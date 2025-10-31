@@ -12,12 +12,19 @@
 :root{--bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--ok:#7CFC9A;--fail:#ff6b6b}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:20px;letter-spacing:.25px;font-size:14px}
-.brand{display:flex;align-items:center;gap:10px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:6px}
+
+/* ===== Header + Arrow Nav ===== */
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:6px}
 .brand .logo{width:48px;height:48px;object-fit:contain}
 .brand h1{font-weight:700;font-size:22px;color:var(--accent);margin:0}
 .brand .jmbn{font-weight:800}
+.navrow{display:flex;align-items:center;gap:10px;margin:4px 0 10px}
+.navlink{display:inline-flex;align-items:center;gap:8px;color:var(--accent);text-decoration:none;font-size:15px;transition:color .2s}
+.navlink::before{content:'←';color:var(--accent);font-size:16px}
+.navlink:hover{color:#fff}
+.navnote{color:var(--muted);font-size:12px}
 
-/* ===== Layout: keep Add/Edit on RIGHT always ===== */
+/* ===== Layout ===== */
 .container{display:grid;grid-template-columns:minmax(640px,1fr) 380px;gap:14px;align-items:start}
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;min-width:0;box-shadow:0 0 10px rgba(214,180,76,.25)}
 .sticky{position:sticky;top:16px;height:fit-content}
@@ -37,103 +44,121 @@ tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .searchbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .searchbar input,.searchbar select{flex:1;min-width:160px;background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:7px;color:var(--text);font-family:'Play',sans-serif;font-size:13px}
+
 label{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;color:var(--muted);font-size:13px}
 select,input{background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:7px;color:var(--text);font-family:'Play',sans-serif;font-size:13px}
 button{padding:6px 10px;border-radius:4px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:12px;transition:.2s}
 button:hover{background:var(--accent);color:#000}
 .small{font-size:11px;color:var(--muted);margin-left:5px}
 
-/* ===== Diagnostics (right panel style like your screenshot) ===== */
-.diag{background:#0d0d0d;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:12px}
+/* ===== Tools & Diagnostics (right panel) ===== */
+.tools,.diag{background:#0d0d0d;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:12px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools h3{margin:0 8px 0 0;color:var(--accent);font-size:14px}
+.tools .btn{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#0a0a0a;color:var(--text);cursor:pointer;font-size:12px}
+.tools .btn:hover{background:var(--accent);color:#000}
+.tools .mini{color:var(--muted);font-size:12px;margin-left:auto}
 .diag h3{margin:0 0 6px;color:var(--accent)}
 .diag ul{list-style:none;margin:0;padding:0}
 .diag li{position:relative;padding-left:18px;margin:5px 0;color:var(--muted)}
-.diag li::before{content:"•";position:absolute;left:4px;top:0;color:var(--muted)}
-.diag li.ok::before{content:"✔";color:var(--ok)}
-.diag li.fail::before{content:"✖";color:var(--fail)}
-.diag li.info::before{content:"ℹ";color:var(--muted)}
+.diag li.ok::before{content:'✔';color:var(--ok)}
+.diag li.fail::before{content:'✖';color:var(--fail)}
 </style>
 </head>
 <body>
-<div class="brand">
-  <img class="logo" alt="JMBN Logo" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" />
-  <h1><span class="jmbn">JMBN</span> Contracts Manifest</h1>
-</div>
-
-<!-- KPI CARDS -->
-<div class="kpis">
-  <div class="card"><h3>Total Contracts</h3><div class="val" id="kpiCount">0</div></div>
-  <div class="card"><h3>Total Payout</h3><div class="val" id="kpiPayout">0<span class="small"> aUEC</span></div></div>
-  <div class="card"><h3>Total Quantity</h3><div class="val" id="kpiSCU">0<span class="small"> SCU</span></div></div>
-  <div class="card"><h3>Avg Payout / SCU</h3><div class="val" id="kpiPerSCU">0<span class="small"> aUEC</span></div></div>
-</div>
-
-<div class="container">
-  <!-- LEFT: Manifest table -->
-  <div class="panel">
-    <h2 style="margin:0 0 6px;color:var(--accent)">Manifest</h2>
-    <div class="searchbar">
-      <input id="q" placeholder="Search contract, commodity, origin/destination…" />
-      <select id="sort">
-        <option value="-created">Newest</option>
-        <option value="created">Oldest</option>
-        <option value="-payout">Payout (high→low)</option>
-        <option value="payout">Payout (low→high)</option>
-        <option value="-quantity">SCU (high→low)</option>
-        <option value="quantity">SCU (low→high)</option>
-      </select>
-    </div>
-    <div class="tableWrap">
-      <table>
-        <thead>
-          <tr>
-            <th>when</th><th>contract name</th><th>type</th><th>commodity</th><th>quantity</th><th>payout</th><th>origin</th><th>destination</th><th>actions</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
+  <div class="brand">
+    <img class="logo" alt="JMBN Logo" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" />
+    <h1><span class="jmbn">JMBN</span> Contracts Manifest</h1>
+  </div>
+  <div class="navrow">
+    <a class="navlink" href="JMBN-Fleet.html" target="_blank" rel="noopener">Go to Hangar</a>
+    <span class="navnote">All data is saved locally (offline).</span>
   </div>
 
-  <!-- RIGHT: Add/Edit form -->
-  <div class="panel sticky">
-    <h2 style="margin:0 0 6px;color:var(--accent)">Add / Edit Contract</h2>
-    <form id="form" autocomplete="off">
-      <label>Contract Name<input id="contractName" required></label>
-      <label>Type<select id="contractType">
-        <option value="">-- select --</option>
-        <option>Mining</option>
-        <option>Hauling</option>
-        <option>Cargo</option>
-        <option>Medical</option>
-      </select></label>
-      <label>Commodity<select id="commodity"></select></label>
-      <label>Quantity (SCU)<input id="quantity" type="number" step="0.1"></label>
-      <label>Payout (aUEC)<input id="payout" type="number" step="1"></label>
-      <label>Origin<select id="origin" required></select></label>
-      <label>Destination<select id="destination" required></select></label>
-      <div style="display:flex;gap:6px;margin-top:10px">
-        <button type="button" id="save">Save Entry</button>
-        <button type="reset" id="reset">Reset</button>
+  <!-- KPI CARDS -->
+  <div class="kpis">
+    <div class="card"><h3>Total Contracts</h3><div class="val" id="kpiCount">0</div></div>
+    <div class="card"><h3>Total Payout</h3><div class="val" id="kpiPayout">0<span class="small"> aUEC</span></div></div>
+    <div class="card"><h3>Total Quantity</h3><div class="val" id="kpiSCU">0<span class="small"> SCU</span></div></div>
+    <div class="card"><h3>Avg Payout / SCU</h3><div class="val" id="kpiPerSCU">0<span class="small"> aUEC</span></div></div>
+  </div>
+
+  <div class="container">
+    <!-- LEFT: Manifest table -->
+    <div class="panel">
+      <h2 style="margin:0 0 6px;color:var(--accent)">Manifest</h2>
+      <div class="searchbar">
+        <input id="q" placeholder="Search contract, commodity, origin/destination…" />
+        <select id="sort">
+          <option value="-created">Newest</option>
+          <option value="created">Oldest</option>
+          <option value="-payout">Payout (high→low)</option>
+          <option value="payout">Payout (low→high)</option>
+          <option value="-quantity">SCU (high→low)</option>
+          <option value="quantity">SCU (low→high)</option>
+        </select>
       </div>
-      <input type="hidden" id="rowId">
-    </form>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>when</th><th>contract name</th><th>type</th><th>commodity</th><th>quantity</th><th>payout</th><th>origin</th><th>destination</th><th>actions</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
 
-    <!-- Diagnostics styled like your screenshot -->
-    <div class="diag" id="diagBox">
-      <h3>Diagnostics</h3>
-      <ul>
-        <li class="info" id="dg-info">(tests will run on load)</li>
-        <li class="fail" id="dg-origin">Origin list populated</li>
-        <li class="fail" id="dg-dest">Destination list populated</li>
-        <li class="fail" id="dg-comm">Commodity list populated</li>
-        <li class="fail" id="dg-reset">Reset clears rowId</li>
-        <li class="fail" id="dg-font">Play font loaded</li>
-        <li class="fail" id="dg-logo">Logo loaded</li>
-      </ul>
+    <!-- RIGHT: Add/Edit form -->
+    <div class="panel sticky">
+      <h2 style="margin:0 0 6px;color:var(--accent)">Add / Edit Contract</h2>
+      <form id="form" autocomplete="off">
+        <label>Contract Name<input id="contractName" required></label>
+        <label>Type<select id="contractType">
+          <option value="">-- select --</option>
+          <option>Mining</option>
+          <option>Hauling</option>
+          <option>Cargo</option>
+          <option>Medical</option>
+        </select></label>
+        <label>Commodity<select id="commodity"></select></label>
+        <label>Quantity (SCU)<input id="quantity" type="number" step="0.1"></label>
+        <label>Payout (aUEC)<input id="payout" type="number" step="1"></label>
+        <label>Origin<select id="origin" required></select></label>
+        <label>Destination<select id="destination" required></select></label>
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <button type="button" id="save">Save Entry</button>
+          <button type="reset" id="reset">Reset</button>
+        </div>
+        <input type="hidden" id="rowId">
+      </form>
+
+      <!-- Tools -->
+      <div class="tools">
+        <h3>Data</h3>
+        <button class="btn" id="btnExport">Export JSON</button>
+        <button class="btn" id="btnImport">Import JSON</button>
+        <button class="btn" id="btnClear">Clear All</button>
+        <span class="mini">Saved locally as <code>sc-haul-v2</code></span>
+        <input type="file" id="fileImport" accept="application/json" style="display:none"/>
+      </div>
+
+      <!-- Diagnostics -->
+      <div class="diag" id="diagBox">
+        <h3>Diagnostics</h3>
+        <ul>
+          <li class="info" id="dg-info">(tests will run on load)</li>
+          <li class="fail" id="dg-origin">Origin list populated</li>
+          <li class="fail" id="dg-dest">Destination list populated</li>
+          <li class="fail" id="dg-comm">Commodity list populated</li>
+          <li class="fail" id="dg-reset">Reset clears rowId</li>
+          <li class="fail" id="dg-font">Play font loaded</li>
+          <li class="fail" id="dg-logo">Logo loaded</li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
 
 <script>
 // ===== Utilities =====
@@ -150,13 +175,7 @@ const commodities=`AcryliPlex Composite, Agricium, Agricium (Ore), Agricultural 
 function populate(el,list){ if(!el) return; el.innerHTML=''; el.appendChild(new Option('-- select --','')); list.forEach(v=>{const t=v.trim(); if(t) el.appendChild(new Option(t,t));}); }
 populate(byId('origin'),originList); const destEl=byId('destination'); populate(destEl,originList); populate(byId('commodity'),commodities);
 
-// mark population tests
-const mark=(id,ok)=>{ const li=byId(id); if(!li) return; li.classList.remove('fail','ok'); li.classList.add(ok?'ok':'fail'); };
-mark('dg-origin', byId('origin')?.options.length>10);
-mark('dg-dest', destEl?.options.length>10);
-mark('dg-comm', byId('commodity')?.options.length>10);
-
-// ===== KPIs =====
+// ===== KPI rendering =====
 function renderKPIs(){ const c=items.length; const tp=items.reduce((s,i)=>s+(+i.payout||0),0); const tq=items.reduce((s,i)=>s+(+i.quantity||0),0); const per=tq?Math.round(tp/tq):0; byId('kpiCount').textContent=c; byId('kpiPayout').innerHTML=money(tp)+"<span class='small'> aUEC</span>"; byId('kpiSCU').innerHTML=(+tq).toLocaleString(undefined,{maximumFractionDigits:1})+"<span class='small'> SCU</span>"; byId('kpiPerSCU').innerHTML=money(per)+"<span class='small'> aUEC</span>"; }
 
 // ===== Table render =====
@@ -177,13 +196,53 @@ byId('rows').onclick=(e)=>{ const b=e.target.closest('button'); if(!b) return; c
 // filters
 byId('q')?.addEventListener('input',render); byId('sort')?.addEventListener('change',render);
 
+// ===== Tools: Export / Import / Clear =====
+function exportJSON(){
+  const data=JSON.stringify(items, null, 2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='jmbn-contracts-manifest.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function importJSONText(text){
+  try{
+    const parsed=JSON.parse(text);
+    if(!Array.isArray(parsed)) throw new Error('JSON must be an array');
+    items=parsed.map(x=>({
+      id:x.id||uid(),
+      created:x.created||new Date().toISOString(),
+      contractName:x.contractName||'',
+      contractType:x.contractType||'',
+      commodity:x.commodity||'',
+      quantity:+x.quantity||0,
+      payout:+x.payout||0,
+      origin:x.origin||'',
+      destination:x.destination||''
+    }));
+    localStorage.setItem(STORE_KEY,JSON.stringify(items));
+    render();
+    alert('Import complete: '+items.length+' entries');
+  }catch(e){ alert('Import failed: '+e.message); }
+}
+function clearAll(){ if(confirm('Clear all saved entries?')){ items=[]; localStorage.removeItem(STORE_KEY); render(); resetForm(); } }
+byId('btnExport').addEventListener('click',exportJSON);
+byId('btnImport').addEventListener('click',()=>byId('fileImport').click());
+byId('fileImport').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>importJSONText(ev.target.result); r.readAsText(f); e.target.value='';});
+byId('btnClear').addEventListener('click',clearAll);
+
 // ===== Diagnostics runner =====
+const mark=(id,ok)=>{ const li=byId(id); if(!li) return; li.classList.remove('fail','ok'); li.classList.add(ok?'ok':'fail'); };
 (function runDiagnostics(){
   const markBool=(id,cond)=>mark(id,!!cond);
   try{
     markBool('dg-font', getComputedStyle(document.body).fontFamily.includes('Play'));
     const logo=document.querySelector('.logo');
     if(logo){ if(logo.complete) mark('dg-logo',true); else logo.addEventListener('load',()=>mark('dg-logo',true)); }
+    markBool('dg-origin', byId('origin')?.options.length>10);
+    markBool('dg-dest', byId('destination')?.options.length>10);
+    markBool('dg-comm', byId('commodity')?.options.length>10);
     byId('dg-info').textContent='(tests completed)';
   }catch(e){ console.warn('Diagnostics error',e); }
 })();
