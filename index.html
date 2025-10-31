@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- Google Fonts for GitHub Pages (online) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <title>JMBN Contracts Manifest (Offline)</title>
 <style>
-/* ===== Offline Font ===== */
-@font-face { font-family:'Play';$1 } /* offline fallback */
+/* ===== Offline Font (fallback) ===== */
+@font-face { font-family:'Play'; font-style:normal; font-weight:400; src:url('data:font/woff2;base64,d09GMgABAAAAAAW8ABAAAAAAB+wAAAV5AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDHAqDWIMmATYCJAMMCwgABCAFhG0HdBvrBRUuJcM4gREIA7kcS8D9F4vx9J2rO/73VTFsOfwqAf1RCC7D0kkKcKJgqIPm7G0pI0nZwcpA9Qd6xAl6ZHoPdrb6w0JhwGho+oEko+QZ5wT8vH/0pJhyDtm3p3r74KARbCMp0C00i3iC4Hez4S2EyJrRczwOlAfCZy4AQogRhhzAxM54g14WTTyEtdE/otmS2u3r2KhO+9GeqRyyW8ZMA3OTrKgh0gD6D8Fq5bF4Gy7tdL93oBfQGHLJ7bVaxAwITCXKZkSaO5HZCy95H8d5fn5f6avGbdtytPR1ce93M0xU+8N5+LHTuF9lK7wRkCXN8rcoZzHdfVh0uAGsQoH4Gl9wrLDKgjEAUFpAXf1WbB5RvPuv1MwxglvUkC4q4hMBJi7DJ4ifb3v+dZQbV4kr2Ekm0hEofcAZNKMWZfMW8mWryYI8mDX0g1vZKu88H3MZ59fnHZ8mXeYvF/G+cT5cPudYXuwZExJCB6A9cHxd/eLe/Po2SeKrIL85f+jr9PhvO+MJh03mXt2xhhpxUhzNY0IxuWNjqMYO0PAAUlsrV8DRxHjze3vS/BHmcMguapBBNsMkCNtAplAW6Rx4hM+7PBmlkpCz7UbEEBFhmyUURHLKqO1w8C07xxYsxBJfSNIwFVVZC1OBeKQBAQgNKwLUAh4bPo9YqfqGuSiU1AFULGNH+BT8JqNZWUlDEOmiRkqJoaF2aLURppf3dnLzYX5vQe8R2jl14UBuRZgugmGgYAA==') format('woff2'); }
 
 /* ===== Theme ===== */
 :root{--bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--ok:#7CFC9A;--fail:#ff6b6b}
@@ -30,7 +31,7 @@ body{background:var(--bg);color:var(--text);font-family:'Play',system-ui,-apple-
 /* ===== Layout ===== */
 .container{display:grid;grid-template-columns:minmax(640px,1fr) 380px;gap:14px;align-items:start}
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;min-width:0;box-shadow:0 0 10px rgba(214,180,76,.25)}
-.sticky{position:sticky;top:16px;height:fit-content}
+/* Right panel should scroll with page (non-sticky) */
 
 /* ===== KPIs ===== */
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0 12px}
@@ -58,7 +59,7 @@ button:hover{background:var(--accent);color:#000}
 .tools,.diag{background:#0d0d0d;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:12px}
 .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .tools h3{margin:0 8px 0 0;color:var(--accent);font-size:14px}
-.tools .btn{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#0a0a0a;color:var(--text);cursor:pointer;font-size:12px}
+.tools .btn{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#0a0a0a;color:#fff;cursor:pointer;font-size:12px}
 .tools .btn:hover{background:var(--accent);color:#000}
 .tools .mini{color:var(--muted);font-size:12px;margin-left:auto}
 .diag h3{margin:0 0 6px;color:var(--accent)}
@@ -66,6 +67,11 @@ button:hover{background:var(--accent);color:#000}
 .diag li{position:relative;padding-left:18px;margin:5px 0;color:var(--muted)}
 .diag li.ok::before{content:'✔';color:var(--ok)}
 .diag li.fail::before{content:'✖';color:var(--fail)}
+
+/* ===== Responsive: on mobile, stack panels (form goes below manifest) ===== */
+@media (max-width:900px){
+  .container{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -113,8 +119,8 @@ button:hover{background:var(--accent);color:#000}
       </div>
     </div>
 
-    <!-- RIGHT: Add/Edit form -->
-    <div class="panel sticky">
+    <!-- RIGHT: Add/Edit form (non-sticky, stacks under manifest on mobile) -->
+    <div class="panel">
       <h2 style="margin:0 0 6px;color:var(--accent)">Add / Edit Contract</h2>
       <form id="form" autocomplete="off">
         <label>Contract Name<input id="contractName" required></label>
