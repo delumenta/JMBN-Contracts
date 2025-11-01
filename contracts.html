@@ -1,275 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<!-- Google Fonts for GitHub Pages (online) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JMBN Contracts Manifest</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<title>JMBN Contracts Manifest (Offline)</title>
 <style>
-/* ===== Offline Font (fallback) ===== */
-@font-face { font-family:'Play'; font-style:normal; font-weight:400; src:url('data:font/woff2;base64,d09GMgABAAAAAAW8ABAAAAAAB+wAAAV5AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDHAqDWIMmATYCJAMMCwgABCAFhG0HdBvrBRUuJcM4gREIA7kcS8D9F4vx9J2rO/73VTFsOfwqAf1RCC7D0kkKcKJgqIPm7G0pI0nZwcpA9Qd6xAl6ZHoPdrb6w0JhwGho+oEko+QZ5wT8vH/0pJhyDtm3p3r74KARbCMp0C00i3iC4Hez4S2EyJrRczwOlAfCZy4AQogRhhzAxM54g14WTTyEtdE/otmS2u3r2KhO+9GeqRyyW8ZMA3OTrKgh0gD6D8Fq5bF4Gy7tdL93oBfQGHLJ7bVaxAwITCXKZkSaO5HZCy95H8d5fn5f6avGbdtytPR1ce93M0xU+8N5+LHTuF9lK7wRkCXN8rcoZzHdfVh0uAGsQoH4Gl9wrLDKgjEAUFpAXf1WbB5RvPuv1MwxglvUkC4q4hMBJi7DJ4ifb3v+dZQbV4kr2Ekm0hEofcAZNKMWZfMW8mWryYI8mDX0g1vZKu88H3MZ59fnHZ8mXeYvF/G+cT5cPudYXuwZExJCB6A9cHxd/eLe/Po2SeKrIL85f+jr9PhvO+MJh03mXt2xhhpxUhzNY0IxuWNjqMYO0PAAUlsrV8DRxHjze3vS/BHmcMguapBBNsMkCNtAplAW6Rx4hM+7PBmlkpCz7UbEEBFhmyUURHLKqO1w8C07xxYsxBJfSNIwFVVZC1OBeKQBAQgNKwLUAh4bPo9YqfqGuSiU1AFULGNH+BT8JqNZWUlDEOmiRkqJoaF2aLURppf3dnLzYX5vQe8R2jl14UBuRZgugmGgYAA==') format('woff2'); }
-
-/* ===== Theme & Font Scale ===== */
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--ok:#7CFC9A;--fail:#ff6b6b;
-  /* unified sizes so every page (Manifest / Hangar / Components) matches */
-  --fs-base:14px;                /* body text */
-  --fs-small:11px;               /* small labels */
-  --fs-table:13px;               /* table/form */
-  --fs-h1:clamp(18px,2.2vw,22px);/* main header */
-  --fs-h2:clamp(14px,1.6vw,16px);/* section titles */
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:20px;letter-spacing:.25px;font-size:var(--fs-base)}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
+}
 
-/* ===== Header + Arrow Nav ===== */
-.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:6px}
-.brand .logo{width:48px;height:48px;object-fit:contain}
+/* Header */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-.brand .jmbn{font-weight:800}
-.navrow{display:flex;align-items:center;gap:10px;margin:4px 0 10px}
-.navlink{display:inline-flex;align-items:center;gap:8px;color:var(--accent);text-decoration:none;font-size:calc(var(--fs-base) + 1px);transition:color .2s}
-.navlink::before{content:'←';color:var(--accent);font-size:calc(var(--fs-base) + 2px)}
-.navlink:hover{color:#fff}
-.navnote{color:var(--muted);font-size:var(--fs-small)}
 
-/* ===== Layout ===== */
-.container{display:grid;grid-template-columns:minmax(640px,1fr) 380px;gap:14px;align-items:start}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;min-width:0;box-shadow:0 0 10px rgba(214,180,76,.25)}
-/* NOTE: right panel is not sticky anymore */
+/* Shiny nav */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{
+  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
+}
+.nav-btn.active::after{
+  content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
+  border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
+}
+@keyframes shine{0%{transform:translateX(-120%)}35%{transform:translateX(120%)}100%{transform:translateX(120%)}}
 
-/* ===== KPIs ===== */
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0 12px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center}
-.card h3{margin:0;color:var(--muted);font-size:var(--fs-small);text-transform:uppercase;letter-spacing:.6px}
-.card .val{font-weight:700;font-size:calc(var(--fs-base) + 4px);color:var(--accent);margin-top:4px}
+/* Panels + buttons */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
+button:hover{background:var(--accent);color:#000}
+.btn-primary{background:var(--accent);color:#000}
+input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+textarea{resize:vertical}
 
-/* ===== Table ===== */
-.tableWrap{border:1px solid var(--border);border-radius:6px;overflow:auto;max-height:70vh;box-shadow:0 0 8px rgba(214,180,76,.2)}
+/* Table */
+.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
 table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
-th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:6px;text-align:left}
-th{color:var(--accent);background:#080808;font-weight:500;font-size:calc(var(--fs-table) - 1px)}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
+th{color:var(--accent);background:#080808;font-weight:500;font-size:12px}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
-.searchbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
-.searchbar input,.searchbar select{flex:1;min-width:160px;background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:7px;color:var(--text);font-family:'Play',sans-serif;font-size:var(--fs-table)}
+.small{font-size:var(--fs-small);color:var(--muted)}
 
-label{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;color:var(--muted);font-size:var(--fs-table)}
-select,input{background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:7px;color:var(--text);font-family:'Play',sans-serif;font-size:var(--fs-table)}
-button{padding:6px 10px;border-radius:4px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:calc(var(--fs-base) - 1px);transition:.2s}
-button:hover{background:var(--accent);color:#000}
-.small{font-size:var(--fs-small);color:var(--muted);margin-left:5px}
-
-/* ===== Tools & Diagnostics (right panel) ===== */
-.tools,.diag{background:#0d0d0d;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:12px}
-.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.tools h3{margin:0 8px 0 0;color:var(--accent);font-size:var(--fs-h2)}
-.tools .btn{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#0a0a0a;color:#fff;cursor:pointer;font-size:calc(var(--fs-base) - 1px)}
-.tools .btn:hover{background:var(--accent);color:#000}
-.tools .mini{color:var(--muted);font-size:var(--fs-small);margin-left:auto}
-.diag h3{margin:0 0 6px;color:var(--accent);font-size:var(--fs-h2)}
-.diag ul{list-style:none;margin:0;padding:0}
-.diag li{position:relative;padding-left:18px;margin:5px 0;color:var(--muted)}
-.diag li.ok::before{content:'✔';color:var(--ok)}
-.diag li.fail::before{content:'✖';color:var(--fail)}
-
-/* ===== Mobile: stack right panel under Manifest ===== */
-@media (max-width: 900px){
-  .container{grid-template-columns:1fr}
-}
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:10}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;width:95%;max-width:500px;box-shadow:0 0 25px rgba(214,180,76,.3)}
+.modal h2{color:var(--accent);margin-top:0}
+.modal .form-grid{display:grid;gap:8px}
+.modal-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
 </style>
 </head>
 <body>
   <div class="brand">
-    <img class="logo" alt="JMBN Logo" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" />
-    <h1><span class="jmbn">JMBN</span> Contracts Manifest</h1>
+    <img class="brand-logo" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
+    <h1>JMBN Contracts</h1>
   </div>
 
- <div class="navrow">
-	<a class="navlink" href="index.html">Back to Manifest</a>
-    <a class="navlink" href="hangar.html">Go to Hangar</a>
-	<a class="navlink" href="components.html">Go to Components</a>
-    <span class="navnote">All data is saved locally (offline).</span>
-  </div>
+  <nav class="nav">
+    <a class="nav-btn" href="index.html">Manifest</a>
+    <a class="nav-btn" href="hangar.html">Hangar</a>
+    <a class="nav-btn" href="components.html">Components</a>
+    <a class="nav-btn" href="contracts.html">Contracts</a>
+  </nav>
 
-  <!-- KPI CARDS -->
-  <div class="kpis">
-    <div class="card"><h3>Total Contracts</h3><div class="val" id="kpiCount">0</div></div>
-    <div class="card"><h3>Total Payout</h3><div class="val" id="kpiPayout">0<span class="small"> aUEC</span></div></div>
-    <div class="card"><h3>Total Quantity</h3><div class="val" id="kpiSCU">0<span class="small"> SCU</span></div></div>
-    <div class="card"><h3>Avg Payout / SCU</h3><div class="val" id="kpiPerSCU">0<span class="small"> aUEC</span></div></div>
-  </div>
-
-  <div class="container">
-    <!-- LEFT: Manifest table -->
-    <div class="panel">
-      <h2 style="margin:0 0 6px;color:var(--accent);font-size:var(--fs-h2)">Manifest</h2>
-      <div class="searchbar">
-        <input id="q" placeholder="Search contract, commodity, origin/destination…" />
-        <select id="sort">
-          <option value="-created">Newest</option>
-          <option value="created">Oldest</option>
-          <option value="-payout">Payout (high→low)</option>
-          <option value="payout">Payout (low→high)</option>
-          <option value="-quantity">SCU (high→low)</option>
-          <option value="quantity">SCU (low→high)</option>
-        </select>
-      </div>
-      <div class="tableWrap">
-        <table>
-          <thead>
-            <tr>
-              <th>when</th><th>contract name</th><th>type</th><th>commodity</th><th>quantity</th><th>payout</th><th>origin</th><th>destination</th><th>actions</th>
-            </tr>
-          </thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
+  <div class="panel">
+    <div class="controls">
+      <input id="search" placeholder="Search contracts…">
+      <button id="addBtn" class="btn-primary">Add Contract</button>
+      <button id="saveBtn">Save</button>
+      <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Clear All</button>
+      <button id="exportJSON">Export JSON</button>
+      <button id="importJSON" class="btn-primary">Import JSON</button>
     </div>
 
-    <!-- RIGHT: Add/Edit form (non-sticky) -->
-    <div class="panel">
-      <h2 style="margin:0 0 6px;color:var(--accent);font-size:var(--fs-h2)">Add / Edit Contract</h2>
-      <form id="form" autocomplete="off">
-        <label>Contract Name<input id="contractName" required></label>
-        <label>Type<select id="contractType">
-          <option value="">-- select --</option>
-          <option>Mining</option>
-          <option>Hauling</option>
-          <option>Cargo</option>
-          <option>Medical</option>
-        </select></label>
-        <label>Commodity<select id="commodity"></select></label>
-        <label>Quantity (SCU)<input id="quantity" type="number" step="0.1"></label>
-        <label>Payout (aUEC)<input id="payout" type="number" step="1"></label>
-        <label>Origin<select id="origin" required></select></label>
-        <label>Destination<select id="destination" required></select></label>
-        <div style="display:flex;gap:6px;margin-top:10px">
-          <button type="button" id="save">Save Entry</button>
-          <button type="reset" id="reset">Reset</button>
-        </div>
-        <input type="hidden" id="rowId">
-      </form>
+    <div class="tableWrap">
+      <table>
+        <thead><tr><th>Time</th><th>Contract</th><th>Origin</th><th>Destination</th><th>Reward (aUEC)</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
 
-      <!-- Tools -->
-      <div class="tools">
-        <h3>Data</h3>
-        <button class="btn" id="btnExport">Export JSON</button>
-        <button class="btn" id="btnImport">Import JSON</button>
-        <button class="btn" id="btnClear">Clear All</button>
-        <span class="mini">Saved locally as <code>sc-haul-v2</code></span>
-        <input type="file" id="fileImport" accept="application/json" style="display:none"/>
+  <!-- Modal for new contract -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <h2>New Contract</h2>
+      <div class="form-grid">
+        <input id="cName" placeholder="Contract Name *">
+        <input id="cOrigin" placeholder="Origin">
+        <input id="cDest" placeholder="Destination">
+        <input id="cReward" placeholder="Reward (aUEC)">
+        <select id="cStatus">
+          <option>Available</option><option>Accepted</option><option>Completed</option>
+        </select>
+        <textarea id="cNotes" placeholder="Notes" rows="3"></textarea>
       </div>
-
-      <!-- Diagnostics -->
-      <div class="diag" id="diagBox">
-        <h3>Diagnostics</h3>
-        <ul>
-          <li class="info" id="dg-info">(tests will run on load)</li>
-          <li class="fail" id="dg-origin">Origin list populated</li>
-          <li class="fail" id="dg-dest">Destination list populated</li>
-          <li class="fail" id="dg-comm">Commodity list populated</li>
-          <li class="fail" id="dg-reset">Reset clears rowId</li>
-          <li class="fail" id="dg-font">Play font loaded</li>
-          <li class="fail" id="dg-logo">Logo loaded</li>
-        </ul>
+      <div class="modal-buttons">
+        <button id="cancelModal">Cancel</button>
+        <button id="saveModal" class="btn-primary">Add</button>
       </div>
     </div>
   </div>
 
 <script>
-// ===== Utilities =====
-const byId=(id)=>document.getElementById(id);
-const STORE_KEY='sc-haul-v2';
-let items=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
-const uid=()=> 'C'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const money=n=>(Number(n)||0).toLocaleString(undefined,{maximumFractionDigits:0});
-
-// ===== Long data lists =====
-const originList=`Ambitious Dream Station (CRU-L1), Anderson (HDMS-Anderson), ARC-L1 Wide Forest Station, ARC-L2 Lively Pathway Station, ARC-L3 Modern Express Station, ARC-L4 Faint Glen Station, ARC-L5 Yellow Core Station, ArcCorp Mining Area 045, ArcCorp Mining Area 048, ArcCorp Mining Area 056, ArcCorp Mining Area 061, ArcCorp Mining Area 141, ArcCorp Mining Area 157, Area18 (Riker Memorial Spaceport), Arid Reach, Ashland, Astor’s Clearing, Baijini Point, Beautiful Glen Station (CRU-L5), Benson Mining Outpost, Blackrock Exchange, Bloodshot Ridge, Bountiful Harvest Hydroponics, Brio’s Breaker Yard, Bud’s Growery, Bueno Ravine, Canard View, Casillo (HDPC-Casillo), Chawla’s Beach, Checkmate, Covalex Distribution Centre S1DC06, Covalex Distribution Centre S4DC05, CRU-L1 Ambitious Dream Station, CRU-L4 Shallow Fields Station, CRU-L5 Beautiful Glen Station, Cry-Astro Processing Plant 19-02, Cry-Astro Processing Plant 34-12, Cutter’s Rig, Deakins Research Outpost, Devlin Scrap & Salvage, Dudley & Daughters, Dunboro, Dupree Industrial Manufacturing Facility, Endgame, Endless Odyssey Station (MIC-L3), Everus Harbor, Faithful Dream Station (HUR-L2), Faint Glen Station (ARC-L4), Fallow Field, Farnesway (HDPC-Farnesway), Finn’s Folley, Frostbite, Frigid Knot, Gallete Family Farms, Gaslight, Goner’s Deal, Golden Riviera (The Golden Riviera), Grim HEX, Greycat Stanton I Production Complex-B, Greycat Stanton IV Production Complex A, Hadley (HDMS-Hadley), Harper’s Point, Hickes Research Outpost, High Course Station (HUR-L5), Humboldt Mines, HUR-L1 Green Glade Station, HUR-L2 Faithful Dream Station, HUR-L3 Thundering Express Station, HUR-L4 Melodic Fields Station, HUR-L5 High Course Station, Jackson’s Swap, Jumptown, Kabir’s Outpost, Kudre Ore, Last Landings, Lathan (HDMS-Lathan), Lively Pathway Station (ARC-L2), Lorville (Teasa Spaceport), Long Forest Station (MIC-L2), Loveridge Mineral Reserve, Ludlow, Magnus Gateway, Maker’s Point, Megumi Refueling, Melodic Fields Station (HUR-L4), MIC-L1 Shallow Frontier Station, MIC-L2 Long Forest Station, MIC-L3 Endless Odyssey Station, MIC-L4 Red Crossroads Station, MIC-L5 Modern Icarus Station, Modern Express Station (ARC-L3), Modern Icarus Station (MIC-L5), Moreland Hills, Necropolis (The Necropolis), New Babbage Interstellar Spaceport, Norgaard (HDMS-Norgaard), NT-999-XX, Nuen Waste Management, Oparei (HDMS-Oparei), Orbituary, Orinth (Reclamation & Disposal Orinth), Orison (August Dunlow Spaceport), Orphanage (The Orphanage), Outpost 54, Paradise Cove, Patch City, Pickers Field, Pinewood (HDMS-Pinewood), Private Property (PRIVATE PROPERTY), Pyro Gateway, Rappel, Raven’s Roost, Razor’s Edge, Rayari Anvik Research Outpost, Rayari Cantwell Research Outpost, Rayari Deltana Research Outpost, Rayari Kaltag Research Outpost, Rayari McGrath Research Outpost, Rat’s Nest, Riker Memorial Spaceport (Area18), Rod’s Fuel ’N Supplies, Rough Landing, Ruin Station, Rustville, Ryder (HDMS-Ryder), Sacren’s Plot, Sakura Sun Goldenrod Workcenter, Sakura Sun Magnolia Workcenter, Samson & Son’s Salvage Center, SCD-1 (Shubin Mining Facility SCD-1), Seer’s Canyon, Seraphim Station, Shady Glen Farms, Shallow Fields Station (CRU-L4), Shallow Frontier Station (MIC-L1), Shepherd’s Rest, Shubin Mining Facility SAL-2, Shubin Mining Facility SAL-5, Shubin Mining Facility SCD-1, Shubin Mining Facility SM0-10, Shubin Mining Facility SM0-13, Shubin Mining Facility SM0-18, Shubin Mining Facility SM0-22, Shubin Mining Facility SMCa-6, Shubin Mining Facility SMCa-8, S4DC05 (Covalex Distribution Centre S4DC05), S4LD01 (Microtech Logistics Depot S4LD01), S4LD13 (Microtech Logistics Depot S4LD13), Stanhope (HDMS-Stanhope), Starlight Service Station, Sunset Mesa, Teasa Spaceport (Lorville), Terra Gateway, Terra Mills HydroFarm, Thedus (HDMS-Thedus), Thundering Express Station (HUR-L3), Tram & Myers Mining, Port Tressler, Weeping Cove, Wide Forest Station (ARC-L1), Woodruff (HDMS-Woodruff), XenoThreat Security Station, Yellow Core Station (ARC-L5), Zephyr`.split(',');
-const commodities=`AcryliPlex Composite, Agricium, Agricium (Ore), Agricultural Supplies, Altruciatoxin, Aluminum, Aluminum (Ore), Aluminium, Aluminium (Ore), Amioshi Plague, Ammonia, Aphorite, Apoxygenite, Argon, Astatine, Atlasium, Beryl, Beryl (Raw), Bexalite, Bexalite (Raw), Bioplastic, Blue Bilva, Borase, Borase (Ore), CK13-GID Seed Blend, Carbon, Carbon Silk, Chlorine, Cobalt, CompBoard, Construction Materials, Copper, Copper (Ore), Corundum, Corundum (Raw), DCSR2, Decari Pod, Degnous Root, Diamond, Diamond (Raw), Diamond Laminate, Diluthermex, Distilled Spirits, Dolivine, Dopple, Dymantium, DynaFlex, E-Tam, Elespo, Fireworks, Fluorine, Fotia Seedpod, Freeze, Fresh Food, Gasping Weevil Eggs, Glow, Gold, Gold (Ore), Golden Medmon, HLX99 Hyperprocessors, Hadanite, Heart of the woods, Helium, Hephaestanite, Hephaestanite (Ore), HexaPolyMesh Coating, Human Food Bars, Hydrogen, Hydrogen Fuel, Inert Materials, Iodine, Iron, Iron (Ore), Janalite, Jumping Limes, Kopion Horn, Laranite, Laranite (Ore), Lastaprene, Luminalia Gift, Lunes, Lycara, Mala, Marok Gem, Maze, MedPens, Medical Supplies, Mercury, Methane, Neograph, Neon, Nitrogen, Omnapoxy, Osoian Hides, Oxypen, Oza, Partillium, Pingala Seeds, Pitambu, Potassium, Pressurized Ice, Processed Food, Prota, Quantainium, Quantainium (Raw), Quantum Fuel, Quartz, Quartz (Raw), RS1 Odyssey Spacesuits, Ranta Dung, Raw Ice, Recycled Material Composite, Redfin Energy Modulators, Revenant Pod, Revenant Tree Pollen, Riccite, SLAM, Sarilus, Scrap, Ship Ammunition, Silicon, Silnex, Souvenirs, Steel, Stileron, Stims, Stone Bug Shell, Sunset Berries, Taranite, Taranite (Raw), Thermal Foam, Thrust, Tin, Titanium, Titanium (Ore), Tritium, Tungsten, Tungsten (Ore), Uncut SLAM, Waste, WiDoW, XaPyen, ZetaProlanide`.split(',');
-
-function populate(el,list){ if(!el) return; el.innerHTML=''; el.appendChild(new Option('-- select --','')); list.forEach(v=>{const t=v.trim(); if(t) el.appendChild(new Option(t,t));}); }
-populate(byId('origin'),originList); const destEl=byId('destination'); populate(destEl,originList); populate(byId('commodity'),commodities);
-
-// ===== KPI rendering =====
-function renderKPIs(){ const c=items.length; const tp=items.reduce((s,i)=>s+(+i.payout||0),0); const tq=items.reduce((s,i)=>s+(+i.quantity||0),0); const per=tq?Math.round(tp/tq):0; byId('kpiCount').textContent=c; byId('kpiPayout').innerHTML=money(tp)+"<span class='small'> aUEC</span>"; byId('kpiSCU').innerHTML=(+tq).toLocaleString(undefined,{maximumFractionDigits:1})+"<span class='small'> SCU</span>"; byId('kpiPerSCU').innerHTML=money(per)+"<span class='small'> aUEC</span>"; }
-
-// ===== Table render =====
-function renderTable(){ const tb=byId('rows'); const q=(byId('q')?.value||'').toLowerCase(); const sort=byId('sort')?.value||'-created'; let arr=items.slice(); if(q){arr=arr.filter(it=>`${it.contractName||''} ${it.contractType||''} ${it.commodity||''} ${it.origin||''} ${it.destination||''}`.toLowerCase().includes(q));} switch(sort){ case 'created':arr.sort((a,b)=>(a.created||'').localeCompare(b.created||''));break; case '-created':arr.sort((a,b)=>(b.created||'').localeCompare(a.created||''));break; case 'payout':arr.sort((a,b)=>(+a.payout||0)-(+b.payout||0));break; case '-payout':arr.sort((a,b)=>(+b.payout||0)-(+a.payout||0));break; case 'quantity':arr.sort((a,b)=>(+a.quantity||0)-(+b.quantity||0));break; case '-quantity':arr.sort((a,b)=>(+b.quantity||0)-(+a.quantity||0));break; } tb.innerHTML=''; arr.forEach(it=>{ const tr=document.createElement('tr'); tr.dataset.id=it.id; tr.innerHTML=`<td class='muted'>${it.created?new Date(it.created).toLocaleString():''}</td><td>${it.contractName||''}</td><td>${it.contractType||''}</td><td>${it.commodity||''}</td><td>${it.quantity??''}</td><td>${money(it.payout)}</td><td>${it.origin||''}</td><td>${it.destination||''}</td><td><button data-act='edit'>Edit</button> <button data-act='del'>Del</button></td>`; tb.appendChild(tr); }); renderKPIs(); }
-
-function render(){ renderTable(); }
-
-// ===== robust reset to avoid TypeError =====
-function resetForm(){ const f=byId('form'); if(f && typeof f.reset==='function'){ f.reset(); } else { ['contractName','contractType','commodity','quantity','payout','origin','destination'].forEach(id=>{ const el=byId(id); if(!el) return; if(el.tagName==='SELECT') el.selectedIndex=0; else el.value=''; }); } byId('rowId').value=''; mark('dg-reset', byId('rowId').value===''); }
-
-// ===== Save & actions =====
-byId('save').onclick=()=>{ const id=byId('rowId').value||uid(); const idx=items.findIndex(x=>x.id===id); const created=(idx>=0 && items[idx].created)?items[idx].created:new Date().toISOString(); const e={ id,created, contractName:byId('contractName').value.trim(), contractType:byId('contractType').value, commodity:byId('commodity').value, quantity:+byId('quantity').value||0, payout:+byId('payout').value||0, origin:byId('origin').value, destination:byId('destination').value }; if(!e.contractName||!e.origin||!e.destination){ alert('Fill required fields'); return; } if(idx>=0) items[idx]=e; else items.unshift(e); localStorage.setItem(STORE_KEY,JSON.stringify(items)); resetForm(); render(); };
-
-byId('reset').onclick=()=>{ byId('rowId').value=''; mark('dg-reset', true); };
-
-byId('rows').onclick=(e)=>{ const b=e.target.closest('button'); if(!b) return; const id=e.target.closest('tr').dataset.id; const it=items.find(x=>x.id===id); if(!it) return; if(b.dataset.act==='edit'){ byId('contractName').value=it.contractName||''; byId('contractType').value=it.contractType||''; byId('commodity').value=it.commodity||''; byId('quantity').value=it.quantity||''; byId('payout').value=it.payout||''; byId('origin').value=it.origin||''; byId('destination').value=it.destination||''; byId('rowId').value=id; window.scrollTo({top:0,behavior:'smooth'}); } if(b.dataset.act==='del'){ if(confirm('Delete this entry?')){ items=items.filter(x=>x.id!==id); localStorage.setItem(STORE_KEY,JSON.stringify(items)); render(); } } };
-
-// filters
-byId('q')?.addEventListener('input',render); byId('sort')?.addEventListener('change',render);
-
-// ===== Tools: Export / Import / Clear =====
-function exportJSON(){
-  const data=JSON.stringify(items, null, 2);
-  const blob=new Blob([data],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download='jmbn-contracts-manifest.html.json';
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-}
-function importJSONText(text){
-  try{
-    const parsed=JSON.parse(text);
-    if(!Array.isArray(parsed)) throw new Error('JSON must be an array');
-    items=parsed.map(x=>({
-      id:x.id||uid(),
-      created:x.created||new Date().toISOString(),
-      contractName:x.contractName||'',
-      contractType:x.contractType||'',
-      commodity:x.commodity||'',
-      quantity:+x.quantity||0,
-      payout:+x.payout||0,
-      origin:x.origin||'',
-      destination:x.destination||''
-    }));
-    localStorage.setItem(STORE_KEY,JSON.stringify(items));
-    render();
-    alert('Import complete: '+items.length+' entries');
-  }catch(e){ alert('Import failed: '+e.message); }
-}
-function clearAll(){ if(confirm('Clear all saved entries?')){ items=[]; localStorage.removeItem(STORE_KEY); render(); resetForm(); } }
-byId('btnExport').addEventListener('click',exportJSON);
-byId('btnImport').addEventListener('click',()=>byId('fileImport').click());
-byId('fileImport').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>importJSONText(ev.target.result); r.readAsText(f); e.target.value='';});
-byId('btnClear').addEventListener('click',clearAll);
-
-// ===== Diagnostics runner =====
-const mark=(id,ok)=>{ const li=byId(id); if(!li) return; li.classList.remove('fail','ok'); li.classList.add(ok?'ok':'fail'); };
-(function runDiagnostics(){
-  const markBool=(id,cond)=>mark(id,!!cond);
-  try{
-    markBool('dg-font', getComputedStyle(document.body).fontFamily.toLowerCase().includes('play'));
-    const logo=document.querySelector('.logo');
-    if(logo){ if(logo.complete) mark('dg-logo',true); else logo.addEventListener('load',()=>mark('dg-logo',true)); }
-    markBool('dg-origin', byId('origin')?.options.length>10);
-    markBool('dg-dest', byId('destination')?.options.length>10);
-    markBool('dg-comm', byId('commodity')?.options.length>10);
-    byId('dg-info').textContent='(tests completed)';
-  }catch(e){ console.warn('Diagnostics error',e); }
+(function(){
+  const here=location.pathname.split('/').pop()||'contracts.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){a.classList.add('active');}
+  });
 })();
 
-// initial draw
-render();
-resetForm(); // run once to update reset test
+const STORE='jmbn-contracts';
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const uid=()=> 'CT-'+Math.random().toString(36).slice(2,8);
+let contracts=[];
+
+/* Load + Save */
+function load(){
+  const raw=localStorage.getItem(STORE);
+  contracts=raw?JSON.parse(raw):[];
+  render();
+}
+function save(){localStorage.setItem(STORE,JSON.stringify(contracts));}
+$('#saveBtn').onclick=save;
+$('#resetBtn').onclick=()=>{if(confirm('Clear all contracts?')){contracts=[];save();render();}};
+
+/* Add contract modal */
+const modalBG=$('#modal-bg');
+$('#addBtn').onclick=()=>{modalBG.style.display='flex';};
+$('#cancelModal').onclick=()=>{modalBG.style.display='none';clearForm();};
+$('#saveModal').onclick=()=>{
+  const name=$('#cName').value.trim(); if(!name){alert('Name required');return;}
+  const now=new Date().toLocaleString();
+  const obj={
+    id:uid(),
+    time:now,
+    name,
+    origin:$('#cOrigin').value.trim(),
+    destination:$('#cDest').value.trim(),
+    reward:$('#cReward').value.trim(),
+    status:$('#cStatus').value,
+    notes:$('#cNotes').value.trim()
+  };
+  contracts.push(obj);
+  save();render();modalBG.style.display='none';clearForm();
+};
+function clearForm(){$('#cName').value=$('#cOrigin').value=$('#cDest').value=$('#cReward').value=$('#cNotes').value='';}
+
+/* Render */
+function render(){
+  const q=($('#search').value||'').toLowerCase();
+  let arr=contracts.slice();
+  if(q)arr=arr.filter(x=>`${x.name} ${x.origin} ${x.destination} ${x.notes}`.toLowerCase().includes(q));
+  $('#rows').innerHTML=arr.map(c=>`
+    <tr>
+      <td>${c.time||'-'}</td><td>${c.name}</td><td>${c.origin}</td><td>${c.destination}</td>
+      <td>${c.reward}</td><td>${c.status}</td><td>${c.notes}</td>
+      <td><button data-act="edit" data-id="${c.id}">Edit</button>
+          <button data-act="del" data-id="${c.id}" style="border-color:var(--bad);color:var(--bad)">Del</button></td>
+    </tr>`).join('');
+  $$('#rows button[data-act]').forEach(b=>{
+    const id=b.dataset.id;
+    if(b.dataset.act==='edit')b.onclick=()=>edit(id);
+    if(b.dataset.act==='del')b.onclick=()=>{if(confirm('Delete this contract?')){contracts=contracts.filter(x=>x.id!==id);save();render();}};
+  });
+}
+
+/* Edit */
+function edit(id){
+  const c=contracts.find(x=>x.id===id);
+  if(!c)return;
+  const name=prompt('Contract name:',c.name)||c.name;
+  const origin=prompt('Origin:',c.origin)||c.origin;
+  const dest=prompt('Destination:',c.destination)||c.destination;
+  const reward=prompt('Reward:',c.reward)||c.reward;
+  const status=prompt('Status:',c.status)||c.status;
+  const notes=prompt('Notes:',c.notes)||c.notes;
+  Object.assign(c,{name,origin,destination:dest,reward,status,notes});
+  save();render();
+}
+
+/* Export / Import */
+$('#exportJSON').onclick=()=>{
+  const blob=new Blob([JSON.stringify(contracts,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='jmbn-contracts.json';a.click();
+  URL.revokeObjectURL(url);
+};
+$('#importJSON').onclick=()=>{
+  const inp=document.createElement('input');inp.type='file';inp.accept='application/json';
+  inp.onchange=()=>{
+    const f=inp.files?.[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const arr=JSON.parse(r.result);
+        if(!Array.isArray(arr))throw new Error('Invalid file');
+        contracts=arr;
+        save();render();alert('Import complete');
+      }catch(e){alert('Import failed: '+e.message);}
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+};
+
+/* Init */
+document.addEventListener('DOMContentLoaded',load);
 </script>
 </body>
 </html>
