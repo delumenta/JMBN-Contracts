@@ -3,398 +3,330 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>JMBN Components</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<title>JMBN Components Manifest</title>
 <style>
-:root {
-  --bg:#000; --panel:#0b0b0b; --border:#d6b44c; --card:#141414; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --good:#7CFC9A; --warn:#ffd166; --fail:#ff6b6b;
-  --fs-base:14px; --fs-small:11px; --fs-table:13px; --fs-h1:22px; --fs-h2:16px;
+:root{
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:18px;letter-spacing:.25px;font-size:var(--fs-base)}
-.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:6px}
-.brand .logo{width:48px;height:48px;object-fit:contain}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);font-family:'Play',sans-serif;margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base)
+}
+
+/* Header */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-.navrow{display:flex;align-items:center;gap:10px;margin:6px 0 10px}
-.navlink{display:inline-flex;align-items:center;gap:8px;color:var(--accent);text-decoration:none;font-size:15px;transition:color .2s}
-.navlink::before{content:"\2190";color:var(--accent);font-size:16px}
-.navlink:hover{color:#fff}
-.navnote{color:var(--muted);font-size:var(--fs-small)}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;margin-top:8px;box-shadow:0 0 10px rgba(214,180,76,.25)}
-button{padding:6px 10px;border-radius:4px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:12px;transition:.2s;font-family:'Play',sans-serif}
+
+/* Shiny pill nav */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{
+  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
+}
+.nav-btn.active::after{
+  content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
+  border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
+}
+@keyframes shine{0%{transform:translateX(-120%)}35%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+
+/* Layout + table */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
 button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
-input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:7px;color:var(--text);font-size:13px;font-family:'Play',sans-serif}
-.small{font-size:var(--fs-small);color:var(--muted)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center}
-.kpi-card h3{margin:0;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.kpi-card h3{margin:0;color:var(--muted);font-size:11px;text-transform:uppercase}
 .kpi-card .val{font-weight:700;font-size:18px;color:var(--accent);margin-top:4px}
+
 .form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
-.tableWrap{border:1px solid var(--border);border-radius:6px;overflow:auto;max-height:70vh;margin-top:12px}
-.tableWrap table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
-th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:6px;text-align:left}
+@media(max-width:980px){.form-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+
+.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
 th{color:var(--accent);background:#080808;font-weight:500;font-size:12px}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
-.badge{border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--muted)}
-
-/* Diagnostics */
-.diag{margin-top:8px;color:var(--muted);font-size:12px}
-.diag .ok{color:var(--good)}
-.diag .fail{color:var(--fail)}
+.small{font-size:var(--fs-small);color:var(--muted)}
 </style>
 </head>
 <body>
   <div class="brand">
-    <img class="logo" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN Logo">
-    <h1>JMBN Components Manifest</h1>
-  </div>
-  <div class="navrow">
-    <a class="navlink" href="index.html" >Back to Manifest</a>
-    <a class="navlink" href="hangar.html" >Go to Hangar</a>
-    <a class="navlink" href="contracts.html">Go to Contracts</a>
-    <span class="navnote">All data is saved locally (offline).</span>
+    <img class="brand-logo" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
+    <h1>JMBN Components</h1>
   </div>
 
-  <div class="controls">
-    <input placeholder="Search component name / manufacturer" id="searchBox">
-    <select id="filterType"><option value="">All Types</option></select>
-    <select id="filterClass"><option value="">All Classes</option></select>
-    <select id="filterGrade"><option value="">All Grades</option></select>
-    <select id="filterSize"><option value="">All Sizes</option></select>
-    <button id="saveBtn">Save</button>
-    <button id="resetBtn" style="border-color:#ff6b6b;color:#ff6b6b">Reset (Factory)</button>
-    <button id="exportJSON">Export JSON</button>
-    <button id="exportCSV">Export CSV</button>
-    <button class="btn-primary" id="importJSON">Import JSON</button>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi-card"><h3>Total Components</h3><div class="val" id="kpiCount">0</div></div>
-    <div class="kpi-card"><h3>By Type</h3><div class="val small" id="kpiType">—</div></div>
-    <div class="kpi-card"><h3>Last Saved</h3><div class="val" id="lastSaved">—</div></div>
-  </div>
+  <nav class="nav">
+    <a class="nav-btn" href="index.html">Manifest</a>
+    <a class="nav-btn" href="hangar.html">Hangar</a>
+    <a class="nav-btn" href="components.html">Components</a>
+    <a class="nav-btn" href="contracts.html">Contracts</a>
+  </nav>
 
   <div class="panel">
-    <h2 style="color:var(--accent);font-size:var(--fs-h2);margin-bottom:6px">Add / Edit Component</h2>
+    <div class="controls">
+      <input id="search" placeholder="Search (name, mfr, notes)…">
+      <select id="filterType"><option value="">All Types</option></select>
+      <select id="filterClass"><option value="">All Classes</option></select>
+      <select id="filterGrade"><option value="">All Grades</option></select>
+      <select id="filterSize"><option value="">All Sizes</option></select>
+      <button id="saveBtn">Save</button>
+      <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Reset (Factory)</button>
+      <button id="exportJSON">Export JSON</button>
+      <button id="exportCSV">Export CSV</button>
+      <button class="btn-primary" id="importJSON">Import JSON</button>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi-card"><h3>Total Components</h3><div class="val" id="kpiCount">0</div></div>
+      <div class="kpi-card"><h3>By Type</h3><div class="val small" id="kpiType">—</div></div>
+      <div class="kpi-card"><h3>Last Saved</h3><div class="val" id="lastSaved">—</div></div>
+    </div>
+
+    <h2 style="color:var(--accent);font-size:var(--fs-h2);margin:8px 0 4px">Add / Edit Component</h2>
     <div class="form-grid">
-      <input id="compName" placeholder="Name *" />
+      <input id="compName" placeholder="Name *">
       <select id="compType">
-        <option>Quantum Drive</option><option>Shield Generator</option><option>Power Plant</option><option>Cooler</option><option>Computer</option><option>Radar</option><option>Weapon Mount</option><option>Missile Rack</option>
+        <option>Quantum Drive</option><option>Shield Generator</option><option>Power Plant</option><option>Cooler</option>
+        <option>Computer</option><option>Radar</option><option>Weapon Mount</option><option>Missile Rack</option>
       </select>
-      <select id="compSize"><option>S1</option><option>S2</option><option>S3</option><option>S4</option><option>S5</option><option>S6</option><option>S7</option><option>S8</option><option>S9</option><option>S10</option></select>
+      <select id="compSize"><option>S1</option><option>S2</option><option>S3</option><option>S4</option><option>S5</option></select>
       <select id="compGrade"><option>Grade A</option><option>Grade B</option><option>Grade C</option><option>Grade D</option></select>
-      <select id="compClass"><option>Civilian</option><option>Industrial</option><option>Military</option><option>Stealth</option><option>Competition</option></select>
-      <input id="compManufacturer" placeholder="Manufacturer" />
-      <input id="compBuy" placeholder="Where to Buy" />
-      <input id="compNotes" placeholder="Notes" />
-    </div>
-    <div style="display:flex;gap:6px">
+      <select id="compClass"><option>Civilian</option><option>Industrial</option><option>Stealth</option><option>Competition</option><option>Military</option></select>
+      <input id="compManufacturer" placeholder="Manufacturer">
+      <input id="compBuy" placeholder="Where to Buy">
+      <input id="compNotes" placeholder="Notes">
       <button class="btn-primary" id="saveComponent">Save Component</button>
-      <button id="clearForm">Clear</button>
-      <button id="cancelForm">Cancel</button>
     </div>
-    <div class="diag" id="diag"></div>
-  </div>
 
-  <div class="panel">
     <div class="tableWrap">
       <table>
-        <thead>
-          <tr><th>Name</th><th>Type</th><th>Size</th><th>Grade</th><th>Class</th><th>Manufacturer</th><th>Where to Buy</th><th>Notes</th><th>Actions</th></tr>
-        </thead>
+        <thead><tr><th>Name</th><th>Type</th><th>Size</th><th>Grade</th><th>Class</th><th>Manufacturer</th><th>Where to Buy</th><th>Notes</th><th>Actions</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
   </div>
 
 <script>
-// ===== Utilities =====
-const STORE = 'componentsDB';
-const $ = (s)=>document.querySelector(s);
-const $$ = (s)=>Array.from(document.querySelectorAll(s));
-const uid = ()=> 'CMP-' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+/* Active nav highlight */
+(function(){
+  const here=location.pathname.split('/').pop()||'index.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){a.classList.add('active');a.setAttribute('aria-current','page');}
+  });
+})();
 
-// ===== Seed Data =====
-const defaultData=[
-  {id:uid(),name:'Atlas',type:'Quantum Drive',size:'S1',grade:'Grade B',class:'Civilian',manufacturer:'Wen/Cassel Propulsic',buy:'PU Shops',notes:'Balanced S1 starter'},
-  {id:uid(),name:'VK-00',type:'Quantum Drive',size:'S3',grade:'Grade A',class:'Competition',manufacturer:'Wei-Tek',buy:'Rare/Loot',notes:'Very fast, high fuel'},
-  {id:uid(),name:'JS-300',type:'Shield Generator',size:'S3',grade:'Grade A',class:'Military',manufacturer:'Juno Starwerk',buy:'Area18',notes:'Strong shield regen'},
-  {id:uid(),name:'Regulus',type:'Power Plant',size:'S2',grade:'Grade B',class:'Industrial',manufacturer:'Aegis Dynamics',buy:'Lorville',notes:'High capacity, moderate heat'},
-  {id:uid(),name:'Thermax',type:'Cooler',size:'S2',grade:'Grade A',class:'Civilian',manufacturer:'Kel-To',buy:'PU Shops',notes:'Excellent heat control'},
-  {id:uid(),name:'Sentinel 3',type:'Radar',size:'S3',grade:'Grade C',class:'Military',manufacturer:'WillsOp',buy:'Crusader',notes:'Improved range'},
-  {id:uid(),name:'Quasar CPU',type:'Computer',size:'S1',grade:'Grade A',class:'Competition',manufacturer:'MicroTech',buy:'New Babbage',notes:'Top-tier processing'},
-  {id:uid(),name:'Havoc Rack',type:'Missile Rack',size:'S5',grade:'Grade B',class:'Military',manufacturer:'Drake Interplanetary',buy:'Grim HEX',notes:'Holds up to 4 missiles'},
-  {id:uid(),name:'Fortress Mount',type:'Weapon Mount',size:'S4',grade:'Grade C',class:'Industrial',manufacturer:'Greycat Industrial',buy:'MicroTech',notes:'Durable heavy mount'}
+/* Storage & helpers */
+const STORE='jmbn-components';
+const $=s=>document.querySelector(s);const $$=s=>Array.from(document.querySelectorAll(s));
+const uid=()=> 'CMP-'+Math.random().toString(36).slice(2,8);
+function esc(s=''){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
+let components=[],editId=null;
+
+/* Prefilled list: Grade A / high-tier you can buy at shops */
+const defaults=[
+  {"id":uid(),"name":"Atlas","type":"Quantum Drive","size":"S1","grade":"Grade A","class":"Civilian","manufacturer":"RSI","buy":"HUR-L5 – Galleria – Platinum Bay","notes":"Fast, efficient S1 drive"},
+  {"id":uid(),"name":"Hemera","type":"Quantum Drive","size":"S2","grade":"Grade A","class":"Civilian","manufacturer":"RSI","buy":"CRU-L5 – Galleria – Platinum Bay; Orison – Cousin Crows","notes":"Balanced long-range S2 drive"},
+  {"id":uid(),"name":"Torrid","type":"Quantum Drive","size":"S2","grade":"Grade A","class":"Competition","manufacturer":"Propulsic","buy":"Area18 – Astro Armada","notes":"Great accel for time-sensitive runs"},
+
+  {"id":uid(),"name":"Palisade","type":"Shield Generator","size":"S1","grade":"Grade A","class":"Industrial","manufacturer":"Basilisk","buy":"CRU-L4 – Galleria – Platinum Bay; New Babbage – Omega Pro","notes":"Excellent small-tank durability"},
+  {"id":uid(),"name":"FR-76","type":"Shield Generator","size":"S1","grade":"Grade A","class":"Military","manufacturer":"Gorgon","buy":"Hurston – Everus Harbor – Platinum Bay","notes":"Strong S1 military shield"},
+  {"id":uid(),"name":"Shimmer","type":"Shield Generator","size":"S1","grade":"Grade A","class":"Stealth","manufacturer":"Gorgon","buy":"Everus Harbor – Platinum Bay","notes":"Lower sig for stealth fits"},
+
+  {"id":uid(),"name":"Snowpack","type":"Cooler","size":"S2","grade":"Grade A","class":"Industrial","manufacturer":"Juno StarWerk","buy":"Area18 – Dumper’s Depot; New Babbage – Omega Pro","notes":"High capacity cooler"},
+  {"id":uid(),"name":"AbsoluteZero","type":"Cooler","size":"S2","grade":"Grade A","class":"Competition","manufacturer":"Juno StarWerk","buy":"Area18 – Dumper’s Depot","notes":"Top performance cooler for S2"},
+
+  {"id":uid(),"name":"IonBurst","type":"Power Plant","size":"S1","grade":"Grade A","class":"Civilian","manufacturer":"Lightning Power Ltd.","buy":"Area18 – Dumper’s Depot; HUR-L2 – Platinum Bay","notes":"Reliable compact power"},
+  {"id":uid(),"name":"LuxCore","type":"Power Plant","size":"S2","grade":"Grade A","class":"Competition","manufacturer":"Lightning Power Ltd.","buy":"Orison – Cousin Crows","notes":"Great output for S2 builds"},
+  {"id":uid(),"name":"DeltaMax","type":"Power Plant","size":"S1","grade":"Grade A","class":"Combat","manufacturer":"Lightning Power Ltd.","buy":"Area18 – Dumper’s Depot; HUR-L5 – Platinum Bay","notes":"Good combat-tier unit"}
 ];
 
-let components=[];
-let editId = null; // current row being edited (by id)
-
-function loadComponents(){
-  const saved = localStorage.getItem(STORE);
-  components = saved ? JSON.parse(saved) : defaultData;
-  // ensure ids
-  components.forEach(c=>{ if(!c.id) c.id = uid(); });
-  renderTable();
-  populateFilters();
+/* Load / Save / Reset */
+function load(){
+  const raw=localStorage.getItem(STORE);
+  components = raw ? JSON.parse(raw) : defaults.slice();
+  render(); updateKPI(); populateFilters();
 }
-
-function saveDB(){
+function save(){
   localStorage.setItem(STORE, JSON.stringify(components));
-  const t = new Date().toLocaleString();
-  const el = document.getElementById('lastSaved');
-  if(el) el.textContent = t;
+  const t=new Date().toLocaleString(); const el=$('#lastSaved'); if(el) el.textContent=t;
 }
+$('#saveBtn').onclick=save;
+$('#resetBtn').onclick=()=>{
+  if(!confirm('Reset to factory defaults?')) return;
+  components = defaults.slice();
+  save(); render(); populateFilters(); updateKPI();
+};
 
-function clearForm(){
-  ['compName','compManufacturer','compBuy','compNotes'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value=''; });
-  ['compType','compSize','compGrade','compClass'].forEach(id=>{ const el = document.getElementById(id); if(el) el.selectedIndex = 0; });
-  editId = null;
-  const btn = document.getElementById('saveComponent');
-  if(btn) btn.textContent = 'Save Component';
-}
-
-function getFormData(){
+/* Form helpers */
+function getForm(){
   return {
     id: editId || uid(),
-    name: document.getElementById('compName').value.trim(),
-    type: document.getElementById('compType').value,
-    size: document.getElementById('compSize').value,
-    grade: document.getElementById('compGrade').value,
-    class: document.getElementById('compClass').value,
-    manufacturer: document.getElementById('compManufacturer').value.trim(),
-    buy: document.getElementById('compBuy').value.trim(),
-    notes: document.getElementById('compNotes').value.trim()
+    name: $('#compName').value.trim(),
+    type: $('#compType').value,
+    size: $('#compSize').value,
+    grade: $('#compGrade').value,
+    class: $('#compClass').value,
+    manufacturer: $('#compManufacturer').value.trim(),
+    buy: $('#compBuy').value.trim(),
+    notes: $('#compNotes').value.trim()
   };
 }
-
-function populateForm(c){
-  document.getElementById('compName').value = c.name || '';
-  document.getElementById('compType').value = c.type || 'Quantum Drive';
-  document.getElementById('compSize').value = c.size || 'S1';
-  document.getElementById('compGrade').value = c.grade || 'Grade C';
-  document.getElementById('compClass').value = c.class || 'Civilian';
-  document.getElementById('compManufacturer').value = c.manufacturer || '';
-  document.getElementById('compBuy').value = c.buy || '';
-  document.getElementById('compNotes').value = c.notes || '';
+function clearForm(){
+  editId=null;
+  ['compName','compManufacturer','compBuy','compNotes'].forEach(i=>$('#'+i).value='');
+  ['compType','compSize','compGrade','compClass'].forEach(i=>$('#'+i).selectedIndex=0);
+  $('#saveComponent').textContent='Save Component';
 }
-
-function renderTable(){
-  const rows = document.getElementById('rows');
-  rows.innerHTML = '';
-  const search = (document.getElementById('searchBox').value || '').toLowerCase();
-  const fType = document.getElementById('filterType').value;
-  const fClass = document.getElementById('filterClass').value;
-  const fGrade = document.getElementById('filterGrade').value;
-  const fSize = document.getElementById('filterSize').value;
-
-  const filtered = components.filter(c =>
-    (!search || (c.name||'').toLowerCase().includes(search) || (c.manufacturer||'').toLowerCase().includes(search)) &&
-    (!fType  || c.type  === fType)  &&
-    (!fClass || c.class === fClass) &&
-    (!fGrade || c.grade === fGrade) &&
-    (!fSize  || c.size  === fSize)
-  );
-
-  for(const c of filtered){
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${escapeHtml(c.name)}</td>
-      <td>${escapeHtml(c.type)}</td>
-      <td>${escapeHtml(c.size)}</td>
-      <td>${escapeHtml(c.grade)}</td>
-      <td>${escapeHtml(c.class)}</td>
-      <td>${escapeHtml(c.manufacturer||'')}</td>
-      <td>${escapeHtml(c.buy||'')}</td>
-      <td>${escapeHtml(c.notes||'')}</td>
-      <td>
-        <button class="editBtn" data-id="${c.id}">Edit</button>
-        <button class="delBtn" data-id="${c.id}" style="border-color:#ff6b6b;color:#ff6b6b">Del</button>
-      </td>`;
-    rows.appendChild(tr);
-  }
-
-  // KPIs
-  document.getElementById('kpiCount').textContent = filtered.length.toString();
-  const typeCounts = {};
-  filtered.forEach(c => typeCounts[c.type] = (typeCounts[c.type]||0) + 1);
-  document.getElementById('kpiType').textContent = Object.entries(typeCounts).map(([k,v])=>`${k}: ${v}`).join(' • ') || '—';
+function fillForm(c){
+  editId=c.id;
+  $('#compName').value=c.name||'';
+  $('#compType').value=c.type||'Quantum Drive';
+  $('#compSize').value=c.size||'S1';
+  $('#compGrade').value=c.grade||'Grade A';
+  $('#compClass').value=c.class||'Civilian';
+  $('#compManufacturer').value=c.manufacturer||'';
+  $('#compBuy').value=c.buy||'';
+  $('#compNotes').value=c.notes||'';
+  $('#saveComponent').textContent='Update Component';
 }
+$('#saveComponent').onclick=()=>{
+  const c=getForm();
+  if(!c.name){ alert('Name is required'); return; }
+  const i=components.findIndex(x=>x.id===c.id);
+  if(i>=0) components[i]=c; else components.push(c);
+  save(); render(); clearForm(); updateKPI();
+};
 
+/* Filters */
+function distinct(arr,key){ return [...new Set(arr.map(x=>x[key]).filter(Boolean))].sort(); }
+function fillSelect(sel,values){
+  const prev=sel.value;
+  sel.innerHTML='<option value="">All</option>'+values.map(v=>`<option>${esc(v)}</option>`).join('');
+  if(values.includes(prev)) sel.value=prev;
+}
 function populateFilters(){
-  const typeSet  = new Set(components.map(c=>c.type));
-  const classSet = new Set(components.map(c=>c.class));
-  const gradeSet = new Set(components.map(c=>c.grade));
-  const sizeSet  = new Set(components.map(c=>c.size));
-  const addOpts = (sel,set)=>{ sel.innerHTML = '<option value="">All</option>' + Array.from(set).sort().map(v=>`<option>${v}</option>`).join(''); };
-  addOpts(document.getElementById('filterType'), typeSet);
-  addOpts(document.getElementById('filterClass'), classSet);
-  addOpts(document.getElementById('filterGrade'), gradeSet);
-  addOpts(document.getElementById('filterSize'), sizeSet);
+  fillSelect($('#filterType'), distinct(components,'type'));
+  fillSelect($('#filterClass'), distinct(components,'class'));
+  fillSelect($('#filterGrade'), distinct(components,'grade'));
+  fillSelect($('#filterSize'), distinct(components,'size'));
+}
+['search','filterType','filterClass','filterGrade','filterSize'].forEach(id=>{
+  const el=document.getElementById(id); el&&el.addEventListener('input',render);
+});
+
+/* Render */
+function render(){
+  const q=($('#search').value||'').toLowerCase().trim();
+  const ft=$('#filterType').value, fc=$('#filterClass').value, fg=$('#filterGrade').value, fs=$('#filterSize').value;
+  let arr=components.slice();
+  if(q)  arr=arr.filter(c=>`${c.name} ${c.manufacturer} ${c.buy} ${c.notes}`.toLowerCase().includes(q));
+  if(ft) arr=arr.filter(c=>c.type===ft);
+  if(fc) arr=arr.filter(c=>c.class===fc);
+  if(fg) arr=arr.filter(c=>c.grade===fg);
+  if(fs) arr=arr.filter(c=>c.size===fs);
+
+  $('#rows').innerHTML = arr.map(c=>`
+    <tr>
+      <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
+      <td>${esc(c.type||'')}</td>
+      <td>${esc(c.size||'')}</td>
+      <td>${esc(c.grade||'')}</td>
+      <td>${esc(c.class||'')}</td>
+      <td>${esc(c.manufacturer||'')}</td>
+      <td>${esc(c.buy||'')}</td>
+      <td>${esc(c.notes||'')}</td>
+      <td style="white-space:nowrap">
+        <button data-act="edit" data-id="${c.id}">Edit</button>
+        <button data-act="del"  data-id="${c.id}" style="border-color:var(--bad);color:var(--bad)">Del</button>
+      </td>
+    </tr>`).join('');
+
+  $$('#rows button[data-act]').forEach(b=>{
+    const id=b.dataset.id;
+    if(b.dataset.act==='edit') b.onclick=()=>{ const c=components.find(x=>x.id===id); if(c) fillForm(c); };
+    if(b.dataset.act==='del')  b.onclick=()=>{ if(confirm('Delete this component?')){ components=components.filter(x=>x.id!==id); save(); render(); updateKPI(); } };
+  });
 }
 
-function escapeHtml(s=''){
-  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#039;'}[m]));
+/* KPIs */
+function updateKPI(){
+  $('#kpiCount').textContent = String(components.length);
+  const byType={}; components.forEach(c=>{ byType[c.type]=(byType[c.type]||0)+1; });
+  const top = Object.entries(byType).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${k}: ${v}`).join(' • ') || '—';
+  $('#kpiType').textContent = top;
 }
 
-// ===== Export / Import =====
+/* Export / Import */
 function exportJSON(){
-  const data = JSON.stringify(components, null, 2);
-  const blob = new Blob([data], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'jmbn-components.json';
-  document.body.appendChild(a); a.click(); a.remove();
+  const blob=new Blob([JSON.stringify(components,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='jmbn-components.json'; a.click();
   URL.revokeObjectURL(url);
 }
-
 function exportCSV(){
-  const headers = ['id','name','type','size','grade','class','manufacturer','buy','notes'];
-  const rows = components.map(c => headers.map(h => (c[h] ?? '').toString().replaceAll('"','""')));
-  // NOTE: the join must use the string "\n" (not a raw newline inside the source!)
-  const csv = [headers.join(','), ...rows.map(r => '"'+r.join('","')+'"')].join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'jmbn-components.csv';
-  document.body.appendChild(a); a.click(); a.remove();
+  const headers=['name','type','size','grade','class','manufacturer','buy','notes'];
+  const rows=components.map(c=>headers.map(h=>String(c[h]??'')));
+  const csv=[headers.join(','), ...rows.map(r=>'"'+r.map(s=>s.replace(/"/g,'""')).join('","')+'"')].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='jmbn-components.csv'; a.click();
   URL.revokeObjectURL(url);
 }
+$('#exportJSON').onclick=exportJSON;
+$('#exportCSV').onclick=exportCSV;
 
 function importJSON(){
-  const inp = document.createElement('input');
-  inp.type = 'file'; inp.accept = 'application/json';
-  inp.onchange = () => {
-    const f = inp.files?.[0]; if(!f) return;
-    const r = new FileReader();
-    r.onload = () => {
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='application/json';
+  inp.onchange=()=>{
+    const f=inp.files?.[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
       try{
-        const data = JSON.parse(r.result);
-        if(!Array.isArray(data)) throw new Error('Invalid JSON (expected an array)');
-        data.forEach(x=>{ if(!x.id) x.id = uid(); });
-        if(confirm('Merge with existing list? Click Cancel to REPLACE.')){
-          // merge by id
-          const map = new Map(components.map(c=>[c.id,c]));
-          for(const x of data){ map.set(x.id, x); }
-          components = Array.from(map.values());
+        const arr=JSON.parse(r.result);
+        if(!Array.isArray(arr)) throw new Error('Expected an array');
+        arr.forEach(x=>{ if(!x.id) x.id=uid(); });
+        if(confirm('Merge with existing? (Cancel = Replace)')){
+          const map=new Map(components.map(x=>[x.id,x]));
+          for(const x of arr){ map.set(x.id,x); }
+          components=[...map.values()];
         }else{
-          components = data;
+          components=arr;
         }
-        saveDB();
-        populateFilters();
-        renderTable();
-        alert('Import complete.');
+        save(); render(); populateFilters(); updateKPI(); alert('Import complete.');
       }catch(e){ alert('Import failed: '+e.message); }
     };
     r.readAsText(f);
   };
   inp.click();
 }
+$('#importJSON').onclick=importJSON;
 
-// ===== Minimal Self-Tests (do not change existing behavior) =====
-function runSelfTests(){
-  const out=[];
-  try{
-    // 1) escapeHtml should escape quotes and angle brackets
-    const esc = escapeHtml('<x>"\''+"&"+'</x>');
-    console.assert(esc.includes('&lt;x&gt;') && esc.includes('&quot;') && esc.includes('&#039;') && esc.includes('&amp;'), 'escapeHtml failed');
-    out.push('escapeHtml: OK');
-  }catch(e){ out.push('escapeHtml: FAIL '+e.message); }
-
-  try{
-    // 2) exportCSV should build a string with \n separators (no syntax error)
-    const headers = ['id','name'];
-    const rows = [["1","A"],["2","B"]];
-    const csvTest = [headers.join(','), ...rows.map(r => '"'+r.join('","')+'"')].join('\n');
-    console.assert(csvTest.includes('\n'), 'CSV join not using \\n');
-    out.push('exportCSV join: OK');
-  }catch(e){ out.push('exportCSV join: FAIL '+e.message); }
-
-  try{
-    // 3) save & reload roundtrip (uses a temp key)
-    const tempKey='__TEST__componentsDB';
-    const tempData=[{id:'T1',name:'Test',type:'Quantum Drive',size:'S1',grade:'Grade A',class:'Civilian',manufacturer:'X',buy:'Y',notes:'Z'}];
-    localStorage.setItem(tempKey, JSON.stringify(tempData));
-    const back = JSON.parse(localStorage.getItem(tempKey)||'[]');
-    console.assert(Array.isArray(back) && back[0]?.name==='Test', 'localStorage roundtrip failed');
-    localStorage.removeItem(tempKey);
-    out.push('localStorage: OK');
-  }catch(e){ out.push('localStorage: FAIL '+e.message); }
-
-  const diag = document.getElementById('diag');
-  if(diag){ diag.innerHTML = out.map(s=>`<div class="${/OK$/.test(s)?'ok':'fail'}">${s}</div>`).join(''); }
-}
-
-// ===== Event Wiring =====
-document.addEventListener('DOMContentLoaded',()=>{
-  loadComponents();
-
-  // Filters + search live
-  ['searchBox','filterType','filterClass','filterGrade','filterSize']
-    .forEach(id => document.getElementById(id).addEventListener('input', renderTable));
-
-  // Table actions (edit/delete)
-  document.getElementById('rows').addEventListener('click', (e)=>{
-    const btn = e.target.closest('button'); if(!btn) return;
-    const id = btn.dataset.id; if(!id) return;
-    const idx = components.findIndex(c=>c.id===id); if(idx<0) return;
-    if(btn.classList.contains('editBtn')){
-      editId = id;
-      populateForm(components[idx]);
-      const saveBtn = document.getElementById('saveComponent');
-      if(saveBtn) saveBtn.textContent = 'Update Component';
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
-    if(btn.classList.contains('delBtn')){
-      if(confirm('Delete this component?')){
-        components.splice(idx,1);
-        saveDB();
-        populateFilters();
-        renderTable();
-      }
-    }
-  });
-
-  // Form buttons
-  document.getElementById('saveComponent').addEventListener('click', (ev)=>{
-    ev.preventDefault();
-    const data = getFormData();
-    if(!data.name){ alert('Name is required'); return; }
-    const i = components.findIndex(c=>c.id===data.id);
-    if(i>=0){ components[i] = data; } else { components.push(data); }
-    saveDB();
-    populateFilters();
-    renderTable();
-    clearForm();
-  });
-
-  document.getElementById('clearForm').addEventListener('click', (e)=>{ e.preventDefault(); clearForm(); });
-  document.getElementById('cancelForm').addEventListener('click', (e)=>{ e.preventDefault(); clearForm(); });
-
-  // Top bar actions
-  document.getElementById('saveBtn').addEventListener('click', (e)=>{ e.preventDefault(); saveDB(); });
-  document.getElementById('resetBtn').addEventListener('click', ()=>{
-    if(confirm('Reset database to factory?')){
-      components = defaultData.map(x=>({...x}));
-      saveDB();
-      populateFilters();
-      renderTable();
-      clearForm();
-    }
-  });
-  document.getElementById('exportJSON').addEventListener('click', exportJSON);
-  document.getElementById('exportCSV').addEventListener('click', exportCSV);
-  document.getElementById('importJSON').addEventListener('click', importJSON);
-
-  // Run minimal self-tests
-  runSelfTests();
-});
+/* Init */
+document.addEventListener('DOMContentLoaded', load);
 </script>
 </body>
 </html>
