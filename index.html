@@ -15,78 +15,151 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; 
-  background: radial-gradient(1200px 1200px at 20% -10%, rgba(242,214,117,.08), transparent 60%),
-              radial-gradient(900px 900px at 110% 110%, rgba(214,180,76,.06), transparent 60%),
-              #000;
+  margin:0;
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:
+    radial-gradient(1200px 1200px at 20% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 900px at 110% 110%, rgba(214,180,76,.06), transparent 60%),
+    #000;
   color:var(--text); letter-spacing:.25px;
 }
 
-/* Layout */
+/* ===== Layout ===== */
 .wrapper{min-height:100%; display:grid; place-items:center; padding:28px}
-.center{width:min(980px,96vw); text-align:center}
-.brand{display:inline-flex; align-items:center; gap:12px; margin-bottom:8px}
+.center{width:min(980px,96vw); text-align:center; position:relative}
+.brand{display:inline-flex; align-items:center; gap:12px; margin-bottom:8px; position:relative}
 .brand-logo{width:56px; height:56px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(242,214,117,.35))}
 .brand h1{margin:0; font-size:clamp(22px,3.6vw,36px); color:var(--accent); font-weight:700}
 .sub{color:var(--muted); margin:4px 0 18px; font-size:clamp(12px,1.6vw,14px)}
 
-/* Cards / Buttons */
+/* ===== OPS Sticker (top) ===== */
+.sticker{
+  position:absolute; left:-8px; top:-14px; transform:rotate(-6deg);
+  background:linear-gradient(180deg, rgba(242,214,117,.18), rgba(242,214,117,.06));
+  border:1px dashed var(--border); color:var(--accent);
+  padding:6px 10px; border-radius:8px;
+  font-weight:800; font-size:12px; letter-spacing:.6px;
+  text-shadow:0 0 6px rgba(242,214,117,.35);
+  box-shadow:0 0 0 1px rgba(214,180,76,.18) inset, 0 4px 12px rgba(214,180,76,.18);
+  user-select:none;
+}
+.sticker small{display:block; color:var(--muted); font-weight:700; margin-top:2px; font-size:10px}
+.brand:hover .sticker{transform:rotate(-6deg) translateY(-1px)}
+@media (max-width:560px){.sticker{left:-2px; top:-12px}}
+
+/* ===== Cards ===== */
 .grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:14px 0}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
 .card{
-  background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px 16px 18px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:12px; padding:16px 16px 18px;
   box-shadow:0 0 18px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12);
 }
 .card h3{margin:.25rem 0 .65rem; font-size:18px; color:var(--accent)}
 .card p{margin:.25rem 0 .9rem; color:var(--muted); font-size:13px}
 .card a{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  width:100%; padding:10px 14px; border-radius:10px; text-decoration:none; cursor:pointer;
+  width:100%; padding:10px 14px; border-radius:10px; text-decoration:none;
   border:1px solid var(--border); color:#000; background:var(--accent); font-weight:700;
-  transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  transition:transform .15s ease, box-shadow .2s ease;
 }
-.card a:hover{ transform:translateY(-1px); box-shadow:0 0 22px rgba(242,214,117,.35) }
-.card a:active{ transform:translateY(0) }
-.card a .arrow{ font-size:18px }
+.card a:hover{transform:translateY(-1px); box-shadow:0 0 22px rgba(242,214,117,.35)}
+.card a .arrow{font-size:18px}
 
-/* Footer */
+/* ===== Footer ===== */
 .footer{color:var(--muted); font-size:12px; margin-top:16px}
 .footer code{color:var(--accent)}
-
-/* Tiny diagnostics */
 .kv{display:inline-grid; grid-template-columns:auto auto; gap:4px 8px; margin-top:8px; text-align:left}
-.kv .k{color:var(--muted)}
-.kv .v{color:var(--accent)}
+.kv .k{color:var(--muted)} .kv .v{color:var(--accent)}
+kbd{background:#111; border:1px solid var(--border); border-bottom-color:#a88d38;
+     border-radius:6px; padding:2px 6px; color:var(--text); font-weight:700}
 
-/* Key helpers */
-kbd{background:#111; border:1px solid var(--border); border-bottom-color:#a88d38; border-radius:6px; padding:2px 6px; color:var(--text); font-weight:700}
+/* ===== Boot overlay ===== */
+.boot{
+  position:fixed; inset:0; background:#000; display:flex; align-items:center; justify-content:center;
+  z-index:9999; transition:opacity .5s ease, visibility .5s ease;
+}
+.boot.hidden{opacity:0; visibility:hidden}
+.bootCard{
+  width:min(720px,90vw); background:#060606; border:1px solid var(--border);
+  border-radius:12px; padding:16px;
+  box-shadow:0 0 22px rgba(214,180,76,.28), inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.bootHead{display:flex; justify-content:space-between; color:var(--accent);
+          font-weight:700; font-size:14px; margin-bottom:8px}
+.bootLog{
+  height:220px; overflow:auto; background:#090909; border:1px solid var(--border);
+  border-radius:8px; padding:10px;
+  font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:#e8e3c8;
+}
+.boot .ok{color:#7CFC9A}
+.bootCtrl{display:flex; gap:8px; margin-top:10px; justify-content:flex-end}
+.bootBtn{
+  padding:6px 10px; border-radius:8px; background:transparent; color:var(--text);
+  border:1px solid var(--border); cursor:pointer; font-size:12px; font-family:'Play',sans-serif;
+}
+.bootBtn:hover{background:var(--accent); color:#000}
+
+/* ===== OPS ticker (bottom bar) ===== */
+.ops-ticker{
+  position:fixed; left:12px; right:12px;
+  bottom:calc(10px + env(safe-area-inset-bottom));
+  z-index:50; display:flex; align-items:center; gap:10px;
+  padding:8px 10px; border-radius:10px;
+  background:rgba(14,14,14,.92); border:1px solid var(--border);
+  box-shadow:0 0 14px rgba(214,180,76,.25);
+  backdrop-filter:saturate(1.2) blur(4px);
+}
+.ops-chip{
+  color:var(--bg); background:var(--accent);
+  border:1px solid var(--border); border-radius:999px;
+  padding:2px 8px; font-weight:800; font-size:12px; letter-spacing:.4px;
+}
+.ops-msg{flex:1; min-width:0; color:var(--text); font-size:13px;
+         white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.ops-ctrl{display:flex; align-items:center; gap:6px}
+.ops-btn{
+  padding:4px 8px; border-radius:6px; font-size:12px;
+  border:1px solid var(--border); background:transparent; color:var(--text);
+  cursor:pointer; font-family:'Play',sans-serif;
+}
+.ops-btn:hover{background:var(--accent); color:#000}
+@media(max-width:520px){
+  .ops-ticker{gap:6px; padding:6px 8px}
+  .ops-msg{font-size:12px}
+  .ops-btn{padding:3px 6px; font-size:11px}
+}
 </style>
 </head>
 <body>
+
+<!-- Boot -->
+<div class="boot" id="boot">
+  <div class="bootCard">
+    <div class="bootHead"><div>JMBN // OPS Loader</div><div>v1.0</div></div>
+    <div class="bootLog" id="bootLog"></div>
+    <div class="bootCtrl"><button class="bootBtn" id="skipBoot">Skip</button></div>
+  </div>
+</div>
+
+<!-- Main -->
 <div class="wrapper">
-  <main class="center" role="main">
-    <div class="brand" aria-label="JMBN brand">
-      <img class="brand-logo" alt="JMBN" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" />
+  <main class="center">
+    <div class="brand">
+      <div class="sticker" id="sticker">[Maint]<small>deck-ops</small></div>
+      <img class="brand-logo" alt="JMBN"
+        src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
       <h1>JMBN Manifest System</h1>
     </div>
     <div class="sub">Offline-friendly • Linked manifests</div>
 
-    <section class="grid" aria-label="JMBN Sections">
-      <div class="card">
-        <h3>Hangar</h3>
-        <p>Manage ships, specs, pros/cons and compare builds.</p>
-        <a href="hangar.html"><span class="arrow">➜</span> Go to Hangar</a>
-      </div>
-      <div class="card">
-        <h3>Contracts</h3>
-        <p>Track contracts, payouts, commodities all across Stanton.</p>
-        <a href="contracts.html"><span class="arrow">➜</span> Go to Contracts List</a>
-      </div>
-      <div class="card">
-        <h3>Components</h3>
-        <p>Catalog quantum drives, shields, power plants and more.</p>
-        <a href="components.html"><span class="arrow">➜</span> Go to Components List</a>
-      </div>
+    <section class="grid">
+      <div class="card"><h3>Hangar</h3><p>Manage ships, specs, pros/cons and compare builds.</p>
+        <a href="hangar.html"><span class="arrow">➜</span> Go to Hangar</a></div>
+      <div class="card"><h3>Contracts</h3><p>Track contracts, payouts, commodities all across Stanton.</p>
+        <a href="contracts.html"><span class="arrow">➜</span> Go to Contracts List</a></div>
+      <div class="card"><h3>Components</h3><p>Catalog quantum drives, shields, power plants and more.</p>
+        <a href="components.html"><span class="arrow">➜</span> Go to Components List</a></div>
     </section>
 
     <div class="footer">
@@ -94,29 +167,94 @@ kbd{background:#111; border:1px solid var(--border); border-bottom-color:#a88d38
         <div class="k">Theme</div><div class="v">Play • Gold Accents</div>
         <div class="k">Links</div><div class="v">Relative URLs (GitHub Pages ready)</div>
       </div>
-      <div style="margin-top:8px">Tip: use <kbd>Ctrl</kbd>+<kbd>Click</kbd> (or <kbd>⌘</kbd>+<kbd>Click</kbd>) to open a section in a new tab.</div>
+      <div style="margin-top:8px">
+        Tip: use <kbd>Ctrl</kbd>+<kbd>Click</kbd> (or <kbd>⌘</kbd>+<kbd>Click</kbd>) to open a section in a new tab.
+      </div>
     </div>
   </main>
 </div>
 
+<!-- OPS ticker -->
+<div class="ops-ticker" id="opsTicker">
+  <span class="ops-chip" id="opsChip">[OPS]</span>
+  <div class="ops-msg" id="opsMsg">Initializing broadcast…</div>
+  <div class="ops-ctrl">
+    <button class="ops-btn" id="opsPrev">⟨</button>
+    <button class="ops-btn" id="opsNext">⟩</button>
+    <button class="ops-btn" id="opsPause">Pause</button>
+    <button class="ops-btn" id="opsClose">✕</button>
+  </div>
+</div>
+
 <script>
-// Small nicety: focus first card button on load, add arrow-key navigation
-window.addEventListener('DOMContentLoaded', () => {
-  const links = Array.from(document.querySelectorAll('.card a'));
-  if(links[0]) links[0].focus();
-  let i = 0;
-  window.addEventListener('keydown', (e)=>{
-    if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){
-      e.preventDefault();
-      const col = window.matchMedia('(max-width:980px)').matches ? 1 : 3;
-      if(e.key==='ArrowRight') i = Math.min(i+1, links.length-1);
-      if(e.key==='ArrowLeft')  i = Math.max(i-1, 0);
-      if(e.key==='ArrowDown')  i = Math.min(i+col, links.length-1);
-      if(e.key==='ArrowUp')    i = Math.max(i-col, 0);
-      links[i]?.focus();
-    }
-  });
-});
+/* ----- Sticker ----- */
+const sticker=document.getElementById('sticker');
+const variants=[
+ {tag:'[Maint]',sub:'deck-ops'},{tag:'[OPS]',sub:'flight-control'},
+ {tag:'[Cargo]',sub:'hold-mgr'},{tag:'[Boot]',sub:'sys-init'},{tag:'[QC]',sub:'hull-inspect'}
+];
+const v=variants[Math.floor(Math.random()*variants.length)];
+sticker.innerHTML=`${v.tag}<small>${v.sub}</small>`;
+
+/* ----- Boot sequence ----- */
+const boot=document.getElementById('boot'),log=document.getElementById('bootLog'),skip=document.getElementById('skipBoot');
+const lines=[
+ 'JMBN SYSTEM BOOTING…',
+ '> Initializing OPS modules … <span class="ok">OK</span>',
+ '> Loading Fleet / Ship Hangar … <span class="ok">OK</span>',
+ '> Linking Contracts Manifest … <span class="ok">OK</span>',
+ '> Mounting Components Registry … <span class="ok">OK</span>',
+ '> Verifying local storage bindings … <span class="ok">OK</span>',
+ '> Applying gold-accent theme … <span class="ok">OK</span>',
+ '> Standby… preparing dashboard …',
+ 'READY.'
+];
+function printLine(t){const r=document.createElement('div');r.innerHTML=t;log.appendChild(r);log.scrollTop=log.scrollHeight;}
+function finishBoot(){sessionStorage.setItem('seenBoot','1');boot.classList.add('hidden');
+ setTimeout(()=>boot.style.display='none',550);}
+function runBoot(){let i=0;const step=()=>{if(i>=lines.length)return finishBoot();
+ printLine(lines[i++]);setTimeout(step,i<lines.length-1?180:420)};step();}
+skip.onclick=finishBoot;
+if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}else{boot.style.display='none';}
+
+/* ----- OPS ticker ----- */
+(function(){
+const el=document.getElementById('opsTicker');
+const msg=document.getElementById('opsMsg');
+const chip=document.getElementById('opsChip');
+const prev=document.getElementById('opsPrev');
+const next=document.getElementById('opsNext');
+const pause=document.getElementById('opsPause');
+const close=document.getElementById('opsClose');
+const chips=['[OPS]','[Maint]','[Cargo]','[QC]','[Boot]'];
+chip.textContent=chips[Math.floor(Math.random()*chips.length)];
+const lines=[
+ '[0700] CONTACT: AshenShrike joined the Frontier Fighters.',
+ '[0710] OPS: Nomad tried to dock upside down. Success rate: 0%.',
+ '[0715] MAINT: FloatinTiger caused a “minor” power shortage.',
+ '[0720] TRAFFIC: Gerald took a wrong jump tunnel. Now in a food court.',
+ '[0725] COMMS: Hendra broadcast karaoke on all channels. Again.',
+ '[0730] SECURITY: Jeneral “poked” a pirate Idris. Backup requested.',
+ '[0735] DATA: Freezern’s console froze. He swears it isn’t the name.',
+ '[0740] CARGO: Ricojes mislabeled 300 SCU of scrap as platinum.',
+ '[0745] OPS: Nomad vs FloatinTiger over the last power cell.',
+ '[0750] ALERT: Vending machine stole Gerald’s aUEC (allegedly).'
+];
+let i=0;let playing=sessionStorage.getItem('opsPlay')!=='0';let timer=null;
+function render(){msg.textContent=lines[i];pause.textContent=playing?'Pause':'Play';}
+function nxt(){i=(i+1)%lines.length;render();}
+function prv(){i=(i-1+lines.length)%lines.length;render();}
+function start(){if(timer)return;playing=true;sessionStorage.setItem('opsPlay','1');
+ timer=setInterval(nxt,4000);render();}
+function stop(){playing=false;sessionStorage.setItem('opsPlay','0');
+ clearInterval(timer);timer=null;render();}
+next.onclick=()=>{stop();nxt();};
+prev.onclick=()=>{stop();prv();};
+pause.onclick=()=>playing?stop():start();
+close.onclick=()=>{el.style.display='none';sessionStorage.setItem('opsClosed','1');};
+if(sessionStorage.getItem('opsClosed')==='1'){el.style.display='none';return;}
+playing?start():(stop(),render());
+})();
 </script>
 </body>
 </html>
