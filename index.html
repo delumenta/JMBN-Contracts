@@ -16,10 +16,8 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0;
-  position:relative; /* enables z-index layering for ::before/::after */
+  margin:0; position:relative;
   font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  /* keep your golden nebula glow on top of the image for the JMBN vibe */
   background:
     radial-gradient(1200px 1200px at 20% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 900px at 110% 110%, rgba(214,180,76,.06), transparent 60%),
@@ -27,33 +25,37 @@ body{
   color:var(--text); letter-spacing:.25px;
 }
 
-/* ===== BACKGROUND IMAGE + VIGNETTE (added) ===== */
+/* ===== BACKGROUND IMAGE (robust) + VIGNETTE ===== */
 body::before{
-  content:"";
-  position:fixed; inset:0; z-index:-2;
+  content:""; position:fixed; inset:0; z-index:0;
   background:
-    url("https://media.discordapp.net/attachments/1010508252234125352/1314957388553519207/image.png?ex=6906bdc0&is=69056c40&hm=5126ced2c9d00f1892d6e47d4cfd22f649737dff2c604a07b0d6b8533fc63ed8&=&format=webp&quality=lossless&width=2112&height=1320")
+    url("https://media.discordapp.net/attachments/1010508252234125352/1314957388553519207/image.png?format=webp&quality=lossless&width=2112&height=1320")
     center / cover no-repeat fixed;
-  filter:brightness(.55) contrast(.95) saturate(.9);
-  transform:scale(1.02); /* tiny zoom to avoid edge seams on some screens */
+  background-image: image-set(
+    url("https://media.discordapp.net/attachments/1010508252234125352/1314957388553519207/image.png?format=webp&quality=lossless&width=2112&height=1320") 1x,
+    url("https://media.discordapp.net/attachments/1010508252234125352/1314957388553519207/image.png?format=webp&quality=lossless&width=4224&height=2640") 2x
+  );
+  filter: brightness(.8) contrast(1.1) saturate(1.1);
+  transform:scale(1.02);
 }
 body::after{
-  content:"";
-  position:fixed; inset:0; z-index:-1;
-  /* soft vignette + extra top/bottom falloff for readability */
+  content:""; position:fixed; inset:0; z-index:1;
   background:
     radial-gradient(1200px 800px at 50% 40%,
       rgba(0,0,0,0) 40%,
-      rgba(0,0,0,.45) 70%,
-      rgba(0,0,0,.80) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.55));
+      rgba(0,0,0,.35) 70%,
+      rgba(0,0,0,.65) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,.18), rgba(0,0,0,.35));
   pointer-events:none;
 }
 
+/* Keep content above */
+.wrapper, .ops-ticker, .boot { position:relative; z-index:2; }
+
 /* Layout */
 .wrapper{min-height:100%; display:grid; place-items:center; padding:28px}
-.center{width:min(980px,96vw); text-align:center; position:relative}
-.brand{display:inline-flex; align-items:center; gap:12px; margin-bottom:8px; position:relative}
+.center{width:min(980px,96vw); text-align:center}
+.brand{display:inline-flex; align-items:center; gap:12px; margin-bottom:8px}
 .brand-logo{width:56px; height:56px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(242,214,117,.35))}
 .brand h1{margin:0; font-size:clamp(22px,3.6vw,36px); color:var(--accent); font-weight:700}
 .sub{color:var(--muted); margin:4px 0 18px; font-size:clamp(12px,1.6vw,14px)}
@@ -62,7 +64,7 @@ body::after{
 .grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:14px 0}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
 .card{
-  background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  background:rgba(11,11,11,.9); border:1px solid var(--border); border-radius:12px;
   padding:16px 16px 18px; box-shadow:0 0 18px rgba(214,180,76,.18),
   inset 0 0 0 1px rgba(214,180,76,.12);
 }
@@ -126,8 +128,11 @@ kbd{background:#111; border:1px solid var(--border); border-bottom-color:#a88d38
   border:1px solid var(--border); border-radius:999px;
   padding:2px 8px; font-weight:800; font-size:12px; letter-spacing:.4px;
 }
-.ops-msg{flex:1; min-width:0; color:var(--text); font-size:13px;
-         white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.ops-msg{
+  flex:1; min-width:0; color:var(--text); font-size:13px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  opacity:1; transition:opacity .35s ease;
+}
 .ops-ctrl{display:flex; align-items:center; gap:6px}
 .ops-btn{
   padding:4px 8px; border-radius:6px; font-size:12px;
@@ -157,7 +162,6 @@ kbd{background:#111; border:1px solid var(--border); border-bottom-color:#a88d38
 <div class="wrapper">
   <main class="center">
     <div class="brand">
-      <!-- (top sticker removed) -->
       <img class="brand-logo" alt="JMBN"
         src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
       <h1>JMBN Manifest System</h1>
@@ -233,158 +237,176 @@ function mixLines(){
  arr.push('READY.');
  return arr;
 }
-const lines=mixLines();
+const linesBoot=mixLines();
 function printLine(t){const r=document.createElement('div');r.innerHTML=t;log.appendChild(r);log.scrollTop=log.scrollHeight;}
 function finishBoot(){sessionStorage.setItem('seenBoot','1');boot.classList.add('hidden');setTimeout(()=>boot.style.display='none',550);}
-function runBoot(){let i=0;const step=()=>{if(i>=lines.length)return finishBoot();printLine(lines[i++]);setTimeout(step,i<lines.length-1?200:500)};step();}
+function runBoot(){let i=0;const step=()=>{if(i>=linesBoot.length)return finishBoot();printLine(linesBoot[i++]);setTimeout(step,i<linesBoot.length-1?200:500)};step();}
 skip.onclick=finishBoot;
 if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}else{boot.style.display='none';}
 
-/* ===== OPS Ticker (24hr feed) ===== */
+/* ===== OPS Ticker (auto-loop + fade) ===== */
 (function(){
-const el=document.getElementById('opsTicker');
-const msg=document.getElementById('opsMsg');
-const chip=document.getElementById('opsChip');
-const prev=document.getElementById('opsPrev');
-const next=document.getElementById('opsNext');
-const pause=document.getElementById('opsPause');
-const close=document.getElementById('opsClose');
-const chips=['[OPS]','[Notice]','[Update]','[Advisory]','[Alert]','[Maint]'];
-chip.textContent=chips[Math.floor(Math.random()*chips.length)];
+  const el = document.getElementById('opsTicker');
+  const msg = document.getElementById('opsMsg');
+  const chip = document.getElementById('opsChip');
+  const prev = document.getElementById('opsPrev');
+  const next = document.getElementById('opsNext');
+  const pause = document.getElementById('opsPause');
+  const close = document.getElementById('opsClose');
+  const chips = ['[OPS]', '[Notice]', '[Update]', '[Advisory]', '[Alert]', '[Maint]'];
+  chip.textContent = chips[Math.floor(Math.random() * chips.length)];
 
-const lines=[
-  'CONTACT: AshenShrike joined the Frontier Fighters.',
-  'OPS: Jeneral tried to dock upside down. Success rate: 0%.',
-  'OPS: Sam Highway Project now includes 2 cones, and a melted Cutlass Black'
-  'OPS: Jeneral forgot his helmet again!! Atmosphere disagreed!!'
-  'MAINT: FloatinTiger caused a “minor” power shortage.',
-  'TRAFFIC: Gerald took a wrong jump tunnel. Now in a food court.',
-  'COMMS: Hendra broadcast karaoke on all channels. Again.',
-  'SECURITY: Jeneral “poked” a pirate Idris. Backup requested.',
-  'DATA: Freezern’s console froze. He swears it isn’t the name.',
-  'FloatinTiger completed a systems Diagnostics.. "no idea what that means"'
-  'CARGO: Ricojes mislabeled 300 SCU of scrap as platinum.',
-  'OPS: Nomad vs FloatinTiger over the last power cell.',
-  'ALERT: Vending machine stole Gerald’s aUEC (allegedly).',
-  'SYSTEM: Reboot successful. Snacks dispenser still offline.',
-  'TECH: Gerald installed patch backwards. It somehow worked.',
-  'CARGO: Shrike stacked crates into a “fortress of solitude”.',
-  'OPS: Someone toggled gravity mid-jump. Report pending.',
-  'MAINT: FloatinTiger now fixing the coffee machine he broke.',
-  'ALERT: Unknown signal detected. Turns out it was karaoke.',
-  'OPS: Hendra achieved record decibel level. Everyone impressed.',
-  'COMMS: Shrike arguing with AI autopilot about directions.',
-  'DATA: Logs show Freezern attempted to format the toaster.',
-  'SECURITY: Jeneral forgot password again. Door won’t open.',
-  'OPS: Nomad accidentally sold the ship’s ladder on TradeNet.',
-  'CARGO: Ricojes labeled everything “Not My Problem.”',
-  'SYSTEM: Power restored after FloatinTiger kicked the panel.',
-  'OPS: AshenShrike tried “turning it off and on again.” Success.',
-  'ALERT: Gerald installed Windows on the ship radar. It crashed.',
-  'MAINT: Freezern replaced fuse with chewing gum. Still works.',
-  'TRAFFIC: Hendra filed a flight plan to the cafeteria.',
-  'OPS: Cargo bay lights now disco mode. No one claiming credit.',
-  'COMMS: Incoming message: “pls no pirates today”.',
-  'SECURITY: Nomad forgot he was cloaked. Scared his own crew.',
-  'CARGO: Ricojes counting SCU manually for “accuracy”.',
-  'OPS: Shrike launched while ramp open. Style points: +10.',
-  'SYSTEM: Autopilot replaced by AI cat. Efficiency down 4%.',
-  'OPS: FloatinTiger insists it’s “feature, not bug.”',
-  'ALERT: Coffee rations critically low. Morale tanking.',
-  'DATA: Backup corrupted due to playlist named “Final Mix v7 FINAL”.',
-  'OPS: AshenShrike declared “nap time” an official break.',
-  'COMMS: Hendra accidentally pinged entire sector.',
-  'SECURITY: Jeneral confiscated Gerald’s drone. It bit him.',
-  'MAINT: FloatinTiger now repairing Jeneral’s dignity.',
-  'OPS: Nomad claims ship AI “whispered insults.”',
-  'ALERT: Reactor fine. Alarm light stuck on for drama.',
-  'CARGO: Ricojes balanced crate tower. Gravity not impressed.',
-  'OPS: Shrike holding seminar titled “Hauling With Style.”',
-  'SYSTEM: Update installed. Everything slightly worse.',
-  'COMMS: Hendra broadcasting motivational speeches unprompted.',
-  'SECURITY: Jeneral arrested the vending machine.',
-  'MAINT: FloatinTiger accidentally welded his glove again.',
-  'OPS: Gerald set navigation to “Surprise Me” mode.',
-  'ALERT: Someone turned off inertial dampeners mid-meal.',
-  'OPS: Nomad trying to prove ship can “drift gracefully.”',
-  'CARGO: Ricojes sold 5 SCU of scrap as “modern art.”',
-  'DATA: Freezern deleted system32-equivalent. Performance improved.',
-  'OPS: Hendra claims karaoke stabilizes resonance fields.',
-  'TRAFFIC: Shrike demanded parking validation at Port Olisar.',
-  'ALERT: Someone left airlock on “party mode.”',
-  'MAINT: FloatinTiger upgraded wrench to “Mark II Deluxe.”',
-  'SECURITY: Jeneral detained himself for being suspicious.',
-  'OPS: Nomad’s helmet HUD stuck in meme filter.',
-  'DATA: System log reached 1000 errors. Achievement unlocked.',
-  'COMMS: AI refused to respond until given a compliment.',
-  'OPS: Shrike filed complaint about “existential lag.”',
-  'CARGO: Ricojes built secret lounge out of boxes.',
-  'ALERT: Reactor hum “too chill.” Crew vibing dangerously.',
-  'OPS: FloatinTiger rerouted coolant to coffee machine.',
-  'SECURITY: Jeneral promoted himself to Admiral temporarily.',
-  'COMMS: Hendra’s mic stuck on. 20 minutes of humming recorded.',
-  'DATA: Freezern forgot semicolon, crashed the manifest.',
-  'OPS: Nomad ordered 3000 glowsticks instead of ammo.',
-  'MAINT: FloatinTiger fixed something accidentally. Confused.',
-  'CARGO: Shrike launched crate into orbit “for science.”',
-  'ALERT: Gerald tried turning off gravity “to clean faster.”',
-  'OPS: Hendra’s karaoke now officially crew hazard.',
-  'SECURITY: Jeneral filed paperwork against paperwork.',
-  'SYSTEM: Update failed successfully.',
-  'OPS: Freezern trying to debug reality.',
-  'CARGO: Ricojes left cargo door open again. Birds inside.',
-  'MAINT: FloatinTiger found wrench he lost last month.',
-  'OPS: Nomad demanded “cooler explosion effects.”',
-  'ALERT: Someone labeled the escape pods “Do Not Touch.”',
-  'COMMS: Hendra’s new call sign: “DJ Mayday.”',
-  'SECURITY: Jeneral challenged AI to arm-wrestle. Lost.',
-  'OPS: Shrike yelled “yeet” before quantum jump. Success.',
-  'MAINT: FloatinTiger trying to invent self-fixing coffee.',
-  'DATA: Freezern added “pls” to code comment. Fixed bug.',
-  'OPS: Nomad claimed gravity “feels heavier today.”',
-  'ALERT: Reactor glow suspiciously rainbow. Probably fine.',
-  'CARGO: Ricojes wrote poem on shipping label. It rhymes.',
-  'OPS: AshenShrike tested emergency klaxon. Works too well.',
-  'SYSTEM: Update notes simply read “trust us.”',
-  'COMMS: Hendra’s mic caught ghost whispers (or Shrike).',
-  'SECURITY: Jeneral confiscated AI cat. Immediate regret.',
-  'OPS: Nomad inverted flight controls “for immersion.”',
-  'MAINT: FloatinTiger started unionizing the coffee mugs.',
-  'CARGO: Ricojes opened a side business selling labels.',
-  'DATA: Freezern introduced bug called “Jeff.” It stayed.',
-  'OPS: Shrike performed 360 landing. Still counts.',
-  'COMMS: Hendra’s playlist corrupted comm logs.',
-  'ALERT: Someone whispered “boom” into mic. Turrets fired.',
-  'MAINT: FloatinTiger dismantled chair to fix monitor stand.',
-  'OPS: Nomad insists ship AI is flirting. Investigation pending.',
-  'SECURITY: Jeneral chasing space pigeons again.',
-  'SYSTEM: Backup completed at 4% confidence.',
-  'CARGO: Ricojes labeled everything “fragile” out of spite.',
-  'OPS: Shrike wrote inspirational note on reactor casing.',
-  'ALERT: Coffee machine achieved sentience. Demands vacation.',
-  'COMMS: Hendra broadcasting lo-fi beats to relax/repair to.',
-  'OPS: FloatinTiger installed disco lights in maintenance bay.',
-  'DATA: Freezern optimized manifest. Deleted everything.',
-  'OPS: Nomad applied for leave to chase “space rumor.”',
-  'SECURITY: Jeneral slept through alert. Dreams classified.',
-  'MAINT: Shrike used duct tape “creatively.” Holds... for now.',
-  'OPS: Hendra autographed cargo containers. Why? Yes.',
-  'CARGO: Ricojes claims crates rearranged themselves.',
-  'SYSTEM: New day. Same chaos. Carry on, JMBN.'
-];
+  const lines = [
+    'CONTACT: AshenShrike joined the Frontier Fighters.',
+    'OPS: Nomad tried to dock upside down. Success rate: 0%.',
+    'MAINT: FloatinTiger caused a “minor” power shortage.',
+    'TRAFFIC: Gerald took a wrong jump tunnel. Now in a food court.',
+    'COMMS: Hendra broadcast karaoke on all channels. Again.',
+    'SECURITY: Jeneral “poked” a pirate Idris. Backup requested.',
+    'DATA: Freezern’s console froze. He swears it isn’t the name.',
+    'CARGO: Ricojes mislabeled 300 SCU of scrap as platinum.',
+    'OPS: Nomad vs FloatinTiger over the last power cell.',
+    'ALERT: Vending machine stole Gerald’s aUEC (allegedly).',
+    'SYSTEM: Reboot successful. Snacks dispenser still offline.',
+    'TECH: Gerald installed patch backwards. It somehow worked.',
+    'CARGO: Shrike stacked crates into a “fortress of solitude”.',
+    'OPS: Someone toggled gravity mid-jump. Report pending.',
+    'MAINT: FloatinTiger now fixing the coffee machine he broke.',
+    'ALERT: Unknown signal detected. Turns out it was karaoke.',
+    'OPS: Hendra achieved record decibel level. Everyone impressed.',
+    'COMMS: Shrike arguing with AI autopilot about directions.',
+    'DATA: Logs show Freezern attempted to format the toaster.',
+    'SECURITY: Jeneral forgot password again. Door won’t open.',
+    'OPS: Nomad accidentally sold the ship’s ladder on TradeNet.',
+    'CARGO: Ricojes labeled everything “Not My Problem.”',
+    'SYSTEM: Power restored after FloatinTiger kicked the panel.',
+    'OPS: AshenShrike tried “turning it off and on again.” Success.',
+    'ALERT: Gerald installed Windows on the ship radar. It crashed.',
+    'MAINT: Freezern replaced fuse with chewing gum. Still works.',
+    'TRAFFIC: Hendra filed a flight plan to the cafeteria.',
+    'OPS: Cargo bay lights now disco mode. No one claiming credit.',
+    'COMMS: Incoming message: “pls no pirates today”.',
+    'SECURITY: Nomad forgot he was cloaked. Scared his own crew.',
+    'CARGO: Ricojes counting SCU manually for “accuracy”.',
+    'OPS: Shrike launched while ramp open. Style points: +10.',
+    'SYSTEM: Autopilot replaced by AI cat. Efficiency down 4%.',
+    'OPS: FloatinTiger insists it’s “feature, not bug.”',
+    'ALERT: Coffee rations critically low. Morale tanking.',
+    'DATA: Backup corrupted due to playlist named “Final Mix v7 FINAL”.',
+    'OPS: AshenShrike declared “nap time” an official break.',
+    'COMMS: Hendra accidentally pinged entire sector.',
+    'SECURITY: Jeneral confiscated Gerald’s drone. It bit him.',
+    'MAINT: FloatinTiger now repairing Jeneral’s dignity.',
+    'OPS: Nomad claims ship AI “whispered insults.”',
+    'ALERT: Reactor fine. Alarm light stuck on for drama.',
+    'CARGO: Ricojes balanced crate tower. Gravity not impressed.',
+    'OPS: Shrike holding seminar titled “Hauling With Style.”',
+    'SYSTEM: Update installed. Everything slightly worse.',
+    'COMMS: Hendra broadcasting motivational speeches unprompted.',
+    'SECURITY: Jeneral arrested the vending machine.',
+    'MAINT: FloatinTiger accidentally welded his glove again.',
+    'OPS: Gerald set navigation to “Surprise Me” mode.',
+    'ALERT: Someone turned off inertial dampeners mid-meal.',
+    'OPS: Nomad trying to prove ship can “drift gracefully.”',
+    'CARGO: Ricojes sold 5 SCU of scrap as “modern art.”',
+    'DATA: Freezern deleted system32-equivalent. Performance improved.',
+    'OPS: Hendra claims karaoke stabilizes resonance fields.',
+    'TRAFFIC: Shrike demanded parking validation at Port Olisar.',
+    'ALERT: Someone left airlock on “party mode.”',
+    'MAINT: FloatinTiger upgraded wrench to “Mark II Deluxe.”',
+    'SECURITY: Jeneral detained himself for being suspicious.',
+    'OPS: Nomad’s helmet HUD stuck in meme filter.',
+    'DATA: System log reached 1000 errors. Achievement unlocked.',
+    'COMMS: AI refused to respond until given a compliment.',
+    'OPS: Shrike filed complaint about “existential lag.”',
+    'CARGO: Ricojes built secret lounge out of boxes.',
+    'ALERT: Reactor hum “too chill.” Crew vibing dangerously.',
+    'OPS: FloatinTiger rerouted coolant to coffee machine.',
+    'SECURITY: Jeneral promoted himself to Admiral temporarily.',
+    'COMMS: Hendra’s mic stuck on. 20 minutes of humming recorded.',
+    'DATA: Freezern forgot semicolon, crashed the manifest.',
+    'OPS: Nomad ordered 3000 glowsticks instead of ammo.',
+    'MAINT: FloatinTiger fixed something accidentally. Confused.',
+    'CARGO: Shrike launched crate into orbit “for science.”',
+    'ALERT: Gerald tried turning off gravity “to clean faster.”',
+    'OPS: Hendra’s karaoke now officially crew hazard.',
+    'SECURITY: Jeneral filed paperwork against paperwork.',
+    'SYSTEM: Update failed successfully.',
+    'OPS: Freezern trying to debug reality.',
+    'CARGO: Ricojes left cargo door open again. Birds inside.',
+    'MAINT: FloatinTiger found wrench he lost last month.',
+    'OPS: Nomad demanded “cooler explosion effects.”',
+    'ALERT: Someone labeled the escape pods “Do Not Touch.”',
+    'COMMS: Hendra’s new call sign: “DJ Mayday.”',
+    'SECURITY: Jeneral challenged AI to arm-wrestle. Lost.',
+    'OPS: Shrike yelled “yeet” before quantum jump. Success.',
+    'MAINT: FloatinTiger trying to invent self-fixing coffee.',
+    'DATA: Freezern added “pls” to code comment. Fixed bug.',
+    'OPS: Nomad claimed gravity “feels heavier today.”',
+    'ALERT: Reactor glow suspiciously rainbow. Probably fine.',
+    'CARGO: Ricojes wrote poem on shipping label. It rhymes.',
+    'OPS: AshenShrike tested emergency klaxon. Works too well.',
+    'SYSTEM: Update notes simply read “trust us.”',
+    'COMMS: Hendra’s mic caught ghost whispers (or Shrike).',
+    'SECURITY: Jeneral confiscated AI cat. Immediate regret.',
+    'OPS: Nomad inverted flight controls “for immersion.”',
+    'MAINT: FloatinTiger started unionizing the coffee mugs.',
+    'CARGO: Ricojes opened a side business selling labels.',
+    'DATA: Freezern introduced bug called “Jeff.” It stayed.',
+    'OPS: Shrike performed 360 landing. Still counts.',
+    'COMMS: Hendra’s playlist corrupted comm logs.',
+    'ALERT: Someone whispered “boom” into mic. Turrets fired.',
+    'MAINT: FloatinTiger dismantled chair to fix monitor stand.',
+    'OPS: Nomad insists ship AI is flirting. Investigation pending.',
+    'SECURITY: Jeneral chasing space pigeons again.',
+    'SYSTEM: Backup completed at 4% confidence.',
+    'CARGO: Ricojes labeled everything “fragile” out of spite.',
+    'OPS: Shrike wrote inspirational note on reactor casing.',
+    'ALERT: Coffee machine achieved sentience. Demands vacation.',
+    'COMMS: Hendra broadcasting lo-fi beats to relax/repair to.',
+    'OPS: FloatinTiger installed disco lights in maintenance bay.',
+    'DATA: Freezern optimized manifest. Deleted everything.',
+    'OPS: Nomad applied for leave to chase “space rumor.”',
+    'SECURITY: Jeneral slept through alert. Dreams classified.',
+    'MAINT: Shrike used duct tape “creatively.” Holds... for now.',
+    'OPS: Hendra autographed cargo containers. Why? Yes.',
+    'CARGO: Ricojes claims crates rearranged themselves.',
+    'SYSTEM: New day. Same chaos. Carry on, JMBN.'
+  ];
 
-let i=0;let playing=sessionStorage.getItem('opsPlay')!=='0';let timer=null;
-function render(){msg.textContent=lines[i];pause.textContent=playing?'Pause':'Play';}
-function nxt(){i=(i+1)%lines.length;render();}
-function prv(){i=(i-1+lines.length)%lines.length;render();}
-function start(){if(timer)return;playing=true;sessionStorage.setItem('opsPlay','1');timer=setInterval(nxt,4000);render();}
-function stop(){playing=false;sessionStorage.setItem('opsPlay','0');clearInterval(timer);timer=null;render();}
-next.onclick=()=>{stop();nxt();};
-prev.onclick=()=>{stop();prv();};
-pause.onclick=()=>playing?stop():start();
-close.onclick=()=>{el.style.display='none';sessionStorage.setItem('opsClosed','1');};
-if(sessionStorage.getItem('opsClosed')==='1'){el.style.display='none';return;}
-playing?start():(stop(),render());
+  let i = 0, timer = null, playing = true;
+
+  function setTextFade(nextText){
+    msg.style.opacity = 0;
+    setTimeout(()=>{
+      msg.textContent = nextText;
+      msg.style.opacity = 1;
+    }, 200);
+  }
+
+  function render(){ setTextFade(lines[i]); pause.textContent = playing ? 'Pause' : 'Play'; }
+  function nextLine(){ i = (i + 1) % lines.length; render(); }
+  function prevLine(){ i = (i - 1 + lines.length) % lines.length; render(); }
+
+  function startLoop(){
+    if (timer) return;
+    playing = true;
+    timer = setInterval(nextLine, 4000);
+    render();
+  }
+  function stopLoop(){
+    playing = false;
+    clearInterval(timer); timer = null;
+    render();
+  }
+
+  next.onclick = () => { stopLoop(); nextLine(); };
+  prev.onclick = () => { stopLoop(); prevLine(); };
+  pause.onclick = () => playing ? stopLoop() : startLoop();
+  close.onclick = () => { el.style.display = 'none'; sessionStorage.setItem('opsClosed','1'); };
+
+  if (sessionStorage.getItem('opsClosed') === '1') { el.style.display = 'none'; return; }
+  startLoop();
 })();
 </script>
 </body>
