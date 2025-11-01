@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JMBN Hangar</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Theme & Unified Font Scale (matches Manifest) ===== */
+:root{
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--good:#73e39b;--warn:#ffd166;
+  --fs-base:14px;                 /* body text */
+  --fs-small:11px;                /* small labels */
+  --fs-table:13px;                /* inputs/tables */
+  --fs-h1:clamp(18px,2.2vw,22px); /* main header */
+  --fs-h2:clamp(14px,1.6vw,16px); /* section titles */
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Play','Segoe UI',Roboto,Helvetica,Arial,sans-serif;margin:0;padding:20px;letter-spacing:.25px;font-size:var(--fs-base)}
+
+/* ===== Header (logo + title) ===== */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 10px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.brand-logo{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+.nav{display:flex;align-items:center;gap:10px;margin:6px 0 12px}
+.nav a{color:var(--accent);text-decoration:none;font-size:calc(var(--fs-base) + 1px)}
+.nav a::before{content:'←';margin-right:6px}
+.nav .note{color:var(--muted);font-size:var(--fs-small)}
+
+/* ===== Layout ===== */
+.wrap{display:grid;grid-template-columns:1fr 380px;gap:14px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;box-shadow:0 0 10px rgba(214,180,76,.25)}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+
+/* ===== Controls ===== */
+.controls{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:6px 0 10px}
+.controls input,.controls select{background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:7px;color:var(--text);font-size:var(--fs-table);font-family:'Play',sans-serif}
+button{padding:6px 10px;border-radius:4px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:calc(var(--fs-base) - 1px);transition:.2s;font-family:'Play',sans-serif}
+button:hover{background:var(--accent);color:#000}
+.btn-primary{background:var(--accent);color:#000}
+
+/* ===== Grid of ship cards ===== */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:1200px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px}
+
+/* Header row */
+.shipHead{margin-bottom:6px}
+.shipRow{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.shipNameText{color:var(--accent);font-weight:700;font-size:calc(var(--fs-base) + 2px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tags-inline{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;white-space:nowrap}
+.badge-role{border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:var(--fs-small);color:var(--muted)}
+.badge-best{border:1px solid var(--accent);border-radius:6px;padding:2px 8px;font-size:var(--fs-small);color:var(--bg);background:var(--accent);font-weight:700;box-shadow:0 0 6px rgba(242,214,117,.35)}
+
+.specs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:6px 0}
+.spec{background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:6px;text-align:center}
+.spec .k{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.spec .v{font-weight:700}
+.proscons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.proscons ul{margin:4px 0 0 16px;padding:0}
+.small{font-size:var(--fs-small);color:var(--muted)}
+.rightSticky{position:sticky;top:16px;height:fit-content;align-self:start}
+label{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;color:var(--muted);font-size:var(--fs-table)}
+input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:4px;padding:7px;color:var(--text);font-size:var(--fs-table);font-family:'Play',sans-serif}
+textarea{min-height:64px;resize:vertical}
+hr{border:none;border-top:1px solid var(--border);opacity:.6;margin:10px 0}
+
+/* Compare (optional) */
+.compareBar{position:sticky;bottom:10px;z-index:5;display:flex;gap:8px;align-items:center;justify-content:space-between;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:8px 10px;box-shadow:0 0 12px rgba(214,180,76,.25)}
+.compareSel{display:flex;gap:6px;flex-wrap:wrap}
+.selTag{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:var(--fs-small)}
+.modalBack{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{width:min(960px,94vw);background:#0b0b0b;border:1px solid var(--border);border-radius:10px;padding:14px;box-shadow:0 0 18px rgba(214,180,76,.3)}
+.modal h3{margin:0 0 10px;color:var(--accent);font-size:var(--fs-h2)}
+.modal table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
+.modal th,.modal td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
+.modal .close{float:right}
+.checkWrap{display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+  <div class="brand">
+    <img src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN" class="brand-logo">
+    <h1>JMBN Fleet / Ship Hangar</h1>
+  </div>
+
+  <div class="nav">
+    <a href="index.html">Go To Contracts Manifest</a>
+	<a href="components.html">Go To Components</a>
+    <span class="note">All data here is editable and saved locally (browser-only). Use Export/Import to move it.</span>
+  </div>
+
+  <div class="wrap">
+    <!-- LEFT: list & controls -->
+    <div class="panel">
+      <h2 style="margin:0 0 6px;color:var(--accent);font-size:var(--fs-h2)">Fleet</h2>
+      <div class="controls">
+        <input id="q" placeholder="Search ship or role… (e.g., Taurus, Heavy Haul)">
+        <select id="role">
+          <option value="">All roles</option>
+          <option>Heavy Haul</option>
+          <option>Medium Haul</option>
+          <option>Solo/Starter</option>
+          <option>Specialty</option>
+        </select>
+        <select id="tractor">
+          <option value="">Tractor beam: Any</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="Planned/Check">Planned/Check</option>
+        </select>
+        <select id="reco">
+          <option value="">Recommendations: Any</option>
+          <option value="solo">Best Solo</option>
+          <option value="budget">Best Budget</option>
+          <option value="heavy">Best Heavy</option>
+          <option value="medium">Best Medium</option>
+        </select>
+        <select id="sort">
+          <option value="-scu">SCU (high → low)</option>
+          <option value="scu">SCU (low → high)</option>
+          <option value="-crew">Crew (high → low)</option>
+          <option value="crew">Crew (low → high)</option>
+          <option value="name">Name (A→Z)</option>
+        </select>
+      </div>
+
+      <div class="grid" id="grid"></div>
+
+      <div class="compareBar" id="cmpBar" style="display:none; margin-top:12px">
+        <div class="compareSel" id="cmpSel"></div>
+        <div style="display:flex; gap:6px">
+          <button id="btnCompare" class="btn-primary" disabled>Compare (0)</button>
+          <button id="btnClearSel">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Add/Edit (NO native form here) -->
+    <div class="panel rightSticky" id="formPanel">
+      <h2 style="margin:0 0 6px;color:var(--accent);font-size:var(--fs-h2)">Add / Edit Ship</h2>
+      <div id="form" role="form" aria-label="Add or Edit Ship" autocomplete="off">
+        <input type="hidden" id="key"><!-- internal unique key -->
+        <label>Ship Name<input id="name" required></label>
+        <label>Role
+          <select id="srole">
+            <option value="">-- select --</option>
+            <option>Heavy Haul</option>
+            <option>Medium Haul</option>
+            <option>Solo/Starter</option>
+            <option>Specialty</option>
+          </select>
+        </label>
+        <label>SCU Capacity<input id="scu" type="number" step="1" placeholder="e.g., 696"></label>
+        <label>Crew (min–opt)<input id="crew" placeholder="e.g., 1–2 or 2–4"></label>
+        <label>Tractor Beam
+          <select id="stractor">
+            <option value="">-- select --</option>
+            <option>Yes</option>
+            <option>No</option>
+            <option>Planned/Check</option>
+          </select>
+        </label>
+        <label>Manufacturer
+          <select id="smfr">
+            <option value="">-- select --</option>
+            <option>Aegis Dynamics</option>
+            <option>Anvil Aerospace</option>
+            <option>Aopoa</option>
+            <option>Argo Astronautics</option>
+            <option>Banu Souli</option>
+            <option>Consolidated Outland</option>
+            <option>Crusader Industries</option>
+            <option>Drake Interplanetary</option>
+            <option>Esperia Inc.</option>
+            <option>Gatac Manufacture</option>
+            <option>Kruger Intergalactic</option>
+            <option>Musashi Industrial & Starflight Concern</option>
+            <option>Origin Jumpworks GmbH</option>
+            <option>Roberts Space Industries</option>
+          </select>
+        </label>
+        <label>Recommendation (optional)
+          <select id="sreco">
+            <option value="">— none —</option>
+            <option value="solo">Best Solo</option>
+            <option value="budget">Best Budget</option>
+            <option value="heavy">Best Heavy</option>
+            <option value="medium">Best Medium</option>
+          </select>
+        </label>
+        <label>Pros (one per line)<textarea id="pros"></textarea></label>
+        <label>Cons (one per line)<textarea id="cons"></textarea></label>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button type="button" id="save">Save Ship</button>
+          <button type="button" id="reset">Reset</button>
+        </div>
+      </div>
+      <hr>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button id="export">Export JSON</button>
+        <button id="import">Import JSON</button>
+        <button id="clear">Clear All</button>
+        <input type="file" id="file" accept="application/json" style="display:none">
+      </div>
+      <p class="small" style="margin-top:8px">⚠️ Specs shift by patch. Use “Planned/Check” if unsure; update when verified in-game.</p>
+    </div>
+  </div>
+
+  <!-- Compare modal -->
+  <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-label="Compare Ships">
+    <div class="modal">
+      <button class="close" id="closeModal">Close ✕</button>
+      <h3>Compare Ships</h3>
+      <div id="cmpTableWrap"></div>
+    </div>
+  </div>
+
+<script>
+const STORE='jmbn-fleet';
+const $=s=>document.querySelector(s);
+const grid=$('#grid');
+
+/* Known ships → manufacturer (and rough role) */
+const KNOWN_SHIPS = [
+  {name:'Gladius', mfr:'Aegis Dynamics', role:'Solo/Starter'},
+  {name:'Sabre', mfr:'Aegis Dynamics', role:'Solo/Starter'},
+  {name:'Avenger Titan', mfr:'Aegis Dynamics', role:'Solo/Starter'},
+  {name:'Reclaimer', mfr:'Aegis Dynamics', role:'Specialty'},
+  {name:'Carrack', mfr:'Anvil Aerospace', role:'Specialty'},
+  {name:'C8X Pisces', mfr:'Anvil Aerospace', role:'Solo/Starter'},
+  {name:'Hornet F7C', mfr:'Anvil Aerospace', role:'Solo/Starter'},
+  {name:'Khartu-al', mfr:'Aopoa', role:'Specialty'},
+  {name:'Nox', mfr:'Aopoa', role:'Specialty'},
+  {name:'ARGO MOLE', mfr:'Argo Astronautics', role:'Specialty'},
+  {name:'SRV', mfr:'Argo Astronautics', role:'Specialty'},
+  {name:'MPUV Cargo', mfr:'Argo Astronautics', role:'Solo/Starter'},
+  {name:'Banu Merchantman', mfr:'Banu Souli', role:'Heavy Haul'},
+  {name:'Nomad', mfr:'Consolidated Outland', role:'Solo/Starter'},
+  {name:'Mustang Alpha', mfr:'Consolidated Outland', role:'Solo/Starter'},
+  {name:'C2 Hercules', mfr:'Crusader Industries', role:'Heavy Haul'},
+  {name:'M2 Hercules', mfr:'Crusader Industries', role:'Heavy Haul'},
+  {name:'A2 Hercules', mfr:'Crusader Industries', role:'Heavy Haul'},
+  {name:'Mercury Star Runner', mfr:'Crusader Industries', role:'Medium Haul'},
+  {name:'Caterpillar', mfr:'Drake Interplanetary', role:'Heavy Haul'},
+  {name:'Cutlass Black', mfr:'Drake Interplanetary', role:'Solo/Starter'},
+  {name:'Cutlass Blue', mfr:'Drake Interplanetary', role:'Specialty'},
+  {name:'Cutlass Red', mfr:'Drake Interplanetary', role:'Specialty'},
+  {name:'Corsair', mfr:'Drake Interplanetary', role:'Medium Haul'},
+  {name:'Vulture', mfr:'Drake Interplanetary', role:'Specialty'},
+  {name:'Herald', mfr:'Drake Interplanetary', role:'Specialty'},
+  {name:'Prowler', mfr:'Esperia Inc.', role:'Specialty'},
+  {name:'Railen', mfr:'Gatac Manufacture', role:'Medium Haul'},
+  {name:'P-52 Merlin', mfr:'Kruger Intergalactic', role:'Specialty'},
+  {name:'Freelancer', mfr:'Musashi Industrial & Starflight Concern', role:'Medium Haul'},
+  {name:'Freelancer MAX', mfr:'Musashi Industrial & Starflight Concern', role:'Medium Haul'},
+  {name:'Freelancer DUR', mfr:'Musashi Industrial & Starflight Concern', role:'Medium Haul'},
+  {name:'Hull A', mfr:'Musashi Industrial & Starflight Concern', role:'Medium Haul'},
+  {name:'Hull B', mfr:'Musashi Industrial & Starflight Concern', role:'Medium Haul'},
+  {name:'Hull C', mfr:'Musashi Industrial & Starflight Concern', role:'Heavy Haul'},
+  {name:'300i', mfr:'Origin Jumpworks GmbH', role:'Solo/Starter'},
+  {name:'600i', mfr:'Origin Jumpworks GmbH', role:'Specialty'},
+  {name:'890 Jump', mfr:'Origin Jumpworks GmbH', role:'Specialty'},
+  {name:'Aurora MR', mfr:'Roberts Space Industries', role:'Solo/Starter'},
+  {name:'Constellation Taurus', mfr:'Roberts Space Industries', role:'Medium Haul'},
+  {name:'Constellation Andromeda', mfr:'Roberts Space Industries', role:'Specialty'},
+  {name:'Constellation Aquila', mfr:'Roberts Space Industries', role:'Specialty'}
+];
+const NAME_TO_SHIP = new Map();
+KNOWN_SHIPS.forEach(s=>NAME_TO_SHIP.set(s.name.toLowerCase(), s));
+
+/* Seed data */
+let ships = JSON.parse(localStorage.getItem(STORE)||'null') || seed();
+function uid(){ return 'S'+Math.random().toString(36).slice(2,8); }
+
+function seed(){
+  const arr = [
+    makeShip('C2 Hercules', {pros:['Top-tier SCU for price','Wide ramp, easy loading','Great for legal/contract hauling'], cons:['No tractor beam on ship','Big target; needs escort','Longer landing/taxi times'], reco:'heavy', scu:696, crew:'1–2', tractor:'No'}),
+    makeShip('Caterpillar', {scu:576, crew:'1–2', tractor:'Planned/Check', pros:['Segmented cargo bays','Good visibility','Flexible mission use'], cons:['Long frame; awkward pads','Light defenses','Handling can feel sluggish when loaded']}),
+    makeShip('Constellation Taurus', {scu:174, crew:'1–3', tractor:'Planned/Check', pros:['Great mid hauler','Decent firepower','Good for box + pallet mix'], cons:['Needs longer pads','Less nimble than Cutlass/Freelancer','Check tractor status per patch'], reco:'medium'}),
+    makeShip('Freelancer MAX', {scu:122, crew:'1–2', tractor:'No', pros:['Solo-friendly','Compact footprint','Good QT range'], cons:['Narrow ramp angle','Limited interior space','No ship tractor (often)']}),
+    makeShip('Cutlass Black', {scu:46, crew:'1–2', tractor:'Planned/Check', pros:['All-rounder for contracts','Fast on/off-loading','Good availability'], cons:['Lower SCU','Light armor','Tweaked frequently across patches'], reco:'solo'}),
+    makeShip('Nomad', {scu:24, crew:'1', tractor:'No', pros:['Great entry hauler','Open-bed = fast loading','Lands almost anywhere'], cons:['Exposed cargo bed','Lower total SCU','Best for short, safe hops']}),
+    makeShip('SRV', {scu:0, crew:'1', tractor:'Yes', role:'Specialty', pros:['Dedicated tractor tug','Great for rescue/recovery','Pairs well with bigger haulers'], cons:['Not a cargo hauler','Niche role','Team-dependent profits']})
+  ];
+  localStorage.setItem(STORE, JSON.stringify(arr));
+  return arr;
+}
+
+function makeShip(name, extra={}){
+  const base = NAME_TO_SHIP.get((name||'').toLowerCase()) || {};
+  return {
+    key: uid(),
+    name: name || '',
+    role: extra.role || base.role || '',
+    mfr:  base.mfr || extra.mfr || '',
+    scu:  extra.scu ?? 0,
+    crew: extra.crew || '',
+    tractor: extra.tractor || '',
+    reco: extra.reco || '',
+    pros: extra.pros || [],
+    cons: extra.cons || []
+  };
+}
+
+ships.forEach(s=>{ if(!s.key) s.key=uid(); });
+
+function escapeHtml(s=''){
+  const div=document.createElement('div');
+  div.textContent=s;
+  return div.innerHTML;
+}
+function li(list){return (list||[]).map(t=>`<li>${escapeHtml(t)}</li>`).join('');}
+function recLabel(key){return key==='solo'?'Best Solo':key==='budget'?'Best Budget':key==='heavy'?'Best Heavy':key==='medium'?'Best Medium':'Recommended';}
+
+/* Filters */
+['q','role','tractor','reco','sort'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('input',render,{passive:true});
+  el.addEventListener('change',render);
+});
+
+/* Compare (optional) */
+const selected=new Set();
+function wireCompareChecks(){
+  document.querySelectorAll('.cmpCheck').forEach(chk=>{
+    chk.addEventListener('change',e=>{
+      const key=e.target.dataset.key;
+      if(e.target.checked){
+        if(selected.size>=3){ e.target.checked=false; alert('You can compare up to 3 ships.'); return; }
+        selected.add(key);
+      }else{ selected.delete(key); }
+      updateCompareBar();
+    });
+  });
+  updateCompareBar();
+}
+function updateCompareBar(){
+  const bar=$('#cmpBar'); const sel=$('#cmpSel');
+  if(selected.size===0){ bar.style.display='none'; sel.innerHTML=''; $('#btnCompare').disabled=true; $('#btnCompare').textContent='Compare (0)'; return; }
+  bar.style.display='flex';
+  sel.innerHTML=[...selected].map(key=>`<span class="selTag">${escapeHtml(ships.find(x=>x.key===key)?.name||key)}</span>`).join('');
+  $('#btnCompare').disabled = selected.size<2;
+  $('#btnCompare').textContent = `Compare (${selected.size})`;
+}
+$('#btnClearSel').onclick=()=>{selected.clear();render();updateCompareBar();};
+$('#btnCompare').onclick=()=>{
+  const list=[...selected].map(key=>ships.find(x=>x.key===key)).filter(Boolean);
+  const rows=[
+    ['Name',...list.map(s=>escapeHtml(s.name||''))],
+    ['Role',...list.map(s=>escapeHtml(s.role||''))],
+    ['Manufacturer',...list.map(s=>escapeHtml(s.mfr||'—'))],
+    ['SCU',...list.map(s=>s.scu ?? '—')],
+    ['Crew',...list.map(s=>escapeHtml(s.crew||''))],
+    ['Tractor',...list.map(s=>escapeHtml(s.tractor||''))],
+    ['Recommendation',...list.map(s=>s.reco?recLabel(s.reco):'—')],
+    ['Pros',...list.map(s=>`<ul style="margin:0 0 0 18px">${li(s.pros)}</ul>`)],
+    ['Cons',...list.map(s=>`<ul style="margin:0 0 0 18px">${li(s.cons)}</ul>`)]
+  ];
+  let html=`<table><thead><tr><th>Spec</th>${'<th>Ship</th>'.repeat(list.length)}</tr></thead><tbody>`;
+  for(const r of rows){ html+=`<tr><td style="color:var(--muted);font-weight:700">${r[0]}</td>${r.slice(1).map(v=>`<td>${v}</td>`).join('')}</tr>`; }
+  html+=`</tbody></table>`;
+  document.getElementById('cmpTableWrap').innerHTML=html;
+  document.getElementById('modalBack').style.display='flex';
+};
+document.getElementById('closeModal').onclick=()=>document.getElementById('modalBack').style.display='none';
+document.getElementById('modalBack').addEventListener('click',e=>{if(e.target.id==='modalBack') document.getElementById('modalBack').style.display='none';});
+
+/* Auto-fill manufacturer/role from Ship Name */
+const smfr = document.getElementById('smfr');
+const sname= document.getElementById('name');
+const srole= document.getElementById('srole');
+
+sname.addEventListener('change', autoFillByName);
+sname.addEventListener('blur', autoFillByName);
+function autoFillByName(){
+  const nm=(sname.value||'').trim().toLowerCase();
+  if(!nm) return;
+  let hit=NAME_TO_SHIP.get(nm);
+  if(!hit){
+    for(const [k,v] of NAME_TO_SHIP){
+      if(k.startsWith(nm) || nm.startsWith(k)){ hit=v; break; }
+    }
+  }
+  if(hit){
+    smfr.value = hit.mfr || '';
+    if(hit.role && !srole.value) srole.value = hit.role;
+  }
+}
+
+/* ---------- Instant save + Enter-to-save (no native form) ---------- */
+function saveShip(){
+  const sh={
+    key: document.getElementById('key').value || uid(),
+    name: sname.value.trim(),
+    role: srole.value,
+    scu: +document.getElementById('scu').value||0,
+    crew: document.getElementById('crew').value.trim(),
+    tractor: document.getElementById('stractor').value||'',
+    mfr: smfr.value || '',
+    reco: document.getElementById('sreco').value || '',
+    pros:(document.getElementById('pros').value||'').split('\n').map(s=>s.trim()).filter(Boolean),
+    cons:(document.getElementById('cons').value||'').split('\n').map(s=>s.trim()).filter(Boolean)
+  };
+  if(!sh.name){ alert('Ship name required'); return; }
+  const i=ships.findIndex(x=>x.key===sh.key);
+  if(i>=0) ships[i]=sh; else ships.push(sh);
+  localStorage.setItem(STORE,JSON.stringify(ships));
+
+  clearForm();
+  render();
+  sname.focus();
+}
+
+function clearForm(){
+  document.getElementById('key').value='';
+  ['name','srole','scu','crew','stractor','smfr','sreco','pros','cons'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    if(el.tagName==='SELECT'){ el.value=''; }
+    else if(el.tagName==='TEXTAREA' || el.tagName==='INPUT'){ el.value=''; }
+  });
+}
+
+document.getElementById('save').addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); saveShip(); });
+document.getElementById('reset').addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); clearForm(); sname.focus(); });
+
+document.getElementById('formPanel').addEventListener('keydown', (e)=>{
+  const tag=(e.target.tagName||'').toUpperCase();
+  if(e.key==='Enter' && tag!=='TEXTAREA'){
+    e.preventDefault(); e.stopPropagation();
+    saveShip();
+  }
+});
+
+/* Export/Import/Clear */
+function download(filename,text){const blob=new Blob([text],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);} 
+document.getElementById('export').onclick=()=>{const ts=new Date().toISOString().replace(/[:.]/g,'-');download(`jmbn-fleet-${ts}.json`,JSON.stringify(ships,null,2));};
+document.getElementById('import').onclick=()=>document.getElementById('file').click();
+document.getElementById('file').addEventListener('change',e=>{
+  const f=e.target.files?.[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      let data=JSON.parse(r.result);
+      if(!Array.isArray(data)) throw new Error('Invalid JSON (expected an array).');
+      data = data.map(x=>{ const y={...x}; if(!y.key) y.key=uid(); return y; });
+      const merge=confirm('Merge with existing fleet? Click "Cancel" to REPLACE.');
+      ships = merge ? mergeByKey(ships,data) : data;
+      localStorage.setItem(STORE,JSON.stringify(ships));
+      render(); alert('Import complete.');
+    }catch(err){ alert('Import failed: '+err.message); }
+    e.target.value='';
+  };
+  r.readAsText(f);
+});
+function mergeByKey(a,b){const map=new Map(a.map(x=>[x.key,x]));for(const x of b){map.set(x.key,x);}return Array.from(map.values());}
+document.getElementById('clear').onclick=()=>{if(!confirm('Delete ALL ships from local storage?'))return;ships=[];localStorage.setItem(STORE,JSON.stringify(ships));selected.clear();render();updateCompareBar();};
+
+/* Render & grid actions */
+grid.addEventListener('click',e=>{
+  const btn=e.target.closest('button'); if(!btn) return;
+  const key=btn.dataset.key; const act=btn.dataset.act;
+  const s=ships.find(x=>x.key===key); if(!s) return;
+  if(act==='edit'){
+    document.getElementById('key').value=s.key;
+    sname.value=s.name||'';
+    srole.value=s.role||'';
+    document.getElementById('scu').value=s.scu||'';
+    document.getElementById('crew').value=s.crew||'';
+    document.getElementById('stractor').value=s.tractor||'';
+    document.getElementById('sreco').value=s.reco||'';
+    smfr.value=s.mfr||'';
+    document.getElementById('pros').value=(s.pros||[]).join('\n');
+    document.getElementById('cons').value=(s.cons||[]).join('\n');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  if(act==='del'){
+    if(confirm('Delete this ship?')){
+      ships=ships.filter(x=>x.key!==key);
+      localStorage.setItem(STORE,JSON.stringify(ships));
+      selected.delete(key);
+      render(); updateCompareBar();
+    }
+  }
+});
+
+function render(){
+  const q=($('#q')?.value||'').toLowerCase();
+  const role=$('#role')?.value||'';
+  const tractor=$('#tractor')?.value||'';
+  const reco=$('#reco')?.value||'';
+  const sort=$('#sort')?.value||'-scu';
+
+  let arr=ships.slice();
+  if(q) arr=arr.filter(s=>`${s.name} ${s.role} ${s.mfr}`.toLowerCase().includes(q));
+  if(role) arr=arr.filter(s=>s.role===role);
+  if(tractor) arr=arr.filter(s=>(s.tractor||'')===tractor);
+  if(reco) arr=arr.filter(s=>(s.reco||'')===reco);
+  switch(sort){
+    case 'name': arr.sort((a,b)=>a.name.localeCompare(b.name)); break;
+    case 'scu': arr.sort((a,b)=>(+a.scu||0)-(+b.scu||0)); break;
+    case '-scu': arr.sort((a,b)=>(+b.scu||0)-(+a.scu||0)); break;
+    case 'crew': arr.sort((a,b)=>(parseInt(a.crew)||0)-(parseInt(b.crew)||0)); break;
+    case '-crew': arr.sort((a,b)=>(parseInt(b.crew)||0)-(parseInt(a.crew)||0)); break;
+  }
+
+  grid.innerHTML='';
+  for(const s of arr){
+    const el=document.createElement('div'); el.className='card';
+    const checked = selected.has(s.key) ? 'checked' : '';
+    el.innerHTML=`
+      <div class="shipHead">
+        <div class="shipRow">
+          <div class="shipNameText">${escapeHtml(s.name)}</div>
+          <span class="tags-inline">
+            ${s.reco?`<span class="badge-best">${recLabel(s.reco)}</span>`:''}
+            ${s.role?`<span class="badge-role">${escapeHtml(s.role)}</span>`:''}
+          </span>
+        </div>
+      </div>
+      <div class="specs">
+        <div class="spec"><span class="k">SCU</span><span class="v">${s.scu??'—'}</span></div>
+        <div class="spec"><span class="k">Crew</span><span class="v">${escapeHtml(s.crew||'—')}</span></div>
+        <div class="spec"><span class="k">Tractor</span><span class="v">${escapeHtml(s.tractor||'—')}</span></div>
+        <div class="spec"><span class="k">Manufacturer</span><span class="v">${escapeHtml(s.mfr||'—')}</span></div>
+      </div>
+      <div class="proscons">
+        <div><div class="small" style="font-weight:700">Pros</div><ul>${li(s.pros)}</ul></div>
+        <div><div class="small" style="font-weight:700">Cons</div><ul>${li(s.cons)}</ul></div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div class="checkWrap">
+          <input type="checkbox" data-key="${s.key}" class="cmpCheck" ${checked}>
+          <label class="small" style="margin:0">Compare</label>
+        </div>
+        <button data-act="edit" data-key="${s.key}">Edit</button>
+        <button data-act="del" data-key="${s.key}">Delete</button>
+      </div>
+    `;
+    grid.appendChild(el);
+  }
+  wireCompareChecks();
+}
+
+render();
+</script>
+</body>
+</html>
