@@ -4,10 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JMBN Hangar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" href="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+
 <style>
 :root{
   --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
@@ -175,6 +173,16 @@ textarea{min-height:70px;resize:vertical}
 .lo-pick-list{max-height:56vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
 .lo-pi{border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px;display:grid;grid-template-columns:1fr auto;gap:8px}
 .lo-meta{font-size:12px;color:#c9b06a}
+
+/* === Edit Modal (numbers + note) === */
+.em-back{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1200}
+.em-card{width:min(560px,94vw);background:#0b0b0b;border:1px solid var(--border);border-radius:12px;
+  box-shadow:0 0 22px rgba(214,180,76,.28), inset 0 0 0 1px rgba(214,180,76,.12);padding:12px}
+.em-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.em-title{font-weight:800;color:var(--accent)}
+.em-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){.em-grid{grid-template-columns:1fr}}
+.em-row{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
 </style>
 </head>
 
@@ -220,6 +228,12 @@ textarea{min-height:70px;resize:vertical}
       <div class="block">
         <input type="hidden" id="key">
 
+        <!-- NEW: Ship picker fed by data.html -->
+        <label>
+          Pick from Ship Data
+          <select id="shipPick"></select>
+        </label>
+
         <label>Ship Name <input id="name" placeholder="e.g., Cutlass Black" required></label>
 
         <label>Manufacturer
@@ -257,6 +271,11 @@ textarea{min-height:70px;resize:vertical}
           </label>
         </div>
 
+        <!-- NEW: Note stored on ship and shown on card -->
+        <label>Note
+          <textarea id="note" placeholder="Quick note shown on the card"></textarea>
+        </label>
+
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
           <button id="save" class="btn-primary">Save Ship</button>
           <button id="reset">Reset</button>
@@ -268,6 +287,35 @@ textarea{min-height:70px;resize:vertical}
           <button id="seed">Seed Demo Ships</button>
           <button id="clearAll" style="border-color:var(--bad);color:var(--bad)">Clear Hangar</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === Edit (numbers + note) Modal === -->
+  <div class="em-back" id="emBack">
+    <div class="em-card">
+      <div class="em-head">
+        <div class="em-title" id="emTitle">Edit</div>
+        <button class="lo-btn" id="emClose">✕</button>
+      </div>
+      <input type="hidden" id="emKey">
+      <div class="em-grid">
+        <label>SCU <input id="emSCU" type="number" min="0" placeholder="e.g., 46"></label>
+        <label>Tractor
+          <select id="emTractor"><option value=""></option><option>Yes</option><option>No</option><option>Planned</option></select>
+        </label>
+        <label>Pilot Weapons
+          <select id="emPilot"><option value=""></option><option>Yes</option><option>No</option></select>
+        </label>
+        <label>Medical Bay
+          <select id="emMed"><option value=""></option><option>Yes</option><option>No</option></select>
+        </label>
+      </div>
+      <label style="display:block;margin-top:8px">Note
+        <textarea id="emNote" class="lo-text" placeholder="Card note…"></textarea>
+      </label>
+      <div class="em-row">
+        <button class="lo-btn primary" id="emSave">Save</button>
       </div>
     </div>
   </div>
@@ -384,7 +432,9 @@ persist(); render();
 /* ===== Editor ===== */
 const f={ key:$('#key'), name:$('#name'), mfr:$('#mfr'), role:$('#role'), size:$('#size'), pilot:$('#pilot'), med:$('#med'),
           scu:$('#scu'), tractor:$('#tractor'),
-          save:$('#save'), reset:$('#reset'), del:$('#del') };
+          save:$('#save'), reset:$('#reset'), del:$('#del'),
+          note:$('#note') /* NEW */
+        };
 
 f.save.onclick=()=>{
   const key=f.key.value||uid();
@@ -398,6 +448,7 @@ f.save.onclick=()=>{
     med:f.med.value,
     scu: f.scu.value ? Number(f.scu.value) : null,
     tractor: f.tractor.value,
+    note: (f.note.value||'').trim(),        /* NEW */
     selected: (hangar.find(x=>x.key===key)?.selected)===true
   };
   if(!s.name){ alert('Ship name required'); return; }
@@ -417,30 +468,32 @@ function fillForm(s){
   f.role.value=s.role||''; f.size.value=s.size||'';
   f.pilot.value=s.pilot||''; f.med.value=s.med||'';
   f.scu.value=(s.scu??''); f.tractor.value=s.tractor||'';
+  f.note.value=s.note||''; /* NEW */
 }
 function clearForm(){
   f.key.value=''; f.name.value=''; f.mfr.value='';
   f.role.value=''; f.size.value='';
   f.pilot.value=''; f.med.value='';
   f.scu.value=''; f.tractor.value='';
+  f.note.value=''; /* NEW */
 }
 
 /* ===== Seed / Clear / Import / Export ===== */
 $('#seed').onclick=()=>{
   if(!confirm('Add demo ships?')) return;
   const demo=[
-    s('Cutlass Black','Drake Interplanetary','Cargo','Small','Yes','No',46,'Yes'),
-    s('Carrack','Anvil Aerospace','Exploration','Large','No','Yes',456,'Planned'),
-    s('Constellation Taurus','Roberts Space Industries','Cargo','Medium','Yes','No',174,'No'),
-    s('Freelancer MAX','Musashi Industrial & Starflight Concern','Cargo','Medium','Yes','No',122,'Yes'),
-    s('C2 Hercules','Crusader Industries','Cargo','Large','No','No',696,'No'),
-    s('Cutlass Red','Drake Interplanetary','Medical','Small','Yes','Yes',34,'Yes'),
+    s('Cutlass Black','Drake Interplanetary','Cargo','Small','Yes','No',46,'Yes','Starter hauler w/ tractor'),
+    s('Carrack','Anvil Aerospace','Exploration','Large','No','Yes',456,'Planned','Big expedition platform'),
+    s('Constellation Taurus','Roberts Space Industries','Cargo','Medium','Yes','No',174,'No','Bulk mid-size cargo'),
+    s('Freelancer MAX','Musashi Industrial & Starflight Concern','Cargo','Medium','Yes','No',122,'Yes','Solid solo hauler'),
+    s('C2 Hercules','Crusader Industries','Cargo','Large','No','No',696,'No','Massive box mover'),
+    s('Cutlass Red','Drake Interplanetary','Medical','Small','Yes','Yes',34,'Yes','Field med + tractor')
   ];
   for(const x of demo){ if(!hangar.some(h=>h.name.toLowerCase()===x.name.toLowerCase())) hangar.push(x); }
   persist(); render();
 };
-function s(name,mfr,role,size,pilot,med,scu,tractor){
-  return { key:uid(), name, mfr, role, size, pilot, med, scu, tractor, selected:false };
+function s(name,mfr,role,size,pilot,med,scu,tractor,note){
+  return { key:uid(), name, mfr, role, size, pilot, med, scu, tractor, note:note||'', selected:false };
 }
 
 $('#clearAll').onclick=()=>{ if(!confirm('Delete ALL hangar items?')) return; hangar=[]; persist(); render(); clearForm(); };
@@ -474,7 +527,7 @@ list.addEventListener('click',(e)=>{
   const b=e.target.closest('button'); if(!b) return;
   const {act, key} = b.dataset;
   const it=hangar.find(x=>x.key===key); if(!it) return;
-  if(act==='edit'){ fillForm(it); window.scrollTo({top:0,behavior:'smooth'}); }
+  if(act==='edit'){ openEditModal(it); return; } /* NEW: open popup */
   if(act==='del'){ if(confirm('Delete this ship?')){ hangar=hangar.filter(x=>x.key!==key); persist(); render(); } }
   if(act==='sel'){ it.selected=!it.selected; persist(); render(); }
   if(act==='lo'){ openLoadoutModal(it.name, it.mfr); }
@@ -519,6 +572,7 @@ function row(it){
         <button data-act="edit" data-key="${it.key}">Edit</button>
         <button data-act="del"  data-key="${it.key}" class="delete">Delete</button>
       </div>
+      ${it.note?`<div style="grid-column:1/-1;color:#c9b06a;font-size:12px;margin-top:4px">📝 ${esc(it.note)}</div>`:''}
     </div>`;
 }
 function persist(){ localStorage.setItem(HANGAR_KEY, JSON.stringify(hangar)); syncSelectedNames(); }
@@ -526,6 +580,103 @@ function syncSelectedNames(){
   const names = hangar.filter(x=>x.selected).map(x=>x.name).filter(Boolean);
   localStorage.setItem(HANGAR_SEL, JSON.stringify(names));
 }
+
+/* === Edit Modal Logic === */
+const emBack = document.getElementById('emBack');
+const em = {
+  key: $('#emKey'),
+  title: $('#emTitle'),
+  scu: $('#emSCU'),
+  tractor: $('#emTractor'),
+  pilot: $('#emPilot'),
+  med: $('#emMed'),
+  note: $('#emNote'),
+  save: $('#emSave'),
+  close: $('#emClose')
+};
+function openEditModal(it){
+  em.key.value = it.key;
+  em.title.textContent = `Edit: ${it.name}`;
+  em.scu.value = (it.scu ?? '');
+  em.tractor.value = it.tractor || '';
+  em.pilot.value = it.pilot || '';
+  em.med.value = it.med || '';
+  em.note.value = it.note || '';
+  emBack.style.display='flex';
+}
+function closeEditModal(){ emBack.style.display='none'; }
+em.close.onclick = closeEditModal;
+emBack.addEventListener('click', e=>{ if(e.target===emBack) closeEditModal(); });
+em.save.onclick = ()=>{
+  const key = em.key.value;
+  const i = hangar.findIndex(x=>x.key===key);
+  if(i<0) return;
+  hangar[i] = {
+    ...hangar[i],
+    scu: em.scu.value ? Number(em.scu.value) : null,
+    tractor: em.tractor.value,
+    pilot: em.pilot.value,
+    med: em.med.value,
+    note: (em.note.value||'').trim()
+  };
+  persist(); render(); closeEditModal();
+};
+
+/* === Ship Catalog from data.html (for dropdown autofill) === */
+let catalog = [];
+async function loadCatalog(){
+  try{
+    const res = await fetch('data.html', {cache:'no-cache'});
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const raw = doc.querySelector('#shipsData')?.textContent || '[]';
+    catalog = JSON.parse(raw);
+  }catch(e){ console.warn('Catalog load failed:', e); catalog = []; }
+  buildShipPick();
+}
+function buildShipPick(){
+  const pick = document.getElementById('shipPick');
+  if(!pick) return;
+  if(!catalog.length){ pick.innerHTML = '<option>No data found (data.html)</option>'; return; }
+  const opts = ['<option value="">— Pick a ship —</option>']
+    .concat(catalog.map(s=>`<option value="${s.name}">${s.name} — ${s.manufacturer}</option>`));
+  pick.innerHTML = opts.join('');
+}
+document.getElementById('shipPick')?.addEventListener('change', e=>{
+  const name = e.target.value;
+  const s = catalog.find(x=>x.name===name);
+  if(!s) return;
+  // Autofill editor
+  f.name.value = s.name || '';
+
+  // Manufacturer match: exact, or contains/contained
+  const mfrOpts = Array.from(f.mfr.options);
+  let mVal = '';
+  const exact = mfrOpts.find(o=>o.text.trim().toLowerCase()===String(s.manufacturer||'').trim().toLowerCase());
+  if(exact) mVal = exact.value;
+  else{
+    const loose = mfrOpts.find(o=>{
+      const a=o.text.toLowerCase(), b=String(s.manufacturer||'').toLowerCase();
+      return a.includes(b) || b.includes(a);
+    });
+    if(loose) mVal = loose.value;
+  }
+  f.mfr.value = mVal;
+
+  // Role/Size mapping to your options
+  const roleGuess = (s.role||'').match(/medical|stealth|combat|cargo|exploration|capital|support|salvage/i)?.[0] || '';
+  f.role.value = roleGuess ? roleGuess[0].toUpperCase()+roleGuess.slice(1).toLowerCase() : '';
+  const sizeMap = {snub:'Solo', small:'Small', medium:'Medium', large:'Large', capital:'Capital'};
+  const sizeGuess = sizeMap[(s.size||'').toLowerCase()] || '';
+  f.size.value = sizeGuess;
+
+  f.med.value = (s.med_bay||'').match(/yes/i)?'Yes':(s.med_bay||'').match(/no/i)?'No':'';
+  f.tractor.value = (s.tractor_beam||'');
+  // SCU as number if numeric
+  const n = Number(s.scu);
+  f.scu.value = Number.isFinite(n) ? n : '';
+});
+loadCatalog();
 
 /* ===== Loadout modal logic (shared with Loadouts page) ===== */
 let loData = JSON.parse(localStorage.getItem(LOADOUT_KEY)||'[]');
@@ -567,7 +718,7 @@ function openLoadoutModal(shipName, mfr=''){
 function closeLoadoutModal(){ loBackdrop.style.display='none'; }
 
 function renderCompList(){
-  const arr=currentShip.components||[];
+  const arr=currentShip?.components||[];
   if(!arr.length){ loList.innerHTML=`<div class="lo-empty">No components yet — use <b>Add Component</b> or the picker.</div>`; return; }
   loList.innerHTML=arr.map((c,i)=>`
     <div class="lo-row">
