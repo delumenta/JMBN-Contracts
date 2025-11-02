@@ -10,7 +10,7 @@
 :root{
   --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
   --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.7vw,16px)
 }
 *{box-sizing:border-box}
 body{
@@ -18,16 +18,16 @@ body{
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text); font-family:'Play','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base)
+  color:var(--text);font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base)
 }
 
-/* === Brand === */
+/* Brand */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
 
-/* === Shiny Button Nav (light-gold text) === */
+/* Nav */
 .nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
@@ -35,121 +35,56 @@ body{
   padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
   background:linear-gradient(180deg,#0c0c0c,#060606);
   color:var(--accent);text-decoration:none;font-weight:700;
-  letter-spacing:.2px;box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
   transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
 }
-.nav-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
-  background:linear-gradient(180deg,#1a1a1a,#0a0a0a);
-  color:var(--accent);
-}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);}
 .nav-btn.active{
-  color:#000;
-  background:
-    radial-gradient(120% 120% at 80% -20%, rgba(255,255,255,.32), rgba(255,255,255,0) 40%),
-    linear-gradient(180deg,var(--gold),var(--gold2));
-  border-color:var(--ring);
-  box-shadow:
-    0 0 20px rgba(214,180,76,.45),
-    inset 0 1px 0 rgba(255,255,255,.25),
-    inset 0 -1px 0 rgba(0,0,0,.12);
-}
-.nav-btn.active::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.32) 50%,rgba(255,255,255,0) 70%);
-  border-radius:inherit;transform:translateX(-120%);
-  animation:shine 2.8s ease-in-out infinite;pointer-events:none;
-}
-@keyframes shine{
-  0%{transform:translateX(-120%);}
-  35%{transform:translateX(120%);}
-  100%{transform:translateX(120%);}
+  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
 }
 
-/* === Layout === */
+/* Layout */
 .wrap{display:grid;grid-template-columns:minmax(640px,1fr) 400px;gap:12px}
-@media (max-width:1060px){.wrap{grid-template-columns:1fr}}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.22), inset 0 0 0 1px rgba(214,180,76,.12)}
+@media(max-width:1060px){.wrap{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.22)}
 .rightSticky{position:sticky;top:12px;height:fit-content}
 
-/* === Controls === */
-/* equal widths for six items (Search, All roles, All sizes, Any selection, Export, Import) */
-.controls{
-  display:grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap:8px;margin:6px 0 8px
-}
-@media(max-width:980px){
-  .controls{grid-template-columns:repeat(2, 1fr)}
-}
-.controls input,.controls select{
-  background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play',sans-serif;width:100%;
-}
-button{
-  padding:9px 10px;border-radius:8px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-size:calc(var(--fs-base) - 1px);transition:.2s;font-family:'Play',sans-serif;width:100%;
-}
+/* Controls */
+.controls{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:6px 0 8px}
+@media(max-width:980px){.controls{grid-template-columns:repeat(2,1fr)}}
+.controls input,.controls select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play';width:100%}
+button{padding:9px 10px;border-radius:8px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-size:calc(var(--fs-base) - 1px);transition:.2s;font-family:'Play';width:100%}
 button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
 
-/* === List === */
+/* List */
 .list{display:flex;flex-direction:column;gap:8px}
 .row{display:grid;grid-template-columns:1.2fr 1fr auto;gap:8px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px}
 @media(max-width:880px){.row{grid-template-columns:1fr;align-items:flex-start}}
-.shipTitle{font-weight:800;color:var(--accent);font-size:16px;line-height:1.1}
+.shipTitle{font-weight:800;color:var(--accent);font-size:16px}
 .shipSub{color:var(--muted);font-size:12px;margin-top:2px}
 .badgebar{display:flex;gap:6px;flex-wrap:wrap}
 .badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--muted);background:#0c0c0c}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.actions button{width:100%;padding:8px 0;border-radius:8px;border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);font-size:12px;cursor:pointer;transition:.2s}
+.actions button:hover{background:var(--accent);color:#000}
+.actions button.delete{border-color:var(--bad);color:var(--bad)}
+.actions button.delete:hover{background:var(--bad);color:#000}
 
-/* === Actions in ONE ROW (4 equal buttons) === */
-.actions{
-  display:grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap:6px;
-}
-.actions button{
-  width:100%;
-  padding:8px 0;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);
-  font-size:12px;
-  cursor:pointer;
-  transition:.2s;
-}
-.actions button:hover{
-  background:var(--accent);
-  color:#000;
-}
-.actions button.btn-primary{
-  background:var(--accent);
-  color:#000;
-}
-.actions button.delete{
-  border-color:var(--bad);
-  color:var(--bad);
-}
-.actions button.delete:hover{
-  background:var(--bad);
-  color:#000;
-}
-
-/* === Editor === */
-.formHead h2{margin:0;color:var(--accent);font-size:var(--fs-h2)}
-.block{background:#0c0c0c;border:1px solid var(--border);border-radius:12px;padding:10px;margin-top:8px}
+/* Editor / form */
 label{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;color:var(--muted);font-size:var(--fs-table)}
-input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play',sans-serif}
+input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
 textarea{min-height:70px;resize:vertical}
 
-/* === LOADOUT MODAL (components-only) === */
+/* Loadout Modal (unchanged features) */
 .lo-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(2px)}
-.lo-modal{width:min(920px,95vw);background:#0b0b0b;border:1px solid var(--border);border-radius:12px;box-shadow:0 0 22px rgba(214,180,76,.28), inset 0 0 0 1px rgba(214,180,76,.12);font-family:'Play',system-ui,sans-serif;color:#f7f1d0}
-.lo-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(214,180,76,.35)}
+.lo-modal{width:min(920px,95vw);background:#0b0b0b;border:1px solid var(--border);border-radius:12px;box-shadow:0 0 22px rgba(214,180,76,.28)}
+.lo-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(214,180,76,.35);color:#f7f1d0}
 .lo-title{font-weight:800;color:#f2d675}
 .lo-body{display:grid;grid-template-columns:1fr 360px;gap:10px;padding:12px}
 @media(max-width:860px){.lo-body{grid-template-columns:1fr}}
-.lo-card{background:#0c0c0c;border:1px solid var(--border);border-radius:10px;padding:10px}
+.lo-card{background:#0c0c0c;border:1px solid var(--border);border-radius:10px;padding:10px;color:#f7f1d0}
 .lo-list{display:flex;flex-direction:column;gap:8px;max-height:56vh;overflow:auto}
 .lo-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:center;background:#0b0b0b;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px}
 @media(max-width:720px){.lo-row{grid-template-columns:1fr}}
@@ -162,10 +97,9 @@ textarea{min-height:70px;resize:vertical}
 .lo-btn{padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:#f7f1d0;border:1px solid var(--border);cursor:pointer}
 .lo-btn:hover{background:#f2d675;color:#000}
 .lo-btn.primary{background:#f2d675;color:#000}
-.lo-tagbar{display:none}
 .lo-empty{border:1px dashed rgba(214,180,76,.5);border-radius:10px;padding:16px;text-align:center;color:#c9b06a}
 
-/* === Mini Picker === */
+/* Mini Components Picker */
 .lo-pick{display:none;position:fixed;inset:0;z-index:1100;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
 .lo-pick-card{width:min(860px,94vw);background:#0b0b0b;border:1px solid var(--border);border-radius:10px;padding:10px}
 .lo-pick-grid{display:grid;grid-template-columns:260px 1fr;gap:10px}
@@ -174,10 +108,9 @@ textarea{min-height:70px;resize:vertical}
 .lo-pi{border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px;display:grid;grid-template-columns:1fr auto;gap:8px}
 .lo-meta{font-size:12px;color:#c9b06a}
 
-/* === Edit Modal (numbers + note) === */
+/* Edit Modal (numbers + note) */
 .em-back{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1200}
-.em-card{width:min(560px,94vw);background:#0b0b0b;border:1px solid var(--border);border-radius:12px;
-  box-shadow:0 0 22px rgba(214,180,76,.28), inset 0 0 0 1px rgba(214,180,76,.12);padding:12px}
+.em-card{width:min(560px,94vw);background:#0b0b0b;border:1px solid var(--border);border-radius:12px;box-shadow:0 0 22px rgba(214,180,76,.28);padding:12px;color:#f7f1d0}
 .em-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .em-title{font-weight:800;color:var(--accent)}
 .em-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -188,7 +121,7 @@ textarea{min-height:70px;resize:vertical}
 
 <body>
   <div class="brand">
-    <img src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN" class="brand-logo">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png" alt="JMBN">
     <h1>JMBN Hangar</h1>
   </div>
 
@@ -197,44 +130,34 @@ textarea{min-height:70px;resize:vertical}
     <a class="nav-btn" href="hangar.html">Hangar</a>
     <a class="nav-btn" href="components.html">Components</a>
     <a class="nav-btn" href="contracts.html">Contracts</a>
-    <!-- Loadouts link removed -->
   </nav>
 
   <div class="wrap">
-    <!-- LEFT: Hangar list -->
+    <!-- LEFT: list -->
     <div class="panel">
       <div class="controls">
-        <input id="q" placeholder="Search ship or mfr… (e.g., Cutlass, RSI)">
-        <select id="fRole">
-          <option value="">All roles</option>
-          <option>Medical</option><option>Stealth</option><option>Combat</option><option>Cargo</option><option>Exploration</option><option>Capital</option><option>Support</option><option>Salvage</option>
-        </select>
-        <select id="fSize">
-          <option value="">All sizes</option>
-          <option>Solo</option><option>Small</option><option>Medium</option><option>Large</option><option>Capital</option>
-        </select>
+        <input id="q" placeholder="Search ship or mfr…">
+        <select id="fRole"><option value="">All roles</option><option>Medical</option><option>Stealth</option><option>Combat</option><option>Cargo</option><option>Exploration</option><option>Capital</option><option>Support</option><option>Salvage</option></select>
+        <select id="fSize"><option value="">All sizes</option><option>Solo</option><option>Small</option><option>Medium</option><option>Large</option><option>Capital</option></select>
         <select id="fSel"><option value="">Any selection</option><option value="1">Selected only</option><option value="0">Unselected only</option></select>
-        <button id="export" title="Export hangar JSON">Export</button>
-        <button id="import" title="Import hangar JSON">Import</button>
+        <button id="export">Export</button>
+        <button id="import">Import</button>
         <input type="file" id="file" accept="application/json" style="display:none">
       </div>
       <div id="list" class="list"></div>
-      <p class="small" style="margin-top:6px;color:#c9b06a">Selected ships are also saved as <code>jmbn-hangar-selected</code> for the Loadouts page.</p>
+      <p class="small" style="margin-top:6px;color:#c9b06a">Selected ships are also saved as <code>jmbn-hangar-selected</code>.</p>
     </div>
 
-    <!-- RIGHT: Editor -->
+    <!-- RIGHT: editor -->
     <div class="panel rightSticky">
-      <div class="formHead"><h2>Add / Edit Ship</h2></div>
       <div class="block">
         <input type="hidden" id="key">
 
-        <!-- NEW: Ship picker fed by data.html -->
-        <label>
-          Pick from Ship Data
+        <label>Pick from Ship Data
           <select id="shipPick"></select>
         </label>
 
-        <label>Ship Name <input id="name" placeholder="e.g., Cutlass Black" required></label>
+        <label>Ship Name <input id="name" required placeholder="e.g., Cutlass Black"></label>
 
         <label>Manufacturer
           <select id="mfr">
@@ -271,7 +194,6 @@ textarea{min-height:70px;resize:vertical}
           </label>
         </div>
 
-        <!-- NEW: Note stored on ship and shown on card -->
         <label>Note
           <textarea id="note" placeholder="Quick note shown on the card"></textarea>
         </label>
@@ -282,6 +204,7 @@ textarea{min-height:70px;resize:vertical}
           <button id="del" style="border-color:var(--bad);color:var(--bad)">Delete</button>
         </div>
       </div>
+
       <div class="block">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button id="seed">Seed Demo Ships</button>
@@ -291,7 +214,7 @@ textarea{min-height:70px;resize:vertical}
     </div>
   </div>
 
-  <!-- === Edit (numbers + note) Modal === -->
+  <!-- Edit (numbers + note) Modal -->
   <div class="em-back" id="emBack">
     <div class="em-card">
       <div class="em-head">
@@ -311,7 +234,7 @@ textarea{min-height:70px;resize:vertical}
           <select id="emMed"><option value=""></option><option>Yes</option><option>No</option></select>
         </label>
       </div>
-      <label style="display:block;margin-top:8px">Note
+      <label>Note
         <textarea id="emNote" class="lo-text" placeholder="Card note…"></textarea>
       </label>
       <div class="em-row">
@@ -320,14 +243,13 @@ textarea{min-height:70px;resize:vertical}
     </div>
   </div>
 
-  <!-- ===== LOADOUT MODAL (components only) ===== -->
+  <!-- ===== LOADOUT MODAL (unchanged feature) ===== -->
   <div class="lo-backdrop" id="loBackdrop" role="dialog" aria-modal="true" aria-label="Edit Loadout">
     <div class="lo-modal">
       <div class="lo-head">
         <div>
           <div class="lo-title" id="loShipTitle">Ship</div>
           <div style="font-size:12px;color:#c9b06a" id="loShipSub"></div>
-          <div class="lo-tagbar" id="loTags"></div>
         </div>
         <div style="display:flex;gap:8px">
           <button class="lo-btn" id="loClose">✕</button>
@@ -335,7 +257,7 @@ textarea{min-height:70px;resize:vertical}
       </div>
 
       <div class="lo-body">
-        <!-- Left: Components on this ship -->
+        <!-- Left: components on this ship -->
         <div class="lo-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
             <strong>Components</strong>
@@ -344,7 +266,7 @@ textarea{min-height:70px;resize:vertical}
           <div id="loList" class="lo-list"></div>
         </div>
 
-        <!-- Right: Component Editor only -->
+        <!-- Right: component editor -->
         <div class="lo-card">
           <div style="margin-bottom:6px"><strong>Component Editor</strong></div>
           <input type="hidden" id="loCompIdx">
@@ -396,6 +318,9 @@ textarea{min-height:70px;resize:vertical}
     </div>
   </div>
 
+  <!-- Inline JSON fallback (optional). Paste ship array here if using file:// -->
+  <script type="application/json" id="shipsDataInline">[]</script>
+
 <script>
 /* === Highlight current nav === */
 (function(){
@@ -403,21 +328,18 @@ textarea{min-height:70px;resize:vertical}
   document.querySelectorAll('.nav-btn').forEach(a=>{
     const href = a.getAttribute('href');
     if (href === here || (here === '' && href === 'index.html')) {
-      a.classList.add('active');
-      a.setAttribute('aria-current','page');
+      a.classList.add('active'); a.setAttribute('aria-current','page');
     }
   });
 })();
 
-/* ===== Hangar storage ===== */
+/* ===== Storage basics ===== */
 const HANGAR_KEY='jmbn-hangar-v1';
 const HANGAR_SEL='jmbn-hangar-selected';
 const LOADOUT_KEY='jmbn-loadouts-v6';
 const $=s=>document.querySelector(s);
-const list=$('#list');
-
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 function uid(){return 'H'+Math.random().toString(36).slice(2,8);}
-function esc(s=''){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
 
 let hangar = JSON.parse(localStorage.getItem(HANGAR_KEY)||'[]');
 persist(); render();
@@ -431,10 +353,8 @@ persist(); render();
 
 /* ===== Editor ===== */
 const f={ key:$('#key'), name:$('#name'), mfr:$('#mfr'), role:$('#role'), size:$('#size'), pilot:$('#pilot'), med:$('#med'),
-          scu:$('#scu'), tractor:$('#tractor'),
-          save:$('#save'), reset:$('#reset'), del:$('#del'),
-          note:$('#note') /* NEW */
-        };
+          scu:$('#scu'), tractor:$('#tractor'), note:$('#note'),
+          save:$('#save'), reset:$('#reset'), del:$('#del')};
 
 f.save.onclick=()=>{
   const key=f.key.value||uid();
@@ -448,7 +368,7 @@ f.save.onclick=()=>{
     med:f.med.value,
     scu: f.scu.value ? Number(f.scu.value) : null,
     tractor: f.tractor.value,
-    note: (f.note.value||'').trim(),        /* NEW */
+    note: (f.note.value||'').trim(),
     selected: (hangar.find(x=>x.key===key)?.selected)===true
   };
   if(!s.name){ alert('Ship name required'); return; }
@@ -468,31 +388,31 @@ function fillForm(s){
   f.role.value=s.role||''; f.size.value=s.size||'';
   f.pilot.value=s.pilot||''; f.med.value=s.med||'';
   f.scu.value=(s.scu??''); f.tractor.value=s.tractor||'';
-  f.note.value=s.note||''; /* NEW */
+  f.note.value=s.note||'';
 }
 function clearForm(){
   f.key.value=''; f.name.value=''; f.mfr.value='';
   f.role.value=''; f.size.value='';
   f.pilot.value=''; f.med.value='';
   f.scu.value=''; f.tractor.value='';
-  f.note.value=''; /* NEW */
+  f.note.value='';
 }
 
 /* ===== Seed / Clear / Import / Export ===== */
 $('#seed').onclick=()=>{
   if(!confirm('Add demo ships?')) return;
   const demo=[
-    s('Cutlass Black','Drake Interplanetary','Cargo','Small','Yes','No',46,'Yes','Starter hauler w/ tractor'),
-    s('Carrack','Anvil Aerospace','Exploration','Large','No','Yes',456,'Planned','Big expedition platform'),
-    s('Constellation Taurus','Roberts Space Industries','Cargo','Medium','Yes','No',174,'No','Bulk mid-size cargo'),
-    s('Freelancer MAX','Musashi Industrial & Starflight Concern','Cargo','Medium','Yes','No',122,'Yes','Solid solo hauler'),
-    s('C2 Hercules','Crusader Industries','Cargo','Large','No','No',696,'No','Massive box mover'),
-    s('Cutlass Red','Drake Interplanetary','Medical','Small','Yes','Yes',34,'Yes','Field med + tractor')
+    makeShip('Cutlass Black','Drake Interplanetary','Cargo','Small','Yes','No',46,'Yes','Starter hauler w/ tractor'),
+    makeShip('Carrack','Anvil Aerospace','Exploration','Large','No','Yes',456,'Planned','Big expedition platform'),
+    makeShip('Constellation Taurus','Roberts Space Industries','Cargo','Medium','Yes','No',174,'No','Bulk mid-size cargo'),
+    makeShip('Freelancer MAX','Musashi Industrial & Starflight Concern','Cargo','Medium','Yes','No',122,'Yes','Solid solo hauler'),
+    makeShip('C2 Hercules','Crusader Industries','Cargo','Large','No','No',696,'No','Massive box mover'),
+    makeShip('Cutlass Red','Drake Interplanetary','Medical','Small','Yes','Yes',34,'Yes','Field med + tractor')
   ];
   for(const x of demo){ if(!hangar.some(h=>h.name.toLowerCase()===x.name.toLowerCase())) hangar.push(x); }
   persist(); render();
 };
-function s(name,mfr,role,size,pilot,med,scu,tractor,note){
+function makeShip(name,mfr,role,size,pilot,med,scu,tractor,note){
   return { key:uid(), name, mfr, role, size, pilot, med, scu, tractor, note:note||'', selected:false };
 }
 
@@ -523,11 +443,12 @@ $('#file').addEventListener('change', e=>{
 });
 
 /* ===== Render list ===== */
+const list=$('#list');
 list.addEventListener('click',(e)=>{
   const b=e.target.closest('button'); if(!b) return;
   const {act, key} = b.dataset;
   const it=hangar.find(x=>x.key===key); if(!it) return;
-  if(act==='edit'){ openEditModal(it); return; } /* NEW: open popup */
+  if(act==='edit'){ openEditModal(it); return; }
   if(act==='del'){ if(confirm('Delete this ship?')){ hangar=hangar.filter(x=>x.key!==key); persist(); render(); } }
   if(act==='sel'){ it.selected=!it.selected; persist(); render(); }
   if(act==='lo'){ openLoadoutModal(it.name, it.mfr); }
@@ -572,7 +493,10 @@ function row(it){
         <button data-act="edit" data-key="${it.key}">Edit</button>
         <button data-act="del"  data-key="${it.key}" class="delete">Delete</button>
       </div>
-      ${it.note?`<div style="grid-column:1/-1;color:#c9b06a;font-size:12px;margin-top:4px">📝 ${esc(it.note)}</div>`:''}
+      ${it.note?`<div style="grid-column:1/-1;font-size:12px;margin-top:4px;display:flex;align-items:flex-start;gap:6px;">
+          <span style="width:6px;height:6px;border-radius:50%;background-color:#f2d675;margin-top:6px;flex-shrink:0;"></span>
+          <span style="color:#c9b06a;white-space:pre-wrap;word-break:break-word;">${esc(it.note)}</span>
+        </div>`:''}
     </div>`;
 }
 function persist(){ localStorage.setItem(HANGAR_KEY, JSON.stringify(hangar)); syncSelectedNames(); }
@@ -622,16 +546,27 @@ em.save.onclick = ()=>{
   persist(); render(); closeEditModal();
 };
 
-/* === Ship Catalog from data.html (for dropdown autofill) === */
+/* === Ship Catalog from data.html (with inline fallback for file://) === */
 let catalog = [];
 async function loadCatalog(){
   try{
+    // 1) Try inline fallback first (works on file://)
+    const inline = document.getElementById('shipsDataInline');
+    if (inline && inline.textContent.trim().length > 2) {
+      catalog = JSON.parse(inline.textContent);
+      buildShipPick();
+      return;
+    }
+    // 2) Fetch data.html (requires http/https)
     const res = await fetch('data.html', {cache:'no-cache'});
     const html = await res.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const raw = doc.querySelector('#shipsData')?.textContent || '[]';
     catalog = JSON.parse(raw);
-  }catch(e){ console.warn('Catalog load failed:', e); catalog = []; }
+  }catch(e){
+    console.warn('Catalog load failed:', e);
+    catalog = [];
+  }
   buildShipPick();
 }
 function buildShipPick(){
@@ -649,7 +584,7 @@ document.getElementById('shipPick')?.addEventListener('change', e=>{
   // Autofill editor
   f.name.value = s.name || '';
 
-  // Manufacturer match: exact, or contains/contained
+  // Manufacturer match: exact or loose
   const mfrOpts = Array.from(f.mfr.options);
   let mVal = '';
   const exact = mfrOpts.find(o=>o.text.trim().toLowerCase()===String(s.manufacturer||'').trim().toLowerCase());
@@ -663,25 +598,21 @@ document.getElementById('shipPick')?.addEventListener('change', e=>{
   }
   f.mfr.value = mVal;
 
-  // Role/Size mapping to your options
+  // Role/Size mapping
   const roleGuess = (s.role||'').match(/medical|stealth|combat|cargo|exploration|capital|support|salvage/i)?.[0] || '';
   f.role.value = roleGuess ? roleGuess[0].toUpperCase()+roleGuess.slice(1).toLowerCase() : '';
   const sizeMap = {snub:'Solo', small:'Small', medium:'Medium', large:'Large', capital:'Capital'};
-  const sizeGuess = sizeMap[(s.size||'').toLowerCase()] || '';
-  f.size.value = sizeGuess;
+  f.size.value = sizeMap[(s.size||'').toLowerCase()] || '';
 
   f.med.value = (s.med_bay||'').match(/yes/i)?'Yes':(s.med_bay||'').match(/no/i)?'No':'';
   f.tractor.value = (s.tractor_beam||'');
-  // SCU as number if numeric
-  const n = Number(s.scu);
-  f.scu.value = Number.isFinite(n) ? n : '';
+  const n = Number(s.scu); f.scu.value = Number.isFinite(n) ? n : '';
 });
 loadCatalog();
 
-/* ===== Loadout modal logic (shared with Loadouts page) ===== */
+/* ===== Loadout Data ===== */
 let loData = JSON.parse(localStorage.getItem(LOADOUT_KEY)||'[]');
 function loPersist(){ localStorage.setItem(LOADOUT_KEY, JSON.stringify(loData)); }
-
 function getShipLoadout(name){
   const n=(name||'').trim();
   let s=loData.find(x=>x.name?.toLowerCase()===n.toLowerCase());
@@ -694,7 +625,7 @@ function saveShipLoadout(s){
   loPersist();
 }
 
-/* Modal DOM refs */
+/* ===== Loadout Modal Logic ===== */
 const loBackdrop=$('#loBackdrop'), loList=$('#loList');
 const fields={
   title:$('#loShipTitle'), sub:$('#loShipSub'),
@@ -763,7 +694,7 @@ document.getElementById('loSaveComp').onclick=()=>{
 };
 document.getElementById('loClearComp').onclick=clearCompForm;
 
-/* ===== Components picker (reads from components.html) ===== */
+/* ===== Components picker (reads from components.html DB saved in localStorage) ===== */
 const pickBack=document.getElementById('loPickBack'),
       pType=document.getElementById('loPType'),
       pSearch=document.getElementById('loPSearch'),
