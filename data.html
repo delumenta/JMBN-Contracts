@@ -61,7 +61,7 @@
         </div>
       </a>
       <div style="flex:1"></div>
-      <span class="pill">data.html</span>
+      <span class="pill">data_all_updated.html</span>
     </div>
   </header>
 
@@ -81,167 +81,1437 @@
   <!-- ===================== Embedded JSON Dataset (Flying Ships Only) ===================== -->
   <script type="application/json" id="shipsData">
 [
-  { "name":"100i","manufacturer":"Origin Jumpworks","role":"Starter / Exploration","size":"Small","scu":"2","med_bay":"No","tractor_beam":"No" },
-  { "name":"125a","manufacturer":"Origin Jumpworks","role":"Starter / Light Fighter","size":"Small","scu":"2","med_bay":"No","tractor_beam":"No" },
-  { "name":"135c","manufacturer":"Origin Jumpworks","role":"Starter / Light Freight","size":"Small","scu":"6","med_bay":"No","tractor_beam":"No" },
-  { "name":"300i","manufacturer":"Origin Jumpworks","role":"Luxury Touring","size":"Small","scu":"4","med_bay":"No","tractor_beam":"No" },
-  { "name":"315p","manufacturer":"Origin Jumpworks","role":"Exploration","size":"Small","scu":"4","med_bay":"No","tractor_beam":"No" },
-  { "name":"325a","manufacturer":"Origin Jumpworks","role":"Light Fighter","size":"Small","scu":"2","med_bay":"No","tractor_beam":"No" },
-  { "name":"350r","manufacturer":"Origin Jumpworks","role":"Racing","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"400i","manufacturer":"Origin Jumpworks","role":"Exploration","size":"Medium","scu":"42","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"600i Explorer","manufacturer":"Origin Jumpworks","role":"Luxury Exploration","size":"Large","scu":"40","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"600i Touring","manufacturer":"Origin Jumpworks","role":"Luxury Touring","size":"Large","scu":"0","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"85X","manufacturer":"Origin Jumpworks","role":"Luxury Shuttle (Snub)","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"890 Jump","manufacturer":"Origin Jumpworks","role":"Luxury Yacht","size":"Capital","scu":"TBD","med_bay":"Yes","tractor_beam":"Planned" },
-
-  { "name":"A1 Spirit","manufacturer":"Crusader Industries","role":"Bomber / Medium Freight","size":"Medium","scu":"64","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"C1 Spirit","manufacturer":"Crusader Industries","role":"Cargo","size":"Medium","scu":"64","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"E1 Spirit","manufacturer":"Crusader Industries","role":"Passenger","size":"Medium","scu":"TBD","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"A2 Hercules","manufacturer":"Crusader Industries","role":"Heavy Bomber / Cargo","size":"Large","scu":"234","med_bay":"No","tractor_beam":"No" },
-  { "name":"C2 Hercules","manufacturer":"Crusader Industries","role":"Heavy Cargo","size":"Large","scu":"696","med_bay":"No","tractor_beam":"No" },
-  { "name":"M2 Hercules","manufacturer":"Crusader Industries","role":"Military Transport","size":"Large","scu":"522","med_bay":"No","tractor_beam":"No" },
-  { "name":"Mercury Star Runner","manufacturer":"Crusader Industries","role":"Data Runner / Light Freight","size":"Medium","scu":"114","med_bay":"No","tractor_beam":"No" },
-  { "name":"Genesis Starliner","manufacturer":"Crusader Industries","role":"Passenger Liner","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Ares Ion","manufacturer":"Crusader Industries","role":"Heavy Fighter (Gun)","size":"Large","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Ares Inferno","manufacturer":"Crusader Industries","role":"Heavy Fighter (Ballistic)","size":"Large","scu":"0","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"Apollo Medivac","manufacturer":"RSI","role":"Medical","size":"Medium","scu":"0","med_bay":"Yes","tractor_beam":"No" },
-  { "name":"Apollo Triage","manufacturer":"RSI","role":"Medical","size":"Medium","scu":"0","med_bay":"Yes","tractor_beam":"No" },
-  { "name":"Aurora CL","manufacturer":"RSI","role":"Cargo","size":"Small","scu":"6","med_bay":"No","tractor_beam":"No" },
-  { "name":"Aurora ES","manufacturer":"RSI","role":"Starter","size":"Small","scu":"3","med_bay":"No","tractor_beam":"No" },
-  { "name":"Aurora LN","manufacturer":"RSI","role":"Light Fighter","size":"Small","scu":"3","med_bay":"No","tractor_beam":"No" },
-  { "name":"Aurora LX","manufacturer":"RSI","role":"Touring","size":"Small","scu":"3","med_bay":"No","tractor_beam":"No" },
-  { "name":"Aurora MR","manufacturer":"RSI","role":"Starter / Cargo","size":"Small","scu":"3","med_bay":"No","tractor_beam":"No" },
-  { "name":"Constellation Andromeda","manufacturer":"RSI","role":"Multi-Role / Freight","size":"Large","scu":"96","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Constellation Aquila","manufacturer":"RSI","role":"Exploration","size":"Large","scu":"96","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Constellation Phoenix","manufacturer":"RSI","role":"Luxury Transport","size":"Large","scu":"40","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Constellation Taurus","manufacturer":"RSI","role":"Cargo","size":"Large","scu":"174","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Mantis","manufacturer":"RSI","role":"Quantum Interdiction","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Orion","manufacturer":"RSI","role":"Heavy Mining","size":"Capital","scu":"TBD","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Perseus","manufacturer":"RSI","role":"Gunship","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Polaris","manufacturer":"RSI","role":"Capital Torpedo Corvette","size":"Capital","scu":"TBD","med_bay":"Yes","tractor_beam":"Planned" },
-  { "name":"Scorpius","manufacturer":"RSI","role":"Heavy Fighter","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Scorpius Antares","manufacturer":"RSI","role":"Heavy Fighter (EMP)","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Zeus Mk II ES","manufacturer":"RSI","role":"Explorer","size":"Small","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Zeus Mk II MR","manufacturer":"RSI","role":"Multi-Role","size":"Small","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Zeus Mk II CL","manufacturer":"RSI","role":"Courier / Light Freight","size":"Small","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Odyssey","manufacturer":"RSI","role":"Exploration (Capital)","size":"Capital","scu":"TBD","med_bay":"Yes","tractor_beam":"Planned" },
-  { "name":"Galaxy","manufacturer":"RSI","role":"Modular Multi-Role","size":"Large","scu":"TBD","med_bay":"Planned","tractor_beam":"Planned" },
-  { "name":"Pisces C8","manufacturer":"RSI","role":"Shuttle / Snub","size":"Small","scu":"4","med_bay":"No","tractor_beam":"No" },
-  { "name":"Pisces C8R","manufacturer":"RSI","role":"Medical Shuttle","size":"Small","scu":"2","med_bay":"Yes","tractor_beam":"No" },
-  { "name":"Pisces C8X","manufacturer":"RSI","role":"Expedition Shuttle","size":"Small","scu":"4","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"Avenger Stalker","manufacturer":"Aegis Dynamics","role":"Bounty Hunter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Avenger Titan","manufacturer":"Aegis Dynamics","role":"Light Cargo","size":"Small","scu":"8","med_bay":"No","tractor_beam":"No" },
-  { "name":"Avenger Warlock","manufacturer":"Aegis Dynamics","role":"EMP Interdictor","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Eclipse","manufacturer":"Aegis Dynamics","role":"Stealth Bomber","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hammerhead","manufacturer":"Aegis Dynamics","role":"Anti-Fighter Corvette","size":"Large","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Idris-P","manufacturer":"Aegis Dynamics","role":"Frigate (Patrol)","size":"Capital","scu":"TBD","med_bay":"Yes","tractor_beam":"Planned" },
-  { "name":"Idris-M","manufacturer":"Aegis Dynamics","role":"Frigate (Military)","size":"Capital","scu":"TBD","med_bay":"Yes","tractor_beam":"Planned" },
-  { "name":"Javelin","manufacturer":"Aegis Dynamics","role":"Destroyer","size":"Capital","scu":"TBD","med_bay":"Yes","tractor_beam":"Planned" },
-  { "name":"Redeemer","manufacturer":"Aegis Dynamics","role":"Gunship","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Reclaimer","manufacturer":"Aegis Dynamics","role":"Industrial Salvage","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Retaliator Bomber","manufacturer":"Aegis Dynamics","role":"Strategic Bomber","size":"Large","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Retaliator Base","manufacturer":"Aegis Dynamics","role":"Modular Platform","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Sabre","manufacturer":"Aegis Dynamics","role":"Stealth Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Sabre Comet","manufacturer":"Aegis Dynamics","role":"Stealth Fighter (Special)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Sabre Raven","manufacturer":"Aegis Dynamics","role":"Stealth Interdictor","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Vanguard Warden","manufacturer":"Aegis Dynamics","role":"Heavy Fighter","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Vanguard Sentinel","manufacturer":"Aegis Dynamics","role":"EWAR / Heavy Fighter","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Vanguard Harbinger","manufacturer":"Aegis Dynamics","role":"Heavy Bomber","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Vanguard Hoplite","manufacturer":"Aegis Dynamics","role":"Dropship","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Nautilus","manufacturer":"Aegis Dynamics","role":"Minelayer","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Vulcan","manufacturer":"Aegis Dynamics","role":"Support (Refuel/Repair/Rear m)","size":"Medium","scu":"TBD","med_bay":"No","tractor_beam":"Planned" },
-
-  { "name":"Arrow","manufacturer":"Anvil Aerospace","role":"Light Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Carrack","manufacturer":"Anvil Aerospace","role":"Exploration","size":"Large","scu":"456","med_bay":"Yes","tractor_beam":"Planned" },
-  { "name":"Gladiator","manufacturer":"Anvil Aerospace","role":"Carrier-Capable Bomber","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Gladius","manufacturer":"Anvil Aerospace","role":"Light Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Gladius Valiant","manufacturer":"Anvil Aerospace","role":"Light Fighter (Special)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hawk","manufacturer":"Anvil Aerospace","role":"Bounty Hunter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hornet F7C","manufacturer":"Anvil Aerospace","role":"Medium Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hornet F7C Ghost","manufacturer":"Anvil Aerospace","role":"Stealth Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hornet F7C Tracker","manufacturer":"Anvil Aerospace","role":"AWACS / Tracker","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Super Hornet F7C-M","manufacturer":"Anvil Aerospace","role":"Multirole Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Super Hornet Heartseeker","manufacturer":"Anvil Aerospace","role":"Multirole Fighter (Special)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hurricane","manufacturer":"Anvil Aerospace","role":"Heavy Fighter (Turret)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Terrapin","manufacturer":"Anvil Aerospace","role":"Recon / Exploration","size":"Small","scu":"2","med_bay":"No","tractor_beam":"No" },
-  { "name":"Valkyrie","manufacturer":"Anvil Aerospace","role":"Dropship","size":"Large","scu":"30","med_bay":"No","tractor_beam":"No" },
-  { "name":"Liberator","manufacturer":"Anvil Aerospace","role":"Light Carrier / Transport","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"Crucible","manufacturer":"Anvil Aerospace","role":"Repair Ship","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"Planned" },
-
-  { "name":"Caterpillar","manufacturer":"Drake Interplanetary","role":"Cargo / Modular","size":"Large","scu":"576","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Corsair","manufacturer":"Drake Interplanetary","role":"Exploration / Combat","size":"Large","scu":"72","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Cutlass Black","manufacturer":"Drake Interplanetary","role":"Multi-Role / Cargo","size":"Medium","scu":"46","med_bay":"No","tractor_beam":"Yes" },
-  { "name":"Cutlass Blue","manufacturer":"Drake Interplanetary","role":"Patrol / Bounty","size":"Medium","scu":"12","med_bay":"No","tractor_beam":"Yes" },
-  { "name":"Cutlass Red","manufacturer":"Drake Interplanetary","role":"Medical","size":"Medium","scu":"34","med_bay":"Yes","tractor_beam":"Yes" },
-  { "name":"Cutlass Steel","manufacturer":"Drake Interplanetary","role":"Dropship / Transport","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Dragonfly Black","manufacturer":"Drake Interplanetary","role":"Space Bike (Snub)","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Dragonfly Yellowjacket","manufacturer":"Drake Interplanetary","role":"Space Bike (Snub)","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Buccaneer","manufacturer":"Drake Interplanetary","role":"Light Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Herald","manufacturer":"Drake Interplanetary","role":"Info Runner","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Kraken","manufacturer":"Drake Interplanetary","role":"Carrier / Mobile Base","size":"Capital","scu":"TBD","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Kraken Privateer","manufacturer":"Drake Interplanetary","role":"Carrier / Retail","size":"Capital","scu":"TBD","med_bay":"No","tractor_beam":"Planned" },
-  { "name":"Vulture","manufacturer":"Drake Interplanetary","role":"Solo Salvage","size":"Small","scu":"12","med_bay":"No","tractor_beam":"No" },
-  { "name":"Cutter","manufacturer":"Drake Interplanetary","role":"Starter / Utility","size":"Small","scu":"10","med_bay":"No","tractor_beam":"No" },
-  { "name":"Cutter Rambler","manufacturer":"Drake Interplanetary","role":"Touring / Utility","size":"Small","scu":"12","med_bay":"No","tractor_beam":"No" },
-  { "name":"Cutter Scout","manufacturer":"Drake Interplanetary","role":"Pathfinder / Recon","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"MPUV Cargo","manufacturer":"Argo Astronautics","role":"Cargo Shuttle","size":"Snub","scu":"4","med_bay":"No","tractor_beam":"No" },
-  { "name":"MPUV Personnel","manufacturer":"Argo Astronautics","role":"Personnel Shuttle","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"RAFT","manufacturer":"Argo Astronautics","role":"Light Cargo","size":"Small","scu":"96","med_bay":"No","tractor_beam":"No" },
-  { "name":"MOLE","manufacturer":"Argo Astronautics","role":"Multi-Crew Mining","size":"Medium","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-  { "name":"SRV","manufacturer":"Argo Astronautics","role":"Tug / Tractor","size":"Small","scu":"0","med_bay":"No","tractor_beam":"Yes" },
-
-  { "name":"Freelancer","manufacturer":"MISC","role":"Medium Freight","size":"Medium","scu":"66","med_bay":"No","tractor_beam":"No" },
-  { "name":"Freelancer DUR","manufacturer":"MISC","role":"Exploration Variant","size":"Medium","scu":"28","med_bay":"No","tractor_beam":"No" },
-  { "name":"Freelancer MAX","manufacturer":"MISC","role":"Heavy Freight Variant","size":"Medium","scu":"122","med_bay":"No","tractor_beam":"No" },
-  { "name":"Freelancer MIS","manufacturer":"MISC","role":"Missile Gunship Variant","size":"Medium","scu":"36","med_bay":"No","tractor_beam":"No" },
-  { "name":"Prospector","manufacturer":"MISC","role":"Solo Mining","size":"Small","scu":"32","med_bay":"No","tractor_beam":"No" },
-  { "name":"Reliant Kore","manufacturer":"MISC","role":"Light Hauler","size":"Small","scu":"30","med_bay":"No","tractor_beam":"No" },
-  { "name":"Reliant Mako","manufacturer":"MISC","role":"News Van / Camera","size":"Small","scu":"24","med_bay":"No","tractor_beam":"No" },
-  { "name":"Reliant Sen","manufacturer":"MISC","role":"Science","size":"Small","scu":"18","med_bay":"No","tractor_beam":"No" },
-  { "name":"Reliant Tana","manufacturer":"MISC","role":"Light Fighter","size":"Small","scu":"6","med_bay":"No","tractor_beam":"No" },
-  { "name":"Razor","manufacturer":"MISC (Mirai)","role":"Racing","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Razor EX","manufacturer":"MISC (Mirai)","role":"Racing / Stealth","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Razor LX","manufacturer":"MISC (Mirai)","role":"Racing / Endurance","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Starfarer","manufacturer":"MISC","role":"Tanker / Heavy Freight","size":"Large","scu":"295","med_bay":"No","tractor_beam":"No" },
-  { "name":"Starfarer Gemini","manufacturer":"MISC","role":"Tanker (Military)","size":"Large","scu":"295","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hull A","manufacturer":"MISC","role":"External Cargo Hauler","size":"Small","scu":"64","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hull B","manufacturer":"MISC","role":"External Cargo Hauler","size":"Medium","scu":"384","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hull C","manufacturer":"MISC","role":"External Cargo Hauler","size":"Large","scu":"4608","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hull D","manufacturer":"MISC","role":"External Cargo Hauler","size":"Capital","scu":"20736","med_bay":"No","tractor_beam":"No" },
-  { "name":"Hull E","manufacturer":"MISC","role":"External Cargo Hauler","size":"Capital","scu":"98304","med_bay":"No","tractor_beam":"No" },
-  { "name":"Endeavor","manufacturer":"MISC","role":"Science / Modular","size":"Capital","scu":"TBD","med_bay":"Planned","tractor_beam":"Planned" },
-  { "name":"Fury","manufacturer":"MISC (Mirai)","role":"Snub Interceptor","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Fury MX","manufacturer":"MISC (Mirai)","role":"Snub Missile Interceptor","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"Mustang Alpha","manufacturer":"Consolidated Outland","role":"Starter","size":"Small","scu":"6","med_bay":"No","tractor_beam":"No" },
-  { "name":"Mustang Beta","manufacturer":"Consolidated Outland","role":"Touring","size":"Small","scu":"4","med_bay":"No","tractor_beam":"No" },
-  { "name":"Mustang Delta","manufacturer":"Consolidated Outland","role":"Light Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Mustang Gamma","manufacturer":"Consolidated Outland","role":"Racing","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Mustang Omega","manufacturer":"Consolidated Outland","role":"Racing (Special)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Nomad","manufacturer":"Consolidated Outland","role":"Light Freight","size":"Small","scu":"24","med_bay":"No","tractor_beam":"No" },
-  { "name":"Pioneer","manufacturer":"Consolidated Outland","role":"Mobile Construction","size":"Capital","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"Khartu-al","manufacturer":"Aopoa","role":"Light Scout (Alien)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"San'tok.yāi","manufacturer":"Aopoa","role":"Medium Fighter (Alien)","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Nox","manufacturer":"Aopoa","role":"Space Bike (Snub)","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Nox Kue","manufacturer":"Aopoa","role":"Space Bike (Snub)","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"Banu Defender","manufacturer":"Banu","role":"Escort Fighter","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Banu Merchantman","manufacturer":"Banu","role":"Cargo / Trade","size":"Large","scu":"3584","med_bay":"No","tractor_beam":"Planned" },
-
-  { "name":"Blade","manufacturer":"Esperia","role":"Light Fighter (Vanduul Rep.)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Glaive","manufacturer":"Esperia","role":"Medium Fighter (Vanduul Rep.)","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Prowler","manufacturer":"Esperia","role":"Tevarin Dropship","size":"Medium","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Talon","manufacturer":"Esperia","role":"Light Fighter (Tevarin)","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Talon Shrike","manufacturer":"Esperia","role":"Missile Interceptor","size":"Small","scu":"0","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"Railen","manufacturer":"Gatac Manufacture","role":"Alien Cargo Transport","size":"Large","scu":"TBD","med_bay":"No","tractor_beam":"No" },
-
-  { "name":"Kruger P-52 Merlin","manufacturer":"Kruger Intergalactic","role":"Escort (Snub)","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" },
-  { "name":"Kruger P-72 Archimedes","manufacturer":"Kruger Intergalactic","role":"Racing / Shuttle (Snub)","size":"Snub","scu":"0","med_bay":"No","tractor_beam":"No" }
+  {
+    "name": "100i",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Starter / Exploration",
+    "size": "Small",
+    "scu": "2",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "125a",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Starter / Light Fighter",
+    "size": "Small",
+    "scu": "2",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "135c",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Starter / Light Freight",
+    "size": "Small",
+    "scu": "6",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "300i",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Luxury Touring",
+    "size": "Small",
+    "scu": "4",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "315p",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Exploration",
+    "size": "Small",
+    "scu": "4",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "325a",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "2",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "350r",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Racing",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "400i",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Exploration",
+    "size": "Medium",
+    "scu": "42",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "600i Explorer",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Luxury Exploration",
+    "size": "Large",
+    "scu": "40",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "600i Touring",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Luxury Touring",
+    "size": "Large",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "85X",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Luxury Shuttle (Snub)",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "890 Jump",
+    "manufacturer": "Origin Jumpworks",
+    "role": "Luxury Yacht",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "Yes",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "A1 Spirit",
+    "manufacturer": "Crusader Industries",
+    "role": "Bomber / Medium Freight",
+    "size": "Medium",
+    "scu": "64",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "C1 Spirit",
+    "manufacturer": "Crusader Industries",
+    "role": "Cargo",
+    "size": "Medium",
+    "scu": "64",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "E1 Spirit",
+    "manufacturer": "Crusader Industries",
+    "role": "Passenger",
+    "size": "Medium",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "A2 Hercules",
+    "manufacturer": "Crusader Industries",
+    "role": "Heavy Bomber / Cargo",
+    "size": "Large",
+    "scu": "234",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "C2 Hercules",
+    "manufacturer": "Crusader Industries",
+    "role": "Heavy Cargo",
+    "size": "Large",
+    "scu": "696",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "M2 Hercules",
+    "manufacturer": "Crusader Industries",
+    "role": "Military Transport",
+    "size": "Large",
+    "scu": "522",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mercury Star Runner",
+    "manufacturer": "Crusader Industries",
+    "role": "Data Runner / Light Freight",
+    "size": "Medium",
+    "scu": "114",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Genesis Starliner",
+    "manufacturer": "Crusader Industries",
+    "role": "Passenger Liner",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Ares Ion",
+    "manufacturer": "Crusader Industries",
+    "role": "Heavy Fighter (Gun)",
+    "size": "Large",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Ares Inferno",
+    "manufacturer": "Crusader Industries",
+    "role": "Heavy Fighter (Ballistic)",
+    "size": "Large",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Apollo Medivac",
+    "manufacturer": "RSI",
+    "role": "Medical",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "Yes",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Apollo Triage",
+    "manufacturer": "RSI",
+    "role": "Medical",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "Yes",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Aurora CL",
+    "manufacturer": "RSI",
+    "role": "Cargo",
+    "size": "Small",
+    "scu": "6",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Aurora ES",
+    "manufacturer": "RSI",
+    "role": "Starter",
+    "size": "Small",
+    "scu": "3",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Aurora LN",
+    "manufacturer": "RSI",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "3",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Aurora LX",
+    "manufacturer": "RSI",
+    "role": "Touring",
+    "size": "Small",
+    "scu": "3",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Aurora MR",
+    "manufacturer": "RSI",
+    "role": "Starter / Cargo",
+    "size": "Small",
+    "scu": "3",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Constellation Andromeda",
+    "manufacturer": "RSI",
+    "role": "Multi-Role / Freight",
+    "size": "Large",
+    "scu": "96",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Constellation Aquila",
+    "manufacturer": "RSI",
+    "role": "Exploration",
+    "size": "Large",
+    "scu": "96",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Constellation Phoenix",
+    "manufacturer": "RSI",
+    "role": "Luxury Transport",
+    "size": "Large",
+    "scu": "40",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Constellation Taurus",
+    "manufacturer": "RSI",
+    "role": "Cargo",
+    "size": "Large",
+    "scu": "174",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Mantis",
+    "manufacturer": "RSI",
+    "role": "Quantum Interdiction",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Orion",
+    "manufacturer": "RSI",
+    "role": "Heavy Mining",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Perseus",
+    "manufacturer": "RSI",
+    "role": "Gunship",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Polaris",
+    "manufacturer": "RSI",
+    "role": "Capital Torpedo Corvette",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "Yes",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Scorpius",
+    "manufacturer": "RSI",
+    "role": "Heavy Fighter",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Scorpius Antares",
+    "manufacturer": "RSI",
+    "role": "Heavy Fighter (EMP)",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Zeus Mk II ES",
+    "manufacturer": "RSI",
+    "role": "Explorer",
+    "size": "Small",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Zeus Mk II MR",
+    "manufacturer": "RSI",
+    "role": "Multi-Role",
+    "size": "Small",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Zeus Mk II CL",
+    "manufacturer": "RSI",
+    "role": "Courier / Light Freight",
+    "size": "Small",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Odyssey",
+    "manufacturer": "RSI",
+    "role": "Exploration (Capital)",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "Yes",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Galaxy",
+    "manufacturer": "RSI",
+    "role": "Modular Multi-Role",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "Planned",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Pisces C8",
+    "manufacturer": "RSI",
+    "role": "Shuttle / Snub",
+    "size": "Small",
+    "scu": "4",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Pisces C8R",
+    "manufacturer": "RSI",
+    "role": "Medical Shuttle",
+    "size": "Small",
+    "scu": "2",
+    "med_bay": "Yes",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Pisces C8X",
+    "manufacturer": "RSI",
+    "role": "Expedition Shuttle",
+    "size": "Small",
+    "scu": "4",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Avenger Stalker",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Bounty Hunter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Avenger Titan",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Light Cargo",
+    "size": "Small",
+    "scu": "8",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Avenger Warlock",
+    "manufacturer": "Aegis Dynamics",
+    "role": "EMP Interdictor",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Eclipse",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Stealth Bomber",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hammerhead",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Anti-Fighter Corvette",
+    "size": "Large",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Idris-P",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Frigate (Patrol)",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "Yes",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Idris-M",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Frigate (Military)",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "Yes",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Javelin",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Destroyer",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "Yes",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Redeemer",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Gunship",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Reclaimer",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Industrial Salvage",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Retaliator Bomber",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Strategic Bomber",
+    "size": "Large",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Retaliator Base",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Modular Platform",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Sabre",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Stealth Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Sabre Comet",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Stealth Fighter (Special)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Sabre Raven",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Stealth Interdictor",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Vanguard Warden",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Heavy Fighter",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Vanguard Sentinel",
+    "manufacturer": "Aegis Dynamics",
+    "role": "EWAR / Heavy Fighter",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Vanguard Harbinger",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Heavy Bomber",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Vanguard Hoplite",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Dropship",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Nautilus",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Minelayer",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Vulcan",
+    "manufacturer": "Aegis Dynamics",
+    "role": "Support (Refuel/Repair/Rear m)",
+    "size": "Medium",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Arrow",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Carrack",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Exploration",
+    "size": "Large",
+    "scu": "456",
+    "med_bay": "Yes",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Gladiator",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Carrier-Capable Bomber",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Gladius",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Gladius Valiant",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Light Fighter (Special)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hawk",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Bounty Hunter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hornet F7C",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Medium Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hornet F7C Ghost",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Stealth Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hornet F7C Tracker",
+    "manufacturer": "Anvil Aerospace",
+    "role": "AWACS / Tracker",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Super Hornet F7C-M",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Multirole Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Super Hornet Heartseeker",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Multirole Fighter (Special)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hurricane",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Heavy Fighter (Turret)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Terrapin",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Recon / Exploration",
+    "size": "Small",
+    "scu": "2",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Valkyrie",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Dropship",
+    "size": "Large",
+    "scu": "30",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Liberator",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Light Carrier / Transport",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Crucible",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Repair Ship",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Caterpillar",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Cargo / Modular",
+    "size": "Large",
+    "scu": "576",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Corsair",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Exploration / Combat",
+    "size": "Large",
+    "scu": "72",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Cutlass Black",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Multi-Role / Cargo",
+    "size": "Medium",
+    "scu": "46",
+    "med_bay": "No",
+    "tractor_beam": "Yes"
+  },
+  {
+    "name": "Cutlass Blue",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Patrol / Bounty",
+    "size": "Medium",
+    "scu": "12",
+    "med_bay": "No",
+    "tractor_beam": "Yes"
+  },
+  {
+    "name": "Cutlass Red",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Medical",
+    "size": "Medium",
+    "scu": "34",
+    "med_bay": "Yes",
+    "tractor_beam": "Yes"
+  },
+  {
+    "name": "Cutlass Steel",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Dropship / Transport",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Dragonfly Black",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Space Bike (Snub)",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Dragonfly Yellowjacket",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Space Bike (Snub)",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Buccaneer",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Herald",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Info Runner",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Kraken",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Carrier / Mobile Base",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Kraken Privateer",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Carrier / Retail",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Vulture",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Solo Salvage",
+    "size": "Small",
+    "scu": "12",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Cutter",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Starter / Utility",
+    "size": "Small",
+    "scu": "10",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Cutter Rambler",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Touring / Utility",
+    "size": "Small",
+    "scu": "12",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Cutter Scout",
+    "manufacturer": "Drake Interplanetary",
+    "role": "Pathfinder / Recon",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "MPUV Cargo",
+    "manufacturer": "Argo Astronautics",
+    "role": "Cargo Shuttle",
+    "size": "Snub",
+    "scu": "4",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "MPUV Personnel",
+    "manufacturer": "Argo Astronautics",
+    "role": "Personnel Shuttle",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "RAFT",
+    "manufacturer": "Argo Astronautics",
+    "role": "Light Cargo",
+    "size": "Small",
+    "scu": "96",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "MOLE",
+    "manufacturer": "Argo Astronautics",
+    "role": "Multi-Crew Mining",
+    "size": "Medium",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "SRV",
+    "manufacturer": "Argo Astronautics",
+    "role": "Tug / Tractor",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "Yes"
+  },
+  {
+    "name": "Freelancer",
+    "manufacturer": "MISC",
+    "role": "Medium Freight",
+    "size": "Medium",
+    "scu": "66",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Freelancer DUR",
+    "manufacturer": "MISC",
+    "role": "Exploration Variant",
+    "size": "Medium",
+    "scu": "28",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Freelancer MAX",
+    "manufacturer": "MISC",
+    "role": "Heavy Freight Variant",
+    "size": "Medium",
+    "scu": "122",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Freelancer MIS",
+    "manufacturer": "MISC",
+    "role": "Missile Gunship Variant",
+    "size": "Medium",
+    "scu": "36",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Prospector",
+    "manufacturer": "MISC",
+    "role": "Solo Mining",
+    "size": "Small",
+    "scu": "32",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Reliant Kore",
+    "manufacturer": "MISC",
+    "role": "Light Hauler",
+    "size": "Small",
+    "scu": "30",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Reliant Mako",
+    "manufacturer": "MISC",
+    "role": "News Van / Camera",
+    "size": "Small",
+    "scu": "24",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Reliant Sen",
+    "manufacturer": "MISC",
+    "role": "Science",
+    "size": "Small",
+    "scu": "18",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Reliant Tana",
+    "manufacturer": "MISC",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "6",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Razor",
+    "manufacturer": "MISC (Mirai)",
+    "role": "Racing",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Razor EX",
+    "manufacturer": "MISC (Mirai)",
+    "role": "Racing / Stealth",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Razor LX",
+    "manufacturer": "MISC (Mirai)",
+    "role": "Racing / Endurance",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Starfarer",
+    "manufacturer": "MISC",
+    "role": "Tanker / Heavy Freight",
+    "size": "Large",
+    "scu": "295",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Starfarer Gemini",
+    "manufacturer": "MISC",
+    "role": "Tanker (Military)",
+    "size": "Large",
+    "scu": "295",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hull A",
+    "manufacturer": "MISC",
+    "role": "External Cargo Hauler",
+    "size": "Small",
+    "scu": "64",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hull B",
+    "manufacturer": "MISC",
+    "role": "External Cargo Hauler",
+    "size": "Medium",
+    "scu": "384",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hull C",
+    "manufacturer": "MISC",
+    "role": "External Cargo Hauler",
+    "size": "Large",
+    "scu": "4608",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hull D",
+    "manufacturer": "MISC",
+    "role": "External Cargo Hauler",
+    "size": "Capital",
+    "scu": "20736",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Hull E",
+    "manufacturer": "MISC",
+    "role": "External Cargo Hauler",
+    "size": "Capital",
+    "scu": "98304",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Endeavor",
+    "manufacturer": "MISC",
+    "role": "Science / Modular",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "Planned",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Fury",
+    "manufacturer": "MISC (Mirai)",
+    "role": "Snub Interceptor",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Fury MX",
+    "manufacturer": "MISC (Mirai)",
+    "role": "Snub Missile Interceptor",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mustang Alpha",
+    "manufacturer": "Consolidated Outland",
+    "role": "Starter",
+    "size": "Small",
+    "scu": "6",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mustang Beta",
+    "manufacturer": "Consolidated Outland",
+    "role": "Touring",
+    "size": "Small",
+    "scu": "4",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mustang Delta",
+    "manufacturer": "Consolidated Outland",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mustang Gamma",
+    "manufacturer": "Consolidated Outland",
+    "role": "Racing",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mustang Omega",
+    "manufacturer": "Consolidated Outland",
+    "role": "Racing (Special)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Nomad",
+    "manufacturer": "Consolidated Outland",
+    "role": "Light Freight",
+    "size": "Small",
+    "scu": "24",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Pioneer",
+    "manufacturer": "Consolidated Outland",
+    "role": "Mobile Construction",
+    "size": "Capital",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Khartu-al",
+    "manufacturer": "Aopoa",
+    "role": "Light Scout (Alien)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "San'tok.yāi",
+    "manufacturer": "Aopoa",
+    "role": "Medium Fighter (Alien)",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Nox",
+    "manufacturer": "Aopoa",
+    "role": "Space Bike (Snub)",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Nox Kue",
+    "manufacturer": "Aopoa",
+    "role": "Space Bike (Snub)",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Banu Defender",
+    "manufacturer": "Banu",
+    "role": "Escort Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Banu Merchantman",
+    "manufacturer": "Banu",
+    "role": "Cargo / Trade",
+    "size": "Large",
+    "scu": "3584",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Blade",
+    "manufacturer": "Esperia",
+    "role": "Light Fighter (Vanduul Rep.)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Glaive",
+    "manufacturer": "Esperia",
+    "role": "Medium Fighter (Vanduul Rep.)",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Prowler",
+    "manufacturer": "Esperia",
+    "role": "Tevarin Dropship",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Talon",
+    "manufacturer": "Esperia",
+    "role": "Light Fighter (Tevarin)",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Talon Shrike",
+    "manufacturer": "Esperia",
+    "role": "Missile Interceptor",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Railen",
+    "manufacturer": "Gatac Manufacture",
+    "role": "Alien Cargo Transport",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Kruger P-52 Merlin",
+    "manufacturer": "Kruger Intergalactic",
+    "role": "Escort (Snub)",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Kruger P-72 Archimedes",
+    "manufacturer": "Kruger Intergalactic",
+    "role": "Racing / Shuttle (Snub)",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mirai Guardian",
+    "manufacturer": "Mirai",
+    "role": "Heavy Fighter",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mirai Guardian QI",
+    "manufacturer": "Mirai",
+    "role": "Heavy Fighter (Quantum Interdictor)",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mirai Guardian MX",
+    "manufacturer": "Mirai",
+    "role": "Heavy Fighter (Up-armored)",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "MISC Starlancer MAX",
+    "manufacturer": "MISC",
+    "role": "Deep-Space Freight",
+    "size": "Large",
+    "scu": "224",
+    "med_bay": "No",
+    "tractor_beam": "TBD"
+  },
+  {
+    "name": "MISC Starlancer TAC",
+    "manufacturer": "MISC",
+    "role": "Deep-Space Patrol / Tactical",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "Yes",
+    "tractor_beam": "TBD"
+  },
+  {
+    "name": "RSI Arrastra",
+    "manufacturer": "Roberts Space Industries",
+    "role": "Industrial Mining/Refining Platform",
+    "size": "Large",
+    "scu": "TBD",
+    "med_bay": "No",
+    "tractor_beam": "Planned"
+  },
+  {
+    "name": "Kruger L-21 Wolf",
+    "manufacturer": "Kruger Intergalactic",
+    "role": "Light Fighter",
+    "size": "Small",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Grey's Market Shiv",
+    "manufacturer": "Grey's Market",
+    "role": "Heavy Fighter (Salvaged)",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Anvil Paladin",
+    "manufacturer": "Anvil Aerospace",
+    "role": "Gunship",
+    "size": "Medium",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mirai Pulse",
+    "manufacturer": "Mirai",
+    "role": "Grav-Lev Bike",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  },
+  {
+    "name": "Mirai Pulse LX",
+    "manufacturer": "Mirai",
+    "role": "Racing Grav-Lev Bike",
+    "size": "Snub",
+    "scu": "0",
+    "med_bay": "No",
+    "tractor_beam": "No"
+  }
 ]
   </script>
   <!-- ====================================================================== -->
