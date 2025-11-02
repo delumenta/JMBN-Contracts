@@ -14,7 +14,7 @@
 :root{
   --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
   --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
+  --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
 body{
@@ -22,107 +22,125 @@ body{
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text);font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base)
+  color:var(--text);font-family:'Play',sans-serif;margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base)
 }
-
-/* Brand */
+/* Brand / Nav */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-
-/* Shiny nav */
 .nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
-  --ring:#d6b44c;
   position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  padding:7px 14px;border:1px solid var(--border);border-radius:999px;
   background:linear-gradient(180deg,#0c0c0c,#060606);
   color:var(--accent);text-decoration:none;font-weight:700;letter-spacing:.2px;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  transition:.15s ease;box-shadow:inset 0 0 0 1px rgba(214,180,76,.12)
 }
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
-.nav-btn.active{color:#000;background:linear-gradient(180deg,#f2d675,#e7c760);border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,#f2d675,#e7c760);box-shadow:0 0 20px rgba(214,180,76,.45)}
 
-/* Panels + controls */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+/* Panel / Controls */
+.panel{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;align-items:center}
+.tip{font-size:12px;color:var(--muted);opacity:.95;margin-left:2px;margin-top:2px;display:block}
 button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
 button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
-input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:13px;font-family:'Play'}
 textarea{resize:vertical}
 
 /* Table */
 .tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
-table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
-th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
-th{color:var(--accent);background:#080808;font-weight:500;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
+th{color:var(--accent);background:#080808;font-weight:500}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
-.small{font-size:var(--fs-small);color:var(--muted)}
+.small{font-size:11px;color:var(--muted)}
 .badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 
-/* Modal */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:10}
-.modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;width:95%;max-width:520px;box-shadow:0 0 25px rgba(214,180,76,.3)}
+/* Official visuals */
+.official-row{
+  background: linear-gradient(90deg, rgba(242,214,117,.05), rgba(242,214,117,.015));
+  border-left:3px solid rgba(214,180,76,.75);
+}
+.official-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:2px 8px;border-radius:999px;
+  background:#000;color:#f2d675;border:1px solid var(--border);
+  font-weight:800;font-size:10px;letter-spacing:.6px;text-transform:uppercase;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.35);
+}
+
+/* Modals */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.8);
+  display:none;align-items:center;justify-content:center;
+  z-index:9999;
+}
+.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:16px;width:95%;max-width:720px;box-shadow:0 0 25px rgba(214,180,76,.3)}
 .modal h2{color:var(--accent);margin:0 0 8px}
 .modal .form-grid{display:grid;gap:8px}
 .modal .form-grid.two{grid-template-columns:1fr 1fr}
-@media(max-width:640px){.modal .form-grid.two{grid-template-columns:1fr}}
 .modal-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+
+/* Gear list rows */
+.gear-row{display:grid;grid-template-columns:1.3fr 1fr auto;gap:8px;align-items:center;background:#111;border:1px solid var(--border);border-radius:8px;padding:8px}
+.gear-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+
+/* Gear Item modal polish */
+.modal .fieldset{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+@media (max-width:720px){.modal .fieldset{grid-template-columns:1fr}}
+.modal .field{display:flex;flex-direction:column;gap:6px}
+.modal .field label{font-size:12px;color:var(--muted);letter-spacing:.3px}
+.input-pill{width:100%;background:#0b0b0b;border:1px solid rgba(214,180,76,.65);color:var(--text);border-radius:12px;padding:10px 12px;font-family:'Play';font-size:13px;outline:none;transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+.input-pill:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(242,214,117,.12),inset 0 0 0 1px rgba(0,0,0,.25);background:#0d0d0d}
+.modal .hint{font-size:11px;color:var(--muted);opacity:.9;margin-top:-2px}
 </style>
 </head>
 <body>
-  <!-- Brand -->
   <div class="brand">
     <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
     <h1>JMBN FPS Loadouts</h1>
   </div>
 
-  <!-- Navigation -->
   <nav class="nav">
     <a class="nav-btn" href="index.html">Manifest</a>
     <a class="nav-btn" href="hangar.html">Hangar</a>
     <a class="nav-btn" href="components.html">Components</a>
     <a class="nav-btn" href="contracts.html">Contracts</a>
     <a class="nav-btn" href="mission-log.html">Mission Log</a>
-    <a class="nav-btn active" href="fps-loadout.html">FPS Loadouts</a>
+    <a class="nav-btn active" href="fps_loadout_editor.html">FPS Loadouts</a>
   </nav>
 
   <div class="panel">
     <div class="controls">
       <input id="search" placeholder="Search loadouts…">
-      <select id="branchFilter"><option value="">All Branches</option><option>Navy</option><option>Engineering</option><option>Combat</option><option>Medic</option><option>Cargo</option></select>
-      <button id="addBtn" class="btn-primary">Add Loadout</button>
-      <button id="seedBtn">Seed Demo</button>
-      <button id="saveBtn">Save</button>
-      <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Clear All</button>
-      <button id="exportJSON">Export JSON</button>
-      <button id="importJSON" class="btn-primary">Import JSON</button>
-      <button id="shareLink">Copy Share Link</button>
-      <button id="dlStatic">Download Static HTML</button>
+      <select id="roleFilter">
+        <option value="">All Roles</option>
+        <option>Gunnery</option><option>Engineering</option><option>Pilot</option><option>FPS</option><option>Rate</option>
+      </select>
+      <button id="addBtn" class="btn-primary" type="button">Add Loadout</button>
+      <button id="saveBtn" type="button">Save</button>
+      <button id="resetBtn" type="button" style="border-color:var(--bad);color:var(--bad)">Clear All</button>
+      <button id="exportJSON" type="button">Export JSON</button>
+      <button id="importJSON" class="btn-primary" type="button">Import JSON</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none">
+      <button id="reseedBtn" type="button">JMBN Official Loadout</button>
     </div>
+    <span class="tip">💡 Tip: Click <b>JMBN Official Loadout</b> to refresh the official presets — your custom kits won’t be touched.</span>
 
     <div class="tableWrap">
       <table>
-        <thead>
-          <tr>
-            <th>Loadout Title</th>
-            <th>Rank</th>
-            <th>Branch</th>
-            <th>Armor</th>
-            <th>Tags</th>
-            $1<th>Gear</th><th>Actions</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>Loadout Title</th><th>Rank</th><th>Role</th><th>Armor</th><th>Tags</th><th>Notes</th><th>Gear</th><th>Actions</th>
+        </tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- Modal for add/edit -->
+  <!-- Loadout Modal (with Gear) -->
   <div class="modal-bg" id="modal-bg">
     <div class="modal">
       <h2 id="modalTitle">New Loadout</h2>
@@ -131,269 +149,406 @@ tr:hover{background:rgba(214,180,76,.08)}
         <input id="loTitle" placeholder="Loadout Title *">
         <div class="form-grid two">
           <input id="loRank" placeholder="Rank (e.g., Junior Rate)">
-          <select id="loBranch">
-            <option value="">Branch</option>
-            <option>Navy</option><option>Engineering</option><option>Combat</option><option>Medic</option><option>Cargo</option>
+          <select id="loRole">
+            <option value="">Role</option>
+            <option>Gunnery</option><option>Engineering</option><option>Pilot</option><option>FPS</option><option>Rate</option>
           </select>
         </div>
         <input id="loArmor" placeholder="Armor (e.g., Heavy / Medium / Light)">
         <input id="loTags" placeholder="Tags (comma separated)">
         <textarea id="loNotes" rows="3" placeholder="Notes"></textarea>
       </div>
+
+      <div class="form-grid" style="margin-top:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h2 style="margin:0;color:var(--accent);font-size:16px">Gear</h2>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button id="addGearBtn" class="btn-primary" type="button">Add Gear</button>
+            <button id="pickFromDBBtn" type="button">Pick from Gear DB</button>
+            <button id="manageDBBtn" type="button">Manage Gear DB</button>
+          </div>
+        </div>
+        <div id="gearList" class="form-grid"></div>
+      </div>
+
       <div class="modal-buttons">
-        <button id="cancelModal">Cancel</button>
-        <button id="saveModal" class="btn-primary">Save</button>
+        <button id="cancelModal" type="button">Cancel</button>
+        <button id="saveModal" class="btn-primary" type="button">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- Gear Modal -->
-  <div class="modal-bg" id="gear-bg">
-    <div class="modal" style="max-width:680px">
-      <h2>Loadout Gear</h2>
+  <!-- Gear Item Modal -->
+  <div class="modal-bg" id="gearItemBG">
+    <div class="modal">
+      <h2 id="gearItemTitle">Add Gear Item</h2>
+      <input type="hidden" id="gearEditIdx">
+      <div class="fieldset">
+        <div class="field"><label for="gCat">Category</label>
+          <select id="gCat" class="input-pill">
+            <option>Primary</option><option>Secondary</option><option>Sidearm</option>
+            <option>Armor</option><option>Backpack</option><option>Gadget</option>
+            <option>Throwable</option><option>Med</option><option>Tool</option><option>Ammo</option>
+          </select>
+        </div>
+        <div class="field"><label for="gName">Item Name</label>
+          <input id="gName" class="input-pill" placeholder="e.g., FS-9 LMG / P4-AR">
+        </div>
+        <div class="field"><label for="gMfr">Manufacturer</label>
+          <input id="gMfr" class="input-pill" placeholder="e.g., Behring">
+        </div>
+        <div class="field"><label for="gBuy">Where to Buy</label>
+          <input id="gBuy" class="input-pill" placeholder="e.g., Area18 / Lorville / Grim HEX">
+        </div>
+        <div class="field"><label for="gAttach">Attachments (comma)</label>
+          <input id="gAttach" class="input-pill" placeholder="e.g., 2x Scope, Suppressor">
+          <div class="hint">Tip: separate with commas — free text.</div>
+        </div>
+        <div class="field"><label for="gQty">Qty</label>
+          <input id="gQty" type="number" min="0" class="input-pill" placeholder="e.g., 6">
+        </div>
+        <div class="field" style="grid-column:1/-1"><label for="gNotes">Notes</label>
+          <textarea id="gNotes" rows="3" class="input-pill" placeholder="Reason / patch tips / alternatives"></textarea>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button id="gearItemCancel" type="button">Cancel</button>
+        <button id="gearItemSave" class="btn-primary" type="button">Save Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gear DB Picker Modal -->
+  <div class="modal-bg" id="gearPickBG">
+    <div class="modal">
+      <h2>Pick from Gear DB</h2>
       <div class="form-grid two">
-        <input id="gType" placeholder="Type (e.g., Armor / Utility)">
-        <input id="gItem" placeholder="Item (e.g., Pembroke, Multi-Tool)">
+        <label>Category
+          <select id="pCat" class="input-pill"><option value="">All</option><option>Primary</option><option>Secondary</option><option>Sidearm</option><option>Armor</option><option>Backpack</option><option>Gadget</option><option>Throwable</option><option>Med</option><option>Tool</option><option>Ammo</option></select>
+        </label>
+        <label>Search <input id="pSearch" class="input-pill" placeholder="Name, mfr, tags…"></label>
       </div>
-      <textarea id="gNotes" rows="2" placeholder="Notes (optional)"></textarea>
+      <div id="pList" style="max-height:50vh;overflow:auto;margin-top:8px"></div>
       <div class="modal-buttons">
-        <button id="gAdd" class="btn-primary">Add Gear</button>
-        <button id="gClose">Close</button>
-      </div>
-      <div class="tableWrap" style="margin-top:10px">
-        <table>
-          <thead><tr><th>Type</th><th>Item</th><th>Notes</th><th>Actions</th></tr></thead>
-          <tbody id="gearRows"></tbody>
-        </table>
+        <button id="gearPickClose" type="button">Close</button>
       </div>
     </div>
   </div>
-  <script id="embeddedLoadouts" type="application/json">[]</script>
-<script>
-(function(){
-  // highlight current nav
-  const here=location.pathname.split('/').pop()||'fps-loadout.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{ if(a.getAttribute('href')===here){ a.classList.add('active'); }});
-})();
 
-const STORE='jmbn-fps-loadouts-v2';
-const $=s=>document.querySelector(s); const $$=s=>Array.from(document.querySelectorAll(s));
+  <!-- Manage Gear DB Modal -->
+  <div class="modal-bg" id="gearDBBG">
+    <div class="modal">
+      <h2>Manage Gear DB</h2>
+      <div id="dbList" style="max-height:50vh;overflow:auto"></div>
+      <div class="modal-buttons">
+        <button id="dbAddItem" type="button">Add to DB</button>
+        <button id="dbClear" type="button" style="border-color:var(--bad);color:var(--bad)">Clear DB</button>
+        <button id="dbClose" class="btn-primary" type="button">Done</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ===== Keys & helpers ===== */
+const STORE='jmbn-fps-loadouts-v3';
+const GEAR_KEY='jmbn-fps-gear';
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
 const uid=()=> 'LD-'+Math.random().toString(36).slice(2,8);
 let loadouts=[];
 
 function esc(s=''){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
+function save(){localStorage.setItem(STORE, JSON.stringify(loadouts));}
+function saveDB(arr){localStorage.setItem(GEAR_KEY, JSON.stringify(arr));}
+function readDB(){try{const v=JSON.parse(localStorage.getItem(GEAR_KEY)||'[]'); return Array.isArray(v)?v:[];}catch{return[];}}
 
-/* Load & Save */
-function load(){ const raw=localStorage.getItem(STORE); loadouts = raw? JSON.parse(raw):[]; render(); }
-function save(){ localStorage.setItem(STORE, JSON.stringify(loadouts)); }
-$('#saveBtn').onclick=save;
-$('#resetBtn').onclick=()=>{ if(confirm('Clear ALL loadouts?')){ loadouts=[]; save(); render(); }};
-
-/* Modal logic */
-const modalBG=$('#modal-bg');
-$('#addBtn').onclick=()=>openModal();
-$('#cancelModal').onclick=()=>closeModal();
-$('#saveModal').onclick=()=>{
-  const id=$('#loId').value || uid();
-  const title=$('#loTitle').value.trim(); if(!title){ alert('Loadout Title is required'); return; }
-  const obj={
-    id,
-    title,
-    rank: $('#loRank').value.trim(),
-    branch: $('#loBranch').value,
-    armor: $('#loArmor').value.trim(),
-    tags: $('#loTags').value.trim(),
-    notes: $('#loNotes').value.trim()
-  };
-  const i=loadouts.findIndex(x=>x.id===id);
-  if(i>=0) loadouts[i]=obj; else loadouts.push(obj);
-  save(); render(); closeModal(); clearForm();
-};
-function openModal(data=null){
-  $('#modalTitle').textContent = data? 'Edit Loadout' : 'New Loadout';
-  if(data){ fillForm(data); }
-  modalBG.style.display='flex';
-}
-function closeModal(){ modalBG.style.display='none'; }
-function clearForm(){ ['loId','loTitle','loRank','loArmor','loTags','loNotes'].forEach(id=>{ $('#'+id).value=''; }); $('#loBranch').value=''; }
-function fillForm(d){
-  $('#loId').value=d.id; $('#loTitle').value=d.title||''; $('#loRank').value=d.rank||''; $('#loBranch').value=d.branch||''; $('#loArmor').value=d.armor||''; $('#loTags').value=d.tags||''; $('#loNotes').value=d.notes||'';
+/* ===== Official seed set ===== */
+function seedDefaults(){
+  return [
+    {seedKey:'fps-breach', isSeed:true, id:uid(), title:'Breach Stack – Shield/Grenadier', rank:'Junior Rate', role:'FPS', armor:'Heavy', tags:'breach, shield, grenade', notes:'CQB stack for ship/room entries', gear:[
+      {category:'Armor',name:'Heavy Security Set',notes:'Full helmet + heavy core'},
+      {category:'Gadget',name:'Multi-Tool',notes:'Tractor attachment'},
+      {category:'Med',name:'MedPen',qty:3}
+    ]},
+    {seedKey:'gunner-aa', isSeed:true, id:uid(), title:'Turret Gunner – AA Focus', rank:'Rate', role:'Gunnery', armor:'Light', tags:'turret, AA', notes:'Anti-fighter fit for remote turrets', gear:[
+      {category:'Gadget',name:'O2 Refill'}
+    ]},
+    {seedKey:'eng-eva', isSeed:true, id:uid(), title:'Field Repairs – EVA Patch', rank:'Junior Rate', role:'Engineering', armor:'Light', tags:'eva, repair', notes:'Exterior patch & basic triage', gear:[
+      {category:'Armor',name:'Light EVA Suit'},
+      {category:'Tool',name:'Multi-Tool',notes:'Cutter + Tractor'}
+    ]},
+    {seedKey:'pilot-egress', isSeed:true, id:uid(), title:'Pilot Survival – Egress Kit', rank:'Junior Rate', role:'Pilot', armor:'Medium', tags:'egress, beacon', notes:'Emergency ejection & beacon kit', gear:[
+      {category:'Gadget',name:'Beacon',notes:'Signal team'},
+      {category:'Med',name:'Medical Gun',notes:'Refill canisters'}
+    ]},
+    {seedKey:'rate-cargo', isSeed:true, id:uid(), title:'Deck Rate – Cargo Ops', rank:'Rate', role:'Rate', armor:'Light', tags:'cargo, tractor', notes:'Ground handling + crate ops', gear:[
+      {category:'Tool',name:'Tractor attachment'}
+    ]}
+  ];
 }
 
-/* Render */
+/* ===== Load / Re-seed ===== */
+function load(){
+  const raw=localStorage.getItem(STORE);
+  if(raw){loadouts=JSON.parse(raw);}
+  else{loadouts=seedDefaults();save();}
+  render();
+}
+function reseed(){
+  if(!confirm('Reapply JMBN Official Loadouts?\n• Existing official kits will reset\n• Custom kits remain')) return;
+  const seeds=seedDefaults();
+  loadouts = loadouts.filter(x=>!x.isSeed);
+  loadouts.push(...seeds);
+  save(); render();
+}
+
+/* ===== Table render ===== */
+function row(r){
+  const gcount=Array.isArray(r.gear)?r.gear.length:0;
+  const official = r.isSeed ? `<span class="official-badge" title="JMBN Official Loadout">JMBN</span>` : '';
+  const trClass = r.isSeed ? ' class="official-row"' : '';
+  return `<tr${trClass}>
+    <td><b style="color:var(--accent)">${esc(r.title)}</b> ${official}</td>
+    <td>${esc(r.rank||'')}</td>
+    <td>${esc(r.role||'')}</td>
+    <td>${esc(r.armor||'')}</td>
+    <td>${esc(r.tags||'')}</td>
+    <td><span class="small">${esc(r.notes||'')}</span></td>
+    <td><span class="badge">${gcount} item${gcount===1?'':'s'}</span></td>
+    <td>
+      <button data-act="gear" data-id="${r.id}" type="button">Manage Gear</button>
+      <button data-act="edit" data-id="${r.id}" type="button">Edit</button>
+      <button data-act="del"  data-id="${r.id}" type="button" style="border-color:var(--bad);color:var(--bad)">Del</button>
+    </td>
+  </tr>`;
+}
 function render(){
   const q=($('#search').value||'').toLowerCase();
-  const bf=$('#branchFilter').value||'';
+  const rf=$('#roleFilter').value||'';
   let arr=loadouts.slice();
-  if(q) arr=arr.filter(x=>`${x.title} ${x.rank} ${x.branch} ${x.armor} ${x.tags} ${x.notes}`.toLowerCase().includes(q));
-  if(bf) arr=arr.filter(x=>x.branch===bf);
-  $('#rows').innerHTML = arr.map(r=>row(r)).join('');
+  if(q) arr=arr.filter(x=>`${x.title} ${x.rank} ${x.role} ${x.armor} ${x.tags} ${x.notes}`.toLowerCase().includes(q));
+  if(rf) arr=arr.filter(x=>x.role===rf);
+  $('#rows').innerHTML=arr.map(row).join('');
   $$('#rows button[data-act]').forEach(b=>{
     const id=b.dataset.id;
-    if(b.dataset.act==='edit') b.onclick=()=>{ const d=loadouts.find(x=>x.id===id); if(d) openModal(d); };
-    if(b.dataset.act==='del') b.onclick=()=>{ if(confirm('Delete this loadout?')){ loadouts = loadouts.filter(x=>x.id!==id); save(); render(); } };
-    if(b.dataset.act==='dup') b.onclick=()=>{ const d=loadouts.find(x=>x.id===id); if(!d) return; const c={...d, id:uid(), title:d.title+' (copy)'}; loadouts.push(c); save(); render(); };
+    if(b.dataset.act==='edit') b.addEventListener('click',()=>editLoadout(id));
+    if(b.dataset.act==='del')  b.addEventListener('click',()=>{if(confirm('Delete this loadout?')){loadouts=loadouts.filter(x=>x.id!==id);save();render();}});
+    if(b.dataset.act==='gear') b.addEventListener('click',()=>openLoadoutWithGear(id));
   });
 }
-function row(r){
-  const gcount = Array.isArray(r.gear)? r.gear.length : 0;
-  return `
-    <tr>
-      <td><b style=\"color:var(--accent)\">${esc(r.title)}</b></td>
-      <td>${esc(r.rank||'')}</td>
-      <td>${esc(r.branch||'')}</td>
-      <td>${esc(r.armor||'')}</td>
-      <td>${esc(r.tags||'')}</td>
-      <td style=\"max-width:360px\"><span class=\"small\">${esc(r.notes||'')}</span></td>
-      <td>
-        <span class=\"badge\">${gcount} item${gcount===1?'':'s'}</span>
-        <button data-act=\"gear\" data-id=\"${r.id}\">Manage Gear</button>
-      </td>
-      <td style=\"white-space:nowrap\">
-        <button data-act=\"edit\" data-id=\"${r.id}\">Edit</button>
-        <button data-act=\"dup\"  data-id=\"${r.id}\">Duplicate</button>
-        <button data-act=\"del\"  data-id=\"${r.id}\" style=\"border-color:var(--bad);color:var(--bad)\">Del</button>
-      </td>
-    </tr>`;
-}
 
-/* Search/filters */
-$('#search').addEventListener('input', render);
-$('#branchFilter').addEventListener('input', render);
+/* ===== Loadout Modal ===== */
+const modalBG=$('#modal-bg');
+const gearList=$('#gearList');
+function openModal(){modalBG.style.display='flex';}
+function closeModal(){modalBG.style.display='none';}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeAllSubModals(); }});
 
-/* Export / Import */
-$('#exportJSON').onclick=()=>{
-  const blob=new Blob([JSON.stringify(loadouts,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='jmbn-fps-loadouts.json';a.click();URL.revokeObjectURL(url);
-};
-$('#importJSON').onclick=()=>{
-  const inp=document.createElement('input');inp.type='file';inp.accept='application/json';
-  inp.onchange=()=>{
-    const f=inp.files?.[0]; if(!f) return;
-    const r=new FileReader();
-    r.onload=()=>{
-      try{
-        const arr=JSON.parse(r.result);
-        if(!Array.isArray(arr)) throw new Error('Invalid JSON (expected an array)');
-        if(confirm('Merge with existing? Click Cancel to REPLACE.')){
-          const map=new Map(loadouts.map(x=>[x.id,x])); arr.forEach(x=>{ if(!x.id) x.id=uid(); map.set(x.id,x); }); loadouts=[...map.values()];
-        }else{ loadouts = arr.map(x=>({...x, id:x.id||uid()})); }
-        save(); render(); alert('Import complete.');
-      }catch(e){ alert('Import failed: '+e.message); }
-    };
-    r.readAsText(f);
+$('#addBtn').addEventListener('click', ()=>{
+  $('#loId').value='';
+  $('#loTitle').value=''; $('#loRank').value=''; $('#loRole').value=''; $('#loArmor').value='';
+  $('#loTags').value=''; $('#loNotes').value='';
+  gearList.innerHTML='';
+  $('#modalTitle').textContent='New Loadout';
+  openModal();
+});
+$('#cancelModal').addEventListener('click', closeModal);
+
+$('#saveModal').addEventListener('click', ()=>{
+  const id=$('#loId').value||uid();
+  const title=$('#loTitle').value.trim(); if(!title){ alert('Loadout Title required'); return; }
+  const existing=loadouts.find(x=>x.id===id);
+  const obj={
+    ...(existing||{}), id, title,
+    rank:$('#loRank').value.trim(),
+    role:$('#loRole').value,
+    armor:$('#loArmor').value.trim(),
+    tags:$('#loTags').value.trim(),
+    notes:$('#loNotes').value.trim(),
+    gear:getCurrentGear()
   };
-  inp.click();
-};
+  const i=loadouts.findIndex(x=>x.id===id);
+  if(i>=0)loadouts[i]=obj; else loadouts.push(obj);
+  save(); render(); closeModal();
+});
 
-// Seed demo
-$('#seedBtn').onclick=()=>{
-  if(!confirm('Add demo loadouts?')) return;
-  const demo=[
-    {id:uid(), title:'Boarding – Heavy Breach', rank:'Junior Rate', branch:'Combat', armor:'Heavy', tags:'breach, shield, grenade', notes:'For forced entry and CQB', gear:[{type:'Armor',item:'Heavy Security Set',notes:'Full helmet + heavy core'},{type:'Utility',item:'Multi-Tool',notes:'Tractor attachment'},{type:'Med',item:'MedPen x3',notes:''}]},
-    {id:uid(), title:'Field Medic – Rapid Response', rank:'Junior Rate', branch:'Medic', armor:'Medium', tags:'med, rescue', notes:'CSAR kit', gear:[{type:'Armor',item:'Medium Paramed Set',notes:''},{type:'Med',item:'Medical Gun',notes:'Refill canisters'},{type:'Utility',item:'Beacon',notes:'Signal team'}]},
-    {id:uid(), title:'Engineering – EVA Patch', rank:'Junior Rate', branch:'Engineering', armor:'Light', tags:'eva, repair', notes:'For exterior patchwork', gear:[{type:'Armor',item:'Light EVA Suit',notes:''},{type:'Tool',item:'Multi-Tool',notes:'Cutter + Tractor'},{type:'Utility',item:'O2 Refill',notes:''}]}
-  ];
-  // Merge without duplicates by title
-  const titles=new Set(loadouts.map(x=>x.title.toLowerCase()));
-  demo.forEach(d=>{ if(!titles.has(d.title.toLowerCase())) loadouts.push(d); });
-  save(); render();
-};
-
-/* ===== Gear Modal Logic ===== */
-let gearFor=null; // holds loadout id currently editing
-const gBG=$('#gear-bg');
-const gRows=$('#gearRows');
-function openGear(id){
-  gearFor=id; renderGear(); gBG.style.display='flex';
+function editLoadout(id){
+  const d=loadouts.find(x=>x.id===id); if(!d) return;
+  $('#loId').value=d.id; $('#loTitle').value=d.title||''; $('#loRank').value=d.rank||'';
+  $('#loRole').value=d.role||''; $('#loArmor').value=d.armor||''; $('#loTags').value=d.tags||''; $('#loNotes').value=d.notes||'';
+  setCurrentGear(d.gear||[]);
+  $('#modalTitle').textContent='Edit Loadout';
+  openModal();
 }
-function closeGear(){ gBG.style.display='none'; }
-$('#gClose').onclick=closeGear;
-function renderGear(){
-  const lo=loadouts.find(x=>x.id===gearFor); if(!lo) return; lo.gear=Array.isArray(lo.gear)?lo.gear:[];
-  gRows.innerHTML = lo.gear.length? lo.gear.map((g,i)=>`
-    <tr>
-      <td>${esc(g.type||'')}</td>
-      <td>${esc(g.item||'')}</td>
-      <td>${esc(g.notes||'')}</td>
-      <td><button data-i=\"${i}\" data-act=\"gedit\">Edit</button> <button data-i=\"${i}\" data-act=\"gdel\" style=\"border-color:var(--bad);color:var(--bad)\">Del</button></td>
-    </tr>`).join('') : `<tr><td colspan=\"4\" class=\"small\">No gear yet — add some above.</td></tr>`;
-  // bind actions
-  Array.from(gRows.querySelectorAll('button[data-act]')).forEach(b=>{
-    const i=Number(b.dataset.i); const lo=loadouts.find(x=>x.id===gearFor); if(!lo) return;
-    if(b.dataset.act==='gdel') b.onclick=()=>{ if(confirm('Delete this item?')){ lo.gear.splice(i,1); save(); renderGear(); render(); } };
-    if(b.dataset.act==='gedit') b.onclick=()=>{
-      const it=lo.gear[i]; if(!it) return;
-      const t=prompt('Type', it.type||''); const n=prompt('Item', it.item||''); const s=prompt('Notes', it.notes||'');
-      lo.gear[i]={type:t||'', item:n||'', notes:s||''}; save(); renderGear(); render();
-    };
+function openLoadoutWithGear(id){ editLoadout(id); }
+
+/* ===== Gear inside Loadout Modal ===== */
+function gearRow(it,idx){
+  const chips = [
+    it.category?`<span class="badge">${esc(it.category)}</span>`:'',
+    it.qty?`<span class="badge">x${esc(String(it.qty))}</span>`:'',
+    it.attach?`<span class="badge">${esc(it.attach)}</span>`:'',
+    it.buy?`<span class="badge">${esc(it.buy)}</span>`:''
+  ].join('');
+  return `<div class="gear-row" data-gear='${esc(JSON.stringify(it))}'>
+    <div>
+      <div style="font-weight:800;color:var(--accent)">${esc(it.name||'Unnamed')}</div>
+      <div class="small">${esc(it.mfr||'—')}</div>
+    </div>
+    <div>${chips}</div>
+    <div class="gear-actions">
+      <button data-gact="edit" data-idx="${idx}" type="button">Edit</button>
+      <button data-gact="dup"  data-idx="${idx}" type="button">Duplicate</button>
+      <button data-gact="up"   data-idx="${idx}" type="button">↑</button>
+      <button data-gact="del"  data-idx="${idx}" type="button" style="border-color:var(--bad);color:var(--bad)">Del</button>
+    </div>
+  </div>`;
+}
+function getCurrentGear(){ return Array.from(gearList.querySelectorAll('[data-gear]')).map(el=>JSON.parse(el.dataset.gear)); }
+function setCurrentGear(arr){ gearList.innerHTML = (arr||[]).map(gearRow).join(''); hookGearBtns(); }
+function hookGearBtns(){
+  gearList.querySelectorAll('button[data-gact]').forEach(b=>{
+    const idx=+b.dataset.idx; const arr=getCurrentGear(); const it=arr[idx];
+    if(b.dataset.gact==='del'){ b.onclick=()=>{ if(confirm('Remove item?')){ arr.splice(idx,1); setCurrentGear(arr); } }; return; }
+    if(b.dataset.gact==='dup'){ b.onclick=()=>{ arr.splice(idx+1,0,{...it}); setCurrentGear(arr); }; return; }
+    if(b.dataset.gact==='up'){  b.onclick=()=>{ if(idx>0){ const t=arr[idx-1]; arr[idx-1]=arr[idx]; arr[idx]=t; setCurrentGear(arr);} }; return; }
+    if(b.dataset.gact==='edit'){ b.onclick=()=>openGearItemModal(it, idx); return; }
   });
 }
-$('#gAdd').onclick=()=>{
-  const lo=loadouts.find(x=>x.id===gearFor); if(!lo) return;
-  const type=$('#gType').value.trim(); const item=$('#gItem').value.trim(); const notes=$('#gNotes').value.trim();
-  if(!type && !item){ alert('Please enter at least a Type or Item'); return; }
-  lo.gear=Array.isArray(lo.gear)?lo.gear:[]; lo.gear.push({type,item,notes});
-  $('#gType').value=''; $('#gItem').value=''; $('#gNotes').value='';
-  save(); renderGear(); render();
-};
 
-// ===== Share Link (URL-embedded data) =====
-function makeShareLink(){
-  try{
-    const json=JSON.stringify(loadouts);
-    const b64=btoa(unescape(encodeURIComponent(json)));
-    const url=location.origin + location.pathname + '#data=' + b64;
-    navigator.clipboard.writeText(url).then(()=>alert('Share link copied to clipboard!'));
-  }catch(e){ alert('Failed to make link: '+e.message); }
+/* Add Gear: item modal */
+const gearItemBG=$('#gearItemBG');
+function openGearItemModal(it=null, idx=-1){
+  $('#gearEditIdx').value = idx>=0?String(idx):'';
+  $('#gearItemTitle').textContent = (idx>=0?'Edit':'Add')+' Gear Item';
+  $('#gCat').value=it?.category||'Primary';
+  $('#gName').value=it?.name||''; $('#gMfr').value=it?.mfr||''; $('#gBuy').value=it?.buy||'';
+  $('#gAttach').value=it?.attach||''; $('#gQty').value=it?.qty??''; $('#gNotes').value=it?.notes||'';
+  gearItemBG.style.display='flex';
 }
-$('#shareLink').onclick=makeShareLink;
+function closeGearItem(){ gearItemBG.style.display='none'; }
+$('#addGearBtn').addEventListener('click', ()=>openGearItemModal());
+$('#gearItemCancel').addEventListener('click', closeGearItem);
+$('#gearItemSave').addEventListener('click', ()=>{
+  const g={ category:$('#gCat').value, name:$('#gName').value.trim(), mfr:$('#gMfr').value.trim(), buy:$('#gBuy').value.trim(), attach:$('#gAttach').value.trim(), qty:($('#gQty').value?Number($('#gQty').value):null), notes:$('#gNotes').value.trim() };
+  if(!g.name){ alert('Item name required'); return; }
+  const idx = $('#gearEditIdx').value===''?-1:+$('#gearEditIdx').value;
+  const arr=getCurrentGear();
+  if(idx>=0) arr[idx]=g; else arr.push(g);
+  setCurrentGear(arr); closeGearItem();
+});
 
-// ===== Download static HTML with embedded JSON =====
-function downloadStatic(){
-  try{
-    // Put current data into the embedded script tag
-    const tag=document.getElementById('embeddedLoadouts');
-    tag.textContent = JSON.stringify(loadouts);
-    // Serialize full HTML
-    const html='<!DOCTYPE html>' + document.documentElement.outerHTML;
-    const blob=new Blob([html],{type:'text/html'});
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download='fps-loadout.static.html';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }catch(e){ alert('Failed to build static HTML: '+e.message); }
+/* Pick from Gear DB */
+const gearPickBG=$('#gearPickBG');
+$('#pickFromDBBtn').addEventListener('click', ()=>{ renderPicker(); gearPickBG.style.display='flex'; });
+$('#gearPickClose').addEventListener('click', ()=>gearPickBG.style.display='none');
+function renderPicker(){
+  const items = readDB();
+  const t=($('#pCat').value||'').toLowerCase();
+  const q=($('#pSearch').value||'').toLowerCase().trim();
+  const filtered = items.filter(it=>{
+    const bag=`${it.name||''} ${it.mfr||''} ${it.buy||''} ${it.attach||''} ${it.notes||''}`.toLowerCase();
+    return (!t || (it.category||'').toLowerCase()===t) && (!q || bag.includes(q));
+  });
+  $('#pList').innerHTML = filtered.length ? filtered.map((it,i)=>`
+    <div class="gear-row" style="grid-template-columns:1.2fr 1fr auto">
+      <div><div style="font-weight:800;color:var(--accent)">${esc(it.name||'Unnamed')}</div><div class="small">${esc(it.mfr||'—')}</div></div>
+      <div class="small">${esc(it.category||'—')}${it.attach?` • ${esc(it.attach)}`:''}${it.buy?` • ${esc(it.buy)}`:''}</div>
+      <div><button class="btn-primary" data-pick="${i}" type="button">Use</button></div>
+    </div>`).join('') : `<div class="small">No items match.</div>`;
+  $$('#pList [data-pick]').forEach(btn=>btn.addEventListener('click', ()=>{
+    const it=filtered[+btn.dataset.pick];
+    const arr=getCurrentGear(); arr.push({...it}); setCurrentGear(arr); gearPickBG.style.display='none';
+  }));
 }
-$('#dlStatic').onclick=downloadStatic;
+$('#pCat').addEventListener('change', renderPicker);
+$('#pSearch').addEventListener('input', renderPicker);
 
-// ===== Load order: hash > ?source > embedded > localStorage =====
-(function(){
-  const h=location.hash||''; if(h.startsWith('#data=')){
-    try{ const b64=h.slice(6); const json=decodeURIComponent(escape(atob(b64))); loadouts=JSON.parse(json); render(); return; }catch(e){ console.warn('Failed to parse shared data:', e); }
-  }
-})();
+/* Manage Gear DB (CRUD) */
+const gearDBBG=$('#gearDBBG');
+$('#manageDBBtn').addEventListener('click', ()=>{ renderDB(); gearDBBG.style.display='flex'; });
+$('#dbClose').addEventListener('click', ()=>gearDBBG.style.display='none');
+$('#dbClear').addEventListener('click', ()=>{
+  if(!confirm('Clear entire Gear DB?')) return;
+  saveDB([]); renderDB();
+});
+$('#dbAddItem').addEventListener('click', ()=>{
+  openDBItemEditor(); // inline via item modal
+});
+function closeAllSubModals(){ gearItemBG.style.display='none'; gearPickBG.style.display='none'; gearDBBG.style.display='none'; }
+function renderDB(){
+  const items=readDB();
+  $('#dbList').innerHTML = items.length ? items.map((it,idx)=>dbRow(it,idx)).join('') : `<div class="small">Gear DB is empty. Click "Add to DB".</div>`;
+  hookDBBtns();
+}
+function dbRow(it,idx){
+  return `<div class="gear-row" data-db="${idx}">
+    <div>
+      <div style="font-weight:800;color:var(--accent)">${esc(it.name||'Unnamed')}</div>
+      <div class="small">${esc(it.category||'—')} • ${esc(it.mfr||'—')}${it.attach?` • ${esc(it.attach)}`:''}${it.buy?` • ${esc(it.buy)}`:''}</div>
+    </div>
+    <div class="small">${esc(it.notes||'')}</div>
+    <div class="gear-actions">
+      <button data-dbact="edit" data-idx="${idx}" type="button">Edit</button>
+      <button data-dbact="dup"  data-idx="${idx}" type="button">Duplicate</button>
+      <button data-dbact="del"  data-idx="${idx}" type="button" style="border-color:var(--bad);color:var(--bad)">Del</button>
+      <button data-dbact="use"  data-idx="${idx}" type="button">Add to Loadout</button>
+    </div>
+  </div>`;
+}
+function hookDBBtns(){
+  $$('#dbList [data-dbact]').forEach(b=>{
+    const idx=+b.dataset.idx;
+    const items=readDB();
+    const it=items[idx];
+    if(b.dataset.dbact==='del'){ b.onclick=()=>{ if(confirm('Delete this DB item?')){ items.splice(idx,1); saveDB(items); renderDB(); } }; return; }
+    if(b.dataset.dbact==='dup'){ b.onclick=()=>{ items.splice(idx+1,0,{...it}); saveDB(items); renderDB(); }; return; }
+    if(b.dataset.dbact==='use'){ b.onclick=()=>{ const arr=getCurrentGear(); arr.push({...it}); setCurrentGear(arr); alert('Added to current loadout.'); }; return; }
+    if(b.dataset.dbact==='edit'){ b.onclick=()=>openDBItemEditor(it, idx); return; }
+  });
+}
+function openDBItemEditor(it=null, idx=-1){
+  // Reuse gear item modal UI but commit to DB
+  $('#gearItemTitle').textContent = (idx>=0?'Edit':'Add')+' DB Item';
+  $('#gearEditIdx').value = idx>=0?String(idx):'';
+  $('#gCat').value=it?.category||'Primary';
+  $('#gName').value=it?.name||''; $('#gMfr').value=it?.mfr||''; $('#gBuy').value=it?.buy||'';
+  $('#gAttach').value=it?.attach||''; $('#gQty').value=it?.qty??''; $('#gNotes').value=it?.notes||'';
+  gearItemBG.style.display='flex';
 
-(async function(){
-  const params=new URLSearchParams(location.search); const src=params.get('source');
-  if(src){
-    try{ const res=await fetch(src,{cache:'no-cache'}); if(!res.ok) throw new Error(res.status+' '+res.statusText); const arr=await res.json(); if(Array.isArray(arr)){ loadouts=arr; render(); return; } }catch(e){ console.warn('Remote source failed:', e); }
-  }
-  // Embedded JSON
-  try{
-    const tag=document.getElementById('embeddedLoadouts');
-    if(tag && tag.textContent && tag.textContent.trim() !== '[]'){
-      const arr=JSON.parse(tag.textContent); if(Array.isArray(arr)){ loadouts=arr; render(); return; }
-    }
-  }catch(e){ console.warn('Embedded JSON parse failed:', e); }
-  // Fallback to localStorage
-  load();
-})();
+  // Temporarily override Save handler for DB save; restore after.
+  const origClick = $('#gearItemSave').onclick;
+  $('#gearItemSave').onclick = ()=>{
+    const g={ category:$('#gCat').value, name:$('#gName').value.trim(), mfr:$('#gMfr').value.trim(), buy:$('#gBuy').value.trim(), attach:$('#gAttach').value.trim(), qty:($('#gQty').value?Number($('#gQty').value):null), notes:$('#gNotes').value.trim() };
+    if(!g.name){ alert('Item name required'); return; }
+    const items=readDB();
+    const i = $('#gearEditIdx').value===''?-1:+$('#gearEditIdx').value;
+    if(i>=0) items[i]=g; else items.push(g);
+    saveDB(items); gearItemBG.style.display='none'; renderDB();
+    $('#gearItemSave').onclick = origClick; // restore
+  };
+}
 
-// Boot placeholder (load() is called in the loader above if nothing else supplied)
-// (no-op)
+/* ===== Toolbar small stuff ===== */
+$('#saveBtn').addEventListener('click', save);
+$('#resetBtn').addEventListener('click', ()=>{ if(confirm('Clear ALL loadouts (including custom)?')){loadouts=[];save();render();}});
+$('#search').addEventListener('input', render);
+$('#roleFilter').addEventListener('input', render);
+$('#reseedBtn').addEventListener('click', reseed);
+$('#exportJSON').addEventListener('click', ()=>{
+  const blob=new Blob([JSON.stringify(loadouts,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download='jmbn-fps-loadouts.json'; a.click(); URL.revokeObjectURL(url);
+});
+$('#importJSON').addEventListener('click',()=>$('#importFile').click());
+$('#importFile').addEventListener('change', e=>{
+  const f=e.target.files?.[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const arr=JSON.parse(r.result); if(!Array.isArray(arr)) throw new Error('Invalid JSON (expected array)'); loadouts=arr; save(); render(); alert('Import complete.'); }catch(err){ alert('Import failed: '+err.message);} e.target.value=''; };
+  r.readAsText(f);
+});
 
+/* Init */
 load();
 </script>
 </body>
