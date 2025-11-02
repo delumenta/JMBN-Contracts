@@ -572,15 +572,8 @@ function row(it){
         <button data-act="edit" data-key="${it.key}">Edit</button>
         <button data-act="del"  data-key="${it.key}" class="delete">Delete</button>
       </div>
-${it.note?`
-  <div style="grid-column:1/-1;font-size:12px;margin-top:4px;
-              display:flex;align-items:flex-start;gap:6px;color:#f2d675;">
-    <span style="width:6px;height:6px;border-radius:50%;
-                 background-color:#f2d675;margin-top:6px;flex-shrink:0;"></span>
-    <span style="color:#c9b06a;white-space:pre-wrap;word-break:break-word;">
-      ${esc(it.note)}
-    </span>
-  </div>` : ''}
+      ${it.note?`<div style="grid-column:1/-1;color:#c9b06a;font-size:12px;margin-top:4px">📝 ${esc(it.note)}</div>`:''}
+    </div>`;
 }
 function persist(){ localStorage.setItem(HANGAR_KEY, JSON.stringify(hangar)); syncSelectedNames(); }
 function syncSelectedNames(){
