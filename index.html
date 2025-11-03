@@ -324,5 +324,20 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
   start();
 })();
 </script>
+<!-- 🔽🔽 ADD THESE RIGHT HERE 🔽🔽 -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+  (async () => {
+    const session = await requireAuth();     // redirects to auth.html if not logged in
+    if (!session) return;
+
+    // Optional: display username (replaces [OPS] with the username)
+    const chip = document.getElementById('opsChip');
+    if (chip) chip.textContent = '[' + currentUsername(session).toUpperCase() + ']';
+  })();
+</script>
+<!-- 🔼🔼 END OF AUTH SECTION 🔼🔼 -->
+
 </body>
 </html>
