@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JMBN Mission Editor</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
 :root{
@@ -14,14 +13,10 @@
   --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
 }
 *{box-sizing:border-box}
-
 body{
-  background:#000;
-  color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
+  background:#000; color:var(--text); font-family:'Play',system-ui,sans-serif;
   margin:0; padding:24px; letter-spacing:.25px; line-height:1.5;
 }
-
 /* Header + Nav */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 14px;border-bottom:1px solid var(--border);padding-bottom:8px}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
@@ -30,40 +25,29 @@ body{
 .nav-btn{display:inline-flex;align-items:center;justify-content:center;padding:7px 14px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);text-decoration:none;font-weight:700;letter-spacing:.2px;box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease}
 .nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25),inset 0 0 0 1px rgba(214,180,76,.18)}
 .nav-btn.active{color:#000;background:linear-gradient(180deg,#f2d675,#e7c760);border-color:var(--border);box-shadow:0 0 20px rgba(214,180,76,.45)}
-
 /* Toolbar */
 .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 20px}
 .btn-cta{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:10px 14px;border:1px solid var(--border);border-radius:12px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);
-  text-decoration:none;font-weight:700;letter-spacing:.2px;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease;
+  display:inline-flex;align-items:center;gap:10px; padding:10px 14px;border:1px solid var(--border);border-radius:12px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent); text-decoration:none;font-weight:700;letter-spacing:.2px;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12); transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease;
 }
 .btn-cta:hover{
-  transform:translateY(-1px);
-  background:linear-gradient(180deg,#f2d675,#e7c760);color:#000;
+  transform:translateY(-1px); background:linear-gradient(180deg,#f2d675,#e7c760);color:#000;
   box-shadow:0 0 16px rgba(214,180,76,.35),inset 0 1px 0 rgba(255,255,255,.25);
 }
 .btn-cta .ic{
   width:18px;height:18px;border:1px solid var(--border);border-radius:50%;
-  display:grid;place-items:center;font-size:14px;line-height:1;flex:0 0 18px;
-  background:transparent;color:inherit;
+  display:grid;place-items:center;font-size:14px;line-height:1;flex:0 0 18px;background:transparent;color:inherit;
 }
 .subtle-note{color:var(--muted);font-size:12px}
-
 /* Panels */
 .panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px;
+  background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px;
   box-shadow:0 0 18px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.10);
 }
 .panel + .panel{margin-top:14px}
 .panel h3{margin:0 0 10px;color:var(--accent);font-size:16px}
-
 /* Inputs + Buttons */
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
 input,select,textarea{
@@ -77,16 +61,13 @@ button,.btn{
   font-family:'Play';cursor:pointer;font-size:13px;transition:.2s
 }
 button:hover,.btn:hover{background:var(--accent);color:#000}
-
 /* Form layout */
 .form-section{display:flex;flex-direction:column;gap:16px;max-width:920px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .row2 > div{min-width:0}
-
 /* Attachments */
 .attach-item{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:8px}
 .attach-item button{padding:6px 10px}
-
 /* Table */
 .table{width:100%;border-collapse:collapse;margin-top:6px}
 .table th,.table td{border-bottom:1px solid rgba(214,180,76,.3);padding:10px 8px;text-align:left;font-size:13px}
@@ -102,17 +83,13 @@ tr:hover{background:rgba(242,214,117,.05)}
 
 <!-- Header -->
 <div class="brand">
-     <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-         alt="JMBN" class="brand-logo">
+  <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN" class="brand-logo">
   <h1>JMBN Mission Editor</h1>
 </div>
 
 <!-- Toolbar -->
 <div class="toolbar">
-  <a class="btn-cta" href="mission-log.html">
-    <span class="ic">←</span>
-    <span>Back to Mission Log</span>
-  </a>
+  <a class="btn-cta" href="mission-log.html"><span class="ic">←</span><span>Back to Mission Log</span></a>
   <span class="subtle-note">Use this page to create or edit missions. “Save to Supabase” sends it to your cloud log.</span>
 </div>
 
@@ -124,7 +101,6 @@ tr:hover{background:rgba(242,214,117,.05)}
       <label>Mission Title</label>
       <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
     </div>
-
     <div class="row2">
       <div>
         <label>Type</label>
@@ -142,22 +118,18 @@ tr:hover{background:rgba(242,214,117,.05)}
         </select>
       </div>
     </div>
-
     <div class="row2">
       <div><label>Origin</label><input id="origin" placeholder="e.g., Area18"></div>
       <div><label>Destination</label><input id="destination" placeholder="e.g., Everus Harbor"></div>
     </div>
-
     <div class="row2">
       <div><label>Date</label><input id="date" type="datetime-local"></div>
       <div><label>No. of Hours</label><input id="hours" type="number" step="0.1"></div>
     </div>
-
     <div class="row2">
       <div><label>Payout (aUEC)</label><input id="payout" type="number" step="1"></div>
       <div><label>Tags (comma separated)</label><input id="tags" placeholder="e.g., hauling, night"></div>
     </div>
-
     <div>
       <label>Attendees</label>
       <input id="attendees" placeholder="e.g., Vex, Kara">
@@ -165,12 +137,12 @@ tr:hover{background:rgba(242,214,117,.05)}
   </div>
 </div>
 
-<!-- Panel: Attachments -->
+<!-- Panel: Attachments (links) -->
 <div class="panel">
   <h3>Attachments</h3>
   <div id="attachList"></div>
   <div class="sub" style="margin:6px 0 10px">Add any links (screenshots, telemetry, clips, reports).</div>
-  <button onclick="addAttach()">Add Attachment</button>
+  <button id="addAttachBtn">Add Attachment</button>
 </div>
 
 <!-- Panel: Notes -->
@@ -183,11 +155,10 @@ tr:hover{background:rgba(242,214,117,.05)}
 <div class="panel">
   <h3>Actions</h3>
   <div class="actions" style="margin-top:6px">
-    <button onclick="addMission()">Add to List</button>
-    <button onclick="copyAll()">Copy &lt;tbody&gt;</button>
-    <button onclick="downloadHTML()">Download HTML</button>
-    <button onclick="clearPreview()">Clear All</button>
-    <!-- NEW: cloud save -->
+    <button id="addListBtn">Add to List</button>
+    <button id="copyAllBtn">Copy &lt;tbody&gt;</button>
+    <button id="downloadBtn">Download HTML</button>
+    <button id="clearAllBtn">Clear All</button>
     <button id="saveSupabaseBtn" title="Insert into Supabase missions table">💾 Save to Supabase</button>
   </div>
   <div class="sub" style="margin-top:8px">Paste copied rows into <code>mission-log.html</code> &lt;tbody&gt; — or just use the cloud log.</div>
@@ -207,151 +178,155 @@ tr:hover{background:rgba(242,214,117,.05)}
   </table>
 </div>
 
-<!-- Supabase client -->
-<script src="https://esm.sh/@supabase/supabase-js@2"></script>
-<script>
-/* ====== CONFIG: replace with your real project values ====== */
-const SUPABASE_URL  = "https://fcegavhipeaeihxegsnw.supabase.co";
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8";
-/* =========================================================== */
+<!-- ===== Supabase + App Logic (ES module) ===== -->
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  // ⬇️ Replace these with your real project values
+  const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8';
 
-const preview=document.querySelector('#preview tbody');
-const attachList=document.getElementById('attachList');
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+  // expose for console testing if you want
+  window.sb = sb;
 
-function esc(s=''){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-function val(id){return document.getElementById(id).value.trim();}
-function setDisabled(el, on){ el.disabled = !!on; el.textContent = on ? 'Saving…' : '💾 Save to Supabase'; }
+  const preview = document.querySelector('#preview tbody');
+  const attachList = document.getElementById('attachList');
 
-function addAttach(){
-  const div=document.createElement('div');
-  div.className='attach-item';
-  div.innerHTML=`<input placeholder='Label (e.g., Screenshot)'>
-                 <input placeholder='URL (https://...)'>
-                 <button onclick='this.parentElement.remove()'>✕</button>`;
-  attachList.appendChild(div);
-}
+  const $ = (id) => document.getElementById(id);
+  const esc = (s='') => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; };
+  const val = (id) => $(id).value.trim();
 
-function collectAttachments(){
-  return [...attachList.querySelectorAll('.attach-item')].map(el=>{
-    const label=el.children[0].value.trim();
-    const url=el.children[1].value.trim();
-    if(!url) return null;
-    const name = label || (url.split('/').pop() || 'link');
-    try { new URL(url); } catch { return null; }
-    return { name, url };
-  }).filter(Boolean);
-}
-
-function pack(obj){
-  return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
-}
-
-function clearInputs(){
-  document.querySelectorAll('input,textarea,select').forEach(e=>{
-    if(!e.closest('.attach-item')) e.value='';
-  });
-  attachList.innerHTML='';
-}
-
-function addMission(){
-  const t={
-    title:val('title'),type:val('type'),status:val('status'),
-    origin:val('origin'),dest:val('destination'),
-    date:val('date'),hours:val('hours'),payout:val('payout'),
-    tags:val('tags'),att:val('attendees'),notes:val('notes'),
-    attachments:collectAttachments()
-  };
-  const attBtn = t.attachments.length
-    ? `<button class="att-view" data-attb64="${pack(t.attachments)}">View (${t.attachments.length})</button>`
-    : '';
-
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td>${esc(t.title)}</td>
-  <td>${t.type?`<span class='badge'>${esc(t.type)}</span>`:''}</td>
-  <td>${t.status?`<span class='badge'>${esc(t.status)}</span>`:''}</td>
-  <td>${esc(t.origin)}</td>
-  <td>${esc(t.dest)}</td>
-  <td>${esc(t.date)}</td>
-  <td>${esc(t.hours)}</td>
-  <td>${esc(t.payout)}</td>
-  <td>${esc(t.tags)}</td>
-  <td>${esc(t.att)}</td>
-  <td>${attBtn}</td>
-  <td>${esc(t.notes)}</td>
-  <td><button onclick='copyRow(this)'>Copy</button> <button onclick='this.closest("tr").remove()'>Del</button></td>`;
-  preview.appendChild(tr);
-  clearInputs();
-}
-
-function copyRow(btn){
-  const html=btn.closest('tr').outerHTML;
-  navigator.clipboard.writeText(html);
-  alert('Row copied! Paste into mission-log.html <tbody>.');
-}
-
-function copyAll(){
-  const html='<tbody>\n'+[...preview.children].map(r=>'  '+r.outerHTML).join('\n')+'\n</tbody>';
-  navigator.clipboard.writeText(html);
-  alert('<tbody> copied! Paste into mission-log.html');
-}
-
-function downloadHTML(){
-  const html='<tbody>\n'+[...preview.children].map(r=>'  '+r.outerHTML).join('\n')+'\n</tbody>';
-  const blob=new Blob([html],{type:'text/html'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='missions-tbody.html';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function clearPreview(){preview.innerHTML='';}
-
-/* ====== NEW: Save to Supabase (keeps your UI) ====== */
-document.getElementById('saveSupabaseBtn').addEventListener('click', async ()=>{
-  const btn = document.getElementById('saveSupabaseBtn');
-  const payload = buildSupabasePayload();
-  if (!payload.title){
-    alert('Please enter a Mission Title.'); return;
+  // UI helpers
+  function setSaving(on){
+    const btn = $('saveSupabaseBtn');
+    btn.disabled = on;
+    btn.textContent = on ? 'Saving…' : '💾 Save to Supabase';
   }
-  try{
-    setDisabled(btn, true);
-    const { error } = await sb.from('missions').insert(payload);
-    if (error) throw error;
-    alert('Mission saved to Supabase ✅');
-    // Optional: redirect to log
-    location.href = 'mission-log.html';
-  }catch(err){
-    console.error(err);
-    alert('Save failed: ' + (err.message || err));
-  }finally{
-    setDisabled(btn, false);
+
+  function addAttachRow(){
+    const div = document.createElement('div');
+    div.className='attach-item';
+    div.innerHTML = `
+      <input placeholder="Label (e.g., Screenshot)">
+      <input placeholder="URL (https://...)">
+      <button type="button" onclick="this.parentElement.remove()">✕</button>`;
+    attachList.appendChild(div);
   }
-});
 
-function buildSupabasePayload(){
-  const dateLocal = val('date');
-  const startISO = dateLocal ? new Date(dateLocal).toISOString() : null;
-  const attachments = collectAttachments();
+  function collectAttachments(){
+    return [...attachList.querySelectorAll('.attach-item')].map(el=>{
+      const label = el.children[0].value.trim();
+      const url   = el.children[1].value.trim();
+      if(!url) return null;
+      try { new URL(url); } catch { return null; }
+      const name = label || (url.split('/').pop() || 'link');
+      return { name, url };
+    }).filter(Boolean);
+  }
 
-  return {
-    title:       val('title'),
-    type:        val('type'),
-    status:      val('status'),
-    origin:      val('origin'),
-    destination: val('destination'),
-    start_time:  startISO,
-    hours:       Number(val('hours') || 0),
-    payout_auec: Number(val('payout') || 0),
-    tags:        val('tags'),
-    attendees:   val('attendees'),
-    notes:       val('notes'),
-    attachments: attachments    // [{name,url}, ...]
-  };
-}
+  function clearInputs(){
+    document.querySelectorAll('input,textarea,select').forEach(e=>{
+      if(!e.closest('.attach-item')) e.value='';
+    });
+    attachList.innerHTML='';
+  }
+
+  function pack(obj){ return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))); }
+
+  function addMissionToPreview(){
+    const t={
+      title:val('title'),type:val('type'),status:val('status'),
+      origin:val('origin'),dest:val('destination'),
+      date:val('date'),hours:val('hours'),payout:val('payout'),
+      tags:val('tags'),att:val('attendees'),notes:val('notes'),
+      attachments:collectAttachments()
+    };
+    const attBtn = t.attachments.length
+      ? `<button class="att-view" data-attb64="${pack(t.attachments)}">View (${t.attachments.length})</button>` : '';
+
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${esc(t.title)}</td>
+      <td>${t.type?`<span class='badge'>${esc(t.type)}</span>`:''}</td>
+      <td>${t.status?`<span class='badge'>${esc(t.status)}</span>`:''}</td>
+      <td>${esc(t.origin)}</td>
+      <td>${esc(t.dest)}</td>
+      <td>${esc(t.date)}</td>
+      <td>${esc(t.hours)}</td>
+      <td>${esc(t.payout)}</td>
+      <td>${esc(t.tags)}</td>
+      <td>${esc(t.att)}</td>
+      <td>${attBtn}</td>
+      <td>${esc(t.notes)}</td>
+      <td><button type="button" onclick='navigator.clipboard.writeText(this.closest("tr").outerHTML).then(()=>alert("Row copied!"))'>Copy</button>
+          <button type="button" onclick='this.closest("tr").remove()'>Del</button></td>`;
+    preview.appendChild(tr);
+    clearInputs();
+  }
+
+  function copyAll(){
+    const html = '<tbody>\n' + [...preview.children].map(r=>'  '+r.outerHTML).join('\n') + '\n</tbody>';
+    navigator.clipboard.writeText(html).then(()=>alert('<tbody> copied! Paste into mission-log.html'));
+  }
+
+  function downloadHTML(){
+    const html = '<tbody>\n' + [...preview.children].map(r=>'  '+r.outerHTML).join('\n') + '\n</tbody>';
+    const blob = new Blob([html], { type:'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'missions-tbody.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function clearPreview(){ preview.innerHTML=''; }
+
+  function buildSupabasePayload(){
+    const dateLocal = val('date');
+    const startISO = dateLocal ? new Date(dateLocal).toISOString() : null;
+    return {
+      title:       val('title'),
+      type:        val('type'),
+      status:      val('status'),
+      origin:      val('origin'),
+      destination: val('destination'),
+      start_time:  startISO,
+      hours:       Number(val('hours') || 0),
+      payout_auec: Number(val('payout') || 0),
+      tags:        val('tags'),
+      attendees:   val('attendees'),
+      notes:       val('notes'),
+      attachments: collectAttachments() // [{name,url}]
+    };
+  }
+
+  async function saveToSupabase(){
+    const payload = buildSupabasePayload();
+    if(!payload.title){ alert('Please enter a Mission Title.'); return; }
+    try{
+      setSaving(true);
+      const { error } = await sb.from('missions').insert(payload);
+      if (error) throw error;
+      alert('Mission saved to Supabase ✅');
+      location.href = 'mission-log.html';
+    }catch(err){
+      console.error(err);
+      alert('Save failed: ' + (err.message || err));
+    }finally{
+      setSaving(false);
+    }
+  }
+
+  // Wire buttons
+  $('addAttachBtn').addEventListener('click', addAttachRow);
+  $('addListBtn').addEventListener('click', addMissionToPreview);
+  $('copyAllBtn').addEventListener('click', copyAll);
+  $('downloadBtn').addEventListener('click', downloadHTML);
+  $('clearAllBtn').addEventListener('click', clearPreview);
+  $('saveSupabaseBtn').addEventListener('click', saveToSupabase);
+
+  // optional: start with one empty attachment row
+  addAttachRow();
 </script>
-
 </body>
 </html>
