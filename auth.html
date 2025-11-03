@@ -36,13 +36,13 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:10px;
-    margin-bottom:8px;
-    padding-bottom:8px;
+    gap:7px;
+    margin-bottom:1px;
+    padding-bottom:2px;
   }
   .brand-logo {
-    width:44px;
-    height:44px;
+    width:60px;
+    height:60px;
     object-fit:contain;
     filter:drop-shadow(0 0 5px rgba(242,214,117,.35));
   }
@@ -53,20 +53,33 @@
     font-weight:700;
   }
 
-  .muted{color:var(--muted);font-size:14px;margin:10px 0 20px;}
-  label{display:block;margin:10px 0 6px;text-align:left;color:var(--accent);}
-  input{
-    width:80%;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid var(--accent);
-    background:#141414;
-    color:#f7f1d0;
-    font-family:'Play',sans-serif;
+  .muted{color:var(--muted);font-size:14px;margin:10px 0 30px;}
+  label {
+  display: block;
+  width: 85%;                /* same width as inputs and buttons */
+  margin: 10px auto 4px;     /* centers whole label+input horizontally */
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14px;
+  text-align: left;          /* label text aligns with input's left edge */
+  letter-spacing: 0.5px;
+}
+
+input {
+  display: block;
+  width: 85%;                /* same width as labels/buttons */
+  margin: 0 auto 8px;        /* centers horizontally + adds bottom spacing */
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: #141414;
+  color: #f7f1d0;
+  font-family: 'Play', sans-serif;
+  font-size: 14px;
   }
   button{
     margin-top:18px;
-    width:85%;
+    width:80%;
     padding:12px;
     border-radius:10px;
     border:1px solid var(--accent);
