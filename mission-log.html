@@ -4,12 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JMBN Mission Log</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png"
       href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
       sizes="32x32">
+
 <style>
 :root{
   --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
@@ -27,7 +29,7 @@ body{
   margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* Header */
+/* Header (stacked) — identical to Contracts */
 .brand{
   display:flex;align-items:center;gap:10px;
   margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)
@@ -35,7 +37,7 @@ body{
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
 
-/* Shiny nav */
+/* Shiny nav — identical to Contracts */
 .nav{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px
 }
@@ -65,91 +67,55 @@ body{
 }
 @keyframes shine{0%{transform:translateX(-120%)}35%{transform:translateX(120%)}100%{transform:translateX(120%)}}
 
-/* Panel + controls */
+/* Panel + controls — identical style family */
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
 button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
 button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
 input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
 textarea{resize:vertical}
-label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
 .small{font-size:var(--fs-small);color:var(--muted)}
 
-/* KPI cards */
-.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 6px}
-@media(max-width:880px){.kpis{grid-template-columns:1fr}}
-.kpi{
-  background:linear-gradient(180deg,#0b0b0b,#080808);
-  border:1px solid var(--border);border-radius:12px;padding:12px;
-  box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)
-}
-.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
-.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
-
-/* Table */
+/* Table — matches Contracts look */
 .tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
 table{width:100%;border-collapse:collapse;font-size:var(--fs-table);min-width:1100px}
 th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
-th{color:var(--accent);background:#080808;font-weight:500;font-size:12px;position:sticky;top:0;z-index:1}
+th{color:var(--accent);background:#080808;font-weight:500}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 .pill{display:inline-block;padding:4px 10px;border:1px solid var(--border);border-radius:999px;color:var(--accent);font-size:12px;background:#090909}
-.link{color:var(--accent);text-decoration:underline;cursor:pointer}
 .nowrap{white-space:nowrap}
 .mono{font-variant-numeric:tabular-nums}
+.link{color:var(--accent);text-decoration:underline}
+
+/* Optional: slim note under toolbar */
+.tip{font-size:12px;color:var(--muted);opacity:.95;margin-left:2px;margin-top:-2px;display:block}
 </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- Header (same logo URL as Contracts) -->
   <div class="brand">
     <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
     <h1>JMBN Mission Log</h1>
   </div>
 
-  <!-- Nav -->
+  <!-- Shiny nav (identical order/spacing) -->
   <nav class="nav">
     <a class="nav-btn" href="index.html">Manifest</a>
     <a class="nav-btn" href="hangar.html">Hangar</a>
     <a class="nav-btn" href="components.html">Components</a>
     <a class="nav-btn" href="contracts.html">Contracts</a>
-    <a class="nav-btn active" href="mission-log.html">Mission Log</a>
+    <a class="nav-btn" href="mission-log.html">Mission Log</a>
   </nav>
 
   <div class="panel">
-    <!-- Controls -->
+    <!-- Toolbar -->
     <div class="controls">
       <input id="search" placeholder="Search… (title, type, status, tags, origin, destination)">
-      <!-- (optional) quick status filter to mirror contracts style -->
-      <select id="statusFilter" title="Filter by Status">
-        <option value="">All Status</option>
-        <option>Planned</option>
-        <option>Active</option>
-        <option>Completed</option>
-        <option>Failed</option>
-      </select>
-      <!-- Export current table view (client-side) -->
-      <button id="exportCSV">Export CSV</button>
-    </div>
-
-    <!-- KPI Cards -->
-    <div class="kpis">
-      <div class="kpi">
-        <div class="kpi-title">Total Missions</div>
-        <div class="kpi-value" id="kpiCount">0</div>
-        <div class="kpi-sub">after filters</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-title">Total Payout (aUEC)</div>
-        <div class="kpi-value" id="kpiTotal">0</div>
-        <div class="kpi-sub">sum of payout_auec</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-title">Average Payout / Mission</div>
-        <div class="kpi-value" id="kpiAvg">0</div>
-        <div class="kpi-sub">based on filtered list</div>
-      </div>
+      <button id="refreshBtn">Refresh</button>
+      <span class="tip">Click attachment names to open links. Data loads from Supabase.</span>
     </div>
 
     <!-- Table -->
@@ -169,7 +135,6 @@ tr:hover{background:rgba(214,180,76,.08)}
             <th>Attendees</th>
             <th>Attachments</th>
             <th>Notes</th>
-            <th>ID</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -177,150 +142,14 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- 🔐 AUTH SECTION (same as Contracts) -->
+  <!-- 🔐 AUTH (same pattern as Contracts) -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
-  <!-- END AUTH SECTION -->
 
-  <!-- Supabase fetch + render -->
-  <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-  const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWlheGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
-  const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
-
-  const tbody  = document.getElementById('tbody')
-  const search = document.getElementById('search')
-  const statusFilter = document.getElementById('statusFilter')
-
-  let cache = []   // full dataset
-  let view  = []   // filtered dataset (for KPIs/export)
-
-  const esc = (s='') => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML }
-  const fmtDate = iso => iso ? new Date(iso).toLocaleString() : ''
-  const fmtNum = n => (n||n===0) ? Number(n).toLocaleString() : ''
-  const pill = t => t ? `<span class="pill">${esc(t)}</span>` : ''
-
-  function attachmentsCell(arr){
-    if(!Array.isArray(arr) || !arr.length) return ''
-    return arr.map((a,i)=>{
-      const name = a?.name?.trim() || `Attachment ${i+1}`
-      const url  = a?.url || '#'
-      return `<a class="link" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`
-    }).join(', ')
-  }
-
-  function rowHtml(r){
-    return `
-      <tr>
-        <td>${esc(r.title||'(untitled)')}</td>
-        <td>${pill(r.type)}</td>
-        <td>${pill(r.status)}</td>
-        <td>${esc(r.origin||'')}</td>
-        <td>${esc(r.destination||'')}</td>
-        <td class="nowrap mono">${fmtDate(r.start_time)}</td>
-        <td class="mono">${r.hours ?? ''}</td>
-        <td class="mono">${fmtNum(r.payout_auec)}</td>
-        <td>${esc(r.tags||'')}</td>
-        <td>${esc(r.attendees||'')}</td>
-        <td>${attachmentsCell(r.attachments)}</td>
-        <td>${esc(r.notes||'')}</td>
-        <td>${esc(r.id||'')}</td>
-      </tr>`
-  }
-
-  function render(rows){
-    tbody.innerHTML = rows.length
-      ? rows.map(rowHtml).join('')
-      : `<tr><td colspan="13" class="small" style="padding:12px">No missions found.</td></tr>`
-    view = rows
-    updateKPIs(rows)
-  }
-
-  function updateKPIs(rows){
-    const count = rows.length
-    let total = 0
-    for(const r of rows){ total += Number(r.payout_auec||0) }
-    const avg = count ? Math.round(total / count) : 0
-    document.getElementById('kpiCount').textContent = count.toLocaleString()
-    document.getElementById('kpiTotal').textContent = total.toLocaleString()
-    document.getElementById('kpiAvg').textContent   = avg.toLocaleString()
-  }
-
-  function applyFilters(){
-    const q  = (search.value||'').toLowerCase()
-    const sf = (statusFilter.value||'').toLowerCase()
-    let rows = cache.slice()
-    if(sf) rows = rows.filter(r => (r.status||'').toLowerCase() === sf)
-    if(q){
-      rows = rows.filter(r =>
-        (r.title||'').toLowerCase().includes(q) ||
-        (r.type||'').toLowerCase().includes(q) ||
-        (r.status||'').toLowerCase().includes(q) ||
-        (r.tags||'').toLowerCase().includes(q) ||
-        (r.origin||'').toLowerCase().includes(q) ||
-        (r.destination||'').toLowerCase().includes(q)
-      )
-    }
-    render(rows)
-  }
-
-  async function load(){
-    const { data, error } = await sb.from('missions')
-      .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes,created_at')
-      .order('created_at',{ascending:false})
-    if(error){
-      tbody.innerHTML = `<tr><td colspan="13" class="small" style="padding:12px">Failed to load missions: ${esc(error.message)}</td></tr>`
-      return
-    }
-    cache = data || []
-    applyFilters()
-  }
-
-  // Export current filtered view as CSV (client-side)
-  document.getElementById('exportCSV').onclick = () => {
-    if(!view.length){ alert('Nothing to export'); return }
-    const cols = ['Mission Title','Type','Status','Origin','Destination','Date','No. of Hours','Payout (aUEC)','Tags','Attendees','Notes','ID']
-    const lines = [cols.join(',')]
-    for(const r of view){
-      const row = [
-        r.title||'',
-        r.type||'',
-        r.status||'',
-        r.origin||'',
-        r.destination||'',
-        fmtDate(r.start_time),
-        r.hours??'',
-        r.payout_auec??'',
-        (r.tags||'').replaceAll(',',';'),
-        (r.attendees||'').replaceAll(',',';'),
-        (r.notes||'').replaceAll('\n',' ').replaceAll(',',';'),
-        r.id||''
-      ].map(x=>`"${String(x??'').replaceAll('"','""')}"`)
-      lines.push(row.join(','))
-    }
-    const blob = new Blob([lines.join('\n')],{type:'text/csv'})
-    const url  = URL.createObjectURL(blob)
-    const a = document.createElement('a'); a.href=url; a.download='jmbn-mission-log.csv'; a.click()
-    URL.revokeObjectURL(url)
-  }
-
-  // Auth-gate like Contracts
-  document.addEventListener('DOMContentLoaded', async () => {
-    const session = await requireAuth();
-    if (!session) return;
-    await load();
-  });
-
-  search.addEventListener('input', applyFilters)
-  statusFilter.addEventListener('input', applyFilters)
-  </script>
-
-  <!-- Active nav highlight -->
   <script>
+  /* ===== Active nav highlight (same as Contracts) ===== */
   (function(){
-    const here=location.pathname.split('/').pop()||'mission-log.html';
+    const here = location.pathname.split('/').pop() || 'mission-log.html';
     document.querySelectorAll('.nav-btn').forEach(a=>{
       if(a.getAttribute('href')===here){
         a.classList.add('active');
@@ -328,6 +157,99 @@ tr:hover{background:rgba(214,180,76,.08)}
       }
     });
   })();
+
+  /* ===== Supabase config (your values) ===== */
+  const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8';
+
+  // auth.js should expose requireAuth(); we’ll still create a scoped client here
+  let sbClient = null;
+
+  /* ===== DOM refs ===== */
+  const tbody  = document.getElementById('tbody');
+  const search = document.getElementById('search');
+  const refreshBtn = document.getElementById('refreshBtn');
+  let cache = [];
+
+  const esc = (s='') => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; };
+  const fmtDate = iso => iso ? new Date(iso).toLocaleString() : '';
+  const fmtNum  = n => (n||n===0) ? Number(n).toLocaleString() : '';
+  const pill = t => t ? `<span class="pill">${esc(t)}</span>` : '';
+
+  function attachmentsCell(arr){
+    if(!Array.isArray(arr) || !arr.length) return '';
+    return arr.map((a,i)=>{
+      const name = (a && (a.name||'').trim()) || `Attachment ${i+1}`;
+      const url  = a && a.url || '#';
+      return `<a class="link" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`;
+    }).join(', ');
+  }
+
+  function rowHtml(r){
+    return `<tr>
+      <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
+      <td>${pill(r.type)}</td>
+      <td>${pill(r.status)}</td>
+      <td>${esc(r.origin||'')}</td>
+      <td>${esc(r.destination||'')}</td>
+      <td class="nowrap mono">${fmtDate(r.start_time)}</td>
+      <td class="mono">${r.hours ?? ''}</td>
+      <td class="mono">${fmtNum(r.payout_auec)}</td>
+      <td>${esc(r.tags||'')}</td>
+      <td>${esc(r.attendees||'')}</td>
+      <td>${attachmentsCell(r.attachments)}</td>
+      <td>${esc(r.notes||'')}</td>
+    </tr>`;
+  }
+
+  function render(rows){
+    tbody.innerHTML = rows.length
+      ? rows.map(rowHtml).join('')
+      : `<tr><td colspan="12" class="small" style="padding:10px">No missions found.</td></tr>`;
+  }
+
+  function filter(){
+    const q = (search.value||'').toLowerCase();
+    if(!q){ render(cache); return; }
+    const filtered = cache.filter(r =>
+      (r.title||'').toLowerCase().includes(q) ||
+      (r.type||'').toLowerCase().includes(q) ||
+      (r.status||'').toLowerCase().includes(q) ||
+      (r.tags||'').toLowerCase().includes(q) ||
+      (r.origin||'').toLowerCase().includes(q) ||
+      (r.destination||'').toLowerCase().includes(q)
+    );
+    render(filtered);
+  }
+
+  async function loadMissions(){
+    try{
+      const { createClient } = window.supabase; // from script tag
+      if(!sbClient) sbClient = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+      const { data, error } = await sbClient
+        .from('missions')
+        .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes')
+        .order('created_at', { ascending:false });
+
+      if(error) throw error;
+      cache = data || [];
+      render(cache);
+    }catch(err){
+      tbody.innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(err.message||String(err))}</td></tr>`;
+    }
+  }
+
+  /* Events */
+  search.addEventListener('input', filter);
+  refreshBtn.addEventListener('click', loadMissions);
+
+  /* Init with auth guard (same pattern as Contracts) */
+  document.addEventListener('DOMContentLoaded', async () => {
+    const session = await requireAuth(); // from js/auth.js
+    if (!session) return;
+    await loadMissions();
+  });
   </script>
 </body>
 </html>
