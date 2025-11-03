@@ -107,14 +107,13 @@ tr:hover{background:rgba(242,214,117,.05)}
   <h1>JMBN Mission Editor</h1>
 </div>
 
-
 <!-- Toolbar -->
 <div class="toolbar">
   <a class="btn-cta" href="mission-log.html">
     <span class="ic">←</span>
     <span>Back to Mission Log</span>
   </a>
-  <span class="subtle-note">Use this page to create or edit missions, then copy the rows into your log.</span>
+  <span class="subtle-note">Use this page to create or edit missions. “Save to Supabase” sends it to your cloud log.</span>
 </div>
 
 <!-- Panel: Mission Details -->
@@ -188,8 +187,10 @@ tr:hover{background:rgba(242,214,117,.05)}
     <button onclick="copyAll()">Copy &lt;tbody&gt;</button>
     <button onclick="downloadHTML()">Download HTML</button>
     <button onclick="clearPreview()">Clear All</button>
+    <!-- NEW: cloud save -->
+    <button id="saveSupabaseBtn" title="Insert into Supabase missions table">💾 Save to Supabase</button>
   </div>
-  <div class="sub" style="margin-top:8px">Paste copied rows into <code>mission-log.html</code> &lt;tbody&gt;.</div>
+  <div class="sub" style="margin-top:8px">Paste copied rows into <code>mission-log.html</code> &lt;tbody&gt; — or just use the cloud log.</div>
 </div>
 
 <!-- Panel: Preview Table -->
@@ -206,12 +207,22 @@ tr:hover{background:rgba(242,214,117,.05)}
   </table>
 </div>
 
+<!-- Supabase client -->
+<script src="https://esm.sh/@supabase/supabase-js@2"></script>
 <script>
+/* ====== CONFIG: replace with your real project values ====== */
+const SUPABASE_URL  = "https://fcegavhipeaeihxegsnw.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8";
+/* =========================================================== */
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
 const preview=document.querySelector('#preview tbody');
 const attachList=document.getElementById('attachList');
 
 function esc(s=''){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function val(id){return document.getElementById(id).value.trim();}
+function setDisabled(el, on){ el.disabled = !!on; el.textContent = on ? 'Saving…' : '💾 Save to Supabase'; }
 
 function addAttach(){
   const div=document.createElement('div');
@@ -226,12 +237,22 @@ function collectAttachments(){
   return [...attachList.querySelectorAll('.attach-item')].map(el=>{
     const label=el.children[0].value.trim();
     const url=el.children[1].value.trim();
-    return {label,url};
-  }).filter(a=>a.url);
+    if(!url) return null;
+    const name = label || (url.split('/').pop() || 'link');
+    try { new URL(url); } catch { return null; }
+    return { name, url };
+  }).filter(Boolean);
 }
 
 function pack(obj){
   return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+}
+
+function clearInputs(){
+  document.querySelectorAll('input,textarea,select').forEach(e=>{
+    if(!e.closest('.attach-item')) e.value='';
+  });
+  attachList.innerHTML='';
 }
 
 function addMission(){
@@ -264,13 +285,6 @@ function addMission(){
   clearInputs();
 }
 
-function clearInputs(){
-  document.querySelectorAll('input,textarea,select').forEach(e=>{
-    if(!e.closest('.attach-item')) e.value='';
-  });
-  attachList.innerHTML='';
-}
-
 function copyRow(btn){
   const html=btn.closest('tr').outerHTML;
   navigator.clipboard.writeText(html);
@@ -294,6 +308,49 @@ function downloadHTML(){
 }
 
 function clearPreview(){preview.innerHTML='';}
+
+/* ====== NEW: Save to Supabase (keeps your UI) ====== */
+document.getElementById('saveSupabaseBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('saveSupabaseBtn');
+  const payload = buildSupabasePayload();
+  if (!payload.title){
+    alert('Please enter a Mission Title.'); return;
+  }
+  try{
+    setDisabled(btn, true);
+    const { error } = await sb.from('missions').insert(payload);
+    if (error) throw error;
+    alert('Mission saved to Supabase ✅');
+    // Optional: redirect to log
+    location.href = 'mission-log.html';
+  }catch(err){
+    console.error(err);
+    alert('Save failed: ' + (err.message || err));
+  }finally{
+    setDisabled(btn, false);
+  }
+});
+
+function buildSupabasePayload(){
+  const dateLocal = val('date');
+  const startISO = dateLocal ? new Date(dateLocal).toISOString() : null;
+  const attachments = collectAttachments();
+
+  return {
+    title:       val('title'),
+    type:        val('type'),
+    status:      val('status'),
+    origin:      val('origin'),
+    destination: val('destination'),
+    start_time:  startISO,
+    hours:       Number(val('hours') || 0),
+    payout_auec: Number(val('payout') || 0),
+    tags:        val('tags'),
+    attendees:   val('attendees'),
+    notes:       val('notes'),
+    attachments: attachments    // [{name,url}, ...]
+  };
+}
 </script>
 
 </body>
