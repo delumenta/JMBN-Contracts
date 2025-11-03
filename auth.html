@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a}
+  body{background:#000;color:var(--text);font-family:Play,system-ui,sans-serif;margin:0;min-height:100vh;display:grid;place-items:center}
+  .card{background:#0b0b0b;border:1px solid var(--border);padding:24px;width:min(420px,92vw);border-radius:16px}
+  label{display:block;margin:10px 0 6px}
+  input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--accent);background:#141414;color:#f7f1d0}
+  button{margin-top:14px;width:100%;padding:12px;border-radius:10px;border:1px solid var(--accent);background:#141414;color:#f7f1d0;font-weight:700;cursor:pointer}
+  .muted{color:var(--muted);font-size:14px;margin-top:10px}
+  .err{color:#ff9b9b;margin-top:10px;min-height:1em}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>JMBN Manifest</h1>
+    <p class="muted">Org login (invite-only)</p>
+
+    <label>Username</label>
+    <input id="username" placeholder="e.g. ops" autocomplete="username" />
+    <label>Password</label>
+    <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+    <button id="loginBtn">Sign in</button>
+    <div id="msg" class="err"></div>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Skip login if already authenticated
+    (async () => {
+      const session = await getSession();
+      if (session) location.replace(BASE + "index.html");
+    })();
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      const msg = document.getElementById('msg');
+
+      msg.textContent = "";
+      const { error } = await signIn(u, p);
+      if (error) { msg.textContent = error.message; return; }
+
+      location.replace(BASE + "index.html");
+    });
+  </script>
+</body>
+</html>
