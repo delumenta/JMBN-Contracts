@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,79 +6,92 @@
 <title>JMBN Mission Editor</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
-
 <style>
-:root{
-  --bg:#000; --panel:#0b0b0b; --card:#0c0c0c; --border:#d6b44c;
-  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-}
+:root{ --bg:#000; --panel:#0b0b0b; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a }
 *{box-sizing:border-box}
-body{
-  background:#000; color:var(--text); font-family:'Play',system-ui,sans-serif;
-  margin:0; padding:24px; letter-spacing:.25px; line-height:1.5;
-}
-/* Header + Nav */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 14px;border-bottom:1px solid var(--border);padding-bottom:8px}
+body{ background:#000; color:var(--text); font-family:'Play',system-ui,sans-serif; margin:0; padding:18px }
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 10px;border-bottom:1px solid var(--border);padding-bottom:8px}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:22px;color:var(--accent);margin:0}
-/* Panels */
-.panel{
-  background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px;
-  box-shadow:0 0 18px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.10);
-}
-.panel + .panel{margin-top:14px}
+.brand h1{margin:0;color:var(--accent);font-size:22px}
+.toolbar{display:flex;gap:10px;align-items:center;margin:10px 0 16px;flex-wrap:wrap}
+.btn-cta{display:inline-flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);text-decoration:none;font-weight:700}
+.btn-cta:hover{background:linear-gradient(180deg,#f2d675,#e7c760);color:#000}
+.ic{width:18px;height:18px;border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;font-size:14px}
+.subtle{color:var(--muted);font-size:12px}
+
+/* 2-column layout */
+.wrap{display:grid;grid-template-columns:340px 1fr;gap:14px}
+@media(max-width:980px){.wrap{grid-template-columns:1fr}}
+
+.panel{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.14)}
 .panel h3{margin:0 0 10px;color:var(--accent);font-size:16px}
-/* Inputs + Buttons */
+
+/* List panel */
+.list-tools{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+input[type="search"]{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--text)}
+.list{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto;padding-right:4px}
+.item{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--border);border-radius:10px;background:#0a0a0a;cursor:pointer}
+.item:hover{background:#111}
+.item-title{font-weight:700}
+.item-sub{font-size:12px;color:var(--muted)}
+.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.small-btn{padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--accent);cursor:pointer}
+.small-btn:hover{background:var(--accent);color:#000}
+
+/* Form side */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid.full{grid-template-columns:1fr}
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
-input,select,textarea{
-  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;
-  padding:10px;color:var(--text);font-family:'Play';font-size:14px;
-}
-textarea{min-height:80px;resize:vertical}
-button{
-  padding:10px 14px;border-radius:10px;border:1px solid var(--border);
-  color:var(--accent);background:linear-gradient(180deg,#0c0c0c,#060606);
-  font-family:'Play';cursor:pointer;font-size:13px;transition:.2s
-}
+input,select,textarea{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:'Play'}
+textarea{min-height:90px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+button{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);cursor:pointer}
 button:hover{background:var(--accent);color:#000}
-button.primary{background:var(--accent);color:#000}
 button.danger{border-color:#ff6b6b;color:#ff6b6b}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-/* Form layout */
-.form-section{display:flex;flex-direction:column;gap:16px;max-width:920px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.row2 > div{min-width:0}
-/* Attachments */
 .attach-item{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:8px}
 .attach-item button{padding:6px 10px}
-/* Mode chip */
-.mode-chip{
-  display:inline-flex;align-items:center;gap:8px;margin-left:auto;
-  padding:6px 10px;border:1px solid var(--border);border-radius:10px;
-  color:var(--accent);background:linear-gradient(180deg,#0c0c0c,#060606);
-  font-size:12px;
-}
-.sub{color:var(--muted);font-size:12px}
+
+.mode-chip{margin-left:auto;border:1px solid var(--border);border-radius:10px;padding:6px 10px;background:#0a0a0a;color:var(--accent);font-size:12px}
 </style>
 </head>
 <body>
 
 <!-- Header -->
 <div class="brand">
-  <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN" class="brand-logo">
+  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
   <h1 style="margin-right:auto">JMBN Mission Editor</h1>
-  <span id="modeChip" class="mode-chip" title="Editor Mode">Create</span>
+  <span id="modeChip" class="mode-chip">Create</span>
 </div>
 
-<!-- Panel: Mission Details -->
-<div class="panel">
-  <h3>Mission Details</h3>
-  <div class="form-section">
-    <div>
-      <label>Mission Title</label>
-      <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
+<!-- Toolbar -->
+<div class="toolbar">
+  <a class="btn-cta" href="mission-log.html" title="Go back"><span class="ic">←</span><span>Back to Mission Log</span></a>
+  <span class="subtle">View missions on the left. Select to edit; Save, Update, or Delete on the right.</span>
+</div>
+
+<div class="wrap">
+  <!-- LEFT: Mission list -->
+  <div class="panel">
+    <h3>All Missions</h3>
+    <div class="list-tools">
+      <input id="search" type="search" placeholder="Search title / tags / status..." />
+      <button id="refresh" class="small-btn" title="Reload">↻</button>
+      <button id="newBtn" class="small-btn" title="Start new">＋ New</button>
     </div>
-    <div class="row2">
+    <div id="list" class="list"></div>
+  </div>
+
+  <!-- RIGHT: Editor -->
+  <div class="panel">
+    <h3>Mission Details</h3>
+    <div class="form-grid full">
+      <div>
+        <label>Mission Title</label>
+        <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
+      </div>
+    </div>
+
+    <div class="form-grid">
       <div>
         <label>Type</label>
         <select id="type">
@@ -96,241 +108,222 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
         </select>
       </div>
     </div>
-    <div class="row2">
+
+    <div class="form-grid">
       <div><label>Origin</label><input id="origin" placeholder="e.g., Area18"></div>
       <div><label>Destination</label><input id="destination" placeholder="e.g., Everus Harbor"></div>
     </div>
-    <div class="row2">
+
+    <div class="form-grid">
       <div><label>Date</label><input id="date" type="datetime-local"></div>
       <div><label>No. of Hours</label><input id="hours" type="number" step="0.1"></div>
     </div>
-    <div class="row2">
+
+    <div class="form-grid">
       <div><label>Payout (aUEC)</label><input id="payout" type="number" step="1"></div>
       <div><label>Tags (comma separated)</label><input id="tags" placeholder="e.g., hauling, night"></div>
     </div>
-    <div>
-      <label>Attendees</label>
-      <input id="attendees" placeholder="e.g., Vex, Kara">
+
+    <div class="form-grid full">
+      <div><label>Attendees</label><input id="attendees" placeholder="e.g., Vex, Kara"></div>
+    </div>
+
+    <div class="form-grid full" style="margin-top:8px">
+      <div>
+        <label>Attachments</label>
+        <div id="attachList"></div>
+        <button id="addAttachBtn" class="small-btn" type="button">Add Attachment</button>
+      </div>
+    </div>
+
+    <div class="form-grid full" style="margin-top:8px">
+      <div><label>Notes / AAR</label><textarea id="notes" placeholder="Summary, outcomes, lessons learned"></textarea></div>
+    </div>
+
+    <div class="actions">
+      <button id="clearFormBtn" title="Clear the form">Clear Form</button>
+      <button id="saveNewBtn" class="btn primary" title="Save as NEW row">💾 Save New</button>
+      <button id="updateBtn" class="btn" title="Update current row">✎ Update Current</button>
+      <button id="deleteBtn" class="danger" title="Delete current">🗑 Delete</button>
     </div>
   </div>
 </div>
 
-<!-- Panel: Attachments -->
-<div class="panel">
-  <h3>Attachments</h3>
-  <div id="attachList"></div>
-  <div class="sub" style="margin:6px 0 10px">Add any links (screenshots, telemetry, clips, reports).</div>
-  <button id="addAttachBtn">Add Attachment</button>
-</div>
-
-<!-- Panel: Notes -->
-<div class="panel">
-  <h3>Notes / AAR</h3>
-  <textarea id="notes" placeholder="Summary, outcomes, lessons learned"></textarea>
-</div>
-
-<!-- Panel: Actions -->
-<div class="panel">
-  <h3>Actions</h3>
-  <div class="actions" style="margin-top:6px">
-    <button id="clearAllBtn">Clear All</button>
-    <button id="saveSupabaseBtn" class="primary" title="Insert or update in Supabase">💾 Save</button>
-    <button id="deleteBtn" class="danger" style="display:none" title="Delete this mission">🗑 Delete</button>
-    <button id="newBtn" style="margin-left:auto" title="Start a new mission form">＋ New</button>
-  </div>
-</div>
-
-<!-- ===== Supabase + App Logic (ES module) ===== -->
+<!-- ===== Supabase + App Logic ===== -->
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8';
+/* ==== CONFIG: your project ==== */
+const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
 
-  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+/* ==== DOM helpers ==== */
+const $ = (id) => document.getElementById(id)
+const listEl = $('list'), searchEl = $('search'), modeChip = $('modeChip'), attachList = $('attachList')
 
-  const attachList = document.getElementById('attachList');
-  const modeChip = document.getElementById('modeChip');
+let currentId = null   // id of selected mission (if any)
+let cache = []         // cached missions list (for search)
 
-  const $  = (id) => document.getElementById(id);
-  const val = (id) => $(id).value.trim();
+/* UI helpers */
+function setMode(){
+  modeChip.textContent = currentId ? `Editing ${currentId.slice(0,8)}…` : 'Create'
+}
+function esc(s=''){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML }
+function isoToLocalInput(iso){ if(!iso) return ''; const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}` }
+function localInputToISO(v){ return v ? new Date(v).toISOString() : null }
 
-  /* ---------- Edit-mode plumbing ---------- */
-  const qs = new URLSearchParams(location.search);
-  const editId = qs.get('id'); // if present, we're editing
-
-  function isoToLocalInput(iso){
-    if (!iso) return '';
-    const d = new Date(iso);
-    const pad = n => String(n).padStart(2,'0');
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function addAttachRow(name='', url=''){
+  const div=document.createElement('div')
+  div.className='attach-item'
+  div.innerHTML=`<input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
+                 <input placeholder="URL (https://...)" value="${esc(url)}">
+                 <button type="button" onclick="this.parentElement.remove()">✕</button>`
+  attachList.appendChild(div)
+}
+function collectAttachments(){
+  return [...attachList.querySelectorAll('.attach-item')].map(el=>{
+    const label=el.children[0].value.trim(), url=el.children[1].value.trim()
+    if(!url) return null
+    try{ new URL(url) }catch{ return null }
+    return { name: label || (url.split('/').pop() || 'link'), url }
+  }).filter(Boolean)
+}
+function clearForm(){
+  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','notes'].forEach(id=>$(id).value='')
+  attachList.innerHTML=''; addAttachRow()
+  currentId = null
+  setMode()
+}
+function payloadFromForm(){
+  return {
+    title: $('title').value.trim(),
+    type: $('type').value || null,
+    status: $('status').value || null,
+    origin: $('origin').value || null,
+    destination: $('destination').value || null,
+    start_time: localInputToISO($('date').value),
+    hours: Number($('hours').value || 0),
+    payout_auec: Number($('payout').value || 0),
+    tags: $('tags').value || null,
+    attendees: $('attendees').value || null,
+    notes: $('notes').value || null,
+    attachments: collectAttachments()
   }
+}
+function fillForm(row){
+  $('title').value = row.title || ''
+  $('type').value = row.type || ''
+  $('status').value = row.status || ''
+  $('origin').value = row.origin || ''
+  $('destination').value = row.destination || ''
+  $('date').value = isoToLocalInput(row.start_time)
+  $('hours').value = row.hours ?? ''
+  $('payout').value = row.payout_auec ?? ''
+  $('tags').value = row.tags || ''
+  $('attendees').value = row.attendees || ''
+  $('notes').value = row.notes || ''
+  attachList.innerHTML = ''
+  if(Array.isArray(row.attachments) && row.attachments.length){
+    row.attachments.forEach(a=>addAttachRow(a.name||'', a.url||''))
+  }else addAttachRow()
+}
 
-  function setModeChip(text){
-    modeChip.textContent = text;
-    modeChip.title = text + (editId ? ` (${editId})` : '');
+/* ==== List rendering ==== */
+function renderList(rows){
+  listEl.innerHTML = ''
+  if(!rows.length){
+    listEl.innerHTML = `<div class="item"><div class="item-title">No missions found</div></div>`
+    return
   }
-
-  function setSaving(on){
-    const btn = $('saveSupabaseBtn');
-    btn.disabled = on;
-    btn.textContent = on ? 'Saving…' : '💾 Save';
+  for(const r of rows){
+    const el=document.createElement('div')
+    el.className='item'
+    el.innerHTML = `
+      <div>
+        <div class="item-title">${esc(r.title || '(untitled)')}</div>
+        <div class="item-sub">${esc(r.type || '')} • ${esc(r.status || '')} • ${r.start_time ? new Date(r.start_time).toLocaleString() : ''}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="badge">${esc(r.id.slice(0,8))}</span>
+        <button class="small-btn" data-id="${r.id}">Open</button>
+      </div>`
+    el.querySelector('button').onclick = ()=> openMission(r.id)
+    listEl.appendChild(el)
   }
+}
+function filterList(){
+  const q = (searchEl.value || '').toLowerCase()
+  if(!q) { renderList(cache); return }
+  const rows = cache.filter(r=>
+    (r.title||'').toLowerCase().includes(q) ||
+    (r.tags||'').toLowerCase().includes(q) ||
+    (r.status||'').toLowerCase().includes(q) ||
+    (r.type||'').toLowerCase().includes(q)
+  )
+  renderList(rows)
+}
 
-  function setEditMode(on){
-    const delBtn = $('deleteBtn');
-    const saveBtn = $('saveSupabaseBtn');
-    if (on){
-      saveBtn.textContent = '✎ Update';
-      delBtn.style.display = '';
-      setModeChip('Editing');
-    } else {
-      saveBtn.textContent = '💾 Save';
-      delBtn.style.display = 'none';
-      setModeChip('Create');
-    }
-  }
+/* ==== Supabase ops ==== */
+async function loadList(){
+  const { data, error } = await sb.from('missions')
+    .select('id,title,type,status,start_time,created_at,tags')
+    .order('created_at',{ascending:false})
+  if(error){ alert('Failed to load list: '+error.message); return }
+  cache = data || []
+  renderList(cache)
+}
+async function openMission(id){
+  const { data, error } = await sb.from('missions').select('*').eq('id', id).single()
+  if(error){ alert('Failed to open: '+error.message); return }
+  currentId = id
+  fillForm(data)
+  setMode()
+  // reflect id in URL so reload keeps context (no hard reload)
+  const u = new URL(location.href); u.searchParams.set('id', id); history.replaceState(null,'',u.toString())
+}
+async function saveNew(){
+  const payload = payloadFromForm()
+  if(!payload.title){ alert('Title is required'); return }
+  const { data, error } = await sb.from('missions').insert(payload).select().single()
+  if(error){ alert('Save failed: '+error.message); return }
+  await loadList(); currentId = data.id; setMode(); alert('Saved ✓'); openMission(data.id)
+}
+async function updateCurrent(){
+  if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return }
+  const payload = payloadFromForm()
+  const { error } = await sb.from('missions').update(payload).eq('id', currentId)
+  if(error){ alert('Update failed: '+error.message); return }
+  await loadList(); alert('Updated ✓')
+}
+async function deleteCurrent(){
+  if(!currentId){ alert('No mission selected.'); return }
+  if(!confirm('Delete this mission? This cannot be undone.')) return
+  const { error } = await sb.from('missions').delete().eq('id', currentId)
+  if(error){ alert('Delete failed: '+error.message); return }
+  await loadList(); clearForm(); alert('Deleted 🗑')
+  // remove id from URL
+  const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString())
+}
 
-  function addAttachRow(name='', url=''){
-    const div = document.createElement('div');
-    div.className='attach-item';
-    div.innerHTML = `
-      <input placeholder="Label (e.g., Screenshot)" value="${name}">
-      <input placeholder="URL (https://...)" value="${url}">
-      <button type="button" onclick="this.parentElement.remove()">✕</button>`;
-    attachList.appendChild(div);
-  }
+/* ==== Wire up ==== */
+$('addAttachBtn').onclick = ()=>addAttachRow()
+$('clearFormBtn').onclick = ()=>{ if(confirm('Clear the form?')) clearForm() }
+$('saveNewBtn').onclick = saveNew
+$('updateBtn').onclick = updateCurrent
+$('deleteBtn').onclick = deleteCurrent
+$('refresh').onclick = loadList
+$('newBtn').onclick = clearForm
+$('search').oninput = filterList
 
-  function collectAttachments(){
-    return [...attachList.querySelectorAll('.attach-item')].map(el=>{
-      const label = el.children[0].value.trim();
-      const url   = el.children[1].value.trim();
-      if(!url) return null;
-      try { new URL(url); } catch { return null; }
-      const name = label || (url.split('/').pop() || 'link');
-      return { name, url };
-    }).filter(Boolean);
-  }
+// initial
+addAttachRow()
+setMode()
+await loadList()
 
-  function clearInputs(){
-    document.querySelectorAll('input,textarea,select').forEach(e=>{
-      if(!e.closest('.attach-item')) e.value='';
-    });
-    attachList.innerHTML='';
-    addAttachRow();
-  }
-
-  function buildSupabasePayload(){
-    const dateLocal = val('date');
-    const startISO = dateLocal ? new Date(dateLocal).toISOString() : null;
-    return {
-      title:       val('title'),
-      type:        val('type'),
-      status:      val('status'),
-      origin:      val('origin'),
-      destination: val('destination'),
-      start_time:  startISO,
-      hours:       Number(val('hours') || 0),
-      payout_auec: Number(val('payout') || 0),
-      tags:        val('tags'),
-      attendees:   val('attendees'),
-      notes:       val('notes'),
-      attachments: collectAttachments()
-    };
-  }
-
-  async function saveToSupabase(){
-    const payload = buildSupabasePayload();
-    if(!payload.title){ alert('Please enter a Mission Title.'); return; }
-    try{
-      setSaving(true);
-
-      if (editId){
-        const { error } = await sb.from('missions').update(payload).eq('id', editId);
-        if (error) throw error;
-        alert('Mission updated ✅');
-      } else {
-        const { error } = await sb.from('missions').insert(payload);
-        if (error) throw error;
-        alert('Mission saved ✅');
-      }
-
-      location.href = 'mission-log.html';
-    }catch(err){
-      console.error(err);
-      alert('Save failed: ' + (err.message || err));
-    }finally{
-      setSaving(false);
-    }
-  }
-
-  async function deleteMission(){
-    if (!editId) return;
-    if (!confirm('Delete this mission? This cannot be undone.')) return;
-    try{
-      const { error } = await sb.from('missions').delete().eq('id', editId);
-      if (error) throw error;
-      alert('Mission deleted 🗑');
-      location.href = 'mission-log.html';
-    }catch(err){
-      console.error(err);
-      alert('Delete failed: ' + (err.message || err));
-    }
-  }
-
-  function startNew(){
-    if (location.search) {
-      location.href = location.pathname; // reload without id
-    } else {
-      setEditMode(false);
-      clearInputs();
-    }
-  }
-
-  async function loadForEdit(){
-    if (!editId){ setEditMode(false); addAttachRow(); return; }
-    setEditMode(true);
-    try{
-      const { data, error } = await sb.from('missions').select('*').eq('id', editId).single();
-      if (error) throw error;
-
-      $('#title').value       = data.title || '';
-      $('#type').value        = data.type || '';
-      $('#status').value      = data.status || '';
-      $('#origin').value      = data.origin || '';
-      $('#destination').value = data.destination || '';
-      $('#date').value        = isoToLocalInput(data.start_time);
-      $('#hours').value       = data.hours ?? '';
-      $('#payout').value      = data.payout_auec ?? '';
-      $('#tags').value        = data.tags || '';
-      $('#attendees').value   = data.attendees || '';
-      $('#notes').value       = data.notes || '';
-
-      attachList.innerHTML = '';
-      if (Array.isArray(data.attachments) && data.attachments.length){
-        for (const a of data.attachments){
-          addAttachRow(a.name||'', a.url||'');
-        }
-      } else {
-        addAttachRow();
-      }
-    } catch(err){
-      console.error(err);
-      alert('Failed to load mission: ' + (err.message || err));
-      setEditMode(false);
-      addAttachRow();
-    }
-  }
-
-  // Wire buttons
-  $('addAttachBtn').addEventListener('click', ()=>addAttachRow());
-  $('clearAllBtn').addEventListener('click', clearInputs);              // repurposed to clear form
-  $('saveSupabaseBtn').addEventListener('click', saveToSupabase);
-  $('deleteBtn').addEventListener('click', deleteMission);
-  $('newBtn').addEventListener('click', startNew);
-
-  // Init
-  await loadForEdit();
+// if page opened with ?id=..., load it
+const qs = new URLSearchParams(location.search)
+if(qs.get('id')) openMission(qs.get('id'))
 </script>
 </body>
 </html>
