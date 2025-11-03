@@ -331,10 +331,6 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
   (async () => {
     const session = await requireAuth();     // redirects to auth.html if not logged in
     if (!session) return;
-
-    // Optional: display username (replaces [OPS] with the username)
-    const chip = document.getElementById('opsChip');
-    if (chip) chip.textContent = '[' + currentUsername(session).toUpperCase() + ']';
   })();
 </script>
 <!-- 🔼🔼 END OF AUTH SECTION 🔼🔼 -->
