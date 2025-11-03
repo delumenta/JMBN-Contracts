@@ -135,6 +135,10 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
+<!-- 🔐 Auth -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+      
 <script>
 /* Active nav highlight */
 (function(){
@@ -331,7 +335,12 @@ function importJSON(){
 $('#importJSON').onclick=importJSON;
 
 /* Init */
-document.addEventListener('DOMContentLoaded', load);
+/* Init (protected) */
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth();   // redirects to auth.html if not logged in
+  if (!session) return;
+  load();
+});
 </script>
 </body>
 </html>
