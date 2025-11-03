@@ -60,9 +60,7 @@ tbody tr:hover{background:#111}
   display:inline-block;padding:4px 10px;border:1px solid var(--border);border-radius:999px;
   color:var(--accent);font-size:12px;background:#090909
 }
-.link{
-  color:var(--accent);text-decoration:underline;cursor:pointer
-}
+.link{color:var(--accent);text-decoration:underline;cursor:pointer}
 .badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
 .nowrap{white-space:nowrap}
 .mono{font-variant-numeric:tabular-nums}
@@ -82,13 +80,13 @@ tbody tr:hover{background:#111}
   <a class="nav-btn" href="hangar.html">Hangar</a>
   <a class="nav-btn" href="components.html">Components</a>
   <a class="nav-btn" href="contracts.html">Contracts</a>
-  <a class="nav-btn active" href="mission-log.html">Mission Log</a>
+  <a class="nav-btn" href="mission-log.html">Mission Log</a>
 </nav>
 
 <!-- Toolbar -->
 <div class="toolbar">
   <input id="search" type="search" placeholder="Search title / type / tags / status...">
-  <span class="subtle">Click a row’s ID to open it for editing.</span>
+  <span class="subtle">Click the ID to open in the editor.</span>
 </div>
 
 <div class="table-wrap">
@@ -114,84 +112,6 @@ tbody tr:hover{background:#111}
   </table>
 </div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
-
-const tbody = document.getElementById('tbody')
-const search = document.getElementById('search')
-let cache = []
-
-const esc = (s='') => {
-  const d=document.createElement('div'); d.textContent=s; return d.innerHTML
-}
-const fmtDate = iso => iso ? new Date(iso).toLocaleString() : ''
-const fmtNum = n => (n||n===0) ? Number(n).toLocaleString() : ''
-const pill = t => t ? `<span class="pill">${esc(t)}</span>` : ''
-
-function attachmentsCell(arr){
-  if(!Array.isArray(arr) || !arr.length) return ''
-  return arr.map((a,i)=>{
-    const name = a?.name?.trim() || `Attachment ${i+1}`
-    const url  = a?.url || '#'
-    return `<a class="link" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`
-  }).join(', ')
-}
-
-function rowHtml(r){
-  return `
-    <tr>
-      <td>${esc(r.title||'(untitled)')}</td>
-      <td>${pill(r.type)}</td>
-      <td>${pill(r.status)}</td>
-      <td>${esc(r.origin||'')}</td>
-      <td>${esc(r.destination||'')}</td>
-      <td class="nowrap mono">${fmtDate(r.start_time)}</td>
-      <td class="mono">${r.hours ?? ''}</td>
-      <td class="mono">${fmtNum(r.payout_auec)}</td>
-      <td>${esc(r.tags||'')}</td>
-      <td>${esc(r.attendees||'')}</td>
-      <td>${attachmentsCell(r.attachments)}</td>
-      <td>${esc(r.notes||'')}</td>
-    </tr>`
-}
-
-function render(rows){
-  tbody.innerHTML = rows.map(rowHtml).join('') || `<tr><td colspan="13" style="padding:12px;color:var(--muted)">No missions found.</td></tr>`
-}
-
-function filter(){
-  const q = (search.value||'').toLowerCase()
-  if(!q){ render(cache); return }
-  render(cache.filter(r =>
-    (r.title||'').toLowerCase().includes(q) ||
-    (r.type||'').toLowerCase().includes(q) ||
-    (r.status||'').toLowerCase().includes(q) ||
-    (r.tags||'').toLowerCase().includes(q) ||
-    (r.origin||'').toLowerCase().includes(q) ||
-    (r.destination||'').toLowerCase().includes(q)
-  ))
-}
-
-async function load(){
-  const { data, error } = await sb.from('missions')
-    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes')
-    .order('created_at',{ascending:false})
-  if(error){
-    tbody.innerHTML = `<tr><td colspan="13" style="padding:12px;color:var(--muted)">Failed to load missions: ${esc(error.message)}</td></tr>`
-    return
-  }
-  cache = data || []
-  render(cache)
-}
-
-search.oninput = filter
-await load()
-</script>
-
 <!-- highlight nav -->
 <script>
 (() => {
@@ -199,6 +119,99 @@ await load()
   document.querySelectorAll('.nav-btn').forEach(a=>{
     if(a.getAttribute('href')===here){a.classList.add('active')}
   });
+})();
+</script>
+
+<!-- ✅ Supabase (UMD) + auth gate + app code -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+async function initMissionLog(){
+  // --- Supabase client ---
+  const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  // --- DOM + utils ---
+  const tbody  = document.getElementById('tbody');
+  const search = document.getElementById('search');
+  let cache = [];
+
+  const esc = (s='') => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; };
+  const fmtDate = iso => iso ? new Date(iso).toLocaleString() : '';
+  const fmtNum = n => (n||n===0) ? Number(n).toLocaleString() : '';
+  const pill = t => t ? `<span class="pill">${esc(t)}</span>` : '';
+  const short = id => String(id||'').split('-')[0] || '';
+
+  function attachmentsCell(arr){
+    if(!Array.isArray(arr) || !arr.length) return '';
+    return arr.map((a,i)=>{
+      const name = a?.name?.trim() || `Attachment ${i+1}`;
+      const url  = a?.url || '#';
+      return `<a class="link" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`;
+    }).join(', ');
+  }
+
+  function rowHtml(r){
+    const idHref = `mission-editor.html?id=${encodeURIComponent(r.id)}`;
+    return `
+      <tr>
+        <td>${esc(r.title||'(untitled)')}</td>
+        <td>${pill(r.type)}</td>
+        <td>${pill(r.status)}</td>
+        <td>${esc(r.origin||'')}</td>
+        <td>${esc(r.destination||'')}</td>
+        <td class="nowrap mono">${fmtDate(r.start_time)}</td>
+        <td class="mono">${r.hours ?? ''}</td>
+        <td class="mono">${fmtNum(r.payout_aueC || r.payout_auec)}</td>
+        <td>${esc(r.tags||'')}</td>
+        <td>${esc(r.attendees||'')}</td>
+        <td>${attachmentsCell(r.attachments)}</td>
+        <td>${esc(r.notes||'')}</td>
+        <td class="nowrap"><a class="link mono" href="${idHref}">${esc(short(r.id))}</a></td>
+      </tr>`;
+  }
+
+  function render(rows){
+    tbody.innerHTML = rows.map(rowHtml).join('') ||
+      `<tr><td colspan="13" style="padding:12px;color:var(--muted)">No missions found.</td></tr>`;
+  }
+
+  function filter(){
+    const q = (search.value||'').toLowerCase();
+    if(!q){ render(cache); return; }
+    render(cache.filter(r =>
+      (r.title||'').toLowerCase().includes(q) ||
+      (r.type||'').toLowerCase().includes(q) ||
+      (r.status||'').toLowerCase().includes(q) ||
+      (r.tags||'').toLowerCase().includes(q) ||
+      (r.origin||'').toLowerCase().includes(q) ||
+      (r.destination||'').toLowerCase().includes(q)
+    ));
+  }
+
+  async function load(){
+    const { data, error } = await sb
+      .from('missions')
+      .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes,created_at')
+      .order('created_at',{ascending:false});
+    if(error){
+      tbody.innerHTML = `<tr><td colspan="13" style="padding:12px;color:var(--muted)">Failed to load missions: ${esc(error.message)}</td></tr>`;
+      return;
+    }
+    cache = data || [];
+    render(cache);
+  }
+
+  search.oninput = filter;
+  await load();
+}
+
+// 🔐 Gate the page
+(async () => {
+  const session = await requireAuth();  // from js/auth.js (redirects to auth.html if not logged-in)
+  if (!session) return;
+  await initMissionLog();
 })();
 </script>
 </body>
