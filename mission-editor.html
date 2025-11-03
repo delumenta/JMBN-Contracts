@@ -41,6 +41,15 @@ body{
   display:grid;place-items:center;font-size:14px;line-height:1;flex:0 0 18px;background:transparent;color:inherit;
 }
 .subtle-note{color:var(--muted);font-size:12px}
+
+/* Mode chip */
+.mode-chip{
+  display:inline-flex;align-items:center;gap:8px;margin-left:auto;
+  padding:6px 10px;border:1px solid var(--border);border-radius:10px;
+  color:var(--accent);background:linear-gradient(180deg,#0c0c0c,#060606);
+  font-size:12px;
+}
+
 /* Panels */
 .panel{
   background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px;
@@ -48,6 +57,7 @@ body{
 }
 .panel + .panel{margin-top:14px}
 .panel h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+
 /* Inputs + Buttons */
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
 input,select,textarea{
@@ -61,14 +71,17 @@ button,.btn{
   font-family:'Play';cursor:pointer;font-size:13px;transition:.2s
 }
 button:hover,.btn:hover{background:var(--accent);color:#000}
+
 /* Form layout */
 .form-section{display:flex;flex-direction:column;gap:16px;max-width:920px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .row2 > div{min-width:0}
+
 /* Attachments */
 .attach-item{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:8px}
 .attach-item button{padding:6px 10px}
-/* Table */
+
+/* Table (preview) */
 .table{width:100%;border-collapse:collapse;margin-top:6px}
 .table th,.table td{border-bottom:1px solid rgba(214,180,76,.3);padding:10px 8px;text-align:left;font-size:13px}
 .table th{color:var(--accent)}
@@ -82,15 +95,17 @@ tr:hover{background:rgba(242,214,117,.05)}
 <body>
 
 <!-- Header -->
-<div class="brand">
+<div class="brand" style="display:flex;align-items:center;gap:10px">
   <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN" class="brand-logo">
-  <h1>JMBN Mission Editor</h1>
+  <h1 style="margin-right:auto">JMBN Mission Editor</h1>
+  <!-- shows "Create" or "Editing" with the ID -->
+  <span id="modeChip" class="mode-chip" title="Editor Mode">Create</span>
 </div>
 
 <!-- Toolbar -->
 <div class="toolbar">
   <a class="btn-cta" href="mission-log.html"><span class="ic">←</span><span>Back to Mission Log</span></a>
-  <span class="subtle-note">Use this page to create or edit missions. “Save to Supabase” sends it to your cloud log.</span>
+  <span class="subtle-note">Use this page to create or edit missions. “Save” writes to Supabase.</span>
 </div>
 
 <!-- Panel: Mission Details -->
@@ -159,7 +174,9 @@ tr:hover{background:rgba(242,214,117,.05)}
     <button id="copyAllBtn">Copy &lt;tbody&gt;</button>
     <button id="downloadBtn">Download HTML</button>
     <button id="clearAllBtn">Clear All</button>
-    <button id="saveSupabaseBtn" title="Insert into Supabase missions table">💾 Save to Supabase</button>
+    <button id="saveSupabaseBtn" title="Insert or update in Supabase">💾 Save</button>
+    <button id="deleteBtn" style="display:none" title="Delete this mission">🗑 Delete</button>
+    <button id="newBtn" style="margin-left:auto" title="Start a new mission form">＋ New</button>
   </div>
   <div class="sub" style="margin-top:8px">Paste copied rows into <code>mission-log.html</code> &lt;tbody&gt; — or just use the cloud log.</div>
 </div>
@@ -182,34 +199,63 @@ tr:hover{background:rgba(242,214,117,.05)}
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-  // ⬇️ Replace these with your real project values
+  // Your project (from you)
   const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8';
 
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
-  // expose for console testing if you want
-  window.sb = sb;
+  window.sb = sb; // optional for console
 
   const preview = document.querySelector('#preview tbody');
   const attachList = document.getElementById('attachList');
+  const modeChip = document.getElementById('modeChip');
 
   const $ = (id) => document.getElementById(id);
   const esc = (s='') => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; };
   const val = (id) => $(id).value.trim();
 
-  // UI helpers
+  /* ---------- Edit-mode plumbing ---------- */
+  const qs = new URLSearchParams(location.search);
+  const editId = qs.get('id'); // if present, we're editing
+
+  function isoToLocalInput(iso){
+    if (!iso) return '';
+    const d = new Date(iso);
+    const pad = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function setModeChip(text){
+    modeChip.textContent = text;
+    modeChip.title = text + (editId ? ` (${editId})` : '');
+  }
+
   function setSaving(on){
     const btn = $('saveSupabaseBtn');
     btn.disabled = on;
-    btn.textContent = on ? 'Saving…' : '💾 Save to Supabase';
+    btn.textContent = on ? 'Saving…' : '💾 Save';
   }
 
-  function addAttachRow(){
+  function setEditMode(on){
+    const delBtn = $('deleteBtn');
+    const saveBtn = $('saveSupabaseBtn');
+    if (on){
+      saveBtn.textContent = '✎ Update';
+      delBtn.style.display = '';
+      setModeChip('Editing');
+    } else {
+      saveBtn.textContent = '💾 Save';
+      delBtn.style.display = 'none';
+      setModeChip('Create');
+    }
+  }
+
+  function addAttachRow(name='', url=''){
     const div = document.createElement('div');
     div.className='attach-item';
     div.innerHTML = `
-      <input placeholder="Label (e.g., Screenshot)">
-      <input placeholder="URL (https://...)">
+      <input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
+      <input placeholder="URL (https://...)" value="${esc(url)}">
       <button type="button" onclick="this.parentElement.remove()">✕</button>`;
     attachList.appendChild(div);
   }
@@ -230,6 +276,7 @@ tr:hover{background:rgba(242,214,117,.05)}
       if(!e.closest('.attach-item')) e.value='';
     });
     attachList.innerHTML='';
+    addAttachRow();
   }
 
   function pack(obj){ return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))); }
@@ -305,9 +352,17 @@ tr:hover{background:rgba(242,214,117,.05)}
     if(!payload.title){ alert('Please enter a Mission Title.'); return; }
     try{
       setSaving(true);
-      const { error } = await sb.from('missions').insert(payload);
-      if (error) throw error;
-      alert('Mission saved to Supabase ✅');
+
+      if (editId){
+        const { error } = await sb.from('missions').update(payload).eq('id', editId);
+        if (error) throw error;
+        alert('Mission updated ✅');
+      } else {
+        const { error } = await sb.from('missions').insert(payload);
+        if (error) throw error;
+        alert('Mission saved ✅');
+      }
+
       location.href = 'mission-log.html';
     }catch(err){
       console.error(err);
@@ -317,16 +372,79 @@ tr:hover{background:rgba(242,214,117,.05)}
     }
   }
 
+  async function deleteMission(){
+    if (!editId) return;
+    if (!confirm('Delete this mission? This cannot be undone.')) return;
+    try{
+      const { error } = await sb.from('missions').delete().eq('id', editId);
+      if (error) throw error;
+      alert('Mission deleted 🗑');
+      location.href = 'mission-log.html';
+    }catch(err){
+      console.error(err);
+      alert('Delete failed: ' + (err.message || err));
+    }
+  }
+
+  function startNew(){
+    // strip ?id= and reset the form
+    if (location.search) {
+      location.href = location.pathname; // reload without id
+    } else {
+      setEditMode(false);
+      clearInputs();
+    }
+  }
+
+  async function loadForEdit(){
+    if (!editId){ setEditMode(false); return; }
+    setEditMode(true);
+    try{
+      const { data, error } = await sb.from('missions').select('*').eq('id', editId).single();
+      if (error) throw error;
+
+      // Fill form
+      $('#title').value       = data.title || '';
+      $('#type').value        = data.type || '';
+      $('#status').value      = data.status || '';
+      $('#origin').value      = data.origin || '';
+      $('#destination').value = data.destination || '';
+      $('#date').value        = isoToLocalInput(data.start_time);
+      $('#hours').value       = data.hours ?? '';
+      $('#payout').value      = data.payout_auec ?? '';
+      $('#tags').value        = data.tags || '';
+      $('#attendees').value   = data.attendees || '';
+      $('#notes').value       = data.notes || '';
+
+      // attachments
+      attachList.innerHTML = '';
+      if (Array.isArray(data.attachments) && data.attachments.length){
+        for (const a of data.attachments){
+          addAttachRow(a.name||'', a.url||'');
+        }
+      } else {
+        addAttachRow();
+      }
+    } catch(err){
+      console.error(err);
+      alert('Failed to load mission: ' + (err.message || err));
+      setEditMode(false);
+    }
+  }
+
   // Wire buttons
-  $('addAttachBtn').addEventListener('click', addAttachRow);
+  $('addAttachBtn').addEventListener('click', ()=>addAttachRow());
   $('addListBtn').addEventListener('click', addMissionToPreview);
   $('copyAllBtn').addEventListener('click', copyAll);
   $('downloadBtn').addEventListener('click', downloadHTML);
   $('clearAllBtn').addEventListener('click', clearPreview);
   $('saveSupabaseBtn').addEventListener('click', saveToSupabase);
+  $('deleteBtn').addEventListener('click', deleteMission);
+  $('newBtn').addEventListener('click', startNew);
 
-  // optional: start with one empty attachment row
-  addAttachRow();
+  // Init
+  addAttachRow();         // start with one attachment row in create mode
+  await loadForEdit();    // if id exists, flip into edit mode
 </script>
 </body>
 </html>
