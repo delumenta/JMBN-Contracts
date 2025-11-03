@@ -181,20 +181,6 @@ tr:hover{background:rgba(242,214,117,.05)}
   <div class="sub" style="margin-top:8px">Paste copied rows into <code>mission-log.html</code> &lt;tbody&gt; — or just use the cloud log.</div>
 </div>
 
-<!-- Panel: Preview Table -->
-<div class="panel">
-  <h3>Preview</h3>
-  <table class="table" id="preview">
-    <thead>
-      <tr>
-        <th>Mission Title</th><th>Type</th><th>Status</th><th>Origin</th><th>Destination</th>
-        <th>Date</th><th>No. of Hours</th><th>Payout (aUEC)</th><th>Tags</th><th>Attendees</th><th>Attachments</th><th>Notes</th><th></th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
-
 <!-- ===== Supabase + App Logic (ES module) ===== -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -206,7 +192,6 @@ tr:hover{background:rgba(242,214,117,.05)}
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
   window.sb = sb; // optional for console
 
-  const preview = document.querySelector('#preview tbody');
   const attachList = document.getElementById('attachList');
   const modeChip = document.getElementById('modeChip');
 
