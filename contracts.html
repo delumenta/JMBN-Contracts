@@ -231,6 +231,11 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
+<!-- 🔐 AUTH SECTION -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<!-- END AUTH SECTION -->
+      
 <script>
 /* ===== Active nav highlight ===== */
 (function(){
@@ -450,7 +455,11 @@ $('#importJSON').onclick=()=>{
 };
 
 /* ===== Init ===== */
-document.addEventListener('DOMContentLoaded', load);
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth();   // redirects to auth.html if not logged in
+  if (!session) return;                  // stop loading if no session
+  load();                                // continue loading contracts if logged in
+});
 </script>
 </body>
 </html>
