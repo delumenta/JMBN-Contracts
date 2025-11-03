@@ -60,7 +60,6 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
 <div class="brand">
   <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
   <h1 style="margin-right:auto">JMBN Mission Editor</h1>
-  <span id="modeChip" class="mode-chip">Create</span>
 </div>
 
 <!-- Toolbar -->
@@ -128,6 +127,11 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
       <div><label>Attendees</label><input id="attendees" placeholder="e.g., Vex, Kara"></div>
     </div>
 
+    <!-- NEW: Submitted By (between Attendees and Notes) -->
+    <div class="form-grid full">
+      <div><label>Submitted By</label><input id="submittedBy" placeholder="e.g., Derek / Vex"></div>
+    </div>
+
     <div class="form-grid full" style="margin-top:8px">
       <div>
         <label>Attachments</label>
@@ -190,7 +194,7 @@ function collectAttachments(){
   }).filter(Boolean)
 }
 function clearForm(){
-  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','notes'].forEach(id=>$(id).value='')
+  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','submittedBy','notes'].forEach(id=>$(id).value='')
   attachList.innerHTML=''; addAttachRow()
   currentId = null
   setMode()
@@ -207,6 +211,7 @@ function payloadFromForm(){
     payout_auec: Number($('payout').value || 0),
     tags: $('tags').value || null,
     attendees: $('attendees').value || null,
+    submitted_by: $('submittedBy').value || null,     // <-- NEW
     notes: $('notes').value || null,
     attachments: collectAttachments()
   }
@@ -222,6 +227,7 @@ function fillForm(row){
   $('payout').value = row.payout_auec ?? ''
   $('tags').value = row.tags || ''
   $('attendees').value = row.attendees || ''
+  $('submittedBy').value = row.submitted_by || ''     // <-- NEW
   $('notes').value = row.notes || ''
   attachList.innerHTML = ''
   if(Array.isArray(row.attachments) && row.attachments.length){
@@ -279,7 +285,6 @@ async function openMission(id){
   currentId = id
   fillForm(data)
   setMode()
-  // reflect id in URL so reload keeps context (no hard reload)
   const u = new URL(location.href); u.searchParams.set('id', id); history.replaceState(null,'',u.toString())
 }
 async function saveNew(){
@@ -302,7 +307,6 @@ async function deleteCurrent(){
   const { error } = await sb.from('missions').delete().eq('id', currentId)
   if(error){ alert('Delete failed: '+error.message); return }
   await loadList(); clearForm(); alert('Deleted 🗑')
-  // remove id from URL
   const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString())
 }
 
