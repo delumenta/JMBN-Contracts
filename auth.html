@@ -5,21 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JMBN — Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
+
 <style>
-  :root{--border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a}
-  body{background:#000;color:var(--text);font-family:Play,system-ui,sans-serif;margin:0;min-height:100vh;display:grid;place-items:center}
-  .card{background:#0b0b0b;border:1px solid var(--border);padding:24px;width:min(420px,92vw);border-radius:16px}
-  label{display:block;margin:10px 0 6px}
-  input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--accent);background:#141414;color:#f7f1d0}
-  button{margin-top:14px;width:100%;padding:12px;border-radius:10px;border:1px solid var(--accent);background:#141414;color:#f7f1d0;font-weight:700;cursor:pointer}
-  .muted{color:var(--muted);font-size:14px;margin-top:10px}
-  .err{color:#ff9b9b;margin-top:10px;min-height:1em}
+  :root{
+    --border:#d6b44c;
+    --accent:#f2d675;
+    --text:#f7f1d0;
+    --muted:#c9b06a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    height:100%;
+    background:#000;
+    color:var(--text);
+    font-family:'Play',system-ui,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .card{
+    background:#0b0b0b;
+    border:1px solid var(--border);
+    padding:32px;
+    width:min(420px,92vw);
+    border-radius:16px;
+    box-shadow:0 0 18px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+    text-align:center;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .brand-logo{
+    width:52px;
+    height:52px;
+    object-fit:contain;
+    filter:drop-shadow(0 0 8px rgba(242,214,117,.35));
+  }
+  .brand h1{
+    font-size:clamp(22px,3.6vw,36px);
+    color:var(--accent);
+    font-weight:700;
+  }
+  .muted{color:var(--muted);font-size:14px;margin-bottom:18px;}
+  label{display:block;margin:10px 0 6px;text-align:left}
+  input{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid var(--accent);
+    background:#141414;
+    color:#f7f1d0;
+  }
+  button{
+    margin-top:14px;
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid var(--accent);
+    background:#141414;
+    color:#f7f1d0;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .15s ease,box-shadow .2s ease;
+  }
+  button:hover{transform:translateY(-1px);box-shadow:0 0 22px rgba(242,214,117,.35);}
+  .err{color:#ff9b9b;margin-top:10px;min-height:1em;}
 </style>
 </head>
 <body>
   <div class="card">
-    <h1>JMBN Manifest</h1>
-    <p class="muted">Org login (invite-only)</p>
+    <div class="brand">
+      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN Logo">
+      <h1>JMBN Manifest</h1>
+    </div>
+    <p class="muted">Org Login — Authorized Members Only</p>
 
     <label>Username</label>
     <input id="username" placeholder="e.g. ops" autocomplete="username" />
@@ -32,7 +98,7 @@
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
   <script>
-    // Skip login if already authenticated
+    // Skip login if already signed in
     (async () => {
       const session = await getSession();
       if (session) location.replace(BASE + "index.html");
@@ -42,10 +108,13 @@
       const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value;
       const msg = document.getElementById('msg');
-
       msg.textContent = "";
+
       const { error } = await signIn(u, p);
-      if (error) { msg.textContent = error.message; return; }
+      if (error) {
+        msg.textContent = error.message;
+        return;
+      }
 
       location.replace(BASE + "index.html");
     });
