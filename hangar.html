@@ -370,7 +370,7 @@ textarea{min-height:70px;resize:vertical}
       <div class="lo-head">
         <div>
           <div class="lo-title" id="loShipTitle">Ship</div>
-          <div style="font-size:12px;color:#c9b06a" id="loShipSub"></div>
+        <div style="font-size:12px;color:#c9b06a" id="loShipSub"></div>
           <div class="lo-tagbar" id="loTags"></div>
         </div>
         <div style="display:flex;gap:8px">
@@ -441,413 +441,428 @@ textarea{min-height:70px;resize:vertical}
   </div>
 
 <script>
-/* === Highlight current nav === */
-(function(){
-  const here = location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    const href = a.getAttribute('href');
-    if (href === here || (here === '' && href === 'index.html')) {
-      a.classList.add('active'); a.setAttribute('aria-current','page');
-    }
-  });
-})();
+/* ✅ Wrap ALL Hangar logic so we can call it after auth */
+function initHangar(){
 
-/* ===== Keys & Helpers ===== */
-const HANGAR_KEY='jmbn-hangar-v1';
-const HANGAR_SEL='jmbn-hangar-selected';
-const LOADOUT_KEY='jmbn-loadouts-v6';
-const $=s=>document.querySelector(s);
-const list=$('#list');
-function uid(){return 'H'+Math.random().toString(36).slice(2,8);}
-function esc(s=''){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
-
-let hangar = JSON.parse(localStorage.getItem(HANGAR_KEY)||'[]');
-persist(); render();
-
-/* ===== Filters ===== */
-['q','fRole','fSize','fSel'].forEach(id=>{
-  const el=document.getElementById(id);
-  el?.addEventListener('input',render,{passive:true});
-  el?.addEventListener('change',render);
-});
-
-/* ===== Editor ===== */
-const f={ key:$('#key'), name:$('#name'), mfr:$('#mfr'), role:$('#role'), size:$('#size'), pilot:$('#pilot'), med:$('#med'),
-          scu:$('#scu'), tractor:$('#tractor'),
-          save:$('#save'), reset:$('#reset'), del:$('#del'),
-          note:$('#note') };
-f.save.onclick=()=>{
-  const key=f.key.value||uid();
-  const s={
-    key,
-    name:f.name.value.trim(),
-    mfr:f.mfr.value,
-    role:f.role.value,
-    size:f.size.value,
-    pilot:f.pilot.value,
-    med:f.med.value,
-    scu: f.scu.value ? Number(f.scu.value) : null,
-    tractor: f.tractor.value,
-    note: (f.note.value||'').trim(),
-    selected: (hangar.find(x=>x.key===key)?.selected)===true
-  };
-  if(!s.name){ alert('Ship name required'); return; }
-  const i=hangar.findIndex(x=>x.key===key);
-  if(i>=0){ hangar[i]=s; } else { hangar.push(s); }
-  persist(); render(); fillForm(s);
-};
-f.reset.onclick=()=>clearForm();
-f.del.onclick=()=>{
-  const key=f.key.value; if(!key) return;
-  if(!confirm('Delete this ship?')) return;
-  hangar=hangar.filter(x=>x.key!==key); persist(); clearForm(); render();
-};
-function fillForm(s){
-  f.key.value=s.key; f.name.value=s.name||''; f.mfr.value=s.mfr||'';
-  f.role.value=s.role||''; f.size.value=s.size||'';
-  f.pilot.value=s.pilot||''; f.med.value=s.med||'';
-  f.scu.value=(s.scu??''); f.tractor.value=s.tractor||'';
-  f.note.value=s.note||'';
-}
-function clearForm(){ f.key.value=''; f.name.value=''; f.mfr.value=''; f.role.value=''; f.size.value=''; f.pilot.value=''; f.med.value=''; f.scu.value=''; f.tractor.value=''; f.note.value=''; }
-
-/* ===== Seed / Clear / Import / Export ===== */
-$('#seed').onclick=()=>{
-  if(!confirm('Add demo ships?')) return;
-  const demo=[
-    s('Cutlass Black','Drake Interplanetary','Cargo','Small','Yes','No',46,'Yes','Starter hauler w/ tractor'),
-    s('Carrack','Anvil Aerospace','Exploration','Large','No','Yes',456,'Planned','Big expedition platform'),
-    s('Constellation Taurus','Roberts Space Industries','Cargo','Medium','Yes','No',174,'No','Bulk mid-size cargo'),
-    s('Freelancer MAX','Musashi Industrial & Starflight Concern','Cargo','Medium','Yes','No',122,'Yes','Solid solo hauler'),
-    s('C2 Hercules','Crusader Industries','Cargo','Large','No','No',696,'No','Massive box mover'),
-    s('Cutlass Red','Drake Interplanetary','Medical','Small','Yes','Yes',34,'Yes','Field med + tractor')
-  ];
-  for(const x of demo){ if(!hangar.some(h=>h.name.toLowerCase()===x.name.toLowerCase())) hangar.push(x); }
-  persist(); render();
-};
-function s(name,mfr,role,size,pilot,med,scu,tractor,note){
-  return { key:uid(), name, mfr, role, size, pilot, med, scu, tractor, note:note||'', selected:false };
-}
-$('#clearAll').onclick=()=>{ if(!confirm('Delete ALL hangar items?')) return; hangar=[]; persist(); render(); clearForm(); };
-
-$('#export').onclick=()=>{
-  const blob=new Blob([JSON.stringify(hangar,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=document.createElement('a');
-  a.href=url; a.download='jmbn-hangar.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-};
-$('#import').onclick=()=>$('#file').click();
-$('#file').addEventListener('change', e=>{
-  const f=e.target.files?.[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const arr=JSON.parse(r.result);
-      if(!Array.isArray(arr)) throw new Error('Invalid JSON (expected an array)');
-      arr.forEach(x=>{ if(!x.key) x.key=uid(); x.selected=!!x.selected; });
-      if(confirm('Merge with existing hangar? Click Cancel to REPLACE.')){
-        const map=new Map(hangar.map(s=>[s.key,s])); for(const x of arr){ map.set(x.key,x); } hangar=[...map.values()];
-      }else{ hangar=arr; }
-      persist(); render(); alert('Import complete.');
-    }catch(err){ alert('Import failed: '+err.message); }
-    e.target.value='';
-  };
-  r.readAsText(f);
-});
-
-/* ===== Render list ===== */
-list.addEventListener('click',(e)=>{
-  const b=e.target.closest('button'); if(!b) return;
-  const {act, key} = b.dataset;
-  const it=hangar.find(x=>x.key===key); if(!it) return;
-  if(act==='edit'){ openEditModal(it); return; }
-  if(act==='del'){ if(confirm('Delete this ship?')){ hangar=hangar.filter(x=>x.key!==key); persist(); render(); } return; }
-  if(act==='sel'){ it.selected=!it.selected; persist(); render(); return; }
-  if(act==='lo'){ openLoadoutModal(it.name, it.mfr); return; }
-});
-function render(){
-  const q=($('#q')?.value||'').toLowerCase();
-  const r=$('#fRole')?.value||'';
-  const s=$('#fSize')?.value||'';
-  const fs=$('#fSel')?.value||'';
-  let arr=hangar.slice();
-  if(q) arr=arr.filter(x=>`${x.name} ${x.mfr}`.toLowerCase().includes(q));
-  if(r) arr=arr.filter(x=>x.role===r);
-  if(s) arr=arr.filter(x=>x.size===s);
-  if(fs==='1') arr=arr.filter(x=>x.selected===true);
-  if(fs==='0') arr=arr.filter(x=>!x.selected);
-  list.innerHTML = arr.length ? arr.map(row).join('') : `<div class="small">No ships. Add some with the editor on the right or click <b>Seed Demo Ships</b>.</div>`;
-  syncSelectedNames();
-}
-function row(it){
-  const tags = `
-    ${it.role?`<span class="badge">${esc(it.role)}</span>`:''}
-    ${it.size?`<span class="badge">${esc(it.size)}</span>`:''}
-    ${it.pilot?`<span class="badge">Pilot: ${esc(it.pilot)}</span>`:''}
-    ${it.med?`<span class="badge">MedBay: ${esc(it.med)}</span>`:''}
-    ${it.scu!=null?`<span class="badge">SCU: ${esc(String(it.scu))}</span>`:''}
-    ${it.tractor?`<span class="badge">Tractor: ${esc(it.tractor)}</span>`:''}
-    ${it.selected?`<span class="badge">Selected</span>`:''}
-  `;
-  return `
-    <div class="row">
-      <div>
-        <div class="shipTitle">${esc(it.name)}</div>
-        <div class="shipSub">${esc(it.mfr||'—')}</div>
-      </div>
-      <div class="badgebar">${tags}</div>
-      <div class="actions">
-        <button data-act="sel" data-key="${it.key}" class="${it.selected?'btn-primary':''}">${it.selected?'Unselect':'Select'}</button>
-        <button data-act="lo"  data-key="${it.key}">Loadouts</button>
-        <button data-act="edit" data-key="${it.key}">Edit</button>
-        <button data-act="del"  data-key="${it.key}" class="delete">Delete</button>
-      </div>
-      ${it.note?`
-        <div style="grid-column:1/-1;font-size:12px;margin-top:4px;display:flex;align-items:flex-start;gap:6px;color:#f2d675;">
-          <span style="width:6px;height:6px;border-radius:50%;background-color:#f2d675;margin-top:6px;flex-shrink:0;"></span>
-          <span style="color:#c9b06a;white-space:pre-wrap;word-break:break-word;">${esc(it.note)}</span>
-        </div>`:''}
-    </div>`;
-}
-function persist(){ localStorage.setItem(HANGAR_KEY, JSON.stringify(hangar)); syncSelectedNames(); }
-function syncSelectedNames(){
-  const names = hangar.filter(x=>x.selected).map(x=>x.name).filter(Boolean);
-  localStorage.setItem(HANGAR_SEL, JSON.stringify(names));
-}
-
-/* === Edit Modal Logic (refined) === */
-const emBack = document.getElementById('emBack');
-const em = {
-  key: document.getElementById('emKey'),
-  title: document.getElementById('emTitle'),
-  scu: document.getElementById('emSCU'),
-  tractor: document.getElementById('emTractor'),
-  pilot: document.getElementById('emPilot'),
-  med: document.getElementById('emMed'),
-  note: document.getElementById('emNote'),
-  save: document.getElementById('emSave'),
-  close: document.getElementById('emClose')
-};
-function openEditModal(it){
-  em.key.value = it.key;
-  em.title.textContent = `Edit: ${it.name}`;
-  em.scu.value = (it.scu ?? '');
-  em.tractor.value = it.tractor || '';
-  em.pilot.value = it.pilot || '';
-  em.med.value = it.med || '';
-  em.note.value = it.note || '';
-  emBack.style.display='flex';
-  setTimeout(()=> em.scu.focus(), 0);
-}
-function closeEditModal(){ emBack.style.display='none'; }
-em.close.onclick = closeEditModal;
-emBack.addEventListener('click', e=>{ if(e.target===emBack) closeEditModal(); });
-em.save.onclick = ()=>{
-  const key = em.key.value;
-  const i = hangar.findIndex(x=>x.key===key);
-  if(i<0) return;
-  hangar[i] = {
-    ...hangar[i],
-    scu: em.scu.value ? Number(em.scu.value) : null,
-    tractor: em.tractor.value,
-    pilot: em.pilot.value,
-    med: em.med.value,
-    note: (em.note.value||'').trim()
-  };
-  persist(); render(); closeEditModal();
-};
-// Keyboard shortcuts while modal is open
-document.addEventListener('keydown', (ev)=>{
-  if (emBack.style.display === 'flex') {
-    if (ev.key === 'Escape') { ev.preventDefault(); em.close.click(); }
-    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'enter') {
-      ev.preventDefault(); em.save.click();
-    }
-  }
-});
-
-/* === Ship Catalog from data.html (for dropdown autofill) === */
-let catalog = [];
-async function loadCatalog(){
-  try{
-    const res = await fetch('data.html', {cache:'no-cache'});
-    const html = await res.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const raw = doc.querySelector('#shipsData')?.textContent || '[]';
-    catalog = JSON.parse(raw);
-  }catch(e){ console.warn('Catalog load failed:', e); catalog = []; }
-  buildShipPick();
-}
-function buildShipPick(){
-  const pick = document.getElementById('shipPick');
-  if(!pick) return;
-  if(!catalog.length){ pick.innerHTML = '<option>No data found (data.html)</option>'; return; }
-  const opts = ['<option value="">— Pick a ship —</option>']
-    .concat(catalog.map(s=>`<option value="${s.name}">${s.name} — ${s.manufacturer}</option>`));
-  pick.innerHTML = opts.join('');
-}
-document.getElementById('shipPick')?.addEventListener('change', e=>{
-  const name = e.target.value;
-  const s = catalog.find(x=>x.name===name);
-  if(!s) return;
-  // Autofill editor
-  f.name.value = s.name || '';
-  // Manufacturer guess
-  const mfrOpts = Array.from(f.mfr.options);
-  let mVal = '';
-  const exact = mfrOpts.find(o=>o.text.trim().toLowerCase()===String(s.manufacturer||'').trim().toLowerCase());
-  if(exact) mVal = exact.value;
-  else{
-    const loose = mfrOpts.find(o=>{
-      const a=o.text.toLowerCase(), b=String(s.manufacturer||'').toLowerCase();
-      return a.includes(b) || b.includes(a);
-    });
-    if(loose) mVal = loose.value;
-  }
-  f.mfr.value = mVal;
-  // Role/Size mapping
-  const roleGuess = (s.role||'').match(/medical|stealth|combat|cargo|exploration|capital|support|salvage/i)?.[0] || '';
-  f.role.value = roleGuess ? roleGuess[0].toUpperCase()+roleGuess.slice(1).toLowerCase() : '';
-  const sizeMap = {snub:'Solo', small:'Small', medium:'Medium', large:'Large', capital:'Capital'};
-  const sizeGuess = sizeMap[(s.size||'').toLowerCase()] || '';
-  f.size.value = sizeGuess;
-  f.med.value = (s.med_bay||'').match(/yes/i)?'Yes':(s.med_bay||'').match(/no/i)?'No':'';
-  f.tractor.value = (s.tractor_beam||'');
-  const n = Number(s.scu);
-  f.scu.value = Number.isFinite(n) ? n : '';
-});
-loadCatalog();
-
-/* ===== Loadout modal logic (shared with Loadouts page) ===== */
-let loData = JSON.parse(localStorage.getItem(LOADOUT_KEY)||'[]');
-function loPersist(){ localStorage.setItem(LOADOUT_KEY, JSON.stringify(loData)); }
-function getShipLoadout(name){
-  const n=(name||'').trim();
-  let s=loData.find(x=>x.name?.toLowerCase()===n.toLowerCase());
-  if(!s){ s={ key:'L'+Math.random().toString(36).slice(2,8), name:n, mfr:'', role:'', size:'', pilot:'', med:'', components:[] }; loData.push(s); loPersist(); }
-  return s;
-}
-function saveShipLoadout(s){
-  const i=loData.findIndex(x=>x.key===s.key);
-  if(i>=0) loData[i]=s; else loData.push(s);
-  loPersist();
-}
-/* Modal DOM refs */
-const loBackdrop=$('#loBackdrop'), loList=$('#loList');
-const fields={
-  title:$('#loShipTitle'), sub:$('#loShipSub'),
-  cIdx:document.getElementById('loCompIdx'), cType:document.getElementById('loCType'),
-  cName:document.getElementById('loCName'), cMfr:document.getElementById('loCMfr'),
-  cBuy:document.getElementById('loCBuy'), cNotes:document.getElementById('loCNotes'),
-};
-let currentShip=null;
-function openLoadoutModal(shipName, mfr=''){
-  currentShip = getShipLoadout(shipName);
-  if(mfr && !currentShip.mfr){ currentShip.mfr=mfr; saveShipLoadout(currentShip); }
-  fields.title.textContent=currentShip.name||'';
-  fields.sub.textContent=currentShip.mfr||'';
-  clearCompForm(); renderCompList(); loBackdrop.style.display='flex';
-}
-function closeLoadoutModal(){ loBackdrop.style.display='none'; }
-function renderCompList(){
-  const arr=currentShip?.components||[];
-  if(!arr.length){ loList.innerHTML=`<div class="lo-empty">No components yet — use <b>Add Component</b> or the picker.</div>`; return; }
-  loList.innerHTML=arr.map((c,i)=>`
-    <div class="lo-row">
-      <div><span class="lo-k">Type</span><span class="lo-v">${esc(c.type||'')}</span></div>
-      <div><span class="lo-k">Component</span><span class="lo-v">${esc(c.name||'')}</span></div>
-      <div><span class="lo-k">Where to Buy</span><span class="lo-v">${esc(c.buy||'')}</span></div>
-      <div class="lo-actions">
-        <button class="lo-btn" data-act="edit" data-idx="${i}">Edit</button>
-        <button class="lo-btn" data-act="del" data-idx="${i}" style="border-color:#ff6b6b;color:#ff6b6b">Del</button>
-      </div>
-      <div style="grid-column:1/-1"><span class="lo-k">Manufacturer</span><span class="lo-v">${esc(c.mfr||'—')}</span></div>
-      ${c.notes?`<div style="grid-column:1/-1"><span class="lo-k">Notes</span><div class="lo-v">${esc(c.notes)}</div></div>`:''}
-    </div>`).join('');
-  loList.querySelectorAll('button[data-act]').forEach(b=>{
-    b.onclick=()=>{
-      const idx=+b.dataset.idx;
-      if(b.dataset.act==='del'){
-        if(confirm('Remove this component?')){ currentShip.components.splice(idx,1); saveShipLoadout(currentShip); renderCompList(); }
-      }else{
-        const c=currentShip.components[idx];
-        fields.cIdx.value=String(idx);
-        fields.cType.value=c.type||'Quantum Drive';
-        fields.cName.value=c.name||'';
-        fields.cMfr.value=c.mfr||'';
-        fields.cBuy.value=c.buy||'';
-        fields.cNotes.value=c.notes||'';
+  /* === Highlight current nav === */
+  (function(){
+    const here = location.pathname.split('/').pop() || 'hangar.html';
+    document.querySelectorAll('.nav-btn').forEach(a=>{
+      const href = a.getAttribute('href');
+      if (href === here || (here === '' && href === 'hangar.html')) {
+        a.classList.add('active'); a.setAttribute('aria-current','page');
       }
+    });
+  })();
+
+  /* ===== Keys & Helpers ===== */
+  const HANGAR_KEY='jmbn-hangar-v1';
+  const HANGAR_SEL='jmbn-hangar-selected';
+  const LOADOUT_KEY='jmbn-loadouts-v6';
+  const $=s=>document.querySelector(s);
+  const list=$('#list');
+  function uid(){return 'H'+Math.random().toString(36).slice(2,8);}
+  function esc(s=''){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
+
+  let hangar = JSON.parse(localStorage.getItem(HANGAR_KEY)||'[]');
+  persist(); render();
+
+  /* ===== Filters ===== */
+  ['q','fRole','fSize','fSel'].forEach(id=>{
+    const el=document.getElementById(id);
+    el?.addEventListener('input',render,{passive:true});
+    el?.addEventListener('change',render);
+  });
+
+  /* ===== Editor ===== */
+  const f={ key:$('#key'), name:$('#name'), mfr:$('#mfr'), role:$('#role'), size:$('#size'), pilot:$('#pilot'), med:$('#med'),
+            scu:$('#scu'), tractor:$('#tractor'),
+            save:$('#save'), reset:$('#reset'), del:$('#del'),
+            note:$('#note') };
+  f.save.onclick=()=>{
+    const key=f.key.value||uid();
+    const s={
+      key,
+      name:f.name.value.trim(),
+      mfr:f.mfr.value,
+      role:f.role.value,
+      size:f.size.value,
+      pilot:f.pilot.value,
+      med:f.med.value,
+      scu: f.scu.value ? Number(f.scu.value) : null,
+      tractor: f.tractor.value,
+      note: (f.note.value||'').trim(),
+      selected: (hangar.find(x=>x.key===key)?.selected)===true
     };
-  });
-}
-function clearCompForm(){ fields.cIdx.value=''; fields.cType.value='Quantum Drive'; fields.cName.value=''; fields.cMfr.value=''; fields.cBuy.value=''; fields.cNotes.value=''; }
-document.getElementById('loClose').onclick=closeLoadoutModal;
-document.getElementById('loAdd').onclick=()=>{ clearCompForm(); fields.cName.focus(); };
-document.getElementById('loSaveComp').onclick=()=>{
-  if(!currentShip) return;
-  const entry={ type:fields.cType.value, name:fields.cName.value.trim(), mfr:fields.cMfr.value.trim(), buy:fields.cBuy.value.trim(), notes:fields.cNotes.value.trim() };
-  if(!entry.name){ alert('Component name is required.'); return; }
-  const idx=fields.cIdx.value===''?-1:+fields.cIdx.value;
-  if(idx>=0) currentShip.components[idx]=entry; else currentShip.components.push(entry);
-  saveShipLoadout(currentShip); clearCompForm(); renderCompList();
-};
-document.getElementById('loClearComp').onclick=clearCompForm;
-
-/* ===== Components picker (reads from components.html) ===== */
-const pickBack=document.getElementById('loPickBack'),
-      pType=document.getElementById('loPType'),
-      pSearch=document.getElementById('loPSearch'),
-      pSource=document.getElementById('loPSource'),
-      pList=document.getElementById('loPList');
-
-document.getElementById('loPick').onclick=()=>{ buildSources(); pType.value=document.getElementById('loCType').value; pSearch.value=''; renderPicker(); pickBack.style.display='flex'; };
-document.getElementById('loPickClose').onclick=()=>{ pickBack.style.display='none'; };
-pickBack.addEventListener('click', e=>{ if(e.target===pickBack) pickBack.style.display='none'; });
-pType.addEventListener('change', renderPicker);
-pSearch.addEventListener('input', renderPicker);
-pSource.addEventListener('change', ()=>{ loadFromSource(pSource.value); renderPicker(); });
-
-function buildSources(){
-  const candidates=Object.keys(localStorage);
-  const likely=['jmbn-components','jmbn-components-v2','components-db','components','componentsList'];
-  const ordered=[...new Set([...likely,...candidates])];
-  const found=[];
-  for(const k of ordered){
-    try{ const v=JSON.parse(localStorage.getItem(k)); if(Array.isArray(v)&&v.some(isComponentLike)) found.push({key:k,count:v.length}); }catch{}
+    if(!s.name){ alert('Ship name required'); return; }
+    const i=hangar.findIndex(x=>x.key===key);
+    if(i>=0){ hangar[i]=s; } else { hangar.push(s); }
+    persist(); render(); fillForm(s);
+  };
+  f.reset.onclick=()=>clearForm();
+  f.del.onclick=()=>{
+    const key=f.key.value; if(!key) return;
+    if(!confirm('Delete this ship?')) return;
+    hangar=hangar.filter(x=>x.key!==key); persist(); clearForm(); render();
+  };
+  function fillForm(s){
+    f.key.value=s.key; f.name.value=s.name||''; f.mfr.value=s.mfr||'';
+    f.role.value=s.role||''; f.size.value=s.size||'';
+    f.pilot.value=s.pilot||''; f.med.value=s.med||'';
+    f.scu.value=(s.scu??''); f.tractor.value=s.tractor||'';
+    f.note.value=s.note||'';
   }
-  pSource.innerHTML=found.length?found.map((s,i)=>`<option value="${esc(s.key)}"${i===0?' selected':''}>${esc(s.key)} (${s.count})</option>`).join(''):`<option>No components DB found</option>`;
-  if(found.length){ loadFromSource(found[0].key); } else { pickerState.items=[]; }
-}
-function isComponentLike(x){ if(!x||typeof x!=='object') return false; const f=Object.keys(x).map(y=>y.toLowerCase()); return f.some(k=>['name','title'].includes(k))&&f.some(k=>['type','slot','category'].includes(k)); }
-function norm(it){ return { type:it.type||it.slot||it.category||'', name:it.name||it.title||'', mfr:it.mfr||it.manufacturer||it.brand||'', buy:it.buy||it.where||it.location||it.shop||'', notes:it.notes||it.desc||it.description||'', size:it.size||it.class||it.grade||it.rating||'' }; }
-let pickerState={items:[],filtered:[]};
-function loadFromSource(k){ try{ pickerState.items=(JSON.parse(localStorage.getItem(k)||'[]')||[]).map(norm); }catch{ pickerState.items=[]; } }
-function renderPicker(){
-  const t=(pType.value||'').toLowerCase(), q=(pSearch.value||'').toLowerCase().trim();
-  pickerState.filtered=pickerState.items.filter(it=>{
-    const matchType=!t||(it.type||'').toLowerCase()===t;
-    const bag=`${it.name} ${it.mfr} ${it.buy} ${it.notes} ${it.size}`.toLowerCase();
-    return matchType && (!q||bag.includes(q));
+  function clearForm(){ f.key.value=''; f.name.value=''; f.mfr.value=''; f.role.value=''; f.size.value=''; f.pilot.value=''; f.med.value=''; f.scu.value=''; f.tractor.value=''; f.note.value=''; }
+
+  /* ===== Seed / Clear / Import / Export ===== */
+  document.getElementById('seed').onclick=()=>{
+    if(!confirm('Add demo ships?')) return;
+    const demo=[
+      s('Cutlass Black','Drake Interplanetary','Cargo','Small','Yes','No',46,'Yes','Starter hauler w/ tractor'),
+      s('Carrack','Anvil Aerospace','Exploration','Large','No','Yes',456,'Planned','Big expedition platform'),
+      s('Constellation Taurus','Roberts Space Industries','Cargo','Medium','Yes','No',174,'No','Bulk mid-size cargo'),
+      s('Freelancer MAX','Musashi Industrial & Starflight Concern','Cargo','Medium','Yes','No',122,'Yes','Solid solo hauler'),
+      s('C2 Hercules','Crusader Industries','Cargo','Large','No','No',696,'No','Massive box mover'),
+      s('Cutlass Red','Drake Interplanetary','Medical','Small','Yes','Yes',34,'Yes','Field med + tractor')
+    ];
+    for(const x of demo){ if(!hangar.some(h=>h.name.toLowerCase()===x.name.toLowerCase())) hangar.push(x); }
+    persist(); render();
+  };
+  function s(name,mfr,role,size,pilot,med,scu,tractor,note){
+    return { key:uid(), name, mfr, role, size, pilot, med, scu, tractor, note:note||'', selected:false };
+  }
+  document.getElementById('clearAll').onclick=()=>{ if(!confirm('Delete ALL hangar items?')) return; hangar=[]; persist(); render(); clearForm(); };
+
+  document.getElementById('export').onclick=()=>{
+    const blob=new Blob([JSON.stringify(hangar,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download='jmbn-hangar.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  };
+  document.getElementById('import').onclick=()=>document.getElementById('file').click();
+  document.getElementById('file').addEventListener('change', e=>{
+    const f=e.target.files?.[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const arr=JSON.parse(r.result);
+        if(!Array.isArray(arr)) throw new Error('Invalid JSON (expected an array)');
+        arr.forEach(x=>{ if(!x.key) x.key=uid(); x.selected=!!x.selected; });
+        if(confirm('Merge with existing hangar? Click Cancel to REPLACE.')){
+          const map=new Map(hangar.map(s=>[s.key,s])); for(const x of arr){ map.set(x.key,x); } hangar=[...map.values()];
+        }else{ hangar=arr; }
+        persist(); render(); alert('Import complete.');
+      }catch(err){ alert('Import failed: '+err.message); }
+      e.target.value='';
+    };
+    r.readAsText(f);
   });
-  pList.innerHTML=pickerState.filtered.length?pickerState.filtered.map((it,i)=>`
-    <div class="lo-pi">
-      <div>
-        <div class="lo-title" style="font-size:14px">${esc(it.name||'Unnamed')}</div>
-        <div class="lo-meta"><b>${esc(it.type||'—')}</b> • ${esc(it.mfr||'—')}${it.size?` • ${esc(it.size)}`:''}${it.buy?` • ${esc(it.buy)}`:''}</div>
-        ${it.notes?`<div style="font-size:12px;color:#c9b06a;margin-top:4px">${esc(it.notes)}</div>`:''}
-      </div>
-      <div><button class="lo-btn primary" data-pick="${i}">Use</button></div>
-    </div>`).join(''):`<div class="lo-empty">No components found for this filter.</div>`;
-  pList.querySelectorAll('[data-pick]').forEach(btn=>btn.onclick=()=>{
-    const it=pickerState.filtered[+btn.dataset.pick];
-    document.getElementById('loCType').value=it.type||document.getElementById('loCType').value;
-    document.getElementById('loCName').value=it.name||'';
-    document.getElementById('loCMfr').value=it.mfr||'';
-    document.getElementById('loCBuy').value=it.buy||'';
-    document.getElementById('loCNotes').value=it.notes||'';
-    pickBack.style.display='none';
+
+  /* ===== Render list ===== */
+  list.addEventListener('click',(e)=>{
+    const b=e.target.closest('button'); if(!b) return;
+    const {act, key} = b.dataset;
+    const it=hangar.find(x=>x.key===key); if(!it) return;
+    if(act==='edit'){ openEditModal(it); return; }
+    if(act==='del'){ if(confirm('Delete this ship?')){ hangar=hangar.filter(x=>x.key!==key); persist(); render(); } return; }
+    if(act==='sel'){ it.selected=!it.selected; persist(); render(); return; }
+    if(act==='lo'){ openLoadoutModal(it.name, it.mfr); return; }
   });
-}
+  function render(){
+    const q=(document.getElementById('q')?.value||'').toLowerCase();
+    const r=document.getElementById('fRole')?.value||'';
+    const s=document.getElementById('fSize')?.value||'';
+    const fs=document.getElementById('fSel')?.value||'';
+    let arr=hangar.slice();
+    if(q) arr=arr.filter(x=>`${x.name} ${x.mfr}`.toLowerCase().includes(q));
+    if(r) arr=arr.filter(x=>x.role===r);
+    if(s) arr=arr.filter(x=>x.size===s);
+    if(fs==='1') arr=arr.filter(x=>x.selected===true);
+    if(fs==='0') arr=arr.filter(x=>!x.selected);
+    list.innerHTML = arr.length ? arr.map(row).join('') : `<div class="small">No ships. Add some with the editor on the right or click <b>Seed Demo Ships</b>.</div>`;
+    syncSelectedNames();
+  }
+  function row(it){
+    const tags = `
+      ${it.role?`<span class="badge">${esc(it.role)}</span>`:''}
+      ${it.size?`<span class="badge">${esc(it.size)}</span>`:''}
+      ${it.pilot?`<span class="badge">Pilot: ${esc(it.pilot)}</span>`:''}
+      ${it.med?`<span class="badge">MedBay: ${esc(it.med)}</span>`:''}
+      ${it.scu!=null?`<span class="badge">SCU: ${esc(String(it.scu))}</span>`:''}
+      ${it.tractor?`<span class="badge">Tractor: ${esc(it.tractor)}</span>`:''}
+      ${it.selected?`<span class="badge">Selected</span>`:''}
+    `;
+    return `
+      <div class="row">
+        <div>
+          <div class="shipTitle">${esc(it.name)}</div>
+          <div class="shipSub">${esc(it.mfr||'—')}</div>
+        </div>
+        <div class="badgebar">${tags}</div>
+        <div class="actions">
+          <button data-act="sel" data-key="${it.key}" class="${it.selected?'btn-primary':''}">${it.selected?'Unselect':'Select'}</button>
+          <button data-act="lo"  data-key="${it.key}">Loadouts</button>
+          <button data-act="edit" data-key="${it.key}">Edit</button>
+          <button data-act="del"  data-key="${it.key}" class="delete">Delete</button>
+        </div>
+        ${it.note?`
+          <div style="grid-column:1/-1;font-size:12px;margin-top:4px;display:flex;align-items:flex-start;gap:6px;color:#f2d675;">
+            <span style="width:6px;height:6px;border-radius:50%;background-color:#f2d675;margin-top:6px;flex-shrink:0;"></span>
+            <span style="color:#c9b06a;white-space:pre-wrap;word-break:break-word;">${esc(it.note)}</span>
+          </div>`:''}
+      </div>`;
+  }
+  function persist(){ localStorage.setItem(HANGAR_KEY, JSON.stringify(hangar)); syncSelectedNames(); }
+  function syncSelectedNames(){
+    const names = hangar.filter(x=>x.selected).map(x=>x.name).filter(Boolean);
+    localStorage.setItem(HANGAR_SEL, JSON.stringify(names));
+  }
+
+  /* === Edit Modal Logic (refined) === */
+  const emBack = document.getElementById('emBack');
+  const em = {
+    key: document.getElementById('emKey'),
+    title: document.getElementById('emTitle'),
+    scu: document.getElementById('emSCU'),
+    tractor: document.getElementById('emTractor'),
+    pilot: document.getElementById('emPilot'),
+    med: document.getElementById('emMed'),
+    note: document.getElementById('emNote'),
+    save: document.getElementById('emSave'),
+    close: document.getElementById('emClose')
+  };
+  function openEditModal(it){
+    em.key.value = it.key;
+    em.title.textContent = `Edit: ${it.name}`;
+    em.scu.value = (it.scu ?? '');
+    em.tractor.value = it.tractor || '';
+    em.pilot.value = it.pilot || '';
+    em.med.value = it.med || '';
+    em.note.value = it.note || '';
+    emBack.style.display='flex';
+    setTimeout(()=> em.scu.focus(), 0);
+  }
+  function closeEditModal(){ emBack.style.display='none'; }
+  em.close.onclick = closeEditModal;
+  emBack.addEventListener('click', e=>{ if(e.target===emBack) closeEditModal(); });
+  em.save.onclick = ()=>{
+    const key = em.key.value;
+    const i = hangar.findIndex(x=>x.key===key);
+    if(i<0) return;
+    hangar[i] = {
+      ...hangar[i],
+      scu: em.scu.value ? Number(em.scu.value) : null,
+      tractor: em.tractor.value,
+      pilot: em.pilot.value,
+      med: em.med.value,
+      note: (em.note.value||'').trim()
+    };
+    persist(); render(); closeEditModal();
+  };
+  // Keyboard shortcuts while modal is open
+  document.addEventListener('keydown', (ev)=>{
+    if (emBack.style.display === 'flex') {
+      if (ev.key === 'Escape') { ev.preventDefault(); em.close.click(); }
+      if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'enter') {
+        ev.preventDefault(); em.save.click();
+      }
+    }
+  });
+
+  /* === Ship Catalog from data.html (for dropdown autofill) === */
+  let catalog = [];
+  async function loadCatalog(){
+    try{
+      const res = await fetch('data.html', {cache:'no-cache'});
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const raw = doc.querySelector('#shipsData')?.textContent || '[]';
+      catalog = JSON.parse(raw);
+    }catch(e){ console.warn('Catalog load failed:', e); catalog = []; }
+    buildShipPick();
+  }
+  function buildShipPick(){
+    const pick = document.getElementById('shipPick');
+    if(!pick) return;
+    if(!catalog.length){ pick.innerHTML = '<option>No data found (data.html)</option>'; return; }
+    const opts = ['<option value="">— Pick a ship —</option>']
+      .concat(catalog.map(s=>`<option value="${s.name}">${s.name} — ${s.manufacturer}</option>`));
+    pick.innerHTML = opts.join('');
+  }
+  document.getElementById('shipPick')?.addEventListener('change', e=>{
+    const name = e.target.value;
+    const s = catalog.find(x=>x.name===name);
+    if(!s) return;
+    // Autofill editor
+    f.name.value = s.name || '';
+    // Manufacturer guess
+    const mfrOpts = Array.from(f.mfr.options);
+    let mVal = '';
+    const exact = mfrOpts.find(o=>o.text.trim().toLowerCase()===String(s.manufacturer||'').trim().toLowerCase());
+    if(exact) mVal = exact.value;
+    else{
+      const loose = mfrOpts.find(o=>{
+        const a=o.text.toLowerCase(), b=String(s.manufacturer||'').toLowerCase();
+        return a.includes(b) || b.includes(a);
+      });
+      if(loose) mVal = loose.value;
+    }
+    f.mfr.value = mVal;
+    // Role/Size mapping
+    const roleGuess = (s.role||'').match(/medical|stealth|combat|cargo|exploration|capital|support|salvage/i)?.[0] || '';
+    f.role.value = roleGuess ? roleGuess[0].toUpperCase()+roleGuess.slice(1).toLowerCase() : '';
+    const sizeMap = {snub:'Solo', small:'Small', medium:'Medium', large:'Large', capital:'Capital'};
+    const sizeGuess = sizeMap[(s.size||'').toLowerCase()] || '';
+    f.size.value = sizeGuess;
+    f.med.value = (s.med_bay||'').match(/yes/i)?'Yes':(s.med_bay||'').match(/no/i)?'No':'';
+    f.tractor.value = (s.tractor_beam||'');
+    const n = Number(s.scu);
+    f.scu.value = Number.isFinite(n) ? n : '';
+  });
+  loadCatalog();
+
+  /* ===== Loadout modal logic ===== */
+  let loData = JSON.parse(localStorage.getItem(LOADOUT_KEY)||'[]');
+  function loPersist(){ localStorage.setItem(LOADOUT_KEY, JSON.stringify(loData)); }
+  function getShipLoadout(name){
+    const n=(name||'').trim();
+    let s=loData.find(x=>x.name?.toLowerCase()===n.toLowerCase());
+    if(!s){ s={ key:'L'+Math.random().toString(36).slice(2,8), name:n, mfr:'', role:'', size:'', pilot:'', med:'', components:[] }; loData.push(s); loPersist(); }
+    return s;
+  }
+  function saveShipLoadout(s){
+    const i=loData.findIndex(x=>x.key===s.key);
+    if(i>=0) loData[i]=s; else loData.push(s);
+    loPersist();
+  }
+  /* Modal DOM refs */
+  const loBackdrop=document.getElementById('loBackdrop'), loList=document.getElementById('loList');
+  const fields={
+    title:document.getElementById('loShipTitle'), sub:document.getElementById('loShipSub'),
+    cIdx:document.getElementById('loCompIdx'), cType:document.getElementById('loCType'),
+    cName:document.getElementById('loCName'), cMfr:document.getElementById('loCMfr'),
+    cBuy:document.getElementById('loCBuy'), cNotes:document.getElementById('loCNotes'),
+  };
+  let currentShip=null;
+  function openLoadoutModal(shipName, mfr=''){
+    currentShip = getShipLoadout(shipName);
+    if(mfr && !currentShip.mfr){ currentShip.mfr=mfr; saveShipLoadout(currentShip); }
+    fields.title.textContent=currentShip.name||'';
+    fields.sub.textContent=currentShip.mfr||'';
+    clearCompForm(); renderCompList(); loBackdrop.style.display='flex';
+  }
+  function closeLoadoutModal(){ loBackdrop.style.display='none'; }
+  function renderCompList(){
+    const arr=currentShip?.components||[];
+    if(!arr.length){ loList.innerHTML=`<div class="lo-empty">No components yet — use <b>Add Component</b> or the picker.</div>`; return; }
+    loList.innerHTML=arr.map((c,i)=>`
+      <div class="lo-row">
+        <div><span class="lo-k">Type</span><span class="lo-v">${esc(c.type||'')}</span></div>
+        <div><span class="lo-k">Component</span><span class="lo-v">${esc(c.name||'')}</span></div>
+        <div><span class="lo-k">Where to Buy</span><span class="lo-v">${esc(c.buy||'')}</span></div>
+        <div class="lo-actions">
+          <button class="lo-btn" data-act="edit" data-idx="${i}">Edit</button>
+          <button class="lo-btn" data-act="del" data-idx="${i}" style="border-color:#ff6b6b;color:#ff6b6b">Del</button>
+        </div>
+        <div style="grid-column:1/-1"><span class="lo-k">Manufacturer</span><span class="lo-v">${esc(c.mfr||'—')}</span></div>
+        ${c.notes?`<div style="grid-column:1/-1"><span class="lo-k">Notes</span><div class="lo-v">${esc(c.notes)}</div></div>`:''}
+      </div>`).join('');
+    loList.querySelectorAll('button[data-act]').forEach(b=>{
+      b.onclick=()=>{
+        const idx=+b.dataset.idx;
+        if(b.dataset.act==='del'){
+          if(confirm('Remove this component?')){ currentShip.components.splice(idx,1); saveShipLoadout(currentShip); renderCompList(); }
+        }else{
+          const c=currentShip.components[idx];
+          fields.cIdx.value=String(idx);
+          fields.cType.value=c.type||'Quantum Drive';
+          fields.cName.value=c.name||'';
+          fields.cMfr.value=c.mfr||'';
+          fields.cBuy.value=c.buy||'';
+          fields.cNotes.value=c.notes||'';
+        }
+      };
+    });
+  }
+  function clearCompForm(){ fields.cIdx.value=''; fields.cType.value='Quantum Drive'; fields.cName.value=''; fields.cMfr.value=''; fields.cBuy.value=''; fields.cNotes.value=''; }
+  document.getElementById('loClose').onclick=closeLoadoutModal;
+  document.getElementById('loAdd').onclick=()=>{ clearCompForm(); fields.cName.focus(); };
+  document.getElementById('loSaveComp').onclick=()=>{
+    if(!currentShip) return;
+    const entry={ type:fields.cType.value, name:fields.cName.value.trim(), mfr:fields.cMfr.value.trim(), buy:fields.cBuy.value.trim(), notes:fields.cNotes.value.trim() };
+    if(!entry.name){ alert('Component name is required.'); return; }
+    const idx=fields.cIdx.value===''?-1:+fields.cIdx.value;
+    if(idx>=0) currentShip.components[idx]=entry; else currentShip.components.push(entry);
+    saveShipLoadout(currentShip); clearCompForm(); renderCompList();
+  };
+  document.getElementById('loClearComp').onclick=clearCompForm;
+
+  /* ===== Components picker (reads from components.html) ===== */
+  const pickBack=document.getElementById('loPickBack'),
+        pType=document.getElementById('loPType'),
+        pSearch=document.getElementById('loPSearch'),
+        pSource=document.getElementById('loPSource'),
+        pList=document.getElementById('loPList');
+
+  document.getElementById('loPick').onclick=()=>{ buildSources(); pType.value=document.getElementById('loCType').value; pSearch.value=''; renderPicker(); pickBack.style.display='flex'; };
+  document.getElementById('loPickClose').onclick=()=>{ pickBack.style.display='none'; };
+  pickBack.addEventListener('click', e=>{ if(e.target===pickBack) pickBack.style.display='none'; });
+  pType.addEventListener('change', renderPicker);
+  pSearch.addEventListener('input', renderPicker);
+  pSource.addEventListener('change', ()=>{ loadFromSource(pSource.value); renderPicker(); });
+
+  function buildSources(){
+    const candidates=Object.keys(localStorage);
+    const likely=['jmbn-components','jmbn-components-v2','components-db','components','componentsList'];
+    const ordered=[...new Set([...likely,...candidates])];
+    const found=[];
+    for(const k of ordered){
+      try{ const v=JSON.parse(localStorage.getItem(k)); if(Array.isArray(v)&&v.some(isComponentLike)) found.push({key:k,count:v.length}); }catch{}
+    }
+    pSource.innerHTML=found.length?found.map((s,i)=>`<option value="${esc(s.key)}"${i===0?' selected':''}>${esc(s.key)} (${s.count})</option>`).join(''):`<option>No components DB found</option>`;
+    if(found.length){ loadFromSource(found[0].key); } else { pickerState.items=[]; }
+  }
+  function isComponentLike(x){ if(!x||typeof x!=='object') return false; const f=Object.keys(x).map(y=>y.toLowerCase()); return f.some(k=>['name','title'].includes(k))&&f.some(k=>['type','slot','category'].includes(k)); }
+  function norm(it){ return { type:it.type||it.slot||it.category||'', name:it.name||it.title||'', mfr:it.mfr||it.manufacturer||it.brand||'', buy:it.buy||it.where||it.location||it.shop||'', notes:it.notes||it.desc||it.description||'', size:it.size||it.class||it.grade||it.rating||'' }; }
+  let pickerState={items:[],filtered:[]};
+  function loadFromSource(k){ try{ pickerState.items=(JSON.parse(localStorage.getItem(k)||'[]')||[]).map(norm); }catch{ pickerState.items=[]; } }
+  function renderPicker(){
+    const t=(pType.value||'').toLowerCase(), q=(pSearch.value||'').toLowerCase().trim();
+    pickerState.filtered=pickerState.items.filter(it=>{
+      const matchType=!t||(it.type||'').toLowerCase()===t;
+      const bag=`${it.name} ${it.mfr} ${it.buy} ${it.notes} ${it.size}`.toLowerCase();
+      return matchType && (!q||bag.includes(q));
+    });
+    pList.innerHTML=pickerState.filtered.length?pickerState.filtered.map((it,i)=>`
+      <div class="lo-pi">
+        <div>
+          <div class="lo-title" style="font-size:14px">${esc(it.name||'Unnamed')}</div>
+          <div class="lo-meta"><b>${esc(it.type||'—')}</b> • ${esc(it.mfr||'—')}${it.size?` • ${esc(it.size)}`:''}${it.buy?` • ${esc(it.buy)}`:''}</div>
+          ${it.notes?`<div style="font-size:12px;color:#c9b06a;margin-top:4px">${esc(it.notes)}</div>`:''}
+        </div>
+        <div><button class="lo-btn primary" data-pick="${i}">Use</button></div>
+      </div>`).join(''):`<div class="lo-empty">No components found for this filter.</div>`;
+    pList.querySelectorAll('[data-pick]').forEach(btn=>btn.onclick=()=>{
+      const it=pickerState.filtered[+btn.dataset.pick];
+      document.getElementById('loCType').value=it.type||document.getElementById('loCType').value;
+      document.getElementById('loCName').value=it.name||'';
+      document.getElementById('loCMfr').value=it.mfr||'';
+      document.getElementById('loCBuy').value=it.buy||'';
+      document.getElementById('loCNotes').value=it.notes||'';
+      pickBack.style.display='none';
+    });
+  }
+} // end initHangar
+</script>
+
+<!-- 🔐 Supabase Auth + Run after login -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+  (async () => {
+    const session = await requireAuth();     // redirects to auth.html if not logged in
+    if (!session) return;
+    initHangar();                            // ✅ run Hangar only after login
+  })();
 </script>
 </body>
 </html>
