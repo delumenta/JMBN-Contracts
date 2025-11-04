@@ -18,7 +18,6 @@ body{ background:#000; color:var(--text); font-family:'Play',system-ui,sans-seri
 .btn-cta:hover{background:linear-gradient(180deg,#f2d675,#e7c760);color:#000}
 .ic{width:18px;height:18px;border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;font-size:14px}
 .subtle{color:var(--muted);font-size:12px}
-.mode-chip{margin-left:auto;border:1px solid var(--border);border-radius:10px;padding:6px 10px;background:#0a0a0a;color:var(--accent);font-size:12px}
 
 /* 2-column layout */
 .wrap{display:grid;grid-template-columns:340px 1fr;gap:14px}
@@ -51,6 +50,8 @@ button:hover{background:var(--accent);color:#000}
 button.danger{border-color:#ff6b6b;color:#ff6b6b}
 .attach-item{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:8px}
 .attach-item button{padding:6px 10px}
+
+.mode-chip{margin-left:auto;border:1px solid var(--border);border-radius:10px;padding:6px 10px;background:#0a0a0a;color:var(--accent);font-size:12px}
 </style>
 </head>
 <body>
@@ -65,7 +66,6 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
 <div class="toolbar">
   <a class="btn-cta" href="mission-log.html" title="Go back"><span class="ic">←</span><span>Back to Mission Log</span></a>
   <span class="subtle">View missions on the left. Select to edit; Save, Update, or Delete on the right.</span>
-  <span id="modeChip" class="mode-chip">Create</span>
 </div>
 
 <div class="wrap">
@@ -127,6 +127,7 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
       <div><label>Attendees</label><input id="attendees" placeholder="e.g., Vex, Kara"></div>
     </div>
 
+    <!-- NEW: Submitted By (between Attendees and Notes) -->
     <div class="form-grid full">
       <div><label>Submitted By</label><input id="submittedBy" placeholder="e.g., Derek / Vex"></div>
     </div>
@@ -152,49 +153,51 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
   </div>
 </div>
 
-<!-- 🔐 Supabase core + your auth helper (shared with other pages) -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-
-<!-- ===== App Logic (uses the authenticated client from auth.js) ===== -->
+<!-- ===== Supabase + App Logic ===== -->
 <script type="module">
-/* Use the global client created in js/auth.js */
-const sb = window.sb;
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-/* DOM helpers */
-const $ = (id) => document.getElementById(id);
-const listEl = $('list'), searchEl = $('search'), modeChip = $('modeChip'), attachList = $('attachList');
+/* ==== CONFIG: your project ==== */
+const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
 
-let currentId = null;
-let cache = [];
+/* ==== DOM helpers ==== */
+const $ = (id) => document.getElementById(id)
+const listEl = $('list'), searchEl = $('search'), modeChip = $('modeChip'), attachList = $('attachList')
+
+let currentId = null   // id of selected mission (if any)
+let cache = []         // cached missions list (for search)
 
 /* UI helpers */
-function setMode(){ if(modeChip) modeChip.textContent = currentId ? `Editing ${currentId.slice(0,8)}…` : 'Create'; }
-function esc(s=''){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-function isoToLocalInput(iso){ if(!iso) return ''; const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
-function localInputToISO(v){ return v ? new Date(v).toISOString() : null; }
+function setMode(){
+  modeChip.textContent = currentId ? `Editing ${currentId.slice(0,8)}…` : 'Create'
+}
+function esc(s=''){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML }
+function isoToLocalInput(iso){ if(!iso) return ''; const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}` }
+function localInputToISO(v){ return v ? new Date(v).toISOString() : null }
 
 function addAttachRow(name='', url=''){
-  const div=document.createElement('div');
-  div.className='attach-item';
+  const div=document.createElement('div')
+  div.className='attach-item'
   div.innerHTML=`<input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
                  <input placeholder="URL (https://...)" value="${esc(url)}">
-                 <button type="button" onclick="this.parentElement.remove()">✕</button>`;
-  attachList.appendChild(div);
+                 <button type="button" onclick="this.parentElement.remove()">✕</button>`
+  attachList.appendChild(div)
 }
 function collectAttachments(){
   return [...attachList.querySelectorAll('.attach-item')].map(el=>{
-    const label=el.children[0].value.trim(), url=el.children[1].value.trim();
-    if(!url) return null;
-    try{ new URL(url) }catch{ return null; }
-    return { name: label || (url.split('/').pop() || 'link'), url };
-  }).filter(Boolean);
+    const label=el.children[0].value.trim(), url=el.children[1].value.trim()
+    if(!url) return null
+    try{ new URL(url) }catch{ return null }
+    return { name: label || (url.split('/').pop() || 'link'), url }
+  }).filter(Boolean)
 }
 function clearForm(){
-  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','submittedBy','notes'].forEach(id=>$(id).value='');
-  attachList.innerHTML=''; addAttachRow();
-  currentId = null;
-  setMode();
+  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','submittedBy','notes'].forEach(id=>$(id).value='')
+  attachList.innerHTML=''; addAttachRow()
+  currentId = null
+  setMode()
 }
 function payloadFromForm(){
   return {
@@ -208,40 +211,40 @@ function payloadFromForm(){
     payout_auec: Number($('payout').value || 0),
     tags: $('tags').value || null,
     attendees: $('attendees').value || null,
-    submitted_by: $('submittedBy').value || null,
+    submitted_by: $('submittedBy').value || null,     // <-- NEW
     notes: $('notes').value || null,
     attachments: collectAttachments()
-  };
+  }
 }
 function fillForm(row){
-  $('title').value = row.title || '';
-  $('type').value = row.type || '';
-  $('status').value = row.status || '';
-  $('origin').value = row.origin || '';
-  $('destination').value = row.destination || '';
-  $('date').value = isoToLocalInput(row.start_time);
-  $('hours').value = row.hours ?? '';
-  $('payout').value = row.payout_auec ?? '';
-  $('tags').value = row.tags || '';
-  $('attendees').value = row.attendees || '';
-  $('submittedBy').value = row.submitted_by || '';
-  $('notes').value = row.notes || '';
-  attachList.innerHTML = '';
+  $('title').value = row.title || ''
+  $('type').value = row.type || ''
+  $('status').value = row.status || ''
+  $('origin').value = row.origin || ''
+  $('destination').value = row.destination || ''
+  $('date').value = isoToLocalInput(row.start_time)
+  $('hours').value = row.hours ?? ''
+  $('payout').value = row.payout_auec ?? ''
+  $('tags').value = row.tags || ''
+  $('attendees').value = row.attendees || ''
+  $('submittedBy').value = row.submitted_by || ''     // <-- NEW
+  $('notes').value = row.notes || ''
+  attachList.innerHTML = ''
   if(Array.isArray(row.attachments) && row.attachments.length){
-    row.attachments.forEach(a=>addAttachRow(a.name||'', a.url||''));
-  }else addAttachRow();
+    row.attachments.forEach(a=>addAttachRow(a.name||'', a.url||''))
+  }else addAttachRow()
 }
 
-/* List rendering */
+/* ==== List rendering ==== */
 function renderList(rows){
-  listEl.innerHTML = '';
+  listEl.innerHTML = ''
   if(!rows.length){
-    listEl.innerHTML = `<div class="item"><div class="item-title">No missions found</div></div>`;
-    return;
+    listEl.innerHTML = `<div class="item"><div class="item-title">No missions found</div></div>`
+    return
   }
   for(const r of rows){
-    const el=document.createElement('div');
-    el.className='item';
+    const el=document.createElement('div')
+    el.className='item'
     el.innerHTML = `
       <div>
         <div class="item-title">${esc(r.title || '(untitled)')}</div>
@@ -250,88 +253,81 @@ function renderList(rows){
       <div style="display:flex;gap:6px;align-items:center">
         <span class="badge">${esc(r.id.slice(0,8))}</span>
         <button class="small-btn" data-id="${r.id}">Open</button>
-      </div>`;
-    el.querySelector('button').onclick = ()=> openMission(r.id);
-    listEl.appendChild(el);
+      </div>`
+    el.querySelector('button').onclick = ()=> openMission(r.id)
+    listEl.appendChild(el)
   }
 }
 function filterList(){
-  const q = (searchEl.value || '').toLowerCase();
-  if(!q) { renderList(cache); return; }
+  const q = (searchEl.value || '').toLowerCase()
+  if(!q) { renderList(cache); return }
   const rows = cache.filter(r=>
     (r.title||'').toLowerCase().includes(q) ||
     (r.tags||'').toLowerCase().includes(q) ||
     (r.status||'').toLowerCase().includes(q) ||
     (r.type||'').toLowerCase().includes(q)
-  );
-  renderList(rows);
+  )
+  renderList(rows)
 }
 
-/* Supabase ops */
+/* ==== Supabase ops ==== */
 async function loadList(){
   const { data, error } = await sb.from('missions')
     .select('id,title,type,status,start_time,created_at,tags')
-    .order('created_at',{ascending:false});
-  if(error){ alert('Failed to load list: '+error.message); return; }
-  cache = data || [];
-  renderList(cache);
+    .order('created_at',{ascending:false})
+  if(error){ alert('Failed to load list: '+error.message); return }
+  cache = data || []
+  renderList(cache)
 }
 async function openMission(id){
-  const { data, error } = await sb.from('missions').select('*').eq('id', id).single();
-  if(error){ alert('Failed to open: '+error.message); return; }
-  currentId = id;
-  fillForm(data);
-  setMode();
-  const u = new URL(location.href); u.searchParams.set('id', id); history.replaceState(null,'',u.toString());
+  const { data, error } = await sb.from('missions').select('*').eq('id', id).single()
+  if(error){ alert('Failed to open: '+error.message); return }
+  currentId = id
+  fillForm(data)
+  setMode()
+  const u = new URL(location.href); u.searchParams.set('id', id); history.replaceState(null,'',u.toString())
 }
 async function saveNew(){
-  const payload = payloadFromForm();
-  if(!payload.title){ alert('Title is required'); return; }
-  const { data, error } = await sb.from('missions').insert(payload).select().single();
-  if(error){ alert('Save failed: '+error.message); return; }
-  await loadList(); currentId = data.id; setMode(); alert('Saved ✓'); openMission(data.id);
+  const payload = payloadFromForm()
+  if(!payload.title){ alert('Title is required'); return }
+  const { data, error } = await sb.from('missions').insert(payload).select().single()
+  if(error){ alert('Save failed: '+error.message); return }
+  await loadList(); currentId = data.id; setMode(); alert('Saved ✓'); openMission(data.id)
 }
 async function updateCurrent(){
-  if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return; }
-  const payload = payloadFromForm();
-  const { error } = await sb.from('missions').update(payload).eq('id', currentId);
-  if(error){ alert('Update failed: '+error.message); return; }
-  await loadList(); alert('Updated ✓');
+  if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return }
+  const payload = payloadFromForm()
+  const { error } = await sb.from('missions').update(payload).eq('id', currentId)
+  if(error){ alert('Update failed: '+error.message); return }
+  await loadList(); alert('Updated ✓')
 }
 async function deleteCurrent(){
-  if(!currentId){ alert('No mission selected.'); return; }
-  if(!confirm('Delete this mission? This cannot be undone.')) return;
-  const { error } = await sb.from('missions').delete().eq('id', currentId);
-  if(error){ alert('Delete failed: '+error.message); return; }
-  await loadList(); clearForm(); alert('Deleted 🗑');
-  const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString());
+  if(!currentId){ alert('No mission selected.'); return }
+  if(!confirm('Delete this mission? This cannot be undone.')) return
+  const { error } = await sb.from('missions').delete().eq('id', currentId)
+  if(error){ alert('Delete failed: '+error.message); return }
+  await loadList(); clearForm(); alert('Deleted 🗑')
+  const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString())
 }
 
-/* Wire up (AFTER auth) */
-function bindUI(){
-  $('addAttachBtn').onclick = ()=>addAttachRow();
-  $('clearFormBtn').onclick = ()=>{ if(confirm('Clear the form?')) clearForm(); };
-  $('saveNewBtn').onclick = saveNew;
-  $('updateBtn').onclick = updateCurrent;
-  $('deleteBtn').onclick = deleteCurrent;
-  $('refresh').onclick = loadList;
-  $('newBtn').onclick = clearForm;
-  $('search').oninput = filterList;
-}
+/* ==== Wire up ==== */
+$('addAttachBtn').onclick = ()=>addAttachRow()
+$('clearFormBtn').onclick = ()=>{ if(confirm('Clear the form?')) clearForm() }
+$('saveNewBtn').onclick = saveNew
+$('updateBtn').onclick = updateCurrent
+$('deleteBtn').onclick = deleteCurrent
+$('refresh').onclick = loadList
+$('newBtn').onclick = clearForm
+$('search').oninput = filterList
 
-/* 🔐 Protect this page like your other pages */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await window.requireAuth();  // redirects to auth.html if not logged in
-  if (!session) return;
+// initial
+addAttachRow()
+setMode()
+await loadList()
 
-  bindUI();
-  addAttachRow();
-  setMode();
-  await loadList();
-
-  const qs = new URLSearchParams(location.search);
-  if(qs.get('id')) openMission(qs.get('id'));
-});
+// if page opened with ?id=..., load it
+const qs = new URLSearchParams(location.search)
+if(qs.get('id')) openMission(qs.get('id'))
 </script>
 </body>
 </html>
