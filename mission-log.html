@@ -53,13 +53,12 @@ body{
 
 /* Panels + controls */
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
-button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
-button:hover{background:var(--accent);color:#000}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+button,.small-btn{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
+button:hover,.small-btn:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
 input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
 .small{font-size:var(--fs-small);color:var(--muted)}
-.notice{border:1px dashed var(--border);border-radius:10px;padding:8px 10px;color:var(--muted);margin:6px 0}
 
 /* KPI */
 .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 6px}
@@ -79,6 +78,16 @@ tr:hover{background:rgba(214,180,76,.08)}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 .nowrap{white-space:nowrap}
 .mono{font-variant-numeric:tabular-nums}
+
+/* Attendance Modal */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
+.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+.modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
+.modal .chip .x:hover{background:#111;color:#ff6b6b}
+.modal .list{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -97,29 +106,18 @@ tr:hover{background:rgba(214,180,76,.08)}
     <a class="nav-btn" href="mission-log.html">Mission Log</a>
   </nav>
 
-  <div id="unauthMsg" class="notice" style="display:none">
-    You don’t have permission to edit missions. Ask an officer/admin to grant access.
-  </div>
-
   <div class="panel">
     <!-- Controls -->
     <div class="controls">
       <input id="search" placeholder="Search... (title, type, status, tags)">
       <select id="statusFilter">
         <option value="">All Status</option>
-        <option>planned</option>
-        <option>open</option>
-        <option>closed</option>
-        <option>cancelled</option>
-        <option>completed</option>
+        <option>Draft</option>
+        <option>In Progress</option>
+        <option>Completed</option>
+        <option>Aborted</option>
       </select>
-
       <button id="exportCsv">Export CSV</button>
-
-      <!-- Shown only for admin/officer -->
-      <button id="openEditor" class="btn-primary" style="display:none;margin-left:auto">
-        ✎ Open Mission Editor
-      </button>
     </div>
 
     <!-- KPI -->
@@ -153,6 +151,7 @@ tr:hover{background:rgba(214,180,76,.08)}
             <th>Attendees</th>
             <th>Attachments</th>
             <th>Notes</th>
+            <th class="nowrap">Attendance</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -160,7 +159,38 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- Supabase + shared auth helpers -->
+  <!-- Attendance Modal -->
+  <div id="attModalMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+        <button class="small-btn" onclick="closeAttendance()">Close</button>
+      </div>
+
+      <div class="row">
+        <button id="attIamGoing" class="small-btn">I’m going</button>
+        <button id="attWithdraw" class="small-btn">Withdraw</button>
+        <span class="small">These toggle <b>your</b> attendance.</span>
+      </div>
+
+      <div id="attElevatedTools" class="row" style="display:none">
+        <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+          <option value="">Role (optional)</option>
+          <option>pilot</option><option>escort</option><option>hauler</option><option>miner</option><option>medic</option>
+        </select>
+        <button id="attAddBtn" class="small-btn">Add</button>
+        <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
+      </div>
+
+      <div class="row">
+        <strong class="small">Attendees:</strong>
+        <div id="attList" class="list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔐 Auth & shared client -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
@@ -171,21 +201,18 @@ tr:hover{background:rgba(214,180,76,.08)}
   document.querySelectorAll('.nav-btn').forEach(a=>{
     if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
   });
-  // unauthorized hint
-  const u = new URL(location.href);
-  if (u.searchParams.get('unauthorized')==='1') {
-    document.getElementById('unauthMsg').style.display='block';
-  }
 })();
 
 /* ===== Helpers ===== */
 const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
 const fmtDate=iso=>iso? new Date(iso).toLocaleString() : '';
 const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
 /* ===== State ===== */
 let cache=[]; // all missions
+let session=null, sb=null;
 const tbody = $('#tbody');
 
 /* ===== Render ===== */
@@ -211,6 +238,7 @@ function row(r){
     <td>${esc(r.attendees||'')}</td>
     <td>${attachmentsCell(r.attachments)}</td>
     <td>${esc(r.notes||'')}</td>
+    <td><button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">View</button></td>
   </tr>`;
 }
 function render(list){
@@ -218,7 +246,7 @@ function render(list){
   const total = (list||[]).reduce((s,x)=> s + (Number(x.payout_auec)||0), 0);
   $('#kpiTotal').textContent = total.toLocaleString();
   tbody.innerHTML = list.length ? list.map(row).join('') :
-    `<tr><td colspan="12" class="small" style="padding:10px">No missions found.</td></tr>`;
+    `<tr><td colspan="13" class="small" style="padding:10px">No missions found.</td></tr>`;
 }
 
 /* ===== Filter + CSV ===== */
@@ -250,43 +278,127 @@ $('#exportCsv').addEventListener('click', ()=>{
   a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 });
 
-/* ===== Load from Supabase (shared client) ===== */
-async function loadMissions(sb){
+/* ===== Load (uses shared Supabase from auth.js) ===== */
+async function loadMissions(){
   const { data, error } = await sb
     .from('missions')
-    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes')
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes,created_at')
     .order('created_at',{ascending:false});
 
   if(error){
-    tbody.innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
     return;
   }
   cache = data || [];
   render(getFiltered());
 }
 
-/* ===== Boot ===== */
-document.addEventListener('DOMContentLoaded', async ()=>{
-  // must be signed in
-  const session = await requireAuth();
-  if(!session) return;
+/* ===== Attendance popup logic ===== */
+let ATT_MISSION_ID = null;
 
-  const sb = getSupabase();
+async function openAttendance(missionId, title=''){
+  ATT_MISSION_ID = missionId;
+  $('#attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
+  $('#attModalMask').style.display = 'flex';
 
-  // show editor button only for elevated
-  try{
-    const elevated = await isElevated(); // from auth.js (uses v_profiles)
-    if(elevated){
-      const btn = document.getElementById('openEditor');
-      btn.style.display = 'inline-flex';
-      btn.onclick = ()=> goto('mission-creator.html');
+  // show elevated tools if admin/officer or mission owner
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', missionId).single()
+  ]);
+  const isOwner = mission?.submitted_by === session.user.id;
+  $('#attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
+
+  $('#attIamGoing').onclick = async () => {
+    await sb.from('mission_attendees').upsert({
+      mission_id: ATT_MISSION_ID,
+      user_id: session.user.id,
+      attendance: 'going'
+    }, { onConflict: 'mission_id,user_id' });
+    await loadAttendees();
+  };
+  $('#attWithdraw').onclick = async () => {
+    await sb.from('mission_attendees')
+      .delete()
+      .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
+    await loadAttendees();
+  };
+  $('#attAddBtn').onclick = async () => {
+    const email = $('#attAddEmail').value.trim();
+    const role  = $('#attAddRole').value || null;
+    if(!email){ alert('Enter an email'); return; }
+    const { error } = await sb.rpc('add_attendee_by_email', {
+      p_mission: ATT_MISSION_ID,
+      p_email: email,
+      p_role: role,
+      p_attendance: 'going'
+    });
+    if(error){ alert('Add failed: ' + error.message); return; }
+    $('#attAddEmail').value=''; $('#attAddRole').value='';
+    await loadAttendees();
+  };
+
+  await loadAttendees();
+}
+
+function closeAttendance(){
+  $('#attModalMask').style.display = 'none';
+  ATT_MISSION_ID = null;
+}
+window.openAttendance = openAttendance;
+window.closeAttendance = closeAttendance;
+
+async function loadAttendees(){
+  const list = $('#attList');
+  list.innerHTML = '<span class="small">Loading…</span>';
+
+  const { data, error } = await sb
+    .from('v_mission_attendees_detailed')
+    .select('*')
+    .eq('mission_id', ATT_MISSION_ID)
+    .order('joined_at', { ascending: true });
+
+  if(error){ list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
+  if(!data?.length){ list.innerHTML = '<span class="small">No attendees yet.</span>'; return; }
+
+  // permission to remove others?
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
+  ]);
+  const canManageAll = (elev || mission?.submitted_by === session.user.id);
+
+  list.innerHTML = '';
+  for(const a of data){
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = `
+      <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
+      <span class="small" style="color:var(--muted)">${a.role_in_mission ? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</span>
+      ${ (canManageAll || a.user_id === session.user.id) ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
+    `;
+    const x = chip.querySelector('.x');
+    if(x){
+      x.onclick = async () => {
+        const targetUser = x.getAttribute('data-uid');
+        const { error: delErr } = await sb
+          .from('mission_attendees')
+          .delete()
+          .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+        if(delErr){ alert('Remove failed: ' + delErr.message); return; }
+        await loadAttendees();
+      };
     }
-  }catch(e){
-    console.warn('role check failed', e);
+    list.appendChild(chip);
   }
+}
 
-  // load data
-  loadMissions(sb);
+/* ===== Gate by auth, then load ===== */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  session = await requireAuth();        // redirect to auth.html if not logged in
+  if(!session) return;
+  sb = getSupabase();
+  loadMissions();
 });
 </script>
 </body>
