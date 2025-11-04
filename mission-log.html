@@ -28,10 +28,13 @@ body{
   font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
+
+/* Header */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
 
+/* Shiny nav */
 .nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
@@ -48,6 +51,7 @@ body{
 .nav-btn.active::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none}
 @keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
 
+/* Panels + controls */
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
 button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
@@ -55,7 +59,9 @@ button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
 input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
 .small{font-size:var(--fs-small);color:var(--muted)}
+.notice{border:1px dashed var(--border);border-radius:10px;padding:8px 10px;color:var(--muted);margin:6px 0}
 
+/* KPI */
 .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 6px}
 @media(max-width:880px){.kpis{grid-template-columns:1fr}}
 .kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)}
@@ -63,11 +69,12 @@ input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px
 .kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
 .kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
 
+/* Table */
 .tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
 table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
 th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
 th{color:var(--accent);background:#080808;font-weight:500}
-tr:nth-child(even){background:##111}
+tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 .nowrap{white-space:nowrap}
@@ -90,22 +97,28 @@ tr:hover{background:rgba(214,180,76,.08)}
     <a class="nav-btn" href="mission-log.html">Mission Log</a>
   </nav>
 
+  <div id="unauthMsg" class="notice" style="display:none">
+    You don’t have permission to edit missions. Ask an officer/admin to grant access.
+  </div>
+
   <div class="panel">
     <!-- Controls -->
     <div class="controls">
       <input id="search" placeholder="Search... (title, type, status, tags)">
       <select id="statusFilter">
         <option value="">All Status</option>
-        <option>Draft</option>
-        <option>In Progress</option>
-        <option>Completed</option>
-        <option>Aborted</option>
+        <option>planned</option>
+        <option>open</option>
+        <option>closed</option>
+        <option>cancelled</option>
+        <option>completed</option>
       </select>
+
       <button id="exportCsv">Export CSV</button>
 
-      <!-- 🔒 Hidden by default, shown only to admin/officer -->
-      <button id="openEditorBtn" class="btn-primary" style="display:none; margin-left:auto;">
-        + Open Editor
+      <!-- Shown only for admin/officer -->
+      <button id="openEditor" class="btn-primary" style="display:none;margin-left:auto">
+        ✎ Open Mission Editor
       </button>
     </div>
 
@@ -147,7 +160,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- 🔐 Auth & shared client -->
+  <!-- Supabase + shared auth helpers -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
@@ -158,11 +171,15 @@ tr:hover{background:rgba(214,180,76,.08)}
   document.querySelectorAll('.nav-btn').forEach(a=>{
     if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
   });
+  // unauthorized hint
+  const u = new URL(location.href);
+  if (u.searchParams.get('unauthorized')==='1') {
+    document.getElementById('unauthMsg').style.display='block';
+  }
 })();
 
 /* ===== Helpers ===== */
 const $=s=>document.querySelector(s);
-const $$=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
 const fmtDate=iso=>iso? new Date(iso).toLocaleString() : '';
 const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
@@ -233,7 +250,7 @@ $('#exportCsv').addEventListener('click', ()=>{
   a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 });
 
-/* ===== Load (uses shared Supabase from auth.js) ===== */
+/* ===== Load from Supabase (shared client) ===== */
 async function loadMissions(sb){
   const { data, error } = await sb
     .from('missions')
@@ -248,30 +265,27 @@ async function loadMissions(sb){
   render(getFiltered());
 }
 
-/* ===== Auth & role-gated editor button ===== */
+/* ===== Boot ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  const session = await requireAuth();   // redirects to auth.html if not logged in
+  // must be signed in
+  const session = await requireAuth();
   if(!session) return;
 
   const sb = getSupabase();
-  const EDITOR_PATH = 'mission-editor.html'; // change to 'mission-creator.html' if you prefer
 
-  // Check roles via v_profiles
-  const { data: prof, error } = await sb
-    .from('v_profiles')
-    .select('roles')
-    .eq('user_id', session.user.id)
-    .single();
-
-  const roles = prof?.roles || [];
-  const elevated = roles.some(r => ['admin','officer'].includes(r));
-
-  if (elevated) {
-    const btn = $('#openEditorBtn');
-    btn.style.display = 'inline-flex';
-    btn.addEventListener('click', () => { location.href = EDITOR_PATH; });
+  // show editor button only for elevated
+  try{
+    const elevated = await isElevated(); // from auth.js (uses v_profiles)
+    if(elevated){
+      const btn = document.getElementById('openEditor');
+      btn.style.display = 'inline-flex';
+      btn.onclick = ()=> goto('mission-creator.html');
+    }
+  }catch(e){
+    console.warn('role check failed', e);
   }
 
+  // load data
   loadMissions(sb);
 });
 </script>
