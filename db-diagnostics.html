@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN • Supabase DB Diagnostics</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--b:#d6b44c;--a:#f2d675;--t:#f7f1d0;--m:#c9b06a}
+*{box-sizing:border-box} body{background:#000;color:var(--t);font-family:'Play',system-ui,sans-serif;margin:0;padding:18px}
+h1{margin:0 0 12px;color:var(--a);font-size:22px}
+.panel{background:#0b0b0b;border:1px solid var(--b);border-radius:12px;padding:12px;margin-bottom:12px}
+.btn{padding:8px 12px;border:1px solid var(--b);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--a);cursor:pointer}
+.btn:hover{background:var(--a);color:#000}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;margin:0 0 6px;color:var(--m);font-size:12px}
+code{background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:2px 6px}
+#log{background:#0a0a0a;border:1px solid var(--b);border-radius:10px;padding:10px;height:360px;overflow:auto;font:12px/1.4 ui-monospace,Menlo,Consolas}
+small{color:var(--m)}
+</style>
+</head>
+<body>
+  <h1>Supabase DB Diagnostics</h1>
+
+  <div class="panel">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button id="login" class="btn">Sign in with GitHub</button>
+      <button id="logout" class="btn" style="display:none">Sign out</button>
+      <div id="who" style="margin-left:auto;color:#c9b06a">Not signed in</div>
+    </div>
+    <small>Tip: run tests once as a normal member (non-elevated), then sign out and in again as an admin/officer to compare.</small>
+  </div>
+
+  <div class="panel grid">
+    <div>
+      <label>Read tests</label>
+      <button class="btn" id="tSelect">SELECT (should work)</button>
+    </div>
+    <div>
+      <label>Write tests</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="tInsPlanned">INSERT Planned (non-elevated: ✅)</button>
+        <button class="btn" id="tInsSuccess">INSERT Success (non-elevated: ❌)</button>
+        <button class="btn" id="tUpdSuccess">UPDATE → Success</button>
+        <button class="btn" id="tDelete">DELETE last test row</button>
+        <button class="btn" id="tCleanup">CLEANUP all test rows</button>
+      </div>
+      <small>Tests use tags = <code>RLS_SELFTEST</code>. We remember the last row’s ID to update/delete.</small>
+    </div>
+  </div>
+
+  <div class="panel">
+    <label>Log</label>
+    <div id="log"></div>
+  </div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+/* ==== YOUR PROJECT CONFIG (from your pages) ==== */
+const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
+
+/* ==== UI refs ==== */
+const ui = {
+  login:  document.getElementById('login'),
+  logout: document.getElementById('logout'),
+  who:    document.getElementById('who'),
+  log:    document.getElementById('log'),
+
+  tSelect:     document.getElementById('tSelect'),
+  tInsPlanned: document.getElementById('tInsPlanned'),
+  tInsSuccess: document.getElementById('tInsSuccess'),
+  tUpdSuccess: document.getElementById('tUpdSuccess'),
+  tDelete:     document.getElementById('tDelete'),
+  tCleanup:    document.getElementById('tCleanup'),
+}
+
+function say(...args){
+  const line = args.map(v => typeof v==='string' ? v : JSON.stringify(v)).join(' ')
+  const div = document.createElement('div')
+  div.textContent = `[${new Date().toLocaleTimeString()}] ${line}`
+  ui.log.appendChild(div)
+  ui.log.scrollTop = ui.log.scrollHeight
+}
+
+/* Track the last created row to update/delete */
+let lastId = null
+const TAG = 'RLS_SELFTEST'
+
+async function refreshWho(){
+  const { data: { session } } = await sb.auth.getSession()
+  if(!session){
+    ui.who.textContent = 'Not signed in'
+    ui.login.style.display = ''
+    ui.logout.style.display = 'none'
+    return { session: null, elevated: false }
+  }
+  const email = session.user.email
+  // Pull role from profiles
+  const { data: prof, error } = await sb.from('profiles').select('role').eq('id', session.user.id).single()
+  const role = (prof?.role || 'member').toLowerCase()
+  const elevated = ['admin','officer'].includes(role)
+  ui.who.textContent = `Signed in: ${email} • role=${role} • elevated=${elevated ? 'YES' : 'no'}`
+  ui.login.style.display = 'none'
+  ui.logout.style.display = ''
+  return { session, elevated }
+}
+
+/* ==== Auth buttons ==== */
+ui.login.onclick = async () => {
+  const { error } = await sb.auth.signInWithOAuth({ provider: 'github' })
+  if(error) say('Login error:', error.message)
+}
+ui.logout.onclick = async () => {
+  await sb.auth.signOut()
+  lastId = null
+  say('Signed out.')
+  await refreshWho()
+}
+
+/* ==== Tests ==== */
+ui.tSelect.onclick = async () => {
+  const { data, error } = await sb.from('missions').select('id, title, status').limit(3)
+  if(error) return say('SELECT error:', error.message)
+  say('SELECT ok:', data)
+}
+
+ui.tInsPlanned.onclick = async () => {
+  const payload = {
+    title: 'RLS selftest (Planned)',
+    status: 'Planned',
+    start_time: new Date().toISOString(),
+    tags: TAG,
+    attachments: []
+  }
+  const { data, error } = await sb.from('missions').insert(payload).select().single()
+  if(error) return say('INSERT Planned error:', error.message)
+  lastId = data.id
+  say('INSERT Planned ok:', { id: data.id, status: data.status })
+}
+
+ui.tInsSuccess.onclick = async () => {
+  const payload = {
+    title: 'RLS selftest (Success)',
+    status: 'Success',
+    start_time: new Date().toISOString(),
+    tags: TAG,
+    attachments: []
+  }
+  const { data, error } = await sb.from('missions').insert(payload).select().single()
+  if(error) return say('INSERT Success blocked (expected for non-elevated):', error.message)
+  lastId = data.id
+  say('INSERT Success ok (you are elevated):', { id: data.id, status: data.status })
+}
+
+ui.tUpdSuccess.onclick = async () => {
+  if(!lastId) return say('No lastId yet. Run INSERT first.')
+  const { error } = await sb.from('missions').update({ status: 'Success' }).eq('id', lastId)
+  if(error) return say('UPDATE → Success blocked (expected for non-elevated):', error.message)
+  say('UPDATE → Success ok (you are elevated).')
+}
+
+ui.tDelete.onclick = async () => {
+  if(!lastId) return say('No lastId yet. Run INSERT first.')
+  const { data, error } = await sb.from('missions').delete().eq('id', lastId).select('id').single()
+  if(error) return say('DELETE blocked (if non-elevated & not Planned/Active):', error.message)
+  say('DELETE ok:', data)
+  lastId = null
+}
+
+ui.tCleanup.onclick = async () => {
+  // Try to set any test rows back to Active (so non-elevated can delete), then delete
+  const { error: upErr } = await sb.from('missions').update({ status:'Active' }).eq('tags', TAG)
+  if(upErr) say('Cleanup: update-to-Active may be blocked for some rows (ok):', upErr.message)
+  const { data, error } = await sb.from('missions').delete().eq('tags', TAG).select('id')
+  if(error) return say('Cleanup delete error:', error.message)
+  say(`Cleanup ok: removed ${data?.length||0} rows.`)
+}
+
+await refreshWho()
+
+// Also refresh if auth state changes in another tab
+sb.auth.onAuthStateChange(async () => {
+  await refreshWho()
+})
+</script>
+</body>
+</html>
