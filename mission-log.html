@@ -8,83 +8,69 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
-:root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-}
+:root{ --bg:#000; --panel:#0b0b0b; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b }
 *{box-sizing:border-box}
-body{
-  background:#000;color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
-  margin:0;padding:16px;
-}
+body{ background:#000; color:var(--text); font-family:'Play',system-ui,sans-serif; margin:0; padding:16px }
 
-/* Header + nav */
+/* header + nav */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;color:var(--accent);margin:0}
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}
-.nav-btn{
-  padding:7px 14px;border:1px solid var(--border);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);
-  text-decoration:none;font-weight:700;transition:.2s;
-}
-.nav-btn:hover{background:var(--accent);color:#000}
-.nav-btn.active{background:var(--accent);color:#000;box-shadow:0 0 12px rgba(214,180,76,.4)}
+.brand h1{margin:0;color:var(--accent)}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.nav a{padding:7px 14px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);text-decoration:none;font-weight:700}
+.nav a:hover{background:var(--accent);color:#000}
+.nav .active{background:var(--accent);color:#000;box-shadow:0 0 12px rgba(214,180,76,.35)}
 
-/* Panel */
+/* panel + controls */
 .panel{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
 .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
-button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
+button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play'}
 button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
 input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'}
 .small{font-size:12px;color:var(--muted)}
+#adminCreateBtn{display:none;margin-left:auto}
 
-/* Table */
+/* table */
 .tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
-th{color:var(--accent);background:#080808;font-weight:500}
+th{color:var(--accent);background:#080808}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
-.pill{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 
-/* Modal */
+/* modal */
 #missionModal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:50}
 #missionModal.show{display:flex}
 #missionModal .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px)}
-#missionModal .sheet{position:relative;z-index:1;width:min(800px,92vw);background:#0b0b0b;border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#missionModal .sheet{position:relative;z-index:1;width:min(820px,92vw);background:#0b0b0b;border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
 .grid1{display:grid;grid-template-columns:1fr;gap:10px}
-.attach-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
-.attach-row button{padding:6px 10px}
-.modal .actions{display:flex;justify-content:space-between;margin-top:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#deleteBtn{display:none;border-color:var(--bad);color:var(--bad)}
+.modal-actions{display:flex;justify-content:space-between;margin-top:10px}
 </style>
 </head>
 <body>
 
-<!-- Header -->
+<!-- header -->
 <div class="brand">
   <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
   <h1>JMBN Mission Log</h1>
 </div>
 
-<!-- Nav -->
+<!-- nav -->
 <nav class="nav">
-  <a class="nav-btn" href="index.html">Manifest</a>
-  <a class="nav-btn" href="hangar.html">Hangar</a>
-  <a class="nav-btn" href="components.html">Components</a>
-  <a class="nav-btn" href="contracts.html">Contracts</a>
-  <a class="nav-btn active" href="mission-log.html">Mission Log</a>
+  <a href="index.html">Manifest</a>
+  <a href="hangar.html">Hangar</a>
+  <a href="components.html">Components</a>
+  <a href="contracts.html">Contracts</a>
+  <a class="active" href="mission-log.html">Mission Log</a>
 </nav>
 
-<!-- Panel -->
+<!-- content -->
 <div class="panel">
   <div class="controls">
     <input id="search" placeholder="Search (title, type, tags)">
@@ -94,7 +80,7 @@ tr:hover{background:rgba(214,180,76,.08)}
       <option>Success</option><option>Fail</option><option>Abort</option>
     </select>
     <button id="exportCsv">Export CSV</button>
-    <button id="adminCreateBtn" class="btn-primary" style="display:none;margin-left:auto">+ New Mission</button>
+    <button id="adminCreateBtn" class="btn-primary">+ New Mission</button>
   </div>
 
   <div class="tableWrap">
@@ -110,30 +96,54 @@ tr:hover{background:rgba(214,180,76,.08)}
   </div>
 </div>
 
-<!-- Modal -->
-<div id="missionModal">
+<!-- modal -->
+<div id="missionModal" aria-hidden="true">
   <div class="backdrop"></div>
   <div class="sheet">
     <h3 id="modalTitle">New Mission</h3>
 
-    <div class="grid1"><label>Title<input id="f_title"></label></div>
-    <div class="grid2">
-      <label>Type<select id="f_type">
-        <option></option><option>Hauling</option><option>Delivery</option>
-        <option>Rescue</option><option>Mining</option><option>Exploration</option>
-      </select></label>
-      <label>Status<select id="f_status">
-        <option></option><option>Planned</option><option>Active</option>
-        <option>Success</option><option>Fail</option><option>Abort</option>
-      </select></label>
+    <div class="grid1">
+      <label>Title <input id="f_title" placeholder="e.g., RW S2 — 24-box Haul"></label>
     </div>
-    <div class="grid2"><label>Origin<input id="f_origin"></label><label>Destination<input id="f_destination"></label></div>
-    <div class="grid2"><label>Date<input id="f_date" type="datetime-local"></label><label>Hours<input id="f_hours" type="number" step="0.1"></label></div>
-    <div class="grid2"><label>Payout<input id="f_payout" type="number"></label><label>Tags<input id="f_tags"></label></div>
-    <div class="grid1"><label>Attendees<input id="f_attendees"></label><label>Notes<textarea id="f_notes"></textarea></label></div>
 
-    <div class="actions">
-      <button id="deleteBtn" style="display:none;border-color:var(--bad);color:var(--bad)">🗑 Delete</button>
+    <div class="grid2">
+      <label>Type
+        <select id="f_type">
+          <option></option><option>Hauling</option><option>Delivery</option>
+          <option>Rescue</option><option>Investigation</option>
+          <option>Salvage</option><option>Mining</option><option>Exploration</option>
+        </select>
+      </label>
+      <label>Status
+        <select id="f_status">
+          <option></option><option>Planned</option><option>Active</option>
+          <option>Success</option><option>Fail</option><option>Abort</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid2">
+      <label>Origin <input id="f_origin" placeholder="Area18"></label>
+      <label>Destination <input id="f_destination" placeholder="Everus Harbor"></label>
+    </div>
+
+    <div class="grid2">
+      <label>Date/Time <input id="f_date" type="datetime-local"></label>
+      <label>Hours <input id="f_hours" type="number" step="0.1"></label>
+    </div>
+
+    <div class="grid2">
+      <label>Payout (aUEC) <input id="f_payout" type="number"></label>
+      <label>Tags <input id="f_tags" placeholder="hauling, night"></label>
+    </div>
+
+    <div class="grid1">
+      <label>Attendees <input id="f_attendees" placeholder="Vex, Kara"></label>
+      <label>Notes <textarea id="f_notes" rows="4" placeholder="Summary / AAR"></textarea></label>
+    </div>
+
+    <div class="modal-actions">
+      <button id="deleteBtn">🗑 Delete</button>
       <div>
         <button id="cancelBtn">Cancel</button>
         <button id="saveBtn" class="btn-primary">Save</button>
@@ -142,120 +152,179 @@ tr:hover{background:rgba(214,180,76,.08)}
   </div>
 </div>
 
-<!-- Supabase -->
+<!-- supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script type="module">
-const $ = s=>document.querySelector(s);
-const $$ = s=>Array.from(document.querySelectorAll(s));
-const fmtDate=iso=>iso?new Date(iso).toLocaleString():'';
-let sb, session, user, elevated=false, cache=[], editId=null;
+/* ===== helpers ===== */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const fmtDate = iso => iso ? new Date(iso).toLocaleString() : '';
+const toISO   = v   => v ? new Date(v).toISOString() : null;
 
-function render(list){
-  const body=$('#tbody');
-  body.innerHTML='';
-  if(!list.length){body.innerHTML='<tr><td colspan=11>No missions found.</td></tr>';return;}
-  for(const r of list){
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td><b style="color:var(--accent)">${r.title||'(untitled)'}</b></td>
+/* ===== state ===== */
+let sb, session, user, elevated = false, cache = [], editId = null;
+
+/* ===== render ===== */
+function renderTable(rows){
+  const tbody = $('#tbody');
+  if(!rows.length){ tbody.innerHTML = '<tr><td colspan="11">No missions found.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(r => `
+    <tr data-id="${r.id}">
+      <td><b style="color:var(--accent)">${(r.title||'(untitled)').replace(/</g,'&lt;')}</b></td>
       <td>${r.type||''}</td>
       <td>${r.status||''}</td>
       <td>${r.origin||''}</td>
       <td>${r.destination||''}</td>
       <td>${fmtDate(r.start_time)}</td>
-      <td>${r.hours||''}</td>
-      <td>${r.payout_auec||''}</td>
+      <td>${r.hours ?? ''}</td>
+      <td>${r.payout_auec ?? ''}</td>
       <td>${r.tags||''}</td>
       <td>${r.attendees||''}</td>
-      <td>${r.notes||''}</td>`;
-    tr.onclick=()=>openEdit(r.id);
-    body.appendChild(tr);
-  }
+      <td>${r.notes||''}</td>
+    </tr>`).join('');
+
+  $$('#tbody tr').forEach(tr=>{
+    tr.onclick = () => openForEdit(tr.getAttribute('data-id'));
+  });
 }
 
-async function load(){
-  const {data,error}=await sb.from('missions').select('*').order('created_at',{ascending:false});
-  if(error){alert('Load failed: '+error.message);return;}
-  cache=data||[];render(cache);
+function filtered(){
+  const q = ($('#search').value || '').toLowerCase();
+  const st = ($('#statusFilter').value || '').toLowerCase();
+  let rows = cache.slice();
+  if(st) rows = rows.filter(x => (x.status||'').toLowerCase() === st);
+  if(q)  rows = rows.filter(x =>
+    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`
+    .toLowerCase().includes(q));
+  return rows;
 }
 
-function openModal(r=null){
-  $('#missionModal').classList.add('show');
-  $('#modalTitle').textContent=r?'Edit Mission':'New Mission';
-  $('#deleteBtn').style.display=r&&canEdit(r)?'inline-block':'none';
-  $('#saveBtn').disabled=!canEdit(r);
-  $('#f_title').value=r?.title||'';
-  $('#f_type').value=r?.type||'';
-  $('#f_status').value=r?.status||'';
-  $('#f_origin').value=r?.origin||'';
-  $('#f_destination').value=r?.destination||'';
-  $('#f_date').value=r?.start_time?new Date(r.start_time).toISOString().slice(0,16):'';
-  $('#f_hours').value=r?.hours||'';
-  $('#f_payout').value=r?.payout_auec||'';
-  $('#f_tags').value=r?.tags||'';
-  $('#f_attendees').value=r?.attendees||'';
-  $('#f_notes').value=r?.notes||'';
+/* ===== data ops ===== */
+async function loadMissions(){
+  const { data, error } = await sb
+    .from('missions')
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,notes,submitted_by')
+    .order('created_at', { ascending:false });
+  if(error){ alert('Load failed: ' + error.message); return; }
+  cache = data || [];
+  renderTable(filtered());
 }
-function hideModal(){$('#missionModal').classList.remove('show');}
-function canEdit(r){if(elevated)return true;return r?.submitted_by===user?.id;}
 
-async function openEdit(id){
-  const {data,error}=await sb.from('missions').select('*').eq('id',id).single();
-  if(error){alert('Open failed: '+error.message);return;}
-  editId=id;openModal(data);
+async function openForEdit(id){
+  const { data, error } = await sb.from('missions').select('*').eq('id', id).single();
+  if(error){ alert('Open failed: ' + error.message); return; }
+  editId = id;
+
+  // view vs edit
+  const canEdit = elevated || (data.submitted_by && data.submitted_by === user.id);
+  $('#saveBtn').disabled = !canEdit;
+  $('#deleteBtn').style.display = canEdit ? 'inline-block' : 'none';
+  $('#modalTitle').textContent = canEdit ? `Edit Mission (${id.slice(0,8)})` : 'View Mission';
+
+  // fill
+  $('#f_title').value = data.title || '';
+  $('#f_type').value = data.type || '';
+  $('#f_status').value = data.status || '';
+  $('#f_origin').value = data.origin || '';
+  $('#f_destination').value = data.destination || '';
+  $('#f_date').value = data.start_time ? new Date(data.start_time).toISOString().slice(0,16) : '';
+  $('#f_hours').value = data.hours ?? '';
+  $('#f_payout').value = data.payout_auec ?? '';
+  $('#f_tags').value = data.tags || '';
+  $('#f_attendees').value = data.attendees || '';
+  $('#f_notes').value = data.notes || '';
+
+  showModal();
+}
+
+function payloadFromUI(){
+  return {
+    title: $('#f_title').value.trim(),
+    type: $('#f_type').value || null,
+    status: $('#f_status').value || null,
+    origin: $('#f_origin').value || null,
+    destination: $('#f_destination').value || null,
+    start_time: toISO($('#f_date').value),
+    hours: Number($('#f_hours').value || 0),
+    payout_auec: Number($('#f_payout').value || 0),
+    tags: $('#f_tags').value || null,
+    attendees: $('#f_attendees').value || null,
+    notes: $('#f_notes').value || null
+  };
 }
 
 async function saveMission(){
-  const payload={
-    title:$('#f_title').value.trim(),
-    type:$('#f_type').value||null,
-    status:$('#f_status').value||null,
-    origin:$('#f_origin').value||null,
-    destination:$('#f_destination').value||null,
-    start_time:$('#f_date').value?new Date($('#f_date').value).toISOString():null,
-    hours:Number($('#f_hours').value||0),
-    payout_auec:Number($('#f_payout').value||0),
-    tags:$('#f_tags').value||null,
-    attendees:$('#f_attendees').value||null,
-    notes:$('#f_notes').value||null
-  };
-  if(!payload.title){alert('Title required');return;}
+  const payload = payloadFromUI();
+  if(!payload.title){ alert('Title is required.'); return; }
+
   if(!editId){
-    payload.submitted_by=user.id;
-    const {error}=await sb.from('missions').insert(payload);
-    if(error)return alert('Insert failed: '+error.message);
+    // insert needs owner id for RLS check
+    payload.submitted_by = user.id;
+    const { error } = await sb.from('missions').insert(payload);
+    if(error){ alert('Insert failed: ' + error.message); return; }
+    alert('Mission created ✓');
   }else{
-    const {error}=await sb.from('missions').update(payload).eq('id',editId);
-    if(error)return alert('Update failed: '+error.message);
+    const { error } = await sb.from('missions').update(payload).eq('id', editId);
+    if(error){ alert('Update failed: ' + error.message); return; }
+    alert('Mission updated ✓');
   }
-  hideModal();load();
+  hideModal(); loadMissions();
 }
+
 async function deleteMission(){
-  if(!editId)return;
-  if(!confirm('Delete this mission?'))return;
-  const {error}=await sb.from('missions').delete().eq('id',editId);
-  if(error)return alert('Delete failed: '+error.message);
-  hideModal();load();
+  if(!editId) return;
+  if(!confirm('Delete this mission?')) return;
+  const { error } = await sb.from('missions').delete().eq('id', editId);
+  if(error){ alert('Delete failed: ' + error.message); return; }
+  hideModal(); loadMissions();
 }
 
-/* ==== Auth boot ==== */
-document.addEventListener('DOMContentLoaded',async()=>{
-  session=await window.requireAuth();
-  if(!session)return;
-  sb=window.sb; user=session.user;
+/* ===== modal helpers ===== */
+function showModal(){ $('#missionModal').classList.add('show'); }
+function hideModal(){ $('#missionModal').classList.remove('show'); }
 
-  const {data:prof}=await sb.from('v_profiles').select('roles').eq('user_id',user.id).single();
-  elevated=(prof?.roles||[]).some(r=>['admin','officer'].includes(r));
-  if(elevated)$('#adminCreateBtn').style.display='inline-flex';
+/* ===== boot ===== */
+document.addEventListener('DOMContentLoaded', async () => {
+  // require login
+  session = await window.requireAuth();
+  if(!session) return;
+  sb = window.sb;
+  user = session.user;
 
-  $('#adminCreateBtn').onclick=()=>{editId=null;openModal(null);};
-  $('#cancelBtn').onclick=hideModal;
-  $('#saveBtn').onclick=saveMission;
-  $('#deleteBtn').onclick=deleteMission;
-  $('.backdrop').onclick=hideModal;
+  // check elevation via your SQL function: public.is_elevated(uuid)->boolean
+  try{
+    const { data: isAdmin, error: rpcErr } = await sb.rpc('is_elevated', { u: user.id });
+    if(rpcErr) console.warn('is_elevated RPC error:', rpcErr);
+    elevated = !!isAdmin;
+  }catch(e){ console.warn('RPC failed', e); elevated = false; }
 
-  load();
+  if(elevated) $('#adminCreateBtn').style.display = 'inline-flex';
+
+  // wire UI
+  $('#adminCreateBtn').onclick = () => { editId = null; $('#modalTitle').textContent='New Mission'; $('#deleteBtn').style.display='none'; $('#saveBtn').disabled=false; $('#f_title').value=''; $('#f_type').value=''; $('#f_status').value=''; $('#f_origin').value=''; $('#f_destination').value=''; $('#f_date').value=''; $('#f_hours').value=''; $('#f_payout').value=''; $('#f_tags').value=''; $('#f_attendees').value=''; $('#f_notes').value=''; showModal(); };
+  $('#cancelBtn').onclick = hideModal;
+  $('.backdrop').onclick = hideModal;
+  $('#saveBtn').onclick = saveMission;
+  $('#deleteBtn').onclick = deleteMission;
+
+  // filters + export
+  $('#search').oninput = () => renderTable(filtered());
+  $('#statusFilter').oninput = () => renderTable(filtered());
+  $('#exportCsv').onclick = () => {
+    const rows = filtered();
+    const cols = ['title','type','status','origin','destination','start_time','hours','payout_auec','tags','attendees','notes'];
+    const csv = [
+      cols.join(','),
+      ...rows.map(r => cols.map(k => `"${String(r[k] ?? '').replace(/"/g,'""')}"`).join(','))
+    ].join('\n');
+    const blob = new Blob([csv],{type:'text/csv'});
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+  };
+
+  // go
+  loadMissions();
 });
 </script>
 </body>
