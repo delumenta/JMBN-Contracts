@@ -29,12 +29,10 @@ body{
   margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* Header */
+/* Header + nav */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-
-/* Shiny nav */
 .nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
@@ -78,6 +76,23 @@ tr:hover{background:rgba(214,180,76,.08)}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 .nowrap{white-space:nowrap}
 .mono{font-variant-numeric:tabular-nums}
+
+/* Admin button + modal */
+#adminCreateBtn{display:none}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:50}
+.modal.show{display:flex}
+.modal .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px)}
+.modal .sheet{position:relative;z-index:1;width:min(820px,92vw);background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.6);padding:14px}
+.modal h3{margin:0 0 10px;color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid1{display:grid;grid-template-columns:1fr;gap:10px}
+.modal label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.modal input,.modal select,.modal textarea{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'}
+.modal .actions{display:flex;gap:8px;justify-content:space-between;margin-top:12px}
+.modal .left-actions{display:flex;gap:8px}
+.attach-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+.attach-row button{padding:6px 10px}
+.tip{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -93,7 +108,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     <a class="nav-btn" href="hangar.html">Hangar</a>
     <a class="nav-btn" href="components.html">Components</a>
     <a class="nav-btn" href="contracts.html">Contracts</a>
-    <a class="nav-btn" href="mission-log.html">Mission Log</a>
+    <a class="nav-btn active" href="mission-log.html">Mission Log</a>
   </nav>
 
   <div class="panel">
@@ -108,6 +123,8 @@ tr:hover{background:rgba(214,180,76,.08)}
         <option>Aborted</option>
       </select>
       <button id="exportCsv">Export CSV</button>
+      <span class="small" style="margin-left:auto">Tip: Click a row to view. If you have permission, it will open in edit mode.</span>
+      <button id="adminCreateBtn" class="btn-primary">+ New Mission</button>
     </div>
 
     <!-- KPI -->
@@ -148,41 +165,129 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- 🔐 Auth & shared client -->
+  <!-- Admin Create/Edit Modal -->
+  <div id="missionModal" class="modal" aria-hidden="true">
+    <div class="backdrop"></div>
+    <div class="sheet">
+      <h3 id="modalTitle">New Mission</h3>
+
+      <div class="grid1">
+        <div>
+          <label>Title</label>
+          <input id="f_title" placeholder="e.g., RW S2 — 24-box Haul">
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div>
+          <label>Type</label>
+          <select id="f_type">
+            <option></option><option>Hauling</option><option>Delivery</option>
+            <option>Rescue</option><option>Bounty</option><option>Investigation</option>
+            <option>Salvage</option><option>Mining</option><option>Exploration</option>
+          </select>
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="f_status">
+            <option></option><option>Draft</option><option>In Progress</option>
+            <option>Completed</option><option>Aborted</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div><label>Origin</label><input id="f_origin"></div>
+        <div><label>Destination</label><input id="f_destination"></div>
+      </div>
+
+      <div class="grid2">
+        <div><label>Date/Time</label><input id="f_date" type="datetime-local"></div>
+        <div><label>Hours</label><input id="f_hours" type="number" step="0.1"></div>
+      </div>
+
+      <div class="grid2">
+        <div><label>Payout (aUEC)</label><input id="f_payout" type="number" step="1"></div>
+        <div><label>Tags</label><input id="f_tags" placeholder="hauling, night"></div>
+      </div>
+
+      <div class="grid1">
+        <div><label>Attendees</label><input id="f_attendees" placeholder="Vex, Kara"></div>
+        <div><label>Notes</label><textarea id="f_notes" rows="4"></textarea></div>
+      </div>
+
+      <div class="grid1">
+        <label>Attachments</label>
+        <div id="attachWrap"></div>
+        <button id="addAttach" style="margin-top:6px">+ Add attachment</button>
+        <div class="tip">Each row is <b>Label</b> + <b>URL</b>.</div>
+      </div>
+
+      <div class="actions">
+        <div class="left-actions">
+          <button id="deleteBtn" class="bad" style="border-color:var(--bad);color:var(--bad)">🗑 Delete</button>
+        </div>
+        <div>
+          <button id="cancelBtn">Cancel</button>
+          <button id="saveBtn" class="btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔐 Supabase client + your auth helper -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
 <script>
-/* ===== Active nav highlight ===== */
-(function(){
-  const here = location.pathname.split('/').pop() || 'mission-log.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
-  });
-})();
-
-/* ===== Helpers ===== */
-const $=s=>document.querySelector(s);
-const $$=s=>Array.from(document.querySelectorAll(s));
-const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
-const fmtDate=iso=>iso? new Date(iso).toLocaleString() : '';
-const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
+/* ===== Utilities ===== */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+const fmtDate = iso => iso? new Date(iso).toLocaleString() : '';
+const fmtNum  = n => (n||n===0) ? Number(n).toLocaleString() : '';
+const isoToLocal = iso => iso ? new Date(iso).toISOString().slice(0,16) : '';
+const localToISO = v => v ? new Date(v).toISOString() : null;
 
 /* ===== State ===== */
-let cache=[]; // all missions
-const tbody = $('#tbody');
+let sb, session, currentUser, elevated = false;
+let cache = [];               // missions
+let editingId = null;         // null = create
 
-/* ===== Render ===== */
+/* ===== Attachments control ===== */
+function addAttachRow(name='',url=''){
+  const row = document.createElement('div');
+  row.className = 'attach-row';
+  row.innerHTML = `
+    <input placeholder="Label" value="${esc(name)}">
+    <input placeholder="URL (https://...)" value="${esc(url)}">
+    <button type="button">✕</button>`;
+  row.querySelector('button').onclick = () => row.remove();
+  $('#attachWrap').appendChild(row);
+}
+function attachmentsFromUI(){
+  return [...$('#attachWrap').querySelectorAll('.attach-row')].map(r=>{
+    const name = r.children[0].value.trim();
+    const url  = r.children[1].value.trim();
+    if(!url) return null;
+    try { new URL(url); } catch { return null; }
+    return { name: name || (url.split('/').pop() || 'link'), url };
+  }).filter(Boolean);
+}
+function fillAttachments(arr){
+  $('#attachWrap').innerHTML = '';
+  if(Array.isArray(arr) && arr.length) arr.forEach(a=>addAttachRow(a.name||'', a.url||''));
+  else addAttachRow();
+}
+
+/* ===== Table render ===== */
+const tbody = $('#tbody');
 function attachmentsCell(arr){
   if(!Array.isArray(arr)||!arr.length) return '';
-  return arr.map((a,i)=>{
-    const name = a?.name?.trim() || `Attachment ${i+1}`;
-    const url  = a?.url || '#';
-    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
-  }).join(', ');
+  return arr.map((a,i)=>`<a href="${esc(a.url||'#')}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(a.name||`Attachment ${i+1}`)}</a>`).join(', ');
 }
-function row(r){
-  return `<tr>
+function rowHTML(r){
+  return `<tr data-id="${r.id}">
     <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
     <td>${r.type?`<span class="pill">${esc(r.type)}</span>`:''}</td>
     <td>${r.status?`<span class="pill">${esc(r.status)}</span>`:''}</td>
@@ -201,11 +306,16 @@ function render(list){
   $('#kpiCount').textContent = (list||[]).length.toLocaleString();
   const total = (list||[]).reduce((s,x)=> s + (Number(x.payout_auec)||0), 0);
   $('#kpiTotal').textContent = total.toLocaleString();
-  tbody.innerHTML = list.length ? list.map(row).join('') :
+  tbody.innerHTML = list.length ? list.map(rowHTML).join('') :
     `<tr><td colspan="12" class="small" style="padding:10px">No missions found.</td></tr>`;
+
+  // row click to view/edit
+  $$('#tbody tr').forEach(tr=>{
+    tr.onclick = () => openForEdit(tr.getAttribute('data-id'));
+  });
 }
 
-/* ===== Filter + CSV ===== */
+/* ===== Filters + CSV ===== */
 function getFiltered(){
   const q = ($('#search').value||'').toLowerCase();
   const st = ($('#statusFilter').value||'').toLowerCase();
@@ -216,31 +326,31 @@ function getFiltered(){
     .toLowerCase().includes(q));
   return arr;
 }
-$('#search').addEventListener('input', ()=>render(getFiltered()));
-$('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
+function bindFilters(){
+  $('#search').addEventListener('input', ()=>render(getFiltered()));
+  $('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
+  $('#exportCsv').addEventListener('click', ()=>{
+    const rows = getFiltered();
+    const cols = ['title','type','status','origin','destination','start_time','hours','payout_auec','tags','attendees','notes'];
+    const csv = [
+      cols.join(','),
+      ...rows.map(r => cols.map(k=>{
+        const v = r[k]==null?'':String(r[k]).replace(/"/g,'""');
+        return `"${v}"`;
+      }).join(','))
+    ].join('\n');
+    const blob = new Blob([csv],{type:'text/csv'});
+    const url = URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+  });
+}
 
-$('#exportCsv').addEventListener('click', ()=>{
-  const rows = getFiltered();
-  const cols = ['title','type','status','origin','destination','start_time','hours','payout_auec','tags','attendees','notes'];
-  const csv = [
-    cols.join(','),
-    ...rows.map(r => cols.map(k=>{
-      const v = r[k]==null?'':String(r[k]).replace(/"/g,'""');
-      return `"${v}"`;
-    }).join(','))
-  ].join('\n');
-  const blob = new Blob([csv],{type:'text/csv'});
-  const url = URL.createObjectURL(blob); const a=document.createElement('a');
-  a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
-});
-
-/* ===== Load (uses shared Supabase from auth.js) ===== */
-async function loadMissions(sb){
+/* ===== Data ===== */
+async function loadMissions(){
   const { data, error } = await sb
     .from('missions')
-    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes')
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes,submitted_by')
     .order('created_at',{ascending:false});
-
   if(error){
     tbody.innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
     return;
@@ -249,12 +359,137 @@ async function loadMissions(sb){
   render(getFiltered());
 }
 
-/* ===== Gate by auth, then load ===== */
+/* ===== Permissions ===== */
+function canEditRow(r){
+  if(elevated) return true; // admin/officer
+  if(!currentUser) return false;
+  // allow editing own mission if your RLS allows owner updates:
+  return r.submitted_by && r.submitted_by === currentUser.id;
+}
+
+/* ===== Modal open/fill ===== */
+const modal = $('#missionModal');
+const showModal = ()=> modal.classList.add('show');
+const hideModal = ()=> modal.classList.remove('show');
+
+function fillForm(r){
+  $('#modalTitle').textContent = editingId ? `Edit Mission (${editingId.slice(0,8)})` : 'New Mission';
+  $('#deleteBtn').style.display = editingId && canEditRow(r||{}) ? 'inline-block' : 'none';
+
+  $('#f_title').value = r?.title || '';
+  $('#f_type').value = r?.type || '';
+  $('#f_status').value = r?.status || '';
+  $('#f_origin').value = r?.origin || '';
+  $('#f_destination').value = r?.destination || '';
+  $('#f_date').value = isoToLocal(r?.start_time);
+  $('#f_hours').value = r?.hours ?? '';
+  $('#f_payout').value = r?.payout_auec ?? '';
+  $('#f_tags').value = r?.tags || '';
+  $('#f_attendees').value = r?.attendees || '';
+  $('#f_notes').value = r?.notes || '';
+  fillAttachments(r?.attachments || []);
+}
+
+async function openForEdit(id){
+  const row = cache.find(x=>x.id===id);
+  if(!row){ return; }
+
+  if(!canEditRow(row)){
+    // view-only open (no delete/save)
+    editingId = null;
+    fillForm(row);
+    $('#saveBtn').disabled = true;
+    $('#deleteBtn').style.display = 'none';
+    showModal();
+    return;
+  }
+
+  // edit mode
+  editingId = id;
+  $('#saveBtn').disabled = false;
+  fillForm(row);
+  showModal();
+}
+
+/* ===== Create / Edit actions ===== */
+function payloadFromUI(){
+  return {
+    title: $('#f_title').value.trim(),
+    type: $('#f_type').value || null,
+    status: $('#f_status').value || null,
+    origin: $('#f_origin').value || null,
+    destination: $('#f_destination').value || null,
+    start_time: localToISO($('#f_date').value),
+    hours: Number($('#f_hours').value || 0),
+    payout_auec: Number($('#f_payout').value || 0),
+    tags: $('#f_tags').value || null,
+    attendees: $('#f_attendees').value || null,
+    notes: $('#f_notes').value || null,
+    attachments: attachmentsFromUI()
+  };
+}
+
+async function saveMission(){
+  const payload = payloadFromUI();
+  if(!payload.title){ alert('Title is required.'); return; }
+
+  if(!editingId){
+    // insert
+    const uid = currentUser?.id;
+    if(!uid){ alert('Please log in again.'); return; }
+    payload.submitted_by = uid; // RLS insert requirement
+    const { error } = await sb.from('missions').insert(payload);
+    if(error){ alert('Save failed: ' + error.message); return; }
+    alert('Mission created ✓');
+  }else{
+    // update
+    const { error } = await sb.from('missions').update(payload).eq('id', editingId);
+    if(error){ alert('Update failed: ' + error.message); return; }
+    alert('Mission updated ✓');
+  }
+
+  hideModal();
+  await loadMissions();
+}
+
+async function deleteMission(){
+  if(!editingId) return;
+  if(!confirm('Delete this mission? This cannot be undone.')) return;
+  const { error } = await sb.from('missions').delete().eq('id', editingId);
+  if(error){ alert('Delete failed: ' + error.message); return; }
+  alert('Deleted ✓');
+  hideModal();
+  await loadMissions();
+}
+
+/* ===== Boot ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  const session = await requireAuth(); // will redirect to auth.html if not logged in
+  // Require auth
+  session = await window.requireAuth();
   if(!session) return;
-  const sb = getSupabase();            // shared client (URL/key from auth.js)
-  loadMissions(sb);
+
+  sb = window.sb;
+  currentUser = session.user;
+
+  // Elevation check
+  const { data: prof } = await sb.from('v_profiles').select('roles').eq('user_id', currentUser.id).single();
+  elevated = (prof?.roles || []).some(r => ['admin','officer'].includes(r));
+  if(elevated) $('#adminCreateBtn').style.display = 'inline-flex';
+
+  // Controls
+  bindFilters();
+  $('#adminCreateBtn').onclick = () => { editingId = null; $('#saveBtn').disabled = false; fillForm(null); showModal(); };
+  $('#addAttach').onclick = () => addAttachRow();
+  $('.backdrop').onclick = hideModal;
+  $('#cancelBtn').onclick = hideModal;
+  $('#saveBtn').onclick = saveMission;
+  $('#deleteBtn').onclick = deleteMission;
+
+  // Default one attachment row for new form
+  addAttachRow();
+
+  // Load data
+  await loadMissions();
 });
 </script>
 </body>
