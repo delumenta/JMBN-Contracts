@@ -234,7 +234,6 @@ function row(r){
     <td class="mono">${r.hours ?? ''}</td>
     <td class="mono">${fmtNum(r.payout_auec)}</td>
     <td>${esc(r.tags||'')}</td>
-    <td>${esc(r.attendees||'')}</td>
     <td>${attachmentsCell(r.attachments)}</td>
     <td>${esc(r.notes||'')}</td>
     <td><button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">View</button></td>
@@ -264,7 +263,7 @@ $('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
 
 $('#exportCsv').addEventListener('click', ()=>{
   const rows = getFiltered();
-  const cols = ['title','type','status','origin','destination','start_time','hours','payout_auec','tags','attendees','notes'];
+  const cols = ['title','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
   const csv = [
     cols.join(','),
     ...rows.map(r => cols.map(k=>{
@@ -281,11 +280,11 @@ $('#exportCsv').addEventListener('click', ()=>{
 async function loadMissions(){
   const { data, error } = await sb
     .from('missions')
-    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attendees,attachments,notes,created_at')
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at')
     .order('created_at',{ascending:false});
 
   if(error){
-    tbody.innerHTML = `<tr><td colspan="13" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
     return;
   }
   cache = data || [];
