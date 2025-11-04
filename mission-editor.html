@@ -6,10 +6,11 @@
 <title>JMBN Mission Editor</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+
 <style>
 :root{ --bg:#000; --panel:#0b0b0b; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a }
 *{box-sizing:border-box}
-body{ background:#000; color:var(--text); font-family:'Play',system-ui,sans-serif; margin:0; padding:18px }
+body{ background:#000; color:var(--text); font-family:'Play',sans-serif; margin:0; padding:18px }
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 10px;border-bottom:1px solid var(--border);padding-bottom:8px}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{margin:0;color:var(--accent);font-size:22px}
@@ -19,15 +20,10 @@ body{ background:#000; color:var(--text); font-family:'Play',system-ui,sans-seri
 .ic{width:18px;height:18px;border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;font-size:14px}
 .subtle{color:var(--muted);font-size:12px}
 .mode-chip{margin-left:auto;border:1px solid var(--border);border-radius:10px;padding:6px 10px;background:#0a0a0a;color:var(--accent);font-size:12px}
-
-/* 2-column layout */
 .wrap{display:grid;grid-template-columns:340px 1fr;gap:14px}
 @media(max-width:980px){.wrap{grid-template-columns:1fr}}
-
 .panel{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.14)}
 .panel h3{margin:0 0 10px;color:var(--accent);font-size:16px}
-
-/* List panel */
 .list-tools{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 input[type="search"]{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--text)}
 .list{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto;padding-right:4px}
@@ -38,8 +34,6 @@ input[type="search"]{width:100%;background:#0a0a0a;border:1px solid var(--border
 .badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
 .small-btn{padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--accent);cursor:pointer}
 .small-btn:hover{background:var(--accent);color:#000}
-
-/* Form side */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-grid.full{grid-template-columns:1fr}
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
@@ -68,14 +62,15 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
   <span id="modeChip" class="mode-chip">Create</span>
 </div>
 
+<!-- Two Column Layout -->
 <div class="wrap">
-  <!-- LEFT: Mission list -->
+  <!-- LEFT: List -->
   <div class="panel">
     <h3>All Missions</h3>
     <div class="list-tools">
       <input id="search" type="search" placeholder="Search title / tags / status..." />
-      <button id="refresh" class="small-btn" title="Reload">↻</button>
-      <button id="newBtn" class="small-btn" title="Start new">＋ New</button>
+      <button id="refresh" class="small-btn">↻</button>
+      <button id="newBtn" class="small-btn">＋ New</button>
     </div>
     <div id="list" class="list"></div>
   </div>
@@ -83,11 +78,9 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
   <!-- RIGHT: Editor -->
   <div class="panel">
     <h3>Mission Details</h3>
+
     <div class="form-grid full">
-      <div>
-        <label>Mission Title</label>
-        <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
-      </div>
+      <div><label>Mission Title</label><input id="title" placeholder="e.g., RW S2 — 24-box Haul"></div>
     </div>
 
     <div class="form-grid">
@@ -102,15 +95,15 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
       <div>
         <label>Status</label>
         <select id="status">
-          <option></option><option>Planned</option><option>Active</option>
-          <option>Success</option><option>Fail</option><option>Abort</option>
+          <option></option><option>Planned</option><option>Open</option><option>Closed</option>
+          <option>Cancelled</option><option>Completed</option>
         </select>
       </div>
     </div>
 
     <div class="form-grid">
-      <div><label>Origin</label><input id="origin" placeholder="e.g., Area18"></div>
-      <div><label>Destination</label><input id="destination" placeholder="e.g., Everus Harbor"></div>
+      <div><label>Origin</label><input id="origin"></div>
+      <div><label>Destination</label><input id="destination"></div>
     </div>
 
     <div class="form-grid">
@@ -120,7 +113,7 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
 
     <div class="form-grid">
       <div><label>Payout (aUEC)</label><input id="payout" type="number" step="1"></div>
-      <div><label>Tags (comma separated)</label><input id="tags" placeholder="e.g., hauling, night"></div>
+      <div><label>Tags</label><input id="tags" placeholder="e.g., hauling, night"></div>
     </div>
 
     <div class="form-grid full">
@@ -131,7 +124,7 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
       <div><label>Submitted By</label><input id="submittedBy" readonly></div>
     </div>
 
-    <div class="form-grid full" style="margin-top:8px">
+    <div class="form-grid full">
       <div>
         <label>Attachments</label>
         <div id="attachList"></div>
@@ -139,247 +132,169 @@ button.danger{border-color:#ff6b6b;color:#ff6b6b}
       </div>
     </div>
 
-    <div class="form-grid full" style="margin-top:8px">
-      <div><label>Notes / AAR</label><textarea id="notes" placeholder="Summary, outcomes, lessons learned"></textarea></div>
+    <div class="form-grid full">
+      <div><label>Notes / AAR</label><textarea id="notes"></textarea></div>
     </div>
 
     <div class="actions">
-      <button id="clearFormBtn" title="Clear the form">Clear Form</button>
-      <button id="saveNewBtn" class="btn primary" title="Save as NEW row">💾 Save New</button>
-      <button id="updateBtn" class="btn" title="Update current row">✎ Update Current</button>
-      <button id="deleteBtn" class="danger" title="Delete current">🗑 Delete</button>
+      <button id="clearFormBtn">Clear Form</button>
+      <button id="saveNewBtn">💾 Save New</button>
+      <button id="updateBtn">✎ Update Current</button>
+      <button id="deleteBtn" class="danger">🗑 Delete</button>
     </div>
   </div>
 </div>
 
-<!-- 🔐 Supabase core + your auth helper (shared with other pages) -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-
-<!-- ===== App Logic (uses the authenticated client from auth.js) ===== -->
 <script type="module">
-/* Use the global client created in js/auth.js */
-const sb = window.sb;
+/* Initialize Supabase Client */
+const sb = window.sb ?? (() => {
+  const url = 'https://YOURPROJECT.supabase.co';       // 🔧 replace
+  const key = 'YOUR_ANON_KEY';                        // 🔧 replace
+  const { createClient } = supabase;
+  const c = createClient(url, key);
+  window.sb = c;
+  return c;
+})();
 
-/* DOM helpers */
 const $ = (id) => document.getElementById(id);
 const listEl = $('list'), searchEl = $('search'), modeChip = $('modeChip'), attachList = $('attachList');
+let currentId = null, cache = [];
 
-let currentId = null;
-let cache = [];
+/* Utility Helpers */
+const esc = s => { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+const isoToLocalInput = iso => iso ? new Date(iso).toISOString().slice(0,16) : '';
+const localInputToISO = v => v ? new Date(v).toISOString() : null;
 
-/* UI helpers */
-function setMode(){ if(modeChip) modeChip.textContent = currentId ? `Editing ${currentId.slice(0,8)}…` : 'Create'; }
-function esc(s=''){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-function isoToLocalInput(iso){ if(!iso) return ''; const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
-function localInputToISO(v){ return v ? new Date(v).toISOString() : null; }
-
-function addAttachRow(name='', url=''){
-  const div=document.createElement('div');
-  div.className='attach-item';
-  div.innerHTML=`<input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
-                 <input placeholder="URL (https://...)" value="${esc(url)}">
-                 <button type="button" onclick="this.parentElement.remove()">✕</button>`;
-  attachList.appendChild(div);
+/* Attachments */
+function addAttachRow(name='',url=''){ const d=document.createElement('div');
+  d.className='attach-item';
+  d.innerHTML=`<input placeholder="Label" value="${esc(name)}">
+               <input placeholder="URL (https://...)" value="${esc(url)}">
+               <button type="button" onclick="this.parentElement.remove()">✕</button>`;
+  attachList.appendChild(d);
 }
-function collectAttachments(){
-  return [...attachList.querySelectorAll('.attach-item')].map(el=>{
-    const label=el.children[0].value.trim(), url=el.children[1].value.trim();
-    if(!url) return null;
-    try{ new URL(url) }catch{ return null; }
-    return { name: label || (url.split('/').pop() || 'link'), url };
-  }).filter(Boolean);
-}
+const collectAttachments=()=>[...attachList.querySelectorAll('.attach-item')].map(e=>{
+  const name=e.children[0].value.trim(),url=e.children[1].value.trim();
+  if(!url) return null;
+  try{new URL(url)}catch{return null;}
+  return{name,url};
+}).filter(Boolean);
+
 function clearForm(){
-  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','submittedBy','notes'].forEach(id=>$(id).value='');
-  attachList.innerHTML=''; addAttachRow();
-  currentId = null;
-  setMode();
+  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','notes'].forEach(i=>$(i).value='');
+  attachList.innerHTML=''; addAttachRow(); currentId=null; modeChip.textContent='Create';
 }
 function payloadFromForm(){
   return {
-    title: $('title').value.trim(),
-    type: $('type').value || null,
-    status: $('status').value || null,
-    origin: $('origin').value || null,
-    destination: $('destination').value || null,
-    start_time: localInputToISO($('date').value),
-    hours: Number($('hours').value || 0),
-    payout_auec: Number($('payout').value || 0),
-    tags: $('tags').value || null,
-    attendees: $('attendees').value || null,
-    submitted_by: $('submittedBy').value || null,
-    notes: $('notes').value || null,
-    attachments: collectAttachments()
+    title:$('title').value.trim(),
+    type:$('type').value||null,
+    status:$('status').value||null,
+    origin:$('origin').value||null,
+    destination:$('destination').value||null,
+    start_time:localInputToISO($('date').value),
+    hours:Number($('hours').value||0),
+    payout_auec:Number($('payout').value||0),
+    tags:$('tags').value||null,
+    attendees:$('attendees').value||null,
+    notes:$('notes').value||null,
+    attachments:collectAttachments()
   };
 }
-function fillForm(row){
-  $('title').value = row.title || '';
-  $('type').value = row.type || '';
-  $('status').value = row.status || '';
-  $('origin').value = row.origin || '';
-  $('destination').value = row.destination || '';
-  $('date').value = isoToLocalInput(row.start_time);
-  $('hours').value = row.hours ?? '';
-  $('payout').value = row.payout_auec ?? '';
-  $('tags').value = row.tags || '';
-  $('attendees').value = row.attendees || '';
-  $('submittedBy').value = row.submitted_by || '';
-  $('notes').value = row.notes || '';
-  attachList.innerHTML = '';
-  if(Array.isArray(row.attachments) && row.attachments.length){
-    row.attachments.forEach(a=>addAttachRow(a.name||'', a.url||''));
-  }else addAttachRow();
-}
 
-/* List rendering */
-function renderList(rows){
-  listEl.innerHTML = '';
-  if(!rows.length){
-    listEl.innerHTML = `<div class="item"><div class="item-title">No missions found</div></div>`;
-    return;
-  }
-  for(const r of rows){
-    const el=document.createElement('div');
-    el.className='item';
-    el.innerHTML = `
-      <div>
-        <div class="item-title">${esc(r.title || '(untitled)')}</div>
-        <div class="item-sub">${esc(r.type || '')} • ${esc(r.status || '')} • ${r.start_time ? new Date(r.start_time).toLocaleString() : ''}</div>
-      </div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <span class="badge">${esc(r.id.slice(0,8))}</span>
-        <button class="small-btn" data-id="${r.id}">Open</button>
-      </div>`;
-    el.querySelector('button').onclick = ()=> openMission(r.id);
-    listEl.appendChild(el);
-  }
-}
-function filterList(){
-  const q = (searchEl.value || '').toLowerCase();
-  if(!q) { renderList(cache); return; }
-  const rows = cache.filter(r=>
-    (r.title||'').toLowerCase().includes(q) ||
-    (r.tags||'').toLowerCase().includes(q) ||
-    (r.status||'').toLowerCase().includes(q) ||
-    (r.type||'').toLowerCase().includes(q)
-  );
-  renderList(rows);
-}
-
-/* Supabase ops */
+/* CRUD */
 async function loadList(){
   const { data, error } = await sb.from('missions')
     .select('id,title,type,status,start_time,created_at,tags')
     .order('created_at',{ascending:false});
-  if(error){ alert('Failed to load list: '+error.message); return; }
+  if(error){ console.error(error); return; }
   cache = data || [];
   renderList(cache);
 }
-async function openMission(id){
-  const { data, error } = await sb.from('missions').select('*').eq('id', id).single();
-  if(error){ alert('Failed to open: '+error.message); return; }
-  currentId = id;
-  fillForm(data);
-  setMode();
-  const u = new URL(location.href); u.searchParams.set('id', id); history.replaceState(null,'',u.toString());
+function renderList(rows){
+  listEl.innerHTML='';
+  if(!rows.length){ listEl.innerHTML='<div class="item"><div>No missions</div></div>'; return; }
+  rows.forEach(r=>{
+    const el=document.createElement('div');
+    el.className='item';
+    el.innerHTML=`<div><div class="item-title">${esc(r.title)}</div>
+    <div class="item-sub">${esc(r.type||'')} • ${esc(r.status||'')} • ${r.start_time?new Date(r.start_time).toLocaleString():''}</div></div>
+    <div style="display:flex;gap:6px;align-items:center">
+    <span class="badge">${esc(r.id.slice(0,8))}</span>
+    <button class="small-btn" onclick="openMission('${r.id}')">Open</button></div>`;
+    listEl.appendChild(el);
+  });
+}
+window.openMission=async function(id){
+  const { data, error } = await sb.from('missions').select('*').eq('id',id).single();
+  if(error){ alert('Failed: '+error.message); return; }
+  currentId=id; fillForm(data); modeChip.textContent='Editing '+id.slice(0,8);
+};
+function fillForm(r){
+  $('title').value=r.title||''; $('type').value=r.type||''; $('status').value=r.status||'';
+  $('origin').value=r.origin||''; $('destination').value=r.destination||'';
+  $('date').value=isoToLocalInput(r.start_time); $('hours').value=r.hours??'';
+  $('payout').value=r.payout_auec??''; $('tags').value=r.tags||'';
+  $('attendees').value=r.attendees||''; $('notes').value=r.notes||'';
+  $('submittedBy').value=r.submitted_by||''; attachList.innerHTML='';
+  if(Array.isArray(r.attachments)&&r.attachments.length)r.attachments.forEach(a=>addAttachRow(a.name,a.url));
+  else addAttachRow();
 }
 async function saveNew(){
-  const payload = payloadFromForm();
-
-  // 🔒 get current user
-  const { data: { user }, error: userErr } = await sb.auth.getUser();
-  if (userErr || !user) {
-    alert('Session expired, please log in again.');
-    return;
-  }
-
-  // ✅ automatically tag the logged-in user (RLS needs this)
-  payload.submitted_by = user.id;
-
-  // Optional: don’t rely on manual form input anymore
-  $('submittedBy').value = user.email || user.id;
-
-  // small safety clean-up
-  Object.keys(payload).forEach(k => {
-    if (payload[k] === '') payload[k] = null;
-  });
-
-  if (!payload.title) { alert('Title is required'); return; }
-
-  const { data, error } = await sb.from('missions')
-    .insert(payload)
-    .select()
-    .single();
-
-  if (error) { alert('Save failed: ' + error.message); return; }
-
-  await loadList();
-  currentId = data.id;
-  setMode();
-  alert('Saved ✓');
-  openMission(data.id);
+  const { data:{user} }=await sb.auth.getUser();
+  if(!user){ alert('Please log in again'); return; }
+  const payload=payloadFromForm();
+  payload.submitted_by=user.id;
+  $('submittedBy').value=user.email||user.id;
+  const { data,error }=await sb.from('missions').insert(payload).select().single();
+  if(error){ alert('Save failed: '+error.message); console.error(error); return; }
+  alert('Saved ✓'); await loadList(); openMission(data.id);
 }
-  
 async function updateCurrent(){
-  if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return; }
-  const payload = payloadFromForm();
-  const { error } = await sb.from('missions').update(payload).eq('id', currentId);
+  if(!currentId){ alert('Select a mission'); return; }
+  const payload=payloadFromForm();
+  const { error }=await sb.from('missions').update(payload).eq('id',currentId);
   if(error){ alert('Update failed: '+error.message); return; }
-  await loadList(); alert('Updated ✓');
+  alert('Updated ✓'); await loadList();
 }
 async function deleteCurrent(){
-  if(!currentId){ alert('No mission selected.'); return; }
-  if(!confirm('Delete this mission? This cannot be undone.')) return;
-  const { error } = await sb.from('missions').delete().eq('id', currentId);
+  if(!currentId||!confirm('Delete this mission?'))return;
+  const { error }=await sb.from('missions').delete().eq('id',currentId);
   if(error){ alert('Delete failed: '+error.message); return; }
-  await loadList(); clearForm(); alert('Deleted 🗑');
-  const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString());
+  alert('Deleted 🗑'); await loadList(); clearForm();
 }
 
-/* Wire up (AFTER auth) */
+/* Bind UI */
 function bindUI(){
-  $('addAttachBtn').onclick = ()=>addAttachRow();
-  $('clearFormBtn').onclick = ()=>{ if(confirm('Clear the form?')) clearForm(); };
-  $('saveNewBtn').onclick = saveNew;
-  $('updateBtn').onclick = updateCurrent;
-  $('deleteBtn').onclick = deleteCurrent;
-  $('refresh').onclick = loadList;
-  $('newBtn').onclick = clearForm;
-  $('search').oninput = filterList;
+  $('addAttachBtn').onclick=()=>addAttachRow();
+  $('clearFormBtn').onclick=()=>clearForm();
+  $('saveNewBtn').onclick=saveNew;
+  $('updateBtn').onclick=updateCurrent;
+  $('deleteBtn').onclick=deleteCurrent;
+  $('refresh').onclick=loadList;
+  $('newBtn').onclick=clearForm;
+  $('search').oninput=()=>renderList(cache.filter(r=>(r.title||'').toLowerCase().includes(searchEl.value.toLowerCase())));
 }
 
-/* 🔐 Protect this page like your other pages */
-document.addEventListener("DOMContentLoaded", async () => {
-  const session = await window.requireAuth(); // redirects to auth.html if not logged in
+/* 🔐 Auth Guard + Role Lock */
+document.addEventListener('DOMContentLoaded',async()=>{
+  const { data:{ user } } = await sb.auth.getUser();
+  if(!user){ location.href='index.html'; return; }
 
-  // 🧭 Check user's roles
-  const { data: prof } = await sb
-    .from('v_profiles')
-    .select('roles')
-    .eq('user_id', session.user.id)
-    .single();
+  // Check role
+  const { data: prof } = await sb.from('v_profiles').select('roles').eq('user_id',user.id).single();
+  const canPost=(prof?.roles||[]).some(r=>['admin','officer'].includes(r));
 
-  const canPost = (prof?.roles || []).some(r => ['admin','officer'].includes(r));
-
-  if (!canPost) {
-    // 🚫 disable buttons for non-elevated users
-    $('saveNewBtn').disabled = true;
-    $('updateBtn').disabled = true;
-    $('deleteBtn').disabled = true;
-    document.querySelector('.subtle').innerText = 'View-only access (members cannot create missions)';
+  if(!canPost){
+    $('saveNewBtn').disabled=true;
+    $('updateBtn').disabled=true;
+    $('deleteBtn').disabled=true;
+    document.querySelector('.subtle').innerText='View-only access (members cannot create missions)';
   }
 
-  // ✅ Initialize UI after role check
-  bindUI();
-  addAttachRow();
-  setMode();
-  await loadList();
-
-  const qs = new URLSearchParams(location.search);
-  if (qs.get('id')) openMission(qs.get('id'));
+  $('submittedBy').value=user.email||user.id;
+  bindUI(); addAttachRow(); await loadList();
 });
-
 </script>
 </body>
 </html>
