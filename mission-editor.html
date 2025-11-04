@@ -350,18 +350,36 @@ function bindUI(){
 }
 
 /* 🔐 Protect this page like your other pages */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await window.requireAuth();  // redirects to auth.html if not logged in
-  if (!session) return;
+document.addEventListener("DOMContentLoaded", async () => {
+  const session = await window.requireAuth(); // redirects to auth.html if not logged in
 
+  // 🧭 Check user's roles
+  const { data: prof } = await sb
+    .from('v_profiles')
+    .select('roles')
+    .eq('user_id', session.user.id)
+    .single();
+
+  const canPost = (prof?.roles || []).some(r => ['admin','officer'].includes(r));
+
+  if (!canPost) {
+    // 🚫 disable buttons for non-elevated users
+    $('saveNewBtn').disabled = true;
+    $('updateBtn').disabled = true;
+    $('deleteBtn').disabled = true;
+    document.querySelector('.subtle').innerText = 'View-only access (members cannot create missions)';
+  }
+
+  // ✅ Initialize UI after role check
   bindUI();
   addAttachRow();
   setMode();
   await loadList();
 
   const qs = new URLSearchParams(location.search);
-  if(qs.get('id')) openMission(qs.get('id'));
+  if (qs.get('id')) openMission(qs.get('id'));
 });
+
 </script>
 </body>
 </html>
