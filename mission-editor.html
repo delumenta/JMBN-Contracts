@@ -286,11 +286,41 @@ async function openMission(id){
 }
 async function saveNew(){
   const payload = payloadFromForm();
-  if(!payload.title){ alert('Title is required'); return; }
-  const { data, error } = await sb.from('missions').insert(payload).select().single();
-  if(error){ alert('Save failed: '+error.message); return; }
-  await loadList(); currentId = data.id; setMode(); alert('Saved ✓'); openMission(data.id);
+
+  // 🔒 get current user
+  const { data: { user }, error: userErr } = await sb.auth.getUser();
+  if (userErr || !user) {
+    alert('Session expired, please log in again.');
+    return;
+  }
+
+  // ✅ automatically tag the logged-in user (RLS needs this)
+  payload.submitted_by = user.id;
+
+  // Optional: don’t rely on manual form input anymore
+  $('submittedBy').value = user.email || user.id;
+
+  // small safety clean-up
+  Object.keys(payload).forEach(k => {
+    if (payload[k] === '') payload[k] = null;
+  });
+
+  if (!payload.title) { alert('Title is required'); return; }
+
+  const { data, error } = await sb.from('missions')
+    .insert(payload)
+    .select()
+    .single();
+
+  if (error) { alert('Save failed: ' + error.message); return; }
+
+  await loadList();
+  currentId = data.id;
+  setMode();
+  alert('Saved ✓');
+  openMission(data.id);
 }
+  
 async function updateCurrent(){
   if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return; }
   const payload = payloadFromForm();
