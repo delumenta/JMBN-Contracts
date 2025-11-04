@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logging Out — JMBN</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
+
+<style>
+:root{
+  --bg:#000;--accent:#f2d675;--border:#d6b44c;--text:#f7f1d0;
+}
+body{
+  background:radial-gradient(900px 700px at 50% -10%, rgba(242,214,117,.08), transparent 60%), #000;
+  color:var(--text); font-family:'Play',sans-serif;
+  display:flex; align-items:center; justify-content:center;
+  height:100vh; margin:0; flex-direction:column;
+}
+.logo{width:66px;height:66px;margin-bottom:20px;filter:drop-shadow(0 0 6px rgba(242,214,117,.4))}
+h1{color:var(--accent);margin:0 0 10px}
+p{color:var(--text);font-size:14px;margin:0 0 30px;text-align:center}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+  <img class="logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+  <div class="spinner"></div>
+  <h1>Logging Out…</h1>
+  <p>Please wait while we end your session.</p>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script>
+  (async()=>{
+    const SUPABASE_URL = 'https://fcegavhipeaeihxegsnw.supabase.co';      // 🔧 Replace
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8';                // 🔧 Replace
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
+      auth:{ persistSession:true, autoRefreshToken:true }
+    });
+
+    try {
+      const { error } = await sb.auth.signOut();
+      if(error) console.error('Logout error:', error.message);
+    } catch(e){ console.error(e); }
+
+    // Clear any remaining local/session storage
+    localStorage.clear(); sessionStorage.clear();
+
+    // ⏳ Small pause so user sees feedback
+    await new Promise(r=>setTimeout(r,1000));
+
+    // ✅ Redirect back to login/home page
+    window.location.href = 'index.html';
+  })();
+  </script>
+</body>
+</html>
