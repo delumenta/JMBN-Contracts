@@ -12,22 +12,22 @@
       sizes="32x32">
 
 <style>
-:root{
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-}
+:root{--border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text)}
+html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity 3s ease;}
+body{opacity:0;} /* Fade-in start */
+
+/* Background layers you already had */
 #goldDust{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;background:#000}
-/* HUD Parallax Grid */
 .hud-grid{
   position:fixed;inset:0;z-index:1;pointer-events:none;
   background-image:
     linear-gradient(rgba(255,230,150,0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,230,150,0.03) 1px, transparent 1px);
-  background-size:80px 80px; animation:drift 80s linear infinite;
+  background-size:80px 80px;
+  animation:drift 80s linear infinite;
 }
-@keyframes drift{from{background-position:0 0}to{background-position:-200px -200px}}
-/* Vignette */
+@keyframes drift{from{background-position:0 0;}to{background-position:-200px -200px;}}
 body::after{
   content:"";position:fixed;inset:0;z-index:2;pointer-events:none;
   background:
@@ -37,67 +37,101 @@ body::after{
 
 /* Layout */
 .wrapper{position:relative;z-index:3;min-height:100%;display:grid;place-items:center;padding:28px}
-.center{width:min(1100px,96vw)}
-.brand{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.center{width:min(980px,96vw)}
+.brand{display:inline-flex;align-items:center;gap:12px;margin-bottom:8px}
 .brand-logo{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(242,214,117,.35))}
 .brand h1{margin:0;font-size:clamp(22px,3.6vw,36px);color:var(--accent);font-weight:700}
-.sub{color:var(--muted);margin:4px 0 16px;font-size:clamp(12px,1.6vw,14px)}
+.sub{color:var(--muted);margin:4px 0 18px;font-size:clamp(12px,1.6vw,14px)}
 
-/* Panels */
-.panel{
-  background:rgba(11,11,11,.9); border:1px solid var(--border); border-radius:16px;
-  padding:16px; box-shadow:0 0 22px rgba(214,180,76,.22), inset 0 0 0 1px rgba(214,180,76,.12);
-  backdrop-filter:blur(5px) saturate(1.05);
-}
-
-/* Member Card */
-.member{
-  display:grid; grid-template-columns:1fr 180px; gap:14px; align-items:center; margin-bottom:14px;
-}
-@media(max-width:800px){ .member{ grid-template-columns:1fr } }
-.m-left h2{font-size:24px; margin:0 0 6px}
-.pills{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--border);
-  border-radius:999px;background:#0c0c0c;color:var(--accent);font-weight:700;font-size:12px}
-.meta{color:var(--muted);font-size:13px;margin-top:6px}
-.note{color:#c9b06a;font-size:12px;margin-top:6px}
-.rank-img{
-  width:160px; height:160px; object-fit:contain; border:1px solid var(--border); border-radius:12px;
-  background:#0b0b0b; display:none; margin-left:auto;
-}
-
-/* Action Cards */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:860px){.grid{grid-template-columns:1fr}}
+/* Cards */
 .card{
-  position:relative; overflow:hidden; border-radius:16px; padding:16px;
-  border:1px solid var(--border); background:rgba(11,11,11,.85);
-  box-shadow:0 0 18px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12);
+  background:rgba(11,11,11,.85);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 0 18px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+  backdrop-filter:blur(6px) brightness(1.1) saturate(1.05);
+  position:relative;overflow:hidden;
 }
-.card h3{margin:0 0 6px; color:var(--accent)}
-.card p{margin:0 0 12px; color:var(--muted); font-size:13px}
-.card a{
-  display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;
-  text-decoration:none;border:1px solid var(--border);color:#000;background:var(--accent);
-  font-weight:800; letter-spacing:.2px; transition:transform .15s ease, box-shadow .2s ease;
-}
-.card a:hover{transform:translateY(-1px);box-shadow:0 0 22px rgba(242,214,117,.35)}
 .card::after{
-  content:""; position:absolute; inset:0; border-radius:16px;
+  content:"";position:absolute;inset:0;border-radius:14px;
   background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,0.18) 50%,rgba(255,255,255,0) 70%);
-  transform:translateX(-110%); transition:transform .6s ease;
+  transform:translateX(-100%);transition:transform .6s ease;pointer-events:none;
 }
-.card:hover::after{transform:translateX(110%)}
+.card:hover::after{transform:translateX(100%)}
 
-.footer{color:var(--muted);font-size:12px;margin-top:16px}
-.kv{display:inline-grid;grid-template-columns:auto auto;gap:4px 8px;margin-top:8px}
-.kv .k{color:var(--muted)} .kv .v{color:var(--accent)}
+/* Member Role Card */
+.member{
+  display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:center;margin-bottom:14px;
+}
+.member .name{font-weight:900;font-size:20px;color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
+.rankline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;margin-top:6px}
+.rankimg{
+  width:120px;height:120px;object-fit:contain;border-radius:10px;border:1px solid var(--border);
+  background:#0c0c0c;display:block;justify-self:end
+}
+.small{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* Two action cards below */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:820px){.grid-2{grid-template-columns:1fr}}
+
+.action h3{margin:0 0 6px;color:var(--accent);font-size:18px}
+.action p{margin:0 0 10px;color:var(--muted);font-size:13px}
+.action a{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;
+  border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content
+}
+
+/* Footer */
+.footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
+
+/* Boot + OPS ticker (kept as-is) */
+.boot{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease;}
+.boot.hidden{opacity:0;visibility:hidden}
+.bootCard{width:min(720px,90vw);background:#060606;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 0 22px rgba(214,180,76,.28),inset 0 0 0 1px rgba(214,180,76,.12);}
+.bootHead{display:flex;justify-content:space-between;color:var(--accent);font-weight:700;font-size:14px;margin-bottom:8px}
+.bootLog{height:220px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;
+  font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8;}
+.boot .ok{color:#7CFC9A}
+.bootCtrl{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
+.bootBtn{padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);
+  border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play',sans-serif;}
+.bootBtn:hover{background:var(--accent);color:#000}
+
+.ops-ticker{
+  position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));
+  z-index:50;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;
+  background:rgba(14,14,14,.92);border:1px solid var(--border);
+  box-shadow:0 0 14px rgba(214,180,76,.25);backdrop-filter:saturate(1.2) blur(4px);
+}
+.ops-chip{color:#000;background:var(--accent);border:1px solid var(--border);
+  border-radius:999px;padding:2px 8px;font-weight:800;font-size:12px;letter-spacing:.4px;}
+.ops-msg{flex:1;min-width:0;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  opacity:1;transition:opacity .35s ease;}
+.ops-ctrl{display:flex;align-items:center;gap:6px}
+.ops-btn{padding:4px 8px;border-radius:6px;font-size:12px;border:1px solid var(--border);
+  background:transparent;color:#f7f1d0;cursor:pointer;font-family:'Play',sans-serif;}
+.ops-btn:hover{background:var(--accent);color:#000}
+@media(max-width:520px){.ops-ticker{gap:6px;padding:6px 8px}.ops-msg{font-size:12px}.ops-btn{padding:3px 6px;font-size:11px}}
 </style>
 </head>
-
 <body>
+
+<!-- Animated background layers -->
 <canvas id="goldDust"></canvas>
 <div class="hud-grid"></div>
+
+<!-- Boot overlay -->
+<div class="boot" id="boot">
+  <div class="bootCard">
+    <div class="bootHead"><div>JMBN // OPS Loader</div><div>v1.0</div></div>
+    <div class="bootLog" id="bootLog"></div>
+    <div class="bootCtrl"><button class="bootBtn" id="skipBoot">Skip</button></div>
+  </div>
+</div>
 
 <div class="wrapper">
   <main class="center">
@@ -108,50 +142,66 @@ body::after{
     </div>
     <div class="sub">Offline-friendly • Linked manifests</div>
 
-    <!-- Member Card -->
-    <section class="panel member">
-      <div class="m-left">
-        <h2 id="mName">—</h2>
-        <div class="pills">
-          <span class="pill" id="mRank">Unranked</span>
-          <span class="pill" id="mRole">Member</span>
-          <span class="pill" id="mMissions">Missions: 0</span>
+    <!-- MEMBER ROLE CARD -->
+    <section class="card member" id="memberCard">
+      <div>
+        <div class="name" id="mName">Loading…</div>
+        <div class="rankline">
+          <span id="mRank">Unranked</span>
+          <span class="badge" id="mPaygrade" style="display:none"></span>
+          <span class="badge" id="mRole">Member</span>
         </div>
-        <div class="meta" id="mEmail">—</div>
-        <div class="note">Rank name & image are pulled from <code>v_profiles_detailed</code> in Supabase.</div>
+        <div class="row">
+          <span class="small" id="mEmail"></span>
+        </div>
+        <div class="small">Rank image is pulled from your <code>ranks.image_url</code> in Supabase.</div>
       </div>
-      <img id="mRankImg" class="rank-img" alt="Rank">
+      <img id="mRankImg" class="rankimg"
+           src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+           alt="Rank">
     </section>
 
-    <!-- Two Action Cards -->
-    <section class="grid">
-      <div class="card">
+    <!-- TWO ACTION CARDS -->
+    <section class="grid-2">
+      <div class="card action">
         <h3>Personal</h3>
         <p>Open your Contracts & personal manifests.</p>
         <a href="contracts.html">➜ Go to Contracts</a>
       </div>
-
-      <div class="card">
+      <div class="card action">
         <h3>JMBN</h3>
         <p>Open Org Mission Logs, Attendance & Archives.</p>
         <a href="mission-log.html">➜ Go to Mission Log</a>
       </div>
     </section>
 
-    <div class="footer">
-      <div class="kv">
-        <div class="k">Theme</div><div class="v">Play • Gold Accents</div>
-        <div class="k">Links</div><div class="v">Relative URLs (GitHub Pages ready)</div>
-      </div>
+    <div class="footer" style="text-align:center;margin-top:16px">
+      <span style="color:var(--muted)">Theme:</span> Play • Gold Accents ·
+      <span style="color:var(--muted)">Links:</span> Relative URLs (GitHub Pages ready)
     </div>
   </main>
 </div>
 
-<!-- ===== Starfield background ===== -->
+<!-- OPS ticker -->
+<div class="ops-ticker" id="opsTicker">
+  <span class="ops-chip" id="opsChip">[OPS]</span>
+  <div class="ops-msg" id="opsMsg">Initializing broadcast…</div>
+  <div class="ops-ctrl">
+    <button class="ops-btn" id="opsPrev">⟨</button>
+    <button class="ops-btn" id="opsNext">⟩</button>
+    <button class="ops-btn" id="opsPause">Pause</button>
+    <button class="ops-btn" id="opsClose">✕</button>
+  </div>
+</div>
+
 <script>
+/* Fade-in when ready */
+window.onload=()=>{document.body.style.opacity=1;};
+
+/* ===== GOLD STARFIELD + SUNLIGHT + SHOOTING STARS (unchanged) ===== */
 (function(){
   const c=document.getElementById('goldDust'),ctx=c.getContext('2d',{alpha:true});
-  let W,H,DPR=Math.min(window.devicePixelRatio||1,2);
+  let W,H,DPR=Math.min(window.devicePixelRatio,2);
   const stars=[],shooting=[];
   const STARCOUNT=900,LAYERS=4,BASE_SPEED=0.05,MAX_SIZE=1.8,MIN_SIZE=0.2;
 
@@ -159,94 +209,196 @@ body::after{
   resize(); addEventListener('resize',resize);
 
   for(let i=0;i<STARCOUNT;i++){
-    const l=(Math.random()*LAYERS|0)+1, d=l/LAYERS;
-    stars.push({ x:Math.random()*W, y:Math.random()*H, z:d,
-      r:(Math.random()*(MAX_SIZE-MIN_SIZE)+MIN_SIZE)*DPR*d, tw:Math.random()*6.28, spd:BASE_SPEED*d });
+    const l=Math.floor(Math.random()*LAYERS)+1, d=l/LAYERS;
+    stars.push({ x:Math.random()*W, y:Math.random()*H, z:d, r:(Math.random()*(MAX_SIZE-MIN_SIZE)+MIN_SIZE)*DPR*d, tw:Math.random()*6.28, spd:BASE_SPEED*d });
   }
+
+  function sunGlow(t){
+    const g1=ctx.createRadialGradient(W/2,H*1.15,H*0.3,W/2,H,H*1.1);
+    g1.addColorStop(0,"rgba(0,10,20,0.25)");
+    g1.addColorStop(0.4,"rgba(0,5,10,0.5)");
+    g1.addColorStop(1,"rgba(0,0,0,1)");
+    ctx.fillStyle=g1; ctx.fillRect(0,0,W,H);
+    const gy=H*0.95, g2=ctx.createRadialGradient(W/2,gy,0,W/2,gy,H*0.6);
+    const p=0.15+0.05*Math.sin(t/800);
+    g2.addColorStop(0,`rgba(255,220,160,${0.35+p})`);
+    g2.addColorStop(0.3,`rgba(255,210,120,${0.18+p/2})`);
+    g2.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle=g2; ctx.fillRect(0,0,W,H);
+  }
+
   function addShooter(){
-    const sx=Math.random()*W, sy=Math.random()*H*0.3, a=(Math.random()<0.5?1:-1)*(Math.random()*Math.PI/4+Math.PI/8);
-    const d=Math.random(), v=3+d*4, len=60+d*80;
-    shooting.push({x:sx,y:sy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:len,d,life:1});
+    const startX=Math.random()*W, startY=Math.random()*H*0.3;
+    const angle=(Math.random()<0.5?1:-1)*(Math.random()*Math.PI/4+Math.PI/8);
+    const depth=Math.random();
+    const speed=3+depth*4, length=60+depth*80;
+    shooting.push({x:startX,y:startY,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,length,depth,life:1});
   }
 
   function draw(){
-    ctx.setTransform(1,0,0,1,0,0); ctx.globalCompositeOperation='source-over';
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.globalCompositeOperation='source-over';
     ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-    const t=Date.now()/1000; ctx.globalCompositeOperation='lighter';
+    const t=Date.now()/1000;
+    ctx.globalCompositeOperation='lighter';
     const swirlX=Math.sin(t/8)*0.5, swirlY=Math.cos(t/10)*0.5;
-
     for(const s of stars){
       s.x+=Math.cos(t*0.08+s.tw+swirlX)*s.spd*1.2;
       s.y+=Math.sin(t*0.06+s.tw+swirlY)*s.spd*1.2;
       if(s.x<0)s.x+=W; if(s.x>W)s.x-=W; if(s.y<0)s.y+=H; if(s.y>H)s.y-=H;
       const f=0.4+0.6*Math.abs(Math.sin(t*5+s.tw));
-      ctx.beginPath(); ctx.fillStyle=`hsla(45,100%,${60+20*f}%,.8)`; ctx.arc(s.x,s.y,s.r,0,6.283); ctx.fill();
+      ctx.beginPath();
+      ctx.fillStyle=`hsla(45,100%,${60+20*f}%,.8)`;
+      ctx.arc(s.x,s.y,s.r,0,6.283); ctx.fill();
     }
     for(let i=shooting.length-1;i>=0;i--){
-      const s=shooting[i]; s.x+=s.vx; s.y+=s.vy; s.life-=0.02;
-      const g=ctx.createLinearGradient(s.x,s.y,s.x-s.vx*s.l,s.y-s.vy*s.l);
-      g.addColorStop(0,`hsla(45,95%,${70+s.d*20}%,${s.life})`); g.addColorStop(1,`hsla(45,95%,${50+s.d*20}%,0)`);
-      ctx.strokeStyle=g; ctx.lineWidth=(1.5+s.d*1.5)*DPR;
-      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x-s.vx*s.l,s.y-s.vy*s.l); ctx.stroke();
+      const s=shooting[i];
+      s.x+=s.vx; s.y+=s.vy; s.life-=0.02;
+      const grad=ctx.createLinearGradient(s.x,s.y,s.x-s.vx*s.length,s.y-s.vy*s.length);
+      grad.addColorStop(0,`hsla(45,95%,${70+s.depth*20}%,${s.life})`);
+      grad.addColorStop(1,`hsla(45,95%,${50+s.depth*20}%,0)`);
+      ctx.strokeStyle=grad; ctx.lineWidth=(1.5+s.depth*1.5)*DPR;
+      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x-s.vx*s.length,s.y-s.vy*s.length); ctx.stroke();
       if(s.life<=0||s.x>W||s.y>H) shooting.splice(i,1);
     }
+    ctx.globalCompositeOperation='screen'; sunGlow(Date.now());
     requestAnimationFrame(draw);
   }
   draw();
-  (function loop(){ setTimeout(()=>{ if(Math.random()<0.85) addShooter(); loop(); }, 5000+Math.random()*5000); })();
+
+  (function trigger(){ setTimeout(()=>{ if(Math.random()<0.85) addShooter(); trigger(); }, 5000+Math.random()*5000); })();
+})();
+
+/* ===== Boot Loader (unchanged) ===== */
+const boot=document.getElementById('boot'),log=document.getElementById('bootLog'),skip=document.getElementById('skipBoot');
+const lines=[
+  'JMBN SYSTEM BOOTING...',
+  '> Initializing OPS modules ... <span class="ok">OK</span>',
+  '> Loading Fleet / Ship Hangar ... <span class="ok">OK</span>',
+  '> Linking Contracts Manifest ... <span class="ok">OK</span>',
+  '> Mounting Components Registry ... <span class="ok">OK</span>',
+  '> Verifying local storage bindings ... <span class="ok">OK</span>',
+  '> Applying gold-accent theme ... <span class="ok">OK</span>',
+  '> Standby... preparing dashboard ...',
+  'READY.'
+];
+function printLine(t){const r=document.createElement('div');r.innerHTML=t;log.appendChild(r);log.scrollTop=log.scrollHeight;}
+function finishBoot(){sessionStorage.setItem('seenBoot','1');boot.classList.add('hidden');setTimeout(()=>boot.style.display='none',550);}
+function runBoot(){let i=0;const step=()=>{if(i>=lines.length)return finishBoot();printLine(lines[i++]);setTimeout(step,220)};step();}
+skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}else{boot.style.display='none';}
+
+/* ===== OPS Ticker (unchanged) ===== */
+(function(){
+  const el=document.getElementById('opsTicker'),chip=document.getElementById('opsChip'),msg=document.getElementById('opsMsg'),
+        prev=document.getElementById('opsPrev'),next=document.getElementById('opsNext'),
+        pause=document.getElementById('opsPause'),close=document.getElementById('opsClose');
+  const lines=[
+    'CONTACT: AshenShrike joined the Frontier Fighters.',
+    'OPS: FloatinTiger caused a “minor” power shortage.',
+    'COMMS: Hendra broadcast karaoke on all channels. Again.',
+    'SECURITY: Jeneral “poked” a pirate Idris. Backup requested.',
+    'CARGO: Ricojes mislabeled 300 SCU of scrap as platinum.',
+    'ALERT: Gerald installed Windows on the ship radar. It crashed.',
+    'OPS: AshenShrike tried “turning it off and on again.” Success.',
+    'SYSTEM: Update failed successfully. Classic.',
+    'OPS: Nomad vs FloatinTiger over the last power cell.',
+    'CARGO: Shrike stacked crates into a “fortress of solitude.”'
+  ];
+  const typeStyles={ALERT:'var(--accent)',OPS:'var(--accent)',COMMS:'#9ecbff',SECURITY:'tomato',CARGO:'#a0f0c0',SYSTEM:'#f7f1d0',CONTACT:'#f7f1d0'};
+  function typeFrom(line){const m=line.match(/^([A-Z]+):/);return m?m[1]:'OPS';}
+  let i=0,timer=null,playing=true;
+  function setChipFor(line){const t=typeFrom(line);chip.textContent=`[${t}]`;chip.style.background=typeStyles[t]??'var(--accent)';chip.style.color='#000';}
+  function fade(txt){msg.style.opacity=0;setTimeout(()=>{msg.textContent=txt;msg.style.opacity=1;},200);}
+  function render(){const line=lines[i];setChipFor(line);fade(line);pause.textContent=playing?'Pause':'Play';}
+  function nextL(){i=(i+1)%lines.length;render()} function prevL(){i=(i-1+lines.length)%lines.length;render()}
+  function start(){if(timer) return; playing=true; timer=setInterval(nextL,4000); render();}
+  function stop(){playing=false; clearInterval(timer); timer=null; render();}
+  next.onclick=()=>{stop();nextL()}; prev.onclick=()=>{stop();prevL()}; pause.onclick=()=>playing?stop():start();
+  close.onclick=()=>{el.style.display='none'; sessionStorage.setItem('opsClosed','1');};
+  if(sessionStorage.getItem('opsClosed')==='1'){ el.style.display='none'; return; }
+  start();
 })();
 </script>
 
-<!-- ===== Supabase Auth + Member Card fill from v_profiles_detailed ===== -->
+<!-- Supabase Auth + Profile/Rank fill -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
 (async () => {
-  // Require login
   const session = await requireAuth();
   if (!session) return;
 
-  const uid   = session.user.id;
-  const emailFallback = session.user.email || '';
-  const $ = id => document.getElementById(id);
+  const uid = session.user.id;
+  const email = session.user.email || '';
+  const el = id => document.getElementById(id);
 
-  // Pull a single row from v_profiles_detailed for this user
-  let row = {};
+  // Load profile (includes rank_code)
+  let profile = null;
   try {
     const { data, error } = await sb
-      .from('v_profiles_detailed')
-      .select('*')
-      .eq('user_id', uid)
+      .from('profiles')
+      .select('full_name, rank_code, role')
+      .eq('id', uid)
       .single();
     if (error) throw error;
-    row = data || {};
+    profile = data;
   } catch (e) {
-    console.warn('v_profiles_detailed error:', e.message);
+    console.warn('profiles load:', e.message);
   }
 
-  // Derive values
-  const handle    = row.handle || emailFallback.split('@')[0] || 'Unknown';
-  const email     = row.display_name || emailFallback;
-  const role      = row.ingame_role || 'Member';
+  // === NEW: Pull the RANK NAME directly ===
+  let rankName = 'Unranked', paygrade = '', rankImg = '';
+  if (profile?.rank_code) {
+    try {
+      const { data, error } = await sb
+        .from('ranks')
+        .select('name, paygrade, image_url')
+        .eq('code', profile.rank_code)
+        .maybeSingle();
+      if (!error && data) {
+        rankName = data.name || rankName;
+        paygrade = data.paygrade || '';
+        rankImg = data.image_url || '';
+      }
+    } catch (e) {
+      console.warn('ranks load:', e.message);
+    }
+  }
 
-  const rankName  = row.current_rank_name || 'Unranked';
-  const rankCode  = row.current_rank_code || '';           // e.g. ENS-O1
-  const paygrade  = rankCode.split('-')[1] || '';          // O1
-  const rankText  = paygrade ? `${rankName} (${paygrade})` : rankName;
+  // Try to get a user role (if table exists)
+  let role = profile?.role || 'Member';
+  try {
+    const { data, error } = await sb
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', uid)
+      .maybeSingle();
+    if (!error && data?.role) role = data.role;
+  } catch (e) {
+    // ignore if table not present
+  }
 
-  const rankImg   = row.current_rank_image_url || '';
-  const missions  = Number.isFinite(row.missions_attended) ? row.missions_attended : 0;
+  // === Fill Member Card ===
+  el('mName').textContent =
+    profile?.full_name ||
+    session.user.user_metadata?.full_name ||
+    (email.split('@')[0] || 'Unknown');
+  el('mEmail').textContent = email;
+  el('mRole').textContent = role;
 
-  // Fill UI
-  $('#mName').textContent      = handle;
-  $('#mEmail').textContent     = email;
-  $('#mRole').textContent      = role;
-  $('#mRank').textContent      = rankText;
-  $('#mMissions').textContent  = `Missions: ${missions}`;
-
-  const img = $('#mRankImg');
-  if (rankImg) { img.src = rankImg; img.alt = rankName; img.style.display='block'; }
+  el('mRank').textContent = rankName;
+  if (paygrade) {
+    const pg = el('mPaygrade');
+    pg.style.display = '';
+    pg.textContent = paygrade;
+  }
+  if (rankImg) {
+    el('mRankImg').src = rankImg;
+    el('mRankImg').alt = rankName;
+  }
 })();
 </script>
+
+
 </body>
 </html>
