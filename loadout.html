@@ -215,19 +215,31 @@ textarea{min-height:70px;resize:vertical}
 </head>
 
 <body>
-  <div class="brand">
-    <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-         alt="JMBN" class="brand-logo">
-    <h1>JMBN Hangar</h1>
-  </div>
+ <!-- 🔁 Shared header mount -->
+<div id="header-container"></div>
+<script>
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    const html = await res.text();
+    document.getElementById('header-container').outerHTML = html;
 
-  <nav class="nav">
-    <a class="nav-btn" href="index.html">Manifest</a>
-    <a class="nav-btn" href="hangar.html">Hangar</a>
-    <a class="nav-btn" href="components.html">Components</a>
-    <a class="nav-btn" href="contracts.html">Contracts</a>
-    <a class="nav-btn" href="mission-log.html">Mission Log</a>    
-  </nav>
+    // Highlight current tab (triggers shiny sweep ✨)
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a => {
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if (href === here) {
+          a.classList.add('active');
+          a.setAttribute('aria-current','page');
+        }
+      });
+    });
+  } catch (e) {
+    console.warn('Header load failed:', e);
+  }
+})();
+</script>
 
   <div class="wrap">
     <!-- LEFT: Hangar list -->
