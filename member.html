@@ -86,7 +86,7 @@ tr:hover{background:rgba(214,180,76,.08)}
 
   <div class="panel">
     <div class="controls">
-      <input id="q" type="search" placeholder="Search handle or rank name…">
+      <input id="q" type="search" placeholder="Search handle or rank…">
       <span id="count" class="badge">0 members</span>
     </div>
 
@@ -145,19 +145,18 @@ const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
 
 let sb=null, session=null;
-let ROWS = [];         // composed rows with rank/role hydrated
-let RANKS = new Map(); // id -> rank
-let ROLES = new Map(); // id -> role
+let ROWS = []; // data from view
 
-function rankPublicUrlFromCode(code){
+const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
+
+/* Fallback URL if view's image URL is null (rank bucket by code) */
+function rankFallbackUrl(code){
   if(!code) return '';
   const base = (sb && (sb.supabaseUrl || sb.url || sb._supabaseUrl)) || '';
   return `${base}/storage/v1/object/public/rank/${encodeURIComponent(code)}.png`;
 }
 
 /* Render */
-const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
-
 function render(rows){
   if(!rows?.length){
     tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--muted)">No members found</td></tr>`;
@@ -165,8 +164,8 @@ function render(rows){
     return;
   }
   tbody.innerHTML = rows.map(r=>{
-    const handle = r.handle || r.display_name || r.user_id.slice(0,8);
-    const rankName = r.rank?.name || '(unranked)';
+    const handle = r.handle || r.display_name || r.user_id?.slice(0,8) || '—';
+    const rankName = r.current_rank_name || '(unranked)';
     return `
       <tr>
         <td class="name">${esc(handle)}</td>
@@ -182,8 +181,8 @@ function filterRows(){
   if(!term) return ROWS;
   return ROWS.filter(r=>{
     const h = (r.handle || r.display_name || '').toLowerCase();
-    const rn = (r.rank?.name || '').toLowerCase();
-    const rc = (r.rank?.code || r.rank_code || '').toLowerCase();
+    const rn = (r.current_rank_name || '').toLowerCase();
+    const rc = (r.current_rank_code || '').toLowerCase();
     return h.includes(term) || rn.includes(term) || rc.includes(term);
   });
 }
@@ -195,62 +194,50 @@ window.closeView = closeView;
 function viewMember(userId){
   const r = ROWS.find(x=>x.user_id===userId);
   if(!r) return;
-  const handle = r.handle || r.display_name || r.user_id.slice(0,8);
-  const rank = r.rank || {};
-  const role = r.role || {};
-  const attended = r.missions_attended_final ?? r.missions_attended ?? r.misions_attended ?? 0;
 
-  const img = r.rank_image_url || rank.image_url || rankPublicUrlFromCode(r.rank_code || rank.code);
+  const handle = r.handle || r.display_name || r.user_id.slice(0,8);
+  const attended = Number(r.missions_attended) || 0;
+  const img = r.current_rank_image_url || rankFallbackUrl(r.current_rank_code);
+
   $('#viewTitle').textContent = `Member — ${handle}`;
   $('#vHandle').textContent = handle;
-  $('#vRankName').textContent = rank.name || '(unranked)';
-  $('#vRankCode').textContent = rank.code ? `(${rank.code})` : '';
-  $('#vRole').textContent = role.name || '—';
+  $('#vRankName').textContent = r.current_rank_name || '(unranked)';
+  $('#vRankCode').textContent = r.current_rank_code ? `(${r.current_rank_code})` : '';
+  $('#vRole').textContent = r.ingame_role || '—';
   $('#vAttended').textContent = attended;
+
   const imgEl = $('#rankImg');
   imgEl.src = img || '';
-  imgEl.alt = rank.code || 'Rank';
+  imgEl.alt = r.current_rank_code || 'Rank';
   imgEl.onerror = () => { imgEl.style.visibility='hidden'; };
 
   $('#viewMask').style.display = 'flex';
 }
 window.viewMember = viewMember;
 
-/* Load */
-async function loadAll(){
-  // Profiles (no email column)
-  const { data: profiles, error: pErr } = await sb
-    .from('profiles')
-    .select('user_id,handle,display_name,current_rank_id,ingame_role_id,rank_code,rank_image_url,missions_attended,missions_attended_final,misions_attended')
-    .order('handle', { ascending: true });
-  if(pErr){ tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--bad)">Failed to load profiles: ${esc(pErr.message)}</td></tr>`; return; }
+/* Load from the VIEW */
+async function loadRoster(){
+  const { data, error } = await sb
+    .from('v_profiles_detailed')
+    .select('user_id,handle,display_name,current_rank_name,current_rank_code,current_rank_image_url,ingame_role,missions_attended')
+    .order('handle',{ ascending:true });
 
-  // Ranks map
-  const { data: ranks } = await sb.from('ranks').select('id,code,name,image_url');
-  (ranks||[]).forEach(r=>RANKS.set(r.id, r));
-
-  // In-game roles map (if table exists)
-  const { data: roles, error: roleErr } = await sb.from('ingame_roles').select('id,name');
-  if(!roleErr) (roles||[]).forEach(r=>ROLES.set(r.id, r));
-
-  // Compose rows
-  ROWS = (profiles||[]).map(p => ({
-    ...p,
-    rank: RANKS.get(p.current_rank_id) || null,
-    role: ROLES.get(p.ingame_role_id) || null
-  }));
-
+  if(error){
+    tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--bad)">Failed to load members: ${esc(error.message)}</td></tr>`;
+    return;
+  }
+  ROWS = data || [];
   render(filterRows());
 }
 
-q.addEventListener('input', ()=>render(filterRows()));
+q.addEventListener('input', ()=> render(filterRows()));
 
 /* Auth gate then load */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();
+  session = await requireAuth();  // redirect to auth.html if not logged in
   if(!session) return;
   sb = getSupabase();
-  loadAll();
+  loadRoster();
 });
 </script>
 </body>
