@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Supabase Login Test</title>
+<button id="login">Login with GitHub</button>
+<button id="logout">Logout</button>
+<pre id="out"></pre>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+const sb = createClient('https://YOUR-PROJECT.supabase.co','ANON_KEY')
+const out = m => (document.querySelector('#out').textContent += `${m}\n`)
+
+async function showSession() {
+  const { data:{ session }, error } = await sb.auth.getSession()
+  out(error ? `getSession error: ${error.message}` : JSON.stringify(session, null, 2))
+}
+document.querySelector('#login').onclick = async () => {
+  const redirectTo = `${location.origin}${location.pathname.replace(/[^/]*$/, '')}auth.html`
+  const { error } = await sb.auth.signInWithOAuth({ provider: 'github', options: { redirectTo } })
+  if (error) out(`login error: ${error.message}`)
+}
+document.querySelector('#logout').onclick = async () => { await sb.auth.signOut(); out('Signed out'); }
+showSession()
+</script>
