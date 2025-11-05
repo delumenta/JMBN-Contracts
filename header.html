@@ -1,0 +1,117 @@
+<!-- header.html -->
+<header class="jmbn-header">
+  <div class="jmbn-nav">
+    <a class="jmbn-brand" href="index.html" aria-label="JMBN Home">
+      <img class="jmbn-logo" alt="JMBN" 
+           src="https://static.wixstatic.com/media/b6db55_17d1c3c1572f401b948fa21101b18467~mv2.png" />
+      <span class="jmbn-title">JMBN</span>
+    </a>
+
+    <nav class="jmbn-links" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="hangar.html">Hangar</a>
+      <a href="mission-log.html">Mission Log</a>
+      <a href="components.html">Components</a>
+      <a href="contracts.html">Contracts</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <div class="jmbn-cta">
+      <a class="jmbn-btn" href="mission-editor.html">+ Open Mission Editor</a>
+
+      <!-- Mobile toggle -->
+      <button class="jmbn-burger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Fallbacks if your pages haven't defined these vars */
+  :root{
+    --bg:#000; --panel:#0b0b0b; --border:#d6b44c;
+    --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+  }
+  .jmbn-header{
+    position: sticky; top:0; z-index:1000;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,.72);
+    border-bottom: 1px solid var(--border);
+  }
+  .jmbn-nav{
+    max-width: 1200px; margin:0 auto;
+    display:flex; align-items:center; gap:14px;
+    padding:10px 18px;
+  }
+  .jmbn-brand{display:flex; align-items:center; gap:10px; text-decoration:none}
+  .jmbn-logo{width:32px; height:32px; object-fit:contain}
+  .jmbn-title{color:var(--text); font-family:'Play',system-ui,sans-serif; font-weight:700; letter-spacing:.5px}
+
+  .jmbn-links{display:flex; gap:14px; margin-left:24px}
+  .jmbn-links a{
+    color:var(--text); text-decoration:none; padding:8px 10px; border-radius:10px;
+    transition:transform .15s ease, background-color .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  .jmbn-links a:hover{ background:rgba(255,255,255,.06); transform:translateY(-1px) }
+  .jmbn-links a.active,
+  .jmbn-links a[aria-current="page"]{
+    outline: 1px solid var(--border);
+    box-shadow: 0 0 0 2px rgba(214,180,76,.18) inset;
+  }
+
+  .jmbn-cta{margin-left:auto; display:flex; align-items:center; gap:10px}
+  .jmbn-btn{
+    text-decoration:none; color:#000; background:var(--accent);
+    padding:8px 12px; border-radius:12px; font-weight:700;
+    border:1px solid var(--border);
+  }
+  .jmbn-btn:hover{filter:brightness(1.05)}
+
+  /* Mobile */
+  .jmbn-burger{
+    display:none; width:40px; height:40px; border-radius:10px;
+    border:1px solid var(--border); background:transparent; cursor:pointer;
+  }
+  .jmbn-burger span{display:block; height:2px; margin:6px 8px; background:var(--accent)}
+  @media (max-width: 840px){
+    .jmbn-links{ display:none }
+    .jmbn-burger{ display:block }
+    .jmbn-links.open{
+      display:flex; flex-direction:column; position:absolute; left:0; right:0; top:58px;
+      background:rgba(0,0,0,.95); border-bottom:1px solid var(--border);
+      padding:10px 18px 14px; gap:6px;
+    }
+  }
+</style>
+
+<script>
+  // Mark active link by URL
+  (function(){
+    try{
+      const path = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.jmbn-links a').forEach(a=>{
+        const href = a.getAttribute('href');
+        if (href === path) {
+          a.classList.add('active');
+          a.setAttribute('aria-current','page');
+        }
+      });
+    }catch(e){}
+  })();
+
+  // Mobile toggle
+  (function(){
+    const btn = document.querySelector('.jmbn-burger');
+    const menu = document.querySelector('.jmbn-links');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', ()=>{
+      const open = menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  })();
+</script>
+
+
+
