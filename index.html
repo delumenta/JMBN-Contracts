@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+8<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -368,7 +368,9 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   const rankImg    = row.current_rank_image_url || storageUrl;
 
   // Fill UI
-  out('#mName', handle);
+  // Capitalize first letter (or each word if multi-word)
+const prettyName = handle.replace(/\b\w/g, c => c.toUpperCase());
+out('#mName', prettyName);
   out('#mRank', rankText);
   out('#mRole', category);
   if (role) { const b = $('#mRole'); if (b) b.title = `In-game role: ${role}`; }
