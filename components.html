@@ -78,18 +78,31 @@ tr:hover{background:rgba(214,180,76,.08)}
 </style>
 </head>
 <body>
-  <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
-    <h1>JMBN Components</h1>
-  </div>
+ <!-- 🔁 Shared header mount -->
+<div id="header-container"></div>
+<script>
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    const html = await res.text();
+    document.getElementById('header-container').outerHTML = html;
 
-  <nav class="nav">
-    <a class="nav-btn" href="index.html">Manifest</a>
-    <a class="nav-btn" href="hangar.html">Hangar</a>
-    <a class="nav-btn" href="components.html">Components</a>
-    <a class="nav-btn" href="contracts.html">Contracts</a>
-    <a class="nav-btn" href="mission-log.html">Mission Log</a>
-  </nav>
+    // Highlight current tab (triggers shiny sweep ✨)
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a => {
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if (href === here) {
+          a.classList.add('active');
+          a.setAttribute('aria-current','page');
+        }
+      });
+    });
+  } catch (e) {
+    console.warn('Header load failed:', e);
+  }
+})();
+</script>
 
   <div class="panel">
     <div class="controls">
