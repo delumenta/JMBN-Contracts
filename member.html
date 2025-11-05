@@ -146,14 +146,14 @@ const esc = s => { const d=document.createElement('div'); d.textContent = s ?? '
 
 let sb=null, session=null;
 let ROWS = []; // data from view
+const RANK_BUCKET = 'Ranks'; // ✅ your bucket is case-sensitive
 
 const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
 
-/* Fallback URL if view's image URL is null (rank bucket by code) */
-function rankFallbackUrl(code){
+/* Build public URL safely via SDK (no network call) */
+function rankPublicUrlFromCode(code){
   if(!code) return '';
-  const base = (sb && (sb.supabaseUrl || sb.url || sb._supabaseUrl)) || '';
-  return `${base}/storage/v1/object/public/rank/${encodeURIComponent(code)}.png`;
+  return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
 
 /* Render */
@@ -195,21 +195,24 @@ function viewMember(userId){
   const r = ROWS.find(x=>x.user_id===userId);
   if(!r) return;
 
-  const handle = r.handle || r.display_name || r.user_id.slice(0,8);
+  const handle   = r.handle || r.display_name || r.user_id.slice(0,8);
   const attended = Number(r.missions_attended) || 0;
-  const img = r.current_rank_image_url || rankFallbackUrl(r.current_rank_code);
+
+  // Prefer view-provided image URL; fallback to bucket using code
+  const imgUrl = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
 
   $('#viewTitle').textContent = `Member — ${handle}`;
-  $('#vHandle').textContent = handle;
+  $('#vHandle').textContent   = handle;
   $('#vRankName').textContent = r.current_rank_name || '(unranked)';
   $('#vRankCode').textContent = r.current_rank_code ? `(${r.current_rank_code})` : '';
-  $('#vRole').textContent = r.ingame_role || '—';
+  $('#vRole').textContent     = r.ingame_role || '—';
   $('#vAttended').textContent = attended;
 
   const imgEl = $('#rankImg');
-  imgEl.src = img || '';
+  imgEl.src = imgUrl || '';
   imgEl.alt = r.current_rank_code || 'Rank';
-  imgEl.onerror = () => { imgEl.style.visibility='hidden'; };
+  imgEl.style.visibility = imgUrl ? 'visible' : 'hidden';
+  imgEl.onerror = () => { imgEl.style.visibility = 'hidden'; };
 
   $('#viewMask').style.display = 'flex';
 }
@@ -234,7 +237,7 @@ q.addEventListener('input', ()=> render(filterRows()));
 
 /* Auth gate then load */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();  // redirect to auth.html if not logged in
+  session = await requireAuth();   // redirect to auth.html if not logged in
   if(!session) return;
   sb = getSupabase();
   loadRoster();
