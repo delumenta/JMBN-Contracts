@@ -58,16 +58,30 @@ tr:hover{background:rgba(214,180,76,.08)}
   <!-- 🔁 Shared header mount -->
   <div id="jmbn-header-mount"></div>
   <script>
-    (async () => {
-      try {
-        const res = await fetch(new URL('header.html', location.href), { cache: 'no-cache' });
-        const html = await res.text();
-        document.getElementById('jmbn-header-mount').outerHTML = html;
-      } catch (e) {
-        console.warn('Header load failed:', e);
-      }
-    })();
-  </script>
+    <script>
+(async () => {
+  try {
+    const res = await fetch(new URL('header.html', location.href), { cache: 'no-cache' });
+    const html = await res.text();
+    const mount = document.getElementById('jmbn-header-mount');
+    mount.outerHTML = html;
+
+    // Wait a tick so DOM updates before scanning
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a => {
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        if (href === here) {
+          a.classList.add('active');
+          a.setAttribute('aria-current', 'page');
+        }
+      });
+    });
+  } catch (e) {
+    console.warn('Header load failed:', e);
+  }
+})();
+</script>
 
   <main>
     <div class="panel">
