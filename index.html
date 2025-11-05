@@ -350,7 +350,7 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
         current_rank_code,
         current_rank_image_url,
         ingame_role,
-        missions_attended
+        missions_attended,
         current_rank_category
       `)
       .eq('user_id', session.user.id)
@@ -364,26 +364,17 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
   // Derive display values
   const handle   = row.handle || row.display_name || handleFallback;
   const email    = row.display_name || emailFallback;
-  const role     = row.ingame_role || 'Member';
-
-  const rankName = row.current_rank_name || 'Unranked';
-  const rankCode = row.current_rank_code || '';          // e.g. 'ENS-O1'
-  const rankText = rankCode ? `${rankName} (${rankCode})` : rankName;
-
-  // Prefer view image; fallback to storage by code
-  const bucketName = 'Ranks'; // case-sensitive — adjust if yours differs
-  const imgFromBucket = code => code
-    ? sb.storage.from(bucketName).getPublicUrl(`${code}.png`).data.publicUrl
-    : '';
-  const rankImg = row.current_rank_image_url || imgFromBucket(rankCode);
-  const category = row.current_rank_category || 'Member'; // fallback
-out('#mRole', category);
+  const role     = row.ingame_role || null;               // optional display
+  const category = row.current_rank_category || 'Member'; // Enlisted/Warrant/Officer
 
   // Fill Member card UI
-  out('#mName',  handle);
-  out('#mEmail', email);
-  out('#mRole',  role);
-  out('#mRank',  rankText);
+  out('#mName', handle);
+  out('#mRank', rankText);
+  out('#mRole', category);                                // ✅ show category
+  if (role) {                                            // optional: tooltip with in-game role
+    const b = document.querySelector('#mRole');
+    if (b) b.title = `In-game role: ${role}`;
+  }
 
   const imgEl = document.getElementById('mRankImg');
   if (imgEl) {
