@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Member Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000; --panel:#0b0b0b; --card:#0c0c0c;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--text);font-family:'Play',system-ui,sans-serif;margin:0}
+.header{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--border)}
+.header h1{font-size:20px;letter-spacing:.5px;margin:0}
+.controls{display:flex;gap:10px;align-items:center}
+input[type="search"]{
+  background:#0f0f0f;border:1px solid var(--border);color:var(--text);
+  padding:10px 12px;border-radius:10px;min-width:260px;outline:none
+}
+.container{max-width:1100px;margin:20px auto;padding:0 16px}
+.table{
+  width:100%; border:1px solid var(--border); border-radius:14px; overflow:hidden; background:var(--card);
+  box-shadow:0 0 0 1px rgba(214,180,76,.15), 0 8px 24px rgba(0,0,0,.45);
+}
+.table thead{background:#121212}
+.table th,.table td{padding:12px 14px;border-bottom:1px solid rgba(214,180,76,.15);text-align:left}
+.table th{font-weight:700;font-size:12px;letter-spacing:.6px;color:var(--muted)}
+.row-rank{display:flex;align-items:center;gap:10px}
+.rank-badge{
+  width:36px;height:36px;object-fit:contain;border-radius:8px;
+  border:1px solid var(--border);background:#111
+}
+.code-pill{
+  display:inline-block; padding:4px 8px; border:1px solid var(--border); border-radius:999px;
+  font-size:12px; letter-spacing:.4px; color:var(--accent); background:#0f0f0f
+}
+.name-cell{font-weight:700}
+.empty{padding:18px;color:var(--muted);text-align:center}
+.footer{padding:12px 2px;color:var(--muted);font-size:12px;text-align:right}
+.badge{border:1px solid var(--border);padding:4px 8px;border-radius:999px}
+.loading{padding:18px}
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Member Roster</h1>
+    <div class="controls">
+      <input id="q" type="search" placeholder="Search name or rank…" />
+      <span id="count" class="badge">0 members</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="table">
+      <table id="grid">
+        <thead>
+          <tr>
+            <th style="width:45%">Name</th>
+            <th style="width:35%">Rank</th>
+            <th style="width:20%">Attended</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="3" class="loading">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer" id="footNote"></div>
+  </div>
+
+<!-- Your global Supabase client -->
+<script type="module" src="js/auth.js"></script>
+
+<script type="module">
+  import { sb } from './js/auth.js'  // 👈 assumes your auth.js exports `sb`
+  const RANK_BUCKET = 'rank'
+
+  const tbody = document.getElementById('tbody')
+  const search = document.getElementById('q')
+  const countEl = document.getElementById('count')
+  const foot = document.getElementById('footNote')
+
+  function rankUrlFromCode(code){
+    if(!code) return ''
+    const base = sb.supabaseUrl || sb.url || sb._supabaseUrl || '' // works for all
+    return `${base}/storage/v1/object/public/${RANK_BUCKET}/${encodeURIComponent(code)}.png`
+  }
+
+  function renderRows(rows){
+    if(!rows || rows.length === 0){
+      tbody.innerHTML = `<tr><td colspan="3" class="empty">No members found</td></tr>`
+      countEl.textContent = '0 members'
+      return
+    }
+    const html = rows.map(r=>{
+      const name = r.display_name ?? r.email ?? r.user_id
+      const attended = r.missions_attended_final ?? r.missions_attended ?? 0
+      const code = r.rank_code || r.rank?.code
+      const img = r.rank_image_url || r.rank?.image_url || rankUrlFromCode(code)
+      return `
+        <tr>
+          <td class="name-cell">${escapeHtml(name)}</td>
+          <td>
+            <div class="row-rank">
+              <img class="rank-badge" src="${img}" alt="${code||''}" onerror="this.style.visibility='hidden'">
+              <span class="code-pill">${code ? escapeHtml(code) : '—'}</span>
+            </div>
+          </td>
+          <td>${attended}</td>
+        </tr>
+      `
+    }).join('')
+    tbody.innerHTML = html
+    countEl.textContent = `${rows.length} member${rows.length===1?'':'s'}`
+  }
+
+  function escapeHtml(s){return (s??'').toString().replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]))}
+
+  async function loadData(){
+    const { data: profiles, error: pErr } = await sb
+      .from('profiles')
+      .select('user_id,display_name,email,current_rank_id,rank_code,rank_image_url,missions_attended,missions_attended_final')
+      .order('display_name', { ascending: true })
+    if(pErr){ console.error(pErr); tbody.innerHTML = `<tr><td colspan="3" class="empty">Failed to load profiles</td></tr>`; return }
+
+    const { data: ranks, error: rErr } = await sb.from('ranks').select('id,code,image_url')
+    const rankById = new Map((ranks||[]).map(r=>[r.id,r]))
+    const rows = (profiles||[]).map(p=>({ ...p, rank: rankById.get(p.current_rank_id) || null }))
+    renderRows(rows)
+    foot.textContent = 'Counts only missions with status Success / Fail / Abort.'
+  }
+
+  search.addEventListener('input', ()=>{
+    const term = search.value.trim().toLowerCase()
+    const rows = Array.from(tbody.querySelectorAll('tr'))
+    let shown = 0
+    rows.forEach(tr=>{
+      const txt = tr.textContent.toLowerCase()
+      const vis = txt.includes(term)
+      tr.style.display = vis ? '' : 'none'
+      if (vis) shown++
+    })
+    countEl.textContent = `${shown} member${shown===1?'':'s'}`
+  })
+
+  loadData()
+</script>
+</body>
+</html>
