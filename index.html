@@ -6,14 +6,13 @@
 <title>JMBN Manifest</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--card:#111;--border:#d6b44c;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-h1:clamp(20px,2.6vw,28px);--fs-h2:clamp(12px,1.6vw,14px)
+  --bg:#000; --panel:#0b0b0b; --card:#111; --border:#d6b44c;
+  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+  --fs-base:14px; --fs-h1:clamp(20px,2.6vw,28px); --fs-h2:clamp(12px,1.6vw,14px)
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -25,51 +24,19 @@ body{
   color:var(--text);font-family:'Play',system-ui,sans-serif;letter-spacing:.25px;
 }
 
-/* Page spacing below the shared sticky header */
-main{padding:14px;max-width:1080px;margin:66px auto 28px}
+/* page spacing under sticky header */
+main{padding:14px;max-width:1080px;margin:66px auto 24px}
+.page-title{font-size:var(--fs-h1);font-weight:800;color:var(--accent);margin:0 0 10px}
 
-/* Page intro */
-.page-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:4px 0 10px}
-.page-title{font-size:var(--fs-h1);font-weight:800;color:var(--accent);margin:0}
-.page-sub{color:var(--muted);font-size:12px}
+/* cards */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
 
-/* Quick strip (search + pins) */
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.input, .btn{
-  border:1px solid var(--border);border-radius:10px;background:#0a0a0a;
-  color:var(--text);padding:9px 12px;font-family:'Play',sans-serif;font-size:13px
-}
-.input{min-width:220px;flex:1}
-.btn{background:linear-gradient(180deg,#0c0c0c,#060606);cursor:pointer}
-.btn:hover{background:var(--accent);color:#000}
-
-/* Sections */
-.section{margin-top:12px}
-.section h2{
-  color:var(--accent);font-size:var(--fs-h2);font-weight:800;margin:0 0 8px;
-  display:flex;align-items:center;gap:8px
-}
-.bucket-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
-.tab{
-  padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#0b0b0b;color:var(--muted);font-size:12px;cursor:pointer
-}
-.tab.active{background:var(--accent);color:#000}
-
-/* Cards grid */
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-@media(max-width:860px){.grid{grid-template-columns:1fr}}
 .card{
   position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;
   box-shadow:0 0 18px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12);
   overflow:hidden
 }
-.card h3{margin:0 0 6px;color:var(--accent);font-size:16px}
-.card p{margin:0 0 10px;color:var(--muted);font-size:13px;min-height:18px}
-.card a{
-  display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;text-decoration:none;
-  border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content
-}
-.card .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:#c9b06a}
 .card::after{
   content:"";position:absolute;inset:0;border-radius:14px;
   background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.18) 50%,rgba(255,255,255,0) 70%);
@@ -77,33 +44,36 @@ main{padding:14px;max-width:1080px;margin:66px auto 28px}
 }
 .card:hover::after{transform:translateX(100%)}
 
-/* Panels (Recent / Tips) */
-.panel{
-  background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px;
-  box-shadow:0 0 18px rgba(214,180,76,.2)
+/* member card */
+.member{
+  display:grid;grid-template-columns:1fr 120px;gap:12px;align-items:center;
 }
-.split{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
-@media(max-width:980px){.split{grid-template-columns:1fr}}
+.member .left .name{font-weight:900;font-size:18px;color:var(--accent)}
+.member .left .row{display:flex;gap:10px;align-items:center;margin-top:6px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;background:#0c0c0c;color:var(--muted)}
+.rankline{display:flex;align-items:center;gap:8px;font-size:13px}
+.rankimg{
+  width:110px;height:110px;object-fit:contain;border-radius:10px;border:1px solid var(--border);
+  background:#0c0c0c;display:block;justify-self:end
+}
+.small{font-size:12px;color:var(--muted);margin-top:6px}
 
-/* Small table look */
-.table{border:1px solid var(--border);border-radius:10px;overflow:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:8px 10px;border-bottom:1px solid rgba(214,180,76,.28);text-align:left}
-th{color:var(--accent);background:#0a0a0a;font-weight:600;font-size:12px}
-tr:nth-child(even){background:#101010}
+/* action cards */
+.action h3{margin:0 0 6px;color:var(--accent);font-size:16px}
+.action p{margin:0 0 10px;color:var(--muted);font-size:13px;min-height:18px}
+.action a{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;text-decoration:none;
+  border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content
+}
 
-/* Tiny helper text */
-.note{color:#c9b06a;font-size:12px}
-kbd{background:#111;border:1px solid var(--border);border-bottom-color:#a88d38;border-radius:6px;padding:2px 6px;color:var(--text);font-weight:700}
-
-/* Fade-in */
-body{opacity:0;transition:opacity .35s ease}
+/* fade */
+body{opacity:0;transition:opacity .3s ease}
 body.ready{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- 🔁 Shared header (logo + shiny nav) -->
+<!-- shared header mount -->
 <div id="header-mount"></div>
 <script>
   (async () => {
@@ -111,7 +81,6 @@ body.ready{opacity:1}
       const res = await fetch('header.html', {cache:'no-cache'});
       const html = await res.text();
       document.getElementById('header-mount').outerHTML = html;
-      // highlight current tab
       requestAnimationFrame(()=>{
         const here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
         document.querySelectorAll('.nav-btn').forEach(a=>{
@@ -125,219 +94,126 @@ body.ready{opacity:1}
 </script>
 
 <main>
-  <div class="page-head">
-    <h1 class="page-title">JMBN Manifest</h1>
-    <div class="page-sub">Offline-friendly • Linked across modules</div>
-  </div>
+  <h1 class="page-title">Manifest</h1>
 
-  <!-- Quick controls -->
-  <div class="toolbar">
-    <input id="q" class="input" placeholder="Quick search (filters cards & recent)…">
-    <button class="btn" id="togglePins">Show Favorites Only</button>
-  </div>
-
-  <!-- PERSONAL -->
-  <section class="section" id="secPersonal">
-    <h2>Personal</h2>
-    <div class="bucket-tabs" id="tabsPersonal">
-      <button class="tab active" data-tag="all">All</button>
-      <button class="tab" data-tag="fleet">Fleet</button>
-      <button class="tab" data-tag="gear">Gear</button>
-    </div>
-    <div class="grid" id="gridPersonal">
-      <!-- Hangar -->
-      <article class="card" data-tags="fleet" data-title="hangar">
-        <h3>Hangar</h3>
-        <p>Manage ships, roles, SCU, and quick notes. Integrates with Loadouts.</p>
-        <a href="hangar.html">➜ Open Hangar</a>
-        <div class="meta"><span>Local save</span><span>Loadouts link</span></div>
-      </article>
-
-      <!-- Components -->
-      <article class="card" data-tags="gear" data-title="components">
-        <h3>Components</h3>
-        <p>Catalog Q-drives, shields, power plants, racks, and more.</p>
-        <a href="components.html">➜ Components List</a>
-        <div class="meta"><span>Local save</span><span>Exports JSON/CSV</span></div>
-      </article>
-
-      <!-- Contracts -->
-      <article class="card" data-tags="fleet" data-title="contracts">
-        <h3>Contracts</h3>
-        <p>Track mission contracts with rewards and simple KPIs.</p>
-        <a href="contracts.html">➜ Contracts</a>
-        <div class="meta"><span>KPI tiles</span><span>Import/Export</span></div>
-      </article>
-
-      <!-- (Placeholder) Loadouts — optional link -->
-      <article class="card" data-tags="gear" data-title="loadouts">
-        <h3>Loadouts</h3>
-        <p>Per-ship component sets pulled from your Components DB.</p>
-        <a href="hangar.html#openLoadouts">➜ Manage via Hangar</a>
-        <div class="meta"><span>Reads Components</span><span>Per ship</span></div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ORG -->
-  <section class="section" id="secOrg">
-    <h2>JMBN Org</h2>
-    <div class="grid" id="gridOrg">
-      <article class="card" data-tags="org" data-title="mission log">
-        <h3>Mission Log</h3>
-        <p>Org-wide logs, attendance, statuses, and archives.</p>
-        <a href="mission-log.html">➜ Mission Log</a>
-        <div class="meta"><span>Supabase</span><span>Attendance tools</span></div>
-      </article>
-
-      <article class="card" data-tags="org" data-title="members">
-        <h3>Members</h3>
-        <p>Roster, ranks (image), roles, and mission counts (view).</p>
-        <a href="members.html">➜ Members</a>
-        <div class="meta"><span>Supabase views</span><span>Rank image</span></div>
-      </article>
-    </div>
-  </section>
-
-  <!-- Recent + Tips -->
-  <div class="split">
-    <div class="panel">
-      <h2>Recent Activity</h2>
-      <div class="table" id="recentWrap">
-        <table id="recentTbl" aria-label="Recent items">
-          <thead><tr><th>When</th><th>Module</th><th>Item</th><th>Action</th></tr></thead>
-          <tbody id="recentRows">
-            <!-- Will be filled from localStorage keys if present -->
-          </tbody>
-        </table>
+  <div class="grid">
+    <!-- MEMBER CARD -->
+    <section class="card member" id="memberCard">
+      <div class="left">
+        <div class="name" id="mName">Loading…</div>
+        <div class="rankline">
+          <span id="mRank">—</span>
+          <span class="badge" id="mPaygrade" style="display:none"></span>
+          <span class="badge" id="mRole">—</span>
+        </div>
+        <div class="row">
+          <span class="small" id="mEmail"></span>
+        </div>
+        <div class="small">Tip: Your rank image is pulled from the <code>ranks.image_url</code> you set in Supabase.</div>
       </div>
-      <div class="note" style="margin-top:6px">
-        Recent reads from: <code>jmbn-hangar-v1</code>, <code>jmbn-components</code>, <code>jmbn-contracts</code>, <code>jmbn-loadouts-v6</code>.
-      </div>
-    </div>
+      <img id="mRankImg" class="rankimg"
+           src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+           alt="Rank">
+    </section>
 
-    <div class="panel">
-      <h2>Tips</h2>
-      <ul class="note" style="margin:6px 0 0 14px">
-        <li>Use <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + click to open a module in a new tab.</li>
-        <li>Components → Export JSON → Hangar Loadouts picker can read it directly.</li>
-        <li>Contracts list supports <b>Import JSON</b> when moving machines.</li>
-      </ul>
-    </div>
+    <!-- ACTION: PERSONAL -->
+    <section class="card action">
+      <h3>Personal</h3>
+      <p>Open your Contracts & personal manifests.</p>
+      <a href="contracts.html">➜ Go to Contracts</a>
+    </section>
+
+    <!-- ACTION: JMBN -->
+    <section class="card action">
+      <h3>JMBN</h3>
+      <p>Open the Org Mission Logs, Attendance & Archives.</p>
+      <a href="mission-log.html">➜ Go to Mission Log</a>
+    </section>
   </div>
 </main>
 
-<!-- Auth guard -->
+<!-- Supabase auth -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 
 <script>
-/* Guard + boot fade */
+/*
+  Expects your existing auth.js to expose:
+  - requireAuth() -> session
+  - global `sb` (Supabase client)
+  DB shape assumed (based on our earlier SQL):
+    - public.profiles: id (uuid), full_name text, rank_code text, role text
+    - public.ranks: code text, name text, paygrade text, image_url text
+    - optional user_roles table → we try it; if not present we show profiles.role (or "Member")
+*/
 (async () => {
-  await requireAuth();        // redirect to auth.html if not logged in
+  const session = await requireAuth();  // redirects to auth.html if not logged in
+  if (!session) return;
   document.body.classList.add('ready');
-})();
 
-/* Mini client-side UX: search / tabs / favorites-only toggle */
-(function(){
-  const q = document.getElementById('q');
-  const toggle = document.getElementById('togglePins');
+  const uid = session.user.id;
+  const email = session.user.email || '';
 
-  // "Favorites" are just remembered titles in localStorage for now
-  const FAV_KEY = 'jmbn-favorites';
-  function getFav(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY)||'[]'); }catch{return []} }
-  function setFav(arr){ localStorage.setItem(FAV_KEY, JSON.stringify([...new Set(arr)])); }
-
-  // Make cards pinnable by double-clicking their title
-  document.querySelectorAll('.card h3').forEach(h=>{
-    h.style.cursor='pointer';
-    h.title='Double-click to toggle Favorite';
-    h.addEventListener('dblclick', ()=>{
-      const title = (h.textContent||'').trim().toLowerCase();
-      const fav = getFav();
-      const i = fav.indexOf(title);
-      if(i>=0) fav.splice(i,1); else fav.push(title);
-      setFav(fav);
-      render();
-    });
-  });
-
-  // Tabs logic (Personal buckets only)
-  document.querySelectorAll('#tabsPersonal .tab').forEach(tab=>{
-    tab.addEventListener('click', ()=>{
-      document.querySelectorAll('#tabsPersonal .tab').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active'); render();
-    });
-  });
-
-  q.addEventListener('input', render);
-  let favOnly = false;
-  toggle.addEventListener('click', ()=>{ favOnly=!favOnly; toggle.textContent = favOnly? 'Show All' : 'Show Favorites Only'; render(); });
-
-  function cardList(){
-    return [...document.querySelectorAll('.card')];
+  // 1) Profile
+  let profile = null;
+  try {
+    const { data, error } = await sb.from('profiles')
+      .select('full_name, rank_code, role')
+      .eq('id', uid).single();
+    if (error) throw error;
+    profile = data;
+  } catch (e) {
+    console.warn('profiles load:', e.message);
   }
-  function visible(el, yes){
-    el.style.display = yes ? '' : 'none';
-  }
-  function matches(text, needle){
-    return text.toLowerCase().includes(needle);
-  }
-  function render(){
-    const needle = (q.value||'').trim().toLowerCase();
-    const fav = getFav();
-    const tab = document.querySelector('#tabsPersonal .tab.active')?.dataset.tag || 'all';
 
-    for(const c of cardList()){
-      const title = (c.dataset.title||'').toLowerCase();
-      const tags  = (c.dataset.tags||'').toLowerCase();
-
-      let ok = true;
-      if(needle) ok = ok && matches(title + ' ' + tags, needle);
-      if(favOnly) ok = ok && fav.includes(title);
-      if(tab !== 'all' && c.closest('#gridPersonal')) ok = ok && tags.includes(tab);
-
-      visible(c, ok);
+  // 2) Rank (if any)
+  let rank = null;
+  if (profile?.rank_code) {
+    try {
+      const { data, error } = await sb.from('ranks')
+        .select('name, paygrade, image_url')
+        .eq('code', profile.rank_code).single();
+      if (error) throw error;
+      rank = data;
+    } catch (e) {
+      console.warn('rank load:', e.message);
     }
   }
-  render();
-})();
 
-/* Recent Activity: sniff from your localStorage datasets */
-(function(){
-  const bucketMap = [
-    { key: 'jmbn-hangar-v1',    module: 'Hangar',     pick: arr => arr.slice(-5).map(x=>({item:x.name, action:'Saved Ship'})) },
-    { key: 'jmbn-components',   module: 'Components', pick: arr => arr.slice(-5).map(x=>({item:x.name, action:'Saved Component'})) },
-    { key: 'jmbn-contracts',    module: 'Contracts',  pick: arr => arr.slice(-5).map(x=>({item:x.name || x.id, action:'Saved Contract'})) },
-    { key: 'jmbn-loadouts-v6',  module: 'Loadouts',   pick: arr => arr.slice(-5).map(x=>({item:x.name, action:'Saved Loadout'})) },
-  ];
-  const rows = document.getElementById('recentRows');
-  const now  = () => new Date().toLocaleString();
-
-  const out = [];
-  for(const b of bucketMap){
-    try{
-      const raw = JSON.parse(localStorage.getItem(b.key)||'[]');
-      if(Array.isArray(raw) && raw.length){
-        const picked = b.pick(raw).reverse();
-        picked.forEach(p => out.push({when: now(), module: b.module, item: p.item || '—', action: p.action}));
-      }
-    }catch{}
+  // 3) Role (prefer user_roles if exists, else profiles.role, else "Member")
+  let role = profile?.role || 'Member';
+  try {
+    const { data, error } = await sb.from('user_roles')
+      .select('role').eq('user_id', uid).limit(1).maybeSingle?.();
+    if (!error && data && data.role) role = data.role;
+  } catch (e) {
+    // table may not exist; ignore
   }
 
-  if(!out.length){
-    rows.innerHTML = `<tr><td colspan="4" style="color:#c9b06a">Nothing yet — open a module and save something to see it here.</td></tr>`;
-    return;
+  // Fill UI
+  const el = s => document.getElementById(s);
+  el('mName').textContent   = profile?.full_name || session.user.user_metadata?.full_name || email.split('@')[0] || 'Unknown';
+  el('mEmail').textContent  = email || '';
+  el('mRole').textContent   = role;
+
+  if (rank?.name) {
+    el('mRank').textContent = rank.name;
+  } else if (profile?.rank_code) {
+    el('mRank').textContent = profile.rank_code;
+  } else {
+    el('mRank').textContent = 'Unranked';
   }
 
-  rows.innerHTML = out.slice(0,10).map(r=>`
-    <tr>
-      <td>${r.when}</td>
-      <td>${r.module}</td>
-      <td>${r.item}</td>
-      <td>${r.action}</td>
-    </tr>
-  `).join('');
+  if (rank?.paygrade) {
+    const p = el('mPaygrade');
+    p.style.display = '';
+    p.textContent = rank.paygrade;
+  }
+
+  if (rank?.image_url) {
+    el('mRankImg').src = rank.image_url;
+    el('mRankImg').alt = rank.name || 'Rank';
+  }
 })();
 </script>
 
