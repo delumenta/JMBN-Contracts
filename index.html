@@ -324,64 +324,81 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
-  (async () => {
-    // Guard page
-    const session = await requireAuth();
-    if (!session) return;
+(async () => {
+  const session = await requireAuth();
+  if (!session) return;
 
-    const uid = session.user.id;
-    const email = session.user.email || '';
-    const el = id => document.getElementById(id);
+  const uid = session.user.id;
+  const email = session.user.email || '';
+  const el = id => document.getElementById(id);
 
-    // Load profile
-    let profile=null;
-    try{
-      const { data, error } = await sb.from('profiles')
-        .select('full_name, rank_code, role')
-        .eq('id', uid).single();
-      if (error) throw error;
-      profile = data;
-    }catch(e){ console.warn('profiles load:', e.message); }
+  // Load profile (includes rank_code)
+  let profile = null;
+  try {
+    const { data, error } = await sb
+      .from('profiles')
+      .select('full_name, rank_code, role')
+      .eq('id', uid)
+      .single();
+    if (error) throw error;
+    profile = data;
+  } catch (e) {
+    console.warn('profiles load:', e.message);
+  }
 
-    // Load rank (if any)
-    let rank=null;
-    if (profile?.rank_code){
-      try{
-        const { data, error } = await sb.from('ranks')
-          .select('name, paygrade, image_url')
-          .eq('code', profile.rank_code).single();
-        if (error) throw error;
-        rank = data;
-      }catch(e){ console.warn('rank load:', e.message); }
+  // === NEW: Pull the RANK NAME directly ===
+  let rankName = 'Unranked', paygrade = '', rankImg = '';
+  if (profile?.rank_code) {
+    try {
+      const { data, error } = await sb
+        .from('ranks')
+        .select('name, paygrade, image_url')
+        .eq('code', profile.rank_code)
+        .maybeSingle();
+      if (!error && data) {
+        rankName = data.name || rankName;
+        paygrade = data.paygrade || '';
+        rankImg = data.image_url || '';
+      }
+    } catch (e) {
+      console.warn('ranks load:', e.message);
     }
+  }
 
-    // Role (prefer user_roles if exists)
-    let role = profile?.role || 'Member';
-    try{
-      const { data, error } = await sb.from('user_roles')
-        .select('role').eq('user_id', uid).limit(1).maybeSingle?.();
-      if (!error && data?.role) role = data.role;
-    }catch(e){ /* table may not exist */ }
+  // Try to get a user role (if table exists)
+  let role = profile?.role || 'Member';
+  try {
+    const { data, error } = await sb
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', uid)
+      .maybeSingle();
+    if (!error && data?.role) role = data.role;
+  } catch (e) {
+    // ignore if table not present
+  }
 
-    // Fill UI
-    el('mName').textContent  = profile?.full_name || session.user.user_metadata?.full_name || email.split('@')[0] || 'Unknown';
-    el('mEmail').textContent = email;
-    el('mRole').textContent  = role;
+  // === Fill Member Card ===
+  el('mName').textContent =
+    profile?.full_name ||
+    session.user.user_metadata?.full_name ||
+    (email.split('@')[0] || 'Unknown');
+  el('mEmail').textContent = email;
+  el('mRole').textContent = role;
 
-    if (rank?.name) { el('mRank').textContent = rank.name; }
-    else if (profile?.rank_code) { el('mRank').textContent = profile.rank_code; }
-
-    if (rank?.paygrade){
-      const p = el('mPaygrade');
-      p.style.display='';
-      p.textContent = rank.paygrade;
-    }
-    if (rank?.image_url){
-      el('mRankImg').src = rank.image_url;
-      el('mRankImg').alt = rank.name || 'Rank';
-    }
-  })();
+  el('mRank').textContent = rankName;
+  if (paygrade) {
+    const pg = el('mPaygrade');
+    pg.style.display = '';
+    pg.textContent = paygrade;
+  }
+  if (rankImg) {
+    el('mRankImg').src = rankImg;
+    el('mRankImg').alt = rankName;
+  }
+})();
 </script>
+
 
 </body>
 </html>
