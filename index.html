@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JMBN Manifest</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
@@ -12,12 +13,14 @@
       sizes="32x32">
 
 <style>
-:root{--border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;}
+:root{
+  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity 3s ease;}
-body{opacity:0;} /* Fade-in start */
+html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity .6s ease}
+body{opacity:0}
 
-/* Background layers you already had */
+/* Background */
 #goldDust{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;background:#000}
 .hud-grid{
   position:fixed;inset:0;z-index:1;pointer-events:none;
@@ -27,7 +30,7 @@ body{opacity:0;} /* Fade-in start */
   background-size:80px 80px;
   animation:drift 80s linear infinite;
 }
-@keyframes drift{from{background-position:0 0;}to{background-position:-200px -200px;}}
+@keyframes drift{from{background-position:0 0}to{background-position:-200px -200px}}
 body::after{
   content:"";position:fixed;inset:0;z-index:2;pointer-events:none;
   background:
@@ -38,10 +41,13 @@ body::after{
 /* Layout */
 .wrapper{position:relative;z-index:3;min-height:100%;display:grid;place-items:center;padding:28px}
 .center{width:min(980px,96vw)}
-.brand{display:inline-flex;align-items:center;gap:12px;margin-bottom:8px}
+
+/* Brand header */
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .brand-logo{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(242,214,117,.35))}
-.brand h1{margin:0;font-size:clamp(22px,3.6vw,36px);color:var(--accent);font-weight:700}
-.sub{color:var(--muted);margin:4px 0 18px;font-size:clamp(12px,1.6vw,14px)}
+.brand-text{display:flex;flex-direction:column}
+.brand-text h1{margin:0;font-size:clamp(24px,3.6vw,36px);color:var(--accent);font-weight:700;line-height:1.1}
+.brand-text .tagline{color:var(--muted);font-size:clamp(12px,1.6vw,14px);margin-top:2px}
 
 /* Cards */
 .card{
@@ -60,67 +66,56 @@ body::after{
 }
 .card:hover::after{transform:translateX(100%)}
 
-/* Member Role Card */
-.member{
-  display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:center;margin-bottom:14px;
-}
+/* Member card */
+.member{display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:center;margin-top:10px;margin-bottom:14px}
 .member .name{font-weight:900;font-size:20px;color:var(--accent)}
-.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
-.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
 .rankline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;margin-top:6px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
 .rankimg{
   width:120px;height:120px;object-fit:contain;border-radius:10px;border:1px solid var(--border);
   background:#0c0c0c;display:block;justify-self:end
 }
 .small{font-size:12px;color:var(--muted);margin-top:6px}
 
-/* Two action cards below */
+/* Action grid */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:820px){.grid-2{grid-template-columns:1fr}}
-
 .action h3{margin:0 0 6px;color:var(--accent);font-size:18px}
 .action p{margin:0 0 10px;color:var(--muted);font-size:13px}
-.action a{
-  display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;
-  border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content
-}
+.action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
 
 /* Footer */
 .footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
 
-/* Boot + OPS ticker (kept as-is) */
-.boot{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease;}
+/* Boot */
+.boot{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease}
 .boot.hidden{opacity:0;visibility:hidden}
-.bootCard{width:min(720px,90vw);background:#060606;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 0 22px rgba(214,180,76,.28),inset 0 0 0 1px rgba(214,180,76,.12);}
+.bootCard{width:min(720px,90vw);background:#060606;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 0 22px rgba(214,180,76,.28),inset 0 0 0 1px rgba(214,180,76,.12)}
 .bootHead{display:flex;justify-content:space-between;color:var(--accent);font-weight:700;font-size:14px;margin-bottom:8px}
-.bootLog{height:220px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;
-  font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8;}
+.bootLog{height:220px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8}
 .boot .ok{color:#7CFC9A}
 .bootCtrl{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
-.bootBtn{padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);
-  border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play',sans-serif;}
+.bootBtn{padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play'}
 .bootBtn:hover{background:var(--accent);color:#000}
 
+/* OPS ticker */
 .ops-ticker{
   position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));
   z-index:50;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;
   background:rgba(14,14,14,.92);border:1px solid var(--border);
   box-shadow:0 0 14px rgba(214,180,76,.25);backdrop-filter:saturate(1.2) blur(4px);
 }
-.ops-chip{color:#000;background:var(--accent);border:1px solid var(--border);
-  border-radius:999px;padding:2px 8px;font-weight:800;font-size:12px;letter-spacing:.4px;}
-.ops-msg{flex:1;min-width:0;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  opacity:1;transition:opacity .35s ease;}
+.ops-chip{color:#000;background:var(--accent);border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-weight:800;font-size:12px;letter-spacing:.4px}
+.ops-msg{flex:1;min-width:0;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:1;transition:opacity .35s ease}
 .ops-ctrl{display:flex;align-items:center;gap:6px}
-.ops-btn{padding:4px 8px;border-radius:6px;font-size:12px;border:1px solid var(--border);
-  background:transparent;color:#f7f1d0;cursor:pointer;font-family:'Play',sans-serif;}
+.ops-btn{padding:4px 8px;border-radius:6px;font-size:12px;border:1px solid var(--border);background:transparent;color:#f7f1d0;cursor:pointer;font-family:'Play'}
 .ops-btn:hover{background:var(--accent);color:#000}
 @media(max-width:520px){.ops-ticker{gap:6px;padding:6px 8px}.ops-msg{font-size:12px}.ops-btn{padding:3px 6px;font-size:11px}}
 </style>
 </head>
 <body>
 
-<!-- Animated background layers -->
+<!-- Background layers -->
 <canvas id="goldDust"></canvas>
 <div class="hud-grid"></div>
 
@@ -135,25 +130,22 @@ body::after{
 
 <div class="wrapper">
   <main class="center">
-   <div class="brand">
-  <img class="brand-logo" alt="JMBN"
-       src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
-  <div class="brand-text">
-    <h1>JMBN Manifest System</h1>
-    <div class="tagline">Hilarity • Immersion • Teamwork</div>
-  </div>
-</div>
+    <div class="brand">
+      <img class="brand-logo" alt="JMBN"
+           src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+      <div class="brand-text">
+        <h1>JMBN Manifest System</h1>
+        <div class="tagline">Hilarity • Immersion • Teamwork</div>
+      </div>
+    </div>
 
-    <!-- MEMBER ROLE CARD -->
+    <!-- Member card -->
     <section class="card member" id="memberCard">
       <div>
         <div class="name" id="mName">Loading…</div>
         <div class="rankline">
           <span id="mRank">Unranked</span>
-          <span class="badge" id="mPaygrade" style="display:none"></span>
           <span class="badge" id="mRole">Member</span>
-        </div>
-        <div class="row">
         </div>
         <div class="small">Welcome to the JMBN Manifest System</div>
       </div>
@@ -162,7 +154,7 @@ body::after{
            alt="Rank">
     </section>
 
-    <!-- TWO ACTION CARDS -->
+    <!-- Actions -->
     <section class="grid-2">
       <div class="card action">
         <h3>Personal</h3>
@@ -176,7 +168,7 @@ body::after{
       </div>
     </section>
 
-    <div class="footer" style="text-align:center;margin-top:16px">
+    <div class="footer">
       <span style="color:var(--muted)">Theme:</span> Play • Gold Accents ·
       <span style="color:var(--muted)">Links:</span> Relative URLs (GitHub Pages ready)
     </div>
@@ -196,10 +188,10 @@ body::after{
 </div>
 
 <script>
-/* Fade-in when ready */
-window.onload=()=>{document.body.style.opacity=1;};
+/* Fade-in */
+window.onload = () => { document.body.style.opacity = 1; };
 
-/* ===== GOLD STARFIELD + SUNLIGHT + SHOOTING STARS (unchanged) ===== */
+/* ===== Background stars + glow + shooters ===== */
 (function(){
   const c=document.getElementById('goldDust'),ctx=c.getContext('2d',{alpha:true});
   let W,H,DPR=Math.min(window.devicePixelRatio,2);
@@ -266,13 +258,12 @@ window.onload=()=>{document.body.style.opacity=1;};
     requestAnimationFrame(draw);
   }
   draw();
-
-  (function trigger(){ setTimeout(()=>{ if(Math.random()<0.85) addShooter(); trigger(); }, 5000+Math.random()*5000); })();
+  (function loop(){ setTimeout(()=>{ if(Math.random()<0.85) addShooter(); loop(); }, 5000+Math.random()*5000); })();
 })();
 
-/* ===== Boot Loader (unchanged) ===== */
-const boot=document.getElementById('boot'),log=document.getElementById('bootLog'),skip=document.getElementById('skipBoot');
-const lines=[
+/* ===== Boot loader ===== */
+const boot=document.getElementById('boot'), log=document.getElementById('bootLog'), skip=document.getElementById('skipBoot');
+const bootLines=[
   'JMBN SYSTEM BOOTING...',
   '> Initializing OPS modules ... <span class="ok">OK</span>',
   '> Loading Fleet / Ship Hangar ... <span class="ok">OK</span>',
@@ -285,10 +276,10 @@ const lines=[
 ];
 function printLine(t){const r=document.createElement('div');r.innerHTML=t;log.appendChild(r);log.scrollTop=log.scrollHeight;}
 function finishBoot(){sessionStorage.setItem('seenBoot','1');boot.classList.add('hidden');setTimeout(()=>boot.style.display='none',550);}
-function runBoot(){let i=0;const step=()=>{if(i>=lines.length)return finishBoot();printLine(lines[i++]);setTimeout(step,220)};step();}
-skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}else{boot.style.display='none';}
+function runBoot(){let i=0;(function step(){if(i>=bootLines.length)return finishBoot();printLine(bootLines[i++]);setTimeout(step,220)})()}
+skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}else{boot.style.display='none'}
 
-/* ===== OPS Ticker (unchanged) ===== */
+/* ===== OPS ticker ===== */
 (function(){
   const el=document.getElementById('opsTicker'),chip=document.getElementById('opsChip'),msg=document.getElementById('opsMsg'),
         prev=document.getElementById('opsPrev'),next=document.getElementById('opsNext'),
@@ -306,38 +297,36 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
     'CARGO: Shrike stacked crates into a “fortress of solitude.”'
   ];
   const typeStyles={ALERT:'var(--accent)',OPS:'var(--accent)',COMMS:'#9ecbff',SECURITY:'tomato',CARGO:'#a0f0c0',SYSTEM:'#f7f1d0',CONTACT:'#f7f1d0'};
-  function typeFrom(line){const m=line.match(/^([A-Z]+):/);return m?m[1]:'OPS';}
+  function typeFrom(line){const m=line.match(/^([A-Z]+):/);return m?m[1]:'OPS'}
   let i=0,timer=null,playing=true;
-  function setChipFor(line){const t=typeFrom(line);chip.textContent=`[${t}]`;chip.style.background=typeStyles[t]??'var(--accent)';chip.style.color='#000';}
-  function fade(txt){msg.style.opacity=0;setTimeout(()=>{msg.textContent=txt;msg.style.opacity=1;},200);}
-  function render(){const line=lines[i];setChipFor(line);fade(line);pause.textContent=playing?'Pause':'Play';}
+  function setChipFor(line){const t=typeFrom(line);chip.textContent=`[${t}]`;chip.style.background=typeStyles[t]??'var(--accent)';chip.style.color='#000'}
+  function fade(txt){msg.style.opacity=0;setTimeout(()=>{msg.textContent=txt;msg.style.opacity=1},200)}
+  function render(){const line=lines[i];setChipFor(line);fade(line);pause.textContent=playing?'Pause':'Play'}
   function nextL(){i=(i+1)%lines.length;render()} function prevL(){i=(i-1+lines.length)%lines.length;render()}
-  function start(){if(timer) return; playing=true; timer=setInterval(nextL,4000); render();}
-  function stop(){playing=false; clearInterval(timer); timer=null; render();}
+  function start(){if(timer)return; playing=true; timer=setInterval(nextL,4000); render()}
+  function stop(){playing=false; clearInterval(timer); timer=null; render()}
   next.onclick=()=>{stop();nextL()}; prev.onclick=()=>{stop();prevL()}; pause.onclick=()=>playing?stop():start();
-  close.onclick=()=>{el.style.display='none'; sessionStorage.setItem('opsClosed','1');};
-  if(sessionStorage.getItem('opsClosed')==='1'){ el.style.display='none'; return; }
-  start();
+  close.onclick=()=>{el.style.display='none'; sessionStorage.setItem('opsClosed','1')}
+  if(sessionStorage.getItem('opsClosed')==='1'){ el.style.display='none'; return }
+  start()
 })();
 </script>
 
-<!-- Supabase Auth + Member card fill (from v_profiles_detailed) -->
+<!-- Supabase (auth + profile fill) -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
 (async () => {
   // Helpers
-  const $  = sel => document.querySelector(sel);
-  const out = (sel, val) => { const el=$(sel); if (el) el.textContent = val ?? ''; };
+  const $ = (sel) => document.querySelector(sel);
+  const out = (sel, val) => { const el = $(sel); if (el) el.textContent = val ?? ''; };
 
-  // Auth first
+  // Auth
   const session = await requireAuth();     // redirects to auth.html if not logged in
   if (!session) return;
   const sb = getSupabase();
-  const emailFallback = session.user?.email || '';
-  const handleFallback = emailFallback.split('@')[0] || 'Unknown';
 
-  // Pull one row from the view for THIS user
+  // Pull from view
   let row = {};
   try {
     const { data, error } = await sb
@@ -349,9 +338,9 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
         current_rank_name,
         current_rank_code,
         current_rank_image_url,
+        current_rank_category,
         ingame_role,
-        missions_attended,
-        current_rank_category
+        missions_attended
       `)
       .eq('user_id', session.user.id)
       .maybeSingle();
@@ -361,22 +350,30 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
     console.warn('v_profiles_detailed:', e.message);
   }
 
-  // Derive display values
-  const handle   = row.handle || row.display_name || handleFallback;
-  const email    = row.display_name || emailFallback;
-  const role     = row.ingame_role || null;               // optional display
-  const category = row.current_rank_category || 'Member'; // Enlisted/Warrant/Officer
+  // Derive values
+  const emailFallback  = session.user?.email || '';
+  const handleFallback = emailFallback.split('@')[0] || 'Unknown';
 
-  // Fill Member card UI
+  const handle   = row.handle || row.display_name || handleFallback;
+  const rankName = row.current_rank_name || 'Unranked';
+  const rankCode = row.current_rank_code || '';
+  const rankText = rankCode ? `${rankName} (${rankCode})` : rankName;
+
+  const category = row.current_rank_category || 'Member'; // Enlisted/Warrant/Officer
+  const role     = row.ingame_role || null;               // optional: tooltip only
+
+  // Rank image: prefer view URL; fallback to Storage by code
+  const bucketName = 'Ranks'; // case-sensitive
+  const storageUrl = rankCode ? sb.storage.from(bucketName).getPublicUrl(`${rankCode}.png`).data.publicUrl : '';
+  const rankImg    = row.current_rank_image_url || storageUrl;
+
+  // Fill UI
   out('#mName', handle);
   out('#mRank', rankText);
-  out('#mRole', category);                                // ✅ show category
-  if (role) {                                            // optional: tooltip with in-game role
-    const b = document.querySelector('#mRole');
-    if (b) b.title = `In-game role: ${role}`;
-  }
+  out('#mRole', category);
+  if (role) { const b = $('#mRole'); if (b) b.title = `In-game role: ${role}`; }
 
-  const imgEl = document.getElementById('mRankImg');
+  const imgEl = $('#mRankImg');
   if (imgEl) {
     if (rankImg) {
       imgEl.src = rankImg;
@@ -389,7 +386,5 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
   }
 })();
 </script>
-
-
 </body>
 </html>
