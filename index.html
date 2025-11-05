@@ -321,6 +321,7 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
 </script>
 
 <!-- Supabase Auth + Profile/Rank fill -->
+<!-- Supabase Auth + Profile/Rank fill (via v_profiles_detailed) -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
@@ -332,69 +333,42 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
   const email = session.user.email || '';
   const el = id => document.getElementById(id);
 
-  // Load profile (includes rank_code)
+  // === Fetch profile directly from unified view ===
   let profile = null;
   try {
     const { data, error } = await sb
-      .from('profiles')
-      .select('full_name, rank_code, role')
-      .eq('id', uid)
+      .from('v_profiles_detailed')
+      .select('*')
+      .eq('user_id', uid)
       .single();
     if (error) throw error;
     profile = data;
   } catch (e) {
-    console.warn('profiles load:', e.message);
-  }
-
-  // === NEW: Pull the RANK NAME directly ===
-  let rankName = 'Unranked', paygrade = '', rankImg = '';
-  if (profile?.rank_code) {
-    try {
-      const { data, error } = await sb
-        .from('ranks')
-        .select('name, paygrade, image_url')
-        .eq('code', profile.rank_code)
-        .maybeSingle();
-      if (!error && data) {
-        rankName = data.name || rankName;
-        paygrade = data.paygrade || '';
-        rankImg = data.image_url || '';
-      }
-    } catch (e) {
-      console.warn('ranks load:', e.message);
-    }
-  }
-
-  // Try to get a user role (if table exists)
-  let role = profile?.role || 'Member';
-  try {
-    const { data, error } = await sb
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', uid)
-      .maybeSingle();
-    if (!error && data?.role) role = data.role;
-  } catch (e) {
-    // ignore if table not present
+    console.warn('v_profiles_detailed load error:', e.message);
   }
 
   // === Fill Member Card ===
-  el('mName').textContent =
-    profile?.full_name ||
-    session.user.user_metadata?.full_name ||
-    (email.split('@')[0] || 'Unknown');
-  el('mEmail').textContent = email;
-  el('mRole').textContent = role;
+  el('mName').textContent = profile?.handle || 'Unknown';
+  el('mEmail').textContent = profile?.display_name || email;
+  el('mRole').textContent = profile?.ingame_role || 'Member';
+  el('mRank').textContent = profile?.current_rank_name || 'Unranked';
 
-  el('mRank').textContent = rankName;
-  if (paygrade) {
-    const pg = el('mPaygrade');
-    pg.style.display = '';
-    pg.textContent = paygrade;
+  // === Optional: paygrade, missions, image ===
+  if (profile?.current_rank_code) {
+    const pay = profile.current_rank_code.replace('ENS-', 'Ensign ');
+    el('mRank').textContent = `${profile.current_rank_name || 'Unranked'} (${pay})`;
   }
-  if (rankImg) {
-    el('mRankImg').src = rankImg;
-    el('mRankImg').alt = rankName;
+
+  if (profile?.current_rank_image_url) {
+    const img = el('mRankImg');
+    img.src = profile.current_rank_image_url;
+    img.alt = profile.current_rank_name || 'Rank';
+    img.style.display = 'block';
+  }
+
+  if (profile?.missions_attended != null) {
+    const m = document.getElementById('mMissions');
+    if (m) m.textContent = profile.missions_attended;
   }
 })();
 </script>
