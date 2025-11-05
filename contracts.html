@@ -3,13 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JMBN Contracts Manifest</title>
+<title>JMBN Contracts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+
 <style>
 :root{
   --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
@@ -27,18 +26,11 @@ body{
   margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* Header (stacked layout) */
-.brand{
-  display:flex;align-items:center;gap:10px;
-  margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)
-}
+/* Header + Nav (styles only; content injected from header.html) */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-
-/* Shiny nav (below header) */
-.nav{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px
-}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
   position:relative;display:inline-flex;align-items:center;justify-content:center;
@@ -47,23 +39,16 @@ body{
   color:var(--accent);text-decoration:none;font-weight:700;
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
   transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
-  overflow:hidden; /* keep sweep inside pill */
+  overflow:hidden;
 }
-.nav-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
-  background:linear-gradient(180deg,#1a1a1a,#0a0a0a)
-}
-.nav-btn.active{
-  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
-  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)
-}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
 .nav-btn.active::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
   border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
 }
-@keyframes shine{0%{transform:translateX(-120%)}35%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
 
 /* Panels + controls */
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
@@ -74,17 +59,13 @@ button:hover{background:var(--accent);color:#000}
 input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
 textarea{resize:vertical}
 
-/* Labels for clean stacked fields */
+/* Labels */
 label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
 
 /* KPI cards */
 .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 6px}
 @media(max-width:880px){.kpis{grid-template-columns:1fr}}
-.kpi{
-  background:linear-gradient(180deg,#0b0b0b,#080808);
-  border:1px solid var(--border);border-radius:12px;padding:12px;
-  box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)
-}
+.kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)}
 .kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
 .kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
 .kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
@@ -108,19 +89,23 @@ tr:hover{background:rgba(214,180,76,.08)}
 </style>
 </head>
 <body>
-  <!-- Stacked header -->
-  <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
-    <h1>JMBN Contracts</h1>
-  </div>
 
-  <nav class="nav">
-    <a class="nav-btn" href="index.html">Manifest</a>
-    <a class="nav-btn" href="hangar.html">Hangar</a>
-    <a class="nav-btn" href="components.html">Components</a>
-    <a class="nav-btn" href="contracts.html">Contracts</a>
-    <a class="nav-btn" href="mission-log.html">Mission Log</a>
-  </nav>
+  <!-- 🔁 Shared header injected here -->
+  <div id="header-container"></div>
+  <script>
+    // Load shared header and highlight the active tab
+    fetch('header.html')
+      .then(r=>r.text())
+      .then(html=>{
+        document.getElementById('header-container').innerHTML = html;
+        const here = location.pathname.split('/').pop() || 'contracts.html';
+        document.querySelectorAll('.nav-btn').forEach(a=>{
+          if(a.getAttribute('href')===here){
+            a.classList.add('active'); a.setAttribute('aria-current','page');
+          }
+        });
+      });
+  </script>
 
   <div class="panel">
     <div class="controls">
@@ -139,7 +124,7 @@ tr:hover{background:rgba(214,180,76,.08)}
       <button id="importJSON" class="btn-primary">Import JSON</button>
     </div>
 
-    <!-- KPI CARDS -->
+    <!-- KPI -->
     <div class="kpis">
       <div class="kpi">
         <div class="kpi-title">Total Contracts</div>
@@ -179,7 +164,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- Modal: Add contract -->
+  <!-- Modal: Add -->
   <div class="modal-bg" id="modal-bg">
     <div class="modal">
       <h2>Add Contract</h2>
@@ -206,7 +191,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- Modal: Edit contract -->
+  <!-- Modal: Edit -->
   <div class="modal-bg" id="edit-modal-bg">
     <div class="modal">
       <h2>Edit Contract</h2>
@@ -231,133 +216,106 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-<!-- 🔐 AUTH SECTION -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-<!-- END AUTH SECTION -->
-      
-<script>
-/* ===== Active nav highlight ===== */
-(function(){
-  const here=location.pathname.split('/').pop()||'contracts.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){
-      a.classList.add('active');
-      a.setAttribute('aria-current','page');
-    }
-  });
-})();
+  <!-- 🔐 Auth -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
 
+<script>
 /* ===== Storage + helpers ===== */
 const STORE='jmbn-contracts';
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const uid=()=> 'CT-'+Math.random().toString(36).slice(2,8);
 function esc(s=''){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
-function parseAUEC(val){
-  if(val==null) return 0;
-  const n=Number(String(val).replace(/[^\d.-]/g,''));
-  return Number.isFinite(n)? n : 0;
-}
+function parseAUEC(val){ if(val==null) return 0; const n=Number(String(val).replace(/[^\d.-]/g,'')); return Number.isFinite(n)? n : 0; }
 function fmt(n){ try{ return Number(n).toLocaleString('en-US'); }catch{ return String(n); } }
 
 /* ===== DATA LISTS ===== */
 const originList = `Ambitious Dream Station (CRU-L1), Anderson (HDMS-Anderson), ARC-L1 Wide Forest Station, ARC-L2 Lively Pathway Station, ARC-L3 Modern Express Station, ARC-L4 Faint Glen Station, ARC-L5 Yellow Core Station, ArcCorp Mining Area 045, ArcCorp Mining Area 048, ArcCorp Mining Area 056, ArcCorp Mining Area 061, ArcCorp Mining Area 141, ArcCorp Mining Area 157, Area18 (Riker Memorial Spaceport), Arid Reach, Ashland, Astor’s Clearing, Baijini Point, Beautiful Glen Station (CRU-L5), Benson Mining Outpost, Blackrock Exchange, Bloodshot Ridge, Bountiful Harvest Hydroponics, Brio’s Breaker Yard, Bud’s Growery, Bueno Ravine, Canard View, Casillo (HDPC-Casillo), Chawla’s Beach, Checkmate, Covalex Distribution Centre S1DC06, Covalex Distribution Centre S4DC05, CRU-L1 Ambitious Dream Station, CRU-L4 Shallow Fields Station, CRU-L5 Beautiful Glen Station, Cry-Astro Processing Plant 19-02, Cry-Astro Processing Plant 34-12, Cutter’s Rig, Deakins Research Outpost, Devlin Scrap & Salvage, Dudley & Daughters, Dunboro, Dupree Industrial Manufacturing Facility, Endgame, Endless Odyssey Station (MIC-L3), Everus Harbor, Faithful Dream Station (HUR-L2), Faint Glen Station (ARC-L4), Fallow Field, Farnesway (HDPC-Farnesway), Finn’s Folley, Frostbite, Frigid Knot, Gallete Family Farms, Gaslight, Goner’s Deal, Golden Riviera (The Golden Riviera), Grim HEX, Greycat Stanton I Production Complex-B, Greycat Stanton IV Production Complex A, Hadley (HDMS-Hadley), Harper’s Point, Hickes Research Outpost, High Course Station (HUR-L5), Humboldt Mines, HUR-L1 Green Glade Station, HUR-L2 Faithful Dream Station, HUR-L3 Thundering Express Station, HUR-L4 Melodic Fields Station, HUR-L5 High Course Station, Jackson’s Swap, Jumptown, Kabir’s Outpost, Kudre Ore, Last Landings, Lathan (HDMS-Lathan), Lively Pathway Station (ARC-L2), Lorville (Teasa Spaceport), Long Forest Station (MIC-L2), Loveridge Mineral Reserve, Ludlow, Magnus Gateway, Maker’s Point, Megumi Refueling, Melodic Fields Station (HUR-L4), MIC-L1 Shallow Frontier Station, MIC-L2 Long Forest Station, MIC-L3 Endless Odyssey Station, MIC-L4 Red Crossroads Station, MIC-L5 Modern Icarus Station, Modern Express Station (ARC-L3), Modern Icarus Station (MIC-L5), Moreland Hills, Necropolis (The Necropolis), New Babbage Interstellar Spaceport, Norgaard (HDMS-Norgaard), NT-999-XX, Nuen Waste Management, Oparei (HDMS-Oparei), Orbituary, Orinth (Reclamation & Disposal Orinth), Orison (August Dunlow Spaceport), Orphanage (The Orphanage), Outpost 54, Paradise Cove, Patch City, Pickers Field, Pinewood (HDMS-Pinewood), Private Property (PRIVATE PROPERTY), Pyro Gateway, Rappel, Raven’s Roost, Razor’s Edge, Rayari Anvik Research Outpost, Rayari Cantwell Research Outpost, Rayari Deltana Research Outpost, Rayari Kaltag Research Outpost, Rayari McGrath Research Outpost, Rat’s Nest, Riker Memorial Spaceport (Area18), Rod’s Fuel ’N Supplies, Rough Landing, Ruin Station, Rustville, Ryder (HDMS-Ryder), Sacren’s Plot, Sakura Sun Goldenrod Workcenter, Sakura Sun Magnolia Workcenter, Samson & Son’s Salvage Center, SCD-1 (Shubin Mining Facility SCD-1), Seer’s Canyon, Seraphim Station, Shady Glen Farms, Shallow Fields Station (CRU-L4), Shallow Frontier Station (MIC-L1), Shepherd’s Rest, Shubin Mining Facility SAL-2, Shubin Mining Facility SAL-5, Shubin Mining Facility SCD-1, Shubin Mining Facility SM0-10, Shubin Mining Facility SM0-13, Shubin Mining Facility SM0-18, Shubin Mining Facility SM0-22, Shubin Mining Facility SMCa-6, Shubin Mining Facility SMCa-8, S4DC05 (Covalex Distribution Centre S4DC05), S4LD01 (Microtech Logistics Depot S4LD01), S4LD13 (Microtech Logistics Depot S4LD13), Stanhope (HDMS-Stanhope), Starlight Service Station, Sunset Mesa, Teasa Spaceport (Lorville), Terra Gateway, Terra Mills HydroFarm, Thedus (HDMS-Thedus), Thundering Express Station (HUR-L3), Tram & Myers Mining, Port Tressler, Weeping Cove, Wide Forest Station (ARC-L1), Woodruff (HDMS-Woodruff), XenoThreat Security Station, Yellow Core Station (ARC-L5), Zephyr`.split(',');
 const commodities = `AcryliPlex Composite, Agricium, Agricium (Ore), Agricultural Supplies, Altruciatoxin, Aluminum, Aluminum (Ore), Aluminium, Aluminium (Ore), Amioshi Plague, Ammonia, Aphorite, Apoxygenite, Argon, Astatine, Atlasium, Beryl, Beryl (Raw), Bexalite, Bexalite (Raw), Bioplastic, Blue Bilva, Borase, Borase (Ore), CK13-GID Seed Blend, Carbon, Carbon Silk, Chlorine, Cobalt, CompBoard, Construction Materials, Copper, Copper (Ore), Corundum, Corundum (Raw), DCSR2, Decari Pod, Degnous Root, Diamond, Diamond (Raw), Diamond Laminate, Diluthermex, Distilled Spirits, Dolivine, Dopple, Dymantium, DynaFlex, E-Tam, Elespo, Fireworks, Fluorine, Fotia Seedpod, Freeze, Fresh Food, Gasping Weevil Eggs, Glow, Gold, Gold (Ore), Golden Medmon, HLX99 Hyperprocessors, Hadanite, Heart of the woods, Helium, Hephaestanite, Hephaestanite (Ore), HexaPolyMesh Coating, Human Food Bars, Hydrogen, Hydrogen Fuel, Inert Materials, Iodine, Iron, Iron (Ore), Janalite, Jumping Limes, Kopion Horn, Laranite, Laranite (Ore), Lastaprene, Luminalia Gift, Lunes, Lycara, Mala, Marok Gem, Maze, MedPens, Medical Supplies, Mercury, Methane, Neograph, Neon, Nitrogen, Omnapoxy, Osoian Hides, Oxypen, Oza, Partillium, Pingala Seeds, Pitambu, Potassium, Pressurized Ice, Processed Food, Prota, Quantainium, Quantainium (Raw), Quantum Fuel, Quartz, Quartz (Raw), RS1 Odyssey Spacesuits, Ranta Dung, Raw Ice, Recycled Material Composite, Redfin Energy Modulators, Revenant Pod, Revenant Tree Pollen, Riccite, SLAM, Sarilus, Scrap, Ship Ammunition, Silicon, Silnex, Souvenirs, Steel, Stileron, Stims, Stone Bug Shell, Sunset Berries, Taranite, Taranite (Raw), Thermal Foam, Thrust, Tin, Titanium, Titanium (Ore), Tritium, Tungsten, Tungsten (Ore), Uncut SLAM, Waste, WiDoW, XaPyen, ZetaProlanide`.split(',');
 
-/* helper to populate selects */
-function populateSelect(selectEl, list){
-  if(!selectEl) return;
-  selectEl.innerHTML = '';
-  const opt0 = document.createElement('option');
-  opt0.value = ''; opt0.textContent = '-- select --';
-  selectEl.appendChild(opt0);
+/* Populate selects */
+function populateSelect(sel, list){
+  if(!sel) return;
+  sel.innerHTML = '';
+  const o0 = document.createElement('option');
+  o0.value = ''; o0.textContent = '-- select --';
+  sel.appendChild(o0);
   list.forEach(v=>{
-    const t = (v||'').trim();
-    if(t){
-      const o = document.createElement('option');
-      o.value = t; o.textContent = t;
-      selectEl.appendChild(o);
-    }
+    const t=(v||'').trim(); if(!t) return;
+    const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o);
   });
 }
 
 let contracts=[];
 
-/* ===== Load + Save ===== */
+/* Load + Save */
 function load(){
   const raw=localStorage.getItem(STORE);
   contracts = raw ? JSON.parse(raw) : [];
-  // Back-compat safeguard for new fields
-  contracts.forEach(c=>{
-    if(typeof c.commodity==='undefined') c.commodity='';
-    if(typeof c.type==='undefined') c.type='';
-  });
+  contracts.forEach(c=>{ if(c.commodity==null)c.commodity=''; if(c.type==null)c.type=''; });
 
-  // Populate dropdowns in Add modal
-  populateSelect($('#cCommodity'), commodities);
-  populateSelect($('#cOrigin'), originList);
-  populateSelect($('#cDest'), originList);
+  populateSelect(document.getElementById('cCommodity'), commodities);
+  populateSelect(document.getElementById('cOrigin'), originList);
+  populateSelect(document.getElementById('cDest'), originList);
 
   render();
 }
 function save(){ localStorage.setItem(STORE, JSON.stringify(contracts)); }
-$('#saveBtn').onclick=save;
-$('#resetBtn').onclick=()=>{ if(confirm('Clear all contracts?')){ contracts=[]; save(); render(); } };
+document.getElementById('saveBtn').onclick=save;
+document.getElementById('resetBtn').onclick=()=>{ if(confirm('Clear all contracts?')){ contracts=[]; save(); render(); } };
 
-/* ===== Add Modal ===== */
-const addBG=$('#modal-bg');
-$('#addBtn').onclick=()=>{ addBG.style.display='flex'; };
-$('#cancelModal').onclick=()=>{ addBG.style.display='none'; clearAddForm(); };
-$('#saveModal').onclick=()=>{
-  const name=$('#cName').value.trim(); if(!name){ alert('Name required'); return; }
+/* Add Modal */
+const addBG=document.getElementById('modal-bg');
+document.getElementById('addBtn').onclick=()=>{ addBG.style.display='flex'; };
+document.getElementById('cancelModal').onclick=()=>{ addBG.style.display='none'; clearAddForm(); };
+document.getElementById('saveModal').onclick=()=>{
+  const name=document.getElementById('cName').value.trim(); if(!name){ alert('Name required'); return; }
   const now=new Date().toLocaleString();
   const obj={
     id:uid(), time:now, name,
-    commodity: $('#cCommodity').value.trim(),
-    type: $('#cType').value,
-    origin: $('#cOrigin').value.trim(),
-    destination: $('#cDest').value.trim(),
-    reward: $('#cReward').value.trim(),
-    status: $('#cStatus').value,
-    notes: $('#cNotes').value.trim()
+    commodity: document.getElementById('cCommodity').value.trim(),
+    type: document.getElementById('cType').value,
+    origin: document.getElementById('cOrigin').value.trim(),
+    destination: document.getElementById('cDest').value.trim(),
+    reward: document.getElementById('cReward').value.trim(),
+    status: document.getElementById('cStatus').value,
+    notes: document.getElementById('cNotes').value.trim()
   };
   contracts.push(obj);
   save(); render(); addBG.style.display='none'; clearAddForm();
 };
 function clearAddForm(){
-  ['cName','cReward','cNotes'].forEach(id=>$('#'+id).value='');
-  ['cCommodity','cOrigin','cDest','cType','cStatus'].forEach(id=>$('#'+id).selectedIndex=0);
+  ['cName','cReward','cNotes'].forEach(id=>document.getElementById(id).value='');
+  ['cCommodity','cOrigin','cDest','cType','cStatus'].forEach(id=>document.getElementById(id).selectedIndex=0);
 }
 
-/* ===== KPI Update ===== */
+/* KPIs */
 function updateKPIs(arr){
   const count = arr.length;
   let total = 0;
   for(const c of arr){ total += parseAUEC(c.reward); }
   const avg = count ? total / count : 0;
-  $('#kpiCount').textContent = fmt(count);
-  $('#kpiTotal').textContent = fmt(total);
-  $('#kpiAvg').textContent = fmt(Math.round(avg));
+  document.getElementById('kpiCount').textContent = fmt(count);
+  document.getElementById('kpiTotal').textContent = fmt(total);
+  document.getElementById('kpiAvg').textContent   = fmt(Math.round(avg));
 }
 
-/* ===== Filtering + Render ===== */
+/* Filter + Render */
 function getFiltered(){
-  const q=($('#search').value||'').toLowerCase();
-  const tf=($('#typeFilter').value||'').toLowerCase();
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const tf=(document.getElementById('typeFilter').value||'').toLowerCase();
   let arr=contracts.slice();
   if(tf) arr=arr.filter(x=>(x.type||'').toLowerCase()===tf);
   if(q) arr=arr.filter(x=>
-    `${x.name} ${x.commodity||''} ${x.type||''} ${x.origin||''} ${x.destination||''} ${x.notes||''}`
-      .toLowerCase().includes(q)
+    `${x.name} ${x.commodity||''} ${x.type||''} ${x.origin||''} ${x.destination||''} ${x.notes||''}`.toLowerCase().includes(q)
   );
   return arr;
 }
 function render(){
   const arr=getFiltered();
   updateKPIs(arr);
-
-  $('#rows').innerHTML=arr.map(c=>`
+  document.getElementById('rows').innerHTML=arr.map(c=>`
     <tr>
       <td>${esc(c.time||'-')}</td>
       <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
@@ -374,62 +332,57 @@ function render(){
       </td>
     </tr>`).join('');
 
-  $$('#rows button[data-act]').forEach(b=>{
+  Array.from(document.querySelectorAll('#rows button[data-act]')).forEach(b=>{
     const id=b.dataset.id;
     if(b.dataset.act==='edit') b.onclick=()=>edit(id);
     if(b.dataset.act==='del')  b.onclick=()=>{ if(confirm('Delete this contract?')){ contracts=contracts.filter(x=>x.id!==id); save(); render(); } };
   });
 }
-$('#search').addEventListener('input', render);
-$('#typeFilter').addEventListener('input', render);
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('typeFilter').addEventListener('input', render);
 
-/* ===== Edit (form modal) ===== */
-const editBG=$('#edit-modal-bg');
-$('#cancelEdit').onclick=()=>{ editBG.style.display='none'; };
+/* Edit modal */
+const editBG=document.getElementById('edit-modal-bg');
+document.getElementById('cancelEdit').onclick=()=>{ editBG.style.display='none'; };
 
 function edit(id){
   const c=contracts.find(x=>x.id===id); if(!c) return;
+  populateSelect(document.getElementById('eCommodity'), commodities);
+  populateSelect(document.getElementById('eOrigin'), originList);
+  populateSelect(document.getElementById('eDest'), originList);
 
-  // ensure dropdowns are populated
-  populateSelect($('#eCommodity'), commodities);
-  populateSelect($('#eOrigin'), originList);
-  populateSelect($('#eDest'), originList);
+  document.getElementById('eName').value = c.name||'';
+  document.getElementById('eCommodity').value = c.commodity||'';
+  document.getElementById('eType').value = c.type||'';
+  document.getElementById('eOrigin').value = c.origin||'';
+  document.getElementById('eDest').value = c.destination||'';
+  document.getElementById('eReward').value = c.reward||'';
+  document.getElementById('eStatus').value = c.status||'Available';
+  document.getElementById('eNotes').value = c.notes||'';
 
-  // set values
-  $('#eName').value = c.name||'';
-  $('#eCommodity').value = c.commodity||'';
-  $('#eType').value = c.type||'';
-  $('#eOrigin').value = c.origin||'';
-  $('#eDest').value = c.destination||'';
-  $('#eReward').value = c.reward||'';
-  $('#eStatus').value = c.status||'Available';
-  $('#eNotes').value = c.notes||'';
-
-  // open
   editBG.style.display='flex';
 
-  // save handler
-  $('#saveEdit').onclick = () => {
-    c.name = $('#eName').value.trim();
-    c.commodity = $('#eCommodity').value.trim();
-    c.type = $('#eType').value;
-    c.origin = $('#eOrigin').value.trim();
-    c.destination = $('#eDest').value.trim();
-    c.reward = $('#eReward').value.trim();
-    c.status = $('#eStatus').value;
-    c.notes = $('#eNotes').value.trim();
+  document.getElementById('saveEdit').onclick = () => {
+    c.name = document.getElementById('eName').value.trim();
+    c.commodity = document.getElementById('eCommodity').value.trim();
+    c.type = document.getElementById('eType').value;
+    c.origin = document.getElementById('eOrigin').value.trim();
+    c.destination = document.getElementById('eDest').value.trim();
+    c.reward = document.getElementById('eReward').value.trim();
+    c.status = document.getElementById('eStatus').value;
+    c.notes = document.getElementById('eNotes').value.trim();
     save(); render(); editBG.style.display='none';
   };
 }
 
-/* ===== Export / Import ===== */
-$('#exportJSON').onclick=()=>{
+/* Export / Import */
+document.getElementById('exportJSON').onclick=()=>{
   const blob=new Blob([JSON.stringify(contracts,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='jmbn-contracts.json';a.click();
   URL.revokeObjectURL(url);
 };
-$('#importJSON').onclick=()=>{
+document.getElementById('importJSON').onclick=()=>{
   const inp=document.createElement('input');inp.type='file';inp.accept='application/json';
   inp.onchange=()=>{
     const f=inp.files?.[0];if(!f)return;
@@ -438,14 +391,10 @@ $('#importJSON').onclick=()=>{
       try{
         const arr=JSON.parse(r.result);
         if(!Array.isArray(arr)) throw new Error('Invalid JSON');
-        arr.forEach(x=>{ if(!x.id) x.id=uid(); if(typeof x.commodity==='undefined') x.commodity=''; if(typeof x.type==='undefined') x.type=''; });
+        arr.forEach(x=>{ if(!x.id) x.id=uid(); if(x.commodity==null) x.commodity=''; if(x.type==null) x.type=''; });
         if(confirm('Merge with existing? Click Cancel to REPLACE.')){
-          const map=new Map(contracts.map(x=>[x.id,x]));
-          arr.forEach(x=>map.set(x.id,x));
-          contracts=[...map.values()];
-        }else{
-          contracts=arr;
-        }
+          const map=new Map(contracts.map(x=>[x.id,x])); arr.forEach(x=>map.set(x.id,x)); contracts=[...map.values()];
+        }else{ contracts=arr; }
         save(); render(); alert('Import complete');
       }catch(e){ alert('Import failed: '+e.message); }
     };
@@ -454,11 +403,11 @@ $('#importJSON').onclick=()=>{
   inp.click();
 };
 
-/* ===== Init ===== */
+/* Init (Auth gate) */
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await requireAuth();   // redirects to auth.html if not logged in
-  if (!session) return;                  // stop loading if no session
-  load();                                // continue loading contracts if logged in
+  if (!session) return;
+  load();
 });
 </script>
 </body>
