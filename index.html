@@ -201,51 +201,54 @@ body::after{
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
+<script>
 (async () => {
-  // Require login
-  const session = await requireAuth();
+  const $  = sel => document.querySelector(sel);   // ✅ accepts '#mName'
+  const out = (sel, val) => { const el=$(sel); if(el) el.textContent = val ?? ''; };
+
+  // session + fallback email
+  const session = (typeof requireAuth==='function') ? await requireAuth() : null;
   if (!session) return;
+  const emailFallback = session.user?.email || '';
 
-  const uid   = session.user.id;
-  const emailFallback = session.user.email || '';
-  const $ = id => document.getElementById(id);
-
-  // Pull a single row from v_profiles_detailed for this user
+  // fetch from view
   let row = {};
   try {
     const { data, error } = await sb
       .from('v_profiles_detailed')
-      .select('*')
-      .eq('user_id', uid)
+      .select('user_id,handle,display_name,current_rank_name,current_rank_code,current_rank_image_url,ingame_role,missions_attended')
+      .eq('user_id', session.user.id)
       .single();
     if (error) throw error;
     row = data || {};
   } catch (e) {
-    console.warn('v_profiles_detailed error:', e.message);
+    console.warn('v_profiles_detailed_error:', e.message);
   }
 
-  // Derive values
-  const handle    = row.handle || emailFallback.split('@')[0] || 'Unknown';
-  const email     = row.display_name || emailFallback;
-  const role      = row.ingame_role || 'Member';
+  // derive values
+  const handle   = row.handle || (emailFallback.split('@')[0] || 'Unknown');
+  const email    = row.display_name || emailFallback;
+  const role     = row.ingame_role || 'Member';
 
-  const rankName  = row.current_rank_name || 'Unranked';
-  const rankCode  = row.current_rank_code || '';           // e.g. ENS-O1
-  const paygrade  = rankCode.split('-')[1] || '';          // O1
-  const rankText  = paygrade ? `${rankName} (${paygrade})` : rankName;
+  const rankName = row.current_rank_name || 'Unranked';
+  const rankCode = row.current_rank_code || '';         // e.g. 'ENS-O1'
+  const paygrade = (rankCode.split('-')[1] || '');      // 'O1'
+  const rankText = paygrade ? `${rankName}-${paygrade}` : rankName;
 
-  const rankImg   = row.current_rank_image_url || '';
-  const missions  = Number.isFinite(row.missions_attended) ? row.missions_attended : 0;
+  const rankImg  = row.current_rank_image_url || '';
+  const missions = Number.isFinite(row.missions_attended) ? row.missions_attended : 0;
 
-  // Fill UI
-  $('#mName').textContent      = handle;
-  $('#mEmail').textContent     = email;
-  $('#mRole').textContent      = role;
-  $('#mRank').textContent      = rankText;
-  $('#mMissions').textContent  = `Missions: ${missions}`;
+  // fill UI  ✅ use '=' (not '|=')
+  out('#mName',  handle);
+  out('#mEmail', email);
+  out('#mRole',  role);
+  out('#mRank',  rankText);
+  out('#mMissions', `Missions: ${missions}`);
 
-  const img = $('#mRankImg');
-  if (rankImg) { img.src = rankImg; img.alt = rankName; img.style.display='block'; }
+  if (rankImg) {
+    const img = $('#mRankImg');
+    if (img) { img.src = rankImg; img.alt = rankText; img.style.display = 'block'; }
+  }
 })();
 </script>
 </body>
