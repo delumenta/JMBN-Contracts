@@ -351,6 +351,7 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
         current_rank_image_url,
         ingame_role,
         missions_attended
+        current_rank_category
       `)
       .eq('user_id', session.user.id)
       .maybeSingle();
@@ -375,6 +376,8 @@ skip.onclick=finishBoot;if(sessionStorage.getItem('seenBoot')!=='1'){runBoot();}
     ? sb.storage.from(bucketName).getPublicUrl(`${code}.png`).data.publicUrl
     : '';
   const rankImg = row.current_rank_image_url || imgFromBucket(rankCode);
+  const category = row.current_rank_category || 'Member'; // fallback
+out('#mRole', category);
 
   // Fill Member card UI
   out('#mName',  handle);
