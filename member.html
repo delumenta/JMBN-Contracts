@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Member Roster</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
+
+<style>
+:root{
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
+}
+*{box-sizing:border-box}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text); font-family:'Play',system-ui,sans-serif;
+  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
+}
+/* Header */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+/* Nav */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
+/* Panel & table */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+input[type="search"]{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);min-width:260px}
+.badge{border:1px solid var(--border);padding:4px 8px;border-radius:999px}
+.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
+th{color:var(--accent);background:#080808;font-weight:500}
+tr:nth-child(even){background:#111}
+tr:hover{background:rgba(214,180,76,.08)}
+.name{font-weight:700}
+/* Modal */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:600px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
+.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+.modal .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.rankCard{display:flex;gap:12px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:10px;background:#0f0f0f}
+.rankCard img{width:58px;height:58px;object-fit:contain;border:1px solid var(--border);border-radius:10px;background:#111}
+.meta{font-size:13px;color:var(--muted)}
+.meta b{color:var(--accent)}
+.btn{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play'}
+.btn:hover{background:var(--accent);color:#000}
+</style>
+</head>
+<body>
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
+    <h1>JMBN Member Roster</h1>
+  </div>
+
+  <nav class="nav">
+    <a class="nav-btn" href="index.html">Manifest</a>
+    <a class="nav-btn" href="hangar.html">Hangar</a>
+    <a class="nav-btn" href="components.html">Components</a>
+    <a class="nav-btn" href="contracts.html">Contracts</a>
+    <a class="nav-btn" href="mission-log.html">Mission Log</a>
+    <a class="nav-btn" href="member.html">Member</a>
+  </nav>
+
+  <div class="panel">
+    <div class="controls">
+      <input id="q" type="search" placeholder="Search handle or rank name…">
+      <span id="count" class="badge">0 members</span>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:45%">Handle</th>
+            <th style="width:35%">Current Rank</th>
+            <th style="width:20%"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="3" style="padding:10px;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="meta" style="padding-top:8px">Attendance counts only missions with status <b>Success / Fail / Abort</b>.</div>
+  </div>
+
+  <!-- Modal -->
+  <div id="viewMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h3 id="viewTitle" style="margin-right:auto">Member</h3>
+        <button class="btn" onclick="closeView()">Close</button>
+      </div>
+
+      <div class="row rankCard">
+        <img id="rankImg" alt="Rank">
+        <div>
+          <div class="meta"><b>Handle:</b> <span id="vHandle"></span></div>
+          <div class="meta"><b>Current Rank:</b> <span id="vRankName"></span> <span id="vRankCode" class="meta"></span></div>
+          <div class="meta"><b>In-game Role:</b> <span id="vRole"></span></div>
+          <div class="meta"><b>Missions attended:</b> <span id="vAttended"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase & shared auth -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
+
+<script>
+/* Active nav */
+(function(){
+  const here = location.pathname.split('/').pop() || 'member.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
+  });
+})();
+
+/* Helpers */
+const $ = s => document.querySelector(s);
+const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+
+let sb=null, session=null;
+let ROWS = [];         // composed rows with rank/role hydrated
+let RANKS = new Map(); // id -> rank
+let ROLES = new Map(); // id -> role
+
+function rankPublicUrlFromCode(code){
+  if(!code) return '';
+  const base = (sb && (sb.supabaseUrl || sb.url || sb._supabaseUrl)) || '';
+  return `${base}/storage/v1/object/public/rank/${encodeURIComponent(code)}.png`;
+}
+
+/* Render */
+const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
+
+function render(rows){
+  if(!rows?.length){
+    tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--muted)">No members found</td></tr>`;
+    countEl.textContent = '0 members';
+    return;
+  }
+  tbody.innerHTML = rows.map(r=>{
+    const handle = r.handle || r.display_name || r.user_id.slice(0,8);
+    const rankName = r.rank?.name || '(unranked)';
+    return `
+      <tr>
+        <td class="name">${esc(handle)}</td>
+        <td>${esc(rankName)}</td>
+        <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
+      </tr>`;
+  }).join('');
+  countEl.textContent = `${rows.length} member${rows.length===1?'':'s'}`;
+}
+
+function filterRows(){
+  const term = (q.value||'').toLowerCase().trim();
+  if(!term) return ROWS;
+  return ROWS.filter(r=>{
+    const h = (r.handle || r.display_name || '').toLowerCase();
+    const rn = (r.rank?.name || '').toLowerCase();
+    const rc = (r.rank?.code || r.rank_code || '').toLowerCase();
+    return h.includes(term) || rn.includes(term) || rc.includes(term);
+  });
+}
+
+/* Modal */
+function closeView(){ $('#viewMask').style.display = 'none'; }
+window.closeView = closeView;
+
+function viewMember(userId){
+  const r = ROWS.find(x=>x.user_id===userId);
+  if(!r) return;
+  const handle = r.handle || r.display_name || r.user_id.slice(0,8);
+  const rank = r.rank || {};
+  const role = r.role || {};
+  const attended = r.missions_attended_final ?? r.missions_attended ?? r.misions_attended ?? 0;
+
+  const img = r.rank_image_url || rank.image_url || rankPublicUrlFromCode(r.rank_code || rank.code);
+  $('#viewTitle').textContent = `Member — ${handle}`;
+  $('#vHandle').textContent = handle;
+  $('#vRankName').textContent = rank.name || '(unranked)';
+  $('#vRankCode').textContent = rank.code ? `(${rank.code})` : '';
+  $('#vRole').textContent = role.name || '—';
+  $('#vAttended').textContent = attended;
+  const imgEl = $('#rankImg');
+  imgEl.src = img || '';
+  imgEl.alt = rank.code || 'Rank';
+  imgEl.onerror = () => { imgEl.style.visibility='hidden'; };
+
+  $('#viewMask').style.display = 'flex';
+}
+window.viewMember = viewMember;
+
+/* Load */
+async function loadAll(){
+  // Profiles (no email column)
+  const { data: profiles, error: pErr } = await sb
+    .from('profiles')
+    .select('user_id,handle,display_name,current_rank_id,ingame_role_id,rank_code,rank_image_url,missions_attended,missions_attended_final,misions_attended')
+    .order('handle', { ascending: true });
+  if(pErr){ tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--bad)">Failed to load profiles: ${esc(pErr.message)}</td></tr>`; return; }
+
+  // Ranks map
+  const { data: ranks } = await sb.from('ranks').select('id,code,name,image_url');
+  (ranks||[]).forEach(r=>RANKS.set(r.id, r));
+
+  // In-game roles map (if table exists)
+  const { data: roles, error: roleErr } = await sb.from('ingame_roles').select('id,name');
+  if(!roleErr) (roles||[]).forEach(r=>ROLES.set(r.id, r));
+
+  // Compose rows
+  ROWS = (profiles||[]).map(p => ({
+    ...p,
+    rank: RANKS.get(p.current_rank_id) || null,
+    role: ROLES.get(p.ingame_role_id) || null
+  }));
+
+  render(filterRows());
+}
+
+q.addEventListener('input', ()=>render(filterRows()));
+
+/* Auth gate then load */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  loadAll();
+});
+</script>
+</body>
+</html>
