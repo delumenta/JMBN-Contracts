@@ -1,185 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Loadouts (SVG)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JMBN Loadouts (Callouts)</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
-
 <style>
-:root{
-  --bg:#000; --panel:#0b0b0b; --card:#0c0c0c;
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
-  --fs-base:14px; --fs-small:11px; --fs-h1:clamp(18px,2.1vw,22px);
-}
-*{box-sizing:border-box}
-html,body{background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;margin:0}
-.body-pad{padding:14px}
+:root{--bg:#000;--panel:#0b0b0b;--border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a}
+*{box-sizing:border-box} body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif}
+.wrap{max-width:1120px;margin:14px auto;padding:0 12px;display:grid;grid-template-columns:minmax(300px,720px) 1fr;gap:12px}
+.panel{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:12px}
+h1{margin:0 0 8px;color:var(--accent);font-size:22px}
+.note{color:var(--muted);font-size:12px}
 
-/* Brand + Nav (consistent with your suite) */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{margin:0;color:var(--accent);font-size:var(--fs-h1)}
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
-.nav-btn{
-  --ring:#d6b44c;
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
-}
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18)}
-.nav-btn.active{
-  color:#000;
-  background:
-    radial-gradient(120% 120% at 80% -20%, rgba(255,255,255,.32), rgba(255,255,255,0) 40%),
-    linear-gradient(180deg,#f2d675,#e7c760);
-}
+.gear{position:relative}
+svg{display:block;width:100%;height:auto}
 
-/* Layout */
-.wrap{display:grid;grid-template-columns:minmax(280px,640px) 340px;gap:12px}
-@media(max-width:1000px){.wrap{grid-template-columns:1fr}}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.18)}
+/* hotspots */
+.hot{fill:rgba(242,214,117,.10);stroke:#d6b44c;stroke-width:2;transition:fill .15s ease,filter .15s ease}
+.hot:hover{fill:rgba(242,214,117,.26);filter:drop-shadow(0 0 6px rgba(214,180,76,.6));cursor:pointer}
+.lbl{font-size:14px;fill:#f2d675}
 
-/* Gear figure */
-.gear-wrap{position:relative;max-width:640px;margin-inline:auto}
-.gear-wrap svg{display:block;width:100%;height:auto}
-
-/* Hotspots */
-.hot{fill:rgba(242,214,117,.10);stroke:#d6b44c;stroke-width:2;transition:fill .15s ease, filter .15s ease}
-.hot:hover{fill:rgba(242,214,117,.28);filter:drop-shadow(0 0 6px rgba(214,180,76,.6));cursor:pointer}
-.gear-label{font-size:14px;fill:#f2d675;text-shadow:0 1px 0 #000}
-
-/* Callouts (optional arrow pointers) */
-.call{
-  fill:none; stroke:#d6b44c; stroke-width:2;
-  marker-end:url(#arrowHead);
-  opacity:.8
-}
-
-/* Sidebar list */
-.slot{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  border:1px solid var(--border);background:var(--card);border-radius:10px;padding:8px 10px;margin-bottom:8px
-}
-.slot b{color:var(--accent)}
-.slot .pill{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
-.slot a{color:var(--accent);text-decoration:underline}
-
-/* Tools */
-.tools{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
-hr.sep{border:none;border-top:1px solid rgba(214,180,76,.35);margin:10px 0}
-.note{color:#c9b06a;font-size:12px}
-
-/* Debug guides */
-.guides .hot{fill:rgba(255,99,71,.18) !important;stroke:#ffcc88 !important}
-.guides .gear-label{fill:#ffdd99}
+/* arrow */
+.call{fill:none;stroke:#d6b44c;stroke-width:2.2;marker-end:url(#arrowHead)}
+/* guides toggle (if you want to see hit areas clearly) */
+.guides .hot{fill:rgba(255,99,71,.18) !important;stroke:#ffdd99 !important}
 </style>
 </head>
 <body>
-<div class="body-pad">
-  <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-    <h1>JMBN Loadouts (SVG Hotspots)</h1>
+<div class="wrap">
+  <!-- IMAGE + SVG -->
+  <div class="panel gear">
+    <h1>Loadout Callouts</h1>
+    <div class="note">Click Helmet or Armor. Toggle “Guides” if you want to adjust positions.</div>
+    <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:6px">
+      <input id="guides" type="checkbox"> Show guides
+    </label>
+
+    <svg viewBox="0 0 1000 1500" xmlns="http://www.w3.org/2000/svg" id="stage">
+      <defs>
+        <marker id="arrowHead" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L0,9 L9,4.5 z" fill="#d6b44c"/>
+        </marker>
+      </defs>
+
+      <!-- background image (use your hosted copy if Reddit blocks hotlink) -->
+      <image href="https://i.redd.it/21ngs91ahfqa1.jpg"
+             x="0" y="0" width="1000" height="1500" preserveAspectRatio="xMidYMid slice"/>
+
+      <!-- ===== HOTSPOTS (only Helmet + Armor are interactive) ===== -->
+
+      <!-- HELMET: nudged slightly up -->
+      <g class="hs" data-slot="helmet"
+         data-title="Helmet"
+         data-buy="Cousin Crows (Orison), Platinum Bay (CRU-L5)"
+         data-notes="Good visibility; stable comms."
+         data-x="505" data-y="215">
+        <circle class="hot" cx="505" cy="215" r="95"></circle>
+        <text class="lbl" x="505" y="200" text-anchor="middle">Helmet</text>
+      </g>
+
+      <!-- ARMOR (chest): nudged a bit lower/wider -->
+      <g class="hs" data-slot="armor"
+         data-title="Armor (Chest)"
+         data-buy="Cubby Blast (Area18), Omega Pro (New Babbage)"
+         data-notes="Balanced protection; easy to source."
+         data-x="505" data-y="450">
+        <rect class="hot" x="385" y="350" width="240" height="220" rx="18" ry="18"></rect>
+        <text class="lbl" x="505" y="338" text-anchor="middle">Armor</text>
+      </g>
+
+      <!-- Arrow (source point updates on click, target is card's left edge mid) -->
+      <path id="arrow" class="call" d="M505,215 C620,215 730,230 760,230" />
+      <!-- Info card lives inside SVG so arrows are easy -->
+      <foreignObject id="cardFO" x="760" y="150" width="230" height="220">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="background:#0c0c0c;border:1px solid #d6b44c;border-radius:12px;padding:12px;color:#f7f1d0;box-shadow:0 0 16px rgba(214,180,76,.18)">
+          <div id="cTitle" style="color:#f2d675;font-weight:800;margin-bottom:6px">Helmet</div>
+          <div style="font-size:12px;line-height:1.35">
+            <div style="margin:6px 0">
+              <span style="color:#c9b06a">Where to buy:</span>
+              <div id="cBuy" style="margin-top:2px">Cousin Crows (Orison), Platinum Bay (CRU-L5)</div>
+            </div>
+            <div style="margin:6px 0">
+              <span style="color:#c9b06a">Notes:</span>
+              <div id="cNotes" style="margin-top:2px">Good visibility; stable comms.</div>
+            </div>
+          </div>
+          <a id="cOpen" href="components.html?slot=helmet"
+             style="display:inline-block;margin-top:8px;padding:6px 10px;border:1px solid #d6b44c;border-radius:10px;text-decoration:none;background:linear-gradient(180deg,#f2d675,#e7c760);color:#000;font-weight:700">Open Components</a>
+        </div>
+      </foreignObject>
+    </svg>
   </div>
 
-  <nav class="nav">
-    <a class="nav-btn" href="index.html">Manifest</a>
-    <a class="nav-btn" href="hangar.html">Hangar</a>
-    <a class="nav-btn" href="components.html">Components</a>
-    <a class="nav-btn" href="contracts.html">Contracts</a>
-    <a class="nav-btn" href="mission-log.html">Mission Log</a>
-    <a class="nav-btn active" href="loadoutsv.html">Loadouts (SVG)</a>
-  </nav>
+  <!-- QUICK TEXT EDIT (optional) -->
+  <div class="panel">
+    <h1>Quick Edit</h1>
+    <div class="note">Update what to buy / where to buy for the selected part.</div>
+    <div style="display:grid;gap:8px;margin-top:10px">
+      <label>Title <input id="fTitle" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:#0a0a0a;color:var(--text)"></label>
+      <label>Where to buy <input id="fBuy" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:#0a0a0a;color:var(--text)"></label>
+      <label>Notes <textarea id="fNotes" rows="4" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:#0a0a0a;color:var(--text)"></textarea></label>
+      <button id="apply" style="padding:10px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);cursor:pointer">Apply to Card</button>
+    </div>
+  </div>
+</div>
 
-  <div class="wrap">
-    <!-- LEFT: Figure with SVG hotspots -->
-    <div class="panel">
-      <div class="tools">
-        <label class="toggle"><input type="checkbox" id="showGuides"> Show guides</label>
-        <span class="note">Tip: toggle guides to fine-tune hotspot positions.</span>
-      </div>
-      <div id="gearWrap" class="gear-wrap">
-        <!--
-          NOTE:
-          - I picked a working coordinate space of 1000×1500 to be safe.
-          - The hotspots below are placed for a centered, full-body portrait.
-          - If your image crops differently, toggle "Show guides" and nudge x/y/w/h.
-        -->
-        <svg viewBox="0 0 1000 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Gear hotspots">
-          <!-- Arrowhead for optional callouts -->
-          <defs>
-            <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L6,3 z" fill="#d6b44c"/>
-            </marker>
-          </defs>
+<script>
+const stage = document.getElementById('stage');
+const arrow = document.getElementById('arrow');
+const cardFO = document.getElementById('cardFO');
+const card = {
+  title: document.getElementById('cTitle'),
+  buy:   document.getElementById('cBuy'),
+  notes: document.getElementById('cNotes'),
+  link:  document.getElementById('cOpen')
+};
+const fTitle = document.getElementById('fTitle');
+const fBuy   = document.getElementById('fBuy');
+const fNotes = document.getElementById('fNotes');
+let current = null; // currently selected hotspot <g>
 
-          <!-- Background image (your Reddit image) -->
-          <image
-            href="https://i.redd.it/21ngs91ahfqa1.jpg"
-            x="0" y="0" width="1000" height="1500"
-            preserveAspectRatio="xMidYMid slice" />
+function redrawArrow(sx, sy){
+  const x = parseFloat(cardFO.getAttribute('x')), y = parseFloat(cardFO.getAttribute('y')), h = parseFloat(cardFO.getAttribute('height'));
+  const tx = x, ty = y + h/2;
+  const c1x = sx + Math.min(120, Math.abs(tx - sx) * 0.4);
+  const c1y = sy, c2x = tx - 60, c2y = ty;
+  arrow.setAttribute('d', `M${sx},${sy} C${c1x},${c1y} ${c2x},${c2y} ${tx},${ty}`);
+}
 
-          <!-- HEAD / HELMET -->
-          <a xlink:href="components.html?slot=helmet" target="_self">
-            <circle class="hot" cx="500" cy="230" r="95"><title>Helmet</title></circle>
-            <text class="gear-label" x="500" y="210" text-anchor="middle">Helmet</text>
-          </a>
+// bind only helmet + armor
+stage.querySelectorAll('.hs').forEach(g=>{
+  g.addEventListener('click', ()=>{
+    current = g;
+    const sx = Number(g.dataset.x), sy = Number(g.dataset.y);
+    const slot = g.dataset.slot || 'part';
+    const title = g.dataset.title || slot;
+    const buy = g.dataset.buy || '—';
+    const notes = g.dataset.notes || '—';
 
-          <!-- CHEST / ARMOR -->
-          <a xlink:href="components.html?slot=chest" target="_self">
-            <rect class="hot" x="400" y="340" width="200" height="220" rx="18" ry="18"><title>Chest Armor</title></rect>
-            <text class="gear-label" x="500" y="330" text-anchor="middle">Armor</text>
-          </a>
+    // update card
+    card.title.textContent = title;
+    card.buy.textContent = buy;
+    card.notes.textContent = notes;
+    card.link.href = `components.html?slot=${encodeURIComponent(slot)}`;
 
-          <!-- SHOULDERS / ARMS / GLOVES -->
-          <a xlink:href="components.html?slot=gloves" target="_self">
-            <!-- Left arm block -->
-            <rect class="hot" x="310" y="360" width="70" height="210" rx="14" ry="14"><title>Gloves / Left Arm</title></rect>
-            <!-- Right arm block -->
-            <rect class="hot" x="620" y="360" width="70" height="210" rx="14" ry="14"><title>Gloves / Right Arm</title></rect>
-            <text class="gear-label" x="500" y="580" text-anchor="middle">Gloves</text>
-          </a>
+    // mirror into right-hand quick edit fields (optional)
+    fTitle.value = title; fBuy.value = buy; fNotes.value = notes;
 
-          <!-- BELT / UTILITY -->
-          <a xlink:href="components.html?slot=utility" target="_self">
-            <rect class="hot" x="420" y="580" width="160" height="70" rx="14" ry="14"><title>Belt / Utility</title></rect>
-            <text class="gear-label" x="500" y="570" text-anchor="middle">Belt</text>
-          </a>
+    redrawArrow(sx, sy);
+  });
+});
 
-          <!-- LEGS -->
-          <a xlink:href="components.html?slot=legs" target="_self">
-            <rect class="hot" x="420" y="660" width="160" height="260" rx="16" ry="16"><title>Leg Armor</title></rect>
-            <text class="gear-label" x="500" y="650" text-anchor="middle">Legs</text>
-          </a>
+// set initial state to helmet
+stage.querySelector('.hs[data-slot="helmet"]').dispatchEvent(new Event('click'));
 
-          <!-- BOOTS -->
-          <a xlink:href="components.html?slot=boots" target="_self">
-            <rect class="hot" x="440" y="930" width="60" height="120" rx="12" ry="12"><title>Left Boot</title></rect>
-            <rect class="hot" x="500" y="930" width="60" height="120" rx="12" ry="12"><title>Right Boot</title></rect>
-            <text class="gear-label" x="500" y="920" text-anchor="middle">Boots</text>
-          </a>
+// apply edits back to card and hotspot dataset
+document.getElementById('apply').addEventListener('click', ()=>{
+  if(!current) return;
+  current.dataset.title = card.title.textContent = fTitle.value.trim() || current.dataset.title;
+  current.dataset.buy   = card.buy.textContent   = fBuy.value.trim()   || current.dataset.buy;
+  current.dataset.notes = card.notes.textContent = fNotes.value.trim() || current.dataset.notes;
+});
 
-          <!-- BACKPACK (optional) -->
-          <a xlink:href="components.html?slot=backpack" target="_self">
-            <rect class="hot" x="440" y="320" width="120" height="160" rx="18" ry="18" opacity=".0001"><title>Backpack</title></rect>
-          </a>
-
-          <!-- PRIMARY WEAPON (example: right side) -->
-          <a xlink:href="components.html?slot=weapon-primary" target="_self">
-            <rect class="hot" x="650" y="620" width="150" height="60" rx="10" ry="10" opacity=".0001"><title>Primary Weapon</title></rect>
-          </a>
-
-          <!-- Optional callout line from label to head -->
-          <!-- <path class="call" d="M 500 120 C 520 120 560 140 600 110" /> -->
-        </svg>
-      </div>
-      <hr class="sep">
-      <div class="note">
-        If the hotspots don’t line up perfectly with your crop, toggle <b>Show guides</b> and nudge
+// guides toggle
+document.getElementById('guides').addEventListener('change', e=>{
+  stage.classList.toggle('guides', e.target.checked);
+});
+</script>
+</body>
+</html>
