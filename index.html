@@ -180,7 +180,11 @@ body::after{
 
       <!-- Announcements -->
       <div class="card">
-        <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Announcements</h3>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <h3 style="margin:0;color:var(--accent);font-size:18px">Announcements</h3>
+          <!-- Post link is hidden by default, shown only if elevated -->
+          <a class="link" href="#" id="postAnnc" style="display:none">Post</a>
+        </div>
         <div id="annc" class="list"><div class="empty">No announcements yet.</div></div>
       </div>
     </section>
@@ -355,7 +359,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     if(!iso) return '';
     const s = Math.floor((Date.now() - new Date(iso)) / 1000);
     const t = [[31536000,'y'],[2592000,'mo'],[604800,'w'],[86400,'d'],[3600,'h'],[60,'m'],[1,'s']];
-    for(const [sec, lbl] of t){ if(s >= sec) return Math.floor(s/sec)+lbl+' ago'; }
+    for(const [sec, lbl] of t){ if(s >= sec) return Math.floor(s/sec)+label+' ago'; }
     return 'just now';
   };
 
@@ -494,7 +498,38 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       console.warn('annc:', e.message);
     }
   }
-  loadAnnouncements();
+  await loadAnnouncements();
+
+  /* ---- Elevation: show Post link only for officers/admins ---- */
+  let elevated = false;
+  try {
+    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
+    elevated = !!data;
+  } catch (_) {}
+
+  if (elevated) {
+    const post = $('#postAnnc');
+    if (post) post.style.display = '';
+  }
+
+  /* ---- Post announcement (requires RLS fields) ---- */
+  const postLink = $('#postAnnc');
+  if (postLink) {
+    postLink.onclick = async (ev) => {
+      ev.preventDefault();
+      const title = prompt('Announcement title?'); if (!title) return;
+      const body  = prompt('Body (optional):') || null;
+      try {
+        const { error } = await sb
+          .from('announcements')
+          .insert({ title, body, posted_by: session.user.id }); // <-- critical for your RLS WITH CHECK
+        if (error) throw error;
+        await loadAnnouncements();
+      } catch (e) {
+        alert('Post failed: ' + e.message);
+      }
+    };
+  }
 
 })();
 </script>
