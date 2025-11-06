@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN Rank Progression</title>
+<title>JMBN – Rank Progression</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,186 +26,320 @@ body{
   margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
 }
 
-/* Panels & sections */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:12px}
-
-/* Remove outer box only on Certifications section */
-.section:last-of-type{
-  border:none;
-  box-shadow:none;
-  background:transparent;
-  padding:0;
-}
-
-/* Titles */
+/* panels */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px;margin-top:10px;box-shadow:0 0 18px rgba(214,180,76,.18)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
 .h{margin:0 0 8px;color:var(--accent);font-size:16px}
-.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent);display:inline-block}
 
-/* Header row */
+/* top row (current + button) */
 .rankRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
 .rankNow{display:flex;align-items:center;gap:10px}
-.rankImg{width:48px;height:48px;border-radius:12px;border:1px solid var(--border);background:#111;object-fit:contain}
+.rankImg{width:50px;height:50px;border-radius:12px;border:1px solid var(--border);background:#111;object-fit:contain}
 
-/* Progress bars */
-.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;margin:8px 0}
-.pb .label{color:var(--muted);font-size:12px}
-.bar{height:14px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-.fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
-.pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+/* small pill */
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:#0e0e0e;color:var(--accent);font-size:12px}
 
-/* Button */
+/* button */
 .btn{padding:10px 14px;border-radius:12px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';font-weight:700}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .btn:hover:not([disabled]){background:var(--accent);color:#000}
 
-/* Certifications grid & cards */
-.certs{margin-top:8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;justify-items:center;text-align:center}
+/* requirement bars */
+.reqRow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin:8px 0}
+.barWrap{height:14px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden;min-width:220px}
+.fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c);width:0%}
+.val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+
+/* history */
+.historyList{font-size:12px;color:var(--muted)}
+
+/* certifications grid (no inner boxes) */
+.certGrid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:22px;margin-top:10px
+}
 .cert{
-  background:transparent;   /* remove box */
-  border:none;              /* remove border */
-  border-radius:0;          /* reset radius */
-  padding:6px;              /* light padding for spacing */
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;
-  transition:transform .15s ease, box-shadow .25s ease, filter .2s ease, opacity .2s ease;
-  box-shadow:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  text-align:center;min-height:220px;padding:10px 8px;border-radius:14px;
+  transition:transform .15s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
+  background:transparent; /* no box */
 }
 .cert .thumb{
-  width:100px;height:100px;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
-  background:transparent;
+  width:128px;height:128px;border-radius:14px;background:#111;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;overflow:hidden
 }
-.cert .thumb img{max-width:100%;max-height:100%;display:block}
+.cert img{max-width:100%;max-height:100%;display:block}
+.cert .title{margin-top:10px;font-weight:700}
+.cert .code{margin-top:4px;font-size:12px;color:var(--muted)}
 
-/* Dim when not owned */
-.cert.dim{opacity:.55;filter:grayscale(.65) contrast(.9)}
-
-/* Owned hover “lift” */
-.cert.owned:hover{
-  transform:translateY(-3px) scale(1.03);
-  filter:saturate(1.2) brightness(1.1);
-}
+/* owned (bright + hover lift) */
 .cert.owned{opacity:1;filter:none}
+.cert.owned:hover{transform:translateY(-2px);box-shadow:0 0 14px rgba(214,180,76,.25)}
 
-/* Titles */
-.cert .title{font-weight:700;margin-top:8px}
-.cert .code{font-size:12px;color:var(--muted);margin-top:4px}
+/* not owned (dim) */
+.cert.dim{opacity:.55;filter:grayscale(.7) contrast(.9)}
+
+/* header mount fallback (keeps layout stable before header.html loads) */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
 </style>
 </head>
 <body>
-  <div id="header-container"></div>
-  <script>
-  (async () => {
-    try {
-      const res = await fetch('header.html', { cache: 'no-cache' });
-      const html = await res.text();
-      document.getElementById('header-container').outerHTML = html;
-      requestAnimationFrame(() => {
-        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
-        document.querySelectorAll('.nav-btn').forEach(a => {
-          const href = (a.getAttribute('href')||'').toLowerCase();
-          if (href === here || href.includes('progression')) a.classList.add('active');
-        });
+
+<!-- Header (injected) -->
+<div id="header-container"></div>
+<script>
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    const html = await res.text();
+    document.getElementById('header-container').outerHTML = html;
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a => {
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if (href === here) a.classList.add('active');
       });
-    } catch {}
-  })();
-  </script>
+    });
+  } catch {}
+})();
+</script>
 
-  <div class="panel">
-    <div class="rankRow">
-      <div class="rankNow">
-        <img id="curImg" class="rankImg" alt="Rank">
-        <div>
-          <div class="h" style="margin:0">Rank Progression</div>
-          <div style="font-size:12px;color:var(--muted)">
-            Current: <b id="curRank">—</b>
-            <span class="badge" id="curPg">PG: —</span>
-          </div>
-        </div>
-      </div>
+<!-- Content -->
+<div class="panel">
+  <!-- top -->
+  <div class="rankRow">
+    <div class="rankNow">
+      <img id="curImg" class="rankImg" alt="Rank">
       <div>
-        <button class="btn" id="btnPromote" disabled>Request Promotion</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3 class="h">Next Rank</h3>
-      <div style="display:flex;align-items:center;gap:10px">
-        <img id="nextImg" class="rankImg" alt="Next">
-        <div>
-          <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
-          <div class="badge" id="nextPg">PG: —</div>
+        <div class="h" style="margin:0">Rank Progression</div>
+        <div style="font-size:12px;color:var(--muted)">
+          Current: <b id="curRank">—</b>
+          <span class="pill" id="curPg">PG: —</span>
         </div>
       </div>
     </div>
-
-    <div class="section">
-      <h3 class="h">Requirements</h3>
-      <div class="pb">
-        <div class="label">Missions</div>
-        <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
-        <div class="val" id="valMissions">0 / 0</div>
-      </div>
-      <div class="pb">
-        <div class="label">Hours</div>
-        <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
-        <div class="val" id="valHours">0 / 0</div>
-      </div>
-      <div class="pb">
-        <div class="label">Certifications</div>
-        <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
-        <div class="val" id="valCerts">0 / 0</div>
-      </div>
-      <div style="margin-top:8px;color:var(--muted);font-size:12px" id="note">Promotion is available when all targets are met.</div>
-    </div>
-
-    <div class="section">
-      <h3 class="h">History</h3>
-      <div id="history" style="font-size:12px;color:var(--muted)">No changes yet.</div>
-    </div>
-
-    <div class="section certs">
-      <h3 class="h">Certifications</h3>
-      <div id="certGrid" class="grid"></div>
-      <div style="font-size:12px;color:var(--muted);margin-top:6px">Dim badges are not yet earned.</div>
+    <div>
+      <button class="btn" id="btnPromote" disabled>Request Promotion</button>
     </div>
   </div>
 
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/auth.js"></script>
-  <script>
-    const $ = s => document.querySelector(s);
-    let session=null, sb=null, me=null;
+  <!-- next -->
+  <div class="section">
+    <h3 class="h">Next Rank</h3>
+    <div style="display:flex;align-items:center;gap:12px">
+      <img id="nextImg" class="rankImg" alt="Next">
+      <div>
+        <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
+        <span class="pill" id="nextPg">PG: —</span>
+      </div>
+    </div>
+  </div>
 
-    async function loadCerts(){
-      const { data, error } = await sb
-        .from('v_user_certifications')
-        .select('certification_code,name,image_url,is_active,owned')
-        .order('sort_order',{ascending:true});
-      if(error){ $('#certGrid').innerHTML = '<div style="color:var(--bad)">Failed to load certifications.</div>'; return; }
+  <!-- requirements -->
+  <div class="section">
+    <h3 class="h">Requirements</h3>
 
-      $('#certGrid').innerHTML = data.map(row=>{
-        const cls = row.owned ? 'cert owned' : 'cert dim';
-        return `
-          <div class="${cls}">
-            <div class="thumb">
-              <img src="${row.image_url || ''}" alt="${row.name||row.certification_code}">
-            </div>
-            <div class="title">${row.name || row.certification_code}</div>
-            <div class="code">${row.certification_code}</div>
-          </div>`;
-      }).join('');
-    }
+    <div class="reqRow">
+      <div class="barWrap"><div id="pbMissions" class="fill"></div></div>
+      <div class="val" id="valMissions">0 / 0</div>
+    </div>
 
-    document.addEventListener('DOMContentLoaded', async ()=>{
-      session = await requireAuth();
-      if(!session) return;
-      sb = getSupabase();
-      me = session.user.id;
-      await loadCerts();
-    });
-  </script>
+    <div class="reqRow">
+      <div class="barWrap"><div id="pbHours" class="fill"></div></div>
+      <div class="val" id="valHours">0 / 0</div>
+    </div>
+
+    <div class="reqRow">
+      <div class="barWrap"><div id="pbCerts" class="fill"></div></div>
+      <div class="val" id="valCerts">0 / 0</div>
+    </div>
+
+    <div style="margin-top:6px;color:var(--muted);font-size:12px" id="note">
+      Promotion is available when all targets are met.
+    </div>
+  </div>
+
+  <!-- history -->
+  <div class="section">
+    <h3 class="h">History</h3>
+    <div id="history" class="historyList">No changes yet.</div>
+  </div>
+
+  <!-- certifications -->
+  <div class="section">
+    <h3 class="h">Certifications</h3>
+    <div id="certGrid" class="certGrid"></div>
+    <div style="margin-top:8px;color:var(--muted);font-size:12px">Dim badges are not yet earned.</div>
+  </div>
+</div>
+
+<!-- Supabase -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+let sb=null, me=null;
+
+/* helpers */
+function setFill(sel, pct){
+  const el = $(sel);
+  const x = Math.max(0, Math.min(1, Number(pct)||0));
+  el.style.width = (x*100) + '%';
+}
+
+/* MAIN: load rank/targets from v_user_rank_progress only */
+async function loadProgress(){
+  const { data: prog, error } = await sb
+    .from('v_user_rank_progress')
+    .select('*')
+    .eq('user_id', me)
+    .maybeSingle();
+
+  if (error) { console.error(error); }
+
+  // current
+  const curCode = prog?.current_code || null;
+  $('#curRank').textContent = prog?.current_name || '(unranked)';
+  $('#curPg').textContent   = `PG: ${prog?.current_paygrade || '—'}`;
+
+  let curImg = '';
+  if (curCode) {
+    curImg = sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl;
+  }
+  $('#curImg').src = curImg || '';
+  $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
+
+  // next
+  const nextCode = prog?.next_code || null;
+  $('#nextName').textContent = prog?.next_name || '—';
+  $('#nextPg').textContent   = `PG: ${prog?.next_paygrade || '—'}`;
+
+  let nextImg = '';
+  if (nextCode) {
+    nextImg = sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl;
+  }
+  $('#nextImg').src = nextImg || '';
+  $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
+
+  // numbers
+  const m  = Number(prog?.missions_attended || 0);
+  const mt = Number(prog?.missions_target   || 0);
+  const h  = Number(prog?.hours_total       || 0);
+  const ht = Number(prog?.hours_target      || 0);
+  const c  = Number(prog?.certifications_total || 0);
+  const ct = Number(prog?.certification_target  || 0);
+
+  $('#valMissions').textContent = `${m} / ${mt}`;
+  $('#valHours').textContent    = `${h} / ${ht}`;
+  $('#valCerts').textContent    = `${c} / ${ct}`;
+
+  const pm = mt ? Math.min(1, m/mt) : 1;
+  const ph = ht ? Math.min(1, h/ht) : 1;
+  const pc = ct ? Math.min(1, c/ct) : 1;
+
+  setFill('#pbMissions', pm);
+  setFill('#pbHours',    ph);
+  setFill('#pbCerts',    pc);
+
+  const canPromote = (!!nextCode) && pm>=1 && ph>=1 && pc>=1;
+  $('#btnPromote').disabled = !canPromote;
+
+  if(!nextCode){
+    $('#note').textContent = 'You are at the highest rank or next rank is not configured.';
+  }else if(!canPromote){
+    $('#note').textContent = 'Promotion is available when all targets are met.';
+  }else{
+    $('#note').textContent = 'All requirements met. You can request promotion.';
+  }
+}
+
+/* load promotion history (optional) */
+async function loadHistory(){
+  const { data, error } = await sb
+    .from('rank_changes')
+    .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+    .eq('user_id', me)
+    .order('created_at', { ascending:false })
+    .limit(10);
+  if(error){ $('#history').textContent = 'Failed to load history.'; return; }
+  if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
+
+  $('#history').innerHTML = data.map(r=>{
+    const when = new Date(r.created_at).toLocaleString();
+    const who = r.changed_by?.slice(0,8) || 'system';
+    const from = r.from_rank_code || '—';
+    const to   = r.to_rank_code || '—';
+    const why  = r.reason || '';
+    return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span style="color:var(--muted)">— ${why}</span>`:''}</div>`;
+  }).join('');
+}
+
+/* certifications: from v_user_certifications (code, name, image_url, owned bool) */
+async function loadCerts(){
+  const { data, error } = await sb
+    .from('v_user_certifications')
+    .select('certification_code,name,image_url,owned,sort_order')
+    .eq('user_id', me)
+    .order('sort_order',{ascending:true});
+
+  const grid = $('#certGrid');
+  if(error){ grid.textContent = 'Failed to load certifications.'; return; }
+  if(!data?.length){ grid.textContent = '—'; return; }
+
+  grid.innerHTML = data.map(row=>{
+    const owned = !!row.owned;
+    const cls = owned ? 'cert owned' : 'cert dim';
+    const img = row.image_url || '';
+    const code = row.certification_code || '';
+    const name = row.name || code || 'Certification';
+    return `
+      <div class="${cls}" title="${owned?'Obtained':'Not earned'}">
+        <div class="thumb">${img?`<img src="${img}" alt="${name}">`:''}</div>
+        <div class="title">${name}</div>
+        <div class="code">${code}</div>
+      </div>`;
+  }).join('');
+}
+
+/* request promotion RPC (server will validate) */
+async function promote(){
+  try{
+    const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+    if(error){ alert('Promotion failed: ' + error.message); return; }
+    if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+    alert('Promoted to ' + (data.to || 'next rank') + '!');
+    await loadProgress();
+    await loadHistory();
+  }catch(e){ alert('Promotion failed.'); }
+}
+
+/* init */
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
+
+  $('#btnPromote').onclick = promote;
+
+  await loadProgress();
+  await loadHistory();
+  await loadCerts();
+});
+</script>
+
 </body>
 </html>
