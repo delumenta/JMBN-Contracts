@@ -116,22 +116,9 @@ body::after{
 .ops-chip{color:#000;background:var(--accent);border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-weight:800;font-size:12px;letter-spacing:.4px}
 .ops-msg{flex:1;min-width:0;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:1;transition:opacity .35s ease}
 .ops-ctrl{display:flex;align-items:center;gap:6px}
-.ops-btn, .btn{
-  padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);
-  border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play'
-}
-.ops-btn:hover,.btn:hover{background:var(--accent);color:#000}
+.ops-btn{padding:4px 8px;border-radius:6px;font-size:12px;border:1px solid var(--border);background:transparent;color:#f7f1d0;cursor:pointer;font-family:'Play'}
+.ops-btn:hover{background:var(--accent);color:#000}
 @media(max-width:520px){.ops-ticker{gap:6px;padding:6px 8px}.ops-msg{font-size:12px}.ops-btn{padding:3px 6px;font-size:11px}}
-
-/* Quick-announcement composer */
-.quick{display:flex;flex-direction:column;gap:8px;margin:6px 0 10px}
-.quick input,.quick textarea{
-  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;
-  padding:8px 10px;color:var(--text);font-family:'Play'
-}
-.quick .row{display:flex;gap:8px;justify-content:flex-end}
-.quick .hint{font-size:11px;color:var(--muted)}
-.actions-bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 </style>
 </head>
 <body>
@@ -194,10 +181,6 @@ body::after{
       <!-- Announcements -->
       <div class="card">
         <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Announcements</h3>
-
-        <!-- Quick composer will render here only for elevated users -->
-        <div id="anncFormBox"></div>
-
         <div id="annc" class="list"><div class="empty">No announcements yet.</div></div>
       </div>
     </section>
@@ -273,7 +256,7 @@ window.onload = () => { document.body.style.opacity = 1; };
     const angle=(Math.random()<0.5?1:-1)*(Math.random()*Math.PI/4+Math.PI/8);
     const depth=Math.random();
     const speed=3+depth*4, length=60+depth*80;
-    shooting.push({x=startX,y=startY,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,length,depth,life:1});
+    shooting.push({x:startX,y:startY,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,length,depth,life:1});
   }
 
   function draw(){
@@ -417,7 +400,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
 
   const prettyName = handle.replace(/\b\w/g, c => c.toUpperCase());
   out('#mName', prettyName);
-  out('#mRank', rankName);
+  out('#mRank', rankName);               // hide code in display
   out('#mCategory', category);
 
   const imgEl = $('#mRankImg');
@@ -465,66 +448,24 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     $('#lastFive').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
   }
 
-  /* ===========================================================
-     Announcements: quick post / edit / delete (elevated only)
-     Policies assumed:
-       SELECT: true for authenticated
-       INSERT/UPDATE/DELETE: is_elevated(auth.uid())
-       INSERT with_check: (is_elevated(auth.uid()) AND posted_by = auth.uid())
-     =========================================================== */
-  let isElevated = false;
-  try {
-    const { data: elev, error: e1 } = await sb.rpc('is_elevated', { u: session.user.id });
-    if (!e1) isElevated = !!elev;
-  } catch (_) {}
-
-  const anncBox   = $('#annc');
-  const anncForm  = $('#anncFormBox');
-  let annCache = [];
-
-  function renderAnnForm(){
-    if (!isElevated) { anncForm.innerHTML = ''; return; }
-    anncForm.innerHTML = `
-      <div class="quick">
-        <input id="annTitle" placeholder="Announcement title">
-        <textarea id="annBody" rows="4" placeholder="Write a quick update…"></textarea>
-        <div class="row">
-          <button class="btn" id="annReset" type="button">Clear</button>
-          <button class="btn" id="annPost"  type="button">Post</button>
-        </div>
-        <div class="hint">Only admins/officers can post. Posts are saved under your user.</div>
-      </div>`;
-    $('#annReset').onclick = () => { $('#annTitle').value=''; $('#annBody').value=''; };
-    $('#annPost').onclick  = async () => {
-      const title = ($('#annTitle').value||'').trim();
-      const body  = ($('#annBody').value||'').trim();
-      if(!title){ alert('Title is required'); return; }
-      try{
-        const { error } = await sb.from('announcements').insert({
-          title, body, posted_by: session.user.id
-        });
-        if (error) throw error;
-        $('#annTitle').value=''; $('#annBody').value='';
-        await loadAnnouncements();
-      } catch(e){
-        alert('Post failed: ' + (e.message||e));
-      }
-    };
-  }
-
+  /* ---- Announcements (latest 5) ---- */
   async function loadAnnouncements(){
+    const box = $('#annc');
     try{
       const { data, error } = await sb
         .from('announcements')
         .select('id,title,body,created_at,posted_by')
         .order('created_at',{ ascending:false })
-        .limit(10);
+        .limit(5);
       if(error) throw error;
 
-      annCache = data || [];
+      if(!data || data.length===0){
+        box.innerHTML = '<div class="empty">No announcements yet.</div>';
+        return;
+      }
 
       // Resolve display names
-      const uids = [...new Set(annCache.map(a=>a.posted_by).filter(Boolean))];
+      const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
       let names = {};
       if(uids.length){
         const { data: profs } = await sb
@@ -534,70 +475,25 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
         (profs||[]).forEach(p => names[p.user_id] = p.handle || p.display_name || p.user_id.slice(0,8));
       }
 
-      if(!annCache.length){
-        anncBox.innerHTML = '<div class="empty">No announcements yet.</div>';
-      } else {
-        anncBox.innerHTML = annCache.map(a => {
-          const who = names[a.posted_by] || 'Officer';
-          const actions = isElevated ? `
-            <div class="actions-bar">
-              <button class="btn" data-act="edit" data-id="${a.id}">Edit</button>
-              <button class="btn" data-act="delete" data-id="${a.id}">Delete</button>
-            </div>` : '';
-          return `
-            <div class="item" data-item-id="${a.id}">
-              <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
-              <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
-              ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
-              ${actions}
-            </div>`;
-        }).join('');
-      }
+      box.innerHTML = data.map(a => {
+        const who = names[a.posted_by] || 'Officer';
+        return `
+          <div class="item">
+            <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
+            <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
+            ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
+          </div>`;
+      }).join('');
 
-      anncBox.querySelectorAll('.expand').forEach(el=>{
+      box.querySelectorAll('.expand').forEach(el=>{
         el.onclick = ()=> el.classList.toggle('open');
       });
 
     }catch(e){
-      anncBox.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
+      box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
       console.warn('annc:', e.message);
     }
   }
-
-  // delegate edit/delete
-  anncBox.addEventListener('click', async (e) => {
-    const btn = e.target.closest('[data-act]');
-    if(!btn) return;
-    const id = btn.dataset.id;
-    const act = btn.dataset.act;
-
-    const current = annCache.find(a => a.id === id);
-    if(!current){ alert('Item not found.'); return; }
-
-    if(act === 'edit'){
-      const newTitle = prompt('Edit title', current.title || '') ?? '';
-      if(newTitle === '') return;
-      const newBody  = prompt('Edit body (leave blank to clear)', current.body || '') ?? '';
-      try{
-        const { error } = await sb.from('announcements')
-          .update({ title: newTitle, body: newBody })
-          .eq('id', id);
-        if(error) throw error;
-        await loadAnnouncements();
-      }catch(err){ alert('Update failed: ' + (err.message||err)); }
-    }
-
-    if(act === 'delete'){
-      if(!confirm('Delete this announcement?')) return;
-      try{
-        const { error } = await sb.from('announcements').delete().eq('id', id);
-        if(error) throw error;
-        await loadAnnouncements();
-      }catch(err){ alert('Delete failed: ' + (err.message||err)); }
-    }
-  });
-
-  renderAnnForm();
   loadAnnouncements();
 
 })();
