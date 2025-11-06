@@ -148,14 +148,15 @@ tr:hover{background:rgba(214,180,76,.08)}
       <table>
         <thead>
           <tr>
-            <th style="width:35%">Handle</th>
-            <th style="width:30%">Current Rank</th>
-            <th style="width:25%">Specialization</th>
-            <th style="width:10%"></th>
+            <th style="width:28%">Handle</th>
+            <th style="width:26%">Current Rank</th>
+            <th style="width:26%">Specialization</th>
+            <th style="width:15%">Certifications</th>
+            <th style="width:5%"></th>
           </tr>
         </thead>
         <tbody id="tbody">
-          <tr><td colspan="4" style="padding:12px;color:var(--muted)">Loading…</td></tr>
+          <tr><td colspan="5" style="padding:12px;color:var(--muted)">Loading…</td></tr>
         </tbody>
       </table>
     </div>
@@ -236,7 +237,7 @@ const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
 
 function render(rows){
   if(!rows?.length){
-    tbody.innerHTML = `<tr><td colspan="4" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
     countEl.textContent = '0 members';
     return;
   }
@@ -259,6 +260,7 @@ function render(rows){
         <td>
           ${roles.length ? `<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>` : `<span style="color:var(--muted)">—</span>`}
         </td>
+        <td><span style="color:var(--muted)">—</span></td>
         <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
       </tr>`;
   }).join('');
@@ -329,7 +331,7 @@ async function loadRoster(){
     .order('handle',{ ascending:true });
 
   if(error){
-    tbody.innerHTML = `<tr><td colspan="4" style="padding:12px;color:var(--bad)">Failed to load members: ${esc(error.message)}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="padding:12px;color:var(--bad)">Failed to load members: ${esc(error.message)}</td></tr>`;
     countEl.textContent = '0 members';
     return;
   }
