@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN Rank Progression</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+
+<style>
+:root{
+  --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--border:#d6b44c;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
+}
+*{box-sizing:border-box}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text); font-family:'Play',system-ui,sans-serif;
+  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
+}
+/* Header mount fallback */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+/* Nav */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
+
+/* Panel */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
+.h{margin:0 0 8px;color:var(--accent);font-size:16px}
+
+/* Rank row */
+.rankRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.rankNow{display:flex;align-items:center;gap:10px}
+.rankImg{width:46px;height:46px;border-radius:10px;border:1px solid var(--border);background:#111;object-fit:contain}
+.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
+
+/* Progress bars */
+.pb{display:grid;grid-template-columns:140px 1fr auto;gap:10px;align-items:center;margin:8px 0}
+.pb .label{color:var(--muted);font-size:12px}
+.bar{height:12px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
+.pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+
+/* Buttons */
+.btn{padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play'}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn:hover:not([disabled]){background:var(--accent);color:#000}
+</style>
+</head>
+<body>
+  <!-- 🔁 Shared header -->
+  <div id="header-container"></div>
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href')||'').toLowerCase();
+          if (href === here) a.classList.add('active');
+        });
+      });
+    } catch {}
+  })();
+  </script>
+
+  <div class="panel">
+    <div class="rankRow">
+      <div class="rankNow">
+        <img id="curImg" class="rankImg" alt="Rank">
+        <div>
+          <div class="h" style="margin:0">Rank Progression</div>
+          <div style="font-size:12px;color:var(--muted)">
+            Current: <b id="curRank">—</b>
+            <span class="badge" id="curCode">—</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="btn" id="btnPromote" disabled>Request Promotion</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="h">Next Rank</h3>
+      <div style="display:flex;align-items:center;gap:10px">
+        <img id="nextImg" class="rankImg" alt="Next">
+        <div>
+          <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
+          <div class="badge" id="nextCode">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="h">Requirements</h3>
+      <div class="pb">
+        <div class="label">Missions</div>
+        <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
+        <div class="val" id="valMissions">0 / 0</div>
+      </div>
+      <div class="pb">
+        <div class="label">Successes</div>
+        <div class="bar"><div id="pbSuccesses" class="fill" style="width:0%"></div></div>
+        <div class="val" id="valSuccesses">0 / 0</div>
+      </div>
+      <div class="pb">
+        <div class="label">Hours</div>
+        <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
+        <div class="val" id="valHours">0 / 0</div>
+      </div>
+      <div style="margin-top:8px;color:var(--muted);font-size:12px" id="note">Promotion is available when all targets are met.</div>
+    </div>
+
+    <div class="section">
+      <h3 class="h">History</h3>
+      <div id="history" style="font-size:12px;color:var(--muted)">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
+  <script>
+  const $ = s => document.querySelector(s);
+  const capWords = s => (s||'').replace(/\b\w/g, c => c.toUpperCase());
+
+  let session=null, sb=null, me=null;
+
+  function setFill(id, pct){
+    const el = $(id);
+    const x = Math.max(0, Math.min(1, Number(pct)||0));
+    el.style.width = (x*100) + '%';
+  }
+
+  async function loadProgress(){
+    const { data: prof } = await sb
+      .from('v_profiles_detailed')
+      .select('user_id,current_rank_code,current_rank_name')
+      .eq('user_id', me)
+      .maybeSingle();
+
+    const curCode = prof?.current_rank_code || null;
+    const curName = prof?.current_rank_name || '(unranked)';
+    $('#curRank').textContent = curName;
+    $('#curCode').textContent = curCode || '—';
+
+    // Rank images via bucket: Ranks/<code>.png
+    const curImg = curCode ? sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl : '';
+    $('#curImg').src = curImg || '';
+    $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
+
+    const { data: prog } = await sb
+      .from('v_user_rank_progress')
+      .select('*')
+      .eq('user_id', me)
+      .maybeSingle();
+
+    const nextCode = prog?.next_code || null;
+    const nextName = prog?.next_name || null;
+    $('#nextName').textContent = nextName || '—';
+    $('#nextCode').textContent = nextCode || '—';
+
+    const nextImg = nextCode ? sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl : '';
+    $('#nextImg').src = nextImg || '';
+    $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
+
+    // Numbers + bars
+    const m = Number(prog?.missions_attended || 0);
+    const mt= Number(prog?.missions_target || 0);
+    const s = Number(prog?.successes || 0);
+    const st= Number(prog?.successes_target || 0);
+    const h = Number(prog?.hours_total || 0);
+    const ht= Number(prog?.hours_target || 0);
+
+    $('#valMissions').textContent  = `${m} / ${mt}`;
+    $('#valSuccesses').textContent = `${s} / ${st}`;
+    $('#valHours').textContent     = `${h} / ${ht}`;
+
+    // Handle 0 targets as auto-met
+    const pm = mt ? Math.min(1, m/mt) : 1;
+    const ps = st ? Math.min(1, s/st) : 1;
+    const ph = ht ? Math.min(1, h/ht) : 1;
+
+    setFill('#pbMissions',  pm);
+    setFill('#pbSuccesses', ps);
+    setFill('#pbHours',     ph);
+
+    const allMet = (!!nextCode) && pm>=1 && ps>=1 && ph>=1;
+    const btn = $('#btnPromote');
+    btn.disabled = !allMet;
+
+    if(!nextCode){
+      $('#note').textContent = 'You are at the highest rank or next rank is not configured.';
+    }else if(!allMet){
+      $('#note').textContent = 'Promotion is available when all targets are met.';
+    }else{
+      $('#note').textContent = 'All requirements met. You can request promotion.';
+    }
+  }
+
+  async function loadHistory(){
+    const { data, error } = await sb
+      .from('rank_changes')
+      .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+      .eq('user_id', me)
+      .order('created_at', { ascending:false })
+      .limit(10);
+    if(error){ $('#history').textContent = 'Failed to load history.'; return; }
+
+    if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
+
+    $('#history').innerHTML = data.map(r=>{
+      const when = new Date(r.created_at).toLocaleString();
+      const who = r.changed_by?.slice(0,8) || 'system';
+      const from = r.from_rank_code || '—';
+      const to   = r.to_rank_code || '—';
+      const why  = r.reason || '';
+      return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span style="color:var(--muted)">— ${why}</span>`:''}</div>`;
+    }).join('');
+  }
+
+  async function promote(){
+    const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+    if(error){ alert('Promotion failed: ' + error.message); return; }
+    if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+    alert('Promoted to ' + (data.to || 'next rank') + '!');
+    await loadProgress();
+    await loadHistory();
+  }
+
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    session = await requireAuth();
+    if(!session) return;
+    sb = getSupabase();
+    me = session.user.id;
+
+    $('#btnPromote').onclick = promote;
+
+    await loadProgress();
+    await loadHistory();
+  });
+  </script>
+</body>
+</html>
