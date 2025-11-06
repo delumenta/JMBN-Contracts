@@ -3,310 +3,192 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JMBN Loadout — Holo-Pod Carousel</title>
+<title>JMBN Loadout — Interactive Blueprint</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#000; --panel:#0b0b0b; --card:#0c0c0c; --border:#d6b44c;
-  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif}
 
 /* Layout */
-.wrap{max-width:1200px;margin:20px auto;padding:0 14px;display:grid;grid-template-columns:1fr 340px;gap:16px}
-@media(max-width:1060px){.wrap{grid-template-columns:1fr}}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 0 18px rgba(214,180,76,.18)}
+.wrap{max-width:1200px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(320px,740px) 1fr;gap:16px}
+@media (max-width:920px){.wrap{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 0 18px rgba(214,180,76,.16)}
 h1{margin:0 0 8px;color:var(--accent);font-size:22px}
 .note{color:var(--muted);font-size:12px}
 
-/* Stage */
-.stage{
-  position:relative;height:620px;overflow:hidden;border-radius:12px;
-  background:
-    radial-gradient(900px 600px at 20% -10%, rgba(242,214,117,.06), transparent 60%),
-    radial-gradient(800px 500px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;
-}
-.grid{
-  position:absolute;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:screen;
-  background:
-    linear-gradient(rgba(214,180,76,.3) 1px, transparent 1px) 0 0/ 100% 40px,
-    linear-gradient(90deg, rgba(214,180,76,.3) 1px, transparent 1px) 0 0/ 40px 100%;
-}
+/* Figure */
+.figure{position:relative;overflow:hidden;border-radius:12px}
+.figure img{display:block;width:100%;height:auto;filter:contrast(1.05) brightness(.9)}
 
-/* Character backdrop (for vibe) */
-.char{
-  position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:.9
-}
-.char img{max-height:100%;max-width:100%;filter:contrast(1.05) brightness(.9)}
-.char::after{
-  content:""; position:absolute; inset:0;
-  background: radial-gradient(600px 320px at 50% 30%, rgba(242,214,117,.08), transparent 60%);
-}
+/* SVG overlay */
+.blueprint{position:absolute;inset:0}
+svg{display:block;width:100%;height:100%}
 
-/* 3D Carousel */
-.space{position:absolute;inset:0;display:grid;place-items:center;perspective:1200px}
-.ring{
-  position:relative; width:720px; height:420px; transform-style:preserve-3d;
-  transition: transform .6s cubic-bezier(.2,.6,.1,1);
-}
-@media(max-width:640px){ .ring{width:92vw;height:420px} }
+/* Zones */
+.zone .hit{fill:transparent;cursor:pointer}
+.zone .glow{fill:none;stroke:transparent;stroke-width:2}
+.zone.active .glow,
+.zone:hover  .glow{stroke:var(--border);filter:drop-shadow(0 0 8px rgba(214,180,76,.55))}
+.zone .label{fill:#f2d675;font-size:12px;opacity:0;transition:opacity .15s ease}
+.zone:hover .label,
+.zone.active .label{opacity:1}
 
-.pod{
-  position:absolute; top:50%; left:50%;
-  width:210px; height:120px; transform-style:preserve-3d; will-change:transform;
-  border:1px solid rgba(214,180,76,.45); border-radius:14px; padding:10px 12px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
-    var(--card);
-  color:var(--accent); text-align:left; letter-spacing:.2px;
-  box-shadow:0 8px 26px rgba(0,0,0,.55), 0 0 18px rgba(214,180,76,.18);
-  backdrop-filter: blur(3px);
-  cursor:pointer;
-  transition: transform .6s cubic-bezier(.2,.6,.1,1), box-shadow .2s ease, border-color .2s ease, color .2s ease;
+/* Right info card */
+.side{position:sticky;top:14px;align-self:start}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)), var(--card);
+  border:1px solid var(--border);border-radius:14px;padding:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 18px rgba(214,180,76,.18);
+  backdrop-filter: blur(3px);min-height:220px;display:flex;flex-direction:column;gap:8px
 }
-.pod:hover{ box-shadow:0 12px 30px rgba(0,0,0,.65), 0 0 22px rgba(214,180,76,.24) }
-.pod .title{ font-weight:800; color:var(--accent); font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-.pod .meta{ font-size:11px; color:var(--muted); margin-top:2px }
-.pod .val { font-size:12px; color:var(--text); margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-
-/* Pod halo for the focused one */
-.pod.focus{
-  color:#000; border-color:var(--border);
-  background:linear-gradient(180deg,#f2d675,#e7c760);
-}
-
-/* Center readout card */
-.readout{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:360px; max-width:92vw; border:1px solid var(--border); border-radius:16px; padding:14px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
-    var(--card);
-  color:var(--text);
-  box-shadow:0 10px 30px rgba(0,0,0,.6), 0 0 20px rgba(214,180,76,.22);
-  backdrop-filter: blur(3px);
-  text-align:left;
-}
-.readout h2{margin:0 0 6px; color:var(--accent); font-size:18px}
-.badges{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
-.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
-.kv{font-size:13px;line-height:1.4;margin:6px 0}
-.kv span{display:block;color:var(--muted);font-size:12px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.card h3{margin:0;color:var(--accent);font-size:18px}
+.meta{display:flex;gap:6px;flex-wrap:wrap}
+.tag{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.field{font-size:13px;line-height:1.4}
+.field span{color:var(--muted);font-size:12px;display:block}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .btn{display:inline-flex;align-items:center;padding:7px 12px;border-radius:10px;border:1px solid var(--border);text-decoration:none}
 .btn.primary{background:linear-gradient(180deg,#f2d675,#e7c760);color:#000;font-weight:700}
 .btn.ghost{color:var(--accent)}
 
-/* Controls */
-.controls{display:flex;gap:8px;align-items:center;margin-top:10px}
-.ctrl{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:40px;height:40px;border-radius:50%;border:1px solid var(--border);
-  background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);font-weight:800;
-  cursor:pointer; user-select:none; transition:.15s ease
-}
-.ctrl:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18)}
-.toggle{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12px}
-input[type="checkbox"]{accent-color:#c9b06a}
+/* Helpers */
+.controls{display:flex;gap:10px;align-items:center;margin-top:6px}
+.controls input{accent-color:#c9b06a}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- Left: Holo-Pod Carousel -->
-  <div class="panel">
-    <h1>Loadout — Holo-Pod Carousel</h1>
-    <div class="note">Drag or use ◀ ▶ to rotate. Click a pod to focus. Auto-spin can be toggled.</div>
+  <div class="wrap">
+    <!-- LEFT: Interactive blueprint -->
+    <div class="panel">
+      <h1>Loadout — Interactive Blueprint</h1>
+      <div class="note">Hover to preview, click to pin. Helmet & Armor live; add more anytime.</div>
 
-    <div class="stage" id="stage">
-      <div class="grid"></div>
-      <div class="char"><img src="https://i.redd.it/21ngs91ahfqa1.jpg" alt="Character"></div>
-      <div class="space">
-        <div class="ring" id="ring"><!-- pods injected by JS --></div>
+      <div class="figure" id="fig">
+        <!-- Character image (re-host in your repo if Reddit blocks hotlink) -->
+        <img src="https://i.redd.it/21ngs91ahfqa1.jpg" alt="Character loadout">
+
+        <!-- SVG overlay (1000×1500 viewBox) -->
+        <svg class="blueprint" viewBox="0 0 1000 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Gear zones">
+          <!-- HELMET (nudged) -->
+          <g class="zone" data-slot="helmet" data-x="505" data-y="215">
+            <circle class="hit"  cx="505" cy="215" r="115"></circle>
+            <circle class="glow" cx="505" cy="215" r="95"></circle>
+            <text class="label" x="505" y="195" text-anchor="middle">Helmet</text>
+          </g>
+
+          <!-- ARMOR (chest, widened/lowered) -->
+          <g class="zone" data-slot="armor" data-x="505" data-y="450">
+            <rect class="hit"  x="355" y="325" width="300" height="280" rx="30" ry="30"></rect>
+            <rect class="glow" x="385" y="350" width="240" height="220" rx="18" ry="18"></rect>
+            <text class="label" x="505" y="338" text-anchor="middle">Armor</text>
+          </g>
+
+          <!-- (Add more zones later by duplicating a <g class="zone"> block) -->
+        </svg>
       </div>
 
-      <div class="readout" id="readout">
-        <h2 id="rTitle">Odyssey Helmet</h2>
-        <div class="badges" id="rBadges"></div>
-        <div class="kv"><span>Where to buy</span><div id="rBuy">Orison – Cousin Crows; CRU-L5 – Platinum Bay</div></div>
-        <div class="kv"><span>Notes</span><div id="rNotes">Clean visor clarity • stable comms • low profile.</div></div>
+      <div class="controls note">
+        <label><input type="checkbox" id="showGuides"> Show outlines</label>
+        <span>• Click again to unpin • Tap works on mobile</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: Info panel -->
+    <div class="side">
+      <div class="card" id="card">
+        <h3 id="cTitle">Select a part</h3>
+        <div class="meta" id="cTags"></div>
+        <div class="field"><span>Where to buy</span><div id="cBuy">—</div></div>
+        <div class="field"><span>Notes</span><div id="cNotes">—</div></div>
         <div class="actions">
-          <a id="rComp" class="btn primary" href="components.html?slot=helmet">Open Components</a>
-          <a id="rLoad" class="btn ghost" href="loadout.html?slot=helmet">Loadout</a>
+          <a id="linkComponents" class="btn primary" href="components.html">Open Components</a>
+          <a id="linkLoadout" class="btn ghost" href="loadout.html">Loadout</a>
         </div>
       </div>
     </div>
-
-    <div class="controls">
-      <div class="ctrl" id="prev">◀</div>
-      <div class="ctrl" id="next">▶</div>
-      <label class="toggle"><input type="checkbox" id="auto" checked> Auto-spin</label>
-    </div>
   </div>
-
-  <!-- Right: Legend / Quick tips -->
-  <div class="panel">
-    <h1>Legend</h1>
-    <div class="note">Pods are holo cards orbiting in 3D. The focused pod pushes details to the center readout.</div>
-    <ul style="list-style:none;padding:0;margin:10px 0 0;font-size:13px;line-height:1.5">
-      <li>• <b>Helmet</b> — Odyssey</li>
-      <li>• <b>Armor</b> — Navis Chest</li>
-      <li>• <b>Gloves</b> — Artemis</li>
-      <li>• <b>Belt</b> — Field Utility</li>
-      <li>• <b>Legs</b> — Navis Legs</li>
-      <li>• <b>Boots</b> — Pathfinder</li>
-    </ul>
-    <div class="note" style="margin-top:10px">Add/remove items by editing the <code>PODS</code> array in the script section.</div>
-  </div>
-</div>
 
 <script>
-/* === Data model (edit to taste) === */
-const PODS = [
-  { slot:'helmet', title:'Odyssey Helmet',
-    buy:'Orison – Cousin Crows; CRU-L5 – Platinum Bay',
-    notes:'Clean visor clarity • stable comms • low profile.',
-    tags:['Light','Exploration'], linkC:'components.html?slot=helmet', linkL:'loadout.html?slot=helmet' },
-  { slot:'armor', title:'Navis Chestpiece',
-    buy:'Area18 – Cubby Blast; New Babbage – Omega Pro',
-    notes:'Balanced plates • reliable availability.',
-    tags:['Medium','Versatile'], linkC:'components.html?slot=chest', linkL:'loadout.html?slot=armor' },
-  { slot:'gloves', title:'Artemis Gloves',
-    buy:'Hurston – Everus Harbor – Platinum Bay',
-    notes:'Grip + tactile control.', tags:['Utility'], linkC:'components.html?slot=gloves', linkL:'loadout.html?slot=gloves' },
-  { slot:'utility', title:'Field Utility Belt',
-    buy:'MicroTech – Shubin; Orison – Cousin Crows',
-    notes:'Extra mag + med slot.', tags:['Storage'], linkC:'components.html?slot=utility', linkL:'loadout.html?slot=utility' },
-  { slot:'legs', title:'Navis Leg Armor',
-    buy:'Area18 – Cubby Blast',
-    notes:'Pairs with Navis chest.', tags:['Medium'], linkC:'components.html?slot=legs', linkL:'loadout.html?slot=legs' },
-  { slot:'boots', title:'Pathfinder Boots',
-    buy:'HUR-L2 – Platinum Bay; Lorville – Tammany & Sons',
-    notes:'Stable footing; EVA-friendly.', tags:['Mobility'], linkC:'components.html?slot=boots', linkL:'loadout.html?slot=boots' },
-];
-
-/* === DOM refs === */
-const ring = document.getElementById('ring');
-const read = {
-  title: document.getElementById('rTitle'),
-  buy:   document.getElementById('rBuy'),
-  notes: document.getElementById('rNotes'),
-  badges:document.getElementById('rBadges'),
-  comp:  document.getElementById('rComp'),
-  load:  document.getElementById('rLoad')
+/* Data model — edit freely */
+const GEAR = {
+  helmet: {
+    title: 'Odyssey Helmet',
+    buy: 'Orison – Cousin Crows; CRU-L5 – Platinum Bay',
+    notes: 'Clean visor clarity • stable comms • low profile.',
+    tags: ['Light','Exploration'],
+    linkC: 'components.html?slot=helmet',
+    linkL: 'loadout.html?slot=helmet'
+  },
+  armor: {
+    title: 'Navis Chestpiece',
+    buy: 'Area18 – Cubby Blast; New Babbage – Omega Pro',
+    notes: 'Balanced plates • reliable availability • pairs with Navis legs.',
+    tags: ['Medium','Versatile'],
+    linkC: 'components.html?slot=chest',
+    linkL: 'loadout.html?slot=armor'
+  }
 };
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-const autoChk = document.getElementById('auto');
 
-/* === Build pods === */
-const COUNT = PODS.length;
-const RADIUS = 440;          // distance from ring center
-const TILT   = -14;          // tilt ring for depth
+/* DOM refs */
+const stage = document.querySelector('.blueprint');
+const zones = Array.from(stage.querySelectorAll('.zone'));
+const card  = {
+  title: document.getElementById('cTitle'),
+  buy:   document.getElementById('cBuy'),
+  notes: document.getElementById('cNotes'),
+  tags:  document.getElementById('cTags'),
+  linkC: document.getElementById('linkComponents'),
+  linkL: document.getElementById('linkLoadout')
+};
+const guidesToggle = document.getElementById('showGuides');
 
-let angleIndex = 0;          // which pod is focused (front)
-let dragging = false, sx=0, baseAngle=0;
-let autoTimer = null;
+let pinned = null;
 
-function build(){
-  ring.style.transform = `rotateX(${TILT}deg) rotateY(0deg)`;
-  ring.innerHTML = '';
-  PODS.forEach((p,i)=>{
-    const pod = document.createElement('div');
-    pod.className = 'pod';
-    pod.dataset.index = i;
-    pod.innerHTML = `
-      <div class="title">${p.title}</div>
-      <div class="meta">slot=${p.slot}</div>
-      <div class="val">${p.buy}</div>
-    `;
-    ring.appendChild(pod);
+/* Helpers */
+function setActive(slot){
+  zones.forEach(z => z.classList.toggle('active', z.dataset.slot === slot));
+}
+function fillCard(data, slot){
+  card.title.textContent = data?.title || 'Select a part';
+  card.buy.textContent   = data?.buy   || '—';
+  card.notes.textContent = data?.notes || '—';
+  card.tags.innerHTML = '';
+  (data?.tags || []).forEach(t=>{
+    const el = document.createElement('span'); el.className='tag'; el.textContent=t; card.tags.appendChild(el);
   });
-  layout();
-  focus(0);
+  card.linkC.href = data?.linkC || `components.html?slot=${encodeURIComponent(slot||'')}`;
+  card.linkL.href = data?.linkL || `loadout.html?slot=${encodeURIComponent(slot||'')}`;
+}
+function preview(slot){
+  fillCard(GEAR[slot], slot);
+  setActive(slot);
 }
 
-function layout(){
-  const pods = [...ring.children];
-  const step = 360/COUNT;
-  pods.forEach((pod,i)=>{
-    const a = (i * step);
-    pod.style.transform =
-      `translate(-50%,-50%) rotateY(${a}deg) translateZ(${RADIUS}px)`;
+/* Interactions (hover preview, click to pin/unpin, tap works too) */
+zones.forEach(z=>{
+  const slot = z.dataset.slot;
+  z.addEventListener('mouseenter', ()=>{ if(!pinned) preview(slot); });
+  z.addEventListener('click', ()=>{
+    if(pinned === slot){ pinned = null; setActive(null); fillCard(null); return; }
+    pinned = slot; preview(slot);
   });
-}
-
-function rotateTo(index){
-  angleIndex = (index + COUNT) % COUNT;
-  const deg = -(360/COUNT) * angleIndex;
-  ring.style.transform = `rotateX(${TILT}deg) rotateY(${deg}deg)`;
-  updateFocus();
-}
-
-function updateFocus(){
-  const pods = [...ring.children];
-  pods.forEach((pod,i)=>{
-    pod.classList.toggle('focus', i === angleIndex);
-  });
-  const data = PODS[angleIndex];
-  fillReadout(data);
-}
-
-function fillReadout(d){
-  read.title.textContent = d.title;
-  read.buy.textContent   = d.buy;
-  read.notes.textContent = d.notes;
-  read.badges.innerHTML  = '';
-  (d.tags||[]).forEach(t=>{
-    const s = document.createElement('span');
-    s.className='badge'; s.textContent=t;
-    read.badges.appendChild(s);
-  });
-  read.comp.href = d.linkC || '#';
-  read.load.href = d.linkL || '#';
-}
-
-function focus(i){ rotateTo(i); }
-
-/* Click / drag */
-ring.addEventListener('click', e=>{
-  const pod = e.target.closest('.pod'); if(!pod) return;
-  focus(Number(pod.dataset.index));
-});
-ring.addEventListener('mousedown', e=>{
-  dragging = true; sx = e.clientX; baseAngle = -(360/COUNT)*angleIndex;
-  e.preventDefault();
-});
-window.addEventListener('mousemove', e=>{
-  if(!dragging) return;
-  const dx = e.clientX - sx;
-  const deg = baseAngle + dx * 0.3; // sensitivity
-  ring.style.transform = `rotateX(${TILT}deg) rotateY(${deg}deg)`;
-});
-window.addEventListener('mouseup', e=>{
-  if(!dragging) return; dragging=false;
-  // snap to nearest pod
-  const m = ring.style.transform.match(/rotateY\(([-\d.]+)deg\)/);
-  const deg = m ? parseFloat(m[1]) : 0;
-  const idx = Math.round(-deg / (360/COUNT));
-  rotateTo(idx);
 });
 
-/* Buttons */
-prevBtn.onclick = ()=> rotateTo(angleIndex - 1);
-nextBtn.onclick = ()=> rotateTo(angleIndex + 1);
+/* Default preview */
+preview('helmet');
 
-/* Auto spin */
-function startAuto(){ stopAuto(); autoTimer = setInterval(()=>rotateTo(angleIndex+1), 2600); }
-function stopAuto(){ if(autoTimer){ clearInterval(autoTimer); autoTimer=null; } }
-autoChk.addEventListener('change', ()=> autoChk.checked ? startAuto() : stopAuto() );
-ring.addEventListener('mouseenter', stopAuto);
-ring.addEventListener('mouseleave', ()=> autoChk.checked && startAuto());
-
-/* Init */
-build();
-autoChk.checked ? startAuto() : stopAuto();
+/* Guides toggle (forces glow outlines visible) */
+guidesToggle.addEventListener('change', e=>{
+  const on = e.target.checked;
+  zones.forEach(z=>{
+    const glow = z.querySelector('.glow');
+    glow.style.stroke = on ? 'var(--border)' : (z.classList.contains('active') ? 'var(--border)' : 'transparent');
+  });
+});
 </script>
 </body>
 </html>
