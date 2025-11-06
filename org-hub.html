@@ -381,7 +381,7 @@ const esc = s => { const d=document.createElement('div'); d.textContent = s ?? '
     const title = prompt('Announcement title?'); if (!title) return;
     const body  = prompt('Body (optional):') || null;
     try{
-      const { error } = await sb.from('announcements').insert({ title, body });
+      const { error } = await sb.from('announcements').insert({ title, body,   posted_by: session.user.id });
       if (error) throw error; loadAnnouncements();
     }catch(e){ alert('Failed: '+e.message); }
   };
