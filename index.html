@@ -34,6 +34,16 @@ body{opacity:0}
   text-decoration: none;
 }
 
+/* Announcement action buttons */
+.annc-row{ display:flex; align-items:center; justify-content:space-between; gap:8px }
+.annc-actions{ display:flex; gap:6px }
+.annc-btn{
+  padding:4px 8px; border-radius:8px; border:1px solid var(--border);
+  background:transparent; color:var(--accent); cursor:pointer; font-family:'Play';
+  font-size:12px; line-height:1;
+}
+.annc-btn:hover{ background:var(--accent); color:#000 }
+
 /* Background */
 #goldDust{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;background:#000}
 .hud-grid{
@@ -96,7 +106,7 @@ body::after{
 .action p{margin:0 0 10px;color:var(--muted);font-size:13px}
 .action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
 
-/* “Your Missions” list + Announcements */
+/* Lists */
 .list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .item{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0f0f0f}
 .item h4{margin:0 0 4px;color:var(--accent);font-size:15px}
@@ -179,7 +189,7 @@ body::after{
            alt="Rank">
     </section>
 
-    <!-- NEW: Your Missions + Announcements -->
+    <!-- Your Missions + Announcements -->
     <section class="grid-2">
       <!-- Your Missions -->
       <div class="card">
@@ -375,7 +385,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     const s = Math.floor((Date.now() - new Date(iso)) / 1000);
     const t = [[31536000,'y'],[2592000,'mo'],[604800,'w'],[86400,'d'],[3600,'h'],[60,'m'],[1,'s']];
     for (const [sec, lbl] of t) {
-      if (s >= sec) return Math.floor(s/sec) + lbl + ' ago';   // <-- FIXED (lbl)
+      if (s >= sec) return Math.floor(s/sec) + lbl + ' ago';
     }
     return 'just now';
   };
@@ -409,9 +419,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   }
 
   const emailFallback  = session.user?.email || '';
-  const handleFallback = emailFallback.split('@')[0] || 'Unknown';
-
-  const handle   = row.handle || row.display_name || handleFallback;
+  theHandle  = row.handle || row.display_name || emailFallback.split('@')[0] || 'Unknown';
   const rankName = row.current_rank_name || 'Unranked';
   const rankCode = row.current_rank_code || '';
   const category = row.current_rank_category || '—';
@@ -419,9 +427,9 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   const storageUrl = rankCode ? sb.storage.from('Ranks').getPublicUrl(`${rankCode}.png`).data.publicUrl : '';
   const rankImg    = row.current_rank_image_url || storageUrl;
 
-  const prettyName = handle.replace(/\b\w/g, c => c.toUpperCase());
+  const prettyName = theHandle.replace(/\b\w/g, c => c.toUpperCase());
   out('#mName', prettyName);
-  out('#mRank', rankName);               // hide code in display
+  out('#mRank', rankName);
   out('#mCategory', category);
 
   const imgEl = $('#mRankImg');
@@ -439,7 +447,6 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   /* ---- Your Missions (attended + last 5) ---- */
   async function loadMissions() {
     try {
-      // Try embedded FK first (requires mission_attendees.mission_id -> missions.id)
       let { data, error } = await sb
         .from('mission_attendees')
         .select('mission_id, joined_at, missions(id,title,start_time)')
@@ -447,7 +454,6 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
         .order('joined_at', { ascending:false });
       if (error) throw error;
 
-      // If Supabase didn't hydrate the relation, missions will be null; fallback to 2-step fetch
       if (data && data.length && data[0].missions == null) {
         const ids = [...new Set(data.map(r => r.mission_id))];
         if (ids.length) {
@@ -487,7 +493,18 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   }
   await loadMissions();
 
-  /* ---- Announcements (latest 5) ---- */
+  /* ---- Elevation (Officer/Admin) ---- */
+  let elevated = false;
+  try {
+    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
+    elevated = !!data;
+  } catch (_) {}
+
+  // Show "Post" only for elevated
+  const postLink = $('#postAnnc');
+  if (elevated && postLink) postLink.style.display = '';
+
+  /* ---- Announcements (latest 5) + Edit/Delete ---- */
   async function loadAnnouncements(){
     const box = $('#annc');
     try{
@@ -516,16 +533,52 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
 
       box.innerHTML = data.map(a => {
         const who = names[a.posted_by] || 'Officer';
+        const canEdit = elevated || a.posted_by === session.user.id;
         return `
-          <div class="item">
-            <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
+          <div class="item" data-id="${a.id}">
+            <div class="annc-row">
+              <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
+              ${canEdit ? `
+                <div class="annc-actions">
+                  <button class="annc-btn edit" title="Edit">✎ Edit</button>
+                  <button class="annc-btn delete" title="Delete">✕ Delete</button>
+                </div>` : ``}
+            </div>
             <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
             ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
           </div>`;
       }).join('');
 
+      // expand toggle
       box.querySelectorAll('.expand').forEach(el=>{
         el.onclick = ()=> el.classList.toggle('open');
+      });
+
+      // Edit
+      box.querySelectorAll('.annc-btn.edit').forEach(btn=>{
+        btn.onclick = async (e)=>{
+          const item = e.target.closest('.item');
+          const id = item.dataset.id;
+          const oldTitle = item.querySelector('h4').textContent;
+          const oldBody  = item.querySelector('.expand-body')?.textContent || '';
+          const title = prompt('Edit title:', oldTitle); if(title===null) return;
+          const body  = prompt('Edit body (optional):', oldBody);
+          const { error } = await sb.from('announcements').update({ title, body }).eq('id', id);
+          if(error){ alert('Edit failed: ' + error.message); return; }
+          await loadAnnouncements();
+        };
+      });
+
+      // Delete
+      box.querySelectorAll('.annc-btn.delete').forEach(btn=>{
+        btn.onclick = async (e)=>{
+          const item = e.target.closest('.item');
+          const id = item.dataset.id;
+          if(!confirm('Delete this announcement?')) return;
+          const { error } = await sb.from('announcements').delete().eq('id', id);
+          if(error){ alert('Delete failed: ' + error.message); return; }
+          await loadAnnouncements();
+        };
       });
 
     }catch(e){
@@ -535,20 +588,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   }
   await loadAnnouncements();
 
-  /* ---- Elevation: show Post link only for officers/admins ---- */
-  let elevated = false;
-  try {
-    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
-    elevated = !!data;
-  } catch (_) {}
-
-  if (elevated) {
-    const post = $('#postAnnc');
-    if (post) post.style.display = '';
-  }
-
-  /* ---- Post announcement (RLS: posted_by must equal auth.uid()) ---- */
-  const postLink = $('#postAnnc');
+  /* ---- Post announcement (elevated only) ---- */
   if (postLink) {
     postLink.onclick = async (ev) => {
       ev.preventDefault();
