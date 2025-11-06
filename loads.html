@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JMBN Loadout — Interactive Blueprint</title>
+<title>JMBN Loadout — AR Overlay v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -14,181 +14,209 @@
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif}
 
 /* Layout */
-.wrap{max-width:1200px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(320px,740px) 1fr;gap:16px}
-@media (max-width:920px){.wrap{grid-template-columns:1fr}}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 0 18px rgba(214,180,76,.16)}
+.wrap{max-width:1180px;margin:20px auto;padding:0 14px;display:grid;grid-template-columns:1fr 340px;gap:16px}
+@media(max-width:1080px){.wrap{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 0 18px rgba(214,180,76,.18)}
 h1{margin:0 0 8px;color:var(--accent);font-size:22px}
 .note{color:var(--muted);font-size:12px}
 
-/* Figure */
-.figure{position:relative;overflow:hidden;border-radius:12px}
-.figure img{display:block;width:100%;height:auto;filter:contrast(1.05) brightness(.9)}
-
-/* SVG overlay */
-.blueprint{position:absolute;inset:0}
-svg{display:block;width:100%;height:100%}
-
-/* Zones */
-.zone .hit{fill:transparent;cursor:pointer}
-.zone .glow{fill:none;stroke:transparent;stroke-width:2}
-.zone.active .glow,
-.zone:hover  .glow{stroke:var(--border);filter:drop-shadow(0 0 8px rgba(214,180,76,.55))}
-.zone .label{fill:#f2d675;font-size:12px;opacity:0;transition:opacity .15s ease}
-.zone:hover .label,
-.zone.active .label{opacity:1}
-
-/* Right info card */
-.side{position:sticky;top:14px;align-self:start}
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)), var(--card);
-  border:1px solid var(--border);border-radius:14px;padding:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 18px rgba(214,180,76,.18);
-  backdrop-filter: blur(3px);min-height:220px;display:flex;flex-direction:column;gap:8px
+/* Stage */
+.stage{
+  position:relative;overflow:hidden;border-radius:12px;
+  background:
+    radial-gradient(1200px 800px at 20% -10%, rgba(242,214,117,.06), transparent 60%),
+    radial-gradient(900px 600px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  min-height:640px;
 }
-.card h3{margin:0;color:var(--accent);font-size:18px}
-.meta{display:flex;gap:6px;flex-wrap:wrap}
-.tag{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
-.field{font-size:13px;line-height:1.4}
-.field span{color:var(--muted);font-size:12px;display:block}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-.btn{display:inline-flex;align-items:center;padding:7px 12px;border-radius:10px;border:1px solid var(--border);text-decoration:none}
-.btn.primary{background:linear-gradient(180deg,#f2d675,#e7c760);color:#000;font-weight:700}
-.btn.ghost{color:var(--accent)}
+.stage img{display:block;width:100%;height:auto;opacity:.95}
 
-/* Helpers */
-.controls{display:flex;gap:10px;align-items:center;margin-top:6px}
-.controls input{accent-color:#c9b06a}
+/* Pulse ring center */
+@keyframes pulse {
+  0% {opacity:0.4;transform:scale(1)}
+  70%{opacity:0;transform:scale(1.8)}
+  100%{opacity:0;transform:scale(1.8)}
+}
+.pulse{
+  position:absolute;left:50%;top:32%;
+  width:140px;height:140px;border:2px solid var(--accent);
+  border-radius:50%;transform:translate(-50%,-50%);
+  animation:pulse 3s infinite;
+  pointer-events:none;
+}
+
+/* HUD grid */
+.grid{
+  position:absolute;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:screen;
+  background:
+    linear-gradient(rgba(214,180,76,.35) 1px, transparent 1px) 0 0/ 100% 40px,
+    linear-gradient(90deg, rgba(214,180,76,.35) 1px, transparent 1px) 0 0/ 40px 100%;
+}
+
+/* Beams */
+svg{position:absolute;inset:0;display:block;width:100%;height:100%}
+@keyframes beamSweep{to{stroke-dashoffset:-1000}}
+.beam{
+  stroke:var(--border);stroke-width:1.8;fill:none;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px rgba(214,180,76,.55));opacity:.9;
+  stroke-dasharray:6 10;stroke-dashoffset:0;animation:beamSweep 10s linear infinite;
+}
+
+/* Chips */
+@keyframes float {
+  0%,100%{transform:translate(-50%,-50%) translateY(-2px)}
+  50%{transform:translate(-50%,-50%) translateY(4px)}
+}
+.chip{
+  position:absolute;transform:translate(-50%,-50%);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)), var(--card);
+  border:1px solid var(--border);border-radius:12px;padding:8px 10px;
+  color:var(--accent);font-weight:700;letter-spacing:.2px;
+  box-shadow:0 6px 20px rgba(0,0,0,.55), 0 0 18px rgba(214,180,76,.18);
+  backdrop-filter: blur(3px);
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+  animation:float 6s ease-in-out infinite;
+}
+.chip:hover{transform:translate(-50%,-50%) translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.6), 0 0 22px rgba(214,180,76,.24)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+
+/* Expanded card inline */
+.card-mini{opacity:0;max-height:0;overflow:hidden;transition:.3s ease}
+.chip.expanded .card-mini{opacity:1;max-height:300px}
+.chip.expanded{padding:10px 12px; color:var(--text);
+  box-shadow:0 0 20px rgba(242,214,117,.45),0 0 40px rgba(242,214,117,.25)}
+.chip .title{color:var(--accent)}
+.card-mini .row{font-size:12px;line-height:1.35;color:var(--text)}
+.card-mini .row span{color:var(--muted);display:block}
+.actions{display:flex;gap:8px;margin-top:8px}
+.btn{border:1px solid var(--border);border-radius:10px;padding:6px 10px;text-decoration:none;color:#000;
+     background:linear-gradient(180deg,#f2d675,#e7c760);font-weight:700}
+
+/* Right rail */
+.legend .badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted);margin-right:6px}
+.legend li{margin:8px 0}
+.control{margin-top:10px;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- LEFT: Interactive blueprint -->
-    <div class="panel">
-      <h1>Loadout — Interactive Blueprint</h1>
-      <div class="note">Hover to preview, click to pin. Helmet & Armor live; add more anytime.</div>
+<div class="wrap">
+  <!-- STAGE -->
+  <div class="panel">
+    <h1>Loadout — AR Overlay v2</h1>
+    <div class="note">Hover/Click a chip. Beams shimmer, chips float, and details expand.</div>
 
-      <div class="figure" id="fig">
-        <!-- Character image (re-host in your repo if Reddit blocks hotlink) -->
-        <img src="https://i.redd.it/21ngs91ahfqa1.jpg" alt="Character loadout">
+    <div class="stage" id="stage">
+      <div class="pulse"></div>
+      <div class="grid"></div>
+      <img src="https://i.redd.it/21ngs91ahfqa1.jpg" alt="Character">
 
-        <!-- SVG overlay (1000×1500 viewBox) -->
-        <svg class="blueprint" viewBox="0 0 1000 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Gear zones">
-          <!-- HELMET (nudged) -->
-          <g class="zone" data-slot="helmet" data-x="505" data-y="215">
-            <circle class="hit"  cx="505" cy="215" r="115"></circle>
-            <circle class="glow" cx="505" cy="215" r="95"></circle>
-            <text class="label" x="505" y="195" text-anchor="middle">Helmet</text>
-          </g>
+      <!-- Beams -->
+      <svg viewBox="0 0 1000 1500" xmlns="http://www.w3.org/2000/svg" id="beams">
+        <path id="beam-helmet" class="beam" d="M 780 250 C 730 240, 640 230, 505 215" />
+        <path id="beam-armor"  class="beam" d="M 820 500 C 740 480, 620 470, 505 450" />
+      </svg>
 
-          <!-- ARMOR (chest, widened/lowered) -->
-          <g class="zone" data-slot="armor" data-x="505" data-y="450">
-            <rect class="hit"  x="355" y="325" width="300" height="280" rx="30" ry="30"></rect>
-            <rect class="glow" x="385" y="350" width="240" height="220" rx="18" ry="18"></rect>
-            <text class="label" x="505" y="338" text-anchor="middle">Armor</text>
-          </g>
-
-          <!-- (Add more zones later by duplicating a <g class="zone"> block) -->
-        </svg>
+      <!-- Chips -->
+      <div class="chip" id="chip-helmet" style="left:78%; top:17%" data-slot="helmet">
+        <div class="dot"></div><div class="title">Helmet</div>
+        <div class="card-mini">
+          <div class="row"><span>Where to buy</span><div class="val" data-field="buy"></div></div>
+          <div class="row"><span>Notes</span><div class="val" data-field="notes"></div></div>
+          <div class="actions">
+            <a class="btn" target="_self" data-link="components">Open Components</a>
+          </div>
+        </div>
       </div>
 
-      <div class="controls note">
-        <label><input type="checkbox" id="showGuides"> Show outlines</label>
-        <span>• Click again to unpin • Tap works on mobile</span>
-      </div>
-    </div>
-
-    <!-- RIGHT: Info panel -->
-    <div class="side">
-      <div class="card" id="card">
-        <h3 id="cTitle">Select a part</h3>
-        <div class="meta" id="cTags"></div>
-        <div class="field"><span>Where to buy</span><div id="cBuy">—</div></div>
-        <div class="field"><span>Notes</span><div id="cNotes">—</div></div>
-        <div class="actions">
-          <a id="linkComponents" class="btn primary" href="components.html">Open Components</a>
-          <a id="linkLoadout" class="btn ghost" href="loadout.html">Loadout</a>
+      <div class="chip" id="chip-armor" style="left:82%; top:34%" data-slot="armor">
+        <div class="dot"></div><div class="title">Armor</div>
+        <div class="card-mini">
+          <div class="row"><span>Where to buy</span><div class="val" data-field="buy"></div></div>
+          <div class="row"><span>Notes</span><div class="val" data-field="notes"></div></div>
+          <div class="actions">
+            <a class="btn" target="_self" data-link="components">Open Components</a>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="control">Tip: host image in your repo for consistent loading.</div>
   </div>
 
+  <!-- RIGHT RAIL -->
+  <div class="panel legend">
+    <h1>Legend & Data</h1>
+    <ul style="list-style:none;padding:0;margin:10px 0 0">
+      <li><span class="badge">Helmet</span> Odyssey Helmet — Cousin Crows (Orison), CRU-L5</li>
+      <li><span class="badge">Armor</span> Navis Chestpiece — Cubby Blast (Area18), Omega Pro (NB)</li>
+    </ul>
+    <div class="control">Add more chips by duplicating blocks and beams.</div>
+  </div>
+</div>
+
 <script>
-/* Data model — edit freely */
-const GEAR = {
+/* === DATA === */
+const DATA = {
   helmet: {
-    title: 'Odyssey Helmet',
-    buy: 'Orison – Cousin Crows; CRU-L5 – Platinum Bay',
-    notes: 'Clean visor clarity • stable comms • low profile.',
-    tags: ['Light','Exploration'],
+    buy: 'Orison — Cousin Crows; CRU-L5 — Platinum Bay',
+    notes: 'Clean visor clarity; stable comms; low profile.',
     linkC: 'components.html?slot=helmet',
-    linkL: 'loadout.html?slot=helmet'
+    anchor: { x:505, y:215 }
   },
   armor: {
-    title: 'Navis Chestpiece',
-    buy: 'Area18 – Cubby Blast; New Babbage – Omega Pro',
-    notes: 'Balanced plates • reliable availability • pairs with Navis legs.',
-    tags: ['Medium','Versatile'],
+    buy: 'Area18 — Cubby Blast; New Babbage — Omega Pro',
+    notes: 'Balanced plates; reliable availability; pairs with Navis legs.',
     linkC: 'components.html?slot=chest',
-    linkL: 'loadout.html?slot=armor'
+    anchor: { x:505, y:450 }
   }
 };
 
-/* DOM refs */
-const stage = document.querySelector('.blueprint');
-const zones = Array.from(stage.querySelectorAll('.zone'));
-const card  = {
-  title: document.getElementById('cTitle'),
-  buy:   document.getElementById('cBuy'),
-  notes: document.getElementById('cNotes'),
-  tags:  document.getElementById('cTags'),
-  linkC: document.getElementById('linkComponents'),
-  linkL: document.getElementById('linkLoadout')
-};
-const guidesToggle = document.getElementById('showGuides');
-
-let pinned = null;
-
-/* Helpers */
-function setActive(slot){
-  zones.forEach(z => z.classList.toggle('active', z.dataset.slot === slot));
-}
-function fillCard(data, slot){
-  card.title.textContent = data?.title || 'Select a part';
-  card.buy.textContent   = data?.buy   || '—';
-  card.notes.textContent = data?.notes || '—';
-  card.tags.innerHTML = '';
-  (data?.tags || []).forEach(t=>{
-    const el = document.createElement('span'); el.className='tag'; el.textContent=t; card.tags.appendChild(el);
+/* Fill chip data */
+function fillChip(chip, slot){
+  const d = DATA[slot]; if(!d) return;
+  chip.querySelectorAll('.card-mini .val').forEach(el=>{
+    const f = el.dataset.field; el.textContent = d[f] || '—';
   });
-  card.linkC.href = data?.linkC || `components.html?slot=${encodeURIComponent(slot||'')}`;
-  card.linkL.href = data?.linkL || `loadout.html?slot=${encodeURIComponent(slot||'')}`;
-}
-function preview(slot){
-  fillCard(GEAR[slot], slot);
-  setActive(slot);
+  chip.querySelector('[data-link="components"]').href = d.linkC || '#';
 }
 
-/* Interactions (hover preview, click to pin/unpin, tap works too) */
-zones.forEach(z=>{
-  const slot = z.dataset.slot;
-  z.addEventListener('mouseenter', ()=>{ if(!pinned) preview(slot); });
-  z.addEventListener('click', ()=>{
-    if(pinned === slot){ pinned = null; setActive(null); fillCard(null); return; }
-    pinned = slot; preview(slot);
+/* Expansion behavior */
+['helmet','armor'].forEach(slot=>{
+  const chip = document.getElementById('chip-'+slot);
+  fillChip(chip, slot);
+  chip.addEventListener('click', e=>{
+    e.stopPropagation();
+    const isOpen = chip.classList.contains('expanded');
+    document.querySelectorAll('.chip.expanded').forEach(c=>c.classList.remove('expanded'));
+    chip.classList.toggle('expanded', !isOpen);
   });
 });
 
-/* Default preview */
-preview('helmet');
-
-/* Guides toggle (forces glow outlines visible) */
-guidesToggle.addEventListener('change', e=>{
-  const on = e.target.checked;
-  zones.forEach(z=>{
-    const glow = z.querySelector('.glow');
-    glow.style.stroke = on ? 'var(--border)' : (z.classList.contains('active') ? 'var(--border)' : 'transparent');
-  });
+/* Tap outside to collapse */
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.chip')){
+    document.querySelectorAll('.chip.expanded').forEach(c=>c.classList.remove('expanded'));
+  }
 });
+
+/* Responsive beam recalculation */
+function updateBeams(){
+  const svg = document.getElementById('beams').getBoundingClientRect();
+  for(const slot in DATA){
+    const chip = document.getElementById('chip-'+slot);
+    const beam = document.getElementById('beam-'+slot);
+    if(!chip || !beam) continue;
+    const rect = chip.getBoundingClientRect();
+    const cx = rect.left + rect.width/2 - svg.left;
+    const cy = rect.top + rect.height/2 - svg.top;
+    const {x,y} = DATA[slot].anchor;
+    const midx = (cx + x)/2, midy = (cy + y)/2;
+    beam.setAttribute('d', `M ${cx.toFixed(1)} ${cy.toFixed(1)} C ${midx.toFixed(1)} ${midy.toFixed(1)}, ${midx.toFixed(1)} ${midy.toFixed(1)}, ${x} ${y}`);
+  }
+}
+window.addEventListener('resize', updateBeams);
+window.addEventListener('load', updateBeams);
 </script>
 </body>
 </html>
