@@ -437,92 +437,134 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   }
 
   /* ---- Your Missions (attended + last 5) ---- */
-async function loadAnnouncements(){
-  const box = $('#annc');
-  try{
-    const { data, error } = await sb
-      .from('announcements')
-      .select('id,title,body,created_at,posted_by')
-      .order('created_at',{ ascending:false })
-      .limit(5);
-    if(error) throw error;
-
-    if(!data || data.length===0){
-      box.innerHTML = '<div class="empty">No announcements yet.</div>';
-      return;
-    }
-
-    // Get display names
-    const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
-    let names = {};
-    if(uids.length){
-      const { data: profs } = await sb
-        .from('v_profiles_detailed')
-        .select('user_id,handle,display_name')
-        .in('user_id', uids);
-      (profs||[]).forEach(p => names[p.user_id] = p.handle || p.display_name || p.user_id.slice(0,8));
-    }
-
-    // Check elevation
-    let elevated = false;
+  async function loadMissions() {
     try {
-      const { data: elev } = await sb.rpc('is_elevated', { u: session.user.id });
-      elevated = !!elev;
-    } catch(_) {}
+      // Try embedded FK first (requires mission_attendees.mission_id -> missions.id)
+      let { data, error } = await sb
+        .from('mission_attendees')
+        .select('mission_id, joined_at, missions(id,title,start_time)')
+        .eq('user_id', session.user.id)
+        .order('joined_at', { ascending:false });
+      if (error) throw error;
 
-    // Render each announcement
-    box.innerHTML = data.map(a => {
-      const who = names[a.posted_by] || 'Officer';
-      const canEdit = elevated || a.posted_by === session.user.id;
-      return `
-        <div class="item" data-id="${a.id}">
-          <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
-          <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
-          ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
-          ${canEdit ? `
-            <div class="annc-actions">
-              <button class="annc-btn edit">Edit</button>
-              <button class="annc-btn delete">Delete</button>
-            </div>` : ''}
-        </div>`;
-    }).join('');
+      // If Supabase didn't hydrate the relation, missions will be null; fallback to 2-step fetch
+      if (data && data.length && data[0].missions == null) {
+        const ids = [...new Set(data.map(r => r.mission_id))];
+        if (ids.length) {
+          const { data: mrows, error: mErr } = await sb
+            .from('missions')
+            .select('id,title,start_time')
+            .in('id', ids);
+          if (!mErr) {
+            const map = Object.fromEntries((mrows||[]).map(m => [m.id, m]));
+            data = data.map(r => ({ ...r, missions: map[r.mission_id] || null }));
+          }
+        }
+      }
 
-    // expand toggle
-    box.querySelectorAll('.expand').forEach(el=>{
-      el.onclick = ()=> el.classList.toggle('open');
-    });
+      out('#attendedCount', data?.length ?? 0);
 
-    // wire buttons
-    box.querySelectorAll('.annc-btn.edit').forEach(btn=>{
-      btn.onclick = async (e)=>{
-        const item = e.target.closest('.item');
-        const id = item.dataset.id;
-        const oldTitle = item.querySelector('h4').textContent;
-        const oldBody  = item.querySelector('.expand-body')?.textContent || '';
-        const title = prompt('Edit title:', oldTitle); if(!title) return;
-        const body  = prompt('Edit body:', oldBody);
-        const { error } = await sb.from('announcements').update({ title, body }).eq('id', id);
-        if(error) return alert('Edit failed: ' + error.message);
-        await loadAnnouncements();
-      };
-    });
-
-    box.querySelectorAll('.annc-btn.delete').forEach(btn=>{
-      btn.onclick = async (e)=>{
-        const item = e.target.closest('.item');
-        const id = item.dataset.id;
-        if(!confirm('Delete this announcement?')) return;
-        const { error } = await sb.from('announcements').delete().eq('id', id);
-        if(error) return alert('Delete failed: ' + error.message);
-        await loadAnnouncements();
-      };
-    });
-
-  }catch(e){
-    box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
-    console.warn('annc:', e.message);
+      const list = $('#lastFive');
+      if (!data || data.length === 0) {
+        list.innerHTML = '<div class="empty">No missions yet.</div>';
+      } else {
+        const last5 = data.slice(0,5).map(r => {
+          const m = r.missions || {};
+          const when = m.start_time ? new Date(m.start_time).toLocaleString() : '';
+          return `<div class="item">
+                    <div class="meta">Joined ${timeAgo(r.joined_at)}</div>
+                    <h4>${esc(m.title || 'Untitled')}</h4>
+                    <div class="meta">${when}</div>
+                  </div>`;
+        }).join('');
+        list.innerHTML = last5;
+      }
+    } catch (e) {
+      console.warn('your missions:', e.message);
+      $('#lastFive').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
+      out('#attendedCount', '—');
+    }
   }
-}
+  await loadMissions();
+
+  /* ---- Announcements (latest 5) ---- */
+  async function loadAnnouncements(){
+    const box = $('#annc');
+    try{
+      const { data, error } = await sb
+        .from('announcements')
+        .select('id,title,body,created_at,posted_by')
+        .order('created_at',{ ascending:false })
+        .limit(5);
+      if(error) throw error;
+
+      if(!data || data.length===0){
+        box.innerHTML = '<div class="empty">No announcements yet.</div>';
+        return;
+      }
+
+      // Resolve display names
+      const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
+      let names = {};
+      if(uids.length){
+        const { data: profs } = await sb
+          .from('v_profiles_detailed')
+          .select('user_id,handle,display_name')
+          .in('user_id', uids);
+        (profs||[]).forEach(p => names[p.user_id] = p.handle || p.display_name || p.user_id.slice(0,8));
+      }
+
+      box.innerHTML = data.map(a => {
+        const who = names[a.posted_by] || 'Officer';
+        return `
+          <div class="item">
+            <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
+            <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
+            ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      box.querySelectorAll('.expand').forEach(el=>{
+        el.onclick = ()=> el.classList.toggle('open');
+      });
+
+    }catch(e){
+      box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
+      console.warn('annc:', e.message);
+    }
+  }
+  await loadAnnouncements();
+
+  /* ---- Elevation: show Post link only for officers/admins ---- */
+  let elevated = false;
+  try {
+    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
+    elevated = !!data;
+  } catch (_) {}
+
+  if (elevated) {
+    const post = $('#postAnnc');
+    if (post) post.style.display = '';
+  }
+
+  /* ---- Post announcement (RLS: posted_by must equal auth.uid()) ---- */
+  const postLink = $('#postAnnc');
+  if (postLink) {
+    postLink.onclick = async (ev) => {
+      ev.preventDefault();
+      const title = prompt('Announcement title?'); if (!title) return;
+      const body  = prompt('Body (optional):') || null;
+      try {
+        const { error } = await sb
+          .from('announcements')
+          .insert({ title, body, posted_by: session.user.id });
+        if (error) throw error;
+        await loadAnnouncements();
+      } catch (e) {
+        alert('Post failed: ' + e.message);
+      }
+    };
+  }
 
 })();
 </script>
