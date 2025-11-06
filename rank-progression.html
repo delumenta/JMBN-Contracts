@@ -25,6 +25,7 @@ body{
   color:var(--text); font-family:'Play',system-ui,sans-serif;
   margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
 }
+
 /* Header mount fallback */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
@@ -43,58 +44,79 @@ body{
 .nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
 .nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
 
-/* Panel */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
-.h{margin:0 0 8px;color:var(--accent);font-size:16px}
+/* Panels & sections */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:12px}
 
-/* Rank row */
+/* OPTION 1 — remove box only on the last section (Certifications) */
+.section:last-of-type{
+  border:none;
+  box-shadow:none;
+  background:transparent;
+  padding:0;                 /* cards will supply their own padding */
+}
+
+/* Titles / chips */
+.h{margin:0 0 8px;color:var(--accent);font-size:16px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent);display:inline-block}
+
+/* Header row */
 .rankRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
 .rankNow{display:flex;align-items:center;gap:10px}
-.rankImg{width:46px;height:46px;border-radius:10px;border:1px solid var(--border);background:#111;object-fit:contain}
-.badge-pg{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
+.rankImg{width:48px;height:48px;border-radius:12px;border:1px solid var(--border);background:#111;object-fit:contain}
+
+/* Next rank mini */
+.nextWrap{display:flex;align-items:center;gap:10px}
+.nextImg{width:48px;height:48px;border-radius:12px;border:1px solid var(--border);background:#111;object-fit:contain}
 
 /* Progress bars */
-.pb{display:grid;grid-template-columns:140px 1fr auto;gap:10px;align-items:center;margin:8px 0}
+.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;margin:8px 0}
 .pb .label{color:var(--muted);font-size:12px}
-.bar{height:12px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.bar{height:14px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Buttons */
-.btn{padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play'}
+/* Button */
+.btn{padding:10px 14px;border-radius:12px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';font-weight:700}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .btn:hover:not([disabled]){background:var(--accent);color:#000}
 
-/* Certifications grid */
-.cert-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(140px,1fr));
-  gap:12px;
-}
+/* Certifications grid & cards */
+.certs{margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 .cert{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:linear-gradient(180deg,#0c0c0c,#070707);
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;background:#0e0e0e;
+  border-radius:18px;
+  padding:16px 14px 14px;
+  min-height:220px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;
+  transition:transform .15s ease, box-shadow .25s ease, filter .2s ease, opacity .2s ease;
+  box-shadow:0 0 0 rgba(0,0,0,0);
+}
+.cert .thumb{
+  width:120px;height:120px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  border:1px solid rgba(214,180,76,.35);background:#111;
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.08);
-  text-align:center;
 }
-.cert img{
-  width:80px;height:80px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#111;
-  filter:grayscale(100%) opacity(.45);
-  transition:filter .2s ease, box-shadow .2s ease;
+.cert .thumb img{max-width:100%;max-height:100%;display:block}
+.cert .title{font-weight:700;margin-top:10px}
+.cert .code{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* Hover “lift” ONLY when owned */
+.cert.owned:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 14px rgba(214,180,76,.25);
 }
-.cert.owned img{
-  filter:none;
-  box-shadow:0 0 14px rgba(214,180,76,.35);
-}
-.cert .nm{font-size:13px;color:var(--text);font-weight:700}
-.cert .code{font-size:11px;color:var(--muted)}
+/* Dim when not owned */
+.cert.dim{opacity:.55;filter:grayscale(.65) contrast(.9)}
+/* Owned accent ring */
+.cert.owned{opacity:1;filter:none;border-color:#f2d675;box-shadow:0 0 22px rgba(214,180,76,.25), inset 0 0 1px rgba(214,180,76,.2)}
 </style>
 </head>
 <body>
-  <!-- 🔁 Shared header -->
+  <!-- Shared header gets mounted here -->
   <div id="header-container"></div>
   <script>
   (async () => {
@@ -106,7 +128,7 @@ body{
         const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
         document.querySelectorAll('.nav-btn').forEach(a => {
           const href = (a.getAttribute('href')||'').toLowerCase();
-          if (href === here) a.classList.add('active');
+          if (href === here || href.endsWith('progression.html')) a.classList.add('active');
         });
       });
     } catch {}
@@ -114,6 +136,7 @@ body{
   </script>
 
   <div class="panel">
+    <!-- Header row -->
     <div class="rankRow">
       <div class="rankNow">
         <img id="curImg" class="rankImg" alt="Rank">
@@ -121,7 +144,7 @@ body{
           <div class="h" style="margin:0">Rank Progression</div>
           <div style="font-size:12px;color:var(--muted)">
             Current: <b id="curRank">—</b>
-            <span class="badge-pg" id="curPg">PG: —</span>
+            <span class="badge" id="curPg">PG: —</span>
           </div>
         </div>
       </div>
@@ -130,49 +153,56 @@ body{
       </div>
     </div>
 
+    <!-- Next rank -->
     <div class="section">
       <h3 class="h">Next Rank</h3>
-      <div style="display:flex;align-items:center;gap:10px">
-        <img id="nextImg" class="rankImg" alt="Next">
+      <div class="nextWrap">
+        <img id="nextImg" class="nextImg" alt="Next">
         <div>
           <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
-          <div class="badge-pg" id="nextPg">PG: —</div>
+          <div class="badge" id="nextPg">PG: —</div>
         </div>
       </div>
     </div>
 
+    <!-- Requirements -->
     <div class="section">
       <h3 class="h">Requirements</h3>
+
       <div class="pb">
         <div class="label">Missions</div>
         <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
         <div class="val" id="valMissions">0 / 0</div>
       </div>
+
       <div class="pb">
         <div class="label">Hours</div>
         <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
         <div class="val" id="valHours">0 / 0</div>
       </div>
+
       <div class="pb">
         <div class="label">Certifications</div>
         <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
         <div class="val" id="valCerts">0 / 0</div>
       </div>
-      <div style="margin-top:8px;color:var(--muted);font-size:12px" id="note">Promotion is available when all targets are met.</div>
+
+      <div style="margin-top:8px;color:var(--muted);font-size:12px" id="note">
+        Promotion is available when all targets are met.
+      </div>
     </div>
 
+    <!-- History -->
     <div class="section">
       <h3 class="h">History</h3>
-      <div id="history" style="font-size:12px;color:var(--muted)">Loading…</div>
+      <div id="history" style="font-size:12px;color:var(--muted)">No changes yet.</div>
     </div>
 
-    <!-- Certifications -->
-    <div class="section">
+    <!-- Certifications (no outer box via :last-of-type rule) -->
+    <div class="section certs">
       <h3 class="h">Certifications</h3>
-      <div id="certWrap" class="cert-grid">
-        <!-- Filled by JS. Shows all certifications, lit up if owned -->
-      </div>
-      <div id="certEmpty" style="font-size:12px;color:var(--muted);display:none">—</div>
+      <div id="certGrid" class="grid"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Dim badges are not yet earned.</div>
     </div>
   </div>
 
@@ -180,204 +210,136 @@ body{
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
   <script>
-  const $ = s => document.querySelector(s);
-  let session=null, sb=null, me=null;
+    const $ = s => document.querySelector(s);
+    let session=null, sb=null, me=null;
 
-  function setFill(id, pct){
-    const el = $(id);
-    const x = Math.max(0, Math.min(1, Number(pct)||0));
-    el.style.width = (x*100) + '%';
-  }
+    function pct(a,b){ if(!b) return 1; return Math.max(0,Math.min(1,(+a||0)/(+b||0))); }
+    function setFill(id, p){ const el=$(id); if(el) el.style.width = (Math.round(p*10000)/100)+'%'; }
 
-  async function fetchPaygradeByCode(code){
-    if(!code) return null;
-    const { data, error } = await sb
-      .from('ranks')
-      .select('paygrade')
-      .eq('code', code)
-      .maybeSingle();
-    if(error) return null;
-    return data?.paygrade || null;
-  }
+    async function loadProgress(){
+      // profile + current rank img
+      const { data: prof } = await sb
+        .from('v_profiles_detailed')
+        .select('user_id,current_rank_code,current_rank_name,current_rank_image_url')
+        .eq('user_id', me).maybeSingle();
 
-  async function loadProgress(){
-    const { data: prof } = await sb
-      .from('v_profiles_detailed')
-      .select('user_id,current_rank_code,current_rank_name,current_rank_image_url')
-      .eq('user_id', me)
-      .maybeSingle();
+      const curCode = prof?.current_rank_code || null;
+      const curName = prof?.current_rank_name || '(unranked)';
+      $('#curRank').textContent = curName;
 
-    const curCode = prof?.current_rank_code || null;
-    const curName = prof?.current_rank_name || '(unranked)';
-    $('#curRank').textContent = curName;
+      let curImg = prof?.current_rank_image_url || '';
+      if(!curImg && curCode){
+        curImg = sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl;
+      }
+      $('#curImg').src = curImg || '';
+      $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
 
-    let curImg = prof?.current_rank_image_url || '';
-    if(!curImg && curCode){
-      curImg = sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl;
-    }
-    $('#curImg').src = curImg || '';
-    $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
+      // rank targets
+      const { data: prog } = await sb
+        .from('v_user_rank_progress')
+        .select('*')
+        .eq('user_id', me).maybeSingle();
 
-    const { data: prog } = await sb
-      .from('v_user_rank_progress')
-      .select('*')
-      .eq('user_id', me)
-      .maybeSingle();
+      const nextCode = prog?.next_code || null;
+      $('#nextName').textContent = prog?.next_name || '—';
+      $('#nextPg').textContent   = `PG: ${prog?.next_paygrade || '—'}`;
 
-    const nextCode = prog?.next_code || null;
-    const nextName = prog?.next_name || null;
-    $('#nextName').textContent = nextName || '—';
+      let nextImg = '';
+      if(nextCode){
+        nextImg = sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl;
+      }
+      $('#nextImg').src = nextImg || '';
+      $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
 
-    let nextImg = '';
-    if(nextCode){
-      nextImg = sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl;
-    }
-    $('#nextImg').src = nextImg || '';
-    $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
+      $('#curPg').textContent = `PG: ${prog?.current_paygrade || '—'}`;
 
-    const curPg = prog?.current_paygrade || (await fetchPaygradeByCode(curCode)) || '—';
-    const nxtPg = prog?.next_paygrade    || (await fetchPaygradeByCode(nextCode)) || '—';
-    $('#curPg').textContent  = `PG: ${curPg || '—'}`;
-    $('#nextPg').textContent = `PG: ${nxtPg || '—'}`;
+      // counters (missions, hours, certs)
+      const m = Number(prog?.missions_attended || 0);
+      const mt= Number(prog?.missions_target   || 0);
+      const h = Number(prog?.hours_total       || 0);
+      const ht= Number(prog?.hours_target      || 0);
+      const c = Number(prog?.certifications_total || 0);
+      const ct= Number(prog?.certification_target || 0);
 
-    // Missions/Hours targets:
-    const m = Number(prog?.missions_attended || 0);
-    const mt= Number(prog?.missions_target || 0);
-    const h = Number(prog?.hours_total || 0);
-    const ht= Number(prog?.hours_target || 0);
-    const ct= Number(prog?.certification_target || 0); // certs target (count), progress filled after we load certs
+      $('#valMissions').textContent = `${m} / ${mt}`;
+      $('#valHours').textContent    = `${h} / ${ht}`;
+      $('#valCerts').textContent    = `${c} / ${ct}`;
 
-    $('#valMissions').textContent  = `${m} / ${mt}`;
-    $('#valHours').textContent     = `${h} / ${ht}`;
+      setFill('#pbMissions', pct(m,mt));
+      setFill('#pbHours',    pct(h,ht));
+      setFill('#pbCerts',    pct(c,ct));
 
-    const pm = mt ? Math.min(1, m/mt) : 1;
-    const ph = ht ? Math.min(1, h/ht) : 1;
-    setFill('#pbMissions',  pm);
-    setFill('#pbHours',     ph);
-
-    // Store target on element for later update when we know owned count
-    $('#valCerts').dataset.target = String(ct);
-    updateCertBar(0, ct); // temporary until certs load
-
-    updateNoteAfterBars();
-  }
-
-  function updateCertBar(owned, target){
-    $('#valCerts').textContent = `${owned} / ${target}`;
-    const pc = target ? Math.min(1, owned/target) : (owned>0 ? 1 : 0);
-    setFill('#pbCerts', pc);
-  }
-
-  function updateNoteAfterBars(){
-    // Check all three bars to enable/disable button (we recalc after certs too)
-    const [mNow, mMax] = $('#valMissions').textContent.split('/').map(s=>Number(s.trim())||0);
-    const [hNow, hMax] = $('#valHours').textContent.split('/').map(s=>Number(s.trim())||0);
-    const [cNow, cMax] = $('#valCerts').textContent.split('/').map(s=>Number(s.trim())||0);
-
-    const allMet = (mMax ? mNow>=mMax : true) && (hMax ? hNow>=hMax : true) && (cMax ? cNow>=cMax : true);
-    $('#btnPromote').disabled = !allMet;
-
-    if (!cMax && !mMax && !hMax){
-      $('#note').textContent = 'No targets configured for next rank.';
-    } else if(allMet){
-      $('#note').textContent = 'All requirements met. You can request promotion.';
-    } else {
-      $('#note').textContent = 'Promotion is available when all targets are met.';
-    }
-  }
-
-  async function loadHistory(){
-    const { data, error } = await sb
-      .from('rank_changes')
-      .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
-      .eq('user_id', me)
-      .order('created_at', { ascending:false })
-      .limit(10);
-    if(error){ $('#history').textContent = 'Failed to load history.'; return; }
-
-    if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
-
-    $('#history').innerHTML = data.map(r=>{
-      const when = new Date(r.created_at).toLocaleString();
-      const who = r.changed_by?.slice(0,8) || 'system';
-      const from = r.from_rank_code || '—';
-      const to   = r.to_rank_code || '—';
-      const why  = r.reason || '';
-      return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span style="color:var(--muted)">— ${why}</span>`:''}</div>`;
-    }).join('');
-  }
-
-  async function loadCertifications(){
-    // Pull ALL certs with an "owned" flag for current user
-    const { data, error } = await sb
-      .from('v_user_certifications')
-      .select('certification_code,name,image_url,owned,sort_order');
-
-    const wrap = $('#certWrap'), empty = $('#certEmpty');
-
-    if(error){
-      wrap.innerHTML = '';
-      empty.style.display = '';
-      empty.textContent = 'Failed to load certifications.';
-      // keep bars/targets visible
-      updateNoteAfterBars();
-      return;
+      const allMet = (!!nextCode) && pct(m,mt)>=1 && pct(h,ht)>=1 && pct(c,ct)>=1;
+      const btn = $('#btnPromote');
+      btn.disabled = !allMet;
+      $('#note').textContent = !nextCode
+        ? 'You are at the highest rank or next rank is not configured.'
+        : (allMet ? 'All requirements met. You can request promotion.' : 'Promotion is available when all targets are met.');
     }
 
-    if(!data?.length){
-      wrap.innerHTML = '';
-      empty.style.display = '';
-      empty.textContent = '—';
-      // Owned = 0
-      const target = Number($('#valCerts').dataset.target || 0);
-      updateCertBar(0, target);
-      updateNoteAfterBars();
-      return;
+    async function loadHistory(){
+      const { data, error } = await sb
+        .from('rank_changes')
+        .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+        .eq('user_id', me)
+        .order('created_at', { ascending:false })
+        .limit(10);
+      if(error){ $('#history').textContent = 'Failed to load history.'; return; }
+      if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
+
+      $('#history').innerHTML = data.map(r=>{
+        const when = new Date(r.created_at).toLocaleString();
+        const who  = r.changed_by?.slice(0,8) || 'system';
+        const why  = r.reason ? ` — <span style="color:var(--muted)">${r.reason}</span>` : '';
+        return `<div>• ${when}: ${r.from_rank_code||'—'} → <b style="color:var(--accent)">${r.to_rank_code||'—'}</b> by ${who}${why}</div>`;
+      }).join('');
     }
 
-    // Render grid and compute owned count
-    let ownedCount = 0;
-    wrap.innerHTML = data.map(c=>{
-      if (c.owned) ownedCount++;
-      const safeName = (c.name||c.certification_code||'').toString();
-      const code = c.certification_code || '';
-      const url  = c.image_url || '';
-      return `
-        <div class="cert ${c.owned ? 'owned' : ''}">
-          <img src="${url}" alt="${code}" onerror="this.style.visibility='hidden'">
-          <div class="nm">${safeName}</div>
-          <div class="code">${code}</div>
-        </div>`;
-    }).join('');
-    empty.style.display = 'none';
+    async function loadCerts(){
+      // Expecting v_user_certifications with: certification_code, name, image_url, sort_order, is_active, user_id, owned(bool)
+      const { data, error } = await sb
+        .from('v_user_certifications')
+        .select('certification_code,name,image_url,is_active,owned')
+        .order('sort_order', { ascending:true });
 
-    const target = Number($('#valCerts').dataset.target || 0);
-    updateCertBar(ownedCount, target);
-    updateNoteAfterBars();
-  }
+      if(error){ $('#certGrid').innerHTML = '<div style="color:var(--bad)">Failed to load certifications.</div>'; return; }
+      if(!data?.length){ $('#certGrid').innerHTML = '<div style="color:var(--muted)">No certifications configured.</div>'; return; }
 
-  async function promote(){
-    const { data, error } = await sb.rpc('request_promotion', { p_user: me });
-    if(error){ alert('Promotion failed: ' + error.message); return; }
-    if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
-    alert('Promoted to ' + (data.to || 'next rank') + '!');
-    await loadProgress();
-    await loadHistory();
-    await loadCertifications(); // recalc cert bar after promotion
-  }
+      $('#certGrid').innerHTML = data.map(row=>{
+        const dim    = row.owned ? '' : 'dim';
+        const ownedC = row.owned ? 'owned' : '';
+        const imgUrl = row.image_url || '';
+        return `
+          <div class="cert ${dim} ${ownedC}">
+            <div class="thumb">
+              ${imgUrl ? `<img alt="${row.name||row.certification_code}" src="${imgUrl}">` : ''}
+            </div>
+            <div class="title">${row.name || row.certification_code}</div>
+            <div class="code">${row.certification_code}</div>
+          </div>
+        `;
+      }).join('');
+    }
 
-  document.addEventListener('DOMContentLoaded', async ()=>{
-    session = await requireAuth(); // from js/auth.js
-    if(!session) return;
-    sb = getSupabase();
-    me = session.user.id;
+    async function promote(){
+      const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+      if(error){ alert('Promotion failed: ' + error.message); return; }
+      if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+      alert('Promoted to ' + (data.to || 'next rank') + '!');
+      await loadProgress();
+      await loadHistory();
+    }
 
-    $('#btnPromote').onclick = promote;
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      session = await requireAuth();
+      if(!session) return;
+      sb = getSupabase();
+      me = session.user.id;
 
-    await loadProgress();
-    await loadHistory();
-    await loadCertifications();
-  });
+      $('#btnPromote').onclick = promote;
+
+      await Promise.all([loadProgress(), loadHistory(), loadCerts()]);
+    });
   </script>
 </body>
 </html>
