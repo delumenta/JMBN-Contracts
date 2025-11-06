@@ -67,34 +67,58 @@ body{
 .btn:hover:not([disabled]){background:var(--accent);color:#000}
 
 /* Certifications grid */
-.certGrid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:12px;margin-top:8px
-}
 .cert{
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  gap:8px;min-height:170px;background:#0d0d0d;border:1px solid var(--border);
-  border-radius:14px;padding:14px;text-align:center;
-  transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
+  min-height:170px;
+  background:transparent;
+  border:none;
+  border-radius:14px;
+  padding:10px;
+  text-align:center;
+  transition:transform .25s ease, box-shadow .25s ease, filter .25s ease, scale .25s ease;
 }
-.cert:hover{transform:translateY(-2px);box-shadow:0 0 14px rgba(214,180,76,.25)}
-.cert .thumb{
-  width:90px;height:90px;border-radius:12px;border:1px solid var(--border);background:#111;
-  display:flex;align-items:center;justify-content:center;overflow:hidden
-}
-.cert .thumb img{max-width:100%;max-height:100%;display:block}
 
-/* Dim vs owned */
-.cert.dim{opacity:.55;filter:grayscale(.65) contrast(.9)}
-.cert.owned{
-  opacity:1;filter:none;border-color:#f2d675;
-  box-shadow:0 0 22px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.2)
+/* Dim (locked) badges */
+.cert.dim{
+  opacity:.55;
+  filter:grayscale(.65) contrast(.9);
+  transform:scale(1);
 }
-.cert .title{font-weight:700}
-.cert .hint{font-size:12px;color:var(--muted)}
-</style>
-</head>
-<body>
+
+/* Owned (unlocked) badges */
+.cert.owned{
+  opacity:1;
+  filter:none;
+  transform:scale(1);
+  box-shadow:0 0 12px rgba(214,180,76,.25);
+}
+
+/* Hover only for owned */
+.cert.owned:hover{
+  transform:translateY(-4px) scale(1.05);
+  box-shadow:
+    0 0 22px rgba(242,214,117,.35),
+    0 0 40px rgba(242,214,117,.15),
+    inset 0 0 12px rgba(242,214,117,.1);
+  filter:saturate(1.2) brightness(1.1);
+}
+
+/* Thumbnail */
+.cert .thumb img{
+  max-width:100%;
+  max-height:100%;
+  display:block;
+  border-radius:12px;
+}
+
+/* Titles + hints */
+.cert .title{font-weight:700;}
+.cert .hint{font-size:12px;color:var(--muted);}
+
   <!-- 🔁 Shared header -->
   <div id="header-container"></div>
   <script>
