@@ -231,7 +231,7 @@ function render(rows){
   tbody.innerHTML=rows.map(r=>{
     const handle=toTitleCase(r.handle||r.display_name||r.user_id?.slice(0,8)||'—');
     const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
-    const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unranked';
+    const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
     const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
     const roles=normalizeRoles(r);
 
@@ -272,7 +272,7 @@ function viewMember(userId){
   const handle=toTitleCase(r.handle||r.display_name||r.user_id.slice(0,8));
   const attended=Number(r.missions_attended)||0;
   const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
-  const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unranked';
+  const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
   const roles=normalizeRoles(r);
   const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
 
