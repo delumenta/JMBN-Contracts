@@ -56,6 +56,14 @@ th{color:var(--accent);background:#080808;font-weight:500}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .name{font-weight:700}
+
+/* NEW: handle cell with rank image */
+.handleCell{display:flex;align-items:center;gap:10px}
+.handleCell img{
+  width:28px;height:28px;object-fit:contain;
+  border:1px solid var(--border);border-radius:6px;background:#111;flex:0 0 28px
+}
+
 /* Modal */
 .modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
 .modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:600px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
@@ -158,7 +166,7 @@ const esc = s => { const d=document.createElement('div'); d.textContent = s ?? '
 
 let sb=null, session=null;
 let ROWS = []; // data from view
-const RANK_BUCKET = 'Ranks'; // ✅ your bucket is case-sensitive
+const RANK_BUCKET = 'Ranks'; // ✅ bucket name is case-sensitive
 
 const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
 
@@ -176,11 +184,19 @@ function render(rows){
     return;
   }
   tbody.innerHTML = rows.map(r=>{
-    const handle = r.handle || r.display_name || r.user_id?.slice(0,8) || '—';
+    const handle   = r.handle || r.display_name || (r.user_id ? r.user_id.slice(0,8) : '—');
     const rankName = r.current_rank_name || '(unranked)';
+    const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+
     return `
       <tr>
-        <td class="name">${esc(handle)}</td>
+        <td>
+          <div class="handleCell">
+            ${imgUrl ? `<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy"
+                         onerror="this.style.display='none'">` : ``}
+            <span class="name">${esc(handle)}</span>
+          </div>
+        </td>
         <td>${esc(rankName)}</td>
         <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
       </tr>`;
@@ -192,7 +208,7 @@ function filterRows(){
   const term = (q.value||'').toLowerCase().trim();
   if(!term) return ROWS;
   return ROWS.filter(r=>{
-    const h = (r.handle || r.display_name || '').toLowerCase();
+    const h  = (r.handle || r.display_name || '').toLowerCase();
     const rn = (r.current_rank_name || '').toLowerCase();
     const rc = (r.current_rank_code || '').toLowerCase();
     return h.includes(term) || rn.includes(term) || rc.includes(term);
@@ -210,7 +226,6 @@ function viewMember(userId){
   const handle   = r.handle || r.display_name || r.user_id.slice(0,8);
   const attended = Number(r.missions_attended) || 0;
 
-  // Prefer view-provided image URL; fallback to bucket using code
   const imgUrl = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
 
   $('#viewTitle').textContent = `Member — ${handle}`;
