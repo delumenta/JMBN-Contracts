@@ -1,400 +1,201 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN Org Hub</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
-<style>
-:root{ --bg:#000; --panel:#0b0b0b; --card:#0c0c0c; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b; }
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0; color:var(--text); background:#000; font-family:'Play',system-ui,sans-serif}
-
-/* Background */
-#goldDust{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;background:#000}
-.hud-grid{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:
- linear-gradient(rgba(255,230,150,.03) 1px, transparent 1px),
- linear-gradient(90deg, rgba(255,230,150,.03) 1px, transparent 1px);
- background-size:80px 80px; animation:drift 80s linear infinite}
-@keyframes drift{from{background-position:0 0}to{background-position:-200px -200px}}
-body::after{content:"";position:fixed;inset:0;z-index:2;pointer-events:none;
- background:radial-gradient(1200px 800px at 50% 45%,rgba(0,0,0,0) 35%,rgba(0,0,0,.45) 70%,rgba(0,0,0,.75) 100%),
- linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.55))}
-
-/* Layout */
-.wrapper{position:relative; z-index:3; min-height:100%; padding:22px}
-.center{width:min(1180px,96vw); margin-inline:auto}
-
-/* Brand */
-.brand{display:flex; align-items:center; gap:12px; margin-bottom:12px}
-.brand-logo{width:56px; height:56px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(242,214,117,.35))}
-.brand h1{margin:0; font-size:clamp(22px,3.6vw,36px); color:var(--accent); font-weight:700}
-.tagline{color:var(--muted); font-size:13px; margin-top:2px}
-
-/* Cards */
-.card{background:rgba(11,11,11,.9); border:1px solid var(--border); border-radius:14px; padding:14px;
- box-shadow:0 0 18px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12); backdrop-filter:blur(6px) brightness(1.1) saturate(1.05); position:relative; overflow:hidden}
-.card::after{content:"";position:absolute;inset:0;border-radius:14px;background:
- linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.16) 50%,rgba(255,255,255,0) 70%);
- transform:translateX(-100%);transition:transform .6s ease;pointer-events:none}
-.card:hover::after{transform:translateX(100%)}
-
-/* Member */
-.member{display:grid; grid-template-columns:1fr 130px; gap:14px; align-items:center; margin-bottom:14px}
-.member .name{font-weight:900; font-size:20px; color:var(--accent)}
-.badge{border:1px solid var(--border); border-radius:999px; padding:4px 10px; font-size:12px; background:#0c0c0c; color:var(--muted)}
-.rankline{display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:14px; margin-top:6px}
-.rankimg{width:120px; height:120px; object-fit:contain; border-radius:10px; border:1px solid var(--border); background:#0c0c0c; display:block; justify-self:end}
-.small{font-size:12px; color:var(--muted); margin-top:4px}
-
-/* Grid */
-.grid{display:grid; grid-template-columns:2fr 1fr; gap:14px}
-@media(max-width:980px){.grid{grid-template-columns:1fr}}
-
-/* KPIs */
-.kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px}
-.kpi{background:#0a0a0a; border:1px solid var(--border); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px}
-.kpi .lbl{color:var(--muted); font-size:12px}
-.kpi .val{font-size:22px; font-weight:900; color:var(--accent)}
-.kpi .sub{font-size:12px; color:var(--muted)}
-.list{display:flex; flex-direction:column; gap:8px; margin-top:6px}
-.item{border:1px solid var(--border); border-radius:10px; padding:10px; background:#0f0f0f}
-.item h4{margin:0 0 4px; color:var(--accent); font-size:15px}
-.item .meta{font-size:12px; color:var(--muted)}
-.empty{color:var(--muted); font-size:13px; padding:10px}
-
-/* Section headers + buttons */
-.hsec{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
-.hsec h3{margin:0; color:var(--accent); font-size:16px}
-.btn{padding:7px 11px; border-radius:10px; background:linear-gradient(180deg,#0c0c0c,#060606);
- color:var(--accent); border:1px solid var(--border); cursor:pointer; font-family:'Play'}
-.btn:hover{background:var(--accent); color:#000}
-.link{color:var(--accent); text-decoration:none; font-weight:700}
-a.inline{color:var(--accent); text-decoration:underline}
-
-/* Expandable text */
-.expand{cursor:pointer}
-.expand-body{display:none; margin-top:6px; color:var(--text); font-size:13px}
-.expand.open + .expand-body{display:block}
-
-/* Countdown pill */
-.countdown{display:inline-block; border:1px solid var(--border); border-radius:999px; padding:2px 8px; font-size:12px; color:var(--muted)}
-</style>
-</head>
-<body>
-
-<canvas id="goldDust"></canvas>
-<div class="hud-grid"></div>
-
-<div class="wrapper">
-  <main class="center">
-    <!-- Brand -->
-    <div class="brand">
-      <img class="brand-logo" alt="JMBN"
-        src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
-      <div>
-        <h1>JMBN Org Hub</h1>
-        <div class="tagline">Hilarity • Immersion • Teamwork</div>
-      </div>
-    </div>
-
-    <!-- Member card -->
-    <section class="card member" id="memberCard">
-      <div>
-        <div class="name" id="mName">Loading…</div>
-        <div class="rankline">
-          <span id="mRank">Unranked</span>
-          <span class="badge" id="mCategory">—</span>
-          <span class="badge" id="mRole">Member</span>
-        </div>
-        <div class="small" id="mEmail"></div>
-      </div>
-      <img id="mRankImg" class="rankimg" alt="Rank">
-    </section>
-
-    <!-- KPIs -->
-    <section class="kpis">
-      <div class="kpi" id="kpiJoined">
-        <div class="lbl">Total Missions Joined</div>
-        <div class="val">—</div>
-        <div class="sub" id="kpiJoinedSub">All time</div>
-      </div>
-      <div class="kpi" id="kpiAvgHours">
-        <div class="lbl">Avg Mission Hours</div>
-        <div class="val">—</div>
-        <div class="sub">Across your joined missions</div>
-      </div>
-      <div class="kpi" id="kpiRecent">
-        <div class="lbl">Last 5 Missions Joined</div>
-        <div class="sub" id="kpiRecentList">Loading…</div>
-      </div>
-    </section>
-
-    <!-- Main grid -->
-    <section class="grid">
-      <!-- Left: Ongoing/Events -->
-      <div class="card">
-        <div class="hsec">
-          <h3>Upcoming Events (Planned / Active)</h3>
-          <div style="display:flex;gap:8px">
-            <a class="btn" href="mission-log.html">Open Mission Log</a>
-          </div>
-        </div>
-        <div id="events" class="list"><div class="empty">Loading…</div></div>
-      </div>
-
-      <!-- Right: Announcements -->
-      <div class="card">
-        <div class="hsec">
-          <h3>Announcements</h3>
-          <a class="link" href="#" id="postAnnc" style="display:none">Post</a>
-        </div>
-        <div id="annc" class="list"><div class="empty">No announcements yet.</div></div>
-      </div>
-    </section>
-
-    <div class="footer" style="text-align:center;margin-top:16px;color:var(--muted);font-size:12px">
-      Theme: Play • Gold · Links are relative (GitHub Pages ready)
-    </div>
-  </main>
-</div>
-
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
 <script>
-/* helpers */
-const $ = s => document.querySelector(s);
-const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
-const timeAgo = (iso) => {
-  if(!iso) return '';
-  const s = Math.floor((Date.now() - new Date(iso)) / 1000);
-  const t = [[31536000,'y'],[2592000,'mo'],[604800,'w'],[86400,'d'],[3600,'h'],[60,'m'],[1,'s']];
-  for(const [sec, label] of t){ if(s >= sec) return Math.floor(s/sec)+label+' ago'; }
-  return 'just now';
-};
-const fmt = n => (n||n===0) ? Number(n).toLocaleString() : '—';
+// ===== SG timezone formatting (add once near your helpers) =====
+const SG_FMT = new Intl.DateTimeFormat('en-SG', {
+  timeZone: 'Asia/Singapore', year: 'numeric', month: 'short', day: '2-digit',
+  hour: '2-digit', minute: '2-digit'
+});
+function sgDateTime(iso){ return iso ? SG_FMT.format(new Date(iso)) : 'TBA'; }
+const CLEAN = s => (s || '').trim().toLowerCase();
+const IS_ONGOING_STATUS = s => (s==='planned' || s==='active');
 
-/* tiny starfield */
-(function(){
-  const c=document.getElementById('goldDust'),ctx=c.getContext('2d',{alpha:true});
-  let W,H,DPR=Math.min(devicePixelRatio||1,2),stars=[];
-  function resize(){W=c.width=innerWidth*DPR;H=c.height=innerHeight*DPR;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px'}
-  resize(); addEventListener('resize',resize);
-  for(let i=0;i<700;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.2});
-  (function draw(){ctx.clearRect(0,0,W,H);ctx.globalCompositeOperation='lighter';ctx.fillStyle='rgba(242,214,117,.8)';
-    for(const s of stars){ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.283);ctx.fill()} requestAnimationFrame(draw)})();
-})();
+// ===== Render helpers =====
+function missionCardHtml(m, tally, mineSet, elevated){
+  const id = m.id;
+  const ts = m.start_time ? new Date(m.start_time) : null;
+  const when = ts ? sgDateTime(m.start_time) : 'TBA';
+  const going = mineSet?.has(id);
+  const rsvpBtn = `
+    <button class="btn rsvp-btn" data-id="${id}" data-state="${going?'going':'not'}" style="margin-left:6px">
+      ${going ? 'Withdraw' : 'I’m going'}
+    </button>`;
+  const count = Number(tally[id] || 0);
+  const editLink = elevated ? ` &nbsp;·&nbsp; <a class="inline" href="mission-editor.html?id=${id}">Edit</a>` : '';
+  const countdown = ts ? `<span class="countdown" data-ts="${ts.toISOString()}">—</span>` : '<span class="countdown">TBA</span>';
 
-/* main */
-(async () => {
-  const session = await requireAuth(); if(!session) return;
-  const sb = getSupabase();
+  return `
+    <div class="item">
+      <h4>${esc(m.title || 'Untitled')}</h4>
+      <div class="meta">
+        ${esc(m.status || '')} • ${when} • ${countdown} •
+        <span class="small">RSVP: <b class="rsvp-count" data-id="${id}">${fmt(count)}</b></span>
+        ${rsvpBtn}
+        &nbsp; · &nbsp;
+        <a class="inline" href="mission-log.html">Open Mission Log</a>
+        ${editLink}
+      </div>
+    </div>`;
+}
 
-  /* member card */
-  let me={};
+// ===== Countdown driver (shared) =====
+function startCountdownTicker(){
+  function tick(){
+    document.querySelectorAll('.countdown').forEach(el=>{
+      const tsStr = el.getAttribute('data-ts');
+      if(!tsStr){ el.textContent = 'TBA'; return; }
+      const ts = new Date(tsStr).getTime();
+      const diff = ts - Date.now();
+      if(diff <= 0){ el.textContent = 'Started'; return; }
+      const d = Math.floor(diff/86400000);
+      const h = Math.floor((diff%86400000)/3600000);
+      const m = Math.floor((diff%3600000)/60000);
+      el.textContent = `${d}d ${h}h ${m}m`;
+    });
+  }
+  tick();
+  if(!window.__jmbnCountdown){
+    window.__jmbnCountdown = setInterval(tick, 60000);
+  }
+}
+
+// ===== RSVP helpers =====
+async function getRsvpCounts(sb, ids){
+  if(!ids.length) return {};
+  // Pull all rows for these missions and tally client-side
+  const { data, error } = await sb
+    .from('mission_attendees')
+    .select('mission_id')
+    .in('mission_id', ids);
+  if(error){ console.warn('RSVP counts:', error.message); return {}; }
+  const tally = {};
+  (data||[]).forEach(a => { tally[a.mission_id] = (tally[a.mission_id]||0) + 1; });
+  return tally;
+}
+
+async function getMineRsvps(sb, userId, ids){
+  if(!ids.length) return new Set();
+  const { data, error } = await sb
+    .from('mission_attendees')
+    .select('mission_id')
+    .eq('user_id', userId)
+    .in('mission_id', ids);
+  if(error){ console.warn('Mine RSVPs:', error.message); return new Set(); }
+  return new Set((data||[]).map(x=>x.mission_id));
+}
+
+async function toggleRsvp(sb, missionId, userId, currentState){
+  if(currentState === 'going'){
+    await sb.from('mission_attendees')
+      .delete()
+      .eq('mission_id', missionId)
+      .eq('user_id', userId);
+  }else{
+    await sb.from('mission_attendees').insert({ mission_id: missionId, user_id: userId });
+  }
+  // Refresh count (cheap head-count)
+  const { count } = await sb
+    .from('mission_attendees')
+    .select('mission_id', { count: 'exact', head: true })
+    .eq('mission_id', missionId);
+  const cEl = document.querySelector(`.rsvp-count[data-id="${missionId}"]`);
+  if(cEl) cEl.textContent = fmt(count || 0);
+  const btn = document.querySelector(`.rsvp-btn[data-id="${missionId}"]`);
+  if(btn){
+    const next = currentState === 'going' ? 'not' : 'going';
+    btn.dataset.state = next;
+    btn.textContent = next === 'going' ? 'Withdraw' : 'I’m going';
+  }
+}
+
+// ===== Bucketize & render =====
+function bucketizeForDashboard(rows){
+  const now = Date.now();
+  const SIX_HR = 6*3600*1000;
+  const ONE_DAY = 24*3600*1000;
+  const ongoing = [];
+  const upcoming = [];
+
+  for(const m of rows){
+    if(!IS_ONGOING_STATUS(CLEAN(m.status))) continue;
+    if(!m.start_time) continue; // must have a date to appear on dashboard buckets
+    const ts = new Date(m.start_time).getTime();
+    if(Number.isNaN(ts)) continue;
+    if(ts >= now - SIX_HR && ts <= now + ONE_DAY) ongoing.push(m); // "Ongoing now" window
+    if(ts > now) upcoming.push(m);                                  // Future only
+  }
+  ongoing.sort((a,b)=>new Date(a.start_time)-new Date(b.start_time));
+  upcoming.sort((a,b)=>new Date(a.start_time)-new Date(b.start_time));
+  return { ongoing, upcoming };
+}
+
+function renderEventsBox(boxEl, ongoing, upcoming, tally, mineSet, elevated){
+  const parts = [];
+  // Ongoing now
+  parts.push(`<div style="margin-bottom:6px"><span class="badge">Ongoing now</span></div>`);
+  if(ongoing.length){
+    parts.push(ongoing.map(m => missionCardHtml(m, tally, mineSet, elevated)).join(''));
+  }else{
+    parts.push(`<div class="empty">No missions currently within the window.</div>`);
+  }
+
+  // Upcoming
+  parts.push(`<div style="margin:10px 0 6px"><span class="badge">Upcoming</span></div>`);
+  if(upcoming.length){
+    parts.push(upcoming.map(m => missionCardHtml(m, tally, mineSet, elevated)).join(''));
+  }else{
+    parts.push(`<div class="empty">No future missions scheduled.</div>`);
+  }
+
+  boxEl.innerHTML = parts.join('');
+  startCountdownTicker();
+
+  // wire RSVP buttons
+  boxEl.querySelectorAll('.rsvp-btn').forEach(btn=>{
+    btn.onclick = () => toggleRsvp(sb, btn.dataset.id, session.user.id, btn.dataset.state);
+  });
+}
+
+// ===== REPLACEMENT: loadEvents() with buckets + RSVP + SG TZ + Realtime =====
+async function loadEvents(){
+  const box = document.querySelector('#events');
+  if(!box) return;
+  box.innerHTML = '<div class="empty">Loading…</div>';
+
   try{
+    // Pull *recent and future* missions and filter client-side for status
+    // Wider window ensures ongoing bucket can include already-started missions
+    const sinceISO = new Date(Date.now() - 48*3600*1000).toISOString(); // 48h lookback to be safe
     const { data, error } = await sb
-      .from('v_profiles_detailed')
-      .select('handle,display_name,current_rank_name,current_rank_code,current_rank_image_url,current_rank_category,ingame_role')
-      .eq('user_id', session.user.id)
-      .maybeSingle();
-    if(error) throw error; me=data||{};
-  }catch(e){ console.warn('member view:', e.message); }
+      .from('missions')
+      .select('id,title,status,start_time')
+      .or(`start_time.gte.${sinceISO},start_time.is.null`) // keep nulls out of buckets but harmless to fetch
+      .order('start_time', { ascending: true })
+      .limit(100);
+    if(error) throw error;
 
-  const handle = me.handle || me.display_name || (session.user.email||'').split('@')[0] || 'Pilot';
-  $('#mName').textContent = handle.charAt(0).toUpperCase() + handle.slice(1);
-  $('#mRank').textContent = me.current_rank_code ? `${me.current_rank_name||'Unranked'} (${me.current_rank_code})` : (me.current_rank_name||'Unranked');
-  $('#mCategory').textContent = me.current_rank_category || '—';
-  $('#mRole').textContent = me.ingame_role || 'Member';
-  $('#mEmail').textContent = session.user.email || '';
-  const rankImg = me.current_rank_image_url || ( me.current_rank_code ? sb.storage.from('Ranks').getPublicUrl(`${me.current_rank_code}.png`).data.publicUrl : '' );
-  if(rankImg){ const img=$('#mRankImg'); img.src=rankImg; img.alt=me.current_rank_name||'Rank'; }
+    const rows = (data||[]).filter(m => IS_ONGOING_STATUS(CLEAN(m.status)));
+    const { ongoing, upcoming } = bucketizeForDashboard(rows);
 
-  /* officer? */
-  let elevated=false;
-  try{ const { data } = await sb.rpc('is_elevated',{ u: session.user.id }); elevated=!!data; }catch(e){}
-  if(elevated) $('#postAnnc').style.display='';
+    const ids = [...new Set([...ongoing, ...upcoming].map(m => m.id))];
+    const [tally, mineSet] = await Promise.all([
+      getRsvpCounts(sb, ids),
+      getMineRsvps(sb, session.user.id, ids)
+    ]);
 
-  /* KPIs: joined count, avg hours, last 5 joined */
-  (async function loadKPIs(){
-    try{
-      const { data, error } = await sb
-        .from('mission_attendees')
-        .select('mission_id, joined_at, missions(id, title, hours, start_time)')
-        .eq('user_id', session.user.id)
-        .order('joined_at', { ascending:false });
-      if(error) throw error;
-      const rows = data || [];
+    // determine elevation (you already computed earlier; reusing if available)
+    let elevated = false;
+    try{ const { data: elev } = await sb.rpc('is_elevated', { u: session.user.id }); elevated = !!elev; }catch(_){}
 
-      $('#kpiJoined .val').textContent = fmt(rows.length);
+    renderEventsBox(box, ongoing, upcoming, tally, mineSet, elevated);
 
-      const hours = rows.map(r => Number(r.missions?.hours)).filter(n => Number.isFinite(n));
-      const avg = hours.length ? (hours.reduce((a,b)=>a+b,0)/hours.length) : null;
-      $('#kpiAvgHours .val').textContent = avg!=null ? (Math.round(avg*10)/10) : '—';
-
-      if(!rows.length){ $('#kpiRecentList').textContent = 'No missions yet.'; return; }
-      const last5 = rows.slice(0,5).map(r => {
-        const m = r.missions || {};
-        const when = m.start_time ? new Date(m.start_time).toLocaleDateString() : '';
-        return `<div>• <span title="${esc(m.title||'Untitled')}">${esc(m.title||'Untitled')}</span> <span class="small" style="color:var(--muted)">(${when})</span></div>`;
-      }).join('');
-      $('#kpiRecentList').innerHTML = last5;
-    }catch(e){
-      $('#kpiRecentList').textContent = 'Failed to load.';
-      console.warn('kpis:', e.message);
+    // Realtime: missions and RSVPs
+    if(!window.__jmbnRealtimeEvents){
+      window.__jmbnRealtimeEvents = sb.channel('rt-events')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'missions' }, () => loadEvents())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'mission_attendees' }, () => loadEvents())
+        .subscribe();
     }
-  })();
-
-  /* Upcoming Events = only future-dated Planned/Active */
-  async function loadEvents(){
-    const box = $('#events');
-    box.innerHTML = '<div class="empty">Loading…</div>';
-    try{
-      const nowISO = new Date().toISOString();
-      const { data, error } = await sb
-        .from('missions')
-        .select('id,title,status,start_time')
-        .in('status',['Planned','Active'])
-        .gt('start_time', nowISO)
-        .order('start_time',{ ascending:true })
-        .limit(24);
-      if(error) throw error;
-
-      if(!data.length){ box.innerHTML = '<div class="empty">No upcoming missions.</div>'; return; }
-
-      // RSVP counts
-      const ids = data.map(m=>m.id);
-      const { data: counts } = await sb
-        .from('mission_attendees')
-        .select('mission_id')
-        .in('mission_id', ids);
-      const tally = {};
-      (counts||[]).forEach(a => { tally[a.mission_id] = (tally[a.mission_id]||0)+1; });
-
-      box.innerHTML = data.map(m => {
-        const t = new Date(m.start_time);
-        return `
-          <div class="item">
-            <h4>${esc(m.title||'Untitled')}</h4>
-            <div class="meta">
-              ${esc(m.status)} • ${t.toLocaleString()} •
-              <span class="countdown" data-ts="${t.toISOString()}">—</span> •
-              <span class="small">RSVP: ${fmt(tally[m.id]||0)}</span>
-              &nbsp; · &nbsp;
-              <a class="inline" href="mission-log.html">Open Mission Log</a>
-            </div>
-          </div>`;
-      }).join('');
-
-      // live countdown
-      function tick(){
-        document.querySelectorAll('.countdown').forEach(el=>{
-          const ts = new Date(el.getAttribute('data-ts')).getTime();
-          const diff = ts - Date.now();
-          if(diff <= 0){ el.textContent = 'Started'; return; }
-          const d = Math.floor(diff/86400000);
-          const h = Math.floor((diff%86400000)/3600000);
-          const m = Math.floor((diff%3600000)/60000);
-          el.textContent = `${d}d ${h}h ${m}m`;
-        });
-      }
-      tick(); setInterval(tick, 60000);
-
-    }catch(e){
-      $('#events').innerHTML = `<div class="empty" style="color:var(--bad)">Failed: ${esc(e.message)}</div>`;
-    }
+  }catch(e){
+    box.innerHTML = `<div class="empty" style="color:var(--bad)">Failed: ${esc(e.message)}</div>`;
   }
-  loadEvents();
-
-  /* Announcements with posted-by, timeAgo, expandable body, officer edit/delete */
-  async function loadAnnouncements(){
-    const box = $('#annc');
-    try{
-      const { data, error } = await sb
-        .from('announcements')
-        .select('id,title,body,created_at,posted_by')
-        .order('created_at', { ascending:false })
-        .limit(8);
-      if(error) throw error;
-
-      if(!data.length){ box.innerHTML = '<div class="empty">No announcements yet.</div>'; return; }
-
-      const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
-      let names = {};
-      if(uids.length){
-        const { data: users } = await sb
-          .from('v_profiles_detailed')
-          .select('user_id,handle,display_name')
-          .in('user_id', uids);
-        (users||[]).forEach(u => names[u.user_id] = u.handle || u.display_name || u.user_id.slice(0,8));
-      }
-
-      box.innerHTML = data.map(a => {
-        const who = names[a.posted_by] || 'Officer';
-        const when = timeAgo(a.created_at);
-        const body = a.body ? `<div class="expand-body">${esc(a.body)}</div>` : '';
-        const controls = elevated ? `
-          <span style="float:right;display:flex;gap:8px">
-            <a href="#" class="inline edit" data-id="${a.id}">Edit</a>
-            <a href="#" class="inline del" data-id="${a.id}">Delete</a>
-          </span>` : '';
-        return `
-          <div class="item">
-            <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
-            ${controls}
-            <div class="meta">Posted by ${esc(who)} • ${when}</div>
-            ${body}
-          </div>`;
-      }).join('');
-
-      box.querySelectorAll('.expand').forEach(el=>{
-        el.onclick = ()=> el.classList.toggle('open');
-      });
-
-      if(elevated){
-        box.querySelectorAll('.edit').forEach(btn=>{
-          btn.onclick = async (e)=>{
-            e.preventDefault();
-            const id = btn.getAttribute('data-id');
-            const title = prompt('New title?'); if(!title) return;
-            const body = prompt('New body (blank to clear)') || null;
-            const { error } = await sb.from('announcements').update({ title, body }).eq('id', id);
-            if(error){ alert('Update failed: '+error.message); return; }
-            loadAnnouncements();
-          };
-        });
-        box.querySelectorAll('.del').forEach(btn=>{
-          btn.onclick = async (e)=>{
-            e.preventDefault();
-            const id = btn.getAttribute('data-id');
-            if(!confirm('Delete this announcement?')) return;
-            const { error } = await sb.from('announcements').delete().eq('id', id);
-            if(error){ alert('Delete failed: '+error.message); return; }
-            loadAnnouncements();
-          };
-        });
-      }
-    }catch(e){
-      $('#annc').innerHTML = `<div class="empty" style="color:var(--bad)">Failed: ${esc(e.message)}</div>`;
-    }
-  }
-  loadAnnouncements();
-
-  // quick post (officers only)
-  $('#postAnnc').onclick = async (ev)=>{
-    ev.preventDefault();
-    const title = prompt('Announcement title?'); if(!title) return;
-    const body  = prompt('Body (optional):') || null;
-    const { error } = await sb.from('announcements').insert({ title, body });
-    if(error){ alert('Post failed: '+error.message); return; }
-    loadAnnouncements();
-  };
-
-})();
+}
 </script>
-</body>
-</html>
