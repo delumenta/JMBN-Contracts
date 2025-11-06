@@ -80,7 +80,7 @@ body::after{
 .action p{margin:0 0 10px;color:var(--muted);font-size:13px}
 .action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
 
-/* Lists (missions & announcements) */
+/* “Your Missions” list + Announcements */
 .list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .item{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0f0f0f}
 .item h4{margin:0 0 4px;color:var(--accent);font-size:15px}
@@ -91,10 +91,6 @@ body::after{
 .expand{cursor:pointer}
 .expand + .expand-body{display:none;margin-top:6px;color:var(--text);font-size:13px}
 .expand.open + .expand-body{display:block}
-
-/* Small inline action link */
-.inline{color:var(--accent);text-decoration:underline;cursor:pointer}
-.inline:hover{opacity:0.85}
 
 /* Footer */
 .footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
@@ -167,7 +163,7 @@ body::after{
            alt="Rank">
     </section>
 
-    <!-- Your Missions + Announcements -->
+    <!-- NEW: Your Missions + Announcements -->
     <section class="grid-2">
       <!-- Your Missions -->
       <div class="card">
@@ -184,10 +180,7 @@ body::after{
 
       <!-- Announcements -->
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <h3 style="margin:0;color:var(--accent);font-size:18px">Announcements</h3>
-          <a id="postAnnc" class="inline" style="display:none">Post</a>
-        </div>
+        <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Announcements</h3>
         <div id="annc" class="list"><div class="empty">No announcements yet.</div></div>
       </div>
     </section>
@@ -362,7 +355,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     if(!iso) return '';
     const s = Math.floor((Date.now() - new Date(iso)) / 1000);
     const t = [[31536000,'y'],[2592000,'mo'],[604800,'w'],[86400,'d'],[3600,'h'],[60,'m'],[1,'s']];
-    for(const [sec, lbl] of t){ if(s >= sec) return Math.floor(s/sec)+label+' ago'; }
+    for(const [sec, lbl] of t){ if(s >= sec) return Math.floor(s/sec)+lbl+' ago'; }
     return 'just now';
   };
 
@@ -431,8 +424,10 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       .order('joined_at', { ascending:false });
     if (error) throw error;
 
+    // total attended
     out('#attendedCount', data?.length ?? 0);
 
+    // last 5
     const list = $('#lastFive');
     if (!data || data.length === 0) {
       list.innerHTML = '<div class="empty">No missions yet.</div>';
@@ -453,20 +448,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     $('#lastFive').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
   }
 
-  /* ---- Officer check ---- */
-  let elevated = false;
-  try {
-    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
-    elevated = !!data;
-  } catch(e) {
-    elevated = false;
-  }
-  if (elevated) {
-    const postLink = $('#postAnnc');
-    if (postLink) postLink.style.display = '';
-  }
-
-  /* ---- Announcements (latest 5) + officer controls ---- */
+  /* ---- Announcements (latest 5) ---- */
   async function loadAnnouncements(){
     const box = $('#annc');
     try{
@@ -495,55 +477,17 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
 
       box.innerHTML = data.map(a => {
         const who = names[a.posted_by] || 'Officer';
-        const controls = elevated
-          ? `<span style="float:right;display:flex;gap:8px">
-               <a class="inline edit" data-id="${a.id}">Edit</a>
-               <a class="inline del"  data-id="${a.id}">Delete</a>
-             </span>`
-          : '';
         return `
           <div class="item">
             <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
-            ${controls}
             <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
             ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
           </div>`;
       }).join('');
 
-      // expand/collapse
       box.querySelectorAll('.expand').forEach(el=>{
         el.onclick = ()=> el.classList.toggle('open');
       });
-
-      // officer edit/delete
-      if (elevated) {
-        box.querySelectorAll('.edit').forEach(btn=>{
-          btn.onclick = async (e) => {
-            e.preventDefault();
-            const id = btn.getAttribute('data-id');
-            const { data: one } = await sb.from('announcements').select('title,body').eq('id', id).maybeSingle();
-            const newTitle = prompt('New title?', one?.title || '')?.trim();
-            if (newTitle==null) return;
-            const newBody  = prompt('New body (blank to clear):', one?.body || '') ?? '';
-            const { error } = await sb.from('announcements').update({
-              title: newTitle || 'Announcement',
-              body: newBody.trim() ? newBody : null
-            }).eq('id', id);
-            if (error) { alert('Update failed: ' + error.message); return; }
-            loadAnnouncements();
-          };
-        });
-        box.querySelectorAll('.del').forEach(btn=>{
-          btn.onclick = async (e) => {
-            e.preventDefault();
-            const id = btn.getAttribute('data-id');
-            if (!confirm('Delete this announcement?')) return;
-            const { error } = await sb.from('announcements').delete().eq('id', id);
-            if (error) { alert('Delete failed: ' + error.message); return; }
-            loadAnnouncements();
-          };
-        });
-      }
 
     }catch(e){
       box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
@@ -551,25 +495,6 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     }
   }
   loadAnnouncements();
-
-  // Quick Post (officers only). NOTE: policy likely requires posted_by = auth.uid()
-  const postBtn = document.getElementById('postAnnc');
-  if (postBtn) {
-    postBtn.onclick = async (ev) => {
-      ev.preventDefault();
-      if (!elevated) return;
-      const title = prompt('Announcement title?')?.trim();
-      if (!title) return;
-      const body = prompt('Body (optional):')?.trim() || null;
-      const { error } = await sb.from('announcements').insert({
-        title,
-        body,
-        posted_by: session.user.id
-      });
-      if (error) { alert('Post failed: ' + error.message); return; }
-      loadAnnouncements();
-    };
-  }
 
 })();
 </script>
