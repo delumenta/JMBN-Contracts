@@ -366,7 +366,7 @@ async function loadOngoing(){
     .from('missions')
     .select('id,title,status,start_time,origin,destination')
     .in('id', ids)
-    .in('status', ['Planned','Active'])
+    .in('status', ['planned','active'])
     .order('start_time', { ascending: true });
 
   if(err2){ return renderOngoing([], 'Failed to load: ' + err2.message); }
