@@ -53,16 +53,15 @@ body{
 
 /* ===== Panel / controls ===== */
 .panel{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.controls{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-bottom:8px}
-@media (max-width:720px){.controls{grid-template-columns:1fr 1fr 1fr}}
-input,select,button{
+.controls{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:8px}
+@media (max-width:720px){.controls{grid-template-columns:1fr auto}}
+input,button{
   background:#0a0a0a;border:1px solid var(--border);border-radius:999px;padding:10px 12px;
   color:var(--text);font-size:13px;font-family:'Play';outline:none
 }
 input::placeholder{color:var(--muted)}
 button{cursor:pointer;background:linear-gradient(180deg,#0c0c0c,#060606)}
 button:hover{background:var(--accent);color:#000}
-.badge{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted);gap:6px}
 .pill{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:9999px;padding:6px 10px;font-weight:700;color:var(--accent);}
 
 /* ===== Table ===== */
@@ -74,15 +73,17 @@ tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .small{font-size:11px;color:var(--muted)}
 
-/* Rank & spec chips */
+/* Chips */
 .rank-chip{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 10px}
 .rank-chip img{width:16px;height:16px;object-fit:contain;filter:drop-shadow(0 0 2px rgba(242,214,117,.2))}
 .spec-chip{display:inline-flex;border:1px solid var(--border);border-radius:999px;padding:3px 8px;color:var(--muted)}
+.cat-chip{display:inline-flex;border:1px solid var(--border);border-radius:999px;padding:3px 10px;font-weight:700;color:var(--accent)}
 
 /* Certification chips */
+.badge{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted);gap:6px}
 .badge.cert{color:var(--accent);border-color:rgba(214,180,76,.65);font-weight:700;font-size:11px;margin:2px 4px 0 0}
 
-/* View buttons */
+/* Buttons */
 .btn-view{padding:7px 12px;border-radius:10px}
 
 /* Footer note */
@@ -110,9 +111,6 @@ tr:hover{background:rgba(214,180,76,.08)}
 <div class="panel" style="margin-top:8px">
   <div class="controls">
     <input id="q" placeholder="Search handle, rank, specialization, certification…">
-    <select id="certFilter" title="Filter by certification">
-      <option value="">All Certifications</option>
-    </select>
     <span id="count" class="pill">0 members</span>
   </div>
 
@@ -120,7 +118,8 @@ tr:hover{background:rgba(214,180,76,.08)}
     <table>
       <thead>
         <tr>
-          <th style="min-width:180px">Handle</th>
+          <th style="min-width:160px">Handle</th>
+          <th style="min-width:140px">Rank Category</th>
           <th style="min-width:180px">Current Rank</th>
           <th style="min-width:160px">Specialization</th>
           <th style="min-width:220px">Certification</th>
@@ -131,7 +130,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     </table>
   </div>
 
-  <div class="note">Attendance counts only missions with status <b>Success</b> / <b>Fail</b> / <b>Abort</b>.</div>
+  <div class="note">Attendance counts only missions with status <b>Success</b> / <b>Fail</b> / <b>Abort</b>. Sorted by <b>Rank Category → Specialization → Certification</b>.</div>
 </div>
 
 <!-- ===== PROFILE MODAL ===== -->
@@ -147,6 +146,10 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
     <div id="tab-overview">
       <div class="grid">
+        <div>
+          <div class="small">Rank Category</div>
+          <div class="row"><span id="pCat" class="cat-chip"></span></div>
+        </div>
         <div>
           <div class="small">Rank</div>
           <div class="row"><span id="pRank" class="rank-chip"></span></div>
@@ -221,16 +224,17 @@ tr:hover{background:rgba(214,180,76,.08)}
   highlightNav(mount);
 })();
 
-/* ===== Data (swap with Supabase rows; expects certifications: string[]) ===== */
-const members = [
-  {handle:'Ashenshrike', rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
-  {handle:'Delumenta',   rank:'Ensign (O-1)', spec:'Gunnery', certifications:['VBSS','Combat Control'], joined_at:'2025-01-05', notes:'Reliable turret ops'},
-  {handle:'Derek',       rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
-  {handle:'Floatintiger',rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
-  {handle:'Jeneral',     rank:'Unranked', spec:null, certifications:['Pararescue'], joined_at:null, notes:''},
-  {handle:'Jesric',      rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
-  {handle:'Nomad',       rank:'Unranked', spec:null, certifications:['Medic'], joined_at:null, notes:''},
-  {handle:'Politico',    rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
+/* ===== Data (replace with Supabase rows; expects rank_category + certifications[]) ===== */
+let members = [
+  // rank_category should be exactly "Enlisted" | "Warrant" | "Officer"
+  {handle:'Ashenshrike', rank_category:'Enlisted', rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
+  {handle:'Delumenta',   rank_category:'Officer',  rank:'Ensign (O-1)', spec:'Gunnery', certifications:['VBSS','Combat Control'], joined_at:'2025-01-05', notes:'Reliable turret ops'},
+  {handle:'Derek',       rank_category:'Enlisted', rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
+  {handle:'Floatintiger',rank_category:'Enlisted', rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
+  {handle:'Jeneral',     rank_category:'Warrant',  rank:'Unranked', spec:null, certifications:['Pararescue'], joined_at:null, notes:''},
+  {handle:'Jesric',      rank_category:'Enlisted', rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
+  {handle:'Nomad',       rank_category:'Enlisted', rank:'Unranked', spec:null, certifications:['Medic'], joined_at:null, notes:''},
+  {handle:'Politico',    rank_category:'Enlisted', rank:'Unranked', spec:null, certifications:[], joined_at:null, notes:''},
 ];
 
 /* ===== Helpers ===== */
@@ -244,15 +248,21 @@ function fmtJoined(d){
   return dt.toLocaleDateString();
 }
 
-/* ===== Filters ===== */
-function buildCertFilterOptions(data){
-  const set = new Set();
-  data.forEach(m => (m.certifications||[]).forEach(c => set.add(c)));
-  const sel = $('#certFilter');
-  const cur = sel.value;
-  sel.innerHTML = `<option value="">All Certifications</option>` + [...set].sort().map(c=>`<option>${esc(c)}</option>`).join('');
-  // keep current selection if still present
-  if(cur && set.has(cur)) sel.value = cur;
+/* ===== Sort: Rank Category → Specialization → Certification ===== */
+const CAT_ORDER = { 'Enlisted':0, 'Warrant':1, 'Officer':2 };
+function byRankCategorySpecCert(a,b){
+  // 1) Rank Category weight
+  const aw = CAT_ORDER[a.rank_category] ?? 99;
+  const bw = CAT_ORDER[b.rank_category] ?? 99;
+  if(aw !== bw) return aw - bw;
+  // 2) Specialization (alpha, empty last)
+  const as = (a.spec||'').toLowerCase();
+  const bs = (b.spec||'').toLowerCase();
+  if(as !== bs) return (as||'zzzz').localeCompare(bs||'zzzz');
+  // 3) Certification (alpha by joined string; empty last)
+  const ac = (Array.isArray(a.certifications)?a.certifications.join('|'):'').toLowerCase();
+  const bc = (Array.isArray(b.certifications)?b.certifications.join('|'):'').toLowerCase();
+  return (ac||'zzzz').localeCompare(bc||'zzzz');
 }
 
 /* ===== Render ===== */
@@ -261,6 +271,7 @@ function rankChip(r){
   return `<span class="rank-chip"><img alt="" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" /> ${esc(r)}</span>`;
 }
 function specChip(s){ return s ? `<span class="spec-chip">${esc(s)}</span>` : `<span class="small">—</span>`; }
+function catChip(c){ return c ? `<span class="cat-chip">${esc(c)}</span>` : `<span class="small">—</span>`; }
 function certChips(arr){
   const a = Array.isArray(arr)?arr:[];
   if(!a.length) return `<span class="small">—</span>`;
@@ -269,27 +280,27 @@ function certChips(arr){
 
 function render(){
   const q = ($('#q').value||'').toLowerCase().trim();
-  const cf = $('#certFilter').value || '';
 
+  // Search
   let arr = members.slice();
   if(q){
     arr = arr.filter(m=>{
-      const bag = `${m.handle||''} ${m.rank||''} ${m.spec||''} ${(m.certifications||[]).join(' ')}`.toLowerCase();
+      const bag = `${m.handle||''} ${m.rank_category||''} ${m.rank||''} ${m.spec||''} ${(m.certifications||[]).join(' ')}`.toLowerCase();
       return bag.includes(q);
     });
   }
-  if(cf){ arr = arr.filter(m => (m.certifications||[]).includes(cf)); }
+
+  // Sort: Rank Category → Specialization → Certification
+  arr.sort(byRankCategorySpecCert);
 
   // Count
   $('#count').textContent = `${arr.length} member${arr.length===1?'':'s'}`;
-
-  // (Re)build cert filter options from full dataset for convenience
-  buildCertFilterOptions(members);
 
   // Rows
   $('#rows').innerHTML = arr.map(m=>`
     <tr>
       <td>${esc(m.handle)}</td>
+      <td>${catChip(m.rank_category)}</td>
       <td>${rankChip(m.rank)}</td>
       <td>${specChip(m.spec)}</td>
       <td>${certChips(m.certifications)}</td>
@@ -308,6 +319,7 @@ const profileBG = $('#profileBG');
 function openProfile(m){
   if(!m) return;
   $('#pHandle').textContent = m.handle || 'Member';
+  $('#pCat').innerHTML = catChip(m.rank_category);
   $('#pRank').innerHTML = rankChip(m.rank);
   $('#pSpec').innerHTML = specChip(m.spec);
   $('#pJoined').textContent = fmtJoined(m.joined_at);
@@ -332,7 +344,6 @@ $$('.modal .tab').forEach(t=>t.onclick=()=>showTab(t.dataset.tab));
 
 /* ===== Events ===== */
 $('#q').addEventListener('input', render);
-$('#certFilter').addEventListener('change', render);
 
 /* Init */
 render();
