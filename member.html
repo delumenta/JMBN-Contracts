@@ -8,9 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
 :root{
@@ -51,7 +49,7 @@ input[type="search"]{background:#0a0a0a;border:1px solid var(--border);border-ra
 .badge{border:1px solid var(--border);padding:4px 8px;border-radius:999px}
 .tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
 table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
-th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:middle}
 th{color:var(--accent);background:#080808;font-weight:500}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
@@ -62,6 +60,17 @@ tr:hover{background:rgba(214,180,76,.08)}
 .rankCell img{
   width:28px;height:28px;object-fit:contain;
   border:1px solid var(--border);border-radius:6px;background:#111;flex:0 0 28px;
+}
+
+/* Role chips */
+.roles{display:flex;flex-wrap:wrap;gap:6px}
+.role-chip{
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:12px;
+  background:#0c0c0c;
+  color:var(--muted);
 }
 
 /* Modal */
@@ -99,7 +108,7 @@ tr:hover{background:rgba(214,180,76,.08)}
 
   <div class="panel">
     <div class="controls">
-      <input id="q" type="search" placeholder="Search handle or rank…">
+      <input id="q" type="search" placeholder="Search handle, rank, or specialization…">
       <span id="count" class="badge">0 members</span>
     </div>
 
@@ -107,13 +116,14 @@ tr:hover{background:rgba(214,180,76,.08)}
       <table>
         <thead>
           <tr>
-            <th style="width:45%">Handle</th>
-            <th style="width:35%">Current Rank</th>
-            <th style="width:20%"></th>
+            <th style="width:35%">Handle</th>
+            <th style="width:30%">Current Rank</th>
+            <th style="width:25%">Specialization</th>
+            <th style="width:10%"></th>
           </tr>
         </thead>
         <tbody id="tbody">
-          <tr><td colspan="3" style="padding:10px;color:var(--muted)">Loading…</td></tr>
+          <tr><td colspan="4" style="padding:10px;color:var(--muted)">Loading…</td></tr>
         </tbody>
       </table>
     </div>
@@ -133,7 +143,7 @@ tr:hover{background:rgba(214,180,76,.08)}
         <div>
           <div class="meta"><b>Handle:</b> <span id="vHandle"></span></div>
           <div class="meta"><b>Current Rank:</b> <span id="vRankName"></span> <span id="vRankCode" class="meta"></span></div>
-          <div class="meta"><b>In-game Role:</b> <span id="vRole"></span></div>
+          <div class="meta"><b>Specialization:</b> <span id="vRoles"></span></div>
           <div class="meta"><b>Missions attended:</b> <span id="vAttended"></span></div>
         </div>
       </div>
@@ -145,54 +155,54 @@ tr:hover{background:rgba(214,180,76,.08)}
   <script src="js/auth.js"></script>
 
 <script>
-/* Active nav (fallback) */
-(function(){
-  const here = location.pathname.split('/').pop() || 'member.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
-  });
-})();
-
 /* Helpers */
 const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
-
-/* Title-case helper (handles snake/space/dash) */
 function toTitleCase(s){
   if(!s) return '';
   return String(s)
-    .replace(/[_-]+/g,' ')                 // underscores/dashes -> space
+    .replace(/[_-]+/g,' ')
     .replace(/\s+/g,' ')
     .trim()
     .toLowerCase()
     .replace(/\b\w/g, c => c.toUpperCase());
 }
+/* Normalize roles: accepts array, CSV, or null */
+function normalizeRoles(r){
+  let roles = r.ingame_roles ?? r.ingame_role ?? null;
+  if(!roles) return [];
+  if(Array.isArray(roles)) return roles.map(toTitleCase).filter(Boolean);
+  // CSV or single string
+  return String(roles)
+    .split(/[,;/]+/)
+    .map(s => toTitleCase(s))
+    .filter(Boolean);
+}
 
 let sb=null, session=null;
 let ROWS = [];
-const RANK_BUCKET = 'Ranks'; // case-sensitive
+const RANK_BUCKET = 'Ranks';
 
-/* Public URL from rank code (no network) */
 function rankPublicUrlFromCode(code){
   if(!code) return '';
   return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
 
-/* Render table */
+/* Render */
 const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
 
 function render(rows){
   if(!rows?.length){
-    tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--muted)">No members found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" style="padding:10px;color:var(--muted)">No members found</td></tr>`;
     countEl.textContent = '0 members';
     return;
   }
 
   tbody.innerHTML = rows.map(r=>{
-    const rawHandle  = r.handle || r.display_name || r.user_id?.slice(0,8) || '—';
-    const handle     = toTitleCase(rawHandle);                       // <-- Capitalize handle
-    const rankName   = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unranked';  // <-- Capitalize rank
-    const imgUrl     = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+    const handle   = toTitleCase(r.handle || r.display_name || r.user_id?.slice(0,8) || '—');
+    const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unranked';
+    const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+    const roles    = normalizeRoles(r);
 
     return `
       <tr>
@@ -202,6 +212,9 @@ function render(rows){
             ${imgUrl ? `<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">` : ''}
             <span>${esc(rankName)}</span>
           </div>
+        </td>
+        <td>
+          ${roles.length ? `<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>` : `<span style="color:var(--muted)">—</span>`}
         </td>
         <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
       </tr>`;
@@ -217,7 +230,8 @@ function filterRows(){
     const h  = (r.handle || r.display_name || '').toLowerCase();
     const rn = (r.current_rank_name || '').toLowerCase();
     const rc = (r.current_rank_code || '').toLowerCase();
-    return h.includes(term) || rn.includes(term) || rc.includes(term);
+    const roles = normalizeRoles(r).join(' ').toLowerCase();
+    return h.includes(term) || rn.includes(term) || rc.includes(term) || roles.includes(term);
   });
 }
 
@@ -233,12 +247,13 @@ function viewMember(userId){
   const attended = Number(r.missions_attended) || 0;
   const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
   const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unranked';
+  const roles    = normalizeRoles(r);
 
   $('#viewTitle').textContent = `Member — ${handle}`;
   $('#vHandle').textContent   = handle;
   $('#vRankName').textContent = rankName;
   $('#vRankCode').textContent = r.current_rank_code ? `(${r.current_rank_code})` : '';
-  $('#vRole').textContent     = r.ingame_role || '—';
+  $('#vRoles').innerHTML      = roles.length ? roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' ') : '—';
   $('#vAttended').textContent = attended;
 
   const imgEl = $('#rankImg');
@@ -251,15 +266,25 @@ function viewMember(userId){
 }
 window.viewMember = viewMember;
 
-/* Load data */
+/* Load */
 async function loadRoster(){
   const { data, error } = await sb
     .from('v_profiles_detailed')
-    .select('user_id,handle,display_name,current_rank_name,current_rank_code,current_rank_image_url,ingame_role,missions_attended')
+    .select(`
+      user_id,
+      handle,
+      display_name,
+      current_rank_name,
+      current_rank_code,
+      current_rank_image_url,
+      ingame_role,
+      ingame_roles,
+      missions_attended
+    `)
     .order('handle',{ ascending:true });
 
   if(error){
-    tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--bad)">Failed to load members: ${esc(error.message)}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" style="padding:10px;color:var(--bad)">Failed to load members: ${esc(error.message)}</td></tr>`;
     return;
   }
   ROWS = data || [];
@@ -270,8 +295,7 @@ q.addEventListener('input', ()=> render(filterRows()));
 
 /* Auth gate then load */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();   // redirects if not logged in
-  if(!session) return;
+  const session = await requireAuth(); if(!session) return;
   sb = getSupabase();
   loadRoster();
 });
