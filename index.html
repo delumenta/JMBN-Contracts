@@ -80,7 +80,7 @@ body::after{
 .action p{margin:0 0 10px;color:var(--muted);font-size:13px}
 .action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
 
-/* “Your Missions” list + Announcements */
+/* Lists */
 .list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .item{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0f0f0f}
 .item h4{margin:0 0 4px;color:var(--accent);font-size:15px}
@@ -116,9 +116,22 @@ body::after{
 .ops-chip{color:#000;background:var(--accent);border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-weight:800;font-size:12px;letter-spacing:.4px}
 .ops-msg{flex:1;min-width:0;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:1;transition:opacity .35s ease}
 .ops-ctrl{display:flex;align-items:center;gap:6px}
-.ops-btn{padding:4px 8px;border-radius:6px;font-size:12px;border:1px solid var(--border);background:transparent;color:#f7f1d0;cursor:pointer;font-family:'Play'}
-.ops-btn:hover{background:var(--accent);color:#000}
+.ops-btn, .btn{
+  padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);
+  border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play'
+}
+.ops-btn:hover,.btn:hover{background:var(--accent);color:#000}
 @media(max-width:520px){.ops-ticker{gap:6px;padding:6px 8px}.ops-msg{font-size:12px}.ops-btn{padding:3px 6px;font-size:11px}}
+
+/* Quick-announcement composer + buttons */
+.quick{display:flex;flex-direction:column;gap:8px;margin:6px 0 10px}
+.quick input,.quick textarea{
+  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;
+  padding:8px 10px;color:var(--text);font-family:'Play'
+}
+.quick .row{display:flex;gap:8px;justify-content:flex-end}
+.quick .hint{font-size:11px;color:var(--muted)}
+.actions-bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 </style>
 </head>
 <body>
@@ -163,7 +176,7 @@ body::after{
            alt="Rank">
     </section>
 
-    <!-- NEW: Your Missions + Announcements -->
+    <!-- Your Missions + Announcements -->
     <section class="grid-2">
       <!-- Your Missions -->
       <div class="card">
@@ -181,6 +194,10 @@ body::after{
       <!-- Announcements -->
       <div class="card">
         <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Announcements</h3>
+
+        <!-- Composer renders here only if user is elevated -->
+        <div id="anncFormBox"></div>
+
         <div id="annc" class="list"><div class="empty">No announcements yet.</div></div>
       </div>
     </section>
@@ -291,56 +308,6 @@ window.onload = () => { document.body.style.opacity = 1; };
   draw();
   (function loop(){ setTimeout(()=>{ if(Math.random()<0.85) addShooter(); loop(); }, 5000+Math.random()*5000); })();
 })();
-
-/* ===== Boot loader ===== */
-const boot=document.getElementById('boot'), log=document.getElementById('bootLog'), skip=document.getElementById('skipBoot');
-const bootLines=[
-  'JMBN SYSTEM BOOTING...',
-  '> Initializing OPS modules ... <span class="ok">OK</span>',
-  '> Loading Fleet / Ship Hangar ... <span class="ok">OK</span>',
-  '> Linking Contracts Manifest ... <span class="ok">OK</span>',
-  '> Mounting Components Registry ... <span class="ok">OK</span>',
-  '> Verifying local storage bindings ... <span class="ok">OK</span>',
-  '> Applying gold-accent theme ... <span class="ok">OK</span>',
-  '> Standby... preparing dashboard ...',
-  'READY.'
-];
-function printLine(t){const r=document.createElement('div');r.innerHTML=t;log.appendChild(r);log.scrollTop=log.scrollHeight;}
-function finishBoot(){sessionStorage.setItem('seenBoot','1');boot.classList.add('hidden');setTimeout(()=>boot.style.display='none',550);}
-function runBoot(){let i=0;(function step(){if(i>=bootLines.length)return finishBoot();printLine(bootLines[i++]);setTimeout(step,220)})()}
-skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}else{boot.style.display='none'}
-
-/* ===== OPS ticker ===== */
-(function(){
-  const el=document.getElementById('opsTicker'),chip=document.getElementById('opsChip'),msg=document.getElementById('opsMsg'),
-        prev=document.getElementById('opsPrev'),next=document.getElementById('opsNext'),
-        pause=document.getElementById('opsPause'),close=document.getElementById('opsClose');
-  const lines=[
-    'CONTACT: AshenShrike joined the Frontier Fighters.',
-    'OPS: FloatinTiger caused a “minor” power shortage.',
-    'COMMS: Hendra broadcast karaoke on all channels. Again.',
-    'SECURITY: Jeneral “poked” a pirate Idris. Backup requested.',
-    'CARGO: Ricojes mislabeled 300 SCU of scrap as platinum.',
-    'ALERT: Gerald installed Windows on the ship radar. It crashed.',
-    'OPS: AshenShrike tried “turning it off and on again.” Success.',
-    'SYSTEM: Update failed successfully. Classic.',
-    'OPS: Nomad vs FloatinTiger over the last power cell.',
-    'CARGO: Shrike stacked crates into a “fortress of solitude.”'
-  ];
-  const typeStyles={ALERT:'var(--accent)',OPS:'var(--accent)',COMMS:'#9ecbff',SECURITY:'tomato',CARGO:'#a0f0c0',SYSTEM:'#f7f1d0',CONTACT:'#f7f1d0'};
-  function typeFrom(line){const m=line.match(/^([A-Z]+):/);return m?m[1]:'OPS'}
-  let i=0,timer=null,playing=true;
-  function setChipFor(line){const t=typeFrom(line);chip.textContent=`[${t}]`;chip.style.background=typeStyles[t]??'var(--accent)';chip.style.color='#000'}
-  function fade(txt){msg.style.opacity=0;setTimeout(()=>{msg.textContent=txt;msg.style.opacity=1},200)}
-  function render(){const line=lines[i];setChipFor(line);fade(line);pause.textContent=playing?'Pause':'Play'}
-  function nextL(){i=(i+1)%lines.length;render()} function prevL(){i=(i-1+lines.length)%lines.length;render()}
-  function start(){if(timer)return; playing=true; timer=setInterval(nextL,4000); render()}
-  function stop(){playing=false; clearInterval(timer); timer=null; render()}
-  next.onclick=()=>{stop();nextL()}; prev.onclick=()=>{stop();prevL()}; pause.onclick=()=>playing?stop():start();
-  close.onclick=()=>{el.style.display='none'; sessionStorage.setItem('opsClosed','1')}
-  if(sessionStorage.getItem('opsClosed')==='1'){ el.style.display='none'; return }
-  start()
-})();
 </script>
 
 <!-- Supabase (auth + profile fill + data) -->
@@ -363,6 +330,13 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   const session = await requireAuth();
   if (!session) return;
   const sb = getSupabase();
+
+  // Check elevation (admins/officers)
+  let isElevated = false;
+  try {
+    const { data: elev, error: elevErr } = await sb.rpc('is_elevated', { u: session.user.id });
+    if (!elevErr) isElevated = !!elev;
+  } catch {}
 
   /* ---- Member card ---- */
   let row = {};
@@ -400,7 +374,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
 
   const prettyName = handle.replace(/\b\w/g, c => c.toUpperCase());
   out('#mName', prettyName);
-  out('#mRank', rankName);               // hide code in display
+  out('#mRank', rankName);
   out('#mCategory', category);
 
   const imgEl = $('#mRankImg');
@@ -424,10 +398,8 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       .order('joined_at', { ascending:false });
     if (error) throw error;
 
-    // total attended
     out('#attendedCount', data?.length ?? 0);
 
-    // last 5
     const list = $('#lastFive');
     if (!data || data.length === 0) {
       list.innerHTML = '<div class="empty">No missions yet.</div>';
@@ -448,24 +420,59 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     $('#lastFive').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
   }
 
-  /* ---- Announcements (latest 5) ---- */
+  /* ============================
+     Announcements (elevated CRUD)
+     ============================ */
+  const anncForm = document.querySelector('#anncFormBox');
+
+  function renderAnnComposer(){
+    if(!isElevated){ anncForm.innerHTML = ''; return; }
+    anncForm.innerHTML = `
+      <div class="quick">
+        <input id="annTitle" placeholder="Announcement title">
+        <textarea id="annBody" rows="4" placeholder="Write a quick update…"></textarea>
+        <div class="row">
+          <button class="btn" id="annReset" type="button">Clear</button>
+          <button class="btn" id="annPost"  type="button">Post</button>
+        </div>
+        <div class="hint">Only admins/officers can post. Saved as you.</div>
+      </div>
+    `;
+    document.querySelector('#annReset').onclick = () => {
+      document.querySelector('#annTitle').value='';
+      document.querySelector('#annBody').value='';
+    };
+    document.querySelector('#annPost').onclick = async () => {
+      const title = (document.querySelector('#annTitle').value||'').trim();
+      const body  = (document.querySelector('#annBody').value||'').trim();
+      if(!title){ alert('Title is required'); return; }
+      try{
+        const { error } = await sb.from('announcements').insert({
+          title, body, posted_by: session.user.id
+        });
+        if(error) throw error;
+        document.querySelector('#annTitle').value='';
+        document.querySelector('#annBody').value='';
+        await loadAnnouncements();
+      }catch(e){ alert('Post failed: ' + (e.message||e)); }
+    };
+  }
+
+  let annCache = [];
+
   async function loadAnnouncements(){
-    const box = $('#annc');
+    const box = document.querySelector('#annc');
     try{
       const { data, error } = await sb
         .from('announcements')
         .select('id,title,body,created_at,posted_by')
         .order('created_at',{ ascending:false })
-        .limit(5);
+        .limit(10);
       if(error) throw error;
 
-      if(!data || data.length===0){
-        box.innerHTML = '<div class="empty">No announcements yet.</div>';
-        return;
-      }
+      annCache = data || [];
 
-      // Resolve display names
-      const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
+      const uids = [...new Set(annCache.map(a=>a.posted_by).filter(Boolean))];
       let names = {};
       if(uids.length){
         const { data: profs } = await sb
@@ -475,25 +482,70 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
         (profs||[]).forEach(p => names[p.user_id] = p.handle || p.display_name || p.user_id.slice(0,8));
       }
 
-      box.innerHTML = data.map(a => {
-        const who = names[a.posted_by] || 'Officer';
-        return `
-          <div class="item">
-            <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
-            <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
-            ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
-          </div>`;
-      }).join('');
+      if(!annCache.length){
+        box.innerHTML = '<div class="empty">No announcements yet.</div>';
+      } else {
+        box.innerHTML = annCache.map(a => {
+          const who = names[a.posted_by] || 'Officer';
+          const actions = isElevated ? `
+            <div class="actions-bar">
+              <button class="btn" data-act="edit" data-id="${a.id}">Edit</button>
+              <button class="btn" data-act="delete" data-id="${a.id}">Delete</button>
+            </div>` : '';
+          return `
+            <div class="item" data-item-id="${a.id}">
+              <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
+              <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
+              ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
+              ${actions}
+            </div>`;
+        }).join('');
+      }
 
       box.querySelectorAll('.expand').forEach(el=>{
         el.onclick = ()=> el.classList.toggle('open');
       });
 
     }catch(e){
-      box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
+      document.querySelector('#annc').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
       console.warn('annc:', e.message);
     }
   }
+
+  // Delegated edit/delete
+  document.querySelector('#annc').addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-act]');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    const act = btn.dataset.act;
+    const current = annCache.find(a => a.id === id);
+    if(!current){ alert('Item not found.'); return; }
+
+    if(act === 'edit'){
+      const newTitle = prompt('Edit title', current.title || '') ?? '';
+      if(newTitle === '') return;
+      const newBody  = prompt('Edit body (leave blank to clear)', current.body || '') ?? '';
+      try{
+        const { error } = await sb.from('announcements')
+          .update({ title: newTitle, body: newBody })
+          .eq('id', id);
+        if(error) throw error;
+        await loadAnnouncements();
+      }catch(err){ alert('Update failed: ' + (err.message||err)); }
+    }
+
+    if(act === 'delete'){
+      if(!confirm('Delete this announcement?')) return;
+      try{
+        const { error } = await sb.from('announcements').delete().eq('id', id);
+        if(error) throw error;
+        await loadAnnouncements();
+      }catch(err){ alert('Delete failed: ' + (err.message||err)); }
+    }
+  });
+
+  // Init
+  renderAnnComposer();
   loadAnnouncements();
 
 })();
