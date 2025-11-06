@@ -3,96 +3,90 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JMBN Loadouts — Callouts v2</title>
+<title>JMBN Loadout — Interactive Blueprint</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#000; --panel:#0b0b0b; --card:#0c0c0c; --border:#d6b44c;
-  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
 }
 *{box-sizing:border-box}
-html,body{background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;margin:0}
-.wrap{max-width:1200px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(320px,760px) 1fr;gap:14px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.16)}
+html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif}
+
+/* layout */
+.wrap{max-width:1200px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(320px,740px) 1fr;gap:16px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 0 18px rgba(214,180,76,.16)}
 h1{margin:0 0 8px;color:var(--accent);font-size:22px}
 .note{color:var(--muted);font-size:12px}
-svg{display:block;width:100%;height:auto}
 
-/* Hotspots */
-.hot{fill:rgba(242,214,117,.10);stroke:#d6b44c;stroke-width:2;transition:.18s ease}
-.hot:hover{fill:rgba(242,214,117,.26);filter:drop-shadow(0 0 8px rgba(214,180,76,.55));cursor:pointer}
-.lbl{font-size:13px;fill:#f2d675}
+/* figure */
+.figure{position:relative;overflow:hidden;border-radius:12px}
+.figure img{display:block;width:100%;height:auto;filter:contrast(1.05) brightness(.9)}
+/* svg overlay sized to image */
+.blueprint{position:absolute;inset:0}
+svg{width:100%;height:100%;display:block}
 
-/* Arrow */
-.call{fill:none;stroke:#d6b44c;stroke-width:2.2;marker-end:url(#arrow);transition:d .18s ease}
+/* zones */
+.zone .hit{fill:transparent;cursor:pointer}
+.zone .glow{fill:none;stroke:transparent;stroke-width:2}
+.zone.active .glow,
+.zone:hover  .glow{stroke:var(--border);filter:drop-shadow(0 0 8px rgba(214,180,76,.55))}
+.zone .label{fill:#f2d675;font-size:12px;opacity:0;transition:opacity .15s ease}
+.zone:hover .label,
+.zone.active .label{opacity:1}
 
-/* Card (glass/gold) */
-.card{
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
-    #0c0c0c;
-  border:1px solid var(--border); border-radius:14px; padding:12px;
-  color:var(--text); box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 18px rgba(214,180,76,.16);
-  backdrop-filter: blur(3px);
-  animation: pop .18s ease;
-}
-@keyframes pop{ from{opacity:.75; transform:translateY(6px) scale(.98)} to{opacity:1; transform:none} }
-
-.card h3{margin:0;color:var(--accent);font-size:16px}
-.sub{color:var(--muted);font-size:12px;margin-top:2px}
-.tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+/* right panel */
+.side{position:sticky;top:14px;align-self:start}
+.card{background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
+        var(--card);
+      border:1px solid var(--border);border-radius:14px;padding:12px;
+      box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 18px rgba(214,180,76,.18);
+      backdrop-filter: blur(3px);min-height:220px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;color:var(--accent);font-size:18px}
+.meta{display:flex;gap:6px;flex-wrap:wrap}
 .tag{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
-.field{margin:8px 0}
-.field span{color:var(--muted);font-size:12px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.btn{
-  display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:10px;
-  border:1px solid var(--border);text-decoration:none;cursor:pointer;transition:.18s ease
-}
+.field{font-size:13px;line-height:1.4}
+.field span{color:var(--muted);font-size:12px;display:block}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.btn{display:inline-flex;align-items:center;padding:7px 12px;border-radius:10px;border:1px solid var(--border);text-decoration:none}
 .btn.primary{background:linear-gradient(180deg,#f2d675,#e7c760);color:#000;font-weight:700}
-.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.btn.ghost{color:var(--accent)}
 
-/* Debug */
-.guides .hot{fill:rgba(255,99,71,.18)!important;stroke:#ffdd99!important}
-.control{display:flex;gap:10px;align-items:center;margin-top:6px}
-.control input{accent-color:#c9b06a}
+/* helper */
+.controls{display:flex;gap:10px;align-items:center;margin-top:6px}
+.controls input{accent-color:#c9b06a}
+
+/* responsive */
+@media (max-width:920px){.wrap{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- FIGURE -->
-  <div class="panel">
-    <h1>Loadout Callouts</h1>
-    <div class="note">Click Helmet or Armor. Card auto-positions left/right; arrow animates to the part.</div>
-    <div class="control note"><label><input id="guides" type="checkbox"> Show guides</label></div>
+  <div class="wrap">
+    <!-- LEFT: interactive blueprint figure -->
+    <div class="panel">
+      <h1>Loadout — Interactive Blueprint</h1>
+      <div class="note">Hover to preview, click to pin. (Helmet & Armor are live; others can be added anytime.)</div>
 
-    <svg viewBox="0 0 1000 1500" id="stage" xmlns="http://www.w3.org/2000/svg" aria-label="Gear">
-      <defs>
-        <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-          <path d="M0,0 L0,9 L9,4.5 z" fill="#d6b44c"/>
-        </marker>
-      </defs>
+      <div class="figure" id="fig">
+        <img src="https://i.redd.it/21ngs91ahfqa1.jpg" alt="Character loadout">
 
-      <!-- Background (swap to your hosted copy if hotlink blocks) -->
-      <image href="https://i.redd.it/21ngs91ahfqa1.jpg" x="0" y="0" width="1000" height="1500" preserveAspectRatio="xMidYMid slice"/>
+        <!-- SVG overlay (1000x1500 viewBox, matching our previous work) -->
+        <svg class="blueprint" viewBox="0 0 1000 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Gear zones">
+          <!-- Helmet -->
+          <g class="zone" data-slot="helmet" data-x="505" data-y="215">
+            <circle class="hit"  cx="505" cy="215" r="110"></circle>
+            <circle class="glow" cx="505" cy="215" r="95"></circle>
+            <text class="label" x="505" y="195" text-anchor="middle">Helmet</text>
+          </g>
 
-      <!-- Helmet (nudged) -->
-      <g class="hs" data-slot="helmet"
-         data-title="Odyssey Helmet"
-         data-buy="Orison – Cousin Crows; CRU-L5 – Platinum Bay"
-         data-notes="Clean visors, good comm integration."
-         data-tags="Light;Exploration"
-         data-x="505" data-y="215">
-        <circle class="hot" cx="505" cy="215" r="95"></circle>
-        <text class="lbl" x="505" y="200" text-anchor="middle">Helmet</text>
-      </g>
+          <!-- Armor (chest) -->
+          <g class="zone" data-slot="armor" data-x="505" data-y="450">
+            <rect class="hit"  x="360" y="330" width="290" height="260" rx="28" ry="28"></rect>
+            <rect class="glow" x="385" y="350" width="240" height="220" rx="18" ry="18"></rect>
+            <text class="label" x="505" y="338" text-anchor="middle">Armor</text>
+          </g>
 
-      <!-- Armor (nudged) -->
-      <g class="hs" data-slot="armor"
-         data-title="Navis Chestpiece"
-         data-buy="Area18 – Cubby Blast; New Babbage – Omega Pro"
-         data-notes="Balanced plates; reliable availability."
-         data-tags="Medium;Versatile"
-         data-x="505" data-y="450">
-        <rect class="hot" x="385" y="350" width="240" height="220" rx="18" ry="18"></rect>
-        <text
+          <!-- (placeholders to extend later) -->
+          <!-- <g class="zone" data-slot="gloves" ...> ... </g> -->
+        </svg
