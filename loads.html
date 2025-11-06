@@ -89,4 +89,107 @@ svg{width:100%;height:100%;display:block}
 
           <!-- (placeholders to extend later) -->
           <!-- <g class="zone" data-slot="gloves" ...> ... </g> -->
-        </svg
+        </svg>
+      </div>
+
+      <div class="controls note">
+        <label><input type="checkbox" id="showGuides"> Show outlines</label>
+        <span>• Click again to unpin.</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: info panel -->
+    <div class="side">
+      <div class="card" id="card">
+        <h3 id="cTitle">Select a part</h3>
+        <div class="meta" id="cTags"></div>
+        <div class="field"><span>Where to buy</span><div id="cBuy">—</div></div>
+        <div class="field"><span>Notes</span><div id="cNotes">—</div></div>
+        <div class="actions">
+          <a id="linkComponents" class="btn primary" href="components.html" target="_self">Open Components</a>
+          <a id="linkLoadout" class="btn ghost" href="loadout.html" target="_self">Loadout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* Minimal data model — edit these to your liking */
+const GEAR = {
+  helmet: {
+    title: 'Odyssey Helmet',
+    buy: 'Orison – Cousin Crows; CRU-L5 – Platinum Bay',
+    notes: 'Clean visor clarity • stable comms • low profile.',
+    tags: ['Light','Exploration'],
+    linkC: 'components.html?slot=helmet',
+    linkL: 'loadout.html?slot=helmet'
+  },
+  armor: {
+    title: 'Navis Chestpiece',
+    buy: 'Area18 – Cubby Blast; New Babbage – Omega Pro',
+    notes: 'Balanced plates • reliable availability • pairs with Navis legs.',
+    tags: ['Medium','Versatile'],
+    linkC: 'components.html?slot=chest',
+    linkL: 'loadout.html?slot=armor'
+  }
+};
+
+/* DOM refs */
+const stage = document.querySelector('.blueprint');
+const zones = Array.from(stage.querySelectorAll('.zone'));
+const card  = {
+  root:  document.getElementById('card'),
+  title: document.getElementById('cTitle'),
+  buy:   document.getElementById('cBuy'),
+  notes: document.getElementById('cNotes'),
+  tags:  document.getElementById('cTags'),
+  linkC: document.getElementById('linkComponents'),
+  linkL: document.getElementById('linkLoadout')
+};
+const guidesToggle = document.getElementById('showGuides');
+
+let pinned = null; // currently pinned slot (or null)
+
+/* helpers */
+function setActive(slot){
+  zones.forEach(z => z.classList.toggle('active', z.dataset.slot === slot));
+}
+function fillCard(data, slot){
+  card.title.textContent = data?.title || '—';
+  card.buy.textContent   = data?.buy || '—';
+  card.notes.textContent = data?.notes || '—';
+  card.tags.innerHTML    = '';
+  (data?.tags || []).forEach(t => {
+    const s=document.createElement('span'); s.className='tag'; s.textContent=t; card.tags.appendChild(s);
+  });
+  card.linkC.href = data?.linkC || `components.html?slot=${encodeURIComponent(slot||'')}`;
+  card.linkL.href = data?.linkL || `loadout.html?slot=${encodeURIComponent(slot||'')}`;
+}
+function preview(slot){
+  const data = GEAR[slot];
+  fillCard(data, slot);
+  setActive(slot);
+}
+
+/* interactions */
+zones.forEach(z=>{
+  const slot = z.dataset.slot;
+  z.addEventListener('mouseenter', ()=>{ if(!pinned) preview(slot); });
+  z.addEventListener('click', ()=>{
+    if(pinned === slot){ pinned = null; setActive(null); fillCard(null); card.title.textContent='Select a part'; return; }
+    pinned = slot; preview(slot);
+  });
+});
+
+/* default preview */
+preview('helmet');
+
+/* guides */
+guidesToggle.addEventListener('change', e=>{
+  zones.forEach(z=>{
+    z.querySelector('.glow').style.stroke = e.target.checked ? 'var(--border)' : (z.classList.contains('active') ? 'var(--border)' : 'transparent');
+  });
+});
+</script>
+</body>
+</html>
