@@ -1,201 +1,379 @@
-<script>
-// ===== SG timezone formatting (add once near your helpers) =====
-const SG_FMT = new Intl.DateTimeFormat('en-SG', {
-  timeZone: 'Asia/Singapore', year: 'numeric', month: 'short', day: '2-digit',
-  hour: '2-digit', minute: '2-digit'
-});
-function sgDateTime(iso){ return iso ? SG_FMT.format(new Date(iso)) : 'TBA'; }
-const CLEAN = s => (s || '').trim().toLowerCase();
-const IS_ONGOING_STATUS = s => (s==='planned' || s==='active');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Manifest — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
+<style>
+:root{
+  --bg:#000; --panel:#0b0b0b; --card:#0c0c0c; --row:#0a0a0a;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+  --fs-base:14px; --fs-small:11px; --fs-table:13px; --fs-h1:clamp(18px,2.2vw,22px); --fs-h2:clamp(14px,1.6vw,16px);
+}
+*{box-sizing:border-box}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);font-family:'Play',system-ui,sans-serif; margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base)
+}
 
-// ===== Render helpers =====
-function missionCardHtml(m, tally, mineSet, elevated){
-  const id = m.id;
-  const ts = m.start_time ? new Date(m.start_time) : null;
-  const when = ts ? sgDateTime(m.start_time) : 'TBA';
-  const going = mineSet?.has(id);
-  const rsvpBtn = `
-    <button class="btn rsvp-btn" data-id="${id}" data-state="${going?'going':'not'}" style="margin-left:6px">
-      ${going ? 'Withdraw' : 'I’m going'}
-    </button>`;
-  const count = Number(tally[id] || 0);
-  const editLink = elevated ? ` &nbsp;·&nbsp; <a class="inline" href="mission-editor.html?id=${id}">Edit</a>` : '';
-  const countdown = ts ? `<span class="countdown" data-ts="${ts.toISOString()}">—</span>` : '<span class="countdown">TBA</span>';
+/* ===== Brand ===== */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
 
-  return `
-    <div class="item">
-      <h4>${esc(m.title || 'Untitled')}</h4>
-      <div class="meta">
-        ${esc(m.status || '')} • ${when} • ${countdown} •
-        <span class="small">RSVP: <b class="rsvp-count" data-id="${id}">${fmt(count)}</b></span>
-        ${rsvpBtn}
-        &nbsp; · &nbsp;
-        <a class="inline" href="mission-log.html">Open Mission Log</a>
-        ${editLink}
+/* ===== Shiny nav ===== */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;letter-spacing:.2px;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{
+  color:#000;
+  background:
+    radial-gradient(120% 120% at 80% -20%, rgba(255,255,255,.32), rgba(255,255,255,0) 40%),
+    linear-gradient(180deg,#f2d675,#e7c760);
+  border-color:var(--ring);
+  box-shadow:0 0 20px rgba(214,180,76,.45), inset 0 1px 0 rgba(255,255,255,.25), inset 0 -1px 0 rgba(0,0,0,.12);
+}
+.nav-btn.active::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.32) 50%,rgba(255,255,255,0) 70%);
+  transform:translateX(-120%); animation:shine 2.8s ease-in-out infinite; pointer-events:none;
+}
+@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
+
+/* ===== Layout ===== */
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+@media(max-width:1060px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.22), inset 0 0 0 1px rgba(214,180,76,.12)}
+.panel h2{margin:0 0 8px;color:var(--accent);font-size:var(--fs-h2)}
+
+/* ===== KPIs ===== */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:880px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;box-shadow:inset 0 0 0 1px rgba(214,180,76,.12)}
+.kpi h3{margin:0;color:var(--muted);font-size:11px;text-transform:uppercase}
+.kpi .val{font-weight:800;font-size:20px;color:var(--accent);margin-top:6px}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ===== Lists ===== */
+.list{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--row);border:1px solid var(--border);border-radius:12px;padding:10px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.title{font-weight:800;color:var(--accent)}
+.sub{font-size:12px;color:var(--muted)}
+.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted);background:#0c0c0c}
+
+/* ===== Tables ===== */
+.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:8px;background:var(--panel)}
+.table{width:100%;border-collapse:collapse;min-width:980px}
+.table th,.table td{padding:10px;border-bottom:1px solid rgba(214,180,76,.25);text-align:left}
+.table thead th{position:sticky;top:0;background:var(--panel);color:var(--accent);z-index:1}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn{padding:7px 10px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);cursor:pointer}
+.btn:hover{background:var(--accent);color:#000}
+.btn.bad{border-color:var(--bad);color:var(--bad)}
+
+/* ===== Toolbar ===== */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+input[type="search"],select{background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--text)}
+
+/* ===== Attendance Modal ===== */
+.attend-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50}
+.attend{width:min(560px,95vw);background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:0 0 26px rgba(214,180,76,.25)}
+.attend h3{margin:0 0 8px;color:var(--accent)}
+.attend .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.attend .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.hint{font-size:11px;color:#c9b06a}
+
+/* sticky right */
+.sticky{position:sticky;top:12px;height:fit-content}
+</style>
+</head>
+<body>
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1>JMBN Manifest — Dashboard</h1>
+  </div>
+
+  <nav class="nav">
+    <a class="nav-btn active" href="index.html">Manifest</a>
+    <a class="nav-btn" href="hangar.html">Hangar</a>
+    <a class="nav-btn" href="components.html">Components</a>
+    <a class="nav-btn" href="contracts.html">Contracts</a>
+    <a class="nav-btn" href="mission-log.html">Mission Log</a>
+  </nav>
+
+  <!-- ===== KPI STRIP ===== -->
+  <div class="panel">
+    <div class="kpis">
+      <div class="kpi"><h3>Total Missions</h3><div class="val" id="kpiMissions">0</div><div class="sub">after filters</div></div>
+      <div class="kpi"><h3>Total Payout</h3><div class="val" id="kpiPayout">0</div><div class="sub">aUEC (sum)</div></div>
+      <div class="kpi"><h3>Planned</h3><div class="val" id="kpiPlanned">0</div><div class="sub">upcoming only</div></div>
+      <div class="kpi"><h3>Active</h3><div class="val" id="kpiActive">0</div><div class="sub">right now</div></div>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:12px">
+    <!-- LEFT: Ongoing & Upcoming -->
+    <section class="panel">
+      <h2>Ongoing & Upcoming Missions</h2>
+      <div class="toolbar" style="margin:8px 0 6px">
+        <input id="search" type="search" placeholder="Search title / type / tags / status…" />
+        <select id="typeFilter"><option value="">All types</option><option>Hauling</option><option>Delivery</option><option>Rescue</option><option>Bounty</option><option>Salvage</option><option>Mining</option><option>Exploration</option></select>
+        <select id="statusFilter"><option value="">Planned + Active</option><option>Planned</option><option>Active</option></select>
+        <button class="btn" id="refresh">↻ Refresh</button>
+        <a class="btn" href="mission-editor.html">＋ Open Mission Editor</a>
       </div>
-    </div>`;
+      <div class="tableWrap">
+        <table class="table">
+          <thead><tr>
+            <th>Mission</th><th>Type</th><th>Status</th><th>Origin</th><th>Destination</th>
+            <th>Date</th><th>Hours</th><th>Payout</th><th>Tags</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- RIGHT: Last 5 joined + Quick Settings -->
+    <aside class="panel sticky">
+      <h2>Last 5 Missions Joined</h2>
+      <div id="joined" class="list"></div>
+      <div class="card" style="margin-top:10px">
+        <div>
+          <div class="title">Settings</div>
+          <div class="sub">Used for attendance & highlighting</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center">
+          <div>
+            <div class="sub" style="margin-bottom:6px">Your Callsign</div>
+            <input id="callsign" placeholder="e.g., Derek / Vex" style="width:100%" />
+            <div class="hint" style="margin-top:6px">Saved locally as <code>jmbn-callsign</code>.</div>
+          </div>
+          <button class="btn" id="saveName">Save</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ===== Attendance Modal ===== -->
+  <div class="attend-bg" id="attendBg" role="dialog" aria-modal="true">
+    <div class="attend">
+      <h3 id="attendTitle">Attend Mission</h3>
+      <div class="grid" style="grid-template-columns:1fr">
+        <div>
+          <label class="sub">Your Callsign</label>
+          <input id="attendName" placeholder="e.g., Derek / Vex" />
+        </div>
+        <div>
+          <label class="sub">Note (optional)</label>
+          <input id="attendNote" placeholder="e.g., bringing C2 / medical" />
+        </div>
+      </div>
+      <div class="hint" style="margin-top:8px">This demo records attendance locally in <code>jmbn-attendance</code>. Use the Mission Editor to update the official attendees list.</div>
+      <div class="actions">
+        <button class="btn" id="withdrawBtn">Withdraw</button>
+        <button class="btn" id="attendBtn">I'm Going</button>
+        <button class="btn bad" id="closeAttend">Close</button>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+// ===== Supabase config (same as mission pages) =====
+const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
+
+// ===== DOM =====
+const tbody = document.getElementById('tbody')
+const joined = document.getElementById('joined')
+const search = document.getElementById('search')
+const fType = document.getElementById('typeFilter')
+const fStatus = document.getElementById('statusFilter')
+const refreshBtn = document.getElementById('refresh')
+
+const kMissions = document.getElementById('kpiMissions')
+const kPayout   = document.getElementById('kpiPayout')
+const kPlanned  = document.getElementById('kpiPlanned')
+const kActive   = document.getElementById('kpiActive')
+
+const callsignEl = document.getElementById('callsign')
+const saveNameBtn = document.getElementById('saveName')
+
+// Attendance modal
+const attendBg = document.getElementById('attendBg')
+const attendTitle = document.getElementById('attendTitle')
+const attendName = document.getElementById('attendName')
+const attendNote = document.getElementById('attendNote')
+const attendBtn = document.getElementById('attendBtn')
+const withdrawBtn = document.getElementById('withdrawBtn')
+const closeAttend = document.getElementById('closeAttend')
+let attendId = null
+
+// ===== Local store helpers =====
+const esc=(s='')=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+const fmtDate=iso=>iso?new Date(iso).toLocaleString():''
+const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : ''
+const getName=()=> localStorage.getItem('jmbn-callsign')||''
+const setName=v=> localStorage.setItem('jmbn-callsign', v||'')
+const getAttendance=()=> JSON.parse(localStorage.getItem('jmbn-attendance')||'{}')
+const setAttendance=m=> localStorage.setItem('jmbn-attendance', JSON.stringify(m))
+
+// ===== Filters (spec: ignore start *time*, only compare the DATE part) =====
+function isUpcomingOrToday(iso){
+  if(!iso) return true; // if no date, keep in list
+  const d=new Date(iso); const now=new Date();
+  const day=(x)=> new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
+  return day(d) >= day(now)
 }
 
-// ===== Countdown driver (shared) =====
-function startCountdownTicker(){
-  function tick(){
-    document.querySelectorAll('.countdown').forEach(el=>{
-      const tsStr = el.getAttribute('data-ts');
-      if(!tsStr){ el.textContent = 'TBA'; return; }
-      const ts = new Date(tsStr).getTime();
-      const diff = ts - Date.now();
-      if(diff <= 0){ el.textContent = 'Started'; return; }
-      const d = Math.floor(diff/86400000);
-      const h = Math.floor((diff%86400000)/3600000);
-      const m = Math.floor((diff%3600000)/60000);
-      el.textContent = `${d}d ${h}h ${m}m`;
-    });
-  }
-  tick();
-  if(!window.__jmbnCountdown){
-    window.__jmbnCountdown = setInterval(tick, 60000);
-  }
+let cache=[]
+
+function row(r){
+  const myName = getName().trim()
+  const attMap = getAttendance()
+  const going = !!attMap[r.id]?.find?.(x=> x.name?.toLowerCase()===myName.toLowerCase())
+  return `<tr>
+    <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
+    <td>${r.type?`<span class="badge">${esc(r.type)}</span>`:''}</td>
+    <td>${r.status?`<span class="badge">${esc(r.status)}</span>`:''}</td>
+    <td>${esc(r.origin||'')}</td>
+    <td>${esc(r.destination||'')}</td>
+    <td>${fmtDate(r.start_time)}</td>
+    <td>${r.hours??''}</td>
+    <td>${fmtNum(r.payout_auec)}</td>
+    <td>${esc(r.tags||'')}</td>
+    <td>
+      <div class="row-actions">
+        <button class="btn" data-act="attend" data-id="${r.id}">${going? 'Update RSVP' : "I'm going"}</button>
+        <a class="btn" href="mission-editor.html?id=${encodeURIComponent(r.id)}">Edit</a>
+      </div>
+    </td>
+  </tr>`
 }
 
-// ===== RSVP helpers =====
-async function getRsvpCounts(sb, ids){
-  if(!ids.length) return {};
-  // Pull all rows for these missions and tally client-side
-  const { data, error } = await sb
-    .from('mission_attendees')
-    .select('mission_id')
-    .in('mission_id', ids);
-  if(error){ console.warn('RSVP counts:', error.message); return {}; }
-  const tally = {};
-  (data||[]).forEach(a => { tally[a.mission_id] = (tally[a.mission_id]||0) + 1; });
-  return tally;
+function render(){
+  const q=(search.value||'').toLowerCase();
+  const tf=(fType.value||'').toLowerCase();
+  const sf=(fStatus.value||'');
+  let rows = cache.filter(r=> ['Planned','Active'].includes(r.status||''))
+                  .filter(r=> isUpcomingOrToday(r.start_time))
+  if(tf) rows = rows.filter(r=> (r.type||'').toLowerCase()===tf)
+  if(sf) rows = rows.filter(r=> (r.status||'')===sf)
+  if(q)  rows = rows.filter(r=> `${r.title} ${r.type||''} ${r.status||''} ${r.tags||''} ${r.origin||''} ${r.destination||''}`.toLowerCase().includes(q))
+
+  // KPIs
+  const total = rows.length
+  const sum = rows.reduce((s,r)=> s + (Number(r.payout_auec||0)||0), 0)
+  const planned = rows.filter(r=>r.status==='Planned').length
+  const active  = rows.filter(r=>r.status==='Active').length
+  kMissions.textContent = total
+  kPayout.textContent   = sum.toLocaleString()
+  kPlanned.textContent  = planned
+  kActive.textContent   = active
+
+  tbody.innerHTML = rows.map(row).join('') || `<tr><td colspan="10" style="padding:12px;color:var(--muted)">No missions match the filters.</td></tr>`
 }
 
-async function getMineRsvps(sb, userId, ids){
-  if(!ids.length) return new Set();
-  const { data, error } = await sb
-    .from('mission_attendees')
-    .select('mission_id')
-    .eq('user_id', userId)
-    .in('mission_id', ids);
-  if(error){ console.warn('Mine RSVPs:', error.message); return new Set(); }
-  return new Set((data||[]).map(x=>x.mission_id));
+function renderJoined(){
+  const name = getName().trim().toLowerCase()
+  if(!name){ joined.innerHTML = `<div class="sub">Set your callsign to see your recent missions.</div>`; return }
+  const attMap = getAttendance()
+  const mine = cache.filter(r=> (attMap[r.id]||[]).some(x=> (x.name||'').toLowerCase()===name))
+                    .sort((a,b)=> new Date(b.start_time||b.created_at||0) - new Date(a.start_time||a.created_at||0))
+                    .slice(0,5)
+  joined.innerHTML = mine.length ? mine.map(r=>
+    `<div class="card">
+      <div>
+        <div class="title">${esc(r.title||'(untitled)')}</div>
+        <div class="sub">${esc(r.type||'')} • ${esc(r.status||'')} • ${fmtDate(r.start_time)}</div>
+      </div>
+      <a class="btn" href="mission-editor.html?id=${encodeURIComponent(r.id)}">Open</a>
+    </div>`
+  ).join('') : `<div class="sub">No recent missions with your name.</div>`
 }
 
-async function toggleRsvp(sb, missionId, userId, currentState){
-  if(currentState === 'going'){
-    await sb.from('mission_attendees')
-      .delete()
-      .eq('mission_id', missionId)
-      .eq('user_id', userId);
-  }else{
-    await sb.from('mission_attendees').insert({ mission_id: missionId, user_id: userId });
+async function load(){
+  const { data, error } = await sb.from('missions')
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,created_at')
+    .order('created_at',{ascending:false})
+  if(error){
+    tbody.innerHTML = `<tr><td colspan="10" style="padding:12px;color:var(--muted)">Failed to load missions: ${esc(error.message)}</td></tr>`
+    return
   }
-  // Refresh count (cheap head-count)
-  const { count } = await sb
-    .from('mission_attendees')
-    .select('mission_id', { count: 'exact', head: true })
-    .eq('mission_id', missionId);
-  const cEl = document.querySelector(`.rsvp-count[data-id="${missionId}"]`);
-  if(cEl) cEl.textContent = fmt(count || 0);
-  const btn = document.querySelector(`.rsvp-btn[data-id="${missionId}"]`);
-  if(btn){
-    const next = currentState === 'going' ? 'not' : 'going';
-    btn.dataset.state = next;
-    btn.textContent = next === 'going' ? 'Withdraw' : 'I’m going';
-  }
+  cache = data || []
+  render(); renderJoined()
 }
 
-// ===== Bucketize & render =====
-function bucketizeForDashboard(rows){
-  const now = Date.now();
-  const SIX_HR = 6*3600*1000;
-  const ONE_DAY = 24*3600*1000;
-  const ongoing = [];
-  const upcoming = [];
-
-  for(const m of rows){
-    if(!IS_ONGOING_STATUS(CLEAN(m.status))) continue;
-    if(!m.start_time) continue; // must have a date to appear on dashboard buckets
-    const ts = new Date(m.start_time).getTime();
-    if(Number.isNaN(ts)) continue;
-    if(ts >= now - SIX_HR && ts <= now + ONE_DAY) ongoing.push(m); // "Ongoing now" window
-    if(ts > now) upcoming.push(m);                                  // Future only
-  }
-  ongoing.sort((a,b)=>new Date(a.start_time)-new Date(b.start_time));
-  upcoming.sort((a,b)=>new Date(a.start_time)-new Date(b.start_time));
-  return { ongoing, upcoming };
+// ===== Attendance (local demo) =====
+function openAttend(id){
+  attendId = id
+  const row = cache.find(r=>r.id===id)
+  attendTitle.textContent = `RSVP: ${row?.title||id}`
+  attendName.value = getName()
+  attendNote.value = ''
+  attendBg.style.display='flex'
 }
+function closeAttend(){ attendBg.style.display='none'; attendId=null }
 
-function renderEventsBox(boxEl, ongoing, upcoming, tally, mineSet, elevated){
-  const parts = [];
-  // Ongoing now
-  parts.push(`<div style="margin-bottom:6px"><span class="badge">Ongoing now</span></div>`);
-  if(ongoing.length){
-    parts.push(ongoing.map(m => missionCardHtml(m, tally, mineSet, elevated)).join(''));
-  }else{
-    parts.push(`<div class="empty">No missions currently within the window.</div>`);
-  }
-
-  // Upcoming
-  parts.push(`<div style="margin:10px 0 6px"><span class="badge">Upcoming</span></div>`);
-  if(upcoming.length){
-    parts.push(upcoming.map(m => missionCardHtml(m, tally, mineSet, elevated)).join(''));
-  }else{
-    parts.push(`<div class="empty">No future missions scheduled.</div>`);
-  }
-
-  boxEl.innerHTML = parts.join('');
-  startCountdownTicker();
-
-  // wire RSVP buttons
-  boxEl.querySelectorAll('.rsvp-btn').forEach(btn=>{
-    btn.onclick = () => toggleRsvp(sb, btn.dataset.id, session.user.id, btn.dataset.state);
-  });
+attendBtn.onclick = ()=>{
+  if(!attendId) return
+  const name = (attendName.value||'').trim(); if(!name){ alert('Enter your callsign'); return }
+  setName(name)
+  const map = getAttendance(); const arr = map[attendId] || []
+  // add/update entry
+  const i = arr.findIndex(x=> (x.name||'').toLowerCase()===name.toLowerCase())
+  const entry = { name, note: attendNote.value.trim(), at: new Date().toISOString() }
+  if(i>=0) arr[i]=entry; else arr.push(entry)
+  map[attendId]=arr; setAttendance(map)
+  closeAttend(); renderJoined(); render()
 }
-
-// ===== REPLACEMENT: loadEvents() with buckets + RSVP + SG TZ + Realtime =====
-async function loadEvents(){
-  const box = document.querySelector('#events');
-  if(!box) return;
-  box.innerHTML = '<div class="empty">Loading…</div>';
-
-  try{
-    // Pull *recent and future* missions and filter client-side for status
-    // Wider window ensures ongoing bucket can include already-started missions
-    const sinceISO = new Date(Date.now() - 48*3600*1000).toISOString(); // 48h lookback to be safe
-    const { data, error } = await sb
-      .from('missions')
-      .select('id,title,status,start_time')
-      .or(`start_time.gte.${sinceISO},start_time.is.null`) // keep nulls out of buckets but harmless to fetch
-      .order('start_time', { ascending: true })
-      .limit(100);
-    if(error) throw error;
-
-    const rows = (data||[]).filter(m => IS_ONGOING_STATUS(CLEAN(m.status)));
-    const { ongoing, upcoming } = bucketizeForDashboard(rows);
-
-    const ids = [...new Set([...ongoing, ...upcoming].map(m => m.id))];
-    const [tally, mineSet] = await Promise.all([
-      getRsvpCounts(sb, ids),
-      getMineRsvps(sb, session.user.id, ids)
-    ]);
-
-    // determine elevation (you already computed earlier; reusing if available)
-    let elevated = false;
-    try{ const { data: elev } = await sb.rpc('is_elevated', { u: session.user.id }); elevated = !!elev; }catch(_){}
-
-    renderEventsBox(box, ongoing, upcoming, tally, mineSet, elevated);
-
-    // Realtime: missions and RSVPs
-    if(!window.__jmbnRealtimeEvents){
-      window.__jmbnRealtimeEvents = sb.channel('rt-events')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'missions' }, () => loadEvents())
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'mission_attendees' }, () => loadEvents())
-        .subscribe();
-    }
-  }catch(e){
-    box.innerHTML = `<div class="empty" style="color:var(--bad)">Failed: ${esc(e.message)}</div>`;
-  }
+withdrawBtn.onclick = ()=>{
+  if(!attendId) return
+  const name = (attendName.value||'').trim(); if(!name){ alert('Enter your callsign'); return }
+  const map = getAttendance(); const arr = (map[attendId]||[]).filter(x=> (x.name||'').toLowerCase()!==name.toLowerCase())
+  map[attendId]=arr; setAttendance(map)
+  closeAttend(); renderJoined(); render()
 }
+closeAttend.onclick = closeAttend
+attendBg.addEventListener('click', e=>{ if(e.target===attendBg) closeAttend() })
+
+tbody.addEventListener('click', (e)=>{
+  const b = e.target.closest('button'); if(!b) return
+  if(b.dataset.act==='attend'){ openAttend(b.dataset.id) }
+})
+
+// ===== Wire-up =====
+search.oninput = render; fType.onchange = render; fStatus.onchange = render; refreshBtn.onclick = load
+callsignEl.value = getName(); saveNameBtn.onclick = ()=>{ setName(callsignEl.value); renderJoined(); render() }
+
+await load()
 </script>
+
+<!-- highlight nav -->
+<script>
+(() => {
+  const here = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{ if(a.getAttribute('href')===here) a.classList.add('active') })
+})();
+</script>
+</body>
+</html>
