@@ -57,11 +57,11 @@ tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .name{font-weight:700}
 
-/* NEW: handle cell with rank image */
-.handleCell{display:flex;align-items:center;gap:10px}
-.handleCell img{
+/* Rank cell with image beside rank text */
+.rankCell{display:flex;align-items:center;gap:10px}
+.rankCell img{
   width:28px;height:28px;object-fit:contain;
-  border:1px solid var(--border);border-radius:6px;background:#111;flex:0 0 28px
+  border:1px solid var(--border);border-radius:6px;background:#111;flex:0 0 28px;
 }
 
 /* Modal */
@@ -79,30 +79,23 @@ tr:hover{background:rgba(214,180,76,.08)}
 </head>
 <body>
   <!-- 🔁 Shared header mount -->
-<div id="header-container"></div>
-<script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    const html = await res.text();
-    document.getElementById('header-container').outerHTML = html;
-
-    // Highlight current tab (triggers shiny sweep ✨)
-    requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a => {
-        const href = (a.getAttribute('href')||'').toLowerCase();
-        if (href === here) {
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
+  <div id="header-container"></div>
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href')||'').toLowerCase();
+          if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
+        });
       });
-    });
-  } catch (e) {
-    console.warn('Header load failed:', e);
-  }
-})();
-</script>
+    } catch (e) { console.warn('Header load failed:', e); }
+  })();
+  </script>
 
   <div class="panel">
     <div class="controls">
@@ -152,7 +145,7 @@ tr:hover{background:rgba(214,180,76,.08)}
   <script src="js/auth.js"></script>
 
 <script>
-/* Active nav */
+/* Active nav (fallback) */
 (function(){
   const here = location.pathname.split('/').pop() || 'member.html';
   document.querySelectorAll('.nav-btn').forEach(a=>{
@@ -164,43 +157,56 @@ tr:hover{background:rgba(214,180,76,.08)}
 const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
 
+/* Title-case helper (handles snake/space/dash) */
+function toTitleCase(s){
+  if(!s) return '';
+  return String(s)
+    .replace(/[_-]+/g,' ')                 // underscores/dashes -> space
+    .replace(/\s+/g,' ')
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
 let sb=null, session=null;
-let ROWS = []; // data from view
-const RANK_BUCKET = 'Ranks'; // ✅ bucket name is case-sensitive
+let ROWS = [];
+const RANK_BUCKET = 'Ranks'; // case-sensitive
 
-const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
-
-/* Build public URL safely via SDK (no network call) */
+/* Public URL from rank code (no network) */
 function rankPublicUrlFromCode(code){
   if(!code) return '';
   return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
 
-/* Render */
+/* Render table */
+const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
+
 function render(rows){
   if(!rows?.length){
     tbody.innerHTML = `<tr><td colspan="3" style="padding:10px;color:var(--muted)">No members found</td></tr>`;
     countEl.textContent = '0 members';
     return;
   }
+
   tbody.innerHTML = rows.map(r=>{
-    const handle   = r.handle || r.display_name || (r.user_id ? r.user_id.slice(0,8) : '—');
-    const rankName = r.current_rank_name || '(unranked)';
-    const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+    const rawHandle  = r.handle || r.display_name || r.user_id?.slice(0,8) || '—';
+    const handle     = toTitleCase(rawHandle);                       // <-- Capitalize handle
+    const rankName   = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unranked';  // <-- Capitalize rank
+    const imgUrl     = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
 
     return `
       <tr>
+        <td class="name">${esc(handle)}</td>
         <td>
-          <div class="handleCell">
-            ${imgUrl ? `<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy"
-                         onerror="this.style.display='none'">` : ``}
-            <span class="name">${esc(handle)}</span>
+          <div class="rankCell">
+            ${imgUrl ? `<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">` : ''}
+            <span>${esc(rankName)}</span>
           </div>
         </td>
-        <td>${esc(rankName)}</td>
         <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
       </tr>`;
   }).join('');
+
   countEl.textContent = `${rows.length} member${rows.length===1?'':'s'}`;
 }
 
@@ -223,14 +229,14 @@ function viewMember(userId){
   const r = ROWS.find(x=>x.user_id===userId);
   if(!r) return;
 
-  const handle   = r.handle || r.display_name || r.user_id.slice(0,8);
+  const handle   = toTitleCase(r.handle || r.display_name || r.user_id.slice(0,8));
   const attended = Number(r.missions_attended) || 0;
-
-  const imgUrl = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+  const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+  const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unranked';
 
   $('#viewTitle').textContent = `Member — ${handle}`;
   $('#vHandle').textContent   = handle;
-  $('#vRankName').textContent = r.current_rank_name || '(unranked)';
+  $('#vRankName').textContent = rankName;
   $('#vRankCode').textContent = r.current_rank_code ? `(${r.current_rank_code})` : '';
   $('#vRole').textContent     = r.ingame_role || '—';
   $('#vAttended').textContent = attended;
@@ -245,7 +251,7 @@ function viewMember(userId){
 }
 window.viewMember = viewMember;
 
-/* Load from the VIEW */
+/* Load data */
 async function loadRoster(){
   const { data, error } = await sb
     .from('v_profiles_detailed')
@@ -264,7 +270,7 @@ q.addEventListener('input', ()=> render(filterRows()));
 
 /* Auth gate then load */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();   // redirect to auth.html if not logged in
+  session = await requireAuth();   // redirects if not logged in
   if(!session) return;
   sb = getSupabase();
   loadRoster();
