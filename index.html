@@ -18,6 +18,28 @@
 html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity .6s ease}
 body{opacity:0}
 
+/* Announcement actions */
+.annc-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+}
+.annc-btn {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: 'Play';
+  font-size: 12px;
+}
+.annc-btn:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+
 /* Post link styling */
 #postAnnc{
   color: var(--accent);
