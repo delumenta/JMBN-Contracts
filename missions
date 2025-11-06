@@ -3,241 +3,233 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN • Mission Log v2</title>
+<title>JMBN Mission Log</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
+
 <style>
-:root{--b:#d6b44c;--a:#f2d675;--t:#f7f1d0;--m:#c9b06a;--panel:#0b0b0b;--card:#111}
+:root{
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
+}
 *{box-sizing:border-box}
-body{margin:0;background:#000;color:var(--t);font-family:'Play',system-ui,sans-serif;padding:16px}
-h1{margin:0 0 8px;color:var(--a);font-size:22px}
-.wrap{max-width:1200px;margin:0 auto}
-.panel{background:var(--panel);border:1px solid var(--b);border-radius:12px;padding:12px;margin:10px 0}
-.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.right{margin-left:auto}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--b);border-radius:999px;background:#0a0a0a;color:var(--a);font-size:12px}
-input,select{background:#0a0a0a;border:1px solid var(--b);border-radius:10px;color:var(--t);padding:8px}
-button{background:linear-gradient(180deg,#0c0c0c,#060606);border:1px solid var(--b);color:var(--a);border-radius:10px;padding:8px 12px;cursor:pointer}
-button:hover{background:var(--a);color:#000}
-small{color:var(--m)}
-.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.kpi{background:var(--card);border:1px solid var(--b);border-radius:12px;padding:12px}
-.kpi .ttl{color:var(--m);font-size:12px}
-.kpi .val{font-size:22px;color:var(--a);font-weight:700}
-.tblWrap{border:1px solid var(--b);border-radius:12px;overflow:auto;max-height:70vh}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:8px;border-bottom:1px solid rgba(214,180,76,.3);vertical-align:top;text-align:left}
-th{color:var(--a);background:#080808;font-weight:500;position:sticky;top:0;z-index:1}
-tr:nth-child(even){background:#101010}
-.pill{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--m)}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
+}
+
+/* Header container is injected */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+
+/* Shiny nav (matches your default) */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  overflow:hidden;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
+.nav-btn.active::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
+
+/* Panels + controls */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+button,.small-btn{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
+button:hover,.small-btn:hover{background:var(--accent);color:#000}
+.btn-primary{background:var(--accent);color:#000}
+input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+.small{font-size:var(--fs-small);color:var(--muted)}
+.spacer{flex:1 1 auto}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 6px}
+@media(max-width:880px){.kpis{grid-template-columns:1fr}}
+.kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)}
+.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* Table */
+.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
+th{color:var(--accent);background:#080808;font-weight:500;position:sticky;top:0;z-index:1}
+tr:nth-child(even){background:#111}
+tr:hover{background:rgba(214,180,76,.08)}
+.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 .nowrap{white-space:nowrap}
 .mono{font-variant-numeric:tabular-nums}
-.modalMask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
-.modal{background:#0b0b0b;border:1px solid var(--b);border-radius:12px;max-width:780px;width:92vw;padding:14px}
-.modal h3{margin:0 0 10px;color:var(--a);font-size:18px}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{display:flex;align-items:center;gap:8px;border:1px solid var(--b);border-radius:999px;padding:6px 10px}
-.chip button{padding:2px 6px;border-radius:6px}
-#log{height:140px;overflow:auto;background:#0a0a0a;border:1px solid var(--b);border-radius:10px;padding:8px;font:12px/1.4 ui-monospace,Menlo,Consolas}
+
+/* Attendance Modal */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
+.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+.modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
+.modal .chip .x:hover{background:#111;color:#ff6b6b}
+.modal .list{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>JMBN • Mission Log</h1>
 
-  <!-- Top bar -->
-  <div class="panel">
-    <div class="row">
-      <div id="who" class="badge">Not signed in</div>
-      <div id="elev" class="badge">elevated: <b id="elevState">no</b></div>
-      <div class="right row">
-        <button id="login">Sign in with GitHub</button>
-        <button id="logout" style="display:none">Sign out</button>
-      </div>
-    </div>
-    <small>Tip: sign in as Admin/Officer to test elevated actions.</small>
+<!-- 🔁 Shared header mount -->
+<div id="header-container"></div>
+<script>
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    const html = await res.text();
+    document.getElementById('header-container').outerHTML = html;
+
+    // Highlight current tab
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'mission-log.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a => {
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
+      });
+    });
+  } catch (e) {
+    console.warn('Header load failed:', e);
+  }
+})();
+</script>
+
+<div class="panel">
+  <!-- Top controls -->
+  <div class="controls">
+    <a class="small-btn" href="index.html">← Back to Manifest</a>
+    <div class="spacer"></div>
+    <input id="search" placeholder="Search... (title, type, status, tags)">
+    <select id="statusFilter" title="Filter by status">
+      <option value="">All Status</option>
+      <option>Draft</option>
+      <option>In Progress</option>
+      <option>Completed</option>
+      <option>Aborted</option>
+    </select>
+    <button id="exportCsv">Export CSV</button>
+    <a class="small-btn btn-primary" href="mission-editor.html">+ Open Mission Editor</a>
   </div>
 
-  <!-- Filters / actions -->
-  <div class="panel">
-    <div class="row">
-      <input id="q" placeholder="Search (title, type, status, tags, origin, destination)" style="min-width:260px;flex:1">
-      <select id="st">
-        <option value="">All Status</option>
-        <option>Planned</option>
-        <option>Active</option>
-        <option>Success</option>
-        <option>Fail</option>
-        <option>Abort</option>
-      </select>
-      <button id="exportCsv">Export CSV</button>
-    </div>
-  </div>
-
-  <!-- KPIs -->
+  <!-- KPI -->
   <div class="kpis">
     <div class="kpi">
-      <div class="ttl">Total Missions (filtered)</div>
-      <div class="val" id="kCount">0</div>
+      <div class="kpi-title">Total Missions</div>
+      <div class="kpi-value" id="kpiCount">0</div>
+      <div class="kpi-sub">after filters</div>
     </div>
     <div class="kpi">
-      <div class="ttl">Total Payout (aUEC)</div>
-      <div class="val" id="kPayout">0</div>
+      <div class="kpi-title">Total Payout (aUEC)</div>
+      <div class="kpi-value" id="kpiTotal">0</div>
+      <div class="kpi-sub">sum of payouts</div>
     </div>
   </div>
 
   <!-- Table -->
-  <div class="panel">
-    <div class="tblWrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th><th>Type</th><th>Status</th>
-            <th>Origin</th><th>Destination</th>
-            <th class="nowrap">Date</th><th class="nowrap">Hours</th>
-            <th class="nowrap">Payout</th>
-            <th>Tags</th><th>Attachments</th><th>Notes</th>
-            <th class="nowrap">Attendance</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Attendance Modal -->
-  <div id="attMask" class="modalMask" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="row">
-        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
-        <button id="attClose">Close</button>
-      </div>
-
-      <div class="row" style="margin:6px 0 10px">
-        <button id="btnGoing">I’m Going</button>
-        <button id="btnWithdraw">Withdraw</button>
-        <small>These toggle <b>your</b> attendance.</small>
-      </div>
-
-      <div id="elevTools" class="row" style="display:none;margin-bottom:10px">
-        <input id="attEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px">
-        <select id="attRole">
-          <option value="">Role (optional)</option>
-          <option>pilot</option><option>escort</option><option>hauler</option>
-          <option>miner</option><option>medic</option>
-        </select>
-        <button id="btnAdd">Add</button>
-        <small>Visible to Admin/Officer or mission owner.</small>
-      </div>
-
-      <div class="row"><b>Attendees</b></div>
-      <div id="chips" class="chips" style="margin-top:6px"></div>
-    </div>
-  </div>
-
-  <!-- Log -->
-  <div class="panel">
-    <div class="row"><b>Log</b></div>
-    <div id="log"></div>
+  <div class="tableWrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Mission Title</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Origin</th>
+          <th>Destination</th>
+          <th class="nowrap">Date</th>
+          <th class="nowrap">Hours</th>
+          <th class="nowrap">Payout (aUEC)</th>
+          <th>Tags</th>
+          <th>Attachments</th>
+          <th>Notes</th>
+          <th class="nowrap">Attendance</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
   </div>
 </div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+<!-- Attendance Modal -->
+<div id="attModalMask" class="modal-mask" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+      <button class="small-btn" onclick="closeAttendance()">Close</button>
+    </div>
 
-/* ========= 1) CONFIG ========= */
-const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';   // <-- replace
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'; // <-- replace
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+    <div class="row">
+      <button id="attIamGoing" class="small-btn">I’m going</button>
+      <button id="attWithdraw" class="small-btn">Withdraw</button>
+      <span class="small">These toggle <b>your</b> attendance.</span>
+    </div>
 
-/* ========= 2) UI refs ========= */
-const ui = {
-  who:  document.getElementById('who'),
-  elev: document.getElementById('elevState'),
-  login:document.getElementById('login'),
-  logout:document.getElementById('logout'),
-  q:    document.getElementById('q'),
-  st:   document.getElementById('st'),
-  kCount:document.getElementById('kCount'),
-  kPayout:document.getElementById('kPayout'),
-  tbody:document.getElementById('tbody'),
-  exportCsv:document.getElementById('exportCsv'),
-  log:  document.getElementById('log'),
-  // modal
-  mask: document.getElementById('attMask'),
-  attTitle: document.getElementById('attTitle'),
-  attClose: document.getElementById('attClose'),
-  btnGoing: document.getElementById('btnGoing'),
-  btnWithdraw: document.getElementById('btnWithdraw'),
-  btnAdd: document.getElementById('btnAdd'),
-  attEmail: document.getElementById('attEmail'),
-  attRole: document.getElementById('attRole'),
-  chips: document.getElementById('chips'),
-  elevTools: document.getElementById('elevTools'),
-};
+    <div id="attElevatedTools" class="row" style="display:none">
+      <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+      <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+        <option value="">Role (optional)</option>
+        <option>pilot</option><option>escort</option><option>hauler</option><option>miner</option><option>medic</option>
+      </select>
+      <button id="attAddBtn" class="small-btn">Add</button>
+      <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
+    </div>
 
-const say = (...a)=>{
-  const s = a.map(x => typeof x==='string'? x : JSON.stringify(x)).join(' ');
-  const div = document.createElement('div');
-  div.textContent = `[${new Date().toLocaleTimeString()}] ${s}`;
-  ui.log.appendChild(div); ui.log.scrollTop = ui.log.scrollHeight;
-};
+    <div class="row">
+      <strong class="small">Attendees:</strong>
+      <div id="attList" class="list"></div>
+    </div>
+  </div>
+</div>
 
-/* ========= 3) State ========= */
-let session=null, user=null, elevated=false, missions=[], lastId=null, CURRENT_MISSION=null;
+<!-- 🔐 Auth & client -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 
-/* ========= 4) Auth ========= */
-async function refreshAuth(){
-  const { data:{ session:ses } } = await sb.auth.getSession();
-  session = ses; user = ses?.user || null;
+<script>
+/* ===== Helpers ===== */
+const $=s=>document.querySelector(s);
+const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
+const fmtDate=iso=>iso? new Date(iso).toLocaleString() : '';
+const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
-  if(!user){
-    ui.who.textContent = 'Not signed in';
-    ui.login.style.display = '';
-    ui.logout.style.display = 'none';
-    ui.elev.textContent = 'no';
-    elevated = false;
-    return;
-  }
-  ui.login.style.display = 'none';
-  ui.logout.style.display = '';
-  ui.who.textContent = `${user.email}`;
+/* ===== State ===== */
+let cache=[]; // missions
+let session=null, sb=null;
+const tbody = $('#tbody');
 
-  // show elevation via RPC (SECURITY DEFINER on backend)
-  const { data: elevRes, error: elevErr } = await sb.rpc('is_elevated', { u: user.id });
-  if(elevErr){ say('is_elevated error:', elevErr.message); }
-  elevated = elevRes === true;
-  ui.elev.textContent = elevated ? 'YES' : 'no';
-}
-
-ui.login.onclick = async ()=>{
-  const { error } = await sb.auth.signInWithOAuth({ provider:'github' });
-  if(error) say('Login error:', error.message);
-};
-ui.logout.onclick = async ()=>{
-  await sb.auth.signOut();
-  await refreshAuth();
-  render([]);
-};
-
-sb.auth.onAuthStateChange(async ()=>{ await refreshAuth(); await loadMissions(); });
-
-/* ========= 5) Data ========= */
-const fmtDate = iso => iso ? new Date(iso).toLocaleString() : '';
-const fmtNum  = n => (n||n===0) ? Number(n).toLocaleString() : '';
-const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
-
-function attachmentCell(arr){
+/* ===== Render ===== */
+function attachmentsCell(arr){
   if(!Array.isArray(arr)||!arr.length) return '';
   return arr.map((a,i)=>{
-    const name=a?.name?.trim()||`Attachment ${i+1}`;
-    const url=a?.url||'#';
-    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--a);text-decoration:underline">${esc(name)}</a>`;
+    const name = a?.name?.trim() || `Attachment ${i+1}`;
+    const url  = a?.url || '#';
+    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
   }).join(', ');
 }
-
 function row(r){
   return `<tr>
-    <td><b style="color:var(--a)">${esc(r.title||'(untitled)')}</b></td>
+    <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
     <td>${r.type?`<span class="pill">${esc(r.type)}</span>`:''}</td>
     <td>${r.status?`<span class="pill">${esc(r.status)}</span>`:''}</td>
     <td>${esc(r.origin||'')}</td>
@@ -246,142 +238,165 @@ function row(r){
     <td class="mono">${r.hours ?? ''}</td>
     <td class="mono">${fmtNum(r.payout_auec)}</td>
     <td>${esc(r.tags||'')}</td>
-    <td>${attachmentCell(r.attachments)}</td>
+    <td>${attachmentsCell(r.attachments)}</td>
     <td>${esc(r.notes||'')}</td>
-    <td><button data-id="${r.id}" data-title="${esc(r.title||'')}" class="attBtn">View</button></td>
+    <td><button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">View</button></td>
   </tr>`;
 }
-
-function applyFilter(){
-  const q=(ui.q.value||'').toLowerCase();
-  const st=(ui.st.value||'').toLowerCase();
-  let list=missions.slice();
-  if(st) list = list.filter(x => (x.status||'').toLowerCase()===st);
-  if(q) list = list.filter(x =>
-    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`.toLowerCase().includes(q)
-  );
-  ui.kCount.textContent = list.length.toLocaleString();
-  ui.kPayout.textContent = list.reduce((s,x)=> s + (Number(x.payout_auec)||0), 0).toLocaleString();
-  ui.tbody.innerHTML = list.length ? list.map(row).join('') :
-    `<tr><td colspan="12"><small>No missions.</small></td></tr>`;
+function render(list){
+  $('#kpiCount').textContent = (list||[]).length.toLocaleString();
+  const total = (list||[]).reduce((s,x)=> s + (Number(x.payout_auec)||0), 0);
+  $('#kpiTotal').textContent = total.toLocaleString();
+  tbody.innerHTML = list.length ? list.map(row).join('') :
+    `<tr><td colspan="13" class="small" style="padding:10px">No missions found.</td></tr>`;
 }
 
+/* ===== Filters + CSV ===== */
+function getFiltered(){
+  const q = ($('#search').value||'').toLowerCase();
+  const st = ($('#statusFilter').value||'').toLowerCase();
+  let arr = cache.slice();
+  if(st) arr = arr.filter(x => (x.status||'').toLowerCase()===st);
+  if(q) arr = arr.filter(x =>
+    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`
+    .toLowerCase().includes(q));
+  return arr;
+}
+$('#search').addEventListener('input', ()=>render(getFiltered()));
+$('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
+
+$('#exportCsv').addEventListener('click', ()=>{
+  const rows = getFiltered();
+  const cols = ['title','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
+  const csv = [
+    cols.join(','),
+    ...rows.map(r => cols.map(k=>{
+      const v = r[k]==null?'':String(r[k]).replace(/"/g,'""');
+      return `"${v}"`;
+    }).join(','))
+  ].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+});
+
+/* ===== Load (Supabase) ===== */
 async function loadMissions(){
-  if(!user){ ui.tbody.innerHTML = `<tr><td colspan="12"><small>Sign in to view missions.</small></td></tr>`; return; }
   const { data, error } = await sb
     .from('missions')
     .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,submitted_by,created_at')
     .order('created_at',{ascending:false});
-  if(error){ say('Load missions error:', error.message); return; }
-  missions = data||[];
-  applyFilter();
+
+  if(error){
+    tbody.innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    return;
+  }
+  cache = data || [];
+  render(getFiltered());
 }
-ui.q.oninput = applyFilter; ui.st.oninput = applyFilter;
 
-ui.exportCsv.onclick = ()=>{
-  const rows = ui.tbody.querySelectorAll('tr');
-  if(!rows.length){ return; }
-  // Recompute from filtered list for reliable CSV
-  const cols=['title','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
-  const filtered = missions.filter(m=>{
-    const q=(ui.q.value||'').toLowerCase();
-    const st=(ui.st.value||'').toLowerCase();
-    const stOk = !st || (m.status||'').toLowerCase()===st;
-    const qOk = !q || `${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.destination||''}`.toLowerCase().includes(q);
-    return stOk && qOk;
-  });
-  const csv = [cols.join(','), ...filtered.map(r => cols.map(k=>{
-    const v = r[k]==null?'':String(r[k]).replace(/"/g,'""'); return `"${v}"`;
-  }).join(','))].join('\n');
-  const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
-};
+/* ===== Attendance modal ===== */
+let ATT_MISSION_ID = null;
 
-/* ========= 6) Attendance ========= */
-function openModal(){ ui.mask.style.display='flex'; }
-function closeModal(){ ui.mask.style.display='none'; CURRENT_MISSION=null; ui.chips.innerHTML=''; }
-ui.attClose.onclick = closeModal;
+async function openAttendance(missionId, title=''){
+  ATT_MISSION_ID = missionId;
+  $('#attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
+  $('#attModalMask').style.display = 'flex';
 
-async function refreshAttendees(){
-  ui.chips.innerHTML = '<small>Loading…</small>';
+  // show elevated tools if admin/officer or mission owner
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', missionId).single()
+  ]);
+  const isOwner = mission?.submitted_by === session.user.id;
+  $('#attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
+
+  $('#attIamGoing').onclick = async () => {
+    await sb.from('mission_attendees').upsert({
+      mission_id: ATT_MISSION_ID,
+      user_id: session.user.id,
+      attendance: 'going'
+    }, { onConflict: 'mission_id,user_id' });
+    await loadAttendees();
+  };
+  $('#attWithdraw').onclick = async () => {
+    await sb.from('mission_attendees')
+      .delete()
+      .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
+    await loadAttendees();
+  };
+  $('#attAddBtn').onclick = async () => {
+    const email = $('#attAddEmail').value.trim();
+    const role  = $('#attAddRole').value || null;
+    if(!email){ alert('Enter an email'); return; }
+    const { error } = await sb.rpc('add_attendee_by_email', {
+      p_mission: ATT_MISSION_ID,
+      p_email: email,
+      p_role: role,
+      p_attendance: 'going'
+    });
+    if(error){ alert('Add failed: ' + error.message); return; }
+    $('#attAddEmail').value=''; $('#attAddRole').value='';
+    await loadAttendees();
+  };
+
+  await loadAttendees();
+}
+function closeAttendance(){ $('#attModalMask').style.display = 'none'; ATT_MISSION_ID = null; }
+window.openAttendance = openAttendance;
+window.closeAttendance = closeAttendance;
+
+async function loadAttendees(){
+  const list = $('#attList');
+  list.innerHTML = '<span class="small">Loading…</span>';
   const { data, error } = await sb
     .from('v_mission_attendees_detailed')
     .select('*')
-    .eq('mission_id', CURRENT_MISSION)
-    .order('joined_at',{ascending:true});
-  if(error){ ui.chips.innerHTML = `<small style="color:#ff6b6b">Load failed: ${esc(error.message)}</small>`; return; }
+    .eq('mission_id', ATT_MISSION_ID)
+    .order('joined_at', { ascending: true });
 
-  // can manage all?
-  const [{ data: elevRes }, { data: mission }] = await Promise.all([
-    sb.rpc('is_elevated', { u: user.id }),
-    sb.from('missions').select('submitted_by').eq('id', CURRENT_MISSION).single()
+  if(error){ list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
+  if(!data?.length){ list.innerHTML = '<span class="small">No attendees yet.</span>'; return; }
+
+  // manage permission?
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
   ]);
-  const canAll = (elevRes===true) || (mission?.submitted_by === user.id);
-  ui.elevTools.style.display = canAll ? 'flex' : 'none';
+  const canManageAll = (elev || mission?.submitted_by === session.user.id);
 
-  ui.chips.innerHTML='';
-  for(const a of (data||[])){
-    const canRemove = canAll || (a.user_id === user.id);
-    const div=document.createElement('div');
-    div.className='chip';
-    div.innerHTML = `
+  list.innerHTML = '';
+  for(const a of data){
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = `
       <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
-      <small style="color:var(--m)">${a.role_in_mission? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</small>
-      ${canRemove? '<button data-uid="'+a.user_id+'">x</button>':''}
+      <span class="small" style="color:var(--muted)">${a.role_in_mission ? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</span>
+      ${ (canManageAll || a.user_id === session.user.id) ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
     `;
-    const btn = div.querySelector('button');
-    if(btn){
-      btn.onclick = async ()=>{
-        const { error:delErr } = await sb.from('mission_attendees').delete().match({
-          mission_id: CURRENT_MISSION, user_id: btn.getAttribute('data-uid')
-        });
-        if(delErr){ alert('Remove failed: '+delErr.message); return; }
-        await refreshAttendees();
+    const x = chip.querySelector('.x');
+    if(x){
+      x.onclick = async () => {
+        const targetUser = x.getAttribute('data-uid');
+        const { error: delErr } = await sb
+          .from('mission_attendees')
+          .delete()
+          .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+        if(delErr){ alert('Remove failed: ' + delErr.message); return; }
+        await loadAttendees();
       };
     }
-    ui.chips.appendChild(div);
+    list.appendChild(chip);
   }
 }
 
-document.addEventListener('click', async (e)=>{
-  const b = e.target.closest('.attBtn');
-  if(!b) return;
-  const id = b.getAttribute('data-id'); const title=b.getAttribute('data-title')||'';
-  CURRENT_MISSION = id;
-  ui.attTitle.textContent = `Attendance — ${title || id.slice(0,8)}`;
-  openModal();
-  await refreshAttendees();
+/* ===== Auth gate + load ===== */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  session = await requireAuth();   // from js/auth.js
+  if(!session) return;
+  sb = getSupabase();              // from js/auth.js
+  loadMissions();
 });
-
-ui.btnGoing.onclick = async ()=>{
-  if(!CURRENT_MISSION) return;
-  await sb.from('mission_attendees').upsert({
-    mission_id: CURRENT_MISSION, user_id: user.id, attendance: 'going'
-  }, { onConflict:'mission_id,user_id' });
-  await refreshAttendees();
-};
-ui.btnWithdraw.onclick = async ()=>{
-  if(!CURRENT_MISSION) return;
-  await sb.from('mission_attendees').delete().match({ mission_id: CURRENT_MISSION, user_id: user.id });
-  await refreshAttendees();
-};
-ui.btnAdd.onclick = async ()=>{
-  if(!CURRENT_MISSION) return;
-  const email = ui.attEmail.value.trim(); const role = ui.attRole.value || null;
-  if(!email){ alert('Enter an email'); return; }
-  const { error } = await sb.rpc('add_attendee_by_email',{
-    p_mission: CURRENT_MISSION, p_email: email, p_role: role, p_attendance: 'going'
-  });
-  if(error){ alert('Add failed: ' + error.message); return; }
-  ui.attEmail.value=''; ui.attRole.value='';
-  await refreshAttendees();
-};
-
-/* ========= 7) Init ========= */
-(async function init(){
-  await refreshAuth();
-  await loadMissions();
-})();
 </script>
 </body>
 </html>
