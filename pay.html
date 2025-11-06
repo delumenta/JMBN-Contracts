@@ -1,27 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Pay Grades</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN Pay Grades — Console</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--card:#141414;
-  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;
+  --bg:#000;--panel:#0b0b0b;--row:#0a0a0a;--card:#0c0c0c;
+  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
 }
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box}
 body{
   background:
-    radial-gradient(1000px 700px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(800px 600px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text);font-family:'Play',sans-serif;
-  margin:0;padding:16px;letter-spacing:.25px;font-size:14px;
+  color:var(--text);font-family:'Play',system-ui,sans-serif;margin:0;padding:16px
+}
+/* Brand + Nav */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 10px;border-bottom:1px solid var(--border);padding-bottom:8px}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{margin:0;color:var(--accent);font-size:22px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.nav-btn{
+  --ring:#d6b44c;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,#f2d675,#e7c760);border-color:var(--ring)}
+/* Console layout */
+.wrap{display:grid;grid-template-columns:1fr 360px;gap:12px}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.18)}
+/* Console */
+.console{
+  background:var(--row);border:1px solid var(--border);border-radius:12px;
+  padding:10px;min-height:60vh;display:flex;flex-direction:column
+}
+.log{
+  flex:1;overflow:auto;padding:8px;background:linear-gradient(180deg,#0a0a0a,#080808);
+  border:1px solid rgba(214,180,76,.25);border-radius:8px;color:#f7f1d0;font-family:ui-monospace,Consolas,monospace;font-size:13px
+}
+.log .line{white-space:pre-wrap;word-break:break-word}
+.log .ok{color:#a6f7a6}
+.log .warn{color:#f7f1a6}
+.log .err{color:#ffb0b0}
+.prompt{display:flex;gap:8px;margin-top:10px}
+.prompt .caret{display:grid;place-items:center;width:34px;border:1px solid var(--border);border-radius:8px;background:#0c0c0c;color:var(--accent);font-weight:700}
+.prompt input{
+  flex:1;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:ui-monospace,Consolas,monospace
+}
+.hint{color:var(--muted);font-size:12px;margin-top:6px}
+/* Side: snapshot + help */
+.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px}
+.card h3{margin:0 0 6px;color:var(--accent);font-size:14px}
+.small{font-size:12px;color:var(--muted)}
+.table{width:100%;border-collapse:collapse;font-size:12px}
+.table th,.table td{border-bottom:1px solid rgba(214,180,76,.25);padding:6px;text-align:left}
+.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
+code{background:#0a0a0a;border:1px solid rgba(214,180,76,.25);border-radius:6px;padding:2px 6px}
+.btn{padding:7px 10px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);cursor:pointer}
+.btn:hover{background:var(--accent);color:#000}
+</style>
+</head>
+<body>
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1>JMBN Pay Grades — Console</h1>
+  </div>
+
+  <nav class="nav">
+    <a class="nav-btn" href="index.html">Manifest</a>
+    <a class="nav-btn" href="hangar.html">Hangar</a>
+    <a class="nav-btn" href="components.html">Components</a>
+    <a class="nav-btn" href="contracts.html">Contracts</a>
+    <a class="nav-btn" href="mission-log.html">Mission Log</a>
+    <a class="nav-btn active" href="paygrades-cli.html">Pay Grades (CLI)</a>
+  </nav>
+
+  <div class="wrap">
+    <!-- LEFT: Console -->
+    <div class="panel">
+      <div class="console">
+        <div id="log" class="log" aria-live="polite"></div>
+        <div class="prompt">
+          <div class="caret">J$</div>
+          <input id="cmd" placeholder='Type "help" for commands… then Enter'/>
+        </div>
+        <div class="hint">↑/↓ history • <span class="badge">localStorage</span> persistence • try: <code>list</code>, <code>show PO-E6</code>, <code>set PO-E6 base 22000</code>, <code>add "Lieutenant" Officer LT-O2 36000 800 2.5</code></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Snapshot + Help -->
+    <div class="panel">
+      <div class="kpi">
+        <div class="card"><h3>Total Ranks</h3><div id="kCount" style="font-weight:800;color:var(--accent);font-size:18px">0</div></div>
+        <div class="card"><h3>Avg Base</h3><div id="kAvg" style="font-weight:800;color:var(--accent);font-size:18px">0</div></div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h3>Top Base Pay</h3>
+        <div id="kTop" class="small">—</div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h3>Quick Export</h3>
+        <button id="btnExport" class="btn">Export JSON</button>
+        <button id="btnClear" class="btn" style="border-color:var(--bad);color:var(--bad)">Factory Reset</button>
+      </div>
+      <div class="card">
+        <h3>Command Help</h3>
+        <table class="table">
+          <tbody>
+            <tr><td><code>help</code></td><td>Show commands</td></tr>
+            <tr><td><code>list</code></td><td>List all pay grades</td></tr>
+            <tr><td><code>show &lt;CODE&gt;</code></td><td>Show one (e.g., <code>show PO-E6</code>)</td></tr>
+            <tr><td><code>set &lt;CODE&gt; base|bonus|pct &lt;value&gt;</code></td><td>Update a field</td></tr>
+            <tr><td><code>add "&lt;Rank Name&gt;" &lt;Category&gt; &lt;Code&gt; &lt;base&gt; &lt;bonus&gt; &lt;pct&gt; ["notes"]</code></td><td>Add rank</td></tr>
+            <tr><td><code>del &lt;CODE&gt;</code></td><td>Delete rank</td></tr>
+            <tr><td><code>search &lt;text&gt;</code></td><td>Filter by text</td></tr>
+            <tr><td><code>export</code></td><td>Download JSON</td></tr>
+            <tr><td><code>import &lt;json&gt;</code></td><td>Paste JSON to replace</td></tr>
+            <tr><td><code>demo</code></td><td>Seed sample data</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ===== Storage + Seed ===== */
+const STORE='jmbn-paygrades-cli';
+let data = load() || demo();
+const logEl = document.getElementById('log');
+const cmdEl = document.getElementById('cmd');
+let historyBuf=[], hIdx=-1;
+
+function demo(){
+  return [
+    {rank:'Ordinary Rate', category:'Enlisted', code:'OR-E2', base:10000, bonus:250, pct:0,   notes:'Junior enlisted stipend'},
+    {rank:'Able Rate',     category:'Enlisted', code:'AB-E4', base:15000, bonus:350, pct:1,   notes:'Begins revenue share'},
+    {rank:'Petty Officer', category:'Enlisted', code:'PO-E6', base:21000, bonus:450, pct:2,   notes:''},
+    {rank:'Chief Petty Officer', category:'Enlisted', code:'CPO-E7', base:24000, bonus:500, pct:2.5, notes:''},
+    {rank:'Warrant Officer', category:'Warrant', code:'WO-W1', base:26000, bonus:600, pct:3,  notes:''},
+    {rank:'Chief Warrant Officer', category:'Warrant', code:'CWO-W3', base:34000, bonus:800, pct:3.5, notes:''},
+    {rank:'Lieutenant',    category:'Officer',  code:'LT-O2', base:36000, bonus:800, pct:2.5, notes:''},
+    {rank:'Captain',       category:'Officer',  code:'CAPT-O5', base:56000, bonus:1200, pct:4, notes:'Top Officer'}
+  ];
+}
+function load(){
+  try{ return JSON.parse(localStorage.getItem(STORE)||'null'); }catch{ return null; }
+}
+function save(){
+  localStorage.setItem(STORE, JSON.stringify(data));
+  refreshKPI();
+}
+function reset(){
+  data = demo(); save();
 }
 
-/* HEADER + NAV */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var
+/* ===== Utils ===== */
+const fmt = n => Number(n||0).toLocaleString('en-US');
+function find(code){ return data.find(x=>x.code?.toLowerCase()===String(code||'').toLowerCase()); }
+function pushLine(text, cls='ok'){
+  const div=document.createElement('div');
+  div.className='line '+cls; div.textContent=text; logEl.appendChild(div);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+function pushObj(obj){ pushLine(JSON.stringify(obj,null,2),'warn'); }
+function refreshKPI(){
+  const kCount = document.getElementById('kCount');
+  const kAvg   = document.getElementById('kAvg');
+  const kTop   = document.getElementById('kTop');
+  kCount.textContent = data.length;
+  const avg = data.length ? data.reduce((a,b)=>a+(Number(b.base)||0),0)/data.length : 0;
+  kAvg.textContent = fmt(Math.round(avg));
+  const top = data.slice().sort((a,b)=>(b.base||0)-(a.base||0))[0];
+  kTop.textContent = top ? `${top.rank} (${top.code}) — ${fmt(top.base)} aUEC` : '—';
+}
+refreshKPI();
+
+/* ===== Command Parser ===== */
+function tokenize(s){
+  const tokens=[]; let cur=''; let inQ=false;
+  for(let i=0;i<s.length;i++){
+    const c=s[i];
+    if(c==='\"'){ inQ=!inQ; continue; }
+    if(!inQ && /\s/.test(c)){ if(cur){ tokens.push(cur); cur=''; } continue; }
+    cur+=c;
+  }
+  if(cur) tokens.push(cur);
+  return tokens;
+}
+
+function handle(cmd){
+  const raw=cmd.trim();
+  if(!raw) return;
+  historyBuf.unshift(raw); hIdx=-1;
+  const t = tokenize(raw);
+  const op = (t[0]||'').toLowerCase();
+
+  if(op==='help'){
+    pushLine('Commands: help, list, show <CODE>, set <CODE> base|bonus|pct <value>, add "<Rank Name>" <Category> <Code> <base> <bonus> <pct> ["notes"] , del <CODE>, search <text>, export, import <json>, demo','warn');
+    return;
+  }
+
+  if(op==='list'){
+    if(!data.length){ pushLine('No ranks','warn'); return; }
+    data.forEach(x=>pushLine(`${x.code.padEnd(7)}  ${x.rank.padEnd(22)}  ${x.category.padEnd(8)}  base=${fmt(x.base)}
