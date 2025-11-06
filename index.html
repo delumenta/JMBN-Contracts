@@ -72,7 +72,6 @@ body::after{
   width:120px;height:120px;object-fit:contain;border-radius:10px;border:1px solid var(--border);
   background:#0c0c0c;display:block;justify-self:end
 }
-.small{font-size:12px;color:var(--muted);margin-top:6px}
 
 /* Action grid */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -80,6 +79,18 @@ body::after{
 .action h3{margin:0 0 6px;color:var(--accent);font-size:18px}
 .action p{margin:0 0 10px;color:var(--muted);font-size:13px}
 .action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
+
+/* “Your Missions” list + Announcements */
+.list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.item{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0f0f0f}
+.item h4{margin:0 0 4px;color:var(--accent);font-size:15px}
+.item .meta{font-size:12px;color:var(--muted)}
+.empty{color:var(--muted);font-size:13px;padding:10px}
+
+/* Expandable announcement body */
+.expand{cursor:pointer}
+.expand + .expand-body{display:none;margin-top:6px;color:var(--text);font-size:13px}
+.expand.open + .expand-body{display:block}
 
 /* Footer */
 .footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
@@ -127,6 +138,7 @@ body::after{
 
 <div class="wrapper">
   <main class="center">
+    <!-- Brand -->
     <div class="brand">
       <img class="brand-logo" alt="JMBN"
            src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
@@ -144,15 +156,37 @@ body::after{
           <span id="mRank">Unranked</span>
           <span class="badge" id="mCategory">—</span>
         </div>
-      <p class="rankline">Welcome to the JMBN Manifest System</p>
+        <p class="rankline" style="margin:0;color:var(--muted)">Welcome to the JMBN Manifest System</p>
       </div>
       <img id="mRankImg" class="rankimg"
            src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
            alt="Rank">
     </section>
 
-    <!-- Actions -->
+    <!-- NEW: Your Missions + Announcements -->
     <section class="grid-2">
+      <!-- Your Missions -->
+      <div class="card">
+        <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Your Missions</h3>
+        <div class="item" style="display:flex;justify-content:space-between;align-items:center">
+          <div><strong>Total Missions Attended</strong></div>
+          <div id="attendedCount" style="font-weight:900;font-size:20px;color:var(--accent)">—</div>
+        </div>
+        <div class="item">
+          <h4>Last 5 Missions Joined</h4>
+          <div id="lastFive" class="list"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- Announcements -->
+      <div class="card">
+        <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Announcements</h3>
+        <div id="annc" class="list"><div class="empty">No announcements yet.</div></div>
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <section class="grid-2" style="margin-top:14px">
       <div class="card action">
         <h3>Personal</h3>
         <p>Open your Contracts & personal manifests.</p>
@@ -309,21 +343,28 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
 })();
 </script>
 
-<!-- Supabase (auth + profile fill) -->
+<!-- Supabase (auth + profile fill + data) -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
 (async () => {
-  // Helpers
   const $ = (sel) => document.querySelector(sel);
   const out = (sel, val) => { const el = $(sel); if (el) el.textContent = val ?? ''; };
+  const esc = (s) => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+  const timeAgo = (iso) => {
+    if(!iso) return '';
+    const s = Math.floor((Date.now() - new Date(iso)) / 1000);
+    const t = [[31536000,'y'],[2592000,'mo'],[604800,'w'],[86400,'d'],[3600,'h'],[60,'m'],[1,'s']];
+    for(const [sec, lbl] of t){ if(s >= sec) return Math.floor(s/sec)+lbl+' ago'; }
+    return 'just now';
+  };
 
   // Auth
-  const session = await requireAuth();     // redirects to auth.html if not logged in
+  const session = await requireAuth();
   if (!session) return;
   const sb = getSupabase();
 
-  // Pull from view
+  /* ---- Member card ---- */
   let row = {};
   try {
     const { data, error } = await sb
@@ -346,30 +387,21 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     console.warn('v_profiles_detailed:', e.message);
   }
 
-  // Derive values (HIDE the rank code in display)
   const emailFallback  = session.user?.email || '';
   const handleFallback = emailFallback.split('@')[0] || 'Unknown';
 
   const handle   = row.handle || row.display_name || handleFallback;
   const rankName = row.current_rank_name || 'Unranked';
-  const rankCode = row.current_rank_code || ''; // kept for image fallback only (not displayed)
+  const rankCode = row.current_rank_code || '';
+  const category = row.current_rank_category || '—';
 
-  const category = row.current_rank_category || 'Member';   // Enlisted/Warrant/Officer
-  const role     = row.ingame_role || null;                 // optional secondary badge/tooltip
-
-  // Rank image: prefer view URL; fallback to Storage by code
-  const bucketName = 'Ranks'; // case-sensitive
-  const storageUrl = rankCode ? sb.storage.from(bucketName).getPublicUrl(`${rankCode}.png`).data.publicUrl : '';
+  const storageUrl = rankCode ? sb.storage.from('Ranks').getPublicUrl(`${rankCode}.png`).data.publicUrl : '';
   const rankImg    = row.current_rank_image_url || storageUrl;
 
-  // Fill UI
   const prettyName = handle.replace(/\b\w/g, c => c.toUpperCase());
   out('#mName', prettyName);
-  out('#mRank', rankName);                 // <-- rank code NOT appended
+  out('#mRank', rankName);               // hide code in display
   out('#mCategory', category);
-  out('#mRole', role || 'Member');
-  if (role) { $('#mRole').title = `In-game role: ${role}`; }
-  out('#mEmail', session.user.email || '');
 
   const imgEl = $('#mRankImg');
   if (imgEl) {
@@ -382,6 +414,88 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       imgEl.style.visibility = 'hidden';
     }
   }
+
+  /* ---- Your Missions (attended + last 5) ---- */
+  try {
+    const { data, error } = await sb
+      .from('mission_attendees')
+      .select('mission_id, joined_at, missions(id,title,start_time)')
+      .eq('user_id', session.user.id)
+      .order('joined_at', { ascending:false });
+    if (error) throw error;
+
+    // total attended
+    out('#attendedCount', data?.length ?? 0);
+
+    // last 5
+    const list = $('#lastFive');
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div class="empty">No missions yet.</div>';
+    } else {
+      const last5 = data.slice(0,5).map(r => {
+        const m = r.missions || {};
+        const when = m.start_time ? new Date(m.start_time).toLocaleString() : '';
+        return `<div class="item">
+                  <div class="meta">Joined ${timeAgo(r.joined_at)}</div>
+                  <h4>${esc(m.title || 'Untitled')}</h4>
+                  <div class="meta">${when}</div>
+                </div>`;
+      }).join('');
+      list.innerHTML = last5;
+    }
+  } catch (e) {
+    console.warn('your missions:', e.message);
+    $('#lastFive').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
+  }
+
+  /* ---- Announcements (latest 5) ---- */
+  async function loadAnnouncements(){
+    const box = $('#annc');
+    try{
+      const { data, error } = await sb
+        .from('announcements')
+        .select('id,title,body,created_at,posted_by')
+        .order('created_at',{ ascending:false })
+        .limit(5);
+      if(error) throw error;
+
+      if(!data || data.length===0){
+        box.innerHTML = '<div class="empty">No announcements yet.</div>';
+        return;
+      }
+
+      // Resolve display names
+      const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
+      let names = {};
+      if(uids.length){
+        const { data: profs } = await sb
+          .from('v_profiles_detailed')
+          .select('user_id,handle,display_name')
+          .in('user_id', uids);
+        (profs||[]).forEach(p => names[p.user_id] = p.handle || p.display_name || p.user_id.slice(0,8));
+      }
+
+      box.innerHTML = data.map(a => {
+        const who = names[a.posted_by] || 'Officer';
+        return `
+          <div class="item">
+            <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
+            <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
+            ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      box.querySelectorAll('.expand').forEach(el=>{
+        el.onclick = ()=> el.classList.toggle('open');
+      });
+
+    }catch(e){
+      box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
+      console.warn('annc:', e.message);
+    }
+  }
+  loadAnnouncements();
+
 })();
 </script>
 </body>
