@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN • Mission Log v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--b:#d6b44c;--a:#f2d675;--t:#f7f1d0;--m:#c9b06a;--panel:#0b0b0b;--card:#111}
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:var(--t);font-family:'Play',system-ui,sans-serif;padding:16px}
+h1{margin:0 0 8px;color:var(--a);font-size:22px}
+.wrap{max-width:1200px;margin:0 auto}
+.panel{background:var(--panel);border:1px solid var(--b);border-radius:12px;padding:12px;margin:10px 0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.right{margin-left:auto}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--b);border-radius:999px;background:#0a0a0a;color:var(--a);font-size:12px}
+input,select{background:#0a0a0a;border:1px solid var(--b);border-radius:10px;color:var(--t);padding:8px}
+button{background:linear-gradient(180deg,#0c0c0c,#060606);border:1px solid var(--b);color:var(--a);border-radius:10px;padding:8px 12px;cursor:pointer}
+button:hover{background:var(--a);color:#000}
+small{color:var(--m)}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kpi{background:var(--card);border:1px solid var(--b);border-radius:12px;padding:12px}
+.kpi .ttl{color:var(--m);font-size:12px}
+.kpi .val{font-size:22px;color:var(--a);font-weight:700}
+.tblWrap{border:1px solid var(--b);border-radius:12px;overflow:auto;max-height:70vh}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid rgba(214,180,76,.3);vertical-align:top;text-align:left}
+th{color:var(--a);background:#080808;font-weight:500;position:sticky;top:0;z-index:1}
+tr:nth-child(even){background:#101010}
+.pill{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--m)}
+.nowrap{white-space:nowrap}
+.mono{font-variant-numeric:tabular-nums}
+.modalMask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{background:#0b0b0b;border:1px solid var(--b);border-radius:12px;max-width:780px;width:92vw;padding:14px}
+.modal h3{margin:0 0 10px;color:var(--a);font-size:18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:8px;border:1px solid var(--b);border-radius:999px;padding:6px 10px}
+.chip button{padding:2px 6px;border-radius:6px}
+#log{height:140px;overflow:auto;background:#0a0a0a;border:1px solid var(--b);border-radius:10px;padding:8px;font:12px/1.4 ui-monospace,Menlo,Consolas}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>JMBN • Mission Log</h1>
+
+  <!-- Top bar -->
+  <div class="panel">
+    <div class="row">
+      <div id="who" class="badge">Not signed in</div>
+      <div id="elev" class="badge">elevated: <b id="elevState">no</b></div>
+      <div class="right row">
+        <button id="login">Sign in with GitHub</button>
+        <button id="logout" style="display:none">Sign out</button>
+      </div>
+    </div>
+    <small>Tip: sign in as Admin/Officer to test elevated actions.</small>
+  </div>
+
+  <!-- Filters / actions -->
+  <div class="panel">
+    <div class="row">
+      <input id="q" placeholder="Search (title, type, status, tags, origin, destination)" style="min-width:260px;flex:1">
+      <select id="st">
+        <option value="">All Status</option>
+        <option>Planned</option>
+        <option>Active</option>
+        <option>Success</option>
+        <option>Fail</option>
+        <option>Abort</option>
+      </select>
+      <button id="exportCsv">Export CSV</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="ttl">Total Missions (filtered)</div>
+      <div class="val" id="kCount">0</div>
+    </div>
+    <div class="kpi">
+      <div class="ttl">Total Payout (aUEC)</div>
+      <div class="val" id="kPayout">0</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="panel">
+    <div class="tblWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th><th>Type</th><th>Status</th>
+            <th>Origin</th><th>Destination</th>
+            <th class="nowrap">Date</th><th class="nowrap">Hours</th>
+            <th class="nowrap">Payout</th>
+            <th>Tags</th><th>Attachments</th><th>Notes</th>
+            <th class="nowrap">Attendance</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Attendance Modal -->
+  <div id="attMask" class="modalMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="row">
+        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+        <button id="attClose">Close</button>
+      </div>
+
+      <div class="row" style="margin:6px 0 10px">
+        <button id="btnGoing">I’m Going</button>
+        <button id="btnWithdraw">Withdraw</button>
+        <small>These toggle <b>your</b> attendance.</small>
+      </div>
+
+      <div id="elevTools" class="row" style="display:none;margin-bottom:10px">
+        <input id="attEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px">
+        <select id="attRole">
+          <option value="">Role (optional)</option>
+          <option>pilot</option><option>escort</option><option>hauler</option>
+          <option>miner</option><option>medic</option>
+        </select>
+        <button id="btnAdd">Add</button>
+        <small>Visible to Admin/Officer or mission owner.</small>
+      </div>
+
+      <div class="row"><b>Attendees</b></div>
+      <div id="chips" class="chips" style="margin-top:6px"></div>
+    </div>
+  </div>
+
+  <!-- Log -->
+  <div class="panel">
+    <div class="row"><b>Log</b></div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+/* ========= 1) CONFIG ========= */
+const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';   // <-- replace
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'; // <-- replace
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+/* ========= 2) UI refs ========= */
+const ui = {
+  who:  document.getElementById('who'),
+  elev: document.getElementById('elevState'),
+  login:document.getElementById('login'),
+  logout:document.getElementById('logout'),
+  q:    document.getElementById('q'),
+  st:   document.getElementById('st'),
+  kCount:document.getElementById('kCount'),
+  kPayout:document.getElementById('kPayout'),
+  tbody:document.getElementById('tbody'),
+  exportCsv:document.getElementById('exportCsv'),
+  log:  document.getElementById('log'),
+  // modal
+  mask: document.getElementById('attMask'),
+  attTitle: document.getElementById('attTitle'),
+  attClose: document.getElementById('attClose'),
+  btnGoing: document.getElementById('btnGoing'),
+  btnWithdraw: document.getElementById('btnWithdraw'),
+  btnAdd: document.getElementById('btnAdd'),
+  attEmail: document.getElementById('attEmail'),
+  attRole: document.getElementById('attRole'),
+  chips: document.getElementById('chips'),
+  elevTools: document.getElementById('elevTools'),
+};
+
+const say = (...a)=>{
+  const s = a.map(x => typeof x==='string'? x : JSON.stringify(x)).join(' ');
+  const div = document.createElement('div');
+  div.textContent = `[${new Date().toLocaleTimeString()}] ${s}`;
+  ui.log.appendChild(div); ui.log.scrollTop = ui.log.scrollHeight;
+};
+
+/* ========= 3) State ========= */
+let session=null, user=null, elevated=false, missions=[], lastId=null, CURRENT_MISSION=null;
+
+/* ========= 4) Auth ========= */
+async function refreshAuth(){
+  const { data:{ session:ses } } = await sb.auth.getSession();
+  session = ses; user = ses?.user || null;
+
+  if(!user){
+    ui.who.textContent = 'Not signed in';
+    ui.login.style.display = '';
+    ui.logout.style.display = 'none';
+    ui.elev.textContent = 'no';
+    elevated = false;
+    return;
+  }
+  ui.login.style.display = 'none';
+  ui.logout.style.display = '';
+  ui.who.textContent = `${user.email}`;
+
+  // show elevation via RPC (SECURITY DEFINER on backend)
+  const { data: elevRes, error: elevErr } = await sb.rpc('is_elevated', { u: user.id });
+  if(elevErr){ say('is_elevated error:', elevErr.message); }
+  elevated = elevRes === true;
+  ui.elev.textContent = elevated ? 'YES' : 'no';
+}
+
+ui.login.onclick = async ()=>{
+  const { error } = await sb.auth.signInWithOAuth({ provider:'github' });
+  if(error) say('Login error:', error.message);
+};
+ui.logout.onclick = async ()=>{
+  await sb.auth.signOut();
+  await refreshAuth();
+  render([]);
+};
+
+sb.auth.onAuthStateChange(async ()=>{ await refreshAuth(); await loadMissions(); });
+
+/* ========= 5) Data ========= */
+const fmtDate = iso => iso ? new Date(iso).toLocaleString() : '';
+const fmtNum  = n => (n||n===0) ? Number(n).toLocaleString() : '';
+const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+
+function attachmentCell(arr){
+  if(!Array.isArray(arr)||!arr.length) return '';
+  return arr.map((a,i)=>{
+    const name=a?.name?.trim()||`Attachment ${i+1}`;
+    const url=a?.url||'#';
+    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--a);text-decoration:underline">${esc(name)}</a>`;
+  }).join(', ');
+}
+
+function row(r){
+  return `<tr>
+    <td><b style="color:var(--a)">${esc(r.title||'(untitled)')}</b></td>
+    <td>${r.type?`<span class="pill">${esc(r.type)}</span>`:''}</td>
+    <td>${r.status?`<span class="pill">${esc(r.status)}</span>`:''}</td>
+    <td>${esc(r.origin||'')}</td>
+    <td>${esc(r.destination||'')}</td>
+    <td class="nowrap mono">${fmtDate(r.start_time)}</td>
+    <td class="mono">${r.hours ?? ''}</td>
+    <td class="mono">${fmtNum(r.payout_auec)}</td>
+    <td>${esc(r.tags||'')}</td>
+    <td>${attachmentCell(r.attachments)}</td>
+    <td>${esc(r.notes||'')}</td>
+    <td><button data-id="${r.id}" data-title="${esc(r.title||'')}" class="attBtn">View</button></td>
+  </tr>`;
+}
+
+function applyFilter(){
+  const q=(ui.q.value||'').toLowerCase();
+  const st=(ui.st.value||'').toLowerCase();
+  let list=missions.slice();
+  if(st) list = list.filter(x => (x.status||'').toLowerCase()===st);
+  if(q) list = list.filter(x =>
+    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`.toLowerCase().includes(q)
+  );
+  ui.kCount.textContent = list.length.toLocaleString();
+  ui.kPayout.textContent = list.reduce((s,x)=> s + (Number(x.payout_auec)||0), 0).toLocaleString();
+  ui.tbody.innerHTML = list.length ? list.map(row).join('') :
+    `<tr><td colspan="12"><small>No missions.</small></td></tr>`;
+}
+
+async function loadMissions(){
+  if(!user){ ui.tbody.innerHTML = `<tr><td colspan="12"><small>Sign in to view missions.</small></td></tr>`; return; }
+  const { data, error } = await sb
+    .from('missions')
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,submitted_by,created_at')
+    .order('created_at',{ascending:false});
+  if(error){ say('Load missions error:', error.message); return; }
+  missions = data||[];
+  applyFilter();
+}
+ui.q.oninput = applyFilter; ui.st.oninput = applyFilter;
+
+ui.exportCsv.onclick = ()=>{
+  const rows = ui.tbody.querySelectorAll('tr');
+  if(!rows.length){ return; }
+  // Recompute from filtered list for reliable CSV
+  const cols=['title','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
+  const filtered = missions.filter(m=>{
+    const q=(ui.q.value||'').toLowerCase();
+    const st=(ui.st.value||'').toLowerCase();
+    const stOk = !st || (m.status||'').toLowerCase()===st;
+    const qOk = !q || `${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.destination||''}`.toLowerCase().includes(q);
+    return stOk && qOk;
+  });
+  const csv = [cols.join(','), ...filtered.map(r => cols.map(k=>{
+    const v = r[k]==null?'':String(r[k]).replace(/"/g,'""'); return `"${v}"`;
+  }).join(','))].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+};
+
+/* ========= 6) Attendance ========= */
+function openModal(){ ui.mask.style.display='flex'; }
+function closeModal(){ ui.mask.style.display='none'; CURRENT_MISSION=null; ui.chips.innerHTML=''; }
+ui.attClose.onclick = closeModal;
+
+async function refreshAttendees(){
+  ui.chips.innerHTML = '<small>Loading…</small>';
+  const { data, error } = await sb
+    .from('v_mission_attendees_detailed')
+    .select('*')
+    .eq('mission_id', CURRENT_MISSION)
+    .order('joined_at',{ascending:true});
+  if(error){ ui.chips.innerHTML = `<small style="color:#ff6b6b">Load failed: ${esc(error.message)}</small>`; return; }
+
+  // can manage all?
+  const [{ data: elevRes }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: user.id }),
+    sb.from('missions').select('submitted_by').eq('id', CURRENT_MISSION).single()
+  ]);
+  const canAll = (elevRes===true) || (mission?.submitted_by === user.id);
+  ui.elevTools.style.display = canAll ? 'flex' : 'none';
+
+  ui.chips.innerHTML='';
+  for(const a of (data||[])){
+    const canRemove = canAll || (a.user_id === user.id);
+    const div=document.createElement('div');
+    div.className='chip';
+    div.innerHTML = `
+      <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
+      <small style="color:var(--m)">${a.role_in_mission? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</small>
+      ${canRemove? '<button data-uid="'+a.user_id+'">x</button>':''}
+    `;
+    const btn = div.querySelector('button');
+    if(btn){
+      btn.onclick = async ()=>{
+        const { error:delErr } = await sb.from('mission_attendees').delete().match({
+          mission_id: CURRENT_MISSION, user_id: btn.getAttribute('data-uid')
+        });
+        if(delErr){ alert('Remove failed: '+delErr.message); return; }
+        await refreshAttendees();
+      };
+    }
+    ui.chips.appendChild(div);
+  }
+}
+
+document.addEventListener('click', async (e)=>{
+  const b = e.target.closest('.attBtn');
+  if(!b) return;
+  const id = b.getAttribute('data-id'); const title=b.getAttribute('data-title')||'';
+  CURRENT_MISSION = id;
+  ui.attTitle.textContent = `Attendance — ${title || id.slice(0,8)}`;
+  openModal();
+  await refreshAttendees();
+});
+
+ui.btnGoing.onclick = async ()=>{
+  if(!CURRENT_MISSION) return;
+  await sb.from('mission_attendees').upsert({
+    mission_id: CURRENT_MISSION, user_id: user.id, attendance: 'going'
+  }, { onConflict:'mission_id,user_id' });
+  await refreshAttendees();
+};
+ui.btnWithdraw.onclick = async ()=>{
+  if(!CURRENT_MISSION) return;
+  await sb.from('mission_attendees').delete().match({ mission_id: CURRENT_MISSION, user_id: user.id });
+  await refreshAttendees();
+};
+ui.btnAdd.onclick = async ()=>{
+  if(!CURRENT_MISSION) return;
+  const email = ui.attEmail.value.trim(); const role = ui.attRole.value || null;
+  if(!email){ alert('Enter an email'); return; }
+  const { error } = await sb.rpc('add_attendee_by_email',{
+    p_mission: CURRENT_MISSION, p_email: email, p_role: role, p_attendance: 'going'
+  });
+  if(error){ alert('Add failed: ' + error.message); return; }
+  ui.attEmail.value=''; ui.attRole.value='';
+  await refreshAttendees();
+};
+
+/* ========= 7) Init ========= */
+(async function init(){
+  await refreshAuth();
+  await loadMissions();
+})();
+</script>
+</body>
+</html>
