@@ -52,7 +52,6 @@ body{
 .rankRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
 .rankNow{display:flex;align-items:center;gap:10px}
 .rankImg{width:46px;height:46px;border-radius:10px;border:1px solid var(--border);background:#111;object-fit:contain}
-.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
 .badge-pg{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
 
 /* Progress bars */
@@ -96,7 +95,6 @@ body{
           <div class="h" style="margin:0">Rank Progression</div>
           <div style="font-size:12px;color:var(--muted)">
             Current: <b id="curRank">—</b>
-            <span class="badge" id="curCode">—</span>
             <span class="badge-pg" id="curPg">PG: —</span>
           </div>
         </div>
@@ -112,7 +110,6 @@ body{
         <img id="nextImg" class="rankImg" alt="Next">
         <div>
           <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
-          <div class="badge" id="nextCode">—</div>
           <div class="badge-pg" id="nextPg">PG: —</div>
         </div>
       </div>
@@ -170,7 +167,6 @@ body{
   }
 
   async function loadProgress(){
-    // Current rank info (from profile)
     const { data: prof } = await sb
       .from('v_profiles_detailed')
       .select('user_id,current_rank_code,current_rank_name,current_rank_image_url')
@@ -180,9 +176,7 @@ body{
     const curCode = prof?.current_rank_code || null;
     const curName = prof?.current_rank_name || '(unranked)';
     $('#curRank').textContent = curName;
-    $('#curCode').textContent = curCode || '—';
 
-    // Rank image via bucket fallback
     let curImg = prof?.current_rank_image_url || '';
     if(!curImg && curCode){
       curImg = sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl;
@@ -190,7 +184,6 @@ body{
     $('#curImg').src = curImg || '';
     $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
 
-    // Progress (next rank + targets)
     const { data: prog } = await sb
       .from('v_user_rank_progress')
       .select('*')
@@ -200,9 +193,7 @@ body{
     const nextCode = prog?.next_code || null;
     const nextName = prog?.next_name || null;
     $('#nextName').textContent = nextName || '—';
-    $('#nextCode').textContent = nextCode || '—';
 
-    // Next image via bucket
     let nextImg = '';
     if(nextCode){
       nextImg = sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl;
@@ -210,14 +201,11 @@ body{
     $('#nextImg').src = nextImg || '';
     $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
 
-    // ---- NEW: Paygrades (current + next) ----
-    // If your views already expose paygrades, you can read them directly; otherwise fetch from ranks table:
     const curPg = prog?.current_paygrade || (await fetchPaygradeByCode(curCode)) || '—';
     const nxtPg = prog?.next_paygrade    || (await fetchPaygradeByCode(nextCode)) || '—';
     $('#curPg').textContent  = `PG: ${curPg || '—'}`;
     $('#nextPg').textContent = `PG: ${nxtPg || '—'}`;
 
-    // Numbers + bars
     const m = Number(prog?.missions_attended || 0);
     const mt= Number(prog?.missions_target || 0);
     const s = Number(prog?.successes || 0);
@@ -229,7 +217,6 @@ body{
     $('#valSuccesses').textContent = `${s} / ${st}`;
     $('#valHours').textContent     = `${h} / ${ht}`;
 
-    // 0 targets = auto-met
     const pm = mt ? Math.min(1, m/mt) : 1;
     const ps = st ? Math.min(1, s/st) : 1;
     const ph = ht ? Math.min(1, h/ht) : 1;
