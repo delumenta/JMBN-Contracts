@@ -25,20 +25,13 @@ body{
   color:var(--text); font-family:'Play',system-ui,sans-serif;
   margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
 }
+
+/* Panel + sections */
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
 .section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
 .h{margin:0 0 8px;color:var(--accent);font-size:16px}
 
-/* Header (from header.html will be injected) */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
-.nav-btn{--gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;position:relative;display:inline-flex;align-items:center;justify-content:center;padding:7px 14px;border:1px solid var(--ring);border-radius:999px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);text-decoration:none;font-weight:700;box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);transition:transform .15s ease, box-shadow .2s ease, background .2s ease}
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
-.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
-
-/* Rank row */
+/* Rank header row */
 .rankRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
 .rankNow{display:flex;align-items:center;gap:10px}
 .rankImg{width:46px;height:46px;border-radius:10px;border:1px solid var(--border);background:#111;object-fit:contain}
@@ -56,271 +49,315 @@ body{
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .btn:hover:not([disabled]){background:var(--accent);color:#000}
 
-/* Certifications list */
-.certItem{display:flex;align-items:center;gap:10px;margin:4px 0}
-.certDot{width:10px;height:10px;border-radius:50%;border:1px solid var(--border)}
-.certName{color:var(--muted)}
-.certName.earned{color:var(--accent);font-weight:700}
+/* Certifications grid */
+.certGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.cert{border:1px solid var(--border);background:#0c0c0c;border-radius:12px;padding:10px;text-align:center}
+.cert img{width:64px;height:64px;object-fit:contain;margin-bottom:6px;filter:grayscale(1) opacity(.45)}
+.cert .name{font-size:12px;color:var(--muted)}
+.cert.owned{box-shadow:0 0 12px rgba(214,180,76,.25)}
+.cert.owned img{filter:none}
+.cert.owned .name{color:var(--accent);font-weight:700}
+
+/* Header mount fallback (only visible if header.html fails to load) */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
 </style>
 </head>
 <body>
-
-<!-- Inject shared header -->
-<div id="header-container"></div>
-<script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    const html = await res.text();
-    document.getElementById('header-container').outerHTML = html;
+  <!-- 🔁 Shared header injection -->
+  <div id="header-container">
+    <!-- Fallback header (will be replaced by header.html if found) -->
+    <div class="brand">
+      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN Logo">
+      <h1>JMBN</h1>
+    </div>
+    <nav class="nav">
+      <a class="nav-btn personal" href="index.html">Manifest</a>
+      <a class="nav-btn personal" href="hangar.html">Hangar</a>
+      <a class="nav-btn personal" href="loadout.html">Loadout</a>
+      <a class="nav-btn personal" href="components.html">Components</a>
+      <a class="nav-btn personal" href="contracts.html">Contracts</a>
+      <span style="border-left:1px solid var(--border);height:20px;margin:0 8px;opacity:.6"></span>
+      <a class="nav-btn org" href="mission-log.html">Mission Log</a>
+      <a class="nav-btn org" href="member.html">Member</a>
+      <a class="nav-btn org" href="progression.html">Progression</a>
+    </nav>
+  </div>
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
+      if(res.ok){
+        const html = await res.text();
+        document.getElementById('header-container').outerHTML = html;
+      }
+    } catch {}
+    // highlight current tab
     requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+      const here = (location.pathname.split('/').pop() || 'progression.html').toLowerCase();
       document.querySelectorAll('.nav-btn').forEach(a => {
         const href = (a.getAttribute('href')||'').toLowerCase();
         if (href === here) a.classList.add('active');
       });
     });
-  } catch {}
-})();
-</script>
+  })();
+  </script>
 
-<div class="panel">
-  <div class="rankRow">
-    <div class="rankNow">
-      <img id="curImg" class="rankImg" alt="Rank">
+  <div class="panel">
+    <!-- Rank header -->
+    <div class="rankRow">
+      <div class="rankNow">
+        <img id="curImg" class="rankImg" alt="Rank">
+        <div>
+          <div class="h" style="margin:0">Rank Progression</div>
+          <div style="font-size:12px;color:var(--muted)">
+            Current: <b id="curRank">—</b>
+            <span class="badge-pg" id="curPg">PG: —</span>
+          </div>
+        </div>
+      </div>
       <div>
-        <div class="h" style="margin:0">Rank Progression</div>
-        <div style="font-size:12px;color:var(--muted)">
-          Current: <b id="curRank">—</b>
-          <span class="badge-pg" id="curPg">PG: —</span>
+        <button class="btn" id="btnPromote" disabled>Request Promotion</button>
+      </div>
+    </div>
+
+    <!-- Next rank -->
+    <div class="section">
+      <h3 class="h">Next Rank</h3>
+      <div style="display:flex;align-items:center;gap:10px">
+        <img id="nextImg" class="rankImg" alt="Next">
+        <div>
+          <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
+          <div class="badge-pg" id="nextPg">PG: —</div>
         </div>
       </div>
     </div>
-    <div>
-      <button class="btn" id="btnPromote" disabled>Request Promotion</button>
-    </div>
-  </div>
 
-  <div class="section">
-    <h3 class="h">Next Rank</h3>
-    <div style="display:flex;align-items:center;gap:10px">
-      <img id="nextImg" class="rankImg" alt="Next">
-      <div>
-        <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
-        <div class="badge-pg" id="nextPg">PG: —</div>
+    <!-- Requirements -->
+    <div class="section">
+      <h3 class="h">Requirements</h3>
+      <div class="pb">
+        <div class="label">Missions</div>
+        <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
+        <div class="val" id="valMissions">0 / 0</div>
+      </div>
+      <div class="pb">
+        <div class="label">Hours</div>
+        <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
+        <div class="val" id="valHours">0 / 0</div>
+      </div>
+      <div class="pb">
+        <div class="label">Certifications</div>
+        <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
+        <div class="val" id="valCerts">0 / 0</div>
+      </div>
+      <div style="margin-top:8px;color:var(--muted);font-size:12px" id="note">Promotion is available when all targets are met.</div>
+    </div>
+
+    <!-- History -->
+    <div class="section">
+      <h3 class="h">History</h3>
+      <div id="history" style="font-size:12px;color:var(--muted)">Loading…</div>
+    </div>
+
+    <!-- Certifications (grid with light/dim states) -->
+    <div class="section">
+      <h3 class="h" style="display:flex;align-items:center;gap:8px">
+        Certifications
+        <span id="certCount" class="badge-pg" style="margin-left:auto">0 / 0</span>
+      </h3>
+      <div id="certGrid" class="certGrid"></div>
+      <div class="meta" style="margin-top:6px;color:var(--muted);font-size:12px">
+        Dim badges are not yet earned.
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <h3 class="h">Requirements</h3>
-    <div class="pb">
-      <div class="label">Missions</div>
-      <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valMissions">0 / 0</div>
-    </div>
-    <div class="pb">
-      <div class="label">Certifications</div>
-      <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valCerts">0 / 0</div>
-    </div>
-    <div class="pb">
-      <div class="label">Hours</div>
-      <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valHours">0 / 0</div>
-    </div>
-    <div style="margin-top:8px;color:var(--muted);font-size:12px" id="note">Promotion is available when all targets are met.</div>
-  </div>
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
+  <script>
+  const $ = s => document.querySelector(s);
+  let session=null, sb=null, me=null;
 
-  <div class="section">
-    <h3 class="h">History</h3>
-    <div id="history" style="font-size:12px;color:var(--muted)">Loading…</div>
-  </div>
-
-  <div class="section">
-    <h3 class="h">Certifications</h3>
-    <div id="certifications" style="font-size:12px;color:var(--muted)">—</div>
-  </div>
-</div>
-
-<!-- Supabase -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-<script>
-const $ = s => document.querySelector(s);
-
-let session=null, sb=null, me=null;
-
-function setFill(id, pct){
-  const el = $(id);
-  const x = Math.max(0, Math.min(1, Number(pct)||0));
-  el.style.width = (x*100) + '%';
-}
-
-async function fetchPaygradeByCode(code){
-  if(!code) return null;
-  const { data, error } = await sb
-    .from('ranks')
-    .select('paygrade')
-    .eq('code', code)
-    .maybeSingle();
-  if(error) return null;
-  return data?.paygrade || null;
-}
-
-async function loadProgress(){
-  // current rank basics
-  const { data: prof } = await sb
-    .from('v_profiles_detailed')
-    .select('user_id,current_rank_code,current_rank_name,current_rank_image_url')
-    .eq('user_id', me)
-    .maybeSingle();
-
-  const curCode = prof?.current_rank_code || null;
-  const curName = prof?.current_rank_name || '(unranked)';
-  $('#curRank').textContent = curName;
-
-  let curImg = prof?.current_rank_image_url || '';
-  if(!curImg && curCode){
-    curImg = sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl;
+  function setFill(sel, pct){
+    const el = $(sel);
+    const x = Math.max(0, Math.min(1, Number(pct)||0));
+    if(el) el.style.width = (x*100) + '%';
   }
-  $('#curImg').src = curImg || '';
-  $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
 
-  // progress + next rank
-  const { data: prog } = await sb
-    .from('v_user_rank_progress')
-    .select('*')
-    .eq('user_id', me)
-    .maybeSingle();
+  async function loadProgress(){
+    // profile basics (current rank visuals)
+    const { data: prof } = await sb
+      .from('v_profiles_detailed')
+      .select('user_id,current_rank_code,current_rank_name,current_rank_image_url')
+      .eq('user_id', me)
+      .maybeSingle();
 
-  const nextCode = prog?.next_code || null;
-  const nextName = prog?.next_name || null;
-  $('#nextName').textContent = nextName || '—';
+    const curCode = prof?.current_rank_code || null;
+    const curName = prof?.current_rank_name || '(unranked)';
+    $('#curRank').textContent = curName;
 
-  let nextImg = '';
-  if(nextCode){
-    nextImg = sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl;
+    let curImg = prof?.current_rank_image_url || '';
+    if(!curImg && curCode){
+      curImg = sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl;
+    }
+    $('#curImg').src = curImg || '';
+    $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
+
+    // next + targets (from progress view)
+    const { data: prog } = await sb
+      .from('v_user_rank_progress')
+      .select('*')
+      .eq('user_id', me)
+      .maybeSingle();
+
+    const nextCode = prog?.next_code || null;
+    const nextName = prog?.next_name || null;
+    $('#nextName').textContent = nextName || '—';
+
+    let nextImg = '';
+    if(nextCode){
+      nextImg = sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl;
+    }
+    $('#nextImg').src = nextImg || '';
+    $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
+
+    // paygrades
+    const curPg = prog?.current_paygrade || '—';
+    const nxtPg = prog?.next_paygrade || '—';
+    $('#curPg').textContent  = `PG: ${curPg || '—'}`;
+    $('#nextPg').textContent = `PG: ${nxtPg || '—'}`;
+
+    // user progress counts
+    const { data: up } = await sb
+      .from('v_user_progress')
+      .select('missions_attended,hours_total,certifications_total')
+      .eq('user_id', me)
+      .maybeSingle();
+
+    const m  = Number(up?.missions_attended || 0);
+    const h  = Number(up?.hours_total || 0);
+    const ct = Number(up?.certifications_total || 0);
+
+    const mt = Number(prog?.missions_target || 0);
+    const ht = Number(prog?.hours_target || 0);
+    const ctt= Number(prog?.certification_target || 0);
+
+    $('#valMissions').textContent  = `${m} / ${mt}`;
+    $('#valHours').textContent     = `${h} / ${ht}`;
+    $('#valCerts').textContent     = `${ct} / ${ctt}`;
+
+    const pm = mt ? Math.min(1, m/mt) : 1;
+    const ph = ht ? Math.min(1, h/ht) : 1;
+    const pc = ctt? Math.min(1, ct/ctt): 1;
+
+    setFill('#pbMissions', pm);
+    setFill('#pbHours',    ph);
+    setFill('#pbCerts',    pc);
+
+    const nextExists = !!nextCode;
+    const allMet = nextExists && pm>=1 && ph>=1 && pc>=1;
+    const btn = $('#btnPromote');
+    btn.disabled = !allMet;
+
+    if(!nextExists){
+      $('#note').textContent = 'You are at the highest rank or next rank is not configured.';
+    }else if(!allMet){
+      $('#note').textContent = 'Promotion is available when all targets are met.';
+    }else{
+      $('#note').textContent = 'All requirements met. You can request promotion.';
+    }
   }
-  $('#nextImg').src = nextImg || '';
-  $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
 
-  // paygrades (prefer view, fallback to ranks table)
-  const curPg = prog?.current_paygrade || (await fetchPaygradeByCode(curCode)) || '—';
-  const nxtPg = prog?.next_paygrade    || (await fetchPaygradeByCode(nextCode)) || '—';
-  $('#curPg').textContent  = `PG: ${curPg || '—'}`;
-  $('#nextPg').textContent = `PG: ${nxtPg || '—'}`;
+  async function loadHistory(){
+    const { data, error } = await sb
+      .from('rank_changes')
+      .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+      .eq('user_id', me)
+      .order('created_at', { ascending:false })
+      .limit(10);
+    if(error){ $('#history').textContent = 'Failed to load history.'; return; }
 
-  // numbers + bars (with robust fallbacks)
-  const m  = Number(prog?.missions_attended || 0);
-  const mt = Number(prog?.missions_target   || 0);
+    if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
 
-  const c  = Number(prog?.certifications_total ?? prog?.certifications ?? 0);
-  const ct = Number(prog?.certification_target || 0);
-
-  const h  = Number(prog?.hours_total || 0);
-  const ht = Number(prog?.hours_target || 0);
-
-  $('#valMissions').textContent = `${m} / ${mt}`;
-  $('#valCerts').textContent    = `${c} / ${ct}`;
-  $('#valHours').textContent    = `${h} / ${ht}`;
-
-  const pm = mt ? Math.min(1, m/mt) : 1;
-  const pc = ct ? Math.min(1, c/ct) : 1;
-  const ph = ht ? Math.min(1, h/ht) : 1;
-
-  setFill('#pbMissions', pm);
-  setFill('#pbCerts',    pc);
-  setFill('#pbHours',    ph);
-
-  const allMet = (!!nextCode) && pm>=1 && pc>=1 && ph>=1;
-  const btn = $('#btnPromote');
-  btn.disabled = !allMet;
-
-  if(!nextCode){
-    $('#note').textContent = 'You are at the highest rank or next rank is not configured.';
-  }else if(!allMet){
-    $('#note').textContent = 'Promotion is available when all targets are met.';
-  }else{
-    $('#note').textContent = 'All requirements met. You can request promotion.';
+    $('#history').innerHTML = data.map(r=>{
+      const when = new Date(r.created_at).toLocaleString();
+      const who = r.changed_by?.slice(0,8) || 'system';
+      const from = r.from_rank_code || '—';
+      const to   = r.to_rank_code || '—';
+      const why  = r.reason || '';
+      return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span style="color:var(--muted)">— ${why}</span>`:''}</div>`;
+    }).join('');
   }
-}
 
-async function loadHistory(){
-  const { data, error } = await sb
-    .from('rank_changes')
-    .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
-    .eq('user_id', me)
-    .order('created_at', { ascending:false })
-    .limit(10);
-  if(error){ $('#history').textContent = 'Failed to load history.'; return; }
+  async function loadCertifications(){
+    const grid = $('#certGrid');
+    // 1) full catalogue
+    const { data: all, error: e1 } = await sb
+      .from('certifications')
+      .select('certification_code,name,image_url,sort_order')
+      .order('sort_order', { ascending: true });
+    if(e1){ grid.textContent = 'Failed to load certifications.'; return; }
 
-  if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
+    // 2) mine
+    const { data: mine, error: e2 } = await sb
+      .from('user_certifications')
+      .select('certification_code,awarded_at')
+      .eq('user_id', me);
+    if(e2){ grid.textContent = 'Failed to load your certifications.'; return; }
 
-  $('#history').innerHTML = data.map(r=>{
-    const when = new Date(r.created_at).toLocaleString();
-    const who = r.changed_by?.slice(0,8) || 'system';
-    const from = r.from_rank_code || '—';
-    const to   = r.to_rank_code || '—';
-    const why  = r.reason || '';
-    return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span style="color:var(--muted)">— ${why}</span>`:''}</div>`;
-  }).join('');
-}
+    const owned = new Map(mine.map(x => [x.certification_code, x.awarded_at]));
 
-/* ---------- Certifications list (earned highlighted) ---------- */
-async function loadCertificationsList(){
-  // earned certs
-  const { data: earned, error: e1 } = await sb
-    .from('user_certifications')
-    .select('cert_code')
-    .eq('user_id', me);
-  if(e1){ $('#certifications').textContent = '—'; return; }
+    grid.innerHTML = all.map(c => {
+      const hasIt = owned.has(c.certification_code);
+      const when  = hasIt ? new Date(owned.get(c.certification_code)).toLocaleDateString() : '';
+      const img   = c.image_url || '';
+      return `
+        <div class="cert ${hasIt ? 'owned':''}" title="${hasIt ? 'Awarded: '+when : 'Not earned'}">
+          <img src="${img}" alt="${c.name}" onerror="this.style.visibility='hidden'">
+          <div class="name">${c.name}</div>
+        </div>`;
+    }).join('');
 
-  const earnedSet = new Set((earned||[]).map(r => r.cert_code));
+    $('#certCount').textContent = `${owned.size} / ${all.length}`;
+  }
 
-  // all available certs in org
-  const { data: allCerts, error: e2 } = await sb
-    .from('certifications')
-    .select('code,name,category,sort_order')
-    .order('sort_order', { ascending: true });
-  if(e2 || !allCerts?.length){ $('#certifications').textContent = '—'; return; }
+  async function promote(){
+    const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+    if(error){ alert('Promotion failed: ' + error.message); return; }
+    if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+    alert('Promoted to ' + (data.to || 'next rank') + '!');
+    await loadProgress();
+    await loadHistory();
+    await loadCertifications();
+  }
 
-  const html = allCerts.map(c => {
-    const has = earnedSet.has(c.code);
-    return `
-      <div class="certItem">
-        <span class="certDot" style="background:${has ? 'var(--accent)' : 'transparent'}"></span>
-        <span class="certName ${has ? 'earned' : ''}">
-          ${c.name} <span style="opacity:.6">(${c.code}${c.category? ' · '+c.category:''})</span>
-        </span>
-      </div>`;
-  }).join('');
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    session = await requireAuth();   // from js/auth.js
+    if(!session) return;
+    sb = getSupabase();              // from js/auth.js
+    me = session.user.id;
 
-  $('#certifications').innerHTML = html;
-}
+    $('#btnPromote').onclick = promote;
 
-async function promote(){
-  const { data, error } = await sb.rpc('request_promotion', { p_user: me });
-  if(error){ alert('Promotion failed: ' + error.message); return; }
-  if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
-  alert('Promoted to ' + (data.to || 'next rank') + '!');
-  await loadProgress();
-  await loadHistory();
-  await loadCertificationsList();
-}
-
-document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();   // redirects if not logged in
-  if(!session) return;
-  sb = getSupabase();
-  me = session.user.id;
-
-  $('#btnPromote').onclick = promote;
-
-  await loadProgress();
-  await loadHistory();
-  await loadCertificationsList();
-});
-</script>
+    await loadProgress();
+    await loadHistory();
+    await loadCertifications();
+  });
+  </script>
 </body>
 </html>
