@@ -29,7 +29,7 @@ body{
   margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* Header (from shared header.html, keep highlight styles here as fallback) */
+/* Header (fallback styles; actual header injected) */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
@@ -112,6 +112,12 @@ tr:hover{background:rgba(214,180,76,.08)}
 .modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
 .modal .chip .x:hover{background:#111;color:#ff6b6b}
 .modal .list{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Optional: visual cue for "not_going" chips */
+.chip[data-attendance="not_going"]{
+  border-color: rgba(255,107,107,.6);
+  color: #ff6b6b;
+}
 </style>
 </head>
 <body>
@@ -214,6 +220,7 @@ tr:hover{background:rgba(214,180,76,.08)}
 
       <div class="row">
         <button id="attIamGoing" class="small-btn">I’m going</button>
+        <button id="attNotGoing" class="small-btn">Not going</button>
         <button id="attWithdraw" class="small-btn">Withdraw</button>
         <span class="small">These toggle <b>your</b> attendance.</span>
       </div>
@@ -421,6 +428,18 @@ async function openAttendance(missionId, title=''){
     await loadAttendees();
     await refreshOngoing();
   };
+
+  // NEW: Not going
+  $('#attNotGoing').onclick = async () => {
+    await sb.from('mission_attendees').upsert({
+      mission_id: ATT_MISSION_ID,
+      user_id: session.user.id,
+      attendance: 'not_going'
+    }, { onConflict: 'mission_id,user_id' });
+    await loadAttendees();
+    await refreshOngoing(); // not included in Ongoing
+  };
+
   $('#attWithdraw').onclick = async () => {
     await sb.from('mission_attendees')
       .delete()
@@ -428,6 +447,7 @@ async function openAttendance(missionId, title=''){
     await loadAttendees();
     await refreshOngoing();
   };
+
   $('#attAddBtn').onclick = async () => {
     const email = $('#attAddEmail').value.trim();
     const role  = $('#attAddRole').value || null;
@@ -478,6 +498,7 @@ async function loadAttendees(){
   for(const a of data){
     const chip = document.createElement('div');
     chip.className = 'chip';
+    chip.setAttribute('data-attendance', (a.attendance || '').toLowerCase()); // for styling
     chip.innerHTML = `
       <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
       <span class="small" style="color:var(--muted)">${a.role_in_mission ? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</span>
