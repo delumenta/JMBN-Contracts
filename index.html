@@ -1,4 +1,4 @@
-8<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -13,9 +13,7 @@
       sizes="32x32">
 
 <style>
-:root{
-  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;
-}
+:root{ --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity .6s ease}
 body{opacity:0}
@@ -25,10 +23,9 @@ body{opacity:0}
 .hud-grid{
   position:fixed;inset:0;z-index:1;pointer-events:none;
   background-image:
-    linear-gradient(rgba(255,230,150,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,230,150,0.03) 1px, transparent 1px);
-  background-size:80px 80px;
-  animation:drift 80s linear infinite;
+    linear-gradient(rgba(255,230,150,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,230,150,.03) 1px, transparent 1px);
+  background-size:80px 80px; animation:drift 80s linear infinite;
 }
 @keyframes drift{from{background-position:0 0}to{background-position:-200px -200px}}
 body::after{
@@ -145,9 +142,10 @@ body::after{
         <div class="name" id="mName">Loading…</div>
         <div class="rankline">
           <span id="mRank">Unranked</span>
+          <span class="badge" id="mCategory">—</span>
           <span class="badge" id="mRole">Member</span>
         </div>
-        <div class="small">Welcome to the JMBN Manifest System</div>
+        <div class="small" id="mEmail"></div>
       </div>
       <img id="mRankImg" class="rankimg"
            src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
@@ -335,11 +333,11 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
         user_id,
         handle,
         display_name,
+        current_rank_name,
         current_rank_code,
         current_rank_image_url,
         current_rank_category,
-        ingame_role,
-        missions_attended
+        ingame_role
       `)
       .eq('user_id', session.user.id)
       .maybeSingle();
@@ -349,16 +347,16 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     console.warn('v_profiles_detailed:', e.message);
   }
 
-  // Derive values
+  // Derive values (HIDE the rank code in display)
   const emailFallback  = session.user?.email || '';
   const handleFallback = emailFallback.split('@')[0] || 'Unknown';
 
   const handle   = row.handle || row.display_name || handleFallback;
-  const rankCode = row.current_rank_code || '';
-  const rankText = rankCode ? `${rankName} (${rankCode})` : rankName;
+  const rankName = row.current_rank_name || 'Unranked';
+  const rankCode = row.current_rank_code || ''; // kept for image fallback only (not displayed)
 
-  const category = row.current_rank_category || 'Member'; // Enlisted/Warrant/Officer
-  const role     = row.ingame_role || null;               // optional: tooltip only
+  const category = row.current_rank_category || 'Member';   // Enlisted/Warrant/Officer
+  const role     = row.ingame_role || null;                 // optional secondary badge/tooltip
 
   // Rank image: prefer view URL; fallback to Storage by code
   const bucketName = 'Ranks'; // case-sensitive
@@ -366,18 +364,19 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   const rankImg    = row.current_rank_image_url || storageUrl;
 
   // Fill UI
-  // Capitalize first letter (or each word if multi-word)
-const prettyName = handle.replace(/\b\w/g, c => c.toUpperCase());
-out('#mName', prettyName);
-  out('#mRank', rankText);
-  out('#mRole', category);
-  if (role) { const b = $('#mRole'); if (b) b.title = `In-game role: ${role}`; }
+  const prettyName = handle.replace(/\b\w/g, c => c.toUpperCase());
+  out('#mName', prettyName);
+  out('#mRank', rankName);                 // <-- rank code NOT appended
+  out('#mCategory', category);
+  out('#mRole', role || 'Member');
+  if (role) { $('#mRole').title = `In-game role: ${role}`; }
+  out('#mEmail', session.user.email || '');
 
   const imgEl = $('#mRankImg');
   if (imgEl) {
     if (rankImg) {
       imgEl.src = rankImg;
-      imgEl.alt = rankText;
+      imgEl.alt = rankName;
       imgEl.style.visibility = 'visible';
       imgEl.onerror = () => { imgEl.style.visibility = 'hidden'; };
     } else {
