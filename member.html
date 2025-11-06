@@ -90,7 +90,7 @@ tr:hover{background:rgba(214,180,76,.08)}
   border:none;margin:16px 0;
 }
 
-/* Section blocks inside modal (roomier) */
+/* Section blocks inside modal */
 .section{
   border:1px solid var(--border);
   border-radius:12px;
@@ -148,15 +148,16 @@ tr:hover{background:rgba(214,180,76,.08)}
       <table>
         <thead>
           <tr>
-            <th style="width:28%">Handle</th>
-            <th style="width:26%">Current Rank</th>
-            <th style="width:26%">Specialization</th>
-            <th style="width:15%">Certifications</th>
+            <th style="width:23%">Handle</th>
+            <th style="width:19%">Rank Category</th>
+            <th style="width:20%">Current Rank</th>
+            <th style="width:20%">Specialization</th>
+            <th style="width:13%">Certifications</th>
             <th style="width:5%"></th>
           </tr>
         </thead>
         <tbody id="tbody">
-          <tr><td colspan="5" style="padding:12px;color:var(--muted)">Loading…</td></tr>
+          <tr><td colspan="6" style="padding:12px;color:var(--muted)">Loading…</td></tr>
         </tbody>
       </table>
     </div>
@@ -175,11 +176,11 @@ tr:hover{background:rgba(214,180,76,.08)}
         <button class="btn" onclick="closeView()">Close</button>
       </div>
 
-      <!-- Rank / identity -->
       <div class="rankCard">
         <img id="rankImg" alt="Rank">
         <div class="meta">
           <div><b>Handle:</b> <span id="vHandle"></span></div>
+          <div><b>Rank Category:</b> <span id="vRankCat"></span></div>
           <div><b>Current Rank:</b> <span id="vRankName"></span> <span id="vRankCode" class="meta"></span></div>
           <div><b>Specialization (role chips):</b> <span id="vRoles"></span></div>
           <div><b>Missions attended:</b> <span id="vAttended"></span></div>
@@ -188,7 +189,6 @@ tr:hover{background:rgba(214,180,76,.08)}
 
       <hr class="divider">
 
-      <!-- Certifications section (intentionally left as a dash) -->
       <div class="section">
         <h4>Certifications</h4>
         <div id="vCertDetails" class="body muted">—</div>
@@ -196,155 +196,135 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- Supabase & shared auth -->
+  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
 <script>
-/* Helpers */
 const $ = s => document.querySelector(s);
-const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
-function toTitleCase(s){
-  if(!s) return '';
-  return String(s)
-    .replace(/\s+/g,' ')
-    .trim()
-    .toLowerCase()
-    .replace(/\b\w/g, c => c.toUpperCase());
-}
-/* Normalize roles: accepts array, CSV, or null */
+const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+const toTitleCase = s => s ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()) : '';
+
 function normalizeRoles(r){
-  const rolesRaw = r.ingame_role ?? r.ingame_role ?? null;
-  if(!rolesRaw) return [];
-  if(Array.isArray(rolesRaw)) return rolesRaw.map(toTitleCase).filter(Boolean);
-  return String(rolesRaw)
-    .split(/[,;/]+/)
-    .map(s => toTitleCase(s))
-    .filter(Boolean);
+  const raw = r.ingame_role ?? null;
+  if(!raw) return [];
+  if(Array.isArray(raw)) return raw.map(toTitleCase).filter(Boolean);
+  return String(raw).split(/[,;/]+/).map(s=>toTitleCase(s)).filter(Boolean);
 }
 
-let sb=null;
-let ROWS = [];
-const RANK_BUCKET = 'Ranks';
-
+let sb=null, ROWS=[];
+const RANK_BUCKET='Ranks';
 function rankPublicUrlFromCode(code){
-  if(!code) return '';
+  if(!code) return ''; 
   return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
 
-/* Render */
-const tbody = $('#tbody'), countEl = $('#count'), q = $('#q');
+const tbody=$('#tbody'), countEl=$('#count'), q=$('#q');
 
 function render(rows){
   if(!rows?.length){
-    tbody.innerHTML = `<tr><td colspan="5" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
-    countEl.textContent = '0 members';
+    tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
+    countEl.textContent='0 members';
     return;
   }
 
-  tbody.innerHTML = rows.map(r=>{
-    const handle   = toTitleCase(r.handle || r.display_name || r.user_id?.slice(0,8) || '—');
-    const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unranked';
-    const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
-    const roles    = normalizeRoles(r);
+  tbody.innerHTML=rows.map(r=>{
+    const handle=toTitleCase(r.handle||r.display_name||r.user_id?.slice(0,8)||'—');
+    const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
+    const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unranked';
+    const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
+    const roles=normalizeRoles(r);
 
     return `
-      <tr>
-        <td class="name">${esc(handle)}</td>
-        <td>
-          <div class="rankCell">
-            ${imgUrl ? `<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">` : ''}
-            <span>${esc(rankName)}</span>
-          </div>
-        </td>
-        <td>
-          ${roles.length ? `<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>` : `<span style="color:var(--muted)">—</span>`}
-        </td>
-        <td><span style="color:var(--muted)">—</span></td>
-        <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
-      </tr>`;
+    <tr>
+      <td class="name">${esc(handle)}</td>
+      <td>${esc(rankCat)}</td>
+      <td>
+        <div class="rankCell">
+          ${imgUrl?`<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">`:''}
+          <span>${esc(rankName)}</span>
+        </div>
+      </td>
+      <td>${roles.length?`<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>`:`<span style="color:var(--muted)">—</span>`}</td>
+      <td><span style="color:var(--muted)">—</span></td>
+      <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
+    </tr>`;
   }).join('');
 
-  countEl.textContent = `${rows.length} member${rows.length===1?'':'s'}`;
+  countEl.textContent=`${rows.length} member${rows.length===1?'':'s'}`;
 }
 
 function filterRows(){
-  const term = (q.value||'').toLowerCase().trim();
+  const term=(q.value||'').toLowerCase().trim();
   if(!term) return ROWS;
   return ROWS.filter(r=>{
-    const h  = (r.handle || r.display_name || '').toLowerCase();
-    const rn = (r.current_rank_name || '').toLowerCase();
-    const rc = (r.current_rank_code || '').toLowerCase();
-    const roles = normalizeRoles(r).join(' ').toLowerCase();
-    return h.includes(term) || rn.includes(term) || rc.includes(term) || roles.includes(term);
+    const all=`${r.handle||''} ${r.display_name||''} ${r.current_rank_category||''} ${r.current_rank_name||''} ${r.current_rank_code||''} ${normalizeRoles(r).join(' ')}`.toLowerCase();
+    return all.includes(term);
   });
 }
 
-/* Modal */
-function closeView(){ $('#viewMask').style.display = 'none'; }
-window.closeView = closeView;
+function closeView(){ $('#viewMask').style.display='none'; }
+window.closeView=closeView;
 
 function viewMember(userId){
-  const r = ROWS.find(x=>x.user_id===userId);
+  const r=ROWS.find(x=>x.user_id===userId);
   if(!r) return;
+  const handle=toTitleCase(r.handle||r.display_name||r.user_id.slice(0,8));
+  const attended=Number(r.missions_attended)||0;
+  const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
+  const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unranked';
+  const roles=normalizeRoles(r);
+  const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
 
-  const handle   = toTitleCase(r.handle || r.display_name || r.user_id.slice(0,8));
-  const attended = Number(r.missions_attended) || 0;
-  const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
-  const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unranked';
-  const roles    = normalizeRoles(r);
+  $('#viewTitle').textContent=`Member — ${handle}`;
+  $('#vHandle').textContent=handle;
+  $('#vRankCat').textContent=rankCat;
+  $('#vRankName').textContent=rankName;
+  $('#vRankCode').textContent=r.current_rank_code?`(${r.current_rank_code})`:'';
+  $('#vRoles').innerHTML=roles.length?roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' '):'—';
+  $('#vAttended').textContent=attended;
+  $('#vCertDetails').textContent='—';
 
-  $('#viewTitle').textContent = `Member — ${handle}`;
-  $('#vHandle').textContent   = handle;
-  $('#vRankName').textContent = rankName;
-  $('#vRankCode').textContent = r.current_rank_code ? `(${r.current_rank_code})` : '';
-  $('#vRoles').innerHTML      = roles.length ? roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' ') : '—';
-  $('#vAttended').textContent = attended;
+  const imgEl=$('#rankImg');
+  imgEl.src=imgUrl||''; imgEl.alt=r.current_rank_code||'Rank';
+  imgEl.style.visibility=imgUrl?'visible':'hidden';
+  imgEl.onerror=()=>{imgEl.style.visibility='hidden';};
 
-  // Certifications section intentionally left as a dash:
-  $('#vCertDetails').textContent = '—';
-
-  const imgEl = $('#rankImg');
-  imgEl.src = imgUrl || '';
-  imgEl.alt = r.current_rank_code || 'Rank';
-  imgEl.style.visibility = imgUrl ? 'visible' : 'hidden';
-  imgEl.onerror = () => { imgEl.style.visibility = 'hidden'; };
-
-  $('#viewMask').style.display = 'flex';
+  $('#viewMask').style.display='flex';
 }
-window.viewMember = viewMember;
+window.viewMember=viewMember;
 
-/* Load */
 async function loadRoster(){
-  const { data, error } = await sb
-    .from('v_profiles_detailed')              // live view
+  const {data,error}=await sb
+    .from('v_profiles_detailed')
     .select(`
       user_id,
       handle,
       display_name,
+      current_rank_category,
       current_rank_name,
       current_rank_code,
       current_rank_image_url,
       ingame_role,
       missions_attended
     `)
-    .order('handle',{ ascending:true });
+    .order('current_rank_category',{ascending:true})
+    .order('handle',{ascending:true});
 
   if(error){
-    tbody.innerHTML = `<tr><td colspan="5" style="padding:12px;color:var(--bad)">Failed to load members: ${esc(error.message)}</td></tr>`;
-    countEl.textContent = '0 members';
+    tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--bad)">Failed to load: ${esc(error.message)}</td></tr>`;
+    countEl.textContent='0 members';
     return;
   }
-  ROWS = data || [];
+  ROWS=data||[];
   render(filterRows());
 }
 
-q.addEventListener('input', ()=> render(filterRows()));
+q.addEventListener('input',()=>render(filterRows()));
 
-/* Auth gate then load */
-document.addEventListener('DOMContentLoaded', async ()=>{
-  const session = await requireAuth(); if(!session) return;
-  sb = getSupabase();
+document.addEventListener('DOMContentLoaded',async()=>{
+  const session=await requireAuth(); if(!session) return;
+  sb=getSupabase();
   loadRoster();
 });
 </script>
