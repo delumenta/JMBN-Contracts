@@ -26,7 +26,7 @@ body{
   margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
 }
 
-/* Header mount fallback visuals (kept light; header.html handles real nav) */
+/* Header mount fallback visuals */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
@@ -90,7 +90,7 @@ tr:hover{background:rgba(214,180,76,.08)}
   border:none;margin:16px 0;
 }
 
-/* Section blocks inside modal (more breathing room) */
+/* Section blocks inside modal (roomier) */
 .section{
   border:1px solid var(--border);
   border-radius:12px;
@@ -112,7 +112,6 @@ tr:hover{background:rgba(214,180,76,.08)}
 
   <!-- Header mount -->
   <div id="header-container">
-    <!-- Fallback brand (hidden once header.html mounts) -->
     <div class="brand">
       <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
       <h1>JMBN</h1>
@@ -188,13 +187,11 @@ tr:hover{background:rgba(214,180,76,.08)}
 
       <hr class="divider">
 
-      <!-- New Specialization section (header only, leave content empty) -->
+      <!-- Certifications section (intentionally left as a dash) -->
       <div class="section">
-        <h4>Specialization</h4>
-        <div id="vSpecDetails" class="body muted">—</div>
+        <h4>Certifications</h4>
+        <div id="vCertDetails" class="body muted">—</div>
       </div>
-
-      <!-- You can add more sections later as needed -->
     </div>
   </div>
 
@@ -216,7 +213,6 @@ function toTitleCase(s){
 }
 /* Normalize roles: accepts array, CSV, or null */
 function normalizeRoles(r){
-  // Keep your original source field here:
   const rolesRaw = r.ingame_role ?? r.ingame_role ?? null;
   if(!rolesRaw) return [];
   if(Array.isArray(rolesRaw)) return rolesRaw.map(toTitleCase).filter(Boolean);
@@ -303,8 +299,8 @@ function viewMember(userId){
   $('#vRoles').innerHTML      = roles.length ? roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' ') : '—';
   $('#vAttended').textContent = attended;
 
-  // Specialization section placeholder (intentionally empty for now)
-  $('#vSpecDetails').textContent = '—';
+  // Certifications section intentionally left as a dash:
+  $('#vCertDetails').textContent = '—';
 
   const imgEl = $('#rankImg');
   imgEl.src = imgUrl || '';
@@ -319,7 +315,7 @@ window.viewMember = viewMember;
 /* Load */
 async function loadRoster(){
   const { data, error } = await sb
-    .from('v_profiles_detailed')              // <- using your live view
+    .from('v_profiles_detailed')              // live view
     .select(`
       user_id,
       handle,
