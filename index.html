@@ -335,7 +335,6 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
         user_id,
         handle,
         display_name,
-        current_rank_name,
         current_rank_code,
         current_rank_image_url,
         current_rank_category,
@@ -355,7 +354,6 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   const handleFallback = emailFallback.split('@')[0] || 'Unknown';
 
   const handle   = row.handle || row.display_name || handleFallback;
-  const rankName = row.current_rank_name || 'Unranked';
   const rankCode = row.current_rank_code || '';
   const rankText = rankCode ? `${rankName} (${rankCode})` : rankName;
 
