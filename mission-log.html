@@ -29,7 +29,7 @@ body{
   margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* Header */
+/* Header (from shared header.html, keep highlight styles here as fallback) */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
@@ -68,6 +68,30 @@ input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px
 .kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
 .kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
 
+/* Ongoing card */
+.ongoing{
+  margin-top:8px;
+  background:linear-gradient(180deg,#0b0b0b,#080808);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.ongoing-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;color:var(--accent)}
+.ongoing-list{display:flex;flex-direction:column;gap:6px}
+.ongoing-item{
+  display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;
+  background:#0c0c0c;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px
+}
+@media(max-width:680px){.ongoing-item{grid-template-columns:1fr}}
+.ongoing-title{font-weight:700;color:var(--accent)}
+.ongoing-meta{font-size:12px;color:var(--muted)}
+.ongoing-open{
+  padding:6px 10px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--accent);cursor:pointer
+}
+.ongoing-open:hover{background:var(--accent);color:#000}
+
 /* Table */
 .tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
 table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
@@ -91,44 +115,44 @@ tr:hover{background:rgba(214,180,76,.08)}
 </style>
 </head>
 <body>
-  <!-- Header -->
- <!-- 🔁 Shared header mount -->
-<div id="header-container"></div>
-<script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    const html = await res.text();
-    document.getElementById('header-container').outerHTML = html;
+  <!-- 🔁 Shared header mount -->
+  <div id="header-container"></div>
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
 
-    // Highlight current tab (triggers shiny sweep ✨)
-    requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a => {
-        const href = (a.getAttribute('href')||'').toLowerCase();
-        if (href === here) {
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
+      // Highlight current tab (triggers shiny sweep ✨)
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href')||'').toLowerCase();
+          if (href === here) {
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
+          }
+        });
       });
-    });
-  } catch (e) {
-    console.warn('Header load failed:', e);
-  }
-})();
-</script>
+    } catch (e) {
+      console.warn('Header load failed:', e);
+    }
+  })();
+  </script>
 
+  <!-- Main Panel -->
   <div class="panel">
     <!-- Controls -->
     <div class="controls">
       <input id="search" placeholder="Search... (title, type, status, tags)">
       <select id="statusFilter">
         <option value="">All Status</option>
+        <option>Draft</option>
         <option>Planned</option>
         <option>Active</option>
-        <option>Success</option>
-        <option>Fail</option>
-        <option>Abort</option>
+        <option>Completed</option>
+        <option>Aborted</option>
       </select>
       <button id="exportCsv">Export CSV</button>
     </div>
@@ -145,6 +169,15 @@ tr:hover{background:rgba(214,180,76,.08)}
         <div class="kpi-value" id="kpiTotal">0</div>
         <div class="kpi-sub">sum of payouts</div>
       </div>
+    </div>
+
+    <!-- Ongoing Missions (user-specific) -->
+    <div class="ongoing">
+      <div class="ongoing-head">
+        <strong>Ongoing Missions</strong>
+        <span class="small" id="ongoingCount">(0)</span>
+      </div>
+      <div id="ongoingList" class="ongoing-list"></div>
     </div>
 
     <!-- Table -->
@@ -207,7 +240,7 @@ tr:hover{background:rgba(214,180,76,.08)}
   <script src="js/auth.js"></script>
 
 <script>
-/* ===== Active nav highlight ===== */
+/* ===== Active nav highlight (fallback) ===== */
 (function(){
   const here = location.pathname.split('/').pop() || 'mission-log.html';
   document.querySelectorAll('.nav-btn').forEach(a=>{
@@ -302,7 +335,66 @@ async function loadMissions(){
   }
   cache = data || [];
   render(getFiltered());
+  refreshOngoing(); // keep the card in sync if statuses change
 }
+
+/* ===== Ongoing (user “going” + Planned/Active) ===== */
+async function loadOngoing(){
+  if(!session || !sb) return;
+
+  // 1) Which missions has THIS user marked as "going"?
+  const { data: att, error: err1 } = await sb
+    .from('mission_attendees')
+    .select('mission_id')
+    .eq('user_id', session.user.id)
+    .eq('attendance', 'going');
+
+  if(err1){ return renderOngoing([], 'Failed to load: ' + err1.message); }
+
+  const ids = (att||[]).map(a => a.mission_id);
+  if(!ids.length){ return renderOngoing([]); }
+
+  // 2) Fetch those missions that are still Planned/Active
+  const { data: rows, error: err2 } = await sb
+    .from('missions')
+    .select('id,title,status,start_time,origin,destination')
+    .in('id', ids)
+    .in('status', ['Planned','Active'])
+    .order('start_time', { ascending: true });
+
+  if(err2){ return renderOngoing([], 'Failed to load: ' + err2.message); }
+
+  renderOngoing(rows||[]);
+}
+function renderOngoing(rows, errMsg){
+  const list = document.getElementById('ongoingList');
+  const count = document.getElementById('ongoingCount');
+  count.textContent = `(${rows?.length || 0})`;
+
+  if(errMsg){
+    list.innerHTML = `<div class="small" style="color:var(--bad)">${esc(errMsg)}</div>`;
+    return;
+  }
+  if(!rows || !rows.length){
+    list.innerHTML = `<div class="small">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
+    return;
+  }
+
+  list.innerHTML = rows.map(r => `
+    <div class="ongoing-item">
+      <div>
+        <div class="ongoing-title">${esc(r.title || '(untitled)')}</div>
+        <div class="ongoing-meta">
+          ${esc(r.status || '')} • ${r.start_time ? fmtDate(r.start_time) : 'TBA'}
+          ${r.origin || r.destination ? ` • ${esc(r.origin||'')} → ${esc(r.destination||'')}` : ''}
+        </div>
+      </div>
+      <span class="pill">${esc(r.status)}</span>
+      <button class="ongoing-open" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">Attendance</button>
+    </div>
+  `).join('');
+}
+window.refreshOngoing = loadOngoing;
 
 /* ===== Attendance popup logic ===== */
 let ATT_MISSION_ID = null;
@@ -327,12 +419,14 @@ async function openAttendance(missionId, title=''){
       attendance: 'going'
     }, { onConflict: 'mission_id,user_id' });
     await loadAttendees();
+    await refreshOngoing();
   };
   $('#attWithdraw').onclick = async () => {
     await sb.from('mission_attendees')
       .delete()
       .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
     await loadAttendees();
+    await refreshOngoing();
   };
   $('#attAddBtn').onclick = async () => {
     const email = $('#attAddEmail').value.trim();
@@ -347,6 +441,7 @@ async function openAttendance(missionId, title=''){
     if(error){ alert('Add failed: ' + error.message); return; }
     $('#attAddEmail').value=''; $('#attAddRole').value='';
     await loadAttendees();
+    await refreshOngoing();
   };
 
   await loadAttendees();
@@ -398,6 +493,7 @@ async function loadAttendees(){
           .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
         if(delErr){ alert('Remove failed: ' + delErr.message); return; }
         await loadAttendees();
+        await refreshOngoing();
       };
     }
     list.appendChild(chip);
@@ -406,10 +502,11 @@ async function loadAttendees(){
 
 /* ===== Gate by auth, then load ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();        // redirect to auth.html if not logged in
+  session = await requireAuth();        // redirects to auth.html if not logged in
   if(!session) return;
   sb = getSupabase();
   loadMissions();
+  loadOngoing();                        // initial Ongoing load
 });
 </script>
 </body>
