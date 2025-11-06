@@ -26,7 +26,24 @@ body{
   margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
 }
 
-/* Panel + sections */
+/* Header mount fallback */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
+
+/* Panel & sections */
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
 .section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
 .h{margin:0 0 8px;color:var(--accent);font-size:16px}
@@ -50,74 +67,55 @@ body{
 .btn:hover:not([disabled]){background:var(--accent);color:#000}
 
 /* Certifications grid */
-.certGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
-.cert{border:1px solid var(--border);background:#0c0c0c;border-radius:12px;padding:10px;text-align:center}
-.cert img{width:64px;height:64px;object-fit:contain;margin-bottom:6px;filter:grayscale(1) opacity(.45)}
-.cert .name{font-size:12px;color:var(--muted)}
-.cert.owned{box-shadow:0 0 12px rgba(214,180,76,.25)}
-.cert.owned img{filter:none}
-.cert.owned .name{color:var(--accent);font-weight:700}
-
-/* Header mount fallback (only visible if header.html fails to load) */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
-.nav-btn{
-  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+.certGrid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:12px;margin-top:8px
 }
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
-.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
+.cert{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:8px;min-height:170px;background:#0d0d0d;border:1px solid var(--border);
+  border-radius:14px;padding:14px;text-align:center;
+  transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease
+}
+.cert:hover{transform:translateY(-2px);box-shadow:0 0 14px rgba(214,180,76,.25)}
+.cert .thumb{
+  width:90px;height:90px;border-radius:12px;border:1px solid var(--border);background:#111;
+  display:flex;align-items:center;justify-content:center;overflow:hidden
+}
+.cert .thumb img{max-width:100%;max-height:100%;display:block}
+
+/* Dim vs owned */
+.cert.dim{opacity:.55;filter:grayscale(.65) contrast(.9)}
+.cert.owned{
+  opacity:1;filter:none;border-color:#f2d675;
+  box-shadow:0 0 22px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.2)
+}
+.cert .title{font-weight:700}
+.cert .hint{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-  <!-- 🔁 Shared header injection -->
-  <div id="header-container">
-    <!-- Fallback header (will be replaced by header.html if found) -->
-    <div class="brand">
-      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN Logo">
-      <h1>JMBN</h1>
-    </div>
-    <nav class="nav">
-      <a class="nav-btn personal" href="index.html">Manifest</a>
-      <a class="nav-btn personal" href="hangar.html">Hangar</a>
-      <a class="nav-btn personal" href="loadout.html">Loadout</a>
-      <a class="nav-btn personal" href="components.html">Components</a>
-      <a class="nav-btn personal" href="contracts.html">Contracts</a>
-      <span style="border-left:1px solid var(--border);height:20px;margin:0 8px;opacity:.6"></span>
-      <a class="nav-btn org" href="mission-log.html">Mission Log</a>
-      <a class="nav-btn org" href="member.html">Member</a>
-      <a class="nav-btn org" href="progression.html">Progression</a>
-    </nav>
-  </div>
+  <!-- 🔁 Shared header -->
+  <div id="header-container"></div>
   <script>
   (async () => {
     try {
       const res = await fetch('header.html', { cache: 'no-cache' });
-      if(res.ok){
-        const html = await res.text();
-        document.getElementById('header-container').outerHTML = html;
-      }
-    } catch {}
-    // highlight current tab
-    requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'progression.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a => {
-        const href = (a.getAttribute('href')||'').toLowerCase();
-        if (href === here) a.classList.add('active');
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href')||'').toLowerCase();
+          if (href === here) a.classList.add('active');
+        });
       });
-    });
+    } catch {}
   })();
   </script>
 
   <div class="panel">
-    <!-- Rank header -->
+    <!-- Rank row -->
     <div class="rankRow">
       <div class="rankNow">
         <img id="curImg" class="rankImg" alt="Rank">
@@ -129,9 +127,7 @@ body{
           </div>
         </div>
       </div>
-      <div>
-        <button class="btn" id="btnPromote" disabled>Request Promotion</button>
-      </div>
+      <div><button class="btn" id="btnPromote" disabled>Request Promotion</button></div>
     </div>
 
     <!-- Next rank -->
@@ -170,19 +166,16 @@ body{
     <!-- History -->
     <div class="section">
       <h3 class="h">History</h3>
-      <div id="history" style="font-size:12px;color:var(--muted)">Loading…</div>
+      <div id="history" style="font-size:12px;color:var(--muted)">No changes yet.</div>
     </div>
 
-    <!-- Certifications (grid with light/dim states) -->
+    <!-- Certifications -->
     <div class="section">
-      <h3 class="h" style="display:flex;align-items:center;gap:8px">
-        Certifications
-        <span id="certCount" class="badge-pg" style="margin-left:auto">0 / 0</span>
-      </h3>
-      <div id="certGrid" class="certGrid"></div>
-      <div class="meta" style="margin-top:6px;color:var(--muted);font-size:12px">
-        Dim badges are not yet earned.
+      <h3 class="h">Certifications</h3>
+      <div id="certGrid" class="certGrid">
+        <!-- Cards injected here -->
       </div>
+      <div class="hint" style="margin-top:8px">Dim badges are not yet earned.</div>
     </div>
   </div>
 
@@ -190,174 +183,177 @@ body{
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
   <script>
-  const $ = s => document.querySelector(s);
-  let session=null, sb=null, me=null;
+    const $ = s => document.querySelector(s);
 
-  function setFill(sel, pct){
-    const el = $(sel);
-    const x = Math.max(0, Math.min(1, Number(pct)||0));
-    if(el) el.style.width = (x*100) + '%';
-  }
+    let session=null, sb=null, me=null;
 
-  async function loadProgress(){
-    // profile basics (current rank visuals)
-    const { data: prof } = await sb
-      .from('v_profiles_detailed')
-      .select('user_id,current_rank_code,current_rank_name,current_rank_image_url')
-      .eq('user_id', me)
-      .maybeSingle();
-
-    const curCode = prof?.current_rank_code || null;
-    const curName = prof?.current_rank_name || '(unranked)';
-    $('#curRank').textContent = curName;
-
-    let curImg = prof?.current_rank_image_url || '';
-    if(!curImg && curCode){
-      curImg = sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl;
+    function setFill(id, pct){
+      const el = $(id);
+      const x = Math.max(0, Math.min(1, Number(pct)||0));
+      el.style.width = (x*100) + '%';
     }
-    $('#curImg').src = curImg || '';
-    $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
 
-    // next + targets (from progress view)
-    const { data: prog } = await sb
-      .from('v_user_rank_progress')
-      .select('*')
-      .eq('user_id', me)
-      .maybeSingle();
+    async function loadRankAndTargets(){
+      // Current + next rank + targets (missions/hours/certifications) and paygrades
+      const { data: prog } = await sb
+        .from('v_user_rank_progress')
+        .select('*')
+        .eq('user_id', me)
+        .maybeSingle();
 
-    const nextCode = prog?.next_code || null;
-    const nextName = prog?.next_name || null;
-    $('#nextName').textContent = nextName || '—';
+      const curCode = prog?.current_code || null;
+      const curName = prog?.current_name || '(unranked)';
+      const nextCode = prog?.next_code || null;
+      const nextName = prog?.next_name || null;
 
-    let nextImg = '';
-    if(nextCode){
-      nextImg = sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl;
+      // Paygrades
+      $('#curPg').textContent  = `PG: ${prog?.current_paygrade || '—'}`;
+      $('#nextPg').textContent = `PG: ${prog?.next_paygrade || '—'}`;
+
+      // Names
+      $('#curRank').textContent  = curName;
+      $('#nextName').textContent = nextName || '—';
+
+      // Rank images (bucket "Ranks/<code>.png")
+      const curImg = curCode ? sb.storage.from('Ranks').getPublicUrl(`${curCode}.png`).data.publicUrl : '';
+      const nextImg = nextCode ? sb.storage.from('Ranks').getPublicUrl(`${nextCode}.png`).data.publicUrl : '';
+      $('#curImg').src = curImg || '';  $('#curImg').style.visibility = curImg ? 'visible' : 'hidden';
+      $('#nextImg').src = nextImg || ''; $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
+
+      return {
+        missions_target:       Number(prog?.missions_target || 0),
+        hours_target:          Number(prog?.hours_target || 0),
+        certification_target:  Number(prog?.certification_target || 0),
+        hasNext: !!nextCode
+      };
     }
-    $('#nextImg').src = nextImg || '';
-    $('#nextImg').style.visibility = nextImg ? 'visible' : 'hidden';
 
-    // paygrades
-    const curPg = prog?.current_paygrade || '—';
-    const nxtPg = prog?.next_paygrade || '—';
-    $('#curPg').textContent  = `PG: ${curPg || '—'}`;
-    $('#nextPg').textContent = `PG: ${nxtPg || '—'}`;
+    async function loadCounts(){
+      const { data } = await sb
+        .from('v_user_progress')
+        .select('*')
+        .eq('user_id', me)
+        .maybeSingle();
 
-    // user progress counts
-    const { data: up } = await sb
-      .from('v_user_progress')
-      .select('missions_attended,hours_total,certifications_total')
-      .eq('user_id', me)
-      .maybeSingle();
-
-    const m  = Number(up?.missions_attended || 0);
-    const h  = Number(up?.hours_total || 0);
-    const ct = Number(up?.certifications_total || 0);
-
-    const mt = Number(prog?.missions_target || 0);
-    const ht = Number(prog?.hours_target || 0);
-    const ctt= Number(prog?.certification_target || 0);
-
-    $('#valMissions').textContent  = `${m} / ${mt}`;
-    $('#valHours').textContent     = `${h} / ${ht}`;
-    $('#valCerts').textContent     = `${ct} / ${ctt}`;
-
-    const pm = mt ? Math.min(1, m/mt) : 1;
-    const ph = ht ? Math.min(1, h/ht) : 1;
-    const pc = ctt? Math.min(1, ct/ctt): 1;
-
-    setFill('#pbMissions', pm);
-    setFill('#pbHours',    ph);
-    setFill('#pbCerts',    pc);
-
-    const nextExists = !!nextCode;
-    const allMet = nextExists && pm>=1 && ph>=1 && pc>=1;
-    const btn = $('#btnPromote');
-    btn.disabled = !allMet;
-
-    if(!nextExists){
-      $('#note').textContent = 'You are at the highest rank or next rank is not configured.';
-    }else if(!allMet){
-      $('#note').textContent = 'Promotion is available when all targets are met.';
-    }else{
-      $('#note').textContent = 'All requirements met. You can request promotion.';
+      return {
+        missions_attended:     Number(data?.missions_attended || 0),
+        hours_total:           Number(data?.hours_total || 0),
+        certifications_total:  Number(data?.certifications_total || 0)
+      };
     }
-  }
 
-  async function loadHistory(){
-    const { data, error } = await sb
-      .from('rank_changes')
-      .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
-      .eq('user_id', me)
-      .order('created_at', { ascending:false })
-      .limit(10);
-    if(error){ $('#history').textContent = 'Failed to load history.'; return; }
+    async function loadHistory(){
+      const { data, error } = await sb
+        .from('rank_changes')
+        .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+        .eq('user_id', me)
+        .order('created_at', { ascending:false })
+        .limit(10);
 
-    if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
+      if(error || !data?.length){
+        $('#history').textContent = 'No changes yet.';
+        return;
+      }
+      $('#history').innerHTML = data.map(r=>{
+        const when = new Date(r.created_at).toLocaleString();
+        const who  = r.changed_by?.slice(0,8) || 'system';
+        const from = r.from_rank_code || '—';
+        const to   = r.to_rank_code || '—';
+        const why  = r.reason ? ` — ${r.reason}` : '';
+        return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who}<span style="color:var(--muted)">${why}</span></div>`;
+      }).join('');
+    }
 
-    $('#history').innerHTML = data.map(r=>{
-      const when = new Date(r.created_at).toLocaleString();
-      const who = r.changed_by?.slice(0,8) || 'system';
-      const from = r.from_rank_code || '—';
-      const to   = r.to_rank_code || '—';
-      const why  = r.reason || '';
-      return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span style="color:var(--muted)">— ${why}</span>`:''}</div>`;
-    }).join('');
-  }
+    async function loadCertifications(){
+      // 1) Full catalog (active)
+      const { data: catalog } = await sb
+        .from('certifications')
+        .select('certification_code,name,image_url,sort_order,is_active')
+        .eq('is_active', true)
+        .order('sort_order', { ascending:true });
 
-  async function loadCertifications(){
-    const grid = $('#certGrid');
-    // 1) full catalogue
-    const { data: all, error: e1 } = await sb
-      .from('certifications')
-      .select('certification_code,name,image_url,sort_order')
-      .order('sort_order', { ascending: true });
-    if(e1){ grid.textContent = 'Failed to load certifications.'; return; }
+      // 2) User-owned codes
+      const { data: ownedRows } = await sb
+        .from('user_certifications')
+        .select('certification_code')
+        .eq('user_id', me);
 
-    // 2) mine
-    const { data: mine, error: e2 } = await sb
-      .from('user_certifications')
-      .select('certification_code,awarded_at')
-      .eq('user_id', me);
-    if(e2){ grid.textContent = 'Failed to load your certifications.'; return; }
+      const owned = new Set((ownedRows||[]).map(r=>r.certification_code));
+      const grid = $('#certGrid');
+      if(!catalog?.length){
+        grid.innerHTML = `<div class="hint">No certifications configured yet.</div>`;
+        return owned.size;
+      }
 
-    const owned = new Map(mine.map(x => [x.certification_code, x.awarded_at]));
+      grid.innerHTML = catalog.map(c=>{
+        const has = owned.has(c.certification_code);
+        const cls = 'cert ' + (has ? 'owned' : 'dim');
+        const img = c.image_url || ''; // you keep the full URL in table
+        return `
+          <div class="${cls}" title="${c.name}">
+            <div class="thumb">${img ? `<img alt="${c.certification_code}" src="${img}">` : ''}</div>
+            <div class="title">${c.name}</div>
+            ${has ? `<div class="hint">Obtained</div>` : `<div class="hint">Not earned</div>`}
+          </div>`;
+      }).join('');
 
-    grid.innerHTML = all.map(c => {
-      const hasIt = owned.has(c.certification_code);
-      const when  = hasIt ? new Date(owned.get(c.certification_code)).toLocaleDateString() : '';
-      const img   = c.image_url || '';
-      return `
-        <div class="cert ${hasIt ? 'owned':''}" title="${hasIt ? 'Awarded: '+when : 'Not earned'}">
-          <img src="${img}" alt="${c.name}" onerror="this.style.visibility='hidden'">
-          <div class="name">${c.name}</div>
-        </div>`;
-    }).join('');
+      return owned.size;
+    }
 
-    $('#certCount').textContent = `${owned.size} / ${all.length}`;
-  }
+    async function promote(){
+      const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+      if(error){ alert('Promotion failed: ' + error.message); return; }
+      if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+      alert('Promoted to ' + (data.to || 'next rank') + '!');
+      // refresh
+      await init();
+    }
 
-  async function promote(){
-    const { data, error } = await sb.rpc('request_promotion', { p_user: me });
-    if(error){ alert('Promotion failed: ' + error.message); return; }
-    if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
-    alert('Promoted to ' + (data.to || 'next rank') + '!');
-    await loadProgress();
-    await loadHistory();
-    await loadCertifications();
-  }
+    function updateBars(counts, targets, hasNext){
+      // Values
+      $('#valMissions').textContent = `${counts.missions_attended} / ${targets.missions_target}`;
+      $('#valHours').textContent    = `${counts.hours_total} / ${targets.hours_target}`;
+      $('#valCerts').textContent    = `${counts.certifications_total} / ${targets.certification_target}`;
 
-  document.addEventListener('DOMContentLoaded', async ()=>{
-    session = await requireAuth();   // from js/auth.js
-    if(!session) return;
-    sb = getSupabase();              // from js/auth.js
-    me = session.user.id;
+      // Fills (0-target = auto-met)
+      const pm = targets.missions_target      ? Math.min(1, counts.missions_attended / targets.missions_target) : 1;
+      const ph = targets.hours_target         ? Math.min(1, counts.hours_total / targets.hours_target)         : 1;
+      const pc = targets.certification_target ? Math.min(1, counts.certifications_total / targets.certification_target) : 1;
 
-    $('#btnPromote').onclick = promote;
+      setFill('#pbMissions', pm);
+      setFill('#pbHours',    ph);
+      setFill('#pbCerts',    pc);
 
-    await loadProgress();
-    await loadHistory();
-    await loadCertifications();
-  });
+      const allMet = hasNext && pm>=1 && ph>=1 && pc>=1;
+      $('#btnPromote').disabled = !allMet;
+      $('#note').textContent = !hasNext
+        ? 'You are at the highest rank or next rank is not configured.'
+        : (allMet ? 'All requirements met. You can request promotion.' : 'Promotion is available when all targets are met.');
+    }
+
+    async function init(){
+      const targets = await loadRankAndTargets();
+      const counts  = await loadCounts();
+      await loadHistory();
+      // Certifications grid returns how many owned; ensure counts match UI if desired
+      const ownedCount = await loadCertifications();
+      // If the view already provided certifications_total, we trust it; else we can sync:
+      if(counts.certifications_total !== ownedCount){
+        counts.certifications_total = ownedCount; // keep UI consistent
+      }
+      updateBars(counts, targets, targets.hasNext);
+    }
+
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      session = await requireAuth();
+      if(!session) return;
+      sb = getSupabase();
+      me = session.user.id;
+
+      $('#btnPromote').onclick = promote;
+
+      init();
+    });
   </script>
 </body>
 </html>
