@@ -169,7 +169,7 @@ function toTitleCase(s){
 }
 /* Normalize roles: accepts array, CSV, or null */
 function normalizeRoles(r){
-  let roles = r.ingame_roles ?? r.ingame_role ?? null;
+  let roles = r.ingame_role ?? r.ingame_role ?? null;
   if(!roles) return [];
   if(Array.isArray(roles)) return roles.map(toTitleCase).filter(Boolean);
   // CSV or single string
@@ -278,7 +278,6 @@ async function loadRoster(){
       current_rank_code,
       current_rank_image_url,
       ingame_role,
-      ingame_roles,
       missions_attended
     `)
     .order('handle',{ ascending:true });
