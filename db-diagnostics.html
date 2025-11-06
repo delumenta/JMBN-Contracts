@@ -7,8 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--b:#d6b44c;--a:#f2d675;--t:#f7f1d0;--m:#c9b06a}
-*{box-sizing:border-box}
-body{background:#000;color:var(--t);font-family:'Play',system-ui,sans-serif;margin:0;padding:18px}
+*{box-sizing:border-box} body{background:#000;color:var(--t);font-family:'Play',system-ui,sans-serif;margin:0;padding:18px}
 h1{margin:0 0 12px;color:var(--a);font-size:22px}
 .panel{background:#0b0b0b;border:1px solid var(--b);border-radius:12px;padding:12px;margin-bottom:12px}
 .btn{padding:8px 12px;border:1px solid var(--b);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--a);cursor:pointer}
@@ -18,11 +17,6 @@ label{display:block;margin:0 0 6px;color:var(--m);font-size:12px}
 code{background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:2px 6px}
 #log{background:#0a0a0a;border:1px solid var(--b);border-radius:10px;padding:10px;height:360px;overflow:auto;font:12px/1.4 ui-monospace,Menlo,Consolas}
 small{color:var(--m)}
-.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 10px;font-size:13px;color:var(--m)}
-.kv div:nth-child(2n){color:var(--t)}
-.badge{display:inline-block;padding:2px 8px;border:1px solid var(--b);border-radius:999px;font-size:12px;margin-left:8px}
-.badge.ok{background:var(--a);color:#000}
-.badge.no{background:#111;color:#bbb}
 </style>
 </head>
 <body>
@@ -34,22 +28,13 @@ small{color:var(--m)}
       <button id="logout" class="btn" style="display:none">Sign out</button>
       <div id="who" style="margin-left:auto;color:#c9b06a">Not signed in</div>
     </div>
-    <div id="info" class="kv" style="margin-top:8px;display:none">
-      <div>User ID</div><div id="uId">—</div>
-      <div>Email</div><div id="uEmail">—</div>
-      <div>profiles.role</div><div id="uRole">—</div>
-      <div>is_elevated RPC</div><div id="uElevated">—</div>
-    </div>
-    <small>Tip: run tests once as a normal member, then sign out and in again as an admin/officer.</small>
+    <small>Tip: run tests once as a normal member (non-elevated), then sign out and in again as an admin/officer to compare.</small>
   </div>
 
   <div class="panel grid">
     <div>
       <label>Read tests</label>
       <button class="btn" id="tSelect">SELECT (should work)</button>
-      <div style="margin-top:8px">
-        <button class="btn" id="tProbe">Probe is_elevated()</button>
-      </div>
     </div>
     <div>
       <label>Write tests</label>
@@ -58,7 +43,7 @@ small{color:var(--m)}
         <button class="btn" id="tInsSuccess">INSERT Success (non-elevated: ❌)</button>
         <button class="btn" id="tUpdSuccess">UPDATE → Success</button>
         <button class="btn" id="tDelete">DELETE last test row</button>
-        <button class="btn" id="tCleanup">CLEANUP test rows</button>
+        <button class="btn" id="tCleanup">CLEANUP all test rows</button>
       </div>
       <small>Tests use tags = <code>RLS_SELFTEST</code>. We remember the last row’s ID to update/delete.</small>
     </div>
@@ -72,7 +57,7 @@ small{color:var(--m)}
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-/* ==== PROJECT CONFIG ==== */
+/* ==== YOUR PROJECT CONFIG (from your pages) ==== */
 const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
@@ -82,15 +67,9 @@ const ui = {
   login:  document.getElementById('login'),
   logout: document.getElementById('logout'),
   who:    document.getElementById('who'),
-  info:   document.getElementById('info'),
-  uId:    document.getElementById('uId'),
-  uEmail: document.getElementById('uEmail'),
-  uRole:  document.getElementById('uRole'),
-  uElev:  document.getElementById('uElevated'),
   log:    document.getElementById('log'),
 
   tSelect:     document.getElementById('tSelect'),
-  tProbe:      document.getElementById('tProbe'),
   tInsPlanned: document.getElementById('tInsPlanned'),
   tInsSuccess: document.getElementById('tInsSuccess'),
   tUpdSuccess: document.getElementById('tUpdSuccess'),
@@ -110,64 +89,23 @@ function say(...args){
 let lastId = null
 const TAG = 'RLS_SELFTEST'
 
-/* ====== SESSION + ELEVATION ====== */
 async function refreshWho(){
   const { data: { session } } = await sb.auth.getSession()
-
   if(!session){
     ui.who.textContent = 'Not signed in'
     ui.login.style.display = ''
     ui.logout.style.display = 'none'
-    ui.info.style.display = 'none'
     return { session: null, elevated: false }
   }
-
-  const userId = session.user.id
-  const email  = session.user.email || '(no email)'
-
-  // 1) Get profiles.role (NOTE: profiles.user_id, not id)
-  let profileRole = null
-  try {
-    const { data: prof, error } = await sb
-      .from('profiles')
-      .select('role')
-      .eq('user_id', userId)   // <-- FIXED COLUMN
-      .single()
-    if (error && error.code !== 'PGRST116') throw error
-    profileRole = (prof?.role || 'member')
-  } catch (e) {
-    say('profiles.role read error:', e.message)
-  }
-
-  // 2) Ask DB authoritatively via RPC (if function exists)
-  let rpcElevated = null
-  try {
-    const { data, error } = await sb.rpc('is_elevated', { u: userId })
-    if (error) throw error
-    rpcElevated = !!data
-  } catch (e) {
-    // Function might not exist on your project yet; that's okay.
-    say('is_elevated RPC error (non-fatal):', e.message)
-  }
-
-  // 3) Final elevated flag:
-  // prefer RPC if available; else infer from profiles.role
-  const inferredElev = ['admin','officer'].includes(String(profileRole).toLowerCase())
-  const elevated = (rpcElevated === null ? inferredElev : rpcElevated)
-
-  // UI
-  ui.who.innerHTML = `Signed in: ${email}
-    <span class="badge ${elevated ? 'ok' : 'no'}">${elevated ? 'ELEVATED' : 'not elevated'}</span>`
+  const email = session.user.email
+  // Pull role from profiles
+  const { data: prof, error } = await sb.from('profiles').select('role').eq('id', session.user.id).single()
+  const role = (prof?.role || 'member').toLowerCase()
+  const elevated = ['admin','officer'].includes(role)
+  ui.who.textContent = `Signed in: ${email} • role=${role} • elevated=${elevated ? 'YES' : 'no'}`
   ui.login.style.display = 'none'
   ui.logout.style.display = ''
-  ui.info.style.display = ''
-
-  ui.uId.textContent = userId
-  ui.uEmail.textContent = email
-  ui.uRole.textContent = profileRole ?? '—'
-  ui.uElev.textContent = rpcElevated === null ? '(RPC unavailable)' : String(rpcElevated)
-
-  return { session, elevated, userId, profileRole, rpcElevated }
+  return { session, elevated }
 }
 
 /* ==== Auth buttons ==== */
@@ -187,14 +125,6 @@ ui.tSelect.onclick = async () => {
   const { data, error } = await sb.from('missions').select('id, title, status').limit(3)
   if(error) return say('SELECT error:', error.message)
   say('SELECT ok:', data)
-}
-
-ui.tProbe.onclick = async () => {
-  const { data: { session } } = await sb.auth.getSession()
-  if(!session) return say('Not signed in.')
-  const { data, error } = await sb.rpc('is_elevated', { u: session.user.id })
-  if(error) return say('is_elevated error:', error.message)
-  say('is_elevated:', data)
 }
 
 ui.tInsPlanned.onclick = async () => {
@@ -249,9 +179,12 @@ ui.tCleanup.onclick = async () => {
   say(`Cleanup ok: removed ${data?.length||0} rows.`)
 }
 
-/* Init + listen */
 await refreshWho()
-sb.auth.onAuthStateChange(async () => { await refreshWho() })
+
+// Also refresh if auth state changes in another tab
+sb.auth.onAuthStateChange(async () => {
+  await refreshWho()
+})
 </script>
 </body>
 </html>
