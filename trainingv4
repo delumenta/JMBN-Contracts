@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JMBN – Training Timeline</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+
+<style>
+:root{
+  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --card:#111;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+  --bad:#ff6b6b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(900px 700px at 20% -5%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(1000px 900px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text); font-family:'Play',system-ui,sans-serif;
+}
+
+/* shell */
+h1{margin:18px 0 10px;text-align:center;color:var(--accent)}
+.wrap{
+  display:grid; grid-template-columns:320px 1fr; gap:16px;
+  max-width:1200px; margin:0 auto; padding:0 16px 40px;
+}
+@media(max-width:960px){.wrap{grid-template-columns:1fr}}
+.panel{
+  background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  box-shadow:0 0 16px rgba(214,180,76,.15); padding:12px;
+}
+
+/* left cert list */
+.certItem{
+  display:flex; gap:10px; align-items:center;
+  padding:8px; border-radius:10px; cursor:pointer;
+  border:1px solid transparent; transition:background .2s,border .2s;
+  margin-bottom:8px;
+}
+.certItem:hover{background:rgba(214,180,76,.08)}
+.certItem.active{background:rgba(214,180,76,.12); border-color:var(--border)}
+.thumb{
+  width:48px;height:48px;border-radius:10px;background:#111;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.thumb img{max-width:82%;max-height:82%}
+.cinfo{flex:1}
+.cname{font-weight:700;color:var(--accent)}
+.bar{height:6px;background:#111;border-radius:999px;overflow:hidden;margin-top:3px}
+.fill{height:100%;background:var(--border)}
+
+/* right timeline */
+.head{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px
+}
+.ctitle{font-size:18px;color:var(--accent);font-weight:700;margin:0}
+.progress{
+  height:10px;background:#0d0d0d;border:1px solid var(--border);border-radius:999px;overflow:hidden;min-width:180px
+}
+.pbar{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
+
+.timeline{
+  position:relative; margin:10px 0 0; padding-left:26px
+}
+.timeline::before{
+  content:""; position:absolute; top:0; left:12px; bottom:0;
+  width:2px; background:linear-gradient(var(--border), rgba(214,180,76,.25));
+  opacity:.5;
+}
+.titem{
+  position:relative; padding:10px 8px 10px 8px; margin-bottom:6px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center;
+}
+.tdot{
+  position:absolute; left:-2px; top:16px; width:10px; height:10px; border-radius:50%;
+  background:#222; border:2px solid var(--border);
+  box-shadow:0 0 8px rgba(214,180,76,.25);
+}
+.titem.done .tdot{ background:var(--border) }
+.tlabel{font-weight:700}
+.tmeta{font-size:12px;color:var(--muted)}
+.tstate{font-size:12px}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--accent);background:#121212}
+.btn{
+  background:#0c0c0c;color:var(--text);border:1px solid var(--border);border-radius:6px;
+  padding:5px 10px;font-family:'Play';cursor:pointer
+}
+.btn:hover{background:var(--border);color:#000}
+.select{width:100%;background:#111;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px}
+.sep{height:1px;background:rgba(255,255,255,.08);margin:10px 0}
+.hint{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- shared header -->
+<div id="header-container"></div>
+<script>
+(async()=>{const r=await fetch('header.html',{cache:'no-cache'});const h=await r.text();document.getElementById('header-container').outerHTML=h;})();
+</script>
+
+<h1>Training Timeline</h1>
+
+<div class="wrap">
+  <!-- LEFT: certification list -->
+  <div class="panel">
+    <h3 class="cname" style="margin:0 0 8px">Certifications</h3>
+    <div id="certList">Loading…</div>
+  </div>
+
+  <!-- RIGHT: details -->
+  <div class="panel">
+    <div class="head">
+      <div>
+        <div class="ctitle" id="certTitle">Select a Certification</div>
+        <div class="hint" id="certHint">Click a certification on the left to view its timeline and requirements.</div>
+      </div>
+      <div class="progress" title="Completion">
+        <div id="pbar" class="pbar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="adminBar" style="display:none">
+      <div class="sep"></div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center">
+        <select id="userSelect" class="select"></select>
+        <button id="refreshUser" class="btn">Refresh</button>
+      </div>
+      <div class="hint" style="margin-top:6px">Officers/Admins can grant or remove completions below.</div>
+      <div class="sep"></div>
+    </div>
+
+    <div id="timeline" class="timeline">
+      <div class="titem"><div class="tdot"></div>
+        <div class="tlabel">Waiting for selection…</div>
+        <div class="tstate hint">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- libs -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+let sb, me, isElev=false, currentCert=null;
+
+const $ = s => document.querySelector(s);
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const session = await requireAuth(); if(!session) return;
+  sb = getSupabase(); me = session.user.id;
+
+  const { data: elev } = await sb.rpc('is_elevated', { u: me });
+  isElev = elev === true;
+  if(isElev) $('#adminBar').style.display='block';
+
+  await buildCertList();
+});
+
+/* ---------- LEFT LIST ---------- */
+async function buildCertList(){
+  const { data: certs } = await sb
+    .from('certifications')
+    .select('certification_code,name,image_url,sort_order')
+    .order('sort_order');
+
+  // compute % for me (for list bars)
+  const { data: reqs } = await sb
+    .from('certification_requirements')
+    .select('certification_code,event_code');
+
+  const { data: myDone } = await sb
+    .from('user_training_events')
+    .select('event_code')
+    .eq('user_id', me);
+
+  const doneSet = new Set(myDone.map(x=>x.event_code));
+  const list = $('#certList'); list.innerHTML = '';
+
+  for(const cert of certs){
+    const rel = reqs.filter(r=>r.certification_code===cert.certification_code);
+    const pct = Math.round((rel.filter(r=>doneSet.has(r.event_code)).length / Math.max(1,rel.length))*100);
+
+    const div = document.createElement('div');
+    div.className = 'certItem';
+    div.innerHTML = `
+      <div class="thumb">${cert.image_url?`<img src="${cert.image_url}" alt="">`:'🏅'}</div>
+      <div class="cinfo">
+        <div class="cname">${cert.name}</div>
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+      </div>`;
+    div.onclick = () => openCertification(cert.certification_code, cert.name, div);
+    list.appendChild(div);
+  }
+}
+
+/* ---------- RIGHT TIMELINE ---------- */
+async function openCertification(code, name, rowEl){
+  document.querySelectorAll('.certItem').forEach(x=>x.classList.remove('active'));
+  rowEl.classList.add('active');
+
+  currentCert = code;
+  $('#certTitle').textContent = name;
+  $('#certHint').textContent = 'Events below must be completed and approved to earn this certification.';
+  $('#timeline').innerHTML = `<div class="titem"><div class="tdot"></div><div class="tlabel">Loading…</div><div class="tstate hint">Please wait</div></div>`;
+
+  // Load requirements (ordered), user’s completions, and admin user list if needed
+  const [{ data: reqs }, { data: myRecs }] = await Promise.all([
+    sb.from('certification_requirements')
+      .select('event_code, sort_order, training_events(title, description)')
+      .eq('certification_code', code)
+      .order('sort_order'),
+    sb.from('user_training_events')
+      .select('event_code, completed_at, approved_by, approved_at')
+      .eq('user_id', me)
+  ]);
+  const doneMap = new Map(myRecs.map(r => [r.event_code, r]));
+
+  // Progress bar
+  const total = reqs.length;
+  const completed = reqs.filter(r => doneMap.has(r.event_code)).length;
+  const pct = Math.round((completed / Math.max(1,total)) * 100);
+  $('#pbar').style.width = pct + '%';
+
+  // Build timeline
+  const html = reqs.map(r=>{
+    const rec = doneMap.get(r.event_code);
+    const isDone = !!rec;
+    const when = rec?.approved_at || rec?.completed_at;
+    const who  = rec?.approved_by ? rec.approved_by.slice(0,8) : null;
+    return `
+      <div class="titem ${isDone?'done':''}">
+        <div class="tdot"></div>
+        <div>
+          <div class="tlabel">${r.training_events.title}</div>
+          <div class="tmeta">${r.training_events.description || ''}</div>
+          ${isDone ? `<div class="tmeta">Completed: ${new Date(when).toLocaleString()}${who?` • Approved by ${who}`:''}</div>` : ''}
+        </div>
+        <div class="tstate">
+          ${isDone ? '<span class="badge">✅ Completed</span>' : '<span class="badge" style="opacity:.65">⏳ Pending</span>'}
+        </div>
+      </div>`;
+  }).join('');
+  $('#timeline').innerHTML = html;
+
+  // Admin prep
+  if(isElev) await setupAdminBar(code);
+}
+
+/* ---------- ADMIN (inline, above timeline) ---------- */
+async function setupAdminBar(certCode){
+  const { data: users } = await sb.from('profiles').select('id,handle').order('handle');
+  $('#userSelect').innerHTML = users.map(u=>`<option value="${u.id}">${u.handle}</option>`).join('');
+  $('#refreshUser').onclick = () => loadAdminTimeline($('#userSelect').value, certCode);
+  if(users.length) loadAdminTimeline(users[0].id, certCode);
+}
+
+async function loadAdminTimeline(uid, certCode){
+  // Get requirements + this user's completions
+  const [{ data: reqs }, { data: recs }] = await Promise.all([
+    sb.from('certification_requirements')
+      .select('event_code, sort_order, training_events(title)')
+      .eq('certification_code', certCode)
+      .order('sort_order'),
+    sb.from('user_training_events')
+      .select('event_code, completed_at')
+      .eq('user_id', uid)
+  ]);
+  const doneSet = new Set(recs.map(r=>r.event_code));
+
+  // Replace timeline rows with admin buttons
+  const items = document.querySelectorAll('#timeline .titem');
+  items.forEach((row, idx)=>{
+    const ev = reqs[idx];
+    const holder = row.querySelector('.tstate');
+    const isDone = doneSet.has(ev.event_code);
+    holder.innerHTML = isDone
+      ? `<button class="btn" data-remove="${ev.event_code}">Remove</button>`
+      : `<button class="btn" data-add="${ev.event_code}">Grant</button>`;
+  });
+
+  // Hook buttons
+  document.querySelectorAll('button[data-add]').forEach(b=>{
+    b.onclick = async ()=>{
+      await sb.from('user_training_events').insert({
+        user_id: uid, event_code: b.dataset.add, completed_at: new Date().toISOString()
+      });
+      loadAdminTimeline(uid, certCode);
+      if(uid === me) openCertification(certCode, $('#certTitle').textContent, document.querySelector('.certItem.active'));
+    };
+  });
+  document.querySelectorAll('button[data-remove]').forEach(b=>{
+    b.onclick = async ()=>{
+      await sb.from('user_training_events').delete()
+        .eq('user_id', uid)
+        .eq('event_code', b.dataset.remove);
+      loadAdminTimeline(uid, certCode);
+      if(uid === me) openCertification(certCode, $('#certTitle').textContent, document.querySelector('.certItem.active'));
+    };
+  });
+}
+</script>
+</body>
+</html>
