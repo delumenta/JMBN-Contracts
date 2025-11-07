@@ -18,43 +18,6 @@
 html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity .6s ease}
 body{opacity:0}
 
-
-/* Background images for action cards */
-.card.has-bg{position:relative;overflow:hidden;min-height:180px}
-.card.has-bg::before{
-  content:"";position:absolute;inset:0;z-index:0;
-  background-position:center; background-size:cover; background-repeat:no-repeat;
-  filter:saturate(1.05) contrast(1.05);
-  opacity:.35; /* overall photo strength */
-}
-.card.has-bg::after{
-  /* keep your existing shine; this just ensures it sits above the photo */
-  z-index:1;
-}
-.card.has-bg > *{ position:relative; z-index:2 } /* keep text/buttons above */
-
-/* Specific images */
-.grow-bg::before{
-  background-image:url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/grow.jpg");
-}
-.jmbn-bg::before{
-  background-image:url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/jmbn.jpg");
-}
-
-/* Slight dark overlay for readability */
-.card.has-bg::before{
-  background-image:
-    linear-gradient( to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65) ),
-    var(--bg-img, none); /* fallback; overridden by classes above */
-}
-
-/* Tighten on small screens */
-@media (max-width:560px){
-  .card.has-bg{min-height:200px}
-  .card.has-bg::before{opacity:.42}
-}
-
-      
 /* Post link styling */
 #postAnnc{
   color: var(--accent);
@@ -252,21 +215,18 @@ body::after{
     </section>
 
     <!-- Actions -->
- <!-- Actions -->
-<section class="grid-2" style="margin-top:14px">
-  <div class="card action has-bg grow-bg">
-    <h3>Grow With Us</h3>
-    <p>Your growth matters. Every journey begins somewhere, and we support and celebrate your progress.</p>
-    <a href="rank-progression.html">➜ Check your progression.</a>
-  </div>
-
-  <div class="card action has-bg jmbn-bg">
-    <h3>JMBN</h3>
-    <p>Our missions tell our story. Here, every operation, every attendance, and every achievement is recorded and remembered..</p>
-    <a href="mission-log.html">➜ Enter our archives</a>
-  </div>
-</section>
-
+    <section class="grid-2" style="margin-top:14px">
+      <div class="card action">
+        <h3>Grow With Us</h3>
+        <p>Your growth matters. Every journey begins somewhere, and we support and celebrate your progress.</p>
+        <a href="rank-progression.html">➜ Check your progression.</a>
+      </div>
+      <div class="card action">
+        <h3>JMBN</h3>
+        <p>Our missions tell our story. Here, every operation, every attendance, and every achievement is recorded and remembered..</p>
+        <a href="mission-log.html">➜ Enter our archives</a>
+      </div>
+    </section>
 
     <div class="footer">
       <span style="color:var(--muted)">Theme:</span> Play • Gold Accents ·
