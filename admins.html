@@ -7,6 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+
 <style>
 :root{
   --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
@@ -15,6 +16,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
+
 /* Fallback brand while header mounts */
 .brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand img{width:44px;height:44px;object-fit:contain}
@@ -41,6 +43,7 @@ button:hover{background:var(--accent);color:#000}
 .btn-danger{border-color:var(--bad);color:var(--bad)}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
 
+/* Member list */
 .mlist{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto}
 .mrow{
   display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
@@ -50,6 +53,7 @@ button:hover{background:var(--accent);color:#000}
 .mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
 .mavatar{width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:#111;display:grid;place-items:center;overflow:hidden}
 
+/* KPIs + progress bars */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .kpi{background:#0c0c0c;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
 .kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
@@ -60,14 +64,38 @@ button:hover{background:var(--accent);color:#000}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
+/* Certifications grid (smaller images) */
 .certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:10px}
-.cert .thumb{height:120px;border:1px solid var(--border);border-radius:10px;background:#101010;display:grid;place-items:center;margin-bottom:8px}
-.cert .thumb img{max-width:80%;max-height:80%}
+.cert .thumb{
+  height:120px;               /* capped height */
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#101010;
+  display:grid;place-items:center;
+  margin-bottom:8px;
+  padding:8px;                /* tighter padding */
+}
+.cert .thumb img{
+  width:auto;                 /* don't stretch */
+  max-width:110px;            /* hard cap */
+  max-height:100%;
+  height:auto;
+  object-fit:contain;
+}
+@media(min-width:1200px){
+  .cert .thumb{height:130px}
+  .cert .thumb img{max-width:120px}
+}
+@media(max-width:900px){
+  .cert .thumb{height:100px}
+  .cert .thumb img{max-width:90px}
+}
 .cert .title{font-weight:700}
 .cert.dim{opacity:.6;filter:grayscale(.5)}
 .small{font-size:12px;color:var(--muted)}
 
+/* Timeline */
 .timeline{position:relative;margin-top:10px;padding-left:24px}
 .timeline::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(var(--border),transparent)}
 .titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
@@ -85,7 +113,9 @@ button:hover{background:var(--accent);color:#000}
 <script>
 (async()=>{try{
   const r=await fetch('header.html',{cache:'no-cache'});
-  if(r.ok){const h=await r.text();document.getElementById('header-container').outerHTML=h;
+  if(r.ok){
+    const h=await r.text();
+    document.getElementById('header-container').outerHTML=h;
     requestAnimationFrame(()=>{document.querySelectorAll('.nav-btn').forEach(a=>{
       const here=(location.pathname.split('/').pop()||'admin.html').toLowerCase();
       if((a.getAttribute('href')||'').toLowerCase()===here) a.classList.add('active');
@@ -97,7 +127,7 @@ button:hover{background:var(--accent);color:#000}
 <div class="wrap">
   <div class="grid">
 
-    <!-- LEFT -->
+    <!-- LEFT: Members -->
     <div class="panel">
       <div class="hd"><h3>Members</h3></div>
       <div class="body">
@@ -106,7 +136,7 @@ button:hover{background:var(--accent);color:#000}
       </div>
     </div>
 
-    <!-- RIGHT -->
+    <!-- RIGHT: Inspector -->
     <div class="panel">
       <div class="hd">
         <h3>Inspector</h3>
@@ -144,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const session = await requireAuth(); if(!session) return;
   sb = getSupabase(); me = session.user.id;
 
-  // must be elevated
+  // elevation gate
   try { const { data } = await sb.rpc('is_elevated',{ u: me }); isElev = data===true; } catch {}
   if(!isElev){ $('#inspector').innerHTML='<div class="small" style="color:#ff6b6b">Access denied — not elevated.</div>'; return; }
 
@@ -159,7 +189,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     if(SELECTED) await openMember(SELECTED.user_id);
   };
 
-  // Force set rank track — NOTE CORRECT ARG NAMES
+  // Force set rank track (args: p_user uuid, p_track text)
   $('#btnForce').onclick = async ()=>{
     if(!SELECTED) return alert('Select a member first.');
     const track = $('#rankTrack').value;
