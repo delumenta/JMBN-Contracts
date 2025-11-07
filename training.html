@@ -7,7 +7,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
-  
+
   <style>
     :root {
       --bg: #000;
@@ -59,7 +59,6 @@
       border: 1px solid var(--border); border-radius: 10px;
     }
     #adminPanel h3 { color: var(--accent); margin-top: 0; }
-    #userList { margin-bottom: 1rem; }
     select, button, input {
       font-family: 'Play', sans-serif; background: #111; color: var(--text);
       border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
@@ -70,10 +69,11 @@
 </head>
 
 <body>
+  <!-- Shared header -->
   <div id="header"></div>
+
   <div class="wrap">
     <h1>Training & Certifications</h1>
-
     <div id="certContainer"></div>
 
     <!-- Admin section -->
@@ -87,33 +87,38 @@
     </div>
   </div>
 
+  <!-- Inject shared auth logic -->
+  <script type="module" src="js/auth.js"></script>
+
+  <!-- Page logic -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    const SUPABASE_URL = 'https://YOURPROJECT.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+    import { SUPABASE_URL, SUPABASE_ANON_KEY, injectHeader, getUserAndRole } from './js/auth.js';
+
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Inject header (shared layout)
+    await injectHeader();
+
+    // Get logged in user + elevation status
+    const { user, isElevated } = await getUserAndRole(sb);
+    if (!user) window.location.href = 'index.html';
 
     const certDiv = document.getElementById('certContainer');
     const adminPanel = document.getElementById('adminPanel');
     const userSelect = document.getElementById('userSelect');
     const userTrainingList = document.getElementById('userTrainingList');
 
-    // get current user
-    const { data: { user } } = await sb.auth.getUser();
-    if (!user) window.location.href = 'index.html';
-
-    // check if elevated
-    let { data: elev } = await sb.rpc('is_elevated', { u: user.id });
-    const isAdmin = elev === true;
-
-    if (isAdmin) {
+    if (isElevated) {
       adminPanel.style.display = 'block';
       loadUsers();
     }
 
-    // Load certifications + training progress
     await loadCerts(user.id);
 
+    // -------------------------------------
+    // MEMBER: show cert progress
+    // -------------------------------------
     async function loadCerts(uid) {
       const { data: certs } = await sb.from('certifications')
         .select('certification_code, name, image_url')
@@ -125,85 +130,4 @@
 
       const { data: done } = await sb.from('user_training_events')
         .select('event_code')
-        .eq('user_id', uid);
-
-      const doneSet = new Set(done.map(x => x.event_code));
-      certDiv.innerHTML = '';
-
-      for (const cert of certs) {
-        const events = reqs.filter(r => r.certification_code === cert.certification_code);
-        const total = events.length;
-        const completed = events.filter(e => doneSet.has(e.event_code)).length;
-        const pct = Math.round((completed / total) * 100);
-        
-        const listHTML = events.map(ev => `
-          <li>
-            <span>${ev.training_events.title}</span>
-            <span class="${doneSet.has(ev.event_code) ? 'done' : 'pending'}">
-              ${doneSet.has(ev.event_code) ? '✅ Completed' : '⏳ Pending'}
-            </span>
-          </li>`).join('');
-
-        certDiv.innerHTML += `
-          <div class="cert-card">
-            <div class="cert-header">
-              <div>
-                <h2>${cert.name}</h2>
-                <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
-              </div>
-              ${cert.image_url ? `<img src="${cert.image_url}" alt="${cert.name}">` : ''}
-            </div>
-            <ul class="events">${listHTML}</ul>
-          </div>`;
-      }
-    }
-
-    // ---------------------------
-    // Admin Panel Functions
-    // ---------------------------
-    async function loadUsers() {
-      const { data: users } = await sb.from('profiles').select('id, handle').order('handle');
-      userSelect.innerHTML = users.map(u => `<option value="${u.id}">${u.handle}</option>`).join('');
-      userSelect.addEventListener('change', e => loadUserTraining(e.target.value));
-      if (users.length) loadUserTraining(users[0].id);
-    }
-
-    async function loadUserTraining(uid) {
-      const { data: records } = await sb.from('user_training_events')
-        .select('event_code, completed_at')
-        .eq('user_id', uid)
-        .order('completed_at', { ascending: true });
-      const { data: allEvents } = await sb.from('training_events').select('event_code, title').order('sort_order');
-      const completedSet = new Set(records.map(r => r.event_code));
-      userTrainingList.innerHTML = `
-        <h4>Training Events for ${userSelect.options[userSelect.selectedIndex].text}</h4>
-        ${allEvents.map(ev => `
-          <div class="training-row">
-            <span>${ev.title}</span>
-            ${completedSet.has(ev.event_code)
-              ? `<button data-remove="${ev.event_code}">Remove</button>`
-              : `<button data-add="${ev.event_code}">Mark Complete</button>`}
-          </div>`).join('')}
-      `;
-
-      // Add event listeners
-      userTrainingList.querySelectorAll('button[data-add]').forEach(btn =>
-        btn.onclick = async () => {
-          await sb.from('user_training_events').insert({
-            user_id: uid, event_code: btn.dataset.add, completed_at: new Date().toISOString()
-          });
-          loadUserTraining(uid);
-        });
-      userTrainingList.querySelectorAll('button[data-remove]').forEach(btn =>
-        btn.onclick = async () => {
-          await sb.from('user_training_events')
-            .delete()
-            .eq('user_id', uid)
-            .eq('event_code', btn.dataset.remove);
-          loadUserTraining(uid);
-        });
-    }
-
-  </script>
-</body>
-</html>
+        .eq('user
