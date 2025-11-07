@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN Training & Certifications</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+  
+  <style>
+    :root {
+      --bg: #000;
+      --panel: #0b0b0b;
+      --card: #111;
+      --border: #d6b44c;
+      --accent: #f2d675;
+      --text: #f7f1d0;
+      --muted: #b39a5d;
+    }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: 'Play', sans-serif; min-height: 100vh;
+    }
+    .wrap { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    h1 { text-align: center; margin-bottom: 1rem; color: var(--accent); }
+
+    .cert-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;
+      box-shadow: 0 0 12px rgba(214,180,76,0.15);
+    }
+    .cert-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .cert-header img {
+      width: 64px; height: 64px; object-fit: contain;
+    }
+    .cert-header h2 { margin: 0; color: var(--accent); }
+    .progress {
+      height: 8px; background: #222; border-radius: 5px;
+      overflow: hidden; margin-top: 0.5rem;
+    }
+    .progress-bar {
+      height: 8px; background: var(--border); transition: width 0.5s ease;
+    }
+    ul.events { list-style: none; margin: 0; padding: 0; }
+    ul.events li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    ul.events li span.done { color: var(--accent); }
+    ul.events li span.pending { color: var(--muted); }
+
+    /* Admin panel */
+    #adminPanel {
+      margin-top: 2rem; background: var(--panel); padding: 1.5rem;
+      border: 1px solid var(--border); border-radius: 10px;
+    }
+    #adminPanel h3 { color: var(--accent); margin-top: 0; }
+    #userList { margin-bottom: 1rem; }
+    select, button, input {
+      font-family: 'Play', sans-serif; background: #111; color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
+    }
+    button:hover { background: var(--border); color: #000; cursor: pointer; }
+    .training-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+  </style>
+</head>
+
+<body>
+  <div id="header"></div>
+  <div class="wrap">
+    <h1>Training & Certifications</h1>
+
+    <div id="certContainer"></div>
+
+    <!-- Admin section -->
+    <div id="adminPanel" style="display:none;">
+      <h3>Admin Controls</h3>
+      <div>
+        <label for="userSelect">Select User:</label>
+        <select id="userSelect"></select>
+      </div>
+      <div id="userTrainingList"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    const SUPABASE_URL = 'https://YOURPROJECT.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const certDiv = document.getElementById('certContainer');
+    const adminPanel = document.getElementById('adminPanel');
+    const userSelect = document.getElementById('userSelect');
+    const userTrainingList = document.getElementById('userTrainingList');
+
+    // get current user
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) window.location.href = 'index.html';
+
+    // check if elevated
+    let { data: elev } = await sb.rpc('is_elevated', { u: user.id });
+    const isAdmin = elev === true;
+
+    if (isAdmin) {
+      adminPanel.style.display = 'block';
+      loadUsers();
+    }
+
+    // Load certifications + training progress
+    await loadCerts(user.id);
+
+    async function loadCerts(uid) {
+      const { data: certs } = await sb.from('certifications')
+        .select('certification_code, name, image_url')
+        .order('sort_order', { ascending: true });
+
+      const { data: reqs } = await sb.from('certification_requirements')
+        .select('certification_code, sort_order, event_code, training_events(title)')
+        .order('sort_order', { ascending: true });
+
+      const { data: done } = await sb.from('user_training_events')
+        .select('event_code')
+        .eq('user_id', uid);
+
+      const doneSet = new Set(done.map(x => x.event_code));
+      certDiv.innerHTML = '';
+
+      for (const cert of certs) {
+        const events = reqs.filter(r => r.certification_code === cert.certification_code);
+        const total = events.length;
+        const completed = events.filter(e => doneSet.has(e.event_code)).length;
+        const pct = Math.round((completed / total) * 100);
+        
+        const listHTML = events.map(ev => `
+          <li>
+            <span>${ev.training_events.title}</span>
+            <span class="${doneSet.has(ev.event_code) ? 'done' : 'pending'}">
+              ${doneSet.has(ev.event_code) ? '✅ Completed' : '⏳ Pending'}
+            </span>
+          </li>`).join('');
+
+        certDiv.innerHTML += `
+          <div class="cert-card">
+            <div class="cert-header">
+              <div>
+                <h2>${cert.name}</h2>
+                <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+              </div>
+              ${cert.image_url ? `<img src="${cert.image_url}" alt="${cert.name}">` : ''}
+            </div>
+            <ul class="events">${listHTML}</ul>
+          </div>`;
+      }
+    }
+
+    // ---------------------------
+    // Admin Panel Functions
+    // ---------------------------
+    async function loadUsers() {
+      const { data: users } = await sb.from('profiles').select('id, handle').order('handle');
+      userSelect.innerHTML = users.map(u => `<option value="${u.id}">${u.handle}</option>`).join('');
+      userSelect.addEventListener('change', e => loadUserTraining(e.target.value));
+      if (users.length) loadUserTraining(users[0].id);
+    }
+
+    async function loadUserTraining(uid) {
+      const { data: records } = await sb.from('user_training_events')
+        .select('event_code, completed_at')
+        .eq('user_id', uid)
+        .order('completed_at', { ascending: true });
+      const { data: allEvents } = await sb.from('training_events').select('event_code, title').order('sort_order');
+      const completedSet = new Set(records.map(r => r.event_code));
+      userTrainingList.innerHTML = `
+        <h4>Training Events for ${userSelect.options[userSelect.selectedIndex].text}</h4>
+        ${allEvents.map(ev => `
+          <div class="training-row">
+            <span>${ev.title}</span>
+            ${completedSet.has(ev.event_code)
+              ? `<button data-remove="${ev.event_code}">Remove</button>`
+              : `<button data-add="${ev.event_code}">Mark Complete</button>`}
+          </div>`).join('')}
+      `;
+
+      // Add event listeners
+      userTrainingList.querySelectorAll('button[data-add]').forEach(btn =>
+        btn.onclick = async () => {
+          await sb.from('user_training_events').insert({
+            user_id: uid, event_code: btn.dataset.add, completed_at: new Date().toISOString()
+          });
+          loadUserTraining(uid);
+        });
+      userTrainingList.querySelectorAll('button[data-remove]').forEach(btn =>
+        btn.onclick = async () => {
+          await sb.from('user_training_events')
+            .delete()
+            .eq('user_id', uid)
+            .eq('event_code', btn.dataset.remove);
+          loadUserTraining(uid);
+        });
+    }
+
+  </script>
+</body>
+</html>
