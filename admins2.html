@@ -17,7 +17,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
 
-/* Header */
+/* Header (fallback if header.html not found) */
 .brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand img{width:44px;height:44px;object-fit:contain}
 .brand h1{margin:0;color:var(--accent);font-size:22px}
@@ -52,20 +52,18 @@ button:hover{background:var(--accent);color:#000}
 .mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
 .mavatar{width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:#111;display:grid;place-items:center;overflow:hidden}
 
-/* KPIs */
+/* KPIs + bars */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .kpi{background:#0c0c0c;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
 .kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
 .kpi .val{font-size:18px;font-weight:700;color:var(--accent)}
-
-/* Progress bars */
 .pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;margin:6px 0}
 .pb .label{color:var(--muted);font-size:12px}
 .bar{height:12px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certifications grid — 6 per row, no borders */
+/* Certifications grid — 6 per row, NO borders on logo/abbrev */
 .certGrid{
   display:grid;
   grid-template-columns:repeat(6,1fr);
@@ -89,14 +87,15 @@ button:hover{background:var(--accent);color:#000}
 
 .cert .thumb{
   height:64px;
-  background:none;
-  border:none;
-  display:grid;
-  place-items:center;
-  margin-bottom:4px;
+  background:none; /* no inner bg */
+  border:none;     /* no inner border */
+  display:grid;place-items:center;margin-bottom:4px;padding:0;
 }
 .cert .thumb img{width:auto;max-width:54px;max-height:100%;object-fit:contain}
-.cert .abbrev{font-weight:700;font-size:12px;color:var(--accent)}
+.cert .abbrev{
+  font-weight:700;font-size:12px;color:var(--accent);
+  /* no border, no pill */
+}
 .cert .meta{font-size:10px;color:var(--muted);margin-top:2px}
 
 .small{font-size:12px;color:var(--muted)}
@@ -140,7 +139,7 @@ button:hover{background:var(--accent);color:#000}
       <div class="hd">
         <h3>Inspector</h3>
         <div style="display:flex;gap:8px;align-items:center">
-          <select id="rankTrack">
+          <select id="rankTrack" title="Rank Track">
             <option value="">— Track —</option>
             <option value="Officer">Officer</option>
             <option value="Enlisted">Enlisted</option>
@@ -148,11 +147,15 @@ button:hover{background:var(--accent);color:#000}
           </select>
           <button id="btnForce" class="pill">Force Track</button>
 
-          <select id="rankCode"><option value="">— Rank —</option></select>
+          <select id="rankCode" title="Rank Code">
+            <option value="">— Rank —</option>
+          </select>
           <button id="btnSetRank" class="pill">Set Rank</button>
+
           <button id="btnPromote" class="pill" disabled>Promotion</button>
         </div>
       </div>
+
       <div class="body" id="inspector">
         <div class="small">Select a member to view and edit their progression & certifications.</div>
       </div>
@@ -161,6 +164,7 @@ button:hover{background:var(--accent);color:#000}
   </div>
 </div>
 
+<!-- libs -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
@@ -170,6 +174,7 @@ const setFill=(el,p)=>{const x=Math.max(0,Math.min(1,Number(p)||0));el.style.wid
 
 let sb, me, isElev=false, MEMBERS=[], SELECTED=null, RANKS=[];
 
+/* Boot */
 document.addEventListener('DOMContentLoaded', async ()=>{
   const session = await requireAuth(); if(!session) return;
   sb = getSupabase(); me = session.user.id;
@@ -177,7 +182,9 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   try{ const { data } = await sb.rpc('is_elevated',{ u: me }); isElev = data===true; }catch{}
   if(!isElev){ $('#inspector').innerHTML='<div class="small" style="color:#ff6b6b">Access denied — not elevated.</div>'; return; }
 
-  await loadMembers(); await loadRankOptions();
+  await loadMembers();
+  await loadRankOptions();
+
   $('#mSearch').oninput = renderMembers;
   $('#rankTrack').onchange = e => loadRankOptions(e.target.value);
 
@@ -186,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     const track=$('#rankTrack').value; if(!track) return alert('Choose a track.');
     if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${track}?`)) return;
     const { error } = await sb.rpc('set_rank_track',{ p_user: SELECTED.user_id, p_track: track });
-    if(error) return alert('Failed: '+error.message);
+    if(error) return alert('Force set failed: '+error.message);
     alert('Track updated ✓'); await openMember(SELECTED.user_id); await loadMembers();
   };
 
@@ -195,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     const code=$('#rankCode').value; if(!code) return alert('Choose a rank.');
     if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${code}?`)) return;
     const { error } = await sb.rpc('set_rank_code',{ p_user: SELECTED.user_id, p_code: code });
-    if(error) return alert('Failed: '+error.message);
+    if(error) return alert('Set rank failed: '+error.message);
     alert('Rank updated ✓'); await openMember(SELECTED.user_id); await loadMembers();
   };
 
@@ -208,22 +215,28 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   };
 });
 
+/* Ranks dropdown */
 async function loadRankOptions(track=''){
   if(!RANKS.length){
-    const { data } = await sb.from('ranks').select('code,name,category,sort_order').order('sort_order');
+    const { data, error } = await sb.from('ranks').select('code,name,category,sort_order').order('sort_order');
+    if(error){ console.warn(error.message); return; }
     RANKS=data||[];
   }
-  const want=(track||$('#rankTrack').value||'').toLowerCase();
-  const sel=$('#rankCode');
-  const items=RANKS.filter(r=>!want||(r.category||'').toLowerCase()===want);
-  sel.innerHTML='<option value="">— Rank —</option>'+items.map(r=>`<option value="${r.code}">${r.code} — ${esc(r.name)}</option>`).join('');
+  const want = (track||$('#rankTrack').value||'').toLowerCase();
+  const items = RANKS.filter(r=>!want || (r.category||'').toLowerCase()===want);
+  const sel = $('#rankCode');
+  sel.innerHTML = '<option value="">— Rank —</option>' +
+    items.map(r=>`<option value="${r.code}">${r.code} — ${esc(r.name)}</option>`).join('');
 }
 
+/* Members list */
 async function loadMembers(){
   const { data, error } = await sb.from('v_profiles_detailed').select(`
-    user_id,handle,display_name,current_rank_category,current_rank_name,current_rank_code,current_rank_image_url
+    user_id,handle,display_name,
+    current_rank_category,current_rank_name,current_rank_code,current_rank_image_url
   `).order('handle');
-  if(error){ $('#mList').textContent='Error: '+error.message; return; }
+
+  if(error){ $('#mList').textContent='Failed to load members: '+error.message; return; }
   MEMBERS=data||[]; renderMembers();
 }
 function renderMembers(){
@@ -251,58 +264,80 @@ function markActive(row){document.querySelectorAll('.mrow').forEach(x=>x.classLi
 async function openMember(userId,rowEl){
   const res=MEMBERS.find(x=>x.user_id===userId); if(!res) return;
   SELECTED=res; markActive(rowEl); $('#btnPromote').disabled=false;
-  $('#rankTrack').value=res.current_rank_category||''; await loadRankOptions(res.current_rank_category||'');
-  if(res.current_rank_code) $('#rankCode').value=res.current_rank_code;
 
-  $('#inspector').innerHTML=`
+  // preselect UI
+  $('#rankTrack').value=res.current_rank_category||'';
+  await loadRankOptions(res.current_rank_category||'');
+  if(res.current_rank_code) $('#rankCode').value = res.current_rank_code;
+
+  // Inspector UI
+  $('#inspector').innerHTML = `
     <div id="summary"></div>
+
     <div class="kpis" style="margin:10px 0">
       <div class="kpi"><h4>Total Missions</h4><div class="val" id="k_mis">—</div></div>
       <div class="kpi"><h4>Total Hours</h4><div class="val" id="k_hrs">—</div></div>
       <div class="kpi"><h4>Owned Certs</h4><div class="val" id="k_cer">—</div></div>
     </div>
+
     <div class="pb"><div class="label">Missions</div><div class="bar"><div id="pbMis" class="fill"></div></div><div class="val" id="vMis">—</div></div>
     <div class="pb"><div class="label">Hours</div><div class="bar"><div id="pbHrs" class="fill"></div></div><div class="val" id="vHrs">—</div></div>
     <div class="pb"><div class="label">Certifications</div><div class="bar"><div id="pbCer" class="fill"></div></div><div class="val" id="vCer">—</div></div>
+
     <div class="panel" style="margin-top:12px">
       <div class="hd"><h3>Certifications</h3></div>
       <div class="body"><div id="certGrid" class="certGrid">Loading…</div></div>
     </div>
+
     <div class="panel" style="margin-top:12px">
-      <div class="hd"><h3>Certification Timeline</h3><div><select id="certSelect"></select><button id="btnReloadTL">Load</button></div></div>
-      <div class="body"><div id="tlHint" class="small">Pick a certification to manage completions.</div><div id="timeline" class="timeline"></div></div>
-    </div>`;
+      <div class="hd">
+        <h3>Certification Timeline</h3>
+        <div>
+          <select id="certSelect"></select>
+          <button id="btnReloadTL">Load</button>
+        </div>
+      </div>
+      <div class="body">
+        <div id="tlHint" class="small">Pick a certification to manage completions.</div>
+        <div id="timeline" class="timeline" style="margin-top:8px"></div>
+      </div>
+    </div>
+  `;
+
   await Promise.all([loadProgress(userId), loadCerts(userId)]);
 }
 
-/* Progress + Certs */
+/* Progress */
 async function loadProgress(uid){
-  const [{data:prog},{data:up}] = await Promise.all([
-    sb.from('v_user_rank_progress').select('*').eq('user_id',uid).maybeSingle(),
-    sb.from('v_user_progress').select('*').eq('user_id',uid).maybeSingle()
+  const [{ data: prog }, { data: up }] = await Promise.all([
+    sb.from('v_user_rank_progress').select('*').eq('user_id', uid).maybeSingle(),
+    sb.from('v_user_progress').select('*').eq('user_id', uid).maybeSingle()
   ]);
-  const cur=esc(prog?.current_name||'(unranked)'),curPg=esc(prog?.current_paygrade||'—');
-  const nxt=esc(prog?.next_name||'—'),nxtPg=esc(prog?.next_paygrade||'—');
-  $('#summary').innerHTML=`<div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
-      <div><b>Current:</b> <span style="color:var(--accent)">${cur}</span> <span class="pill">PG:${curPg}</span>
-      <div class="small">Next: ${nxt<span class="pill">PG:${nxtPg}</span></div></div>
+
+  const cur = esc(prog?.current_name||'(unranked)');
+  const curPg = esc(prog?.current_paygrade||'—');
+  const nxt = esc(prog?.next_name||'—');
+  const nxtPg = esc(prog?.next_paygrade||'—');
+
+  $('#summary').innerHTML = `
+    <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+      <div>
+        <div><b>Current:</b> <span style="color:var(--accent)">${cur}</span> <span class="pill">PG: ${curPg}</span></div>
+        <div class="small">Next: ${nxt} <span class="pill">PG: ${nxtPg}</span></div>
+      </div>
       <div class="small">Targets • M:${prog?.missions_target??0} • H:${prog?.hours_target??0} • C:${prog?.certification_target??0}</div>
     </div>`;
 
-  const m=Number(up?.missions_attended||0);
-  const h=Number(up?.hours_total||0);
-  const c=Number(up?.certifications_total||0);
-  const mt=Number(prog?.missions_target||0);
-  const ht=Number(prog?.hours_target||0);
-  const ct=Number(prog?.certification_target||0);
+  const m=Number(up?.missions_attended||0), h=Number(up?.hours_total||0), c=Number(up?.certifications_total||0);
+  const mt=Number(prog?.missions_target||0), ht=Number(prog?.hours_target||0), ct=Number(prog?.certification_target||0);
 
   $('#k_mis').textContent=String(m);
   $('#k_hrs').textContent=String(h);
   $('#k_cer').textContent=String(c);
 
-  $('#vMis')?.textContent!==undefined && ($('#vMis').textContent = `${m} / ${mt}`);
-  $('#vHrs')?.textContent!==undefined && ($('#vHrs').textContent = `${h} / ${ht}`);
-  $('#vCer')?.textContent!==undefined && ($('#vCer').textContent = `${c} / ${ct}`);
+  $('#vMis').textContent=`${m} / ${mt}`;
+  $('#vHrs').textContent=`${h} / ${ht}`;
+  $('#vCer').textContent=`${c} / ${ct}`;
 
   setFill($('#pbMis'), mt?Math.min(1,m/mt):1);
   setFill($('#pbHrs'), ht?Math.min(1,h/ht):1);
@@ -330,11 +365,13 @@ async function loadCerts(uid){
   (catalog||[]).forEach(c=>{
     const div=document.createElement('div');
     div.className='cert'+(owned.has(c.certification_code)?'':' dim');
-    div.innerHTML=`
+    div.innerHTML = `
       <div class="thumb">${c.image_url ? `<img src="${esc(c.image_url)}" alt="">` : '🏅'}</div>
       <div class="abbrev">${esc(c.certification_code)}</div>
       <div class="meta">${c.is_active===false?'Inactive • ':''}Reqs: ${byCert.get(c.certification_code)?.length ?? 0}</div>
-      <div style="margin-top:6px"><button class="pill" data-open="${c.certification_code}">Open</button></div>
+      <div style="margin-top:6px">
+        <button class="pill" data-open="${c.certification_code}">Open</button>
+      </div>
     `;
     div.querySelector('button').onclick=()=>{
       select.value=c.certification_code;
@@ -394,7 +431,6 @@ async function loadTimeline(uid, certCode){
       await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
     };
   });
-
   tl.querySelectorAll('button[data-remove]').forEach(b=>{
     b.onclick=async ()=>{
       const { error } = await sb.from('user_training_events')
