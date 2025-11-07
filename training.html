@@ -1,26 +1,252 @@
-div.innerHTML = `
-  <div class="hex">
-    <div class="medal">
-      <img src="${cert.image_url || ''}" alt="${cert.name}">
-    </div>
-  </div>
-  <div class="title">${cert.name}</div>
-  <div class="code">${cert.certification_code}</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JMBN – Badge Case</title>
 
-  <div class="overlay">
-    <div class="status">${isOwned ? '✅ Earned' : '⏳ In Progress'}</div>
-    <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
-    <ul class="reqs">
-      ${rel.map(r=>{
-        const ok = doneSet.has(r.event_code);
-        return `<li>
-          <span>${r.title}</span>
-          <span class="${ok?'ok':'pending'}">${ok?'✔':'—'}</span>
-        </li>`;
-      }).join('')}
-    </ul>
-    ${isElevated ? `<div style="margin-top:8px;text-align:right">
-      <button class="manage" style="font-size:12px">Manage</button>
-    </div>` : ``}
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+
+<style>
+:root{
+  --bg:#000; --panel:#0a0a0a;
+  --border:#d6b44c; --accent:#f2d675;
+  --text:#f7f1d0; --muted:#c9b06a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 600px at 20% -10%, rgba(242,214,117,.06), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  font-family:'Play',sans-serif; color:var(--text); min-height:100vh;
+}
+h1{ text-align:center; margin:40px 0 20px; font-size:1.8em; color:var(--accent); }
+
+/* grid */
+.badge-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:22px; padding:0 20px 60px; max-width:1200px; margin:0 auto;
+}
+
+/* --- HEX MEDALLION CARD --- */
+.badge{ position:relative; padding:16px 14px 14px; }
+
+/* hex shell */
+.hex{
+  position:relative; margin:0 auto; width:180px; height:200px;
+  clip-path:polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background:linear-gradient(180deg,#0b0b0b,#000);
+  box-shadow:inset 0 0 0 2px rgba(214,180,76,.35), 0 0 30px rgba(214,180,76,.08);
+  transition:transform .2s ease, box-shadow .25s ease;
+}
+
+/* thick gold rim */
+.hex::before{
+  content:""; position:absolute; inset:-6px; clip-path:inherit; border-radius:8px;
+  background:linear-gradient(180deg,#f2d675,#d6b44c,#9d7f2b);
+  filter:saturate(1.1); z-index:-1;
+}
+
+/* rotating halo (owned only) */
+.hex::after{
+  content:""; position:absolute; inset:-16px; clip-path:inherit; border-radius:12px;
+  background:conic-gradient(from 0deg, rgba(242,214,117,.35), transparent 40%, transparent 60%, rgba(242,214,117,.35));
+  animation:spin 8s linear infinite; opacity:0; pointer-events:none;
+}
+.badge.owned .hex::after{ opacity:.55 }
+@keyframes spin { to{ transform:rotate(360deg) } }
+
+.medal{ position:absolute; inset:12px; display:flex; align-items:center; justify-content:center; }
+.medal img{ max-width:85%; max-height:85%; filter:drop-shadow(0 4px 8px rgba(0,0,0,.6)) }
+
+/* underglow strip */
+.badge::after{
+  content:""; position:absolute; left:0; right:0; bottom:-2px; height:10px;
+  background:radial-gradient(60% 100% at 50% 100%, rgba(242,214,117,.22), transparent 70%);
+  filter:blur(6px); opacity:.25; pointer-events:none;
+}
+.badge.owned::after{ opacity:.8 }
+
+/* title / code */
+.title{ text-align:center; font-weight:700; margin-top:10px }
+.code{ text-align:center; font-size:11px; color:var(--muted) }
+
+/* locked vs owned feel */
+.badge.locked .hex{ filter:grayscale(.85) contrast(.85) brightness(.95); box-shadow:inset 0 0 0 2px rgba(214,180,76,.22) }
+.badge.locked .title{ opacity:.75 }
+.badge.owned:hover .hex{ transform:translateY(-2px); box-shadow:inset 0 0 0 2px rgba(214,180,76,.55), 0 0 40px rgba(242,214,117,.25) }
+
+/* --- hover overlay (requirements shown only on hover) --- */
+.overlay{
+  position:absolute; inset:0; background:rgba(0,0,0,.9);
+  opacity:0; transition:opacity .22s ease; border-radius:16px;
+  display:flex; flex-direction:column; align-items:stretch; padding:12px;
+}
+.badge:hover .overlay{ opacity:1; }
+
+.overlay .status{ font-weight:700; margin-bottom:6px; }
+.overlay .bar{ height:8px; background:#0a0a0a; border:1px solid var(--border); border-radius:999px; overflow:hidden; margin:6px 0 10px }
+.overlay .fill{ height:100%; background:linear-gradient(180deg,var(--accent),#d6b44c) }
+
+.reqs{ list-style:none; margin:0; padding:0; flex:1; overflow:auto; max-height:200px; border-top:1px solid rgba(255,255,255,.06); padding-top:8px }
+.reqs li{ display:flex; justify-content:space-between; gap:10px; font-size:12px; padding:4px 0; border-bottom:1px solid rgba(255,255,255,.05) }
+.reqs .ok{ color:var(--accent) }
+.reqs .pending{ color:var(--muted) }
+
+/* admin modal */
+#adminPanel{ position:fixed; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(8px); display:none; align-items:center; justify-content:center; }
+.modal{ background:#111; border:1px solid var(--border); border-radius:12px; padding:20px; width:360px; max-height:80vh; overflow:auto }
+.modal h3{ color:var(--accent); margin-top:0 }
+button,select{
+  background:#0c0c0c; color:var(--text); border:1px solid var(--border); border-radius:6px;
+  padding:6px 10px; font-family:'Play'; cursor:pointer;
+}
+button:hover{ background:var(--border); color:#000 }
+</style>
+</head>
+<body>
+<div id="header-container"></div>
+<script>
+(async()=>{const r=await fetch('header.html',{cache:'no-cache'});const h=await r.text();document.getElementById('header-container').outerHTML=h;})();
+</script>
+
+<h1>Badge Case</h1>
+<div id="badgeGrid" class="badge-grid">Loading…</div>
+
+<!-- Admin modal -->
+<div id="adminPanel">
+  <div class="modal">
+    <h3>Modify Training</h3>
+    <label>User:</label>
+    <select id="userSelect"></select>
+    <div id="eventList" style="margin-top:10px;font-size:13px;"></div>
+    <button id="closeModal" style="margin-top:10px;width:100%">Close</button>
   </div>
-`;
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+let sb, me, isElevated=false;
+const $ = s => document.querySelector(s);
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const session = await requireAuth(); if(!session) return;
+  sb = getSupabase(); me = session.user.id;
+  const { data:e } = await sb.rpc('is_elevated', { u: me }); isElevated = e === true;
+  await buildBadges();
+});
+
+/* Build all badges with one round of data fetches */
+async function buildBadges(){
+  const [{data: certs},{data: owned},{data: reqs},{data: done}] = await Promise.all([
+    sb.from('certifications').select('certification_code,name,image_url,sort_order').order('sort_order'),
+    sb.from('user_certifications').select('certification_code').eq('user_id', me),
+    sb.from('certification_requirements').select('certification_code,event_code,sort_order,training_events(title)').order('sort_order'),
+    sb.from('user_training_events').select('event_code').eq('user_id', me),
+  ]);
+
+  const ownedSet   = new Set(owned.map(c=>c.certification_code));
+  const doneSet    = new Set(done.map(d=>d.event_code));
+  const reqByCert  = new Map(); // code -> [{event_code,title}]
+  reqs.forEach(r=>{
+    if(!reqByCert.has(r.certification_code)) reqByCert.set(r.certification_code,[]);
+    reqByCert.get(r.certification_code).push({event_code:r.event_code,title:r.training_events?.title||r.event_code});
+  });
+
+  const grid = $('#badgeGrid'); grid.innerHTML = '';
+  for(const cert of certs){
+    const rel = reqByCert.get(cert.certification_code) || [];
+    const completed = rel.filter(r=>doneSet.has(r.event_code)).length;
+    const pct = Math.round((completed / Math.max(1, rel.length)) * 100);
+    const isOwned = ownedSet.has(cert.certification_code);
+
+    const div = document.createElement('div');
+    div.className = 'badge ' + (isOwned ? 'owned' : 'locked');
+
+    /* ---------- innerHTML template (hex + hover overlay) ---------- */
+    div.innerHTML = `
+      <div class="hex">
+        <div class="medal">
+          <img src="${cert.image_url || ''}" alt="${cert.name}">
+        </div>
+      </div>
+      <div class="title">${cert.name}</div>
+      <div class="code">${cert.certification_code}</div>
+
+      <div class="overlay">
+        <div class="status">${isOwned ? '✅ Earned' : '⏳ In Progress'}</div>
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+        <ul class="reqs">
+          ${rel.map(r=>{
+            const ok = doneSet.has(r.event_code);
+            return `<li>
+              <span>${r.title}</span>
+              <span class="${ok?'ok':'pending'}">${ok?'✔':'—'}</span>
+            </li>`;
+          }).join('')}
+        </ul>
+        ${isElevated ? `<div style="margin-top:8px;text-align:right">
+          <button class="manage" style="font-size:12px">Manage</button>
+        </div>` : ``}
+      </div>
+    `;
+    /* -------------------------------------------------------------- */
+
+    if(isElevated){
+      div.querySelector('.manage').onclick = () => openModal(cert.certification_code, cert.name);
+    }
+    grid.appendChild(div);
+  }
+}
+
+/* Admin modal */
+async function openModal(code,name){
+  $('#adminPanel').style.display='flex';
+  const {data:users}=await sb.from('profiles').select('id,handle').order('handle');
+  $('#userSelect').innerHTML=users.map(u=>`<option value="${u.id}">${u.handle}</option>`).join('');
+  $('#userSelect').onchange=()=>loadEvents($('#userSelect').value,code);
+  if(users.length) loadEvents(users[0].id,code);
+  $('#closeModal').onclick=()=>$('#adminPanel').style.display='none';
+}
+async function loadEvents(uid,code){
+  const {data:reqs}=await sb.from('certification_requirements')
+    .select('event_code,sort_order,training_events(title)')
+    .eq('certification_code',code).order('sort_order');
+  const {data:done}=await sb.from('user_training_events')
+    .select('event_code').eq('user_id',uid);
+  const doneSet=new Set(done.map(d=>d.event_code));
+
+  $('#eventList').innerHTML=reqs.map(r=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <span>${r.training_events.title}</span>
+      ${doneSet.has(r.event_code)
+        ? `<button data-remove="${r.event_code}">Remove</button>`
+        : `<button data-add="${r.event_code}">Grant</button>`}
+    </div>`).join('');
+
+  // handlers
+  $('#eventList').querySelectorAll('button[data-add]').forEach(b=>{
+    b.onclick=async()=>{
+      await sb.from('user_training_events').insert({
+        user_id:uid,event_code:b.dataset.add,completed_at:new Date().toISOString()
+      });
+      await loadEvents(uid,code);
+      if(uid===me) await buildBadges();
+    };
+  });
+  $('#eventList').querySelectorAll('button[data-remove]').forEach(b=>{
+    b.onclick=async()=>{
+      await sb.from('user_training_events').delete()
+        .eq('user_id',uid).eq('event_code',b.dataset.remove);
+      await loadEvents(uid,code);
+      if(uid===me) await buildBadges();
+    };
+  });
+}
+</script>
+</body>
+</html>
