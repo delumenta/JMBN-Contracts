@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN – Progression (Command Rail)</title>
+<title>JMBN – Progression (Badge Collection Case)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 <style>
 :root{
   --bg:#000; --line:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --ink:#0b0b0b; --ink2:#0f0f0f; --fs:14px;
+  --ink:#0b0b0b; --ink2:#111; --fs:14px;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -40,7 +40,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.75));}
 .shell{max-width:1180px;margin:0 auto;padding:14px}
 .hero-row{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
-.logo-wrap{width:56px;height:56px;border-radius:14px;overflow:hidden;background:#000;display:grid;place-items:center;
+.logo-wrap{position:relative;width:56px;height:56px;border-radius:14px;overflow:hidden;background:#000;display:grid;place-items:center;
   box-shadow:0 0 14px rgba(214,180,76,.25)}
 .logo{width:100%;height:100%;object-fit:cover}
 .logo-wrap::after{content:"";position:absolute;inset:0;border-radius:14px;box-shadow:inset 0 0 0 8px #000}
@@ -76,30 +76,25 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 .btn{cursor:pointer;transition:filter .18s ease,transform .06s ease}
 .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
 .btn.pulse{animation:pulseGlow 1.6s ease-in-out infinite}
-@keyframes pulseGlow{
-  0%{box-shadow:0 0 0 0 rgba(242,214,117,.0)}
-  50%{box-shadow:0 0 18px 0 rgba(242,214,117,.35)}
-  100%{box-shadow:0 0 0 0 rgba(242,214,117,.0)}
-}
+@keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(242,214,117,.0)}50%{box-shadow:0 0 18px 0 rgba(242,214,117,.35)}100%{box-shadow:0 0 0 0 rgba(242,214,117,.0)}}
 
-/* Requirement meters (long, with ticks) */
+/* Requirement meters */
 .pb{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;margin:8px 0}
 .pb .label{color:var(--muted);font-size:12px}
 .track{--w:0%;height:12px;border-radius:999px;position:relative;background:#0a0a0a;
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.28);overflow:hidden}
-.track::before{ /* ticks */
-  content:"";position:absolute;inset:0;background-image:linear-gradient(to right, rgba(214,180,76,.15) 1px, transparent 1px);
+.track::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right, rgba(214,180,76,.15) 1px, transparent 1px);
   background-size:10% 100%;opacity:.35;pointer-events:none}
 .fill{height:100%;width:var(--w);background:linear-gradient(180deg,var(--accent),#d6b44c);
   transition:width .9s cubic-bezier(.25,.9,.25,1)}
 .val{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.count{display:inline-block;min-width:38px;text-align:right}
 
 /* Right content */
 .section{position:relative;padding-top:4px}
 .ribbon{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 0;
   background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.76));border-bottom:1px solid var(--line);backdrop-filter:saturate(1.2) blur(2px)}
 .ribbon h2{margin:0;color:var(--accent);font-size:18px}
-
 .sep{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.5),transparent);border-radius:999px;margin:16px 0}
 
 /* Timeline */
@@ -111,24 +106,73 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 .ti .when{color:var(--muted);font-size:12px}
 .ti .chg b{color:var(--accent)}
 
-/* Certifications as chips */
-.certList{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-.cert{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 10px;border:1px solid rgba(214,180,76,.35);border-radius:999px;
-  background:linear-gradient(180deg,#101010,#070707);transition:transform .15s ease, filter .15s ease
+/* ===== Badge Collection Case ===== */
+.case{
+  position:relative;margin-top:10px;border-radius:16px;
+  background:
+    linear-gradient(180deg, rgba(214,180,76,.18), rgba(214,180,76,.04)) border-box,
+    linear-gradient(180deg, #0b0b0b, #050505) padding-box;
+  border:1px solid transparent;
+  box-shadow:0 0 22px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.18);
+  padding:14px;
 }
-.cert:hover{transform:translateY(-1px);filter:brightness(1.05)}
-.thumb{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:#0b0b0b;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.25)}
-.thumb img{max-width:88%;max-height:88%}
-.cert .name{font-weight:700}
-.cert .code{font-size:11px;color:var(--muted)}
-.cert.dim{opacity:.55;filter:grayscale(.55)}
-.badge-own{margin-left:6px}
+.case::before{ /* glass sheen */
+  content:""; position:absolute; inset:0; pointer-events:none; border-radius:16px;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.08) 18%, rgba(255,255,255,0) 25%),
+    radial-gradient(800px 140px at 30% -10%, rgba(255,255,255,.07), transparent 70%);
+  mix-blend-mode:screen;
+}
+.shelf{
+  --h: 140px;
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+  gap:14px; padding:16px 6px 10px; margin:0 0 12px;
+  position:relative;
+  background:
+    linear-gradient(180deg, rgba(214,180,76,.25), rgba(214,180,76,.0)) top/100% 2px no-repeat,
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+  border-radius:12px;
+}
+.shelf:last-child{margin-bottom:0}
 
-/* Count-up */
-.count{display:inline-block;min-width:38px;text-align:right}
+/* slots */
+.slot{
+  height:var(--h); border-radius:14px; position:relative; overflow:hidden;
+  background:radial-gradient(200px 120px at 50% 20%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%), #0e0e0e;
+  box-shadow:
+    inset 0 0 0 1px rgba(214,180,76,.25),
+    0 0 0 1px rgba(0,0,0,.6);
+  display:grid; place-items:center;
+  transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+.slot:hover{transform:translateY(-2px); box-shadow:0 0 20px rgba(214,180,76,.20), inset 0 0 0 1px rgba(214,180,76,.3)}
+.slot .img-wrap{width:86%; height:86%; display:grid; place-items:center}
+.slot img{max-width:100%; max-height:100%; display:block}
+
+/* owned effect */
+.slot.owned{filter:none}
+.slot.owned::after{
+  content:""; position:absolute; inset:0; pointer-events:none; border-radius:14px;
+  box-shadow:0 0 18px rgba(242,214,117,.35), inset 0 0 0 1px rgba(242,214,117,.35);
+}
+
+/* locked/empty */
+.slot.locked{opacity:.55; filter:grayscale(.6) contrast(.95)}
+.slot.locked .lock{
+  position:absolute; inset:auto 8px 8px auto; width:22px; height:22px;
+  border-radius:6px; background:#0b0b0b; border:1px solid rgba(214,180,76,.35);
+  display:grid; place-items:center; font-size:12px; color:var(--muted)
+}
+
+/* label under slot */
+.label{
+  text-align:center; margin-top:6px;
+  font-size:12px; color:var(--muted)
+}
+.label .name{display:block; color:var(--text); font-weight:700}
+.label .code{opacity:.85}
+
+/* Helpers */
 .small{font-size:12px;color:var(--muted)}
 </style>
 </head>
@@ -141,7 +185,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
       <div class="logo-wrap"><img class="logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN"></div>
       <div>
         <h1>Rank Progression</h1>
-        <div class="sub">Live requirements • Eligibility • Certifications</div>
+        <div class="sub">Live requirements • Eligibility • Badge Collection Case</div>
       </div>
       <div><span class="pill" id="curPgHero">PG: —</span></div>
     </div>
@@ -215,7 +259,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
       </div>
     </aside>
 
-    <!-- RIGHT: Detail Canvas -->
+    <!-- RIGHT: History + Badge Case -->
     <section>
       <div class="section">
         <div class="ribbon"><h2>History</h2></div>
@@ -225,9 +269,16 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
       <div class="sep"></div>
 
       <div class="section">
-        <div class="ribbon"><h2>Certifications</h2></div>
-        <div class="certList" id="certList">—</div>
-        <div class="small" style="margin-top:6px">Dim chips are not yet earned.</div>
+        <div class="ribbon"><h2>Badge Collection Case</h2></div>
+
+        <!-- Shelves will be filled dynamically, but we keep one container -->
+        <div class="case">
+          <div id="caseShelves">
+            <!-- shelves get injected here -->
+          </div>
+        </div>
+
+        <div class="small" style="margin-top:8px">Glow = owned. Dim = not yet earned.</div>
       </div>
     </section>
   </div>
@@ -263,7 +314,7 @@ async function fetchRankImage(code){
   catch{ return ''; }
 }
 
-/* Load progression + bars */
+/* Load progression + meters */
 async function loadProgress(){
   const { data: prog } = await sb
     .from('v_user_rank_progress')
@@ -296,17 +347,14 @@ async function loadProgress(){
   const ht = Number(prog?.hours_target || 0);
   const ct = Number(prog?.certification_target || 0);
 
-  // Count-ups
   countUp($('#cm'), m); $('#cmt').textContent = mt;
   countUp($('#ch'), h); $('#cht').textContent = ht;
   countUp($('#cc'), c); $('#cct').textContent = ct;
 
-  // Meters
   setFill('#trkM', mt ? Math.min(1, m/mt) : 1);
   setFill('#trkH', ht ? Math.min(1, h/ht) : 1);
   setFill('#trkC', ct ? Math.min(1, c/ct) : 1);
 
-  // Eligibility pulse
   const allMet = (!!prog?.next_code) && (!mt || m>=mt) && (!ht || h>=ht) && (!ct || c>=ct);
   const btn = $('#btnPromote');
   btn.disabled = !allMet;
@@ -343,7 +391,40 @@ async function loadHistory(){
   }).join('');
 }
 
-/* Certifications chips */
+/* ===== Badge Case =====
+   We render rows of slots. Each certification gets one slot.
+   Owned => .owned glow; Not owned => .locked with a small lock chip.
+*/
+function groupIntoShelves(items, perRow = 6){
+  const rows = [];
+  for(let i=0;i<items.length;i+=perRow) rows.push(items.slice(i, i+perRow));
+  return rows;
+}
+function renderBadgeCase(rows){
+  const host = $('#caseShelves');
+  if(!rows.length){ host.innerHTML = '<div class="small">No certifications configured.</div>'; return; }
+
+  host.innerHTML = rows.map(row=>{
+    const slots = row.map(r=>{
+      const owned = !!r.owned;
+      const img   = r.image_url || '';
+      const code  = r.certification_code || '';
+      const name  = r.name || code || 'Certification';
+      const cls   = `slot ${owned?'owned':'locked'}`;
+      return `
+        <div class="slot-wrap">
+          <div class="${cls}" title="${owned?'Obtained':'Not earned'}">
+            <div class="img-wrap">${img?`<img src="${img}" alt="${name}">`:''}</div>
+            ${owned?'':'<div class="lock">🔒</div>'}
+          </div>
+          <div class="label"><span class="name">${name}</span><span class="code">${code}</span></div>
+        </div>`;
+    }).join('');
+    return `<div class="shelf">${slots}</div>`;
+  }).join('');
+}
+
+/* Load certifications -> Badge Case */
 async function loadCerts(){
   const { data, error } = await sb
     .from('v_user_certifications')
@@ -351,23 +432,9 @@ async function loadCerts(){
     .or(`user_id.eq.${me},user_id.is.null`)
     .order('sort_order', { ascending:true });
 
-  const host = $('#certList');
-  if (error){ host.textContent = 'Failed to load certifications.'; return; }
-  if (!data?.length){ host.textContent = '—'; return; }
-
-  host.innerHTML = data.map(row=>{
-    const owned = !!row.owned;
-    const img   = row.image_url || '';
-    const code  = row.certification_code || '';
-    const name  = row.name || code || 'Certification';
-    return `
-      <div class="cert ${owned?'':'dim'}" title="${owned?'Obtained':'Not earned'}">
-        <span class="thumb">${img?`<img src="${img}" alt="${name}">`:''}</span>
-        <span class="name">${name}</span>
-        <span class="code">• ${code}</span>
-        ${owned?`<span class="pill badge-own">Owned</span>`:''}
-      </div>`;
-  }).join('');
+  if (error){ renderBadgeCase([]); return; }
+  const rows = groupIntoShelves(data || [], 6);
+  renderBadgeCase(rows);
 }
 
 /* Promotion */
