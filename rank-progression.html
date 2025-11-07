@@ -26,9 +26,13 @@ body{
 }
 
 /* fallback header mount border below */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
+.brand-logo {
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+  border-radius:50%; /* removes square border */
+  background:none;   /* ensures no background color shows */
 
 /* nav buttons already styled inside header.html */
 
