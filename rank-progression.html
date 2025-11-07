@@ -30,12 +30,12 @@ body{
 .brand-logo {
   width:44px;
   height:44px;
+  background:#000;
+  border:none;
+  box-shadow:inset 0 0 0 9999px #000; /* covers any lighter edge pixels */
   object-fit:contain;
-  background:#000;               /* make the frame area black */
-  border:none;        /* ensures any residual border is pure black */
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
-  border-radius:0;               /* keep square edges */
 }
+
 
 .brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
 
