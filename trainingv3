@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JMBN – Training Console</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+
+<style>
+:root{
+  --bg:#000;
+  --panel:#0b0b0b;
+  --border:#d6b44c;
+  --accent:#f2d675;
+  --text:#f7f1d0;
+  --muted:#c9b06a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(900px 700px at 20% -5%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(1000px 900px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  min-height:100vh;
+}
+h1{text-align:center;margin:20px 0;color:var(--accent);}
+.console{
+  display:grid;
+  grid-template-columns:320px 1fr;
+  gap:16px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 16px 40px;
+}
+@media(max-width:900px){.console{grid-template-columns:1fr;}}
+.leftPanel,.rightPanel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 0 14px rgba(214,180,76,.15);
+  padding:12px;
+}
+
+/* Left: certifications list */
+.certItem{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px;
+  margin-bottom:8px;
+  border:1px solid transparent;
+  border-radius:8px;
+  transition:background .2s ease,border .2s ease;
+  cursor:pointer;
+}
+.certItem:hover{background:rgba(214,180,76,.08);}
+.certItem.active{
+  border-color:var(--border);
+  background:rgba(214,180,76,.1);
+}
+.certThumb{
+  width:46px;height:46px;border-radius:8px;
+  background:#111;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+}
+.certThumb img{max-width:80%;max-height:80%;}
+.certInfo{flex:1;}
+.certInfo .name{font-weight:700;color:var(--accent);}
+.bar{
+  height:6px;border-radius:999px;background:#111;overflow:hidden;
+  margin-top:3px;
+}
+.fill{height:100%;background:var(--border);}
+
+/* Right: training detail */
+.rightPanel h2{margin-top:0;color:var(--accent);}
+ul.events{list-style:none;margin:10px 0 0;padding:0;}
+ul.events li{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);
+}
+ul.events li span.done{color:var(--accent);}
+ul.events li span.pending{color:var(--muted);}
+button{
+  background:#0c0c0c;color:var(--text);
+  border:1px solid var(--border);
+  border-radius:6px;padding:4px 8px;
+  font-family:'Play';cursor:pointer;
+}
+button:hover{background:var(--border);color:#000;}
+#userSelect{margin-bottom:8px;width:100%;padding:4px;border:1px solid var(--border);border-radius:6px;background:#111;color:var(--text);}
+</style>
+</head>
+<body>
+<div id="header-container"></div>
+<script>
+(async()=>{const res=await fetch('header.html',{cache:'no-cache'});const html=await res.text();document.getElementById('header-container').outerHTML=html;})();
+</script>
+
+<h1>Training Console</h1>
+<div class="console">
+  <div class="leftPanel">
+    <h3 style="color:var(--accent);margin-top:0;">Certifications</h3>
+    <div id="certList">Loading...</div>
+  </div>
+  <div class="rightPanel">
+    <h2 id="certTitle">Select a Certification</h2>
+    <div id="certDetail" style="color:var(--muted);font-size:13px;">Click a certification on the left to see required training events.</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+let sb,me,isElevated=false;
+const $=s=>document.querySelector(s);
+
+document.addEventListener('DOMContentLoaded',async()=>{
+  const session=await requireAuth();
+  if(!session)return;
+  sb=getSupabase();me=session.user.id;
+  const {data:elev}=await sb.rpc('is_elevated',{u:me});isElevated=elev===true;
+  loadCertList();
+});
+
+/* --- load certifications --- */
+async function loadCertList(){
+  const {data:certs}=await sb.from('certifications')
+    .select('certification_code,name,image_url,sort_order').order('sort_order');
+  const {data:reqs}=await sb.from('certification_requirements').select('certification_code,event_code');
+  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',me);
+  const doneSet=new Set(done.map(d=>d.event_code));
+  const list=$('#certList');list.innerHTML='';
+
+  for(const cert of certs){
+    const rel=reqs.filter(r=>r.certification_code===cert.certification_code);
+    const pct=Math.round((rel.filter(r=>doneSet.has(r.event_code)).length/rel.length)*100)||0;
+    const div=document.createElement('div');
+    div.className='certItem';
+    div.innerHTML=`
+      <div class="certThumb">${cert.image_url?`<img src="${cert.image_url}" alt="">`:'🏅'}</div>
+      <div class="certInfo">
+        <div class="name">${cert.name}</div>
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+      </div>`;
+    div.onclick=()=>openCert(cert.certification_code,cert.name);
+    list.appendChild(div);
+  }
+}
+
+/* --- open cert details --- */
+async function openCert(code,name){
+  document.querySelectorAll('.certItem').forEach(e=>e.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  $('#certTitle').textContent=name;
+  $('#certDetail').innerHTML='<div style="font-size:12px;color:var(--muted)">Loading training events…</div>';
+
+  const {data:reqs}=await sb.from('certification_requirements')
+    .select('event_code,training_events(title)').eq('certification_code',code).order('sort_order');
+  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',me);
+  const doneSet=new Set(done.map(d=>d.event_code));
+
+  const eventsHTML=reqs.map(r=>`
+    <li>
+      <span>${r.training_events.title}</span>
+      <span class="${doneSet.has(r.event_code)?'done':'pending'}">
+        ${doneSet.has(r.event_code)?'✅ Completed':'⏳ Pending'}
+      </span>
+    </li>`).join('');
+  
+  let adminHTML='';
+  if(isElevated){
+    adminHTML=`
+      <div style="margin-top:16px;">
+        <h4 style="color:var(--accent);margin:6px 0;">Admin Panel</h4>
+        <select id="userSelect"></select>
+        <div id="adminEvents" style="margin-top:8px;font-size:13px;"></div>
+      </div>`;
+  }
+
+  $('#certDetail').innerHTML=`<ul class="events">${eventsHTML}</ul>${adminHTML}`;
+  if(isElevated) setupAdmin(code);
+}
+
+/* --- admin functions --- */
+async function setupAdmin(code){
+  const {data:users}=await sb.from('profiles').select('id,handle').order('handle');
+  $('#userSelect').innerHTML=users.map(u=>`<option value="${u.id}">${u.handle}</option>`).join('');
+  $('#userSelect').onchange=()=>loadAdminUser($('#userSelect').value,code);
+  if(users.length) loadAdminUser(users[0].id,code);
+}
+
+async function loadAdminUser(uid,code){
+  const {data:reqs}=await sb.from('certification_requirements')
+    .select('event_code,training_events(title)').eq('certification_code',code).order('sort_order');
+  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',uid);
+  const doneSet=new Set(done.map(d=>d.event_code));
+  $('#adminEvents').innerHTML=reqs.map(r=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;">
+      <span>${r.training_events.title}</span>
+      ${doneSet.has(r.event_code)
+        ? `<button data-remove="${r.event_code}">Remove</button>`
+        : `<button data-add="${r.event_code}">Grant</button>`}
+    </div>`).join('');
+  
+  $('#adminEvents').querySelectorAll('button[data-add]').forEach(b=>{
+    b.onclick=async()=>{
+      await sb.from('user_training_events').insert({
+        user_id:uid,event_code:b.dataset.add,completed_at:new Date().toISOString()
+      });
+      loadAdminUser(uid,code);
+    };
+  });
+  $('#adminEvents').querySelectorAll('button[data-remove]').forEach(b=>{
+    b.onclick=async()=>{
+      await sb.from('user_training_events').delete().eq('user_id',uid).eq('event_code',b.dataset.remove);
+      loadAdminUser(uid,code);
+    };
+  });
+}
+</script>
+</body>
+</html>
