@@ -28,7 +28,7 @@ body{opacity:0}
   background: linear-gradient(180deg,#0c0c0c,#060606);
   font-weight: 800;
 }
-#postAnnc:hover{ background: var(--accent); color: #000; text-decoration: none }
+#postAnnc:hover{ background: var(--accent); color:#000; text-decoration: none }
 
 /* Announcement action buttons */
 .annc-row{ display:flex; align-items:center; justify-content:space-between; gap:8px }
@@ -157,6 +157,16 @@ body::after{
 </head>
 <body>
 
+<!-- Safety net: show UI even if later JS fails -->
+<script>
+document.addEventListener('DOMContentLoaded', () => { document.body.style.opacity = 1; });
+window.addEventListener('error', () => {
+  document.body.style.opacity = 1;
+  const boot = document.getElementById('boot');
+  if (boot) { boot.classList.add('hidden'); setTimeout(()=>boot.style.display='none', 300); }
+});
+</script>
+
 <!-- Background layers -->
 <canvas id="goldDust"></canvas>
 <div class="hud-grid"></div>
@@ -257,9 +267,8 @@ body::after{
 </div>
 
 <script>
-/* Force-show UI even if a later error happens */
+/* Fade-in even if other JS hiccups */
 document.addEventListener('DOMContentLoaded', () => { document.body.style.opacity = 1; });
-window.addEventListener('error', () => { document.body.style.opacity = 1; const boot=document.getElementById('boot'); if(boot){boot.classList.add('hidden');} });
 
 /* ===== Background stars + glow + shooters ===== */
 (function(){
@@ -295,7 +304,7 @@ window.addEventListener('error', () => { document.body.style.opacity = 1; const 
     const angle=(Math.random()<0.5?1:-1)*(Math.random()*Math.PI/4+Math.PI/8);
     const depth=Math.random();
     const speed=3+depth*4, length=60+depth*80;
-    shooting.push({x=startX,y=startY,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,length,depth,life:1});
+    shooting.push({x:startX,y:startY,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,length,depth,life:1});
   }
 
   function draw(){
@@ -510,8 +519,10 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     elevated = !!data;
   } catch (_) {}
 
+  // Grab once and reuse
+  const postLink = document.getElementById('postAnnc');
+
   // Show "Post" only for elevated
-  const postLink = $('#postAnnc');
   if (elevated && postLink) postLink.style.display = '';
 
   /* ---- Announcements (latest 5) + Edit/Delete ---- */
@@ -599,7 +610,6 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   await loadAnnouncements();
 
   /* ---- Post announcement (elevated only) ---- */
-  const postLink = document.getElementById('postAnnc');
   if (postLink) {
     postLink.onclick = async (ev) => {
       ev.preventDefault();
