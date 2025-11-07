@@ -40,7 +40,7 @@ body{opacity:0}
 }
 .annc-btn:hover{ background:var(--accent); color:#000 }
 
-/* Background */
+/* Background grid & lighting */
 #goldDust{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;background:#000}
 .hud-grid{
   position:fixed;inset:0;z-index:1;pointer-events:none;
@@ -95,14 +95,14 @@ body::after{
   background:#0c0c0c;display:block;justify-self:end
 }
 
-/* Action grid */
+/* Grid layout */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:820px){.grid-2{grid-template-columns:1fr}}
 .action h3{margin:0 0 6px;color:var(--accent);font-size:18px}
 .action p{margin:0 0 10px;color:var(--muted);font-size:13px}
 .action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
 
-/* === Photo backgrounds on the two action cards === */
+/* === Photo backgrounds on Grow/JMBN cards === */
 .card.action.grow-bg{
   background:
     linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
@@ -113,6 +113,13 @@ body::after{
     linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
     url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/jmbn.jpg") center/cover no-repeat;
 }
+/* Make these two cards bigger */
+.card.action.grow-bg,
+.card.action.jmbn-bg {
+  min-height: 260px;          /* increased height */
+  background-position: center 30%;
+  background-size: cover;
+}
 
 /* Lists */
 .list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
@@ -120,11 +127,6 @@ body::after{
 .item h4{margin:0 0 4px;color:var(--accent);font-size:15px}
 .item .meta{font-size:12px;color:var(--muted)}
 .empty{color:var(--muted);font-size:13px;padding:10px}
-
-/* Expandable announcement body */
-.expand{cursor:pointer}
-.expand + .expand-body{display:none;margin-top:6px;color:var(--text);font-size:13px}
-.expand.open + .expand-body{display:block}
 
 /* Footer */
 .footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
@@ -157,7 +159,6 @@ body::after{
 </head>
 <body>
 
-<!-- Safety net: show UI even if later JS fails -->
 <script>
 document.addEventListener('DOMContentLoaded', () => { document.body.style.opacity = 1; });
 window.addEventListener('error', () => {
@@ -167,11 +168,9 @@ window.addEventListener('error', () => {
 });
 </script>
 
-<!-- Background layers -->
 <canvas id="goldDust"></canvas>
 <div class="hud-grid"></div>
 
-<!-- Boot overlay -->
 <div class="boot" id="boot">
   <div class="bootCard">
     <div class="bootHead"><div>JMBN // OPS Loader</div><div>v1.0</div></div>
@@ -182,7 +181,6 @@ window.addEventListener('error', () => {
 
 <div class="wrapper">
   <main class="center">
-    <!-- Brand -->
     <div class="brand">
       <img class="brand-logo" alt="JMBN"
            src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
@@ -192,7 +190,6 @@ window.addEventListener('error', () => {
       </div>
     </div>
 
-    <!-- Member card -->
     <section class="card member" id="memberCard">
       <div>
         <div class="name" id="mName">Loading…</div>
@@ -207,9 +204,7 @@ window.addEventListener('error', () => {
            alt="Rank">
     </section>
 
-    <!-- Your Missions + Announcements -->
     <section class="grid-2">
-      <!-- Your Missions -->
       <div class="card">
         <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Your Missions</h3>
         <div class="item" style="display:flex;justify-content:space-between;align-items:center">
@@ -222,7 +217,6 @@ window.addEventListener('error', () => {
         </div>
       </div>
 
-      <!-- Announcements -->
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
           <h3 style="margin:0;color:var(--accent);font-size:18px">Announcements</h3>
@@ -232,7 +226,6 @@ window.addEventListener('error', () => {
       </div>
     </section>
 
-    <!-- Actions -->
     <section class="grid-2" style="margin-top:14px">
       <div class="card action grow-bg">
         <h3>Grow With Us</h3>
@@ -254,7 +247,6 @@ window.addEventListener('error', () => {
   </main>
 </div>
 
-<!-- OPS ticker -->
 <div class="ops-ticker" id="opsTicker">
   <span class="ops-chip" id="opsChip">[OPS]</span>
   <div class="ops-msg" id="opsMsg">Initializing broadcast…</div>
@@ -266,368 +258,7 @@ window.addEventListener('error', () => {
   </div>
 </div>
 
-<script>
-/* Fade-in even if other JS hiccups */
-document.addEventListener('DOMContentLoaded', () => { document.body.style.opacity = 1; });
-
-/* ===== Background stars + glow + shooters ===== */
-(function(){
-  const c=document.getElementById('goldDust'),ctx=c.getContext('2d',{alpha:true});
-  let W,H,DPR=Math.min(window.devicePixelRatio,2);
-  const stars=[],shooting=[];
-  const STARCOUNT=900,LAYERS=4,BASE_SPEED=0.05,MAX_SIZE=1.8,MIN_SIZE=0.2;
-
-  function resize(){ W=c.width=innerWidth*DPR; H=c.height=innerHeight*DPR; c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px'; }
-  resize(); addEventListener('resize',resize);
-
-  for(let i=0;i<STARCOUNT;i++){
-    const l=Math.floor(Math.random()*LAYERS)+1, d=l/LAYERS;
-    stars.push({ x:Math.random()*W, y:Math.random()*H, z:d, r:(Math.random()*(MAX_SIZE-MIN_SIZE)+MIN_SIZE)*DPR*d, tw:Math.random()*6.28, spd:BASE_SPEED*d });
-  }
-
-  function sunGlow(t){
-    const g1=ctx.createRadialGradient(W/2,H*1.15,H*0.3,W/2,H,H*1.1);
-    g1.addColorStop(0,"rgba(0,10,20,0.25)");
-    g1.addColorStop(0.4,"rgba(0,5,10,0.5)");
-    g1.addColorStop(1,"rgba(0,0,0,1)");
-    ctx.fillStyle=g1; ctx.fillRect(0,0,W,H);
-    const gy=H*0.95, g2=ctx.createRadialGradient(W/2,gy,0,W/2,gy,H*0.6);
-    const p=0.15+0.05*Math.sin(t/800);
-    g2.addColorStop(0,`rgba(255,220,160,${0.35+p})`);
-    g2.addColorStop(0.3,`rgba(255,210,120,${0.18+p/2})`);
-    g2.addColorStop(1,"rgba(0,0,0,0)");
-    ctx.fillStyle=g2; ctx.fillRect(0,0,W,H);
-  }
-
-  function addShooter(){
-    const startX=Math.random()*W, startY=Math.random()*H*0.3;
-    const angle=(Math.random()<0.5?1:-1)*(Math.random()*Math.PI/4+Math.PI/8);
-    const depth=Math.random();
-    const speed=3+depth*4, length=60+depth*80;
-    shooting.push({x:startX,y:startY,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,length,depth,life:1});
-  }
-
-  function draw(){
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.globalCompositeOperation='source-over';
-    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-    const t=Date.now()/1000;
-    ctx.globalCompositeOperation='lighter';
-    const swirlX=Math.sin(t/8)*0.5, swirlY=Math.cos(t/10)*0.5;
-    for(const s of stars){
-      s.x+=Math.cos(t*0.08+s.tw+swirlX)*s.spd*1.2;
-      s.y+=Math.sin(t*0.06+s.tw+swirlY)*s.spd*1.2;
-      if(s.x<0)s.x+=W; if(s.x>W)s.x-=W; if(s.y<0)s.y+=H; if(s.y>H)s.y-=H;
-      const f=0.4+0.6*Math.abs(Math.sin(t*5+s.tw));
-      ctx.beginPath();
-      ctx.fillStyle=`hsla(45,100%,${60+20*f}%,.8)`;
-      ctx.arc(s.x,s.y,s.r,0,6.283); ctx.fill();
-    }
-    for(let i=shooting.length-1;i>=0;i--){
-      const s=shooting[i];
-      s.x+=s.vx; s.y+=s.vy; s.life-=0.02;
-      const grad=ctx.createLinearGradient(s.x,s.y,s.x-s.vx*s.length,s.y-s.vy*s.length);
-      grad.addColorStop(0,`hsla(45,95%,${70+s.depth*20}%,${s.life})`);
-      grad.addColorStop(1,`hsla(45,95%,${50+s.depth*20}%,0)`);
-      ctx.strokeStyle=grad; ctx.lineWidth=(1.5+s.depth*1.5)*DPR;
-      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x-s.vx*s.length,s.y-s.vy*s.length); ctx.stroke();
-      if(s.life<=0||s.x>W||s.y>H) shooting.splice(i,1);
-    }
-    ctx.globalCompositeOperation='screen'; sunGlow(Date.now());
-    requestAnimationFrame(draw);
-  }
-  draw();
-  (function loop(){ setTimeout(()=>{ if(Math.random()<0.85) addShooter(); loop(); }, 5000+Math.random()*5000); })();
-})();
-
-/* ===== Boot loader ===== */
-const boot=document.getElementById('boot'), log=document.getElementById('bootLog'), skip=document.getElementById('skipBoot');
-const bootLines=[
-  'JMBN SYSTEM BOOTING...',
-  '> Initializing OPS modules ... <span class="ok">OK</span>',
-  '> Loading Fleet / Ship Hangar ... <span class="ok">OK</span>',
-  '> Linking Contracts Manifest ... <span class="ok">OK</span>',
-  '> Mounting Components Registry ... <span class="ok">OK</span>',
-  '> Verifying local storage bindings ... <span class="ok">OK</span>',
-  '> Applying gold-accent theme ... <span class="ok">OK</span>',
-  '> Standby... preparing dashboard ...',
-  'READY.'
-];
-function printLine(t){const r=document.createElement('div');r.innerHTML=t;log.appendChild(r);log.scrollTop=log.scrollHeight;}
-function finishBoot(){sessionStorage.setItem('seenBoot','1');boot.classList.add('hidden');setTimeout(()=>boot.style.display='none',550);}
-function runBoot(){let i=0;(function step(){if(i>=bootLines.length)return finishBoot();printLine(bootLines[i++]);setTimeout(step,220)})()}
-skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}else{boot.style.display='none'}
-
-/* ===== OPS ticker ===== */
-(function(){
-  const el=document.getElementById('opsTicker'),chip=document.getElementById('opsChip'),msg=document.getElementById('opsMsg'),
-        prev=document.getElementById('opsPrev'),next=document.getElementById('opsNext'),
-        pause=document.getElementById('opsPause'),close=document.getElementById('opsClose');
-  const lines=[
-    'CONTACT: AshenShrike joined the Frontier Fighters.',
-    'OPS: FloatinTiger caused a “minor” power shortage.',
-    'COMMS: Hendra broadcast karaoke on all channels. Again.',
-    'SECURITY: Jeneral “poked” a pirate Idris. Backup requested.',
-    'CARGO: Ricojes mislabeled 300 SCU of scrap as platinum.',
-    'ALERT: Gerald installed Windows on the ship radar. It crashed.',
-    'OPS: AshenShrike tried “turning it off and on again.” Success.',
-    'SYSTEM: Update failed successfully. Classic.',
-    'OPS: Nomad vs FloatinTiger over the last power cell.',
-    'CARGO: Shrike stacked crates into a “fortress of solitude.”'
-  ];
-  const typeStyles={ALERT:'var(--accent)',OPS:'var(--accent)',COMMS:'#9ecbff',SECURITY:'tomato',CARGO:'#a0f0c0',SYSTEM:'#f7f1d0',CONTACT:'#f7f1d0'};
-  function typeFrom(line){const m=line.match(/^([A-Z]+):/);return m?m[1]:'OPS'}
-  let i=0,timer=null,playing=true;
-  function setChipFor(line){const t=typeFrom(line);chip.textContent=`[${t}]`;chip.style.background=typeStyles[t]??'var(--accent)';chip.style.color='#000'}
-  function fade(txt){msg.style.opacity=0;setTimeout(()=>{msg.textContent=txt;msg.style.opacity=1},200)}
-  function render(){const line=lines[i];setChipFor(line);fade(line);pause.textContent=playing?'Pause':'Play'}
-  function nextL(){i=(i+1)%lines.length;render()} function prevL(){i=(i-1+lines.length)%lines.length;render()}
-  function start(){if(timer)return; playing=true; timer=setInterval(nextL,4000); render()}
-  function stop(){playing=false; clearInterval(timer); timer=null; render()}
-  next.onclick=()=>{stop();nextL()}; prev.onclick=()=>{stop();prevL()}; pause.onclick=()=>playing?stop():start();
-  close.onclick=()=>{el.style.display='none'; sessionStorage.setItem('opsClosed','1')}
-  if(sessionStorage.getItem('opsClosed')==='1'){ el.style.display='none'; return }
-  start()
-})();
-</script>
-
-<!-- Supabase (auth + profile fill + data) -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
-<script>
-(async () => {
-  const $ = (sel) => document.querySelector(sel);
-  const out = (sel, val) => { const el = $(sel); if (el) el.textContent = val ?? ''; };
-  const esc = (s) => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
-  const timeAgo = (iso) => {
-    if(!iso) return '';
-    const s = Math.floor((Date.now() - new Date(iso)) / 1000);
-    const t = [[31536000,'y'],[2592000,'mo'],[604800,'w'],[86400,'d'],[3600,'h'],[60,'m'],[1,'s']];
-    for (const [sec, lbl] of t) {
-      if (s >= sec) return Math.floor(s/sec) + lbl + ' ago';
-    }
-    return 'just now';
-  };
-
-  // Auth
-  const session = await requireAuth();
-  if (!session) return;
-  const sb = getSupabase();
-
-  /* ---- Member card ---- */
-  let row = {};
-  try {
-    const { data, error } = await sb
-      .from('v_profiles_detailed')
-      .select(`
-        user_id,
-        handle,
-        display_name,
-        current_rank_name,
-        current_rank_code,
-        current_rank_image_url,
-        current_rank_category,
-        ingame_role
-      `)
-      .eq('user_id', session.user.id)
-      .maybeSingle();
-    if (error) throw error;
-    row = data || {};
-  } catch (e) {
-    console.warn('v_profiles_detailed:', e.message);
-  }
-
-  const emailFallback  = session.user?.email || '';
-  const theHandle  = row.handle || row.display_name || emailFallback.split('@')[0] || 'Unknown';
-  const rankName = row.current_rank_name || 'Unranked';
-  const rankCode = row.current_rank_code || '';
-  const category = row.current_rank_category || '—';
-
-  const storageUrl = rankCode ? sb.storage.from('Ranks').getPublicUrl(`${rankCode}.png`).data.publicUrl : '';
-  const rankImg    = row.current_rank_image_url || storageUrl;
-
-  const prettyName = theHandle.replace(/\b\w/g, c => c.toUpperCase());
-  out('#mName', prettyName);
-  out('#mRank', rankName);
-  out('#mCategory', category);
-
-  const imgEl = $('#mRankImg');
-  if (imgEl) {
-    if (rankImg) {
-      imgEl.src = rankImg;
-      imgEl.alt = rankName;
-      imgEl.style.visibility = 'visible';
-      imgEl.onerror = () => { imgEl.style.visibility = 'hidden'; };
-    } else {
-      imgEl.style.visibility = 'hidden';
-    }
-  }
-
-  /* ---- Your Missions (attended + last 5) ---- */
-  async function loadMissions() {
-    try {
-      let { data, error } = await sb
-        .from('mission_attendees')
-        .select('mission_id, joined_at, missions(id,title,start_time)')
-        .eq('user_id', session.user.id)
-        .order('joined_at', { ascending:false });
-      if (error) throw error;
-
-      if (data && data.length && data[0].missions == null) {
-        const ids = [...new Set(data.map(r => r.mission_id))];
-        if (ids.length) {
-          const { data: mrows, error: mErr } = await sb
-            .from('missions')
-            .select('id,title,start_time')
-            .in('id', ids);
-          if (!mErr) {
-            const map = Object.fromEntries((mrows||[]).map(m => [m.id, m]));
-            data = data.map(r => ({ ...r, missions: map[r.mission_id] || null }));
-          }
-        }
-      }
-
-      out('#attendedCount', data?.length ?? 0);
-
-      const list = $('#lastFive');
-      if (!data || data.length === 0) {
-        list.innerHTML = '<div class="empty">No missions yet.</div>';
-      } else {
-        const last5 = data.slice(0,5).map(r => {
-          const m = r.missions || {};
-          const when = m.start_time ? new Date(m.start_time).toLocaleString() : '';
-          return `<div class="item">
-                    <div class="meta">Joined ${timeAgo(r.joined_at)}</div>
-                    <h4>${esc(m.title || 'Untitled')}</h4>
-                    <div class="meta">${when}</div>
-                  </div>`;
-        }).join('');
-        list.innerHTML = last5;
-      }
-    } catch (e) {
-      console.warn('your missions:', e.message);
-      $('#lastFive').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
-      out('#attendedCount', '—');
-    }
-  }
-  await loadMissions();
-
-  /* ---- Elevation (Officer/Admin) ---- */
-  let elevated = false;
-  try {
-    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
-    elevated = !!data;
-  } catch (_) {}
-
-  // Grab once and reuse
-  const postLink = document.getElementById('postAnnc');
-
-  // Show "Post" only for elevated
-  if (elevated && postLink) postLink.style.display = '';
-
-  /* ---- Announcements (latest 5) + Edit/Delete ---- */
-  async function loadAnnouncements(){
-    const box = $('#annc');
-    try{
-      const { data, error } = await sb
-        .from('announcements')
-        .select('id,title,body,created_at,posted_by')
-        .order('created_at',{ ascending:false })
-        .limit(5);
-      if(error) throw error;
-
-      if(!data || data.length===0){
-        box.innerHTML = '<div class="empty">No announcements yet.</div>';
-        return;
-      }
-
-      // Resolve display names
-      const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
-      let names = {};
-      if(uids.length){
-        const { data: profs } = await sb
-          .from('v_profiles_detailed')
-          .select('user_id,handle,display_name')
-          .in('user_id', uids);
-        (profs||[]).forEach(p => names[p.user_id] = p.handle || p.display_name || p.user_id.slice(0,8));
-      }
-
-      box.innerHTML = data.map(a => {
-        const who = names[a.posted_by] || 'Officer';
-        const canEdit = elevated || a.posted_by === session.user.id;
-        return `
-          <div class="item" data-id="${a.id}">
-            <div class="annc-row">
-              <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
-              ${canEdit ? `
-                <div class="annc-actions">
-                  <button class="annc-btn edit" title="Edit">✎ Edit</button>
-                  <button class="annc-btn delete" title="Delete">✕ Delete</button>
-                </div>` : ``}
-            </div>
-            <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
-            ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
-          </div>`;
-      }).join('');
-
-      // expand toggle
-      box.querySelectorAll('.expand').forEach(el=>{
-        el.onclick = ()=> el.classList.toggle('open');
-      });
-
-      // Edit
-      box.querySelectorAll('.annc-btn.edit').forEach(btn=>{
-        btn.onclick = async (e)=>{
-          const item = e.target.closest('.item');
-          const id = item.dataset.id;
-          const oldTitle = item.querySelector('h4').textContent;
-          const oldBody  = item.querySelector('.expand-body')?.textContent || '';
-          const title = prompt('Edit title:', oldTitle); if(title===null) return;
-          const body  = prompt('Edit body (optional):', oldBody);
-          const { error } = await sb.from('announcements').update({ title, body }).eq('id', id);
-          if(error){ alert('Edit failed: ' + error.message); return; }
-          await loadAnnouncements();
-        };
-      });
-
-      // Delete
-      box.querySelectorAll('.annc-btn.delete').forEach(btn=>{
-        btn.onclick = async (e)=>{
-          const item = e.target.closest('.item');
-          const id = item.dataset.id;
-          if(!confirm('Delete this announcement?')) return;
-          const { error } = await sb.from('announcements').delete().eq('id', id);
-          if(error){ alert('Delete failed: ' + error.message); return; }
-          await loadAnnouncements();
-        };
-      });
-
-    }catch(e){
-      box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
-      console.warn('annc:', e.message);
-    }
-  }
-  await loadAnnouncements();
-
-  /* ---- Post announcement (elevated only) ---- */
-  if (postLink) {
-    postLink.onclick = async (ev) => {
-      ev.preventDefault();
-      const title = prompt('Announcement title?'); if (!title) return;
-      const body  = prompt('Body (optional):') || null;
-      try {
-        const { error } = await sb
-          .from('announcements')
-          .insert({ title, body, posted_by: session.user.id });
-        if (error) throw error;
-        await loadAnnouncements();
-      } catch (e) {
-        alert('Post failed: ' + e.message);
-      }
-    };
-  }
-
-})();
-</script>
 </body>
 </html>
