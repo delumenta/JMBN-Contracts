@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN – Progression</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+
+<style>
+:root{
+  --bg:#000; --line:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+  --fs:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  padding:14px; font-family:'Play',system-ui,sans-serif; font-size:var(--fs); color:var(--text);
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+}
+
+/* Header (replaced by header.html if available) */
+.brand{display:flex;align-items:center;gap:10px;padding-bottom:8px;margin:0 0 10px;border-bottom:1px solid var(--line)}
+.brand-logo{
+  width:44px;height:44px;background:#000;border:none;object-fit:contain;
+  box-shadow:inset 0 0 0 9999px #000; /* hard mask to kill any baked rim */
+}
+.brand h1{margin:0;color:var(--accent);font-weight:700;font-size:clamp(18px,2.2vw,22px)}
+
+/* Page shell + simple grid (no cards) */
+.shell{max-width:1180px;margin:0 auto}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:18px}
+@media(max-width:1020px){.grid{grid-template-columns:1fr}}
+
+/* Left column blocks */
+.block{padding:8px 0;border-bottom:1px solid rgba(214,180,76,.28)}
+.block:last-child{border-bottom:none}
+.block-title{margin:0 0 8px;color:var(--accent);font-weight:700;font-size:16px}
+
+/* Rows (clean, line-separated) */
+.row{
+  display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  padding:8px 2px;border-bottom:1px solid rgba(214,180,76,.22)
+}
+.row:last-child{border-bottom:none}
+.row:hover{background:rgba(214,180,76,.06)}
+.kv{display:flex;flex-direction:column}
+.k{color:var(--muted);font-size:12px}
+.v{font-weight:800}
+
+/* Rank glyphs with black mask */
+.rankImg{
+  width:46px;height:46px;border-radius:10px;background:#000;object-fit:contain;display:block;
+  box-shadow:inset 0 0 0 9999px #000; /* masks any baked gold frame in PNG */
+}
+
+/* Pills and button */
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border:1px solid var(--line);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);font-size:12px;font-weight:800
+}
+.btn{cursor:pointer;transition:filter .18s ease,transform .06s ease}
+.btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+
+/* Requirement bars (no boxes) */
+.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;padding:8px 2px;border-bottom:1px solid rgba(214,180,76,.22)}
+.pb:last-child{border-bottom:none}
+.pb .label{color:var(--muted);font-size:12px}
+.track{height:12px;border-radius:999px;background:#0a0a0a;box-shadow:inset 0 0 0 1px rgba(214,180,76,.3);overflow:hidden}
+.fill{height:100%;width:0%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
+.val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+
+/* Right column sections */
+.section{position:relative;padding-top:4px}
+.ribbon{
+  position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:8px 0;
+  background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.76));border-bottom:1px solid var(--line);
+  backdrop-filter:saturate(1.15) blur(2px)
+}
+.ribbon h2{margin:0;color:var(--accent);font-size:18px}
+.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.5),transparent);border-radius:999px;margin:14px 0}
+
+/* History list */
+.history{margin-top:8px}
+.hitem{padding:10px 2px;border-bottom:1px dashed rgba(214,180,76,.28)}
+.hitem:last-child{border-bottom:none}
+.when{color:var(--muted);font-size:12px}
+.arrow{color:var(--accent)}
+
+/* Certifications grid (no inner cards) */
+.certGrid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;margin-top:10px
+}
+.cert{
+  background:transparent;border-radius:18px;text-align:center;
+  transition:transform .15s ease, box-shadow .2s ease, filter .2s ease; padding:8px 6px 12px;
+}
+.thumb{
+  width:220px;max-width:100%;height:220px;max-height:min(220px,55vw);
+  margin:0 auto 8px;display:flex;align-items:center;justify-content:center;border-radius:14px;
+  background:#0b0b0b;box-shadow:inset 0 0 0 1px rgba(214,180,76,.25)
+}
+.thumb img{max-width:86%;max-height:86%;display:block}
+.cert .title{font-weight:700;margin-top:6px}
+.cert .code{font-size:12px;color:var(--muted)}
+.cert.owned:hover{transform:translateY(-2px);box-shadow:0 0 14px rgba(214,180,76,.25)}
+.cert.dim{opacity:.55;filter:grayscale(.65) contrast(.9)}
+.cert.dim:hover{opacity:.75;filter:grayscale(.35) contrast(1)}
+
+.small{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- Header mount -->
+<div id="header-container" class="brand shell">
+  <img class="brand-logo" alt="JMBN"
+       src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+  <h1>Rank Progression</h1>
+</div>
+<script>
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    if (res.ok) {
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a=>{
+          const href=(a.getAttribute('href')||'').toLowerCase();
+          if(href===here || (here==='' && href==='index.html')) a.classList.add('active');
+        });
+      });
+    }
+  } catch {}
+})();
+</script>
+
+<div class="shell">
+  <div class="grid">
+    <!-- LEFT: Overview + Requirements -->
+    <aside>
+      <div class="block">
+        <div class="block-title">Overview</div>
+
+        <div class="row">
+          <img id="curImg" class="rankImg" alt="Current Rank">
+          <div class="kv">
+            <div class="k">Current Rank</div>
+            <div class="v" id="curRank">—</div>
+          </div>
+          <span class="pill" id="curPg">PG: —</span>
+        </div>
+
+        <div class="row">
+          <img id="nextImg" class="rankImg" alt="Next Rank">
+          <div class="kv">
+            <div class="k">Next Rank</div>
+            <div class="v" id="nextName">—</div>
+          </div>
+          <span class="pill" id="nextPg">PG: —</span>
+        </div>
+
+        <div class="row" style="justify-content:flex-end">
+          <button class="pill btn" id="btnPromote" disabled title="Becomes available when all targets are met">Request Promotion</button>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Requirements</div>
+
+        <div class="pb">
+          <div class="label">Missions</div>
+          <div class="track"><div id="pbMissions" class="fill"></div></div>
+          <div class="val" id="valMissions">0 / 0</div>
+        </div>
+
+        <div class="pb">
+          <div class="label">Hours</div>
+          <div class="track"><div id="pbHours" class="fill"></div></div>
+          <div class="val" id="valHours">0 / 0</div>
+        </div>
+
+        <div class="pb">
+          <div class="label">Certifications</div>
+          <div class="track"><div id="pbCerts" class="fill"></div></div>
+          <div class="val" id="valCerts">0 / 0</div>
+        </div>
+
+        <div class="small" id="note" style="margin-top:6px">Promotion is available when all targets are met.</div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: History + Certifications -->
+    <main>
+      <section class="section">
+        <div class="ribbon"><h2>History</h2></div>
+        <div id="history" class="history">
+          <div class="small">Loading…</div>
+        </div>
+      </section>
+
+      <div class="sep"></div>
+
+      <section class="section">
+        <div class="ribbon"><h2>Certifications</h2></div>
+        <div id="certGrid" class="certGrid">—</div>
+        <div class="small" style="margin-top:8px">Dim badges are not yet earned.</div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Supabase -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+let session=null, sb=null, me=null;
+
+/* Progress bar helper */
+function setFill(sel, pct){
+  const el = $(sel);
+  const x  = Math.max(0, Math.min(1, Number(pct)||0));
+  if(el) el.style.width = (x*100) + '%';
+}
+
+/* Rank image from bucket */
+async function fetchRankImage(code){
+  if(!code) return '';
+  try{
+    return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl || '';
+  }catch{ return ''; }
+}
+
+/* Load progression + next rank + bars */
+async function loadProgress(){
+  const { data: prog } = await sb
+    .from('v_user_rank_progress')
+    .select('*')
+    .eq('user_id', me)
+    .maybeSingle();
+
+  $('#curRank').textContent   = prog?.current_name || '(unranked)';
+  $('#curPg').textContent     = `PG: ${prog?.current_paygrade || '—'}`;
+  $('#nextName').textContent  = prog?.next_name || '—';
+  $('#nextPg').textContent    = `PG: ${prog?.next_paygrade || '—'}`;
+
+  const curImg = await fetchRankImage(prog?.current_code);
+  const nxtImg = await fetchRankImage(prog?.next_code);
+  if (curImg){ $('#curImg').src = curImg; $('#curImg').style.visibility='visible'; } else { $('#curImg').style.visibility='hidden'; }
+  if (nxtImg){ $('#nextImg').src = nxtImg; $('#nextImg').style.visibility='visible'; } else { $('#nextImg').style.visibility='hidden'; }
+
+  const { data: up } = await sb
+    .from('v_user_progress')
+    .select('*')
+    .eq('user_id', me)
+    .maybeSingle();
+
+  const m = Number(up?.missions_attended || 0);
+  const h = Number(up?.hours_total || 0);
+  const c = Number(up?.certifications_total || 0);
+
+  const mt = Number(prog?.missions_target || 0);
+  const ht = Number(prog?.hours_target || 0);
+  const ct = Number(prog?.certification_target || 0);
+
+  $('#valMissions').textContent = `${m} / ${mt}`;
+  $('#valHours').textContent    = `${h} / ${ht}`;
+  $('#valCerts').textContent    = `${c} / ${ct}`;
+
+  setFill('#pbMissions', mt ? Math.min(1, m/mt) : 1);
+  setFill('#pbHours',    ht ? Math.min(1, h/ht) : 1);
+  setFill('#pbCerts',    ct ? Math.min(1, c/ct) : 1);
+
+  const allMet = (!!prog?.next_code) && (!mt || m>=mt) && (!ht || h>=ht) && (!ct || c>=ct);
+  $('#btnPromote').disabled = !allMet;
+  $('#note').textContent = !prog?.next_code
+    ? 'You are at the highest rank or next rank is not configured.'
+    : allMet ? 'All requirements met. You can request promotion.'
+             : 'Promotion is available when all targets are met.';
+}
+
+/* Rank history */
+async function loadHistory(){
+  const { data, error } = await sb
+    .from('rank_changes')
+    .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+    .eq('user_id', me)
+    .order('created_at', { ascending:false })
+    .limit(12);
+
+  const host = $('#history');
+  if(error){ host.innerHTML = '<div class="small">Failed to load history.</div>'; return; }
+  if(!data?.length){ host.innerHTML = '<div class="small">No changes yet.</div>'; return; }
+
+  host.innerHTML = data.map(r=>{
+    const when = new Date(r.created_at).toLocaleString();
+    const who  = r.changed_by?.slice(0,8) || 'system';
+    const from = r.from_rank_code || '—';
+    const to   = r.to_rank_code || '—';
+    const why  = r.reason ? ` — <span class="small">${r.reason}</span>` : '';
+    return `<div class="hitem">
+              <span class="when">${when}</span> •
+              ${from} <span class="arrow">→</span> <b style="color:var(--accent)">${to}</b> • by ${who}${why}
+            </div>`;
+  }).join('');
+}
+
+/* Certifications (grid, no inner cards) */
+async function loadCerts(){
+  const { data, error } = await sb
+    .from('v_user_certifications')
+    .select('certification_code,name,image_url,owned,sort_order,user_id')
+    .or(`user_id.eq.${me},user_id.is.null`)
+    .order('sort_order', { ascending:true });
+
+  const grid = $('#certGrid');
+  if (error){ grid.textContent = 'Failed to load certifications.'; return; }
+  if (!data?.length){ grid.textContent = '—'; return; }
+
+  grid.innerHTML = data.map(row=>{
+    const owned = !!row.owned;
+    const cls   = owned ? 'cert owned' : 'cert dim';
+    const img   = row.image_url || '';
+    const code  = row.certification_code || '';
+    const name  = row.name || code || 'Certification';
+    return `
+      <div class="${cls}" title="${owned?'Obtained':'Not earned'}" tabindex="0">
+        <div class="thumb">${img?`<img src="${img}" alt="${name}">`:''}</div>
+        <div class="title">${name}</div>
+        <div class="code">${code}</div>
+      </div>`;
+  }).join('');
+}
+
+/* Promote */
+async function promote(){
+  const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+  if(error){ alert('Promotion failed: ' + error.message); return; }
+  if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+  alert('Promoted to ' + (data.to || 'next rank') + '!');
+  await loadProgress(); await loadHistory();
+}
+
+/* Boot */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
+
+  $('#btnPromote').onclick = promote;
+
+  await loadProgress();
+  await loadHistory();
+  await loadCerts();
+});
+</script>
+</body>
+</html>
