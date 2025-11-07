@@ -1,215 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JMBN Training & Certifications</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JMBN – Badge Case</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
 
-  <style>
-    :root {
-      --bg: #000;
-      --panel: #0b0b0b;
-      --card: #111;
-      --border: #d6b44c;
-      --accent: #f2d675;
-      --text: #f7f1d0;
-      --muted: #b39a5d;
-    }
-    body {
-      margin: 0; background: var(--bg); color: var(--text);
-      font-family: 'Play', sans-serif; min-height: 100vh;
-    }
-    .wrap { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-    h1 { text-align: center; margin-bottom: 1rem; color: var(--accent); }
+<style>
+:root{
+  --bg:#000;
+  --panel:#0a0a0a;
+  --border:#d6b44c;
+  --accent:#f2d675;
+  --text:#f7f1d0;
+  --muted:#c9b06a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 600px at 20% -10%,rgba(242,214,117,.06),transparent 60%),
+    radial-gradient(900px 700px at 120% 110%,rgba(214,180,76,.05),transparent 60%),
+    #000;
+  font-family:'Play',sans-serif;
+  color:var(--text);
+  min-height:100vh;
+}
+h1{text-align:center;margin:40px 0 20px;font-size:1.8em;color:var(--accent);}
 
-    .cert-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;
-      box-shadow: 0 0 12px rgba(214,180,76,0.15);
-    }
-    .cert-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-    .cert-header img {
-      width: 64px; height: 64px; object-fit: contain;
-    }
-    .cert-header h2 { margin: 0; color: var(--accent); }
-    .progress {
-      height: 8px; background: #222; border-radius: 5px;
-      overflow: hidden; margin-top: 0.5rem;
-    }
-    .progress-bar {
-      height: 8px; background: var(--border); transition: width 0.5s ease;
-    }
-    ul.events { list-style: none; margin: 0; padding: 0; }
-    ul.events li {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    ul.events li span.done { color: var(--accent); }
-    ul.events li span.pending { color: var(--muted); }
+.badge-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px;
+  padding:0 20px 80px;
+  max-width:1200px;
+  margin:0 auto;
+}
 
-    /* Admin panel */
-    #adminPanel {
-      margin-top: 2rem; background: var(--panel); padding: 1.5rem;
-      border: 1px solid var(--border); border-radius: 10px;
-    }
-    #adminPanel h3 { color: var(--accent); margin-top: 0; }
-    select, button, input {
-      font-family: 'Play', sans-serif; background: #111; color: var(--text);
-      border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
-    }
-    button:hover { background: var(--border); color: #000; cursor: pointer; }
-    .training-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
-  </style>
+/* --- badge cards --- */
+.badge{
+  position:relative;
+  background:radial-gradient(circle at 50% 40%,#111 0%,#000 70%);
+  border:1px solid rgba(214,180,76,.25);
+  border-radius:16px;
+  overflow:hidden;
+  padding:16px 8px;
+  text-align:center;
+  transition:transform .25s ease, box-shadow .3s ease, filter .3s ease;
+}
+.badge img{
+  width:120px;height:120px;object-fit:contain;margin:10px auto;
+  filter:drop-shadow(0 0 4px rgba(214,180,76,.2));
+}
+.badge .title{font-weight:700;margin-top:6px;}
+.badge .code{font-size:12px;color:var(--muted);}
+
+/* Owned vs locked */
+.badge.locked{opacity:.55;filter:grayscale(.8) contrast(.8);}
+.badge.owned{
+  border-color:var(--border);
+  box-shadow:0 0 12px rgba(214,180,76,.25);
+}
+.badge.owned:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 0 22px rgba(242,214,117,.35);
+}
+
+/* Subtle pulse for owned */
+@keyframes pulse{
+  0%{box-shadow:0 0 10px rgba(242,214,117,.15);}
+  50%{box-shadow:0 0 18px rgba(242,214,117,.35);}
+  100%{box-shadow:0 0 10px rgba(242,214,117,.15);}
+}
+.badge.owned{animation:pulse 4s ease-in-out infinite;}
+
+/* --- hover detail overlay --- */
+.badge .overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.85);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  opacity:0;transition:opacity .25s ease;
+  padding:10px;font-size:13px;line-height:1.3;
+}
+.badge:hover .overlay{opacity:1;}
+.overlay .bar{
+  height:8px;width:100%;background:#111;border:1px solid var(--border);
+  border-radius:999px;margin:8px 0;overflow:hidden;
+}
+.overlay .fill{
+  height:100%;background:var(--border);
+}
+
+/* admin modal */
+#adminPanel{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.8);
+  backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+}
+.modal{
+  background:#111;border:1px solid var(--border);
+  border-radius:12px;padding:20px;width:320px;
+}
+.modal h3{color:var(--accent);margin-top:0;}
+button,select{
+  background:#0c0c0c;color:var(--text);
+  border:1px solid var(--border);border-radius:6px;
+  padding:6px 10px;font-family:'Play';cursor:pointer;
+}
+button:hover{background:var(--border);color:#000;}
+</style>
 </head>
-
 <body>
-  <!-- Shared header -->
-  <div id="header"></div>
+<div id="header-container"></div>
+<script>
+(async()=>{const res=await fetch('header.html',{cache:'no-cache'});const html=await res.text();document.getElementById('header-container').outerHTML=html;})();
+</script>
 
-  <div class="wrap">
-    <h1>Training & Certifications</h1>
-    <div id="certContainer"></div>
+<h1>Badge Case</h1>
+<div id="badgeGrid" class="badge-grid">Loading…</div>
 
-    <!-- Admin section -->
-    <div id="adminPanel" style="display:none;">
-      <h3>Admin Controls</h3>
-      <div>
-        <label for="userSelect">Select User:</label>
-        <select id="userSelect"></select>
-      </div>
-      <div id="userTrainingList"></div>
-    </div>
+<!-- admin modal -->
+<div id="adminPanel">
+  <div class="modal">
+    <h3>Modify Training</h3>
+    <label>User:</label>
+    <select id="userSelect"></select>
+    <div id="eventList" style="margin-top:10px;font-size:13px;"></div>
+    <button id="closeModal" style="margin-top:10px;width:100%">Close</button>
   </div>
+</div>
 
-  <!-- Inject shared auth logic -->
-  <script type="module" src="js/auth.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+let sb,me,isElevated=false;
+const $=s=>document.querySelector(s);
+document.addEventListener('DOMContentLoaded',async()=>{
+  const session=await requireAuth();if(!session)return;
+  sb=getSupabase();me=session.user.id;
+  const {data:e}=await sb.rpc('is_elevated',{u:me});isElevated=e===true;
+  loadBadges();
+});
 
-  <!-- Page logic -->
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import { SUPABASE_URL, SUPABASE_ANON_KEY, injectHeader, getUserAndRole } from './js/auth.js';
+async function loadBadges(){
+  const {data:certs}=await sb.from('certifications').select('certification_code,name,image_url,sort_order').order('sort_order');
+  const {data:owned}=await sb.from('user_certifications').select('certification_code').eq('user_id',me);
+  const ownedSet=new Set(owned.map(c=>c.certification_code));
+  const grid=$('#badgeGrid');grid.innerHTML='';
+  for(const cert of certs){
+    const owned=ownedSet.has(cert.certification_code);
+    const div=document.createElement('div');
+    div.className='badge '+(owned?'owned':'locked');
+    div.innerHTML=`
+      <img src="${cert.image_url||''}" alt="${cert.name}">
+      <div class="title">${cert.name}</div>
+      <div class="code">${cert.certification_code}</div>
+      <div class="overlay">
+        <div>${owned?'✅ Earned':'⏳ In Progress'}</div>
+        <div class="bar"><div class="fill" style="width:${await certProgress(cert.certification_code)}%"></div></div>
+        <div style="color:var(--muted);font-size:11px">${await certSummary(cert.certification_code)}</div>
+        ${isElevated?'<button style="margin-top:8px;font-size:12px">Manage</button>':''}
+      </div>`;
+    if(isElevated) div.querySelector('button').onclick=()=>openModal(cert.certification_code,cert.name);
+    grid.appendChild(div);
+  }
+}
 
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+async function certProgress(code){
+  const {data:reqs}=await sb.from('certification_requirements').select('event_code').eq('certification_code',code);
+  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',me);
+  const doneSet=new Set(done.map(d=>d.event_code));
+  return Math.round((reqs.filter(r=>doneSet.has(r.event_code)).length/reqs.length)*100)||0;
+}
+async function certSummary(code){
+  const {data:reqs}=await sb.from('certification_requirements').select('event_code').eq('certification_code',code);
+  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',me);
+  const doneSet=new Set(done.map(d=>d.event_code));
+  return `${reqs.filter(r=>doneSet.has(r.event_code)).length}/${reqs.length} events completed`;
+}
 
-    // Inject header (shared layout)
-    await injectHeader();
-
-    // Get logged in user + elevation status
-    const { user, isElevated } = await getUserAndRole(sb);
-    if (!user) window.location.href = 'index.html';
-
-    const certDiv = document.getElementById('certContainer');
-    const adminPanel = document.getElementById('adminPanel');
-    const userSelect = document.getElementById('userSelect');
-    const userTrainingList = document.getElementById('userTrainingList');
-
-    if (isElevated) {
-      adminPanel.style.display = 'block';
-      loadUsers();
-    }
-
-    await loadCerts(user.id);
-
-    // -------------------------------------
-    // MEMBER: show cert progress
-    // -------------------------------------
-    async function loadCerts(uid) {
-      const { data: certs } = await sb.from('certifications')
-        .select('certification_code, name, image_url')
-        .order('sort_order', { ascending: true });
-
-      const { data: reqs } = await sb.from('certification_requirements')
-        .select('certification_code, sort_order, event_code, training_events(title)')
-        .order('sort_order', { ascending: true });
-
-      const { data: done } = await sb.from('user_training_events')
-        .select('event_code')
-        .eq('user_id', uid);
-
-      const doneSet = new Set(done.map(x => x.event_code));
-      certDiv.innerHTML = '';
-
-      for (const cert of certs) {
-        const events = reqs.filter(r => r.certification_code === cert.certification_code);
-        const total = events.length;
-        const completed = events.filter(e => doneSet.has(e.event_code)).length;
-        const pct = Math.round((completed / total) * 100);
-
-        const listHTML = events.map(ev => `
-          <li>
-            <span>${ev.training_events.title}</span>
-            <span class="${doneSet.has(ev.event_code) ? 'done' : 'pending'}">
-              ${doneSet.has(ev.event_code) ? '✅ Completed' : '⏳ Pending'}
-            </span>
-          </li>`).join('');
-
-        certDiv.innerHTML += `
-          <div class="cert-card">
-            <div class="cert-header">
-              <div>
-                <h2>${cert.name}</h2>
-                <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
-              </div>
-              ${cert.image_url ? `<img src="${cert.image_url}" alt="${cert.name}">` : ''}
-            </div>
-            <ul class="events">${listHTML}</ul>
-          </div>`;
-      }
-    }
-
-    // -------------------------------------
-    // ADMIN PANEL
-    // -------------------------------------
-    async function loadUsers() {
-      const { data: users } = await sb.from('profiles').select('id, handle').order('handle');
-      userSelect.innerHTML = users.map(u => `<option value="${u.id}">${u.handle}</option>`).join('');
-      userSelect.addEventListener('change', e => loadUserTraining(e.target.value));
-      if (users.length) loadUserTraining(users[0].id);
-    }
-
-    async function loadUserTraining(uid) {
-      const { data: records } = await sb.from('user_training_events')
-        .select('event_code, completed_at')
-        .eq('user_id', uid)
-        .order('completed_at', { ascending: true });
-      const { data: allEvents } = await sb.from('training_events')
-        .select('event_code, title')
-        .order('sort_order');
-      const completedSet = new Set(records.map(r => r.event_code));
-      userTrainingList.innerHTML = `
-        <h4>Training Events for ${userSelect.options[userSelect.selectedIndex].text}</h4>
-        ${allEvents.map(ev => `
-          <div class="training-row">
-            <span>${ev.title}</span>
-            ${completedSet.has(ev.event_code)
-              ? `<button data-remove="${ev.event_code}">Remove</button>`
-              : `<button data-add="${ev.event_code}">Mark Complete</button>`}
-          </div>`).join('')}
-      `;
-
-      // Add/remove logic
-      userTrainingList.querySelectorAll('button[data-add]').forEach(btn =>
-        btn.onclick = async () => {
-          await sb.from('user_training_events').insert({
-            user_id: uid, event_code: btn.dataset.add, completed_at: new Date().toISOString()
-          });
-          loadUserTraining(uid);
-        });
-      userTrainingList.querySelectorAll('button[data-remove]').forEach(btn =>
-        btn.onclick = async () => {
-          await sb.from('user_training_events')
-            .delete()
-            .eq('user_id', uid)
-            .eq('event_code', btn.dataset.remove);
-          loadUserTraining(uid);
-        });
-    }
-  </script>
+/* --- admin modal functions --- */
+async function openModal(code,name){
+  $('#adminPanel').style.display='flex';
+  const {data:users}=await sb.from('profiles').select('id,handle').order('handle');
+  $('#userSelect').innerHTML=users.map(u=>`<option value="${u.id}">${u.handle}</option>`).join('');
+  $('#userSelect').onchange=()=>loadEvents($('#userSelect').value,code);
+  if(users.length) loadEvents(users[0].id,code);
+  $('#closeModal').onclick=()=>$('#adminPanel').style.display='none';
+}
+async function loadEvents(uid,code){
+  const {data:reqs}=await sb.from('certification_requirements').select('event_code,training_events(title)').eq('certification_code',code);
+  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',uid);
+  const doneSet=new Set(done.map(d=>d.event_code));
+  $('#eventList').innerHTML=reqs.map(r=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;">
+      <span>${r.training_events.title}</span>
+      ${doneSet.has(r.event_code)
+        ? `<button data-remove="${r.event_code}">Remove</button>`
+        : `<button data-add="${r.event_code}">Grant</button>`}
+    </div>`).join('');
+  $('#eventList').querySelectorAll('button[data-add]').forEach(b=>{
+    b.onclick=async()=>{await sb.from('user_training_events').insert({user_id:uid,event_code:b.dataset.add,completed_at:new Date().toISOString()});loadEvents(uid,code);}
+  });
+  $('#eventList').querySelectorAll('button[data-remove]').forEach(b=>{
+    b.onclick=async()=>{await sb.from('user_training_events').delete().eq('user_id',uid).eq('event_code',b.dataset.remove);loadEvents(uid,code);}
+  });
+}
+</script>
 </body>
 </html>
