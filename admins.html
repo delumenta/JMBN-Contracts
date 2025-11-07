@@ -7,20 +7,17 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
-
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --card:#111;
-  --row:#0a0a0a;
+  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
   --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b; --ok:#5cd47c;
   --fs:14px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
-
-/* Brand fallback when header.html isn’t loaded yet */
+/* Fallback brand while header mounts */
 .brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand img{width:44px;height:44px;object-fit:contain}
 .brand h1{margin:0;color:var(--accent);font-size:22px}
 
 .wrap{max-width:1200px;margin:0 auto;padding:0 16px 40px}
@@ -32,21 +29,18 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .panel .hd h3{margin:0;color:var(--accent);font-size:16px}
 .panel .body{padding:12px}
 
-input[type="search"], select{
-  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;
-  padding:9px;color:var(--text);font-family:'Play'
+input[type="search"],select{
+  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'
 }
 button{
   padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
   color:var(--accent);cursor:pointer;font-family:'Play'
 }
 button:hover{background:var(--accent);color:#000}
-.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px;color:var(--accent);background:#121212}
+.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
 .btn-danger{border-color:var(--bad);color:var(--bad)}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
-.small{font-size:12px;color:var(--muted)}
 
-/* Member list */
 .mlist{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto}
 .mrow{
   display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
@@ -54,9 +48,8 @@ button:hover{background:var(--accent);color:#000}
 }
 .mrow:hover{background:#111;border-color:rgba(214,180,76,.35)}
 .mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
-.mavatar{width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:#111;display:grid;place-items:center}
+.mavatar{width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:#111;display:grid;place-items:center;overflow:hidden}
 
-/* KPIs + progress bars */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .kpi{background:#0c0c0c;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
 .kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
@@ -67,31 +60,17 @@ button:hover{background:var(--accent);color:#000}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certs grid (smaller art) */
-.certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:12px}
-.cert .thumb{
-  height:160px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#101010;
-  display:grid;place-items:center;
-  margin-bottom:10px;
-  padding:12px;
-}
-.cert .thumb img{
-  width:72%;
-  height:auto;
-  max-height:100%;
-  object-fit:contain;
-}
+.certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:10px}
+.cert .thumb{height:120px;border:1px solid var(--border);border-radius:10px;background:#101010;display:grid;place-items:center;margin-bottom:8px}
+.cert .thumb img{max-width:80%;max-height:80%}
 .cert .title{font-weight:700}
 .cert.dim{opacity:.6;filter:grayscale(.5)}
+.small{font-size:12px;color:var(--muted)}
 
-/* Timeline */
 .timeline{position:relative;margin-top:10px;padding-left:24px}
 .timeline::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(var(--border),transparent)}
-.titem{position:relative;padding:10px 8px 10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
+.titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
 .tdot{position:absolute;left:6px;top:16px;width:10px;height:10px;border-radius:50%;background:#222;border:2px solid var(--border)}
 .titem.done .tdot{background:var(--border)}
 .tlabel{font-weight:700}
@@ -99,18 +78,17 @@ button:hover{background:var(--accent);color:#000}
 </head>
 <body>
 
-<!-- Shared header mount -->
+<!-- Header mount -->
 <div id="header-container">
-  <div class="brand"><img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN"><h1>JMBN Admin Console</h1></div>
+  <div class="brand"><img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt=""><h1>JMBN Admin Console</h1></div>
 </div>
 <script>
 (async()=>{try{
-  const r=await fetch('header.html',{cache:'no-cache'});if(r.ok){
-    const h=await r.text();document.getElementById('header-container').outerHTML=h;
+  const r=await fetch('header.html',{cache:'no-cache'});
+  if(r.ok){const h=await r.text();document.getElementById('header-container').outerHTML=h;
     requestAnimationFrame(()=>{document.querySelectorAll('.nav-btn').forEach(a=>{
       const here=(location.pathname.split('/').pop()||'admin.html').toLowerCase();
-      const href=(a.getAttribute('href')||'').toLowerCase();
-      if(href===here) a.classList.add('active');
+      if((a.getAttribute('href')||'').toLowerCase()===here) a.classList.add('active');
     });});
   }
 }catch{}})();
@@ -119,7 +97,7 @@ button:hover{background:var(--accent);color:#000}
 <div class="wrap">
   <div class="grid">
 
-    <!-- LEFT: Members -->
+    <!-- LEFT -->
     <div class="panel">
       <div class="hd"><h3>Members</h3></div>
       <div class="body">
@@ -128,31 +106,23 @@ button:hover{background:var(--accent);color:#000}
       </div>
     </div>
 
-    <!-- RIGHT: Inspector -->
+    <!-- RIGHT -->
     <div class="panel">
       <div class="hd">
         <h3>Inspector</h3>
         <div style="display:flex;gap:8px;align-items:center">
-          <!-- Track selector + action -->
           <select id="rankTrack" title="Rank Track">
             <option value="">— Track —</option>
-            <option>Officer</option>
-            <option>Enlisted</option>
-            <option>Warrant</option>
+            <option value="Officer">Officer</option>
+            <option value="Enlisted">Enlisted</option>
+            <option value="Warrant">Warrant</option>
           </select>
-          <button id="btnForce" class="pill" title="Force set user's rank track">Force Set Track</button>
-
-          <!-- Exact rank code selector + action -->
-          <select id="rankCode" title="Set exact rank (code)" style="min-width:260px">
-            <option value="">— Select Rank —</option>
-          </select>
-          <button id="btnSetRank" class="pill" title="Force set the exact rank code">Set Rank</button>
-
-          <button id="btnPromote" class="pill" title="Run server-side promotion check">Run Promotion Check</button>
+          <button id="btnForce" class="pill" title="Force set user's rank track">Force Set Rank</button>
+          <button id="btnPromote" class="pill" disabled>Run Promotion Check</button>
         </div>
       </div>
       <div class="body" id="inspector">
-        <div class="small">Select a member on the left to view and edit their progression and certifications.</div>
+        <div class="small">Select a member to view and edit their progression & certifications.</div>
       </div>
     </div>
 
@@ -164,73 +134,46 @@ button:hover{background:var(--accent);color:#000}
 <script src="js/auth.js"></script>
 <script>
 const $ = s => document.querySelector(s);
-const esc = (s='') => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; };
+const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+function setFill(el,p){ const x=Math.max(0,Math.min(1,Number(p)||0)); el.style.width=(x*100)+'%'; }
 
-let sb, me, isElev=false, MEMBERS=[], SELECTED=null, ALL_RANKS=[];
+let sb, me, isElev=false, MEMBERS=[], SELECTED=null;
 
-/* Helpers */
-function setFill(el,pct){ const x=Math.max(0,Math.min(1,Number(pct)||0)); el.style.width=(x*100)+'%'; }
-function byHandle(a,b){ return (a.handle||'').localeCompare(b.handle||''); }
-function fmtDate(iso){ return iso? new Date(iso).toLocaleString() : ''; }
-
-/* Boot (auth + elevation) */
+/* Boot */
 document.addEventListener('DOMContentLoaded', async ()=>{
   const session = await requireAuth(); if(!session) return;
   sb = getSupabase(); me = session.user.id;
 
-  // elevation
-  try{
-    const { data: elev } = await sb.rpc('is_elevated', { u: me });
-    isElev = elev === true;
-  }catch{ isElev = false; }
-  if(!isElev){
-    $('#inspector').innerHTML = '<div class="small" style="color:#ff6b6b">You are not elevated. Access denied.</div>';
-    return;
-  }
+  // must be elevated
+  try { const { data } = await sb.rpc('is_elevated',{ u: me }); isElev = data===true; } catch {}
+  if(!isElev){ $('#inspector').innerHTML='<div class="small" style="color:#ff6b6b">Access denied — not elevated.</div>'; return; }
 
-  await Promise.all([loadMembers(), fetchRanks()]);
-
-  // search
+  await loadMembers();
   $('#mSearch').oninput = renderMembers;
 
-  // filter rank codes by track
-  $('#rankTrack').onchange = populateRankCode;
+  $('#btnPromote').onclick = async ()=>{
+    if(!SELECTED) return;
+    const { data, error } = await sb.rpc('request_promotion',{ p_user: SELECTED.user_id });
+    if(error){ alert('Promotion RPC failed: '+error.message); return; }
+    alert(data?.message || (data?.ok?'Promotion OK':'Not eligible yet'));
+    if(SELECTED) await openMember(SELECTED.user_id);
+  };
 
-  // force set track (RPC: set_rank_track(p_user uuid, p_track text))
+  // Force set rank track — NOTE CORRECT ARG NAMES
   $('#btnForce').onclick = async ()=>{
     if(!SELECTED) return alert('Select a member first.');
     const track = $('#rankTrack').value;
-    if(!track) return alert('Choose a track first.');
-    if(!confirm(`Force set track to ${track}?`)) return;
+    if(!track) return alert('Choose a track.');
+    if(!confirm(`Force set ${SELECTED.handle || SELECTED.display_name || SELECTED.user_id.slice(0,8)} to track: ${track}?`)) return;
     const { error } = await sb.rpc('set_rank_track', { p_user: SELECTED.user_id, p_track: track });
-    if(error){ alert('Force set track failed: ' + error.message); return; }
-    alert('Track updated ✓');
+    if(error){ alert('Force set failed: '+error.message); return; }
+    alert('Rank track updated ✓');
     await openMember(SELECTED.user_id);
-  };
-
-  // force set exact rank (RPC: admin_set_rank(p_user uuid, p_code text))
-  $('#btnSetRank').onclick = async ()=>{
-    if(!SELECTED) return alert('Select a member first.');
-    const code = $('#rankCode').value;
-    if(!code) return alert('Choose a rank code.');
-    if(!confirm(`Force set ${SELECTED.handle || SELECTED.display_name || SELECTED.user_id.slice(0,8)} to rank ${code}?`)) return;
-    const { error } = await sb.rpc('admin_set_rank', { p_user: SELECTED.user_id, p_code: code });
-    if(error){ alert('Set rank failed: ' + error.message); return; }
-    alert('Rank updated ✓');
-    await Promise.all([openMember(SELECTED.user_id), loadMembers()]);
-  };
-
-  // promotion check
-  $('#btnPromote').onclick = async ()=>{
-    if(!SELECTED) return alert('Select a member first.');
-    const { data, error } = await sb.rpc('request_promotion', { p_user: SELECTED.user_id });
-    if(error){ alert('Promotion RPC failed: '+error.message); return; }
-    alert(data?.message || (data?.ok ? 'Promotion OK' : 'Not eligible yet'));
-    await openMember(SELECTED.user_id);
+    await loadMembers();
   };
 });
 
-/* ---------- Members list ---------- */
+/* Load members */
 async function loadMembers(){
   const { data, error } = await sb
     .from('v_profiles_detailed')
@@ -241,55 +184,57 @@ async function loadMembers(){
       current_rank_category,
       current_rank_name,
       current_rank_code,
-      current_rank_image_url,
-      missions_attended
+      current_rank_image_url
     `)
-    .order('current_rank_category',{ascending:true})
-    .order('handle',{ascending:true});
+    .order('handle');
 
-  if(error){ $('#mList').textContent = 'Failed to load members: ' + error.message; return; }
+  if(error){ $('#mList').textContent='Failed to load members: '+error.message; return; }
   MEMBERS = data || [];
   renderMembers();
 }
 
 function renderMembers(){
-  const q = ($('#mSearch').value||'').toLowerCase().trim();
-  const arr = q
-    ? MEMBERS.filter(m => (`${m.handle||''} ${m.display_name||''}`.toLowerCase().includes(q)))
-    : MEMBERS.slice();
+  const q=($('#mSearch').value||'').toLowerCase().trim();
+  const list=$('#mList');
+  const rows = q? MEMBERS.filter(m => (`${m.handle} ${m.display_name}`.toLowerCase().includes(q))) : MEMBERS.slice();
+  if(!rows.length){ list.textContent='No matches.'; return; }
+  list.innerHTML='';
 
-  const list = $('#mList');
-  if(!arr.length){ list.textContent='No matches.'; return; }
-
-  list.innerHTML = '';
-  for(const m of arr){
+  rows.forEach(m=>{
     const row = document.createElement('div');
     row.className='mrow';
     row.innerHTML = `
-      <div class="mavatar">👤</div>
+      <div class="mavatar">
+        ${m.current_rank_image_url
+          ? `<img src="${esc(m.current_rank_image_url)}" alt="${esc(m.current_rank_code||'rank')}" style="width:100%;height:100%;object-fit:contain">`
+          : '👤'}
+      </div>
       <div>
         <div><b>${esc(m.handle||'(no handle)')}</b> <span class="small">• ${esc(m.display_name||'')}</span></div>
         <div class="small">${esc(m.current_rank_category||'Unrated')} — ${esc(m.current_rank_name||'Unrated')}</div>
       </div>
-      <div><button class="pill" data-open="${m.user_id}">Open</button></div>`;
-    row.querySelector('button[data-open]').onclick = ()=> openMember(m.user_id, row);
+      <div><button class="pill">Open</button></div>
+    `;
+    row.querySelector('button').onclick = ()=> openMember(m.user_id, row);
     list.appendChild(row);
-  }
+  });
 }
 
-function markActiveRow(activeRow){
-  document.querySelectorAll('.mrow').forEach(r=>r.classList.remove('active'));
-  activeRow?.classList.add('active');
+function markActive(row){
+  document.querySelectorAll('.mrow').forEach(x=>x.classList.remove('active'));
+  row?.classList.add('active');
 }
 
-/* ---------- Inspector (progress + certs + timeline) ---------- */
+/* Open inspector */
 async function openMember(userId, rowEl){
-  SELECTED = MEMBERS.find(m=>m.user_id===userId);
-  markActiveRow(rowEl);
+  const res = MEMBERS.find(x=>x.user_id===userId);
+  if(!res) return;
+  SELECTED = res;
+  markActive(rowEl);
+  $('#btnPromote').disabled = false;
 
   $('#inspector').innerHTML = `
     <div id="summary"></div>
-
     <div class="kpis" style="margin:10px 0">
       <div class="kpi"><h4>Total Missions</h4><div class="val" id="k_mis">—</div></div>
       <div class="kpi"><h4>Total Hours</h4><div class="val" id="k_hrs">—</div></div>
@@ -308,8 +253,8 @@ async function openMember(userId, rowEl){
     <div class="panel" style="margin-top:12px">
       <div class="hd">
         <h3>Certification Timeline</h3>
-        <div style="display:flex;gap:8px;align-items:center">
-          <select id="certSelect" title="Pick certification"></select>
+        <div>
+          <select id="certSelect"></select>
           <button id="btnReloadTL">Load</button>
         </div>
       </div>
@@ -323,6 +268,7 @@ async function openMember(userId, rowEl){
   await Promise.all([loadProgress(userId), loadCerts(userId)]);
 }
 
+/* Progress blocks */
 async function loadProgress(uid){
   const [{ data: prog }, { data: up }] = await Promise.all([
     sb.from('v_user_rank_progress').select('*').eq('user_id', uid).maybeSingle(),
@@ -343,43 +289,40 @@ async function loadProgress(uid){
       <div class="small">Targets • M:${prog?.missions_target??0} • H:${prog?.hours_target??0} • C:${prog?.certification_target??0}</div>
     </div>`;
 
-  const m = Number(up?.missions_attended||0), h = Number(up?.hours_total||0), c = Number(up?.certifications_total||0);
-  const mt= Number(prog?.missions_target||0), ht= Number(prog?.hours_target||0), ct= Number(prog?.certification_target||0);
+  const m=Number(up?.missions_attended||0), h=Number(up?.hours_total||0), c=Number(up?.certifications_total||0);
+  const mt=Number(prog?.missions_target||0), ht=Number(prog?.hours_target||0), ct=Number(prog?.certification_target||0);
 
-  $('#k_mis').textContent = String(m);
-  $('#k_hrs').textContent = String(h);
-  $('#k_cer').textContent = String(c);
+  $('#k_mis').textContent=String(m);
+  $('#k_hrs').textContent=String(h);
+  $('#k_cer').textContent=String(c);
 
-  $('#vMis').textContent = `${m} / ${mt}`;
-  $('#vHrs').textContent = `${h} / ${ht}`;
-  $('#vCer').textContent = `${c} / ${ct}`;
+  $('#vMis').textContent=`${m} / ${mt}`;
+  $('#vHrs').textContent=`${h} / ${ht}`;
+  $('#vCer').textContent=`${c} / ${ct}`;
 
-  setFill($('#pbMis'), mt? Math.min(1,m/mt):1);
-  setFill($('#pbHrs'), ht? Math.min(1,h/ht):1);
-  setFill($('#pbCer'), ct? Math.min(1,c/ct):1);
+  setFill($('#pbMis'), mt?Math.min(1,m/mt):1);
+  setFill($('#pbHrs'), ht?Math.min(1,h/ht):1);
+  setFill($('#pbCer'), ct?Math.min(1,c/ct):1);
 }
 
+/* Cert list + ownership */
 async function loadCerts(uid){
   const [{ data: catalog }, { data: mine }, { data: reqs }] = await Promise.all([
     sb.from('certifications').select('certification_code,name,image_url,sort_order,is_active').order('sort_order'),
     sb.from('user_certifications').select('certification_code').eq('user_id', uid),
-    sb.from('certification_requirements').select('certification_code,event_code,sort_order')
+    sb.from('certification_requirements').select('certification_code,event_code')
   ]);
-
   const owned = new Set((mine||[]).map(x=>x.certification_code));
   const byCert = new Map();
-  (reqs||[]).forEach(r=>{
-    const k=r.certification_code; if(!byCert.has(k)) byCert.set(k,[]);
-    byCert.get(k).push(r.event_code);
-  });
+  (reqs||[]).forEach(r=>{ if(!byCert.has(r.certification_code)) byCert.set(r.certification_code,[]); byCert.get(r.certification_code).push(r.event_code); });
 
   const grid = $('#certGrid'); grid.innerHTML='';
   const select = $('#certSelect'); select.innerHTML='';
 
-  for(const c of (catalog||[])){
-    const o = owned.has(c.certification_code);
+  (catalog||[]).forEach(c=>{
+    const has = owned.has(c.certification_code);
     const div = document.createElement('div');
-    div.className = 'cert'+(o?'':' dim');
+    div.className='cert'+(has?'':' dim');
     div.innerHTML = `
       <div class="thumb">${c.image_url?`<img src="${esc(c.image_url)}" alt="">`:'🏅'}</div>
       <div class="title">${esc(c.name)}</div>
@@ -387,22 +330,25 @@ async function loadCerts(uid){
       <div class="small">Reqs: ${byCert.get(c.certification_code)?.length ?? 0}</div>
       <div style="margin-top:8px"><button class="pill" data-open="${c.certification_code}">Open Timeline</button></div>
     `;
-    div.querySelector('button[data-open]').onclick = ()=>{
-      select.value = c.certification_code; loadTimeline(uid, c.certification_code);
-      document.querySelector('#tlHint').textContent = c.name;
+    div.querySelector('button').onclick = ()=>{
+      select.value=c.certification_code;
+      loadTimeline(uid,c.certification_code);
+      $('#tlHint').textContent=c.name;
     };
     grid.appendChild(div);
 
-    const opt = document.createElement('option');
-    opt.value=c.certification_code; opt.textContent = `${c.certification_code} — ${c.name}`;
+    const opt=document.createElement('option');
+    opt.value=c.certification_code; opt.textContent=`${c.certification_code} — ${c.name}`;
     select.appendChild(opt);
-  }
+  });
+
   $('#btnReloadTL').onclick = ()=> loadTimeline(uid, select.value);
 }
 
+/* Timeline + grant/remove */
 async function loadTimeline(uid, certCode){
-  const tl = $('#timeline');
-  if(!certCode){ tl.innerHTML=''; return; }
+  const tl=$('#timeline'); tl.innerHTML='';
+  if(!certCode){ tl.innerHTML='<div class="small">Pick a certification.</div>'; return; }
 
   const [{ data: reqs }, { data: recs }] = await Promise.all([
     sb.from('certification_requirements')
@@ -413,38 +359,35 @@ async function loadTimeline(uid, certCode){
       .select('event_code, completed_at, approved_by, approved_at')
       .eq('user_id', uid)
   ]);
-  const done = new Map((recs||[]).map(r => [r.event_code, r]));
+  const done = new Map((recs||[]).map(r=>[r.event_code,r]));
 
-  tl.innerHTML='';
-  if(!reqs?.length){ tl.innerHTML = '<div class="small">No requirements configured for this certification.</div>'; return; }
+  if(!reqs?.length){ tl.innerHTML='<div class="small">No requirements configured.</div>'; return; }
 
-  for(const r of reqs){
+  reqs.forEach(r=>{
     const rec = done.get(r.event_code);
-    const isDone = !!rec;
-    const row = document.createElement('div');
-    row.className = 'titem'+(isDone?' done':'');
+    const ok = !!rec;
+    const row=document.createElement('div');
+    row.className='titem'+(ok?' done':'');
     row.innerHTML = `
       <div class="tdot"></div>
       <div>
         <div class="tlabel">${esc(r.training_events?.title || r.event_code)}</div>
         <div class="small">${esc(r.training_events?.description || '')}</div>
-        ${isDone ? `<div class="small">Completed: ${fmtDate(rec.approved_at||rec.completed_at)}${rec.approved_by?` • Approved by ${esc(rec.approved_by.slice(0,8))}`:''}</div>` : ''}
+        ${ok ? `<div class="small">Completed: ${new Date(rec.approved_at||rec.completed_at).toLocaleString()}${rec.approved_by?` • by ${esc(rec.approved_by.slice(0,8))}`:''}</div>` : ''}
       </div>
       <div>
-        ${isDone
+        ${ok
           ? `<button class="btn-danger" data-remove="${r.event_code}">Remove</button>`
           : `<button class="btn-ok" data-add="${r.event_code}">Grant</button>`}
       </div>
     `;
     tl.appendChild(row);
-  }
+  });
 
-  // grant/remove handlers (triggers keep user_certifications in sync)
   tl.querySelectorAll('button[data-add]').forEach(b=>{
     b.onclick = async ()=>{
-      const event_code=b.dataset.add;
       const { error } = await sb.from('user_training_events').insert({
-        user_id: uid, event_code, completed_at: new Date().toISOString()
+        user_id: uid, event_code: b.dataset.add, completed_at: new Date().toISOString()
       });
       if(error){ alert('Grant failed: '+error.message); return; }
       await Promise.all([loadTimeline(uid, certCode), loadProgress(uid)]);
@@ -452,31 +395,12 @@ async function loadTimeline(uid, certCode){
   });
   tl.querySelectorAll('button[data-remove]').forEach(b=>{
     b.onclick = async ()=>{
-      const event_code=b.dataset.remove;
-      const { error } = await sb.from('user_training_events').delete().eq('user_id', uid).eq('event_code', event_code);
+      const { error } = await sb.from('user_training_events')
+        .delete().eq('user_id',uid).eq('event_code',b.dataset.remove);
       if(error){ alert('Remove failed: '+error.message); return; }
       await Promise.all([loadTimeline(uid, certCode), loadProgress(uid)]);
     };
   });
-}
-
-/* ---------- Ranks (for Force Set Rank) ---------- */
-async function fetchRanks(){
-  const { data, error } = await sb
-    .from('ranks')
-    .select('code,name,category,sort_order')
-    .order('category',{ascending:true})
-    .order('sort_order',{ascending:true});
-  if(error){ console.warn('ranks load failed', error.message); return; }
-  ALL_RANKS = data || [];
-  populateRankCode();
-}
-function populateRankCode(){
-  const track = $('#rankTrack').value || '';
-  const rows = ALL_RANKS.filter(r => track ? r.category===track : true);
-  const el = $('#rankCode');
-  el.innerHTML = '<option value="">— Select Rank —</option>' +
-    rows.map(r => `<option value="${r.code}">${r.code} — ${esc(r.name)} (${r.category})</option>`).join('');
 }
 </script>
 </body>
