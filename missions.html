@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Mission Editor</title>
+<title>JMBN Mission Log</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,9 +14,8 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
+  --bg:#000; --line:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+  --fs-base:14px; --fs-small:11px; --fs-table:13px; --fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
 body{
@@ -29,12 +28,12 @@ body{
   margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* Header */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+/* Header (fallback styles; real header injected) */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.brand-logo{width:44px;height:44px;object-fit:contain;box-shadow:inset 0 0 0 9999px #000;background:#000;border:none}
 .brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
 
-/* Shiny nav */
+/* Shiny nav (kept) */
 .nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
@@ -51,287 +50,469 @@ body{
 .nav-btn.active::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none}
 @keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
 
-/* Panel + form */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:900px){.form-grid{grid-template-columns:1fr}}
-label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
-input[type="text"],input[type="number"],input[type="datetime-local"],select,textarea{
-  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:'Play';
+/* Shell + ribbons (no cards) */
+.shell{max-width:1180px;margin:0 auto}
+.section{position:relative;padding-top:4px;margin-top:10px}
+.ribbon{
+  position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:10px;padding:8px 0;
+  background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.76));border-bottom:1px solid var(--line);
+  backdrop-filter:saturate(1.15) blur(2px)
 }
-textarea{min-height:120px;resize:vertical}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ribbon h2{margin:0;color:var(--accent);font-size:16px}
+.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.5),transparent);border-radius:999px;margin:12px 0}
+
+/* Controls (line based) */
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+button,.small-btn{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--line);cursor:pointer;font-family:'Play';transition:.2s}
+button:hover,.small-btn:hover{background:var(--accent);color:#000}
+input,select{background:#0a0a0a;border:1px solid var(--line);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+
+/* KPIs (no boxes) */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:6px 0 2px}
+@media(max-width:880px){.kpis{grid-template-columns:1fr}}
+.kpi{padding:6px 2px;border-bottom:1px solid rgba(214,180,76,.28)}
+.kpi-title{font-size:12px;color:var(--muted);margin-bottom:4px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* Ongoing list (no card) */
+.ongoing{margin-top:8px}
+.ongoing-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;color:var(--accent)}
+.ongoing-list{display:flex;flex-direction:column}
+.ongoing-item{
+  display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;
+  padding:8px 0;border-bottom:1px solid rgba(214,180,76,.22)
+}
+.ongoing-item:last-child{border-bottom:none}
+@media(max-width:680px){.ongoing-item{grid-template-columns:1fr}}
+.ongoing-title{font-weight:700;color:var(--accent)}
+.ongoing-meta{font-size:12px;color:var(--muted)}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
+.ongoing-open{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--accent);cursor:pointer}
+.ongoing-open:hover{background:var(--accent);color:#000}
+
+/* Table (kept with a simple border, not a card) */
+.tableWrap{border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
+th{color:var(--accent);background:#080808;font-weight:500}
+tr:nth-child(even){background:#111}
+tr:hover{background:rgba(214,180,76,.08)}
+.nowrap{white-space:nowrap}
+.mono{font-variant-numeric:tabular-nums}
 .small{font-size:var(--fs-small);color:var(--muted)}
-hr{border:none;border-top:1px solid rgba(214,180,76,.3);margin:10px 0}
 
-button,.btn{padding:9px 14px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
-button:hover,.btn:hover{background:var(--accent);color:#000}
-.btn-primary{background:var(--accent);color:#000}
-.btn-bad{border-color:#cc5a5a;color:#ffbcbc}
-.btn-bad:hover{background:#ff6b6b;color:#000}
-
-/* Attachments list */
-.att-item{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px}
-@media(max-width:900px){.att-item{grid-template-columns:1fr 1fr}}
-.att-item .remove{padding:8px 10px}
+/* Attendance Modal */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{background:#0b0b0b;border:1px solid var(--line);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
+.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+.modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.modal .list{display:flex;gap:8px;flex-wrap:wrap}
+.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 10px}
+.modal .chip .x{cursor:pointer;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
+.modal .chip .x:hover{background:#111;color:#ff6b6b}
+.chip[data-attendance="not_going"]{border-color:rgba(255,107,107,.6);color:#ff6b6b}
 </style>
 </head>
 <body>
 
-<!-- 🔁 Shared header mount -->
-<div id="header-container"></div>
-<script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    const html = await res.text();
-    document.getElementById('header-container').outerHTML = html;
-
-    // highlight tab
-    requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'missions-editor.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a => {
-        const href = (a.getAttribute('href')||'').toLowerCase();
-        if (href === here) {
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
-      });
-    });
-  } catch (e) {
-    console.warn('Header load failed:', e);
-  }
-})();
-</script>
-
-<div class="panel">
-  <div class="row" style="justify-content:space-between;margin-bottom:10px">
-    <a class="btn" href="mission-log.html">← Back to Mission Log</a>
-    <span class="small" id="statusMsg"></span>
+  <!-- Header mount (replaced by header.html) -->
+  <div id="header-container" class="brand shell">
+    <img class="brand-logo" alt="JMBN"
+         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+    <h1>JMBN Mission Log</h1>
   </div>
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
+      if(res.ok){
+        const html = await res.text();
+        document.getElementById('header-container').outerHTML = html;
+        requestAnimationFrame(() => {
+          const here = (location.pathname.split('/').pop() || 'mission-log.html').toLowerCase();
+          document.querySelectorAll('.nav-btn').forEach(a=>{
+            const href=(a.getAttribute('href')||'').toLowerCase();
+            if(href===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
+          });
+        });
+      }
+    } catch (e) { console.warn('Header load failed:', e); }
+  })();
+  </script>
 
-  <div class="form-grid">
-    <div>
-      <label>Mission Title</label>
-      <input id="fTitle" type="text" placeholder="e.g., RW S2 — 24-box Haul" />
-    </div>
-
-    <div class="row" style="gap:12px">
-      <div style="flex:1">
-        <label>Type</label>
-        <input id="fType" type="text" placeholder="hauling / escort / mining…" />
-      </div>
-      <div style="flex:1">
-        <label>Status</label>
-        <select id="fStatus">
-          <option>Draft</option>
-          <option>In Progress</option>
-          <option>Completed</option>
-          <option>Aborted</option>
+  <div class="shell">
+    <!-- Controls -->
+    <div class="section">
+      <div class="ribbon"><h2>Filters & Export</h2></div>
+      <div class="controls">
+        <input id="search" placeholder="Search... (title, type, status, tags)">
+        <select id="statusFilter">
+          <option value="">All Status</option>
+          <option>planned</option>
+          <option>active</option>
+          <option>success</option>
+          <option>fail</option>
+          <option>abort</option>
         </select>
+        <button id="exportCsv">Export CSV</button>
       </div>
     </div>
 
-    <div>
-      <label>Origin</label>
-      <input id="fOrigin" type="text" placeholder="e.g., Area18" />
-    </div>
-    <div>
-      <label>Destination</label>
-      <input id="fDestination" type="text" placeholder="e.g., Everus Harbor" />
-    </div>
-
-    <div>
-      <label>Date & Time</label>
-      <input id="fStart" type="datetime-local" />
-    </div>
-
-    <div class="row" style="gap:12px">
-      <div style="flex:1">
-        <label>No. of Hours</label>
-        <input id="fHours" type="number" min="0" step="0.1" />
-      </div>
-      <div style="flex:1">
-        <label>Payout (aUEC)</label>
-        <input id="fPayout" type="number" min="0" step="1" />
+    <!-- KPIs -->
+    <div class="section">
+      <div class="ribbon"><h2>Overview</h2></div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-title">Total Missions</div>
+          <div class="kpi-value" id="kpiCount">0</div>
+          <div class="kpi-sub">after filters</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-title">Total Payout (aUEC)</div>
+          <div class="kpi-value" id="kpiTotal">0</div>
+          <div class="kpi-sub">sum of payouts</div>
+        </div>
       </div>
     </div>
 
-    <div>
-      <label>Tags (comma separated)</label>
-      <input id="fTags" type="text" placeholder="hauling, night" />
-    </div>
-    <div></div>
-
-    <div style="grid-column:1/-1">
-      <label>Notes</label>
-      <textarea id="fNotes" placeholder="Route, risks, cargo details, etc."></textarea>
-    </div>
-
-    <div style="grid-column:1/-1">
-      <div class="row" style="justify-content:space-between;align-items:center">
-        <label style="margin:0">Attachments</label>
-        <button id="btnAddAtt" type="button">+ Add Attachment</button>
+    <!-- Ongoing Missions -->
+    <div class="section">
+      <div class="ribbon"><h2>Ongoing Missions</h2></div>
+      <div class="ongoing">
+        <div class="ongoing-head">
+          <strong>Ongoing Missions</strong>
+          <span class="small" id="ongoingCount">(0)</span>
+        </div>
+        <div id="ongoingList" class="ongoing-list"></div>
       </div>
-      <div id="attList" style="margin-top:8px"></div>
-      <div class="small">Tip: give each link a short label (e.g., “Screenshot 1”) and paste the URL.</div>
+    </div>
+
+    <!-- Table -->
+    <div class="section">
+      <div class="ribbon"><h2>All Missions</h2></div>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mission Title</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Origin</th>
+              <th>Destination</th>
+              <th class="nowrap">Date</th>
+              <th class="nowrap">Hours</th>
+              <th class="nowrap">Payout (aUEC)</th>
+              <th>Tags</th>
+              <th>Attachments</th>
+              <th>Notes</th>
+              <th class="nowrap">Attendance</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <hr/>
+  <!-- Attendance Modal -->
+  <div id="attModalMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+        <button class="small-btn" onclick="closeAttendance()">Close</button>
+      </div>
 
-  <div class="row" style="gap:8px">
-    <button id="btnSave" class="btn-primary">Save Mission</button>
-    <button id="btnDelete" class="btn-bad" style="display:none">Delete</button>
+      <div class="row">
+        <button id="attIamGoing" class="small-btn">I’m going</button>
+        <button id="attNotGoing" class="small-btn">Not going</button>
+        <button id="attWithdraw" class="small-btn">Withdraw</button>
+        <span class="small">These toggle <b>your</b> attendance.</span>
+      </div>
+
+      <div id="attElevatedTools" class="row" style="display:none">
+        <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--text)">
+        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--text)">
+          <option value="">Role (optional)</option>
+          <option>pilot</option><option>escort</option><option>hauler</option><option>miner</option><option>medic</option>
+        </select>
+        <button id="attAddBtn" class="small-btn">Add</button>
+        <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
+      </div>
+
+      <div class="row">
+        <strong class="small">Attendees:</strong>
+        <div id="attList" class="list"></div>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Supabase -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
+  <!-- Auth & Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
 
 <script>
+/* ===== Active nav highlight (fallback) ===== */
+(function(){
+  const here = (location.pathname.split('/').pop() || 'mission-log.html').toLowerCase();
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if((a.getAttribute('href')||'').toLowerCase()===here){
+      a.classList.add('active'); a.setAttribute('aria-current','page');
+    }
+  });
+})();
+
 /* ===== Helpers ===== */
-const $ = s => document.querySelector(s);
-const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
-const params = new URLSearchParams(location.search);
-const MISSION_ID = params.get('id') || null;
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
+const fmtDate=iso=>iso? new Date(iso).toLocaleString() : '';
+const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
-let sb = null, session = null;
-let IS_ELEVATED = false;
-let OWNER_ID = null;
+/* ===== State ===== */
+let cache=[]; // all missions
+let session=null, sb=null;
+const tbody = $('#tbody');
 
-/* ===== Attachments UI ===== */
-function attRow(name='', url=''){
-  const wrap = document.createElement('div');
-  wrap.className = 'att-item';
-  wrap.innerHTML = `
-    <input type="text" class="att-name" placeholder="Label (e.g., Screenshot 1)" value="${esc(name)}" />
-    <input type="text" class="att-url" placeholder="https://…" value="${esc(url)}" />
-    <button type="button" class="remove">✕</button>
-  `;
-  wrap.querySelector('.remove').onclick = () => wrap.remove();
-  return wrap;
+/* ===== Render ===== */
+function attachmentsCell(arr){
+  if(!Array.isArray(arr)||!arr.length) return '';
+  return arr.map((a,i)=>{
+    const name = a?.name?.trim() || `Attachment ${i+1}`;
+    const url  = a?.url || '#';
+    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
+  }).join(', ');
 }
-function readAttachments(){
-  const items = Array.from(document.querySelectorAll('#attList .att-item'));
-  return items.map(x => {
-    const n = x.querySelector('.att-name').value.trim();
-    const u = x.querySelector('.att-url').value.trim();
-    if(!n && !u) return null;
-    return { name: n || null, url: u || null };
-  }).filter(Boolean);
+function row(r){
+  return `<tr>
+    <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
+    <td>${r.type?`<span class="pill">${esc(r.type)}</span>`:''}</td>
+    <td>${r.status?`<span class="pill">${esc(r.status)}</span>`:''}</td>
+    <td>${esc(r.origin||'')}</td>
+    <td>${esc(r.destination||'')}</td>
+    <td class="nowrap mono">${fmtDate(r.start_time)}</td>
+    <td class="mono">${r.hours ?? ''}</td>
+    <td class="mono">${fmtNum(r.payout_auec)}</td>
+    <td>${esc(r.tags||'')}</td>
+    <td>${attachmentsCell(r.attachments)}</td>
+    <td>${esc(r.notes||'')}</td>
+    <td><button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">View</button></td>
+  </tr>`;
 }
-$('#btnAddAtt').onclick = () => $('#attList').appendChild(attRow());
+function render(list){
+  $('#kpiCount').textContent = (list||[]).length.toLocaleString();
+  const total = (list||[]).reduce((s,x)=> s + (Number(x.payout_auec)||0), 0);
+  $('#kpiTotal').textContent = total.toLocaleString();
+  tbody.innerHTML = list.length ? list.map(row).join('') :
+    `<tr><td colspan="13" class="small" style="padding:10px">No missions found.</td></tr>`;
+}
 
-/* ===== Load Existing (edit mode) ===== */
-async function loadMission(){
-  if(!MISSION_ID) return;
+/* ===== Filter + CSV ===== */
+function getFiltered(){
+  const q = ($('#search').value||'').toLowerCase();
+  const st = ($('#statusFilter').value||'').toLowerCase();
+  let arr = cache.slice();
+  if(st) arr = arr.filter(x => (x.status||'').toLowerCase()===st);
+  if(q) arr = arr.filter(x =>
+    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`
+    .toLowerCase().includes(q));
+  return arr;
+}
+$('#search').addEventListener('input', ()=>render(getFiltered()));
+$('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
 
+$('#exportCsv').addEventListener('click', ()=>{
+  const rows = getFiltered();
+  const cols = ['title','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
+  const csv = [
+    cols.join(','),
+    ...rows.map(r => cols.map(k=>{
+      const v = r[k]==null?'':String(r[k]).replace(/"/g,'""');
+      return `"${v}"`;
+    }).join(','))
+  ].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+});
+
+/* ===== Load (uses shared Supabase from auth.js) ===== */
+async function loadMissions(){
   const { data, error } = await sb
     .from('missions')
-    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,submitted_by')
-    .eq('id', MISSION_ID).maybeSingle();
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at')
+    .order('created_at',{ascending:false});
 
-  if(error){ $('#statusMsg').textContent = 'Failed to load mission: ' + error.message; return; }
-  if(!data){ $('#statusMsg').textContent = 'Mission not found.'; return; }
-
-  OWNER_ID = data.submitted_by || null;
-
-  // Fill form
-  $('#fTitle').value = data.title || '';
-  $('#fType').value = data.type || '';
-  $('#fStatus').value = data.status || 'Draft';
-  $('#fOrigin').value = data.origin || '';
-  $('#fDestination').value = data.destination || '';
-  $('#fHours').value = data.hours ?? '';
-  $('#fPayout').value = data.payout_auec ?? '';
-  $('#fTags').value = data.tags || '';
-  $('#fNotes').value = data.notes || '';
-
-  if (data.start_time){
-    // to datetime-local format
-    const t = new Date(data.start_time);
-    const pad = n => String(n).padStart(2,'0');
-    const local = `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}T${pad(t.getHours())}:${pad(t.getMinutes())}`;
-    $('#fStart').value = local;
+  if(error){
+    tbody.innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    return;
   }
-
-  $('#attList').innerHTML = '';
-  (Array.isArray(data.attachments) ? data.attachments : []).forEach(a=>{
-    $('#attList').appendChild(attRow(a?.name||'', a?.url||'')); 
-  });
-
-  // Delete button visibility
-  if (IS_ELEVATED || (OWNER_ID && OWNER_ID === session.user.id)){
-    $('#btnDelete').style.display = '';
-  }
+  cache = data || [];
+  render(getFiltered());
+  refreshOngoing(); // keep the ongoing list in sync
 }
 
-/* ===== Save / Delete ===== */
-function isoFromLocalInput(v){
-  if(!v) return null;
-  // treat as local time; convert to ISO
-  const dt = new Date(v);
-  if (isNaN(dt)) return null;
-  return dt.toISOString();
+/* ===== Ongoing (user going + planned/active) ===== */
+async function loadOngoing(){
+  if(!session || !sb) return;
+  const { data: att, error: err1 } = await sb
+    .from('mission_attendees')
+    .select('mission_id')
+    .eq('user_id', session.user.id)
+    .eq('attendance', 'going');
+
+  if(err1){ return renderOngoing([], 'Failed to load: ' + err1.message); }
+  const ids = (att||[]).map(a => a.mission_id);
+  if(!ids.length){ return renderOngoing([]); }
+
+  const { data: rows, error: err2 } = await sb
+    .from('missions')
+    .select('id,title,status,start_time,origin,destination')
+    .in('id', ids)
+    .in('status', ['planned','active'])
+    .order('start_time', { ascending: true });
+
+  if(err2){ return renderOngoing([], 'Failed to load: ' + err2.message); }
+  renderOngoing(rows||[]);
 }
+function renderOngoing(rows, errMsg){
+  const list = document.getElementById('ongoingList');
+  const count = document.getElementById('ongoingCount');
+  count.textContent = `(${rows?.length || 0})`;
 
-async function saveMission(){
-  $('#statusMsg').textContent = 'Saving…';
-
-  const payload = {
-    title: $('#fTitle').value.trim() || null,
-    type: $('#fType').value.trim() || null,
-    status: $('#fStatus').value || null,
-    origin: $('#fOrigin').value.trim() || null,
-    destination: $('#fDestination').value.trim() || null,
-    start_time: isoFromLocalInput($('#fStart').value) || null,
-    hours: $('#fHours').value ? Number($('#fHours').value) : null,
-    payout_auec: $('#fPayout').value ? Number($('#fPayout').value) : null,
-    tags: $('#fTags').value.trim() || null,
-    attachments: readAttachments(),
-    notes: $('#fNotes').value || null
-  };
-
-  // new
-  if(!MISSION_ID){
-    payload.submitted_by = session.user.id;
-    const { data, error } = await sb.from('missions').insert(payload).select('id').single();
-    if(error){ $('#statusMsg').textContent = 'Save failed: ' + error.message; return; }
-    location.href = `missions-editor.html?id=${data.id}`;
+  if(errMsg){
+    list.innerHTML = `<div class="small" style="color:var(--bad)">${esc(errMsg)}</div>`;
+    return;
+  }
+  if(!rows || !rows.length){
+    list.innerHTML = `<div class="small">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
     return;
   }
 
-  // update (RLS should allow owner or elevated)
-  const { error } = await sb.from('missions').update(payload).eq('id', MISSION_ID);
-  if(error){ $('#statusMsg').textContent = 'Save failed: ' + error.message; return; }
-  $('#statusMsg').textContent = 'Saved.';
+  list.innerHTML = rows.map(r => `
+    <div class="ongoing-item">
+      <div>
+        <div class="ongoing-title">${esc(r.title || '(untitled)')}</div>
+        <div class="ongoing-meta">
+          ${esc(r.status || '')} • ${r.start_time ? fmtDate(r.start_time) : 'TBA'}
+          ${r.origin || r.destination ? ` • ${esc(r.origin||'')} → ${esc(r.destination||'')}` : ''}
+        </div>
+      </div>
+      <span class="pill">${esc(r.status)}</span>
+      <button class="ongoing-open" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">Attendance</button>
+    </div>
+  `).join('');
+}
+window.refreshOngoing = loadOngoing;
+
+/* ===== Attendance modal ===== */
+let ATT_MISSION_ID = null;
+
+async function openAttendance(missionId, title=''){
+  ATT_MISSION_ID = missionId;
+  $('#attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
+  $('#attModalMask').style.display = 'flex';
+
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', missionId).single()
+  ]);
+  const isOwner = mission?.submitted_by === session.user.id;
+  $('#attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
+
+  $('#attIamGoing').onclick = async () => {
+    await sb.from('mission_attendees').upsert({
+      mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance: 'going'
+    }, { onConflict: 'mission_id,user_id' });
+    await loadAttendees(); await refreshOngoing();
+  };
+
+  $('#attNotGoing').onclick = async () => {
+    await sb.from('mission_attendees').upsert({
+      mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance: 'not_going'
+    }, { onConflict: 'mission_id,user_id' });
+    await loadAttendees(); await refreshOngoing();
+  };
+
+  $('#attWithdraw').onclick = async () => {
+    await sb.from('mission_attendees').delete().match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
+    await loadAttendees(); await refreshOngoing();
+  };
+
+  $('#attAddBtn').onclick = async () => {
+    const email = $('#attAddEmail').value.trim();
+    const role  = $('#attAddRole').value || null;
+    if(!email){ alert('Enter an email'); return; }
+    const { error } = await sb.rpc('add_attendee_by_email', {
+      p_mission: ATT_MISSION_ID, p_email: email, p_role: role, p_attendance: 'going'
+    });
+    if(error){ alert('Add failed: ' + error.message); return; }
+    $('#attAddEmail').value=''; $('#attAddRole').value='';
+    await loadAttendees(); await refreshOngoing();
+  };
+
+  await loadAttendees();
 }
 
-async function deleteMission(){
-  if(!confirm('Delete this mission? This cannot be undone.')) return;
-  const { error } = await sb.from('missions').delete().eq('id', MISSION_ID);
-  if(error){ $('#statusMsg').textContent = 'Delete failed: ' + error.message; return; }
-  location.href = 'mission-log.html';
+function closeAttendance(){
+  $('#attModalMask').style.display = 'none';
+  ATT_MISSION_ID = null;
+}
+window.openAttendance = openAttendance;
+window.closeAttendance = closeAttendance;
+
+async function loadAttendees(){
+  const list = $('#attList');
+  list.innerHTML = '<span class="small">Loading…</span>';
+
+  const { data, error } = await sb
+    .from('v_mission_attendees_detailed')
+    .select('*')
+    .eq('mission_id', ATT_MISSION_ID)
+    .order('joined_at', { ascending: true });
+
+  if(error){ list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
+  if(!data?.length){ list.innerHTML = '<span class="small">No attendees yet.</span>'; return; }
+
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
+  ]);
+  const canManageAll = (elev || mission?.submitted_by === session.user.id);
+
+  list.innerHTML = '';
+  for(const a of data){
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.setAttribute('data-attendance', (a.attendance || '').toLowerCase());
+    chip.innerHTML = `
+      <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
+      <span class="small" style="color:var(--muted)">${a.role_in_mission ? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</span>
+      ${ (canManageAll || a.user_id === session.user.id) ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
+    `;
+    const x = chip.querySelector('.x');
+    if(x){
+      x.onclick = async () => {
+        const targetUser = x.getAttribute('data-uid');
+        const { error: delErr } = await sb
+          .from('mission_attendees')
+          .delete()
+          .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+        if(delErr){ alert('Remove failed: ' + delErr.message); return; }
+        await loadAttendees(); await refreshOngoing();
+      };
+    }
+    list.appendChild(chip);
+  }
 }
 
-$('#btnSave').onclick = saveMission;
-$('#btnDelete').onclick = deleteMission;
-
-/* ===== Boot ===== */
+/* ===== Gate by auth, then load ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();
+  session = await requireAuth();        // redirect if not logged in
   if(!session) return;
   sb = getSupabase();
-
-  // elevated?
-  try {
-    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
-    IS_ELEVATED = !!data;
-  } catch(e){ IS_ELEVATED = false; }
-
-  if(MISSION_ID) await loadMission();
+  loadMissions();
+  loadOngoing();
 });
 </script>
 </body>
