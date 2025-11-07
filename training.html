@@ -10,12 +10,8 @@
 
 <style>
 :root{
-  --bg:#000;
-  --panel:#0a0a0a;
-  --border:#d6b44c;
-  --accent:#f2d675;
-  --text:#f7f1d0;
-  --muted:#c9b06a;
+  --bg:#000; --panel:#0a0a0a; --border:#d6b44c; --accent:#f2d675;
+  --text:#f7f1d0; --muted:#c9b06a;
 }
 *{box-sizing:border-box}
 body{
@@ -24,19 +20,13 @@ body{
     radial-gradient(800px 600px at 20% -10%,rgba(242,214,117,.06),transparent 60%),
     radial-gradient(900px 700px at 120% 110%,rgba(214,180,76,.05),transparent 60%),
     #000;
-  font-family:'Play',sans-serif;
-  color:var(--text);
-  min-height:100vh;
+  font-family:'Play',sans-serif; color:var(--text); min-height:100vh;
 }
 h1{text-align:center;margin:40px 0 20px;font-size:1.8em;color:var(--accent);}
 
 .badge-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:24px;
-  padding:0 20px 80px;
-  max-width:1200px;
-  margin:0 auto;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px; padding:0 20px 80px; max-width:1200px; margin:0 auto;
 }
 
 /* --- badge cards --- */
@@ -44,10 +34,7 @@ h1{text-align:center;margin:40px 0 20px;font-size:1.8em;color:var(--accent);}
   position:relative;
   background:radial-gradient(circle at 50% 40%,#111 0%,#000 70%);
   border:1px solid rgba(214,180,76,.25);
-  border-radius:16px;
-  overflow:hidden;
-  padding:16px 8px;
-  text-align:center;
+  border-radius:16px; overflow:hidden; padding:16px 8px; text-align:center;
   transition:transform .25s ease, box-shadow .3s ease, filter .3s ease;
 }
 .badge img{
@@ -59,14 +46,8 @@ h1{text-align:center;margin:40px 0 20px;font-size:1.8em;color:var(--accent);}
 
 /* Owned vs locked */
 .badge.locked{opacity:.55;filter:grayscale(.8) contrast(.8);}
-.badge.owned{
-  border-color:var(--border);
-  box-shadow:0 0 12px rgba(214,180,76,.25);
-}
-.badge.owned:hover{
-  transform:translateY(-3px) scale(1.03);
-  box-shadow:0 0 22px rgba(242,214,117,.35);
-}
+.badge.owned{border-color:var(--border); box-shadow:0 0 12px rgba(214,180,76,.25);}
+.badge.owned:hover{transform:translateY(-3px) scale(1.03); box-shadow:0 0 22px rgba(242,214,117,.35);}
 
 /* Subtle pulse for owned */
 @keyframes pulse{
@@ -78,36 +59,50 @@ h1{text-align:center;margin:40px 0 20px;font-size:1.8em;color:var(--accent);}
 
 /* --- hover detail overlay --- */
 .badge .overlay{
-  position:absolute;inset:0;
-  background:rgba(0,0,0,.85);
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  opacity:0;transition:opacity .25s ease;
-  padding:10px;font-size:13px;line-height:1.3;
+  position:absolute;inset:0;background:rgba(0,0,0,.88);
+  display:flex;flex-direction:column;opacity:0;transition:opacity .25s ease;
+  padding:10px 10px 12px; font-size:13px; line-height:1.35;
 }
 .badge:hover .overlay{opacity:1;}
-.overlay .bar{
-  height:8px;width:100%;background:#111;border:1px solid var(--border);
-  border-radius:999px;margin:8px 0;overflow:hidden;
+
+.overlay h4{margin:4px 0 6px;color:var(--accent);font-size:14px}
+.reqlist{
+  margin:0; padding:0; list-style:none; flex:1; overflow:auto;
+  border:1px solid rgba(214,180,76,.25); border-radius:10px; background:#0b0b0b;
 }
-.overlay .fill{
-  height:100%;background:var(--border);
+.reqitem{
+  display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center;
+  padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.06);
 }
+.reqitem:last-child{border-bottom:none}
+.reqitem .name{font-weight:700}
+.reqitem .state{font-size:12px}
+.reqitem .done{color:var(--accent)}
+.reqitem .pending{color:var(--muted)}
+.overlay .summary{
+  margin-top:8px; font-size:12px; color:var(--muted);
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+}
+.overlay .bar{height:8px;flex:1;background:#111;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.overlay .fill{height:100%;background:var(--border)}
+.overlay .actions{margin-top:8px;display:flex;justify-content:center}
+.overlay button{
+  background:#0c0c0c;color:var(--text);border:1px solid var(--border);border-radius:6px;
+  padding:6px 10px;font-family:'Play';cursor:pointer;font-size:12px
+}
+.overlay button:hover{background:var(--border);color:#000}
 
 /* admin modal */
 #adminPanel{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.8);
-  backdrop-filter:blur(8px);
+  position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);
   display:none;align-items:center;justify-content:center;
 }
 .modal{
-  background:#111;border:1px solid var(--border);
-  border-radius:12px;padding:20px;width:320px;
+  background:#111;border:1px solid var(--border);border-radius:12px;padding:20px;width:340px;
 }
 .modal h3{color:var(--accent);margin-top:0;}
 button,select{
-  background:#0c0c0c;color:var(--text);
-  border:1px solid var(--border);border-radius:6px;
+  background:#0c0c0c;color:var(--text);border:1px solid var(--border);border-radius:6px;
   padding:6px 10px;font-family:'Play';cursor:pointer;
 }
 button:hover{background:var(--border);color:#000;}
@@ -136,53 +131,82 @@ button:hover{background:var(--border);color:#000;}
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
-let sb,me,isElevated=false;
-const $=s=>document.querySelector(s);
-document.addEventListener('DOMContentLoaded',async()=>{
-  const session=await requireAuth();if(!session)return;
-  sb=getSupabase();me=session.user.id;
-  const {data:e}=await sb.rpc('is_elevated',{u:me});isElevated=e===true;
-  loadBadges();
+let sb, me, isElevated = false;
+const $ = s => document.querySelector(s);
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth(); if (!session) return;
+  sb = getSupabase(); me = session.user.id;
+
+  const { data: e } = await sb.rpc('is_elevated', { u: me });
+  isElevated = e === true;
+
+  await loadBadges();
 });
 
+/* ---------- Build all badges with per-cert requirement list ---------- */
 async function loadBadges(){
-  const {data:certs}=await sb.from('certifications').select('certification_code,name,image_url,sort_order').order('sort_order');
-  const {data:owned}=await sb.from('user_certifications').select('certification_code').eq('user_id',me);
-  const ownedSet=new Set(owned.map(c=>c.certification_code));
-  const grid=$('#badgeGrid');grid.innerHTML='';
+  const [{data: certs}, {data: reqs}, {data: myDone}, {data: owned}] = await Promise.all([
+    sb.from('certifications').select('certification_code,name,image_url,sort_order').order('sort_order'),
+    sb.from('certification_requirements').select('certification_code,event_code,sort_order,training_events(title)').order('sort_order'),
+    sb.from('user_training_events').select('event_code').eq('user_id', me),
+    sb.from('user_certifications').select('certification_code').eq('user_id', me)
+  ]);
+
+  // group requirements by certification
+  const byCert = new Map();
+  for(const r of reqs){
+    if(!byCert.has(r.certification_code)) byCert.set(r.certification_code, []);
+    byCert.get(r.certification_code).push(r);
+  }
+
+  const doneSet = new Set(myDone.map(d=>d.event_code));
+  const ownedSet = new Set(owned.map(c=>c.certification_code));
+
+  const grid = $('#badgeGrid'); grid.innerHTML = '';
   for(const cert of certs){
-    const owned=ownedSet.has(cert.certification_code);
-    const div=document.createElement('div');
-    div.className='badge '+(owned?'owned':'locked');
-    div.innerHTML=`
+    const list = byCert.get(cert.certification_code) || [];
+    const completed = list.filter(r=>doneSet.has(r.event_code)).length;
+    const total = list.length || 1;
+    const pct = Math.round((completed/total)*100);
+
+    const reqListHtml = list.map(r=>{
+      const ok = doneSet.has(r.event_code);
+      return `
+        <li class="reqitem">
+          <span class="name">${r.training_events?.title || r.event_code}</span>
+          <span class="state ${ok?'done':'pending'}">${ok?'✅ Completed':'⏳ Pending'}</span>
+        </li>`;
+    }).join('') || `<li class="reqitem"><span class="name">No requirements configured</span><span class="state pending">—</span></li>`;
+
+    const card = document.createElement('div');
+    card.className = 'badge ' + (ownedSet.has(cert.certification_code) ? 'owned' : 'locked');
+    card.innerHTML = `
       <img src="${cert.image_url||''}" alt="${cert.name}">
       <div class="title">${cert.name}</div>
       <div class="code">${cert.certification_code}</div>
+
       <div class="overlay">
-        <div>${owned?'✅ Earned':'⏳ In Progress'}</div>
-        <div class="bar"><div class="fill" style="width:${await certProgress(cert.certification_code)}%"></div></div>
-        <div style="color:var(--muted);font-size:11px">${await certSummary(cert.certification_code)}</div>
-        ${isElevated?'<button style="margin-top:8px;font-size:12px">Manage</button>':''}
-      </div>`;
-    if(isElevated) div.querySelector('button').onclick=()=>openModal(cert.certification_code,cert.name);
-    grid.appendChild(div);
+        <h4>Requirements</h4>
+        <ul class="reqlist">${reqListHtml}</ul>
+        <div class="summary">
+          <span>${completed}/${list.length} complete</span>
+          <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+        </div>
+        ${isElevated ? `<div class="actions"><button data-manage="${cert.certification_code}" aria-label="Manage ${cert.name}">Manage</button></div>` : ''}
+      </div>
+    `;
+
+    if(isElevated){
+      const btn = card.querySelector('button[data-manage]');
+      btn.onclick = () => openModal(cert.certification_code, cert.name);
+    }
+
+    grid.appendChild(card);
   }
 }
 
-async function certProgress(code){
-  const {data:reqs}=await sb.from('certification_requirements').select('event_code').eq('certification_code',code);
-  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',me);
-  const doneSet=new Set(done.map(d=>d.event_code));
-  return Math.round((reqs.filter(r=>doneSet.has(r.event_code)).length/reqs.length)*100)||0;
-}
-async function certSummary(code){
-  const {data:reqs}=await sb.from('certification_requirements').select('event_code').eq('certification_code',code);
-  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',me);
-  const doneSet=new Set(done.map(d=>d.event_code));
-  return `${reqs.filter(r=>doneSet.has(r.event_code)).length}/${reqs.length} events completed`;
-}
-
-/* --- admin modal functions --- */
+/* ---------- Admin modal (unchanged behaviour) ---------- */
 async function openModal(code,name){
   $('#adminPanel').style.display='flex';
   const {data:users}=await sb.from('profiles').select('id,handle').order('handle');
@@ -192,21 +216,40 @@ async function openModal(code,name){
   $('#closeModal').onclick=()=>$('#adminPanel').style.display='none';
 }
 async function loadEvents(uid,code){
-  const {data:reqs}=await sb.from('certification_requirements').select('event_code,training_events(title)').eq('certification_code',code);
-  const {data:done}=await sb.from('user_training_events').select('event_code').eq('user_id',uid);
+  const {data:reqs}=await sb.from('certification_requirements')
+    .select('event_code,training_events(title)')
+    .eq('certification_code',code)
+    .order('sort_order');
+  const {data:done}=await sb.from('user_training_events')
+    .select('event_code')
+    .eq('user_id',uid);
   const doneSet=new Set(done.map(d=>d.event_code));
   $('#eventList').innerHTML=reqs.map(r=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;">
-      <span>${r.training_events.title}</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+      <span>${r.training_events?.title || r.event_code}</span>
       ${doneSet.has(r.event_code)
         ? `<button data-remove="${r.event_code}">Remove</button>`
         : `<button data-add="${r.event_code}">Grant</button>`}
     </div>`).join('');
+
+  // hooks
   $('#eventList').querySelectorAll('button[data-add]').forEach(b=>{
-    b.onclick=async()=>{await sb.from('user_training_events').insert({user_id:uid,event_code:b.dataset.add,completed_at:new Date().toISOString()});loadEvents(uid,code);}
+    b.onclick=async()=>{
+      await sb.from('user_training_events').insert({
+        user_id:uid,event_code:b.dataset.add,completed_at:new Date().toISOString()
+      });
+      loadEvents(uid,code);
+      // live-refresh badges if admin modified themselves
+      if(uid===me) loadBadges();
+    };
   });
   $('#eventList').querySelectorAll('button[data-remove]').forEach(b=>{
-    b.onclick=async()=>{await sb.from('user_training_events').delete().eq('user_id',uid).eq('event_code',b.dataset.remove);loadEvents(uid,code);}
+    b.onclick=async()=>{
+      await sb.from('user_training_events').delete()
+        .eq('user_id',uid).eq('event_code',b.dataset.remove);
+      loadEvents(uid,code);
+      if(uid===me) loadBadges();
+    };
   });
 }
 </script>
