@@ -130,4 +130,86 @@
 
       const { data: done } = await sb.from('user_training_events')
         .select('event_code')
-        .eq('user
+        .eq('user_id', uid);
+
+      const doneSet = new Set(done.map(x => x.event_code));
+      certDiv.innerHTML = '';
+
+      for (const cert of certs) {
+        const events = reqs.filter(r => r.certification_code === cert.certification_code);
+        const total = events.length;
+        const completed = events.filter(e => doneSet.has(e.event_code)).length;
+        const pct = Math.round((completed / total) * 100);
+
+        const listHTML = events.map(ev => `
+          <li>
+            <span>${ev.training_events.title}</span>
+            <span class="${doneSet.has(ev.event_code) ? 'done' : 'pending'}">
+              ${doneSet.has(ev.event_code) ? '✅ Completed' : '⏳ Pending'}
+            </span>
+          </li>`).join('');
+
+        certDiv.innerHTML += `
+          <div class="cert-card">
+            <div class="cert-header">
+              <div>
+                <h2>${cert.name}</h2>
+                <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+              </div>
+              ${cert.image_url ? `<img src="${cert.image_url}" alt="${cert.name}">` : ''}
+            </div>
+            <ul class="events">${listHTML}</ul>
+          </div>`;
+      }
+    }
+
+    // -------------------------------------
+    // ADMIN PANEL
+    // -------------------------------------
+    async function loadUsers() {
+      const { data: users } = await sb.from('profiles').select('id, handle').order('handle');
+      userSelect.innerHTML = users.map(u => `<option value="${u.id}">${u.handle}</option>`).join('');
+      userSelect.addEventListener('change', e => loadUserTraining(e.target.value));
+      if (users.length) loadUserTraining(users[0].id);
+    }
+
+    async function loadUserTraining(uid) {
+      const { data: records } = await sb.from('user_training_events')
+        .select('event_code, completed_at')
+        .eq('user_id', uid)
+        .order('completed_at', { ascending: true });
+      const { data: allEvents } = await sb.from('training_events')
+        .select('event_code, title')
+        .order('sort_order');
+      const completedSet = new Set(records.map(r => r.event_code));
+      userTrainingList.innerHTML = `
+        <h4>Training Events for ${userSelect.options[userSelect.selectedIndex].text}</h4>
+        ${allEvents.map(ev => `
+          <div class="training-row">
+            <span>${ev.title}</span>
+            ${completedSet.has(ev.event_code)
+              ? `<button data-remove="${ev.event_code}">Remove</button>`
+              : `<button data-add="${ev.event_code}">Mark Complete</button>`}
+          </div>`).join('')}
+      `;
+
+      // Add/remove logic
+      userTrainingList.querySelectorAll('button[data-add]').forEach(btn =>
+        btn.onclick = async () => {
+          await sb.from('user_training_events').insert({
+            user_id: uid, event_code: btn.dataset.add, completed_at: new Date().toISOString()
+          });
+          loadUserTraining(uid);
+        });
+      userTrainingList.querySelectorAll('button[data-remove]').forEach(btn =>
+        btn.onclick = async () => {
+          await sb.from('user_training_events')
+            .delete()
+            .eq('user_id', uid)
+            .eq('event_code', btn.dataset.remove);
+          loadUserTraining(uid);
+        });
+    }
+  </script>
+</body>
+</html>
