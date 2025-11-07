@@ -17,11 +17,12 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
 
-/* Fallback header */
+/* Header (fallback if header.html not found) */
 .brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand img{width:44px;height:44px;object-fit:contain}
 .brand h1{margin:0;color:var(--accent);font-size:22px}
 
+/* Layout */
 .wrap{max-width:1200px;margin:0 auto;padding:0 16px 40px}
 .grid{display:grid;grid-template-columns:340px 1fr;gap:16px}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
@@ -31,6 +32,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .panel .hd h3{margin:0;color:var(--accent);font-size:16px}
 .panel .body{padding:12px}
 
+/* Inputs & buttons */
 input[type="search"],select{
   width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'
 }
@@ -61,13 +63,41 @@ button:hover{background:var(--accent);color:#000}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certifications grid — smaller images */
-.certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:10px}
-.cert .thumb{height:120px;border:1px solid var(--border);border-radius:10px;background:#101010;display:grid;place-items:center;margin-bottom:8px;padding:8px}
-.cert .thumb img{width:auto;max-width:110px;max-height:100%;object-fit:contain}
-.cert .title{font-weight:700}
-.cert.dim{opacity:.6;filter:grayscale(.5)}
+/* Certifications grid — 6 per row, NO borders on logo/abbrev */
+.certGrid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  justify-items:center;
+}
+@media(max-width:1100px){.certGrid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:900px){.certGrid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.certGrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
+
+.cert{
+  background:transparent;
+  text-align:center;
+  padding:4px;
+  border-radius:6px;
+  transition:transform .15s ease,opacity .15s ease;
+}
+.cert:hover{transform:scale(1.05)}
+.cert.dim{opacity:.45;filter:grayscale(.6)}
+
+.cert .thumb{
+  height:64px;
+  background:none; /* no inner bg */
+  border:none;     /* no inner border */
+  display:grid;place-items:center;margin-bottom:4px;padding:0;
+}
+.cert .thumb img{width:auto;max-width:54px;max-height:100%;object-fit:contain}
+.cert .abbrev{
+  font-weight:700;font-size:12px;color:var(--accent);
+  /* no border, no pill */
+}
+.cert .meta{font-size:10px;color:var(--muted);margin-top:2px}
+
 .small{font-size:12px;color:var(--muted)}
 
 /* Timeline */
@@ -115,14 +145,14 @@ button:hover{background:var(--accent);color:#000}
             <option value="Enlisted">Enlisted</option>
             <option value="Warrant">Warrant</option>
           </select>
-          <button id="btnForce" class="pill" title="Force set user's rank track">Force Set Track</button>
+          <button id="btnForce" class="pill">Force Track</button>
 
           <select id="rankCode" title="Rank Code">
-            <option value="">— Select Rank —</option>
+            <option value="">— Rank —</option>
           </select>
-          <button id="btnSetRank" class="pill" title="Force set a specific rank code">Set Rank</button>
+          <button id="btnSetRank" class="pill">Set Rank</button>
 
-          <button id="btnPromote" class="pill" disabled>Run Promotion Check</button>
+          <button id="btnPromote" class="pill" disabled>Promotion</button>
         </div>
       </div>
 
@@ -195,7 +225,7 @@ async function loadRankOptions(track=''){
   const want = (track||$('#rankTrack').value||'').toLowerCase();
   const items = RANKS.filter(r=>!want || (r.category||'').toLowerCase()===want);
   const sel = $('#rankCode');
-  sel.innerHTML = '<option value="">— Select Rank —</option>' +
+  sel.innerHTML = '<option value="">— Rank —</option>' +
     items.map(r=>`<option value="${r.code}">${r.code} — ${esc(r.name)}</option>`).join('');
 }
 
@@ -240,7 +270,7 @@ async function openMember(userId,rowEl){
   await loadRankOptions(res.current_rank_category||'');
   if(res.current_rank_code) $('#rankCode').value = res.current_rank_code;
 
-  // Full inspector UI (summary + KPIs + bars + Certs + Timeline)
+  // Inspector UI
   $('#inspector').innerHTML = `
     <div id="summary"></div>
 
@@ -250,9 +280,9 @@ async function openMember(userId,rowEl){
       <div class="kpi"><h4>Owned Certs</h4><div class="val" id="k_cer">—</div></div>
     </div>
 
-    <div class="pb"><div class="label">Missions</div><div class="bar"><div id="pbMis" class="fill" style="width:0%"></div></div><div class="val" id="vMis">—</div></div>
-    <div class="pb"><div class="label">Hours</div><div class="bar"><div id="pbHrs" class="fill" style="width:0%"></div></div><div class="val" id="vHrs">—</div></div>
-    <div class="pb"><div class="label">Certifications</div><div class="bar"><div id="pbCer" class="fill" style="width:0%"></div></div><div class="val" id="vCer">—</div></div>
+    <div class="pb"><div class="label">Missions</div><div class="bar"><div id="pbMis" class="fill"></div></div><div class="val" id="vMis">—</div></div>
+    <div class="pb"><div class="label">Hours</div><div class="bar"><div id="pbHrs" class="fill"></div></div><div class="val" id="vHrs">—</div></div>
+    <div class="pb"><div class="label">Certifications</div><div class="bar"><div id="pbCer" class="fill"></div></div><div class="val" id="vCer">—</div></div>
 
     <div class="panel" style="margin-top:12px">
       <div class="hd"><h3>Certifications</h3></div>
@@ -335,12 +365,13 @@ async function loadCerts(uid){
   (catalog||[]).forEach(c=>{
     const div=document.createElement('div');
     div.className='cert'+(owned.has(c.certification_code)?'':' dim');
-    div.innerHTML=`
-      <div class="thumb">${c.image_url?`<img src="${esc(c.image_url)}" alt="">`:'🏅'}</div>
-      <div class="title">${esc(c.name)}</div>
-      <div class="small">${esc(c.certification_code)}${c.is_active===false?' • (Inactive)':''}</div>
-      <div class="small">Reqs: ${byCert.get(c.certification_code)?.length ?? 0}</div>
-      <div style="margin-top:8px"><button class="pill" data-open="${c.certification_code}">Open Timeline</button></div>
+    div.innerHTML = `
+      <div class="thumb">${c.image_url ? `<img src="${esc(c.image_url)}" alt="">` : '🏅'}</div>
+      <div class="abbrev">${esc(c.certification_code)}</div>
+      <div class="meta">${c.is_active===false?'Inactive • ':''}Reqs: ${byCert.get(c.certification_code)?.length ?? 0}</div>
+      <div style="margin-top:6px">
+        <button class="pill" data-open="${c.certification_code}">Open</button>
+      </div>
     `;
     div.querySelector('button').onclick=()=>{
       select.value=c.certification_code;
