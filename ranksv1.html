@@ -25,6 +25,30 @@ body{
     #000;
 }
 
+/* ↓ Make certification images smaller and consistent */
+.cert .thumb{
+  height:110px;        /* was 160px */
+  padding:8px;         /* a little tighter */
+}
+.cert .thumb img{
+  width:auto;          /* stop using % of card */
+  max-width:110px;     /* hard cap the graphic */
+  max-height:100%;
+  height:auto;
+  object-fit:contain;
+}
+
+/* Optional: tiny tweak per screen size */
+@media (min-width:1200px){
+  .cert .thumb{ height:130px; }
+  .cert .thumb img{ max-width:120px; }
+}
+@media (max-width:900px){
+  .cert .thumb{ height:100px; }
+  .cert .thumb img{ max-width:90px; }
+}
+
+  
 /* Header (replaced by header.html if available) */
 .brand{display:flex;align-items:center;gap:10px;padding-bottom:8px;margin:0 0 10px;border-bottom:1px solid var(--line)}
 .brand-logo{
