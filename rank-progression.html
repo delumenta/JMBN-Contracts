@@ -27,7 +27,26 @@ body{
 
 /* fallback header mount border below */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(0,0,0,0))}
+/* Wrap to hide/crop the logo's gold outer frame */
+.brand-logo-wrap{
+  width:44px;             /* match your current .brand-logo size */
+  height:44px;
+  border-radius:12px;     /* rounded corners */
+  overflow:hidden;        /* crop edges (hides the gold frame) */
+  background:#000;        /* BLACK background inside the rounded box */
+  display:grid;
+  place-items:center;
+}
+
+/* Slightly zoom the image so the gold rim gets cropped out */
+.brand-logo{
+  width:120%;
+  height:120%;
+  object-fit:cover;
+  transform:scale(1.08);  /* adjust 1.05–1.15 if a sliver of gold shows */
+  filter:none;            /* remove any drop-shadow if you had one */
+}
+
 .brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
 
 /* nav buttons already styled inside header.html */
