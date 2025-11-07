@@ -165,7 +165,10 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
 /* Load & render members */
 async function loadMembers(){
-  const { data, error } = await sb.from('profiles').select('id,handle,display_name,avatar_url,current_rank, current_rank_category').order('handle');
+ const { data, error } = await sb.from('v_profiles_detailed')
+  .select('user_id,handle,display_name,current_rank,current_rank_category,avatar_url')
+  .order('handle');
+
   if(error){ $('#mList').textContent = 'Failed to load members.'; return; }
   members = data || [];
   renderMemberList();
@@ -186,8 +189,8 @@ function renderMemberList(){
         <div><b>${esc(m.handle||'(no handle)')}</b> <span class="small">• ${esc(m.display_name||'')}</span></div>
         <div class="small">${esc(m.current_rank_category||'Unrated')} — ${esc(m.current_rank||'Unrated')}</div>
       </div>
-      <div><button class="pill" data-open="${m.id}">Open</button></div>`;
-    row.querySelector('button[data-open]').onclick = ()=> openMember(m.id, row);
+      <div><button class="pill" data-open="${m.user.user_id}">Open</button></div>`;
+    row.querySelector('button[data-open]').onclick = ()=> openMember(m.user_id, row);
     list.appendChild(row);
   }
 }
