@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN – Progression</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+
+<style>
+:root{
+  --bg:#000; --sub:#0a0a0a;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+  --fs:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  font-size:var(--fs);
+  letter-spacing:.25px;
+  padding:14px;
+}
+
+/* Header (in case header.html fails we still show brand) */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 10px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{margin:0;color:var(--accent);font-weight:700;font-size:clamp(18px,2.2vw,22px)}
+
+/* Layout: split without cards */
+.wrap{display:grid;grid-template-columns:320px 1fr;gap:18px}
+@media(max-width:980px){.wrap{grid-template-columns:1fr}}
+
+.left{position:sticky;top:10px;height:fit-content}
+.block-title{color:var(--accent);font-weight:700;margin:0 0 8px;font-size:16px}
+
+/* Row list style (no boxes) */
+.row{
+  display:flex;align-items:center;gap:12px;
+  padding:8px 2px;
+  border-bottom:1px solid rgba(214,180,76,.28);
+}
+.row:last-child{border-bottom:none}
+.row:hover{background:rgba(214,180,76,.06)}
+.kv{display:flex;flex-direction:column}
+.k{color:var(--muted);font-size:12px}
+.v{font-weight:700}
+
+/* Images (no frames) */
+.rankImg{width:46px;height:46px;object-fit:contain;display:block;filter:drop-shadow(0 0 3px rgba(242,214,117,.20))}
+
+/* Pills & buttons */
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border:1px solid var(--border);
+  border-radius:999px;background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);font-size:12px;font-weight:700;
+}
+.btn{cursor:pointer;transition:.18s}
+.btn:hover{filter:brightness(1.06)}
+
+/* Progress bars (no containers, just lines) */
+.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;padding:6px 2px;border-bottom:1px solid rgba(214,180,76,.28)}
+.pb:last-child{border-bottom:none}
+.pb .label{color:var(--muted);font-size:12px}
+.track{
+  height:10px;border-radius:999px;background:#0a0a0a;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.30);
+  overflow:hidden;
+}
+.fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c);width:0%}
+.pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+
+/* History */
+.history{margin-top:4px}
+.history .item{padding:8px 2px;border-bottom:1px dashed rgba(214,180,76,.3)}
+.history .item:last-child{border-bottom:none}
+.time{color:var(--muted);font-size:12px}
+.arrow{color:var(--accent)}
+
+/* Certifications: clean list, no cards */
+.certList{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.certRow{
+  display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+  padding:8px 2px;border-bottom:1px solid rgba(214,180,76,.28)
+}
+.certRow:last-child{border-bottom:none}
+.thumb{width:30px;height:30px;display:grid;place-items:center}
+.thumb img{max-width:100%;max-height:100%;display:block}
+.certMeta .title{font-weight:700}
+.certMeta .code{font-size:12px;color:var(--muted)}
+.owned .title{color:var(--accent)}
+.dim{opacity:.55;filter:grayscale(.55)}
+.certRow:hover{background:rgba(214,180,76,.06)}
+
+/* Notes line */
+.note{margin-top:8px;color:var(--muted);font-size:12px}
+
+/* Right: group sections with titles only (no panels) */
+.section{margin-top:6px}
+.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.5),transparent);margin:10px 0;border-radius:999px}
+
+/* Utility */
+.small{font-size:12px;color:var(--muted)}
+.mono{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<!-- Header mount -->
+<div id="header-container" class="brand">
+  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+  <h1>Rank Progression</h1>
+</div>
+<script>
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    if (res.ok) {
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a=>{
+          const href=(a.getAttribute('href')||'').toLowerCase();
+          if(href===here || (here==='' && href==='index.html')) a.classList.add('active');
+        });
+      });
+    }
+  } catch {}
+})();
+</script>
+
+<div class="wrap">
+  <!-- LEFT: Overview -->
+  <aside class="left">
+    <div class="block-title">Overview</div>
+
+    <div class="row">
+      <img id="curImg" class="rankImg" alt="Rank">
+      <div class="kv">
+        <div class="k">Current Rank</div>
+        <div class="v" id="curRank">—</div>
+      </div>
+      <span class="pill" id="curPg">PG: —</span>
+    </div>
+
+    <div class="row">
+      <img id="nextImg" class="rankImg" alt="Next">
+      <div class="kv">
+        <div class="k">Next Rank</div>
+        <div class="v" id="nextName">—</div>
+      </div>
+      <span class="pill" id="nextPg">PG: —</span>
+    </div>
+
+    <div class="row" style="justify-content:flex-end">
+      <button class="pill btn" id="btnPromote" disabled title="Become available when all targets met">Request Promotion</button>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="block-title">Requirements</div>
+
+    <div class="pb">
+      <div class="label">Missions</div>
+      <div class="track"><div id="pbMissions" class="fill"></div></div>
+      <div class="val mono" id="valMissions">0 / 0</div>
+    </div>
+
+    <div class="pb">
+      <div class="label">Hours</div>
+      <div class="track"><div id="pbHours" class="fill"></div></div>
+      <div class="val mono" id="valHours">0 / 0</div>
+    </div>
+
+    <div class="pb">
+      <div class="label">Certifications</div>
+      <div class="track"><div id="pbCerts" class="fill"></div></div>
+      <div class="val mono" id="valCerts">0 / 0</div>
+    </div>
+
+    <div class="note" id="note">Promotion is available when all targets are met.</div>
+  </aside>
+
+  <!-- RIGHT: Details -->
+  <main>
+    <section class="section">
+      <div class="block-title">History</div>
+      <div id="history" class="history small">Loading…</div>
+    </section>
+
+    <div class="sep"></div>
+
+    <section class="section">
+      <div class="block-title">Certifications</div>
+      <div id="certList" class="certList">—</div>
+      <div class="note">Dim rows are not yet earned.</div>
+    </section>
+  </main>
+</div>
+
+<!-- Supabase + App -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+
+let session=null, sb=null, me=null;
+
+/* helpers */
+function setFill(sel, pct){
+  const el = $(sel);
+  const x  = Math.max(0, Math.min(1, Number(pct)||0));
+  if(el) el.style.width = (x*100) + '%';
+}
+async function fetchRankImage(code){
+  if(!code) return '';
+  try{
+    return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl || '';
+  }catch{ return ''; }
+}
+
+/* ===== Progress / Next / Bars ===== */
+async function loadProgress(){
+  const { data: prog } = await sb
+    .from('v_user_rank_progress')
+    .select('*')
+    .eq('user_id', me)
+    .maybeSingle();
+
+  $('#curRank').textContent = prog?.current_name || '(unranked)';
+  $('#curPg').textContent   = `PG: ${prog?.current_paygrade || '—'}`;
+  $('#nextName').textContent = prog?.next_name || '—';
+  $('#nextPg').textContent   = `PG: ${prog?.next_paygrade || '—'}`;
+
+  // images
+  const curImg = await fetchRankImage(prog?.current_code);
+  const nxtImg = await fetchRankImage(prog?.next_code);
+  if (curImg){ $('#curImg').src = curImg; $('#curImg').style.visibility='visible'; } else { $('#curImg').style.visibility='hidden'; }
+  if (nxtImg){ $('#nextImg').src = nxtImg; $('#nextImg').style.visibility='visible'; } else { $('#nextImg').style.visibility='hidden'; }
+
+  // numbers for bars
+  const { data: up } = await sb
+    .from('v_user_progress')
+    .select('*')
+    .eq('user_id', me)
+    .maybeSingle();
+
+  const m = Number(up?.missions_attended || 0);
+  const h = Number(up?.hours_total || 0);
+  const c = Number(up?.certifications_total || 0);
+
+  const mt = Number(prog?.missions_target || 0);
+  const ht = Number(prog?.hours_target || 0);
+  const ct = Number(prog?.certification_target || 0);
+
+  $('#valMissions').textContent = `${m} / ${mt}`;
+  $('#valHours').textContent    = `${h} / ${ht}`;
+  $('#valCerts').textContent    = `${c} / ${ct}`;
+
+  const pm = mt ? Math.min(1, m/mt) : 1;
+  const ph = ht ? Math.min(1, h/ht) : 1;
+  const pc = ct ? Math.min(1, c/ct) : 1;
+
+  setFill('#pbMissions', pm);
+  setFill('#pbHours',    ph);
+  setFill('#pbCerts',    pc);
+
+  const allMet = (!!prog?.next_code) && pm>=1 && ph>=1 && pc>=1;
+  $('#btnPromote').disabled = !allMet;
+  $('#note').textContent = !prog?.next_code
+    ? 'You are at the highest rank or next rank is not configured.'
+    : allMet
+      ? 'All requirements met. You can request promotion.'
+      : 'Promotion is available when all targets are met.';
+}
+
+/* ===== History ===== */
+async function loadHistory(){
+  const { data, error } = await sb
+    .from('rank_changes')
+    .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+    .eq('user_id', me)
+    .order('created_at', { ascending:false })
+    .limit(12);
+
+  const host = $('#history');
+  if(error){ host.textContent = 'Failed to load history.'; return; }
+  if(!data?.length){ host.textContent = 'No changes yet.'; return; }
+
+  host.innerHTML = data.map(r=>{
+    const when = new Date(r.created_at).toLocaleString();
+    const who = r.changed_by?.slice(0,8) || 'system';
+    const from = r.from_rank_code || '—';
+    const to   = r.to_rank_code || '—';
+    const why  = r.reason ? ` — <span style="color:var(--muted)">${r.reason}</span>` : '';
+    return `<div class="item"><span class="time">${when}</span> • ${from} <span class="arrow">→</span> <b style="color:var(--accent)">${to}</b> • by ${who}${why}</div>`;
+  }).join('');
+}
+
+/* ===== Certifications (list, no cards) ===== */
+async function loadCerts(){
+  const { data, error } = await sb
+    .from('v_user_certifications')
+    .select('certification_code,name,image_url,owned,sort_order,user_id')
+    .or(`user_id.eq.${me},user_id.is.null`)
+    .order('sort_order', { ascending:true });
+
+  const host = $('#certList');
+  if (error){ host.textContent = 'Failed to load certifications.'; return; }
+  if (!data?.length){ host.textContent = '—'; return; }
+
+  host.innerHTML = data.map(row=>{
+    const owned = !!row.owned;
+    const cls   = `certRow ${owned?'owned':''} ${owned?'':'dim'}`;
+    const img   = row.image_url || '';
+    const code  = row.certification_code || '';
+    const name  = row.name || code || 'Certification';
+    return `
+      <div class="${cls}" title="${owned?'Obtained':'Not earned'}">
+        <div class="thumb">${img?`<img src="${img}" alt="${name}">`:''}</div>
+        <div class="certMeta">
+          <div class="title">${name}</div>
+          <div class="code">${code}</div>
+        </div>
+        <div>${owned?'<span class="pill">Owned</span>':''}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ===== Promote RPC ===== */
+async function promote(){
+  const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+  if(error){ alert('Promotion failed: ' + error.message); return; }
+  if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+  alert('Promoted to ' + (data.to || 'next rank') + '!');
+  await loadProgress(); await loadHistory();
+}
+
+/* ===== Boot ===== */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
+
+  $('#btnPromote').onclick = promote;
+
+  await loadProgress();
+  await loadHistory();
+  await loadCerts();
+});
+</script>
+</body>
+</html>
