@@ -30,24 +30,39 @@ body{
   padding:14px;
 }
 
-/* Header (in case header.html fails we still show brand) */
+/* Header (fallback if header.html fails) */
 .brand{
   display:flex;align-items:center;gap:10px;
   margin:0 0 10px;
   padding-bottom:8px;
   border-bottom:1px solid var(--border);
 }
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
 .brand h1{margin:0;color:var(--accent);font-weight:700;font-size:clamp(18px,2.2vw,22px)}
 
-/* Layout: split without cards */
+/* Fallback logo wrapped so the baked-in gold rim looks black */
+.brand-logo-wrap{
+  position:relative;
+  width:44px;height:44px;
+  border-radius:12px;
+  overflow:hidden;
+  background:#000;                 /* black frame */
+  display:grid;place-items:center;
+}
+.brand-logo{width:100%;height:100%;object-fit:cover}
+.brand-logo-wrap::after{
+  content:"";position:absolute;inset:0;border-radius:12px;
+  box-shadow: inset 0 0 0 6px #000; /* mask the PNG’s gold rim (tweak 4–8px) */
+  pointer-events:none;
+}
+
+/* Layout */
 .wrap{display:grid;grid-template-columns:320px 1fr;gap:18px}
 @media(max-width:980px){.wrap{grid-template-columns:1fr}}
 
 .left{position:sticky;top:10px;height:fit-content}
 .block-title{color:var(--accent);font-weight:700;margin:0 0 8px;font-size:16px}
 
-/* Row list style (no boxes) */
+/* Rows (no big panels) */
 .row{
   display:flex;align-items:center;gap:12px;
   padding:8px 2px;
@@ -59,8 +74,12 @@ body{
 .k{color:var(--muted);font-size:12px}
 .v{font-weight:700}
 
-/* Images (no frames) */
-.rankImg{width:46px;height:46px;object-fit:contain;display:block;filter:drop-shadow(0 0 3px rgba(242,214,117,.20))}
+/* Rank images — keep glyph, hide outer rim */
+.rankImg{
+  width:46px;height:46px;object-fit:contain;display:block;
+  border-radius:10px;background:#000;
+  box-shadow: inset 0 0 0 6px #000; /* mask just the baked rim */
+}
 
 /* Pills & buttons */
 .pill{
@@ -72,7 +91,7 @@ body{
 .btn{cursor:pointer;transition:.18s}
 .btn:hover{filter:brightness(1.06)}
 
-/* Progress bars (no containers, just lines) */
+/* Progress bars */
 .pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;padding:6px 2px;border-bottom:1px solid rgba(214,180,76,.28)}
 .pb:last-child{border-bottom:none}
 .pb .label{color:var(--muted);font-size:12px}
@@ -91,7 +110,7 @@ body{
 .time{color:var(--muted);font-size:12px}
 .arrow{color:var(--accent)}
 
-/* Certifications: clean list, no cards */
+/* Certifications list */
 .certList{display:flex;flex-direction:column;gap:4px;margin-top:4px}
 .certRow{
   display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
@@ -106,23 +125,23 @@ body{
 .dim{opacity:.55;filter:grayscale(.55)}
 .certRow:hover{background:rgba(214,180,76,.06)}
 
-/* Notes line */
-.note{margin-top:8px;color:var(--muted);font-size:12px}
-
-/* Right: group sections with titles only (no panels) */
+/* Right sections */
 .section{margin-top:6px}
 .sep{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.5),transparent);margin:10px 0;border-radius:999px}
 
-/* Utility */
+/* Utils */
+.note{margin-top:8px;color:var(--muted);font-size:12px}
 .small{font-size:12px;color:var(--muted)}
 .mono{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
 
-<!-- Header mount -->
+<!-- Header mount (replaced by header.html if available) -->
 <div id="header-container" class="brand">
-  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+  <div class="brand-logo-wrap">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+  </div>
   <h1>Rank Progression</h1>
 </div>
 <script>
@@ -150,7 +169,7 @@ body{
     <div class="block-title">Overview</div>
 
     <div class="row">
-      <img id="curImg" class="rankImg" alt="Rank">
+      <img id="curImg" class="rankImg" alt="Current Rank">
       <div class="kv">
         <div class="k">Current Rank</div>
         <div class="v" id="curRank">—</div>
@@ -159,7 +178,7 @@ body{
     </div>
 
     <div class="row">
-      <img id="nextImg" class="rankImg" alt="Next">
+      <img id="nextImg" class="rankImg" alt="Next Rank">
       <div class="kv">
         <div class="k">Next Rank</div>
         <div class="v" id="nextName">—</div>
@@ -168,7 +187,7 @@ body{
     </div>
 
     <div class="row" style="justify-content:flex-end">
-      <button class="pill btn" id="btnPromote" disabled title="Become available when all targets met">Request Promotion</button>
+      <button class="pill btn" id="btnPromote" disabled title="Becomes available when all targets are met">Request Promotion</button>
     </div>
 
     <div class="sep"></div>
@@ -221,7 +240,6 @@ const $ = s => document.querySelector(s);
 
 let session=null, sb=null, me=null;
 
-/* helpers */
 function setFill(sel, pct){
   const el = $(sel);
   const x  = Math.max(0, Math.min(1, Number(pct)||0));
@@ -234,7 +252,7 @@ async function fetchRankImage(code){
   }catch{ return ''; }
 }
 
-/* ===== Progress / Next / Bars ===== */
+/* Progress / Next / Bars */
 async function loadProgress(){
   const { data: prog } = await sb
     .from('v_user_rank_progress')
@@ -247,13 +265,11 @@ async function loadProgress(){
   $('#nextName').textContent = prog?.next_name || '—';
   $('#nextPg').textContent   = `PG: ${prog?.next_paygrade || '—'}`;
 
-  // images
   const curImg = await fetchRankImage(prog?.current_code);
   const nxtImg = await fetchRankImage(prog?.next_code);
   if (curImg){ $('#curImg').src = curImg; $('#curImg').style.visibility='visible'; } else { $('#curImg').style.visibility='hidden'; }
   if (nxtImg){ $('#nextImg').src = nxtImg; $('#nextImg').style.visibility='visible'; } else { $('#nextImg').style.visibility='hidden'; }
 
-  // numbers for bars
   const { data: up } = await sb
     .from('v_user_progress')
     .select('*')
@@ -289,7 +305,7 @@ async function loadProgress(){
       : 'Promotion is available when all targets are met.';
 }
 
-/* ===== History ===== */
+/* History */
 async function loadHistory(){
   const { data, error } = await sb
     .from('rank_changes')
@@ -312,7 +328,7 @@ async function loadHistory(){
   }).join('');
 }
 
-/* ===== Certifications (list, no cards) ===== */
+/* Certifications */
 async function loadCerts(){
   const { data, error } = await sb
     .from('v_user_certifications')
@@ -342,7 +358,7 @@ async function loadCerts(){
   }).join('');
 }
 
-/* ===== Promote RPC ===== */
+/* Promote RPC */
 async function promote(){
   const { data, error } = await sb.rpc('request_promotion', { p_user: me });
   if(error){ alert('Promotion failed: ' + error.message); return; }
@@ -351,7 +367,7 @@ async function promote(){
   await loadProgress(); await loadHistory();
 }
 
-/* ===== Boot ===== */
+/* Boot */
 document.addEventListener('DOMContentLoaded', async ()=>{
   session = await requireAuth();
   if(!session) return;
