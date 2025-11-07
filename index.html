@@ -440,7 +440,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   }
 
   const emailFallback  = session.user?.email || '';
-  theHandle  = row.handle || row.display_name || emailFallback.split('@')[0] || 'Unknown';
+  const theHandle  = row.handle || row.display_name || emailFallback.split('@')[0] || 'Unknown';
   const rankName = row.current_rank_name || 'Unranked';
   const rankCode = row.current_rank_code || '';
   const category = row.current_rank_category || '—';
