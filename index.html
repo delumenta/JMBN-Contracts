@@ -18,28 +18,6 @@
 html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity .6s ease}
 body{opacity:0}
 
-/* Post link styling */
-#postAnnc{
-  color: var(--accent);
-  text-decoration: none;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 6px 10px;
-  background: linear-gradient(180deg,#0c0c0c,#060606);
-  font-weight: 800;
-}
-#postAnnc:hover{ background: var(--accent); color:#000; text-decoration: none }
-
-/* Announcement action buttons */
-.annc-row{ display:flex; align-items:center; justify-content:space-between; gap:8px }
-.annc-actions{ display:flex; gap:6px }
-.annc-btn{
-  padding:4px 8px; border-radius:8px; border:1px solid var(--border);
-  background:transparent; color:var(--accent); cursor:pointer; font-family:'Play';
-  font-size:12px; line-height:1;
-}
-.annc-btn:hover{ background:var(--accent); color:#000 }
-
 /* Background */
 #goldDust{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;background:#000}
 .hud-grid{
@@ -58,58 +36,100 @@ body::after{
 }
 
 /* Layout */
-.wrapper{position:relative;z-index:3;min-height:100%;display:grid;place-items:center;padding:28px}
+.wrapper{position:relative;z-index:3;min-height:100%;display:grid;place-items:center;padding:24px}
 .center{width:min(980px,96vw)}
 
+/* ===== Announcement Ticket (top banner) ===== */
+.annc-ticket{
+  margin:6px 0 22px;                 /* more bottom spacing */
+  background:rgba(10,10,10,.9);
+  border:1px dashed var(--border);
+  border-radius:12px;
+  padding:12px 14px;
+  box-shadow:0 0 10px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.08);
+}
+.annc-ticket .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.annc-ticket .left{display:flex;align-items:center;gap:10px}
+.annc-chip{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:3px 8px;background:#0c0c0c;color:var(--accent);font-weight:800;font-size:11px;letter-spacing:.3px}
+.annc-title{font-weight:900;color:var(--accent);font-size:15px}
+.annc-meta{color:var(--muted);font-size:11px}
+.annc-body{margin-top:6px;color:var(--text);font-size:12px}
+.annc-actions{display:flex;gap:6px}
+.annc-btn{
+  padding:3px 8px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--accent);cursor:pointer;font-family:'Play';
+  font-size:11px;line-height:1;
+}
+.annc-btn:hover{background:var(--accent);color:#000}
+#postAnnc{
+  color: var(--accent);text-decoration:none;border:1px solid var(--border);
+  border-radius:8px;padding:3px 8px;background:linear-gradient(180deg,#0c0c0c,#060606);font-weight:800;font-size:11px
+}
+#postAnnc:hover{background:var(--accent);color:#000;text-decoration:none}
+
 /* Brand header */
-.brand{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-.brand-logo{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(242,214,117,.35))}
+.brand{display:flex;align-items:center;gap:12px;margin:0 0 16px} /* space below brand */
+.brand-logo{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(242,214,117,.35))}
 .brand-text{display:flex;flex-direction:column}
-.brand-text h1{margin:0;font-size:clamp(24px,3.6vw,36px);color:var(--accent);font-weight:700;line-height:1.1}
-.brand-text .tagline{color:var(--muted);font-size:clamp(12px,1.6vw,14px);margin-top:2px}
+.brand-text h1{margin:0;font-size:clamp(22px,3vw,32px);color:var(--accent);font-weight:700;line-height:1.1}
+.brand-text .tagline{color:var(--muted);font-size:clamp(11px,1.4vw,13px);margin-top:2px}
 
 /* Cards */
 .card{
   background:rgba(11,11,11,.85);
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:16px;
-  box-shadow:0 0 18px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 14px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
   backdrop-filter:blur(6px) brightness(1.1) saturate(1.05);
   position:relative;overflow:hidden;
 }
 .card::after{
-  content:"";position:absolute;inset:0;border-radius:14px;
+  content:"";position:absolute;inset:0;border-radius:12px;
   background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,0.18) 50%,rgba(255,255,255,0) 70%);
   transform:translateX(-100%);transition:transform .6s ease;pointer-events:none;
 }
 .card:hover::after{transform:translateX(100%)}
 
-/* Member card */
-.member{display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:center;margin-top:10px;margin-bottom:14px}
-.member .name{font-weight:900;font-size:20px;color:var(--accent)}
-.rankline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;margin-top:6px}
-.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
+/* Member card (compact) */
+.member{
+  display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:center;
+  margin:0 0 22px;                  /* bigger gap below member card */
+}
+.member .name{font-weight:900;font-size:18px;color:var(--accent)}
+.rankline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;margin-top:4px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;background:#0c0c0c;color:var(--muted)}
+.rankimg{width:110px;height:110px;object-fit:contain;border:none;border-radius:0;background:transparent;display:block;justify-self:end}
 
-/* Rank image — NO frame/background */
-.rankimg{
-  width:120px;height:120px;object-fit:contain;
-  border:none;border-radius:0;background:transparent; /* <- unframed */
-  display:block;justify-self:end;
+/* ===== ONE container of three cards ===== */
+.actions-wrap{margin-top:24px}      /* more space above the 3-card row */
+.actions-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;                         /* bigger gaps between cards */
+}
+@media(max-width:920px){.actions-3{grid-template-columns:1fr}}
+.action h3{margin:0 0 6px;color:var(--accent);font-size:16px}
+.action p{margin:0 0 8px;color:var(--muted);font-size:12px}
+.action a{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+  text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content;font-size:13px
 }
 
-/* Action grid */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:820px){.grid-2{grid-template-columns:1fr}}
-.action h3{margin:0 0 6px;color:var(--accent);font-size:18px}
-.action p{margin:0 0 10px;color:var(--muted);font-size:13px}
-.action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
-
-/* === Photo backgrounds on the two action cards === */
+/* Action backgrounds + compact height */
+.card.action{
+  min-height:210px;                 /* slightly taller for balance */
+  display:flex;flex-direction:column;justify-content:flex-end;gap:10px;
+}
 .card.action.grow-bg{
   background:
     linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
     url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/grow.jpg") center/cover no-repeat;
+}
+.card.action.missions{
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
+    url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/mission.png") center/cover no-repeat;
 }
 .card.action.jmbn-bg{
   background:
@@ -117,27 +137,15 @@ body::after{
     url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/jmbn.jpg") center/cover no-repeat;
 }
 
-/* Lists */
-.list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
-.item{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0f0f0f}
-.item h4{margin:0 0 4px;color:var(--accent);font-size:15px}
-.item .meta{font-size:12px;color:var(--muted)}
-.empty{color:var(--muted);font-size:13px;padding:10px}
-
-/* Expandable announcement body */
-.expand{cursor:pointer}
-.expand + .expand-body{display:none;margin-top:6px;color:var(--text);font-size:13px}
-.expand.open + .expand-body{display:block}
-
 /* Footer */
-.footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
+.footer{color:var(--muted);font-size:12px;margin-top:18px;text-align:center}
 
 /* Boot */
 .boot{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease}
 .boot.hidden{opacity:0;visibility:hidden}
 .bootCard{width:min(720px,90vw);background:#060606;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 0 22px rgba(214,180,76,.28),inset 0 0 0 1px rgba(214,180,76,.12)}
 .bootHead{display:flex;justify-content:space-between;color:var(--accent);font-weight:700;font-size:14px;margin-bottom:8px}
-.bootLog{height:220px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8}
+.bootLog{height:200px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8}
 .boot .ok{color:#7CFC9A}
 .bootCtrl{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
 .bootBtn{padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play'}
@@ -160,7 +168,7 @@ body::after{
 </head>
 <body>
 
-<!-- Safety net: show UI even if later JS fails -->
+<!-- Safety net -->
 <script>
 document.addEventListener('DOMContentLoaded', () => { document.body.style.opacity = 1; });
 window.addEventListener('error', () => {
@@ -185,6 +193,26 @@ window.addEventListener('error', () => {
 
 <div class="wrapper">
   <main class="center">
+
+    <!-- ===== Announcement Ticket (top) ===== -->
+    <section class="annc-ticket" id="anncTicket">
+      <div class="row">
+        <div class="left">
+          <span class="annc-chip">ANNOUNCEMENT</span>
+          <div>
+            <div class="annc-title" id="anncTitle">No announcements yet.</div>
+            <div class="annc-meta" id="anncMeta"></div>
+          </div>
+        </div>
+        <div class="annc-actions" id="anncActions" style="display:none">
+          <a id="postAnnc" href="#">Post</a>
+          <button class="annc-btn" id="anncEdit" title="Edit">✎ Edit</button>
+          <button class="annc-btn" id="anncDelete" title="Delete">✕ Delete</button>
+        </div>
+      </div>
+      <div class="annc-body" id="anncBody"></div>
+    </section>
+
     <!-- Brand -->
     <div class="brand">
       <img class="brand-logo" alt="JMBN"
@@ -210,49 +238,32 @@ window.addEventListener('error', () => {
            alt="Rank">
     </section>
 
-    <!-- Your Missions + Announcements -->
-    <section class="grid-2">
-      <!-- Your Missions -->
-      <div class="card">
-        <h3 style="margin:0 0 8px;color:var(--accent);font-size:18px">Your Missions</h3>
-        <div class="item" style="display:flex;justify-content:space-between;align-items:center">
-          <div><strong>Total Missions Attended</strong></div>
-          <div id="attendedCount" style="font-weight:900;font-size:20px;color:var(--accent)">—</div>
+    <!-- ONE container with 3 cards -->
+    <section class="actions-wrap">
+      <div class="actions-3">
+        <div class="card action grow-bg">
+          <h3>Grow With Us</h3>
+          <p>Your growth matters. Start your journey and track each step upward.</p>
+          <a href="rank-progression.html">➜ Check your progression</a>
         </div>
-        <div class="item">
-          <h4>Last 5 Missions Joined</h4>
-          <div id="lastFive" class="list"><div class="empty">Loading…</div></div>
+
+        <div class="card action missions">
+          <h3>Your Missions</h3>
+          <p id="missionsBlurb">Track your operations and see how far you’ve come.</p>
+          <a href="mission-log.html">➜ View missions</a>
         </div>
-      </div>
 
-      <!-- Announcements -->
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <h3 style="margin:0;color:var(--accent);font-size:18px">Announcements</h3>
-          <a class="link" href="#" id="postAnnc" style="display:none">Post</a>
+        <div class="card action jmbn-bg">
+          <h3>JMBN</h3>
+          <p>Every operation, attendance, and achievement is recorded and remembered.</p>
+          <a href="mission-log.html">➜ Enter our archives</a>
         </div>
-        <div id="annc" class="list"><div class="empty">No announcements yet.</div></div>
-      </div>
-    </section>
-
-    <!-- Actions -->
-    <section class="grid-2" style="margin-top:14px">
-      <div class="card action grow-bg">
-        <h3>Grow With Us</h3>
-        <p>Your growth matters. Every journey begins somewhere, and we support and celebrate your progress.</p>
-        <a href="rank-progression.html">➜ Check your progression.</a>
-      </div>
-
-      <div class="card action jmbn-bg">
-        <h3>JMBN</h3>
-        <p>Our missions tell our story. Here, every operation, every attendance, and every achievement is recorded and remembered..</p>
-        <a href="mission-log.html">➜ Enter our archives</a>
       </div>
     </section>
 
     <div class="footer">
       <span style="color:var(--muted)">Theme:</span> Play • Gold Accents ·
-      <span style="color:var(--muted)">Links:</span> Relative URLs (GitHub Pages ready)
+      <span style="color:var(--muted)">Grid:</span> One 3-up container
     </div>
   </main>
 </div>
@@ -394,7 +405,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
 })();
 </script>
 
-<!-- Supabase (auth + profile fill + data) -->
+<!-- Supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
@@ -412,7 +423,6 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     return 'just now';
   };
 
-  // Auth
   const session = await requireAuth();
   if (!session) return;
   const sb = getSupabase();
@@ -423,14 +433,9 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     const { data, error } = await sb
       .from('v_profiles_detailed')
       .select(`
-        user_id,
-        handle,
-        display_name,
-        current_rank_name,
-        current_rank_code,
-        current_rank_image_url,
-        current_rank_category,
-        ingame_role
+        user_id, handle, display_name,
+        current_rank_name, current_rank_code, current_rank_image_url,
+        current_rank_category, ingame_role
       `)
       .eq('user_id', session.user.id)
       .maybeSingle();
@@ -449,8 +454,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
   const storageUrl = rankCode ? sb.storage.from('Ranks').getPublicUrl(`${rankCode}.png`).data.publicUrl : '';
   const rankImg    = row.current_rank_image_url || storageUrl;
 
-  const prettyName = theHandle.replace(/\b\w/g, c => c.toUpperCase());
-  out('#mName', prettyName);
+  out('#mName', theHandle.replace(/\b\w/g, c => c.toUpperCase()));
   out('#mRank', rankName);
   out('#mCategory', category);
 
@@ -466,153 +470,102 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     }
   }
 
-  /* ---- Your Missions (attended + last 5) ---- */
-  async function loadMissions() {
-    try {
-      let { data, error } = await sb
-        .from('mission_attendees')
-        .select('mission_id, joined_at, missions(id,title,start_time)')
-        .eq('user_id', session.user.id)
-        .order('joined_at', { ascending:false });
-      if (error) throw error;
-
-      if (data && data.length && data[0].missions == null) {
-        const ids = [...new Set(data.map(r => r.mission_id))];
-        if (ids.length) {
-          const { data: mrows, error: mErr } = await sb
-            .from('missions')
-            .select('id,title,start_time')
-            .in('id', ids);
-          if (!mErr) {
-            const map = Object.fromEntries((mrows||[]).map(m => [m.id, m]));
-            data = data.map(r => ({ ...r, missions: map[r.mission_id] || null }));
-          }
-        }
-      }
-
-      out('#attendedCount', data?.length ?? 0);
-
-      const list = $('#lastFive');
-      if (!data || data.length === 0) {
-        list.innerHTML = '<div class="empty">No missions yet.</div>';
-      } else {
-        const last5 = data.slice(0,5).map(r => {
-          const m = r.missions || {};
-          const when = m.start_time ? new Date(m.start_time).toLocaleString() : '';
-          return `<div class="item">
-                    <div class="meta">Joined ${timeAgo(r.joined_at)}</div>
-                    <h4>${esc(m.title || 'Untitled')}</h4>
-                    <div class="meta">${when}</div>
-                  </div>`;
-        }).join('');
-        list.innerHTML = last5;
-      }
-    } catch (e) {
-      console.warn('your missions:', e.message);
-      $('#lastFive').innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
-      out('#attendedCount', '—');
-    }
-  }
-  await loadMissions();
-
-  /* ---- Elevation (Officer/Admin) ---- */
-  let elevated = false;
+  /* ---- Missions count only (for CTA blurb) ---- */
   try {
-    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
-    elevated = !!data;
-  } catch (_) {}
+    let { data, error } = await sb
+      .from('mission_attendees')
+      .select('mission_id, joined_at')
+      .eq('user_id', session.user.id)
+      .order('joined_at', { ascending:false });
+    if (error) throw error;
+    const count = data?.length ?? 0;
+    const recent = data?.[0]?.joined_at ? ` • last joined ${timeAgo(data[0].joined_at)}` : '';
+    out('#missionsBlurb', `You’ve attended ${count} mission${count===1?'':'s'}${recent}.`);
+  } catch (e) {
+    console.warn('missions count:', e.message);
+  }
 
-  // Grab once and reuse
-  const postLink = document.getElementById('postAnnc');
+  /* ---- Elevation ---- */
+  let elevated = false;
+  try { const { data } = await sb.rpc('is_elevated', { u: session.user.id }); elevated = !!data; } catch (_) {}
 
-  // Show "Post" only for elevated
-  if (elevated && postLink) postLink.style.display = '';
+  /* ---- Announcement Ticket (latest only) ---- */
+  const tTitle = $('#anncTitle'), tMeta = $('#anncMeta'), tBody = $('#anncBody'),
+        tActions = $('#anncActions'), btnEdit = $('#anncEdit'), btnDel = $('#anncDelete'),
+        postLink = $('#postAnnc');
+  let latest = null;
 
-  /* ---- Announcements (latest 5) + Edit/Delete ---- */
-  async function loadAnnouncements(){
-    const box = $('#annc');
+  async function loadAnncTicket(){
     try{
       const { data, error } = await sb
         .from('announcements')
         .select('id,title,body,created_at,posted_by')
         .order('created_at',{ ascending:false })
-        .limit(5);
+        .limit(1);
       if(error) throw error;
 
       if(!data || data.length===0){
-        box.innerHTML = '<div class="empty">No announcements yet.</div>';
+        tTitle.textContent = 'No announcements yet.';
+        tMeta.textContent = '';
+        tBody.textContent = '';
+        tActions.style.display = elevated ? '' : 'none';
+        if(postLink){ postLink.style.display = elevated ? '' : 'none'; }
         return;
       }
 
-      // Resolve display names
-      const uids = [...new Set(data.map(a=>a.posted_by).filter(Boolean))];
-      let names = {};
-      if(uids.length){
-        const { data: profs } = await sb
+      latest = data[0];
+
+      // resolve poster
+      let who = 'Officer';
+      try{
+        const { data: prof } = await sb
           .from('v_profiles_detailed')
           .select('user_id,handle,display_name')
-          .in('user_id', uids);
-        (profs||[]).forEach(p => names[p.user_id] = p.handle || p.display_name || p.user_id.slice(0,8));
+          .eq('user_id', latest.posted_by)
+          .maybeSingle();
+        if(prof) who = prof.handle || prof.display_name || who;
+      }catch(_){}
+
+      tTitle.textContent = latest.title || 'Announcement';
+      tMeta.textContent = `Posted by ${who} • ${timeAgo(latest.created_at)}`;
+      tBody.textContent = latest.body || '';
+      const canEdit = elevated || latest.posted_by === session.user.id;
+      tActions.style.display = (elevated || canEdit) ? '' : 'none';
+      if(postLink){ postLink.style.display = elevated ? '' : 'none'; }
+
+      if(btnEdit){
+        btnEdit.onclick = async ()=>{
+          if(!latest) return;
+          const title = prompt('Edit title:', latest.title || '');
+          if(title===null) return;
+          const body  = prompt('Edit body (optional):', latest.body || '') ?? null;
+          const { error } = await sb.from('announcements').update({ title, body }).eq('id', latest.id);
+          if(error){ alert('Edit failed: ' + error.message); return; }
+          await loadAnncTicket();
+        };
+      }
+      if(btnDel){
+        btnDel.onclick = async ()=>{
+          if(!latest) return;
+          if(!confirm('Delete this announcement?')) return;
+          const { error } = await sb.from('announcements').delete().eq('id', latest.id);
+          if(error){ alert('Delete failed: ' + error.message); return; }
+          latest = null;
+          await loadAnncTicket();
+        };
       }
 
-      box.innerHTML = data.map(a => {
-        const who = names[a.posted_by] || 'Officer';
-        const canEdit = elevated || a.posted_by === session.user.id;
-        return `
-          <div class="item" data-id="${a.id}">
-            <div class="annc-row">
-              <div class="expand"><h4 style="display:inline">${esc(a.title||'Announcement')}</h4></div>
-              ${canEdit ? `
-                <div class="annc-actions">
-                  <button class="annc-btn edit" title="Edit">✎ Edit</button>
-                  <button class="annc-btn delete" title="Delete">✕ Delete</button>
-                </div>` : ``}
-            </div>
-            <div class="meta">Posted by ${esc(who)} • ${timeAgo(a.created_at)}</div>
-            ${a.body ? `<div class="expand-body">${esc(a.body)}</div>` : ''}
-          </div>`;
-      }).join('');
-
-      // expand toggle
-      box.querySelectorAll('.expand').forEach(el=>{
-        el.onclick = ()=> el.classList.toggle('open');
-      });
-
-      // Edit
-      box.querySelectorAll('.annc-btn.edit').forEach(btn=>{
-        btn.onclick = async (e)=>{
-          const item = e.target.closest('.item');
-          const id = item.dataset.id;
-          const oldTitle = item.querySelector('h4').textContent;
-          const oldBody  = item.querySelector('.expand-body')?.textContent || '';
-          const title = prompt('Edit title:', oldTitle); if(title===null) return;
-          const body  = prompt('Edit body (optional):', oldBody);
-          const { error } = await sb.from('announcements').update({ title, body }).eq('id', id);
-          if(error){ alert('Edit failed: ' + error.message); return; }
-          await loadAnnouncements();
-        };
-      });
-
-      // Delete
-      box.querySelectorAll('.annc-btn.delete').forEach(btn=>{
-        btn.onclick = async (e)=>{
-          const item = e.target.closest('.item');
-          const id = item.dataset.id;
-          if(!confirm('Delete this announcement?')) return;
-          const { error } = await sb.from('announcements').delete().eq('id', id);
-          if(error){ alert('Delete failed: ' + error.message); return; }
-          await loadAnnouncements();
-        };
-      });
-
     }catch(e){
-      box.innerHTML = '<div class="empty" style="color:#ff9c9c">Failed to load.</div>';
-      console.warn('annc:', e.message);
+      console.warn('announcement ticket:', e.message);
+      tTitle.textContent = 'Announcement unavailable';
+      tMeta.textContent  = '';
+      tBody.textContent  = '';
+      tActions.style.display = elevated ? '' : 'none';
+      if(postLink){ postLink.style.display = elevated ? '' : 'none'; }
     }
   }
-  await loadAnnouncements();
+  await loadAnncTicket();
 
-  /* ---- Post announcement (elevated only) ---- */
   if (postLink) {
     postLink.onclick = async (ev) => {
       ev.preventDefault();
@@ -623,13 +576,12 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
           .from('announcements')
           .insert({ title, body, posted_by: session.user.id });
         if (error) throw error;
-        await loadAnnouncements();
+        await loadAnncTicket();
       } catch (e) {
         alert('Post failed: ' + e.message);
       }
     };
   }
-
 })();
 </script>
 </body>
