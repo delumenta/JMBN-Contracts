@@ -36,85 +36,87 @@ body::after{
 }
 
 /* Layout */
-.wrapper{position:relative;z-index:3;min-height:100%;display:grid;place-items:center;padding:28px}
+.wrapper{position:relative;z-index:3;min-height:100%;display:grid;place-items:center;padding:20px}
 .center{width:min(980px,96vw)}
 
 /* ===== Announcement Ticket (top banner) ===== */
 .annc-ticket{
-  margin:0 0 12px 0;
-  position:relative;
+  margin:0 0 10px 0;
   background:rgba(10,10,10,.9);
   border:1px dashed var(--border);
-  border-radius:14px;
-  padding:12px 14px;
-  box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.08);
+  border-radius:12px;
+  padding:10px 12px;
+  box-shadow:0 0 10px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.08);
 }
-.annc-ticket .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.annc-ticket .left{display:flex;align-items:center;gap:10px}
-.annc-chip{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;background:#0c0c0c;color:var(--accent);font-weight:800;font-size:12px;letter-spacing:.3px}
-.annc-title{font-weight:900;color:var(--accent);font-size:16px}
-.annc-meta{color:var(--muted);font-size:12px}
-.annc-body{margin-top:6px;color:var(--text);font-size:13px}
+.annc-ticket .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.annc-ticket .left{display:flex;align-items:center;gap:8px}
+.annc-chip{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:3px 8px;background:#0c0c0c;color:var(--accent);font-weight:800;font-size:11px;letter-spacing:.3px}
+.annc-title{font-weight:900;color:var(--accent);font-size:15px}
+.annc-meta{color:var(--muted);font-size:11px}
+.annc-body{margin-top:4px;color:var(--text);font-size:12px}
 .annc-actions{display:flex;gap:6px}
 .annc-btn{
-  padding:4px 8px; border-radius:8px; border:1px solid var(--border);
-  background:transparent; color:var(--accent); cursor:pointer; font-family:'Play';
-  font-size:12px; line-height:1;
+  padding:3px 8px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--accent);cursor:pointer;font-family:'Play';
+  font-size:11px;line-height:1;
 }
-.annc-btn:hover{ background:var(--accent); color:#000 }
+.annc-btn:hover{background:var(--accent);color:#000}
 #postAnnc{
-  color: var(--accent);
-  text-decoration: none;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 5px 10px;
-  background: linear-gradient(180deg,#0c0c0c,#060606);
-  font-weight: 800;
+  color: var(--accent);text-decoration:none;border:1px solid var(--border);
+  border-radius:8px;padding:3px 8px;background:linear-gradient(180deg,#0c0c0c,#060606);font-weight:800;font-size:11px
 }
-#postAnnc:hover{ background: var(--accent); color:#000; text-decoration: none }
+#postAnnc:hover{background:var(--accent);color:#000;text-decoration:none}
 
 /* Brand header */
-.brand{display:flex;align-items:center;gap:12px;margin:8px 0}
-.brand-logo{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(242,214,117,.35))}
+.brand{display:flex;align-items:center;gap:10px;margin:6px 0 8px}
+.brand-logo{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(242,214,117,.35))}
 .brand-text{display:flex;flex-direction:column}
-.brand-text h1{margin:0;font-size:clamp(24px,3.6vw,36px);color:var(--accent);font-weight:700;line-height:1.1}
-.brand-text .tagline{color:var(--muted);font-size:clamp(12px,1.6vw,14px);margin-top:2px}
+.brand-text h1{margin:0;font-size:clamp(22px,3vw,32px);color:var(--accent);font-weight:700;line-height:1.1}
+.brand-text .tagline{color:var(--muted);font-size:clamp(11px,1.4vw,13px);margin-top:2px}
 
 /* Cards */
 .card{
   background:rgba(11,11,11,.85);
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:16px;
-  box-shadow:0 0 18px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 14px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
   backdrop-filter:blur(6px) brightness(1.1) saturate(1.05);
   position:relative;overflow:hidden;
 }
 .card::after{
-  content:"";position:absolute;inset:0;border-radius:14px;
+  content:"";position:absolute;inset:0;border-radius:12px;
   background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,0.18) 50%,rgba(255,255,255,0) 70%);
   transform:translateX(-100%);transition:transform .6s ease;pointer-events:none;
 }
 .card:hover::after{transform:translateX(100%)}
 
-/* Member card */
-.member{display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:center;margin-top:10px;margin-bottom:14px}
-.member .name{font-weight:900;font-size:20px;color:var(--accent)}
-.rankline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;margin-top:6px}
-.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
-.rankimg{width:120px;height:120px;object-fit:contain;border:none;border-radius:0;background:transparent;display:block;justify-self:end}
+/* Member card (compact) */
+.member{display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:center;margin:8px 0 12px}
+.member .name{font-weight:900;font-size:18px;color:var(--accent)}
+.rankline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;margin-top:4px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;background:#0c0c0c;color:var(--muted)}
+.rankimg{width:110px;height:110px;object-fit:contain;border:none;border-radius:0;background:transparent;display:block;justify-self:end}
 
-/* === Actions row (now 3 columns on wide screens) === */
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-@media(max-width:980px){.grid-3{grid-template-columns:1fr}}
-.action h3{margin:0 0 6px;color:var(--accent);font-size:18px}
-.action p{margin:0 0 10px;color:var(--muted);font-size:13px}
-.action a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content}
+/* ===== ONE container of three cards ===== */
+.actions-wrap{margin-top:12px}
+.actions-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+@media(max-width:920px){.actions-3{grid-template-columns:1fr}}
+.action h3{margin:0 0 6px;color:var(--accent);font-size:16px}
+.action p{margin:0 0 8px;color:var(--muted);font-size:12px}
+.action a{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+  text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content;font-size:13px
+}
 
-/* Action backgrounds + height (Option B) */
+/* Action backgrounds + compact height */
 .card.action{
-  min-height: 260px;
-  display:flex; flex-direction:column; justify-content:flex-end; gap:10px;
+  min-height:200px;
+  display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
 }
 .card.action.grow-bg{
   background:
@@ -126,8 +128,6 @@ body::after{
     linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
     url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/jmbn.jpg") center/cover no-repeat;
 }
-
-/* Plain card (for Missions CTA) */
 .card.action.missions{
   background:
     linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
@@ -136,14 +136,14 @@ body::after{
 }
 
 /* Footer */
-.footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
+.footer{color:var(--muted);font-size:12px;margin-top:12px;text-align:center}
 
 /* Boot */
 .boot{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease}
 .boot.hidden{opacity:0;visibility:hidden}
 .bootCard{width:min(720px,90vw);background:#060606;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 0 22px rgba(214,180,76,.28),inset 0 0 0 1px rgba(214,180,76,.12)}
 .bootHead{display:flex;justify-content:space-between;color:var(--accent);font-weight:700;font-size:14px;margin-bottom:8px}
-.bootLog{height:220px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8}
+.bootLog{height:200px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8}
 .boot .ok{color:#7CFC9A}
 .bootCtrl{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
 .bootBtn{padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play'}
@@ -236,30 +236,32 @@ window.addEventListener('error', () => {
            alt="Rank">
     </section>
 
-    <!-- Actions (Grow • Missions CTA • Archives) -->
-    <section class="grid-3" style="margin-top:14px">
-      <div class="card action grow-bg">
-        <h3>Grow With Us</h3>
-        <p>Your growth matters. Every journey begins somewhere, and we support and celebrate your progress.</p>
-        <a href="rank-progression.html">➜ Check your progression.</a>
-      </div>
+    <!-- ONE container with 3 cards -->
+    <section class="actions-wrap">
+      <div class="actions-3">
+        <div class="card action grow-bg">
+          <h3>Grow With Us</h3>
+          <p>Your growth matters. Start your journey and track each step upward.</p>
+          <a href="rank-progression.html">➜ Check your progression</a>
+        </div>
 
-      <div class="card action missions">
-        <h3>Your Missions</h3>
-        <p id="missionsBlurb">Track your operations and see how far you’ve come.</p>
-        <a href="mission-log.html">➜ View missions</a>
-      </div>
+        <div class="card action missions">
+          <h3>Your Missions</h3>
+          <p id="missionsBlurb">Track your operations and see how far you’ve come.</p>
+          <a href="mission-log.html">➜ View missions</a>
+        </div>
 
-      <div class="card action jmbn-bg">
-        <h3>JMBN</h3>
-        <p>Our missions tell our story. Every operation, attendance, and achievement is recorded and remembered.</p>
-        <a href="mission-log.html">➜ Enter our archives</a>
+        <div class="card action jmbn-bg">
+          <h3>JMBN</h3>
+          <p>Every operation, attendance, and achievement is recorded and remembered.</p>
+          <a href="mission-log.html">➜ Enter our archives</a>
+        </div>
       </div>
     </section>
 
     <div class="footer">
       <span style="color:var(--muted)">Theme:</span> Play • Gold Accents ·
-      <span style="color:var(--muted)">Links:</span> Relative URLs (GitHub Pages ready)
+      <span style="color:var(--muted)">Grid:</span> One 3-up container
     </div>
   </main>
 </div>
@@ -471,7 +473,8 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     let { data, error } = await sb
       .from('mission_attendees')
       .select('mission_id, joined_at')
-      .eq('user_id', session.user.id);
+      .eq('user_id', session.user.id)
+      .order('joined_at', { ascending:false });
     if (error) throw error;
     const count = data?.length ?? 0;
     const recent = data?.[0]?.joined_at ? ` • last joined ${timeAgo(data[0].joined_at)}` : '';
@@ -523,11 +526,9 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       tTitle.textContent = latest.title || 'Announcement';
       tMeta.textContent = `Posted by ${who} • ${timeAgo(latest.created_at)}`;
       tBody.textContent = latest.body || '';
-      // show actions if elevated or the original poster
       const canEdit = elevated || latest.posted_by === session.user.id;
-      tActions.style.display = elevated || canEdit ? '' : (elevated ? '' : 'none');
+      tActions.style.display = (elevated || canEdit) ? '' : 'none';
 
-      // wire buttons
       if(postLink){ postLink.style.display = elevated ? '' : 'none'; }
       if(btnEdit){
         btnEdit.onclick = async ()=>{
