@@ -110,6 +110,15 @@ tr:hover{background:rgba(214,180,76,.08)}
 }
 .section .body{font-size:13px;color:var(--text);line-height:1.6}
 .section .muted{color:var(--muted)}
+
+/* Certifications-only gallery in modal */
+.certThumbs{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center
+}
+.certThumbs img{
+  width:56px;height:56px;object-fit:contain;display:block;
+  border:none;background:transparent;box-shadow:none;border-radius:0;
+}
 </style>
 </head>
 <body>
@@ -156,7 +165,7 @@ tr:hover{background:rgba(214,180,76,.08)}
             <th style="width:19%">Rank Category</th>
             <th style="width:20%">Current Rank</th>
             <th style="width:20%">Specialization</th>
-            <th style="width:13%;text-align:right">Total Hours</th>
+            <th style="width:13%">Certifications</th>
             <th style="width:5%"></th>
           </tr>
         </thead>
@@ -171,7 +180,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal (RESTORED) -->
   <div id="viewMask" class="modal-mask" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="header-row">
@@ -193,10 +202,10 @@ tr:hover{background:rgba(214,180,76,.08)}
 
       <hr class="divider">
 
-      <!-- Last mission section (replaces old Certifications block) -->
       <div class="section">
-        <h4>Last Mission</h4>
-        <div id="vLastMission" class="body muted">—</div>
+        <h4>Certifications</h4>
+        <!-- ONLY images below, no labels/text -->
+        <div id="vCertThumbs" class="certThumbs"></div>
       </div>
     </div>
   </div>
@@ -209,13 +218,6 @@ tr:hover{background:rgba(214,180,76,.08)}
 const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 const toTitleCase = s => s ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()) : '';
-const timeAgo = (iso) => {
-  if(!iso) return '';
-  const s = Math.floor((Date.now() - new Date(iso)) / 1000);
-  const steps = [[31536000,'y'],[2592000,'mo'],[604800,'w'],[86400,'d'],[3600,'h'],[60,'m'],[1,'s']];
-  for (const [sec,lbl] of steps) if (s >= sec) return Math.floor(s/sec) + lbl + ' ago';
-  return 'just now';
-};
 
 function normalizeRoles(r){
   const raw = r.ingame_role ?? null;
@@ -225,10 +227,15 @@ function normalizeRoles(r){
 }
 
 let sb=null, ROWS=[];
-const RANK_BUCKET='Ranks';
+const RANK_BUCKET='Ranks', CERT_BUCKET='Certifications';
+
 function rankPublicUrlFromCode(code){
-  if(!code) return ''; 
+  if(!code) return '';
   return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
+}
+function certPublicUrlFromCode(code){
+  if(!code) return '';
+  return sb.storage.from(CERT_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
 
 const tbody=$('#tbody'), countEl=$('#count'), q=$('#q');
@@ -246,7 +253,6 @@ function render(rows){
     const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
     const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
     const roles=normalizeRoles(r);
-    const hours = Number(r.total_hours ?? 0);
 
     return `
     <tr>
@@ -259,7 +265,7 @@ function render(rows){
         </div>
       </td>
       <td>${roles.length?`<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>`:`<span style="color:var(--muted)">—</span>`}</td>
-      <td style="text-align:right;color:var(--accent);font-weight:800">${hours}h</td>
+      <td><span style="color:var(--muted)">—</span></td>
       <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
     </tr>`;
   }).join('');
@@ -279,6 +285,36 @@ function filterRows(){
 function closeView(){ $('#viewMask').style.display='none'; }
 window.closeView=closeView;
 
+async function loadCertThumbs(userId){
+  // Load owned cert images for this user; show only images
+  const box = $('#vCertThumbs');
+  box.innerHTML = '';
+  try{
+    const { data, error } = await sb
+      .from('v_user_certifications')
+      .select('certification_code,image_url,owned')
+      .eq('user_id', userId);
+    if(error){ console.warn(error.message); return; }
+
+    const imgs = (data||[])
+      .filter(c => c.owned)
+      .map(c => c.image_url || certPublicUrlFromCode(c.certification_code))
+      .filter(Boolean);
+
+    if(!imgs.length){
+      // show nothing at all (per your requirement)
+      box.innerHTML = '';
+      return;
+    }
+
+    box.innerHTML = imgs
+      .map(src => `<img src="${esc(src)}" alt="" loading="lazy" onerror="this.style.display='none'">`)
+      .join('');
+  }catch(e){
+    console.warn('cert thumbs:', e.message);
+  }
+}
+
 function viewMember(userId){
   const r=ROWS.find(x=>x.user_id===userId);
   if(!r) return;
@@ -297,18 +333,13 @@ function viewMember(userId){
   $('#vRoles').innerHTML=roles.length?roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' '):'—';
   $('#vAttended').textContent=attended;
 
-  // Last mission block
-  const when = r.last_mission_at ? timeAgo(r.last_mission_at) : null;
-  const exact = r.last_mission_at ? new Date(r.last_mission_at).toLocaleString() : null;
-  const title = r.last_mission_title || '—';
-  $('#vLastMission').innerHTML = r.last_mission_at
-    ? `<div><b>${esc(title)}</b></div><div class="muted">${when} <span title="${esc(exact)}">(${esc(exact)})</span></div>`
-    : '—';
-
   const imgEl=$('#rankImg');
   imgEl.src=imgUrl||''; imgEl.alt=r.current_rank_code||'Rank';
   imgEl.style.visibility=imgUrl?'visible':'hidden';
   imgEl.onerror=()=>{imgEl.style.visibility='hidden';};
+
+  // Load ONLY certification images into modal
+  loadCertThumbs(userId);
 
   $('#viewMask').style.display='flex';
 }
@@ -326,10 +357,7 @@ async function loadRoster(){
       current_rank_code,
       current_rank_image_url,
       ingame_role,
-      missions_attended,
-      total_hours,         -- NEW
-      last_mission_at,     -- NEW
-      last_mission_title   -- NEW (optional)
+      missions_attended
     `)
     .order('current_rank_category',{ascending:true})
     .order('handle',{ascending:true});
