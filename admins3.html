@@ -25,7 +25,7 @@ body{
   color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.25px;
 }
 
-/* Header */
+/* Fallback brand (used only if header.html fails to load) */
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand img.brand-logo{width:44px;height:44px;object-fit:contain;border:none;background:transparent;box-shadow:none}
 .brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
@@ -62,19 +62,17 @@ body{
 .cert .title{font-weight:700;font-size:12px}
 .cert .code{font-size:10px;color:var(--muted);margin-top:1px}
 
-/* Timeline – keep line, REMOVE dots */
+/* Timeline – keep vertical line, REMOVE dots */
 .timeline{
   position:relative;
   margin-top:10px;
-  padding-left:36px;        /* breathing room from the vertical line */
+  padding-left:36px;
 }
 .timeline::before{
   content:"";
   position:absolute;
-  left:16px;               /* vertical line position */
-  top:0;bottom:0;
-  width:2px;
-  background:linear-gradient(var(--border),transparent);
+  left:16px; top:0; bottom:0;
+  width:2px; background:linear-gradient(var(--border),transparent);
 }
 .titem{
   position:relative;
@@ -82,7 +80,7 @@ body{
   border-bottom:1px solid rgba(255,255,255,.06);
   display:grid;grid-template-columns:1fr auto;gap:10px;
 }
-.tdot{display:none}         /* <<< circles removed */
+.tdot{display:none}
 .titem.done .tdot{display:none}
 .tlabel{font-weight:700}
 .small{font-size:12px;color:var(--muted)}
@@ -100,12 +98,34 @@ button:hover{background:var(--accent);color:#000}
 </head>
 <body>
 
+<!-- Header mount point (replaced by header.html if available) -->
 <div id="header-container">
   <div class="brand">
     <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
     <h1>JMBN – Progression</h1>
   </div>
 </div>
+<script>
+/* Inject shared header.html and set active nav */
+(async () => {
+  try{
+    const r = await fetch('header.html', { cache: 'no-cache' });
+    if(!r.ok) return;
+    const html = await r.text();
+    const mount = document.getElementById('header-container');
+    if(mount) mount.outerHTML = html;
+
+    // highlight current page in header nav (expects links with .nav-btn)
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a => {
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        if (href === here || (here === '' && href === 'index.html')) a.classList.add('active');
+      });
+    });
+  }catch(e){ console.warn('Header mount failed:', e); }
+})();
+</script>
 
 <div class="panel">
   <div class="rankRow">
@@ -192,6 +212,7 @@ async function fetchRankImage(code){
   if(!code) return '';
   try{return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl||'';}catch{return '';}
 }
+
 document.addEventListener('DOMContentLoaded', async ()=>{
   const session=await requireAuth();if(!session)return;
   sb=getSupabase();me=session.user.id;
