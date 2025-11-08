@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN — Earnings & Payouts</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+
+<style>
+:root{
+  --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--row:#0a0a0a;
+  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#7CFC9A;
+  --fs:14px
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.25px}
+.wrap{max-width:1100px;margin:22px auto;padding:0 14px}
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.brand img{width:44px;height:44px;object-fit:contain}
+.brand h1{margin:0;color:var(--accent);font-size:clamp(18px,2.6vw,24px)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;
+  box-shadow:0 0 18px rgba(214,180,76,.18)
+}
+.card h3{margin:0 0 8px;color:var(--accent);font-size:16px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:900px){.kpis{grid-template-columns:1fr}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px}
+.kpi .t{color:var(--muted);font-size:12px}
+.kpi .v{font-weight:700;font-size:18px;margin-top:2px}
+.kpi small{color:var(--muted)}
+.table{margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.table header,.row{display:grid;grid-template-columns:160px 1fr 120px 110px 110px 110px;gap:10px;align-items:center}
+.table header{background:#121212;color:var(--accent);padding:10px;font-size:12px}
+.row{padding:10px;border-top:1px solid rgba(255,255,255,.08);background:var(--row)}
+.row:nth-child(odd){background:#0d0d0d}
+.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;background:#0c0c0c;color:var(--muted)}
+.mono{font-variant-numeric:tabular-nums}
+.right{text-align:right}
+.hint{color:var(--muted);font-size:12px;margin-top:8px}
+.note{background:#0c0c0c;border:1px dashed var(--border);border-radius:10px;padding:10px;margin-top:10px;color:var(--text)}
+.formula{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;line-height:1.5}
+hr.sep{border:0;border-top:1px solid rgba(255,255,255,.1);margin:10px 0}
+.small{font-size:12px;color:var(--muted)}
+button.link{border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border-radius:8px;padding:6px 10px;cursor:pointer;font-family:'Play'}
+button.link:hover{background:var(--accent);color:#000}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1>JMBN — Earnings & Payouts</h1>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="t">Org cut (lifetime)</div>
+      <div class="v mono" id="orgTotal">—</div>
+      <small id="orgThisMonth" class="small">MTD: —</small>
+    </div>
+    <div class="kpi">
+      <div class="t">You — lifetime earned</div>
+      <div class="v mono" id="youTotal">—</div>
+      <small id="youMissions" class="small">from — missions</small>
+    </div>
+    <div class="kpi">
+      <div class="t">Latest mission</div>
+      <div class="v mono" id="lastMissionEarned">—</div>
+      <small id="lastMissionTitle" class="small">—</small>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:14px">
+    <!-- Your last 10 payouts -->
+    <section class="card">
+      <h3>Your latest 10 mission payouts</h3>
+      <div class="table">
+        <header>
+          <div>Date</div>
+          <div>Mission</div>
+          <div class="right">Pool (after org)</div>
+          <div class="right">Base share</div>
+          <div class="right">Adj. (+/−)</div>
+          <div class="right">Final</div>
+        </header>
+        <div id="rows"></div>
+      </div>
+      <div class="hint">Tip: click a row to see the formula breakdown for that mission.</div>
+      <div id="breakdown" class="note" style="display:none"></div>
+    </section>
+
+    <!-- Explanation -->
+    <section class="card">
+      <h3>How base pay is calculated</h3>
+      <div class="note">
+        <div class="formula">
+          1) <b>Org cut</b>: <code>org_cut_pct</code> taken from mission payout<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;Pool after cut = <code>payout_auec × (1 − org_cut_pct)</code><br>
+          2) <b>Weighted split</b> by pay grade weight:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<code>base_share = pool_after_cut × (your_weight / total_weight)</code><br>
+          3) <b>Overrides</b> (optional): manual +/− aUEC per user<br>
+          4) <b>Final</b> = <code>base_share + add_pay_override</code>
+        </div>
+        <hr class="sep">
+        We read weights from <span class="badge">pay_grade_rules</span> via your current rank’s paygrade
+        and compute the org cut using <span class="badge">v_mission_org_cut_effective</span> joined to <span class="badge">missions</span>.
+      </div>
+
+      <h3 style="margin-top:14px">Your lifetime summary</h3>
+      <div class="table">
+        <header>
+          <div>Metric</div><div>Value</div><div></div><div></div><div></div><div></div>
+        </header>
+        <div class="row">
+          <div>Total Base</div><div class="mono" id="sumBase">—</div>
+          <div></div><div></div><div></div><div></div>
+        </div>
+        <div class="row">
+          <div>Total Overrides</div><div class="mono" id="sumBonus">—</div>
+          <div></div><div></div><div></div><div></div>
+        </div>
+        <div class="row">
+          <div><b>Total Earned</b></div><div class="mono" id="sumTotal"><b>—</b></div>
+          <div></div><div></div><div></div><div></div>
+        </div>
+      </div>
+
+      <div class="hint" style="margin-top:8px">
+        Need a CSV? <button class="link" id="btnExport">Export last 10</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Supabase -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const fmt = n => (n===null||n===undefined) ? '—'
+               : Number(n).toLocaleString('en-US', {maximumFractionDigits:0});
+  const fmt2 = n => (n===null||n===undefined) ? '—'
+               : Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+  const dateOnly = iso => new Date(iso).toLocaleDateString();
+
+  let sb, me;
+
+  async function boot(){
+    const session = await requireAuth();
+    if(!session) return;
+    sb = getSupabase();
+    me = session.user.id;
+
+    await Promise.all([
+      loadUserSummary(),
+      loadOrgTotals(),
+      loadLatest10()
+    ]);
+  }
+
+  // ----- YOUR SUMMARY (v_missions_payout_summary)
+  async function loadUserSummary(){
+    try{
+      const { data, error } = await sb
+        .from('v_missions_payout_summary')
+        .select('*')
+        .eq('user_id', me)
+        .maybeSingle();
+      if(error) throw error;
+
+      $('#youTotal').textContent   = data ? fmt2(data.total_earned) : '0';
+      $('#youMissions').textContent= data ? `from ${fmt(data.missions_count)} missions` : 'from 0 missions';
+      $('#sumBase').textContent    = data ? fmt2(data.total_base) : '0';
+      $('#sumBonus').textContent   = data ? fmt2(data.total_bonus) : '0';
+      $('#sumTotal').textContent   = data ? fmt2(data.total_earned) : '0';
+    }catch(e){
+      console.warn('summary:', e.message);
+    }
+  }
+
+  // ----- ORG TOTALS (sum per mission so we don’t double-count per user)
+  async function loadOrgTotals(){
+    try{
+      // lifetime
+      const { data: life, error: e1 } = await sb
+        .from('missions')
+        .select('id,payout_auec, created_at')
+        .neq('payout_auec', 0)
+        .order('created_at', {ascending:false});
+      if(e1) throw e1;
+
+      // get effective org cut per mission
+      const map = new Map();
+      // Pull all effective cuts in one go
+      const { data: cuts, error: e2 } = await sb
+        .from('v_mission_org_cut_effective')
+        .select('mission_id, org_cut_pct');
+      if(e2) throw e2;
+      for(const c of (cuts||[])) map.set(c.mission_id, Number(c.org_cut_pct||0));
+
+      let lifetime = 0, mtd = 0;
+      const now = new Date();
+      const monthKey = now.getUTCFullYear()+'-'+String(now.getUTCMonth()+1).padStart(2,'0');
+
+      for(const m of (life||[])){
+        const pct = map.get(m.id) ?? 0;
+        const take = Number(m.payout_auec||0) * pct;
+        lifetime += take;
+
+        const d = new Date(m.created_at);
+        const key = d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');
+        if(key === monthKey) mtd += take;
+      }
+
+      $('#orgTotal').textContent = fmt2(lifetime);
+      $('#orgThisMonth').textContent = 'MTD: ' + fmt2(mtd);
+    }catch(e){
+      console.warn('org totals:', e.message);
+    }
+  }
+
+  // ----- LATEST 10 (v_missions_payout_live)
+  async function loadLatest10(){
+    try{
+      const { data, error } = await sb
+        .from('v_missions_payout_live')
+        .select('*')
+        .eq('user_id', me)
+        .order('mission_date', { ascending:false })
+        .limit(10);
+      if(error) throw error;
+
+      const rows = data||[];
+      if(rows[0]){
+        $('#lastMissionEarned').textContent = fmt2(rows[0].final_share);
+        $('#lastMissionTitle').textContent  = rows[0].title || '—';
+      }
+
+      $('#rows').innerHTML = rows.map(r => `
+        <div class="row" data-mid="${r.mission_id}">
+          <div>${dateOnly(r.mission_date)}</div>
+          <div>${(r.title||'—')}</div>
+          <div class="right mono">${fmt2(r.pool_after_cut)}</div>
+          <div class="right mono">${fmt2(r.base_share)}</div>
+          <div class="right mono">${fmt2(r.add_pay_override)}</div>
+          <div class="right mono"><b>${fmt2(r.final_share)}</b></div>
+        </div>
+      `).join('');
+
+      // click to show breakdown
+      for(const el of document.querySelectorAll('.row')){
+        el.addEventListener('click', () => {
+          const r = rows.find(x => x.mission_id === el.dataset.mid);
+          if(!r) return;
+          showBreakdown(r);
+        });
+      }
+
+      // CSV export (last 10)
+      $('#btnExport').onclick = () => exportCSV(rows);
+
+    }catch(e){
+      console.warn('latest10:', e.message);
+    }
+  }
+
+  function showBreakdown(r){
+    const pct = Number(r.org_cut_pct||0);
+    const pctTxt = (pct*100).toFixed(1)+'%';
+    const html = `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <div>
+          <b>${r.title||'—'}</b><br>
+          <span class="small">${dateOnly(r.mission_date)}</span>
+        </div>
+        <div><span class="badge">Paygrade: ${r.paygrade||'—'}</span></div>
+      </div>
+      <hr class="sep">
+      <div class="formula">
+        payout_auec = <b>${fmt2(r.payout_auec)}</b><br>
+        org_cut = payout_auec × <b>${pctTxt}</b> = <b>${fmt2(r.org_cut_value)}</b><br>
+        pool_after_cut = <b>${fmt2(r.pool_after_cut)}</b><br>
+        total_weight = <b>${fmt2(r.total_weight)}</b>, your weight = <b>${fmt2(r.weight)}</b><br>
+        base_share = pool_after_cut × (your_weight / total_weight)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;= <b>${fmt2(r.base_share)}</b><br>
+        override = <b>${fmt2(r.add_pay_override)}</b><br>
+        <b>final_share = ${fmt2(r.base_share)} + ${fmt2(r.add_pay_override)} = ${fmt2(r.final_share)}</b>
+      </div>
+    `;
+    const box = $('#breakdown');
+    box.innerHTML = html;
+    box.style.display = 'block';
+    box.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  function exportCSV(rows){
+    const header = ['Date','Mission','PoolAfterOrg','BaseShare','Override','Final'];
+    const lines = [header.join(',')].concat(
+      rows.map(r => [
+        dateOnly(r.mission_date),
+        `"${(r.title||'').replace(/"/g,'""')}"`,
+        r.pool_after_cut, r.base_share, r.add_pay_override, r.final_share
+      ].join(','))
+    );
+    const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'jmbn_earnings_last10.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
