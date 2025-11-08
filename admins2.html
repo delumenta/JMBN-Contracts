@@ -1,400 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN – Progression</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Manifest</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
-:root{
-  --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--border:#d6b44c;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#5cd47c;
-  --fs:14px;
+:root{ --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow-x:hidden;font-family:'Play',sans-serif;background:#000;color:var(--text);transition:opacity .6s ease}
+body{opacity:0}
+
+/* Background */
+#goldDust{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;background:#000}
+.hud-grid{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,230,150,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,230,150,.03) 1px, transparent 1px);
+  background-size:80px 80px; animation:drift 80s linear infinite;
 }
-*{box-sizing:border-box}
-body{
-  margin:0;padding:14px;background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;
-  color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.25px
+@keyframes drift{from{background-position:0 0}to{background-position:-200px -200px}}
+body::after{
+  content:"";position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:
+    radial-gradient(1200px 800px at 50% 45%,rgba(0,0,0,0) 35%,rgba(0,0,0,.45) 70%,rgba(0,0,0,.75) 100%),
+    linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.55));
 }
 
-/* fallback header */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand img.brand-logo{width:44px;height:44px;object-fit:contain;border:none;background:transparent;box-shadow:none}
-.brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
+/* Layout */
+.wrapper{position:relative;z-index:3;min-height:100%;display:grid;place-items:center;padding:24px}
+.center{width:min(980px,96vw)}
 
-/* containers */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px;box-shadow:0 0 18px rgba(214,180,76,.20)}
-.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
-.h{margin:0 0 8px;color:var(--accent);font-size:16px}
+/* ===== Announcement Ticket (top banner) ===== */
+.annc-ticket{
+  margin:6px 0 18px;
+  background:rgba(10,10,10,.9);
+  border:1px dashed var(--border);
+  border-radius:12px;
+  padding:12px 14px;
+  box-shadow:0 0 10px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.08);
+}
+.annc-ticket .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.annc-ticket .left{display:flex;align-items:center;gap:10px}
+.annc-chip{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:3px 8px;background:#0c0c0c;color:var(--accent);font-weight:800;font-size:11px;letter-spacing:.3px}
+.annc-title{font-weight:900;color:var(--accent);font-size:15px}
+.annc-meta{color:var(--muted);font-size:11px}
+.annc-body{margin-top:6px;color:var(--text);font-size:12px}
+.annc-actions{display:flex;gap:6px}
+.annc-btn{
+  padding:3px 8px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--accent);cursor:pointer;font-family:'Play';
+  font-size:11px;line-height:1;
+}
+.annc-btn:hover{background:var(--accent);color:#000}
+#postAnnc{
+  color: var(--accent);text-decoration:none;border:1px solid var(--border);
+  border-radius:8px;padding:3px 8px;background:linear-gradient(180deg,#0c0c0c,#060606);font-weight:800;font-size:11px
+}
+#postAnnc:hover{background:var(--accent);color:#000;text-decoration:none}
 
-/* rank rows */
-.rankRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
-.rankNow{display:flex;align-items:center;gap:10px}
+/* Brand header */
+.brand{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.brand-logo{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(242,214,117,.35))}
+.brand-text{display:flex;flex-direction:column}
+.brand-text h1{margin:0;font-size:clamp(22px,3vw,32px);color:var(--accent);font-weight:700;line-height:1.1}
+.brand-text .tagline{color:var(--muted);font-size:clamp(11px,1.4vw,13px);margin-top:2px}
 
-/* rank image — NO frame/background */
-.rankImg{width:46px;height:46px;object-fit:contain;border:none;background:transparent;border-radius:10px;box-shadow:none}
+/* Cards */
+.card{
+  background:rgba(11,11,11,.85);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 14px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+  backdrop-filter:blur(6px) brightness(1.1) saturate(1.05);
+  position:relative;overflow:hidden;
+}
+.card::after{
+  content:"";position:absolute;inset:0;border-radius:12px;
+  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,0.18) 50%,rgba(255,255,255,0) 70%);
+  transform:translateX(-100%);transition:transform .6s ease;pointer-events:none;
+}
+.card:hover::after{transform:translateX(100%)}
 
-.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
+/* Member card (compact) */
+.member{
+  display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:center;
+  margin:0 0 18px;
+}
+.member .name{font-weight:900;font-size:18px;color:var(--accent)}
+.rankline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;margin-top:4px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;background:#0c0c0c;color:var(--muted)}
+.rankimg{width:110px;height:110px;object-fit:contain;border:none;border-radius:0;background:transparent;display:block;justify-self:end}
 
-/* requirement bars */
-.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;margin:8px 0}
-.pb .label{color:var(--muted);font-size:12px}
-.bar{height:12px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-.fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
-.pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+/* ===== ONE container of three cards ===== */
+.actions-wrap{margin-top:20px}
+.actions-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+@media(max-width:920px){.actions-3{grid-template-columns:1fr}}
+.action h3{margin:0 0 6px;color:var(--accent);font-size:16px}
+.action p{margin:0 0 8px;color:var(--muted);font-size:12px}
+.action a{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+  text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content;font-size:13px
+}
 
-/* certifications grid — compact, frameless */
-.certGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px;justify-items:center}
-@media(max-width:1100px){.certGrid{grid-template-columns:repeat(5,1fr)}}
-@media(max-width:900px){.certGrid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:700px){.certGrid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
-.cert{background:transparent;text-align:center;padding:4px 2px 10px;border-radius:8px;transition:transform .15s ease, opacity .15s ease, filter .15s ease}
-.cert:hover{transform:scale(1.05)}
-.cert.dim{opacity:.45;filter:grayscale(.6)}
-.cert .thumb{width:64px;height:64px;display:grid;place-items:center;margin:0 auto 4px;background:none;border:none}
-.cert .thumb img{width:auto;max-width:54px;max-height:100%;object-fit:contain}
-.cert .title{font-weight:700;font-size:12px}
-.cert .code{font-size:10px;color:var(--muted);margin-top:1px}
+/* Action backgrounds */
+.card.action{
+  min-height:210px;
+  display:flex;flex-direction:column;justify-content:flex-end;gap:10px;
+}
+.card.action.grow-bg{
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
+    url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/grow.jpg") center/cover no-repeat;
+}
+.card.action.missions{
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
+    url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/mission.png")
+      center/cover no-repeat;
+}
+.card.action.jmbn-bg{
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
+    url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/jmbn.jpg") center/cover no-repeat;
+}
 
-/* timeline */
-.tlWrap{display:grid;gap:10px}
-.tlHead{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.tlHint{font-size:12px;color:var(--muted)}
-.timeline{position:relative;margin-top:10px;padding-left:24px}
-.timeline::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(var(--border),transparent)}
-.titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
-.tdot{position:absolute;left:6px;top:16px;width:10px;height:10px;border-radius:50%;background:#222;border:2px solid var(--border)}
-.titem.done .tdot{background:var(--border)}
-.tlabel{font-weight:700}
-.small{font-size:12px;color:var(--muted)}
+/* Footer */
+.footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
+
+/* Boot */
+.boot{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease}
+.boot.hidden{opacity:0;visibility:hidden}
+.bootCard{width:min(720px,90vw);background:#060606;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 0 22px rgba(214,180,76,.28),inset 0 0 0 1px rgba(214,180,76,.12)}
+.bootHead{display:flex;justify-content:space-between;color:var(--accent);font-weight:700;font-size:14px;margin-bottom:8px}
+.bootLog{height:200px;overflow:auto;background:#090909;border:1px solid var(--border);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8e3c8}
+.boot .ok{color:#7CFC9A}
+.bootCtrl{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
+.bootBtn{padding:6px 10px;border-radius:8px;background:transparent;color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:12px;font-family:'Play'}
+.bootBtn:hover{background:var(--accent);color:#000}
+
+/* OPS ticker */
+.ops-ticker{
+  position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));
+  z-index:50;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;
+  background:rgba(14,14,14,.92);border:1px solid var(--border);
+  box-shadow:0 0 14px rgba(214,180,76,.25);backdrop-filter:saturate(1.2) blur(4px);
+}
+.ops-chip{color:#000;background:var(--accent);border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-weight:800;font-size:12px;letter-spacing:.4px}
+.ops-msg{flex:1;min-width:0;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:1;transition:opacity .35s ease}
+.ops-ctrl{display:flex;align-items:center;gap:6px}
+.ops-btn{padding:4px 8px;border-radius:6px;font-size:12px;border:1px solid var(--border);background:transparent;color:#f7f1d0;cursor:pointer;font-family:'Play'}
+.ops-btn:hover{background:var(--accent);color:#000}
+@media(max-width:520px){.ops-ticker{gap:6px;padding:6px 8px}.ops-msg{font-size:12px}.ops-btn{padding:3px 6px;font-size:11px}}
 </style>
 </head>
 <body>
 
-<!-- header mount -->
-<div id="header-container">
-  <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-    <h1>JMBN – Progression</h1>
-  </div>
-</div>
+<!-- Safety net -->
 <script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    if(res.ok){
-      const html = await res.text();
-      document.getElementById('header-container').outerHTML = html;
-      requestAnimationFrame(() => {
-        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
-        document.querySelectorAll('.nav-btn').forEach(a=>{
-          const href=(a.getAttribute('href')||'').toLowerCase();
-          if(href===here || (here==='' && href==='index.html')) a.classList.add('active');
-        });
-      });
-    }
-  } catch {}
-})();
+document.addEventListener('DOMContentLoaded', () => { document.body.style.opacity = 1; });
+window.addEventListener('error', () => {
+  document.body.style.opacity = 1;
+  const boot = document.getElementById('boot');
+  if (boot) { boot.classList.add('hidden'); setTimeout(()=>boot.style.display='none', 300); }
+});
 </script>
 
-<div class="panel">
-  <!-- Rank header -->
-  <div class="rankRow">
-    <div class="rankNow">
-      <img id="curImg" class="rankImg" alt="Rank">
-      <div>
-        <div class="h" style="margin:0">Rank Progression</div>
-        <div style="font-size:12px;color:var(--muted)">
-          Current: <b id="curRank">—</b>
-          <span class="badge" id="curPg">PG: —</span>
-        </div>
-      </div>
-    </div>
-    <div>
-      <button class="badge" id="btnPromote" disabled style="cursor:pointer;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent)">Request Promotion</button>
-    </div>
-  </div>
+<!-- Background layers -->
+<canvas id="goldDust"></canvas>
+<div class="hud-grid"></div>
 
-  <!-- Next rank -->
-  <div class="section">
-    <h3 class="h">Next Rank</h3>
-    <div style="display:flex;align-items:center;gap:10px">
-      <img id="nextImg" class="rankImg" alt="Next">
-      <div>
-        <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
-        <div class="badge" id="nextPg">PG: —</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Requirements -->
-  <div class="section">
-    <h3 class="h">Requirements</h3>
-    <div class="pb">
-      <div class="label">Missions</div>
-      <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valMissions">0 / 0</div>
-    </div>
-    <div class="pb">
-      <div class="label">Hours</div>
-      <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valHours">0 / 0</div>
-    </div>
-    <div class="pb">
-      <div class="label">Certifications</div>
-      <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valCerts">0 / 0</div>
-    </div>
-    <div style="margin-top:8px" class="small" id="note">Promotion is available when all targets are met.</div>
-  </div>
-
-  <!-- History -->
-  <div class="section">
-    <h3 class="h">History</h3>
-    <div id="history" class="small">Loading…</div>
-  </div>
-
-  <!-- Certifications grid -->
-  <div class="section">
-    <h3 class="h">Certifications</h3>
-    <div id="certGrid" class="certGrid">—</div>
-    <div style="margin-top:8px" class="small">Dim badges are not yet earned.</div>
-  </div>
-
-  <!-- Certifications Timeline (NEW) -->
-  <div class="section">
-    <h3 class="h">Certification Timeline</h3>
-    <div class="tlWrap">
-      <div class="tlHead">
-        <select id="certSelect" style="background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:'Play'">
-          <option value="">— Select a Certification —</option>
-        </select>
-        <button id="btnReloadTL" class="badge" style="cursor:pointer">Load</button>
-        <span id="tlHint" class="tlHint">Pick a certification to view its required trainings.</span>
-      </div>
-      <div id="timeline" class="timeline"></div>
-    </div>
+<!-- Boot overlay -->
+<div class="boot" id="boot">
+  <div class="bootCard">
+    <div class="bootHead"><div>JMBN // OPS Loader</div><div>v1.0</div></div>
+    <div class="bootLog" id="bootLog"></div>
+    <div class="bootCtrl"><button class="bootBtn" id="skipBoot">Skip</button></div>
   </div>
 </div>
 
-<!-- Supabase -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-<script>
-const $ = s => document.querySelector(s);
+<div class="wrapper">
+  <main class="center">
 
-let session=null, sb=null, me=null;
-
-function setFill(sel, pct){
-  const el = $(sel);
-  const x  = Math.max(0, Math.min(1, Number(pct)||0));
-  el.style.width = (x*100) + '%';
-}
-
-async function fetchRankImage(code){
-  if(!code) return '';
-  try{
-    return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl || '';
-  }catch{ return ''; }
-}
-
-/* ===== Progress + next rank + bars ===== */
-async function loadProgress(){
-  const { data: prog } = await sb.from('v_user_rank_progress').select('*').eq('user_id', me).maybeSingle();
-
-  $('#curRank').textContent = prog?.current_name || '(unranked)';
-  $('#curPg').textContent   = `PG: ${prog?.current_paygrade || '—'}`;
-  $('#nextName').textContent = prog?.next_name || '—';
-  $('#nextPg').textContent   = `PG: ${prog?.next_paygrade || '—'}`;
-
-  const curImg = await fetchRankImage(prog?.current_code);
-  const nxtImg = await fetchRankImage(prog?.next_code);
-  if (curImg){ $('#curImg').src = curImg; $('#curImg').style.visibility='visible'; } else { $('#curImg').style.visibility='hidden'; }
-  if (nxtImg){ $('#nextImg').src = nxtImg; $('#nextImg').style.visibility='visible'; } else { $('#nextImg').style.visibility='hidden'; }
-
-  const { data: up } = await sb.from('v_user_progress').select('*').eq('user_id', me).maybeSingle();
-
-  const m = Number(up?.missions_attended || 0);
-  const h = Number(up?.hours_total || 0);
-  const c = Number(up?.certifications_total || 0);
-
-  const mt = Number(prog?.missions_target || 0);
-  const ht = Number(prog?.hours_target || 0);
-  const ct = Number(prog?.certification_target || 0);
-
-  $('#valMissions').textContent = `${m} / ${mt}`;
-  $('#valHours').textContent    = `${h} / ${ht}`;
-  $('#valCerts').textContent    = `${c} / ${ct}`;
-
-  setFill('#pbMissions', mt ? Math.min(1, m/mt) : 1);
-  setFill('#pbHours',    ht ? Math.min(1, h/ht) : 1);
-  setFill('#pbCerts',    ct ? Math.min(1, c/ct) : 1);
-
-  const allMet = (!!prog?.next_code) && (mt?m>=mt:true) && (ht?h>=ht:true) && (ct?c>=ct:true);
-  $('#btnPromote').disabled = !allMet;
-  $('#note').textContent = !prog?.next_code
-    ? 'You are at the highest rank or next rank is not configured.'
-    : allMet
-      ? 'All requirements met. You can request promotion.'
-      : 'Promotion is available when all targets are met.';
-}
-
-/* ===== Rank history ===== */
-async function loadHistory(){
-  const { data, error } = await sb
-    .from('rank_changes')
-    .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
-    .eq('user_id', me)
-    .order('created_at', { ascending:false })
-    .limit(10);
-  if(error){ $('#history').textContent = 'Failed to load history.'; return; }
-  if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
-
-  $('#history').innerHTML = data.map(r=>{
-    const when = new Date(r.created_at).toLocaleString();
-    const who = r.changed_by?.slice(0,8) || 'system';
-    const from = r.from_rank_code || '—';
-    const to   = r.to_rank_code || '—';
-    const why  = r.reason || '';
-    return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span class="small">— ${why}</span>`:''}</div>`;
-  }).join('');
-}
-
-/* ===== Certifications grid (owned + catalog) ===== */
-async function loadCertsGridAndSelect(){
-  // Prefer a view if present
-  let gridRows = [];
-  try {
-    const { data } = await sb
-      .from('v_user_certifications')
-      .select('certification_code,name,image_url,owned,sort_order,user_id')
-      .or(`user_id.eq.${me},user_id.is.null`)
-      .order('sort_order', { ascending:true });
-    gridRows = data || [];
-  } catch {
-    // Fallback: join catalog with my owned list
-    const [{ data: catalog }, { data: mine }] = await Promise.all([
-      sb.from('certifications').select('certification_code,name,image_url,sort_order,is_active').order('sort_order'),
-      sb.from('user_certifications').select('certification_code').eq('user_id', me)
-    ]);
-    const ownedSet = new Set((mine||[]).map(x=>x.certification_code));
-    gridRows = (catalog||[]).map(c => ({
-      certification_code: c.certification_code,
-      name: c.name,
-      image_url: c.image_url,
-      sort_order: c.sort_order,
-      owned: ownedSet.has(c.certification_code)
-    }));
-  }
-
-  // Grid
-  const grid = $('#certGrid');
-  if (!gridRows?.length){ grid.textContent = '—'; } else {
-    grid.innerHTML = gridRows.map(row=>{
-      const owned = !!row.owned;
-      const cls   = owned ? 'cert owned' : 'cert dim';
-      const img   = row.image_url || '';
-      const code  = row.certification_code || '';
-      const name  = row.name || code || 'Certification';
-      return `
-        <div class="${cls}" title="${owned?'Obtained':'Not earned'}">
-          <div class="thumb">${img?`<img src="${img}" alt="${name}">`:''}</div>
-          <div class="title">${name}</div>
-          <div class="code">${code}</div>
-        </div>`;
-    }).join('');
-  }
-
-  // Timeline select (use all certifications; put owned first)
-  const select = $('#certSelect');
-  const ownedFirst = [...gridRows].sort((a,b)=> (b.owned===true)-(a.owned===true) || (a.sort_order??999)-(b.sort_order??999));
-  select.innerHTML = '<option value="">— Select a Certification —</option>' +
-    ownedFirst.map(c => `<option value="${c.certification_code}">${c.owned?'★ ':''}${c.certification_code} — ${c.name||c.certification_code}</option>`).join('');
-}
-
-/* ===== Certification Timeline ===== */
-async function loadTimeline(certCode){
-  const tl = $('#timeline');
-  tl.innerHTML = '';
-  if(!certCode){ tl.innerHTML = '<div class="small">Pick a certification.</div>'; return; }
-
-  const [{ data: reqs, error: e1 }, { data: recs, error: e2 }] = await Promise.all([
-    sb.from('certification_requirements')
-      .select('event_code, sort_order, training_events(title, description)')
-      .eq('certification_code', certCode)
-      .order('sort_order'),
-    sb.from('user_training_events')
-      .select('event_code, completed_at, approved_by, approved_at')
-      .eq('user_id', me)
-  ]);
-
-  if(e1){ tl.innerHTML = `<div class="small" style="color:#ff9c9c">${e1.message}</div>`; return; }
-  const done = new Map((recs||[]).map(r=>[r.event_code,r]));
-
-  if(!reqs?.length){
-    tl.innerHTML = '<div class="small">No requirements configured for this certification.</div>';
-    return;
-  }
-
-  reqs.forEach(r=>{
-    const rec = done.get(r.event_code);
-    const ok  = !!rec;
-    const when = rec ? (rec.approved_at || rec.completed_at) : null;
-    const by   = rec?.approved_by ? ` • by ${rec.approved_by.slice(0,8)}` : '';
-    const row = document.createElement('div');
-    row.className = 'titem' + (ok ? ' done' : '');
-    row.innerHTML = `
-      <div class="tdot"></div>
-      <div>
-        <div class="tlabel">${(r.training_events?.title || r.event_code) ?? r.event_code}</div>
-        <div class="small">${r.training_events?.description ? r.training_events.description : ''}</div>
-        ${ok ? `<div class="small">Completed: ${new Date(when).toLocaleString()}${by}</div>` : `<div class="small" style="color:#c9b06a">Pending</div>`}
+    <!-- ===== Announcement Ticket (top) ===== -->
+    <section class="annc-ticket" id="anncTicket">
+      <div class="row">
+        <div class="left">
+          <span class="annc-chip">ANNOUNCEMENT</span>
+          <div>
+            <div class="annc-title" id="anncTitle">No announcements yet.</div>
+            <div class="annc-meta" id="anncMeta"></div>
+          </div>
+        </div>
+        <div class="annc-actions" id="anncActions" style="display:none">
+          <a id="postAnnc" href="#">Post</a>
+          <button class="annc-btn" id="anncEdit" title="Edit">✎ Edit</button>
+          <button class="annc-btn" id="anncDelete" title="Delete">✕ Delete</button>
+        </div>
       </div>
-      <div>${ok ? '<span class="badge" style="border-color:var(--ok);color:var(--ok)">Done</span>' : ''}</div>
-    `;
-    tl.appendChild(row);
-  });
-}
+      <div class="annc-body" id="anncBody"></div>
+    </section>
 
-/* ===== Promote RPC ===== */
-async function promote(){
-  const { data, error } = await sb.rpc('request_promotion', { p_user: me });
-  if(error){ alert('Promotion failed: ' + error.message); return; }
-  if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
-  alert('Promoted to ' + (data.to || 'next rank') + '!');
-  await loadProgress(); await loadHistory();
-}
+    <!-- Brand -->
+    <div class="brand">
+      <img class="brand-logo" alt="JMBN"
+           src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+      <div class="brand-text">
+        <h1>JMBN Manifest System</h1>
+        <div class="tagline">Hilarity • Immersion • Teamwork • And the shenanigans in between </div>
+      </div>
+    </div>
 
-/* ===== Boot ===== */
-document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();
-  if(!session) return;
-  sb = getSupabase();
-  me = session.user.id;
+    <!-- Member card -->
+    <section class="card member" id="memberCard">
+      <div>
+        <div class="name" id="mName">Loading…</div>
+        <div class="rankline">
+          <span id="mRank">Unranked</span>
+          <span class="badge" id="mCategory">—</span>
+        </div>
+        <p class="rankline" style="margin:0;color:var(--muted)">Welcome to the JMBN Manifest System</p>
+      </div>
+      <img id="mRankImg" class="rankimg"
+           src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+           alt="Rank">
+    </section>
 
-  $('#btnPromote').onclick = promote;
-  $('#btnReloadTL').onclick = () => loadTimeline($('#certSelect').value);
-  $('#certSelect').onchange = (e) => {
-    const opt = e.target.selectedOptions[0];
-    $('#tlHint').textContent = opt && opt.value ? opt.textContent : 'Pick a certification to view its required trainings.';
-  };
+    <!-- ONE container with 3 cards -->
+    <section class="actions-wrap">
+      <div class="actions-3">
+        <div class="card action grow-bg">
+          <h3>Grow With Us</h3>
+          <p>Your growth matters. Start your journey and track each step upward.</p>
+          <a href="rank-progression.html">➜ Check your progression</a>
+        </div>
 
-  await loadProgress();
-  await loadHistory();
-  await loadCertsGridAndSelect();
-  // If you want to auto-open first owned certification in the dropdown:
-  const first = Array.from($('#certSelect').options).find(o=>o.value);
-  if(first){ $('#certSelect').value = first.value; $('#tlHint').textContent = first.textContent; await loadTimeline(first.value); }
-});
+        <div class="card action missions">
+          <h3>Your Missions</h3>
+          <p id="missionsBlurb">Track your operations and see how far you’ve come.</p>
+          <a href="mission-log.html">➜ View missions</a>
+        </div>
+
+        <div class="card action jmbn-bg">
+          <h3>JMBN</h3>
+          <p>Every operation, attendance, and achievement is recorded and remembered.</p>
+          <a href="mission-log.html">➜ Enter our archives</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <span style="color:var(--muted)">Theme:</span> Play • Gold Accents ·
+      <span style="color:var(--muted)">Grid:</span> One 3-up container
+    </div>
+  </main>
+</div>
+
+<!-- OPS ticker -->
+<div class="ops-ticker" id="opsTicker">
+  <span class="ops-chip" id="opsChip">[OPS]</span>
+  <div class="ops-msg" id="opsMsg">Initializing broadcast…</div>
+  <div class="ops-ctrl">
+    <button class="ops-btn" id="opsPrev">⟨</button>
+    <button class="ops-btn" id="opsNext">⟩</button>
+    <button class="ops-btn" id="opsPause">Pause</button>
+    <button class="ops-btn" id="opsClose">✕</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => { document.body.style.opacity = 1; });
 </script>
 </body>
 </html>
