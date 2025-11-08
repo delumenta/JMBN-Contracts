@@ -44,6 +44,7 @@ button:hover{background:var(--accent);color:#000}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
 .btn-danger{border-color:var(--bad);color:var(--bad)}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
+.small{font-size:12px;color:var(--muted)}
 
 /* Members list */
 .mlist{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto}
@@ -65,40 +66,19 @@ button:hover{background:var(--accent);color:#000}
 
 /* Certifications grid — 6 per row, NO borders on logo/abbrev */
 .certGrid{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:8px;
-  justify-items:center;
+  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;justify-items:center;
 }
 @media(max-width:1100px){.certGrid{grid-template-columns:repeat(5,1fr)}}
 @media(max-width:900px){.certGrid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:700px){.certGrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
-
-.cert{
-  background:transparent;
-  text-align:center;
-  padding:4px;
-  border-radius:6px;
-  transition:transform .15s ease,opacity .15s ease;
-}
+.cert{background:transparent;text-align:center;padding:4px;border-radius:6px;transition:transform .15s ease,opacity .15s ease}
 .cert:hover{transform:scale(1.05)}
 .cert.dim{opacity:.45;filter:grayscale(.6)}
-
-.cert .thumb{
-  height:64px;
-  background:none; /* no inner bg */
-  border:none;     /* no inner border */
-  display:grid;place-items:center;margin-bottom:4px;padding:0;
-}
+.cert .thumb{height:64px;background:none;border:none;display:grid;place-items:center;margin-bottom:4px;padding:0}
 .cert .thumb img{width:auto;max-width:54px;max-height:100%;object-fit:contain}
-.cert .abbrev{
-  font-weight:700;font-size:12px;color:var(--accent);
-  /* no border, no pill */
-}
+.cert .abbrev{font-weight:700;font-size:12px;color:var(--accent)}
 .cert .meta{font-size:10px;color:var(--muted);margin-top:2px}
-
-.small{font-size:12px;color:var(--muted)}
 
 /* Timeline */
 .timeline{position:relative;margin-top:10px;padding-left:24px}
@@ -106,7 +86,13 @@ button:hover{background:var(--accent);color:#000}
 .titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
 .tdot{position:absolute;left:6px;top:16px;width:10px;height:10px;border-radius:50%;background:#222;border:2px solid var(--border)}
 .titem.done .tdot{background:var(--border)}
-.tlabel{font-weight:700}
+
+/* Missions card */
+.mis-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.mis-list{display:flex;flex-direction:column;gap:8px}
+.mis-card{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0f0f0f}
+.mis-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mis-title{color:var(--accent);font-weight:800}
 </style>
 </head>
 <body>
@@ -171,6 +157,7 @@ button:hover{background:var(--accent);color:#000}
 const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 const setFill=(el,p)=>{const x=Math.max(0,Math.min(1,Number(p)||0));el.style.width=(x*100)+'%';};
+const fmtDate = iso => iso ? new Date(iso).toLocaleString() : '';
 
 let sb, me, isElev=false, MEMBERS=[], SELECTED=null, RANKS=[];
 
@@ -302,9 +289,25 @@ async function openMember(userId,rowEl){
         <div id="timeline" class="timeline" style="margin-top:8px"></div>
       </div>
     </div>
+
+    <div class="panel" style="margin-top:12px">
+      <div class="hd">
+        <h3>Missions Attended</h3>
+        <div class="small" id="misCount">—</div>
+      </div>
+      <div class="body">
+        <div class="mis-controls">
+          <input id="misSearch" type="search" placeholder="Search mission title…">
+          <select id="misStatus" style="max-width:220px">
+            <option value="">All statuses</option>
+          </select>
+        </div>
+        <div id="misList" class="mis-list"><div class="small">Loading…</div></div>
+      </div>
+    </div>
   `;
 
-  await Promise.all([loadProgress(userId), loadCerts(userId)]);
+  await Promise.all([loadProgress(userId), loadCerts(userId), loadMissions(userId)]);
 }
 
 /* Progress */
@@ -413,7 +416,7 @@ async function loadTimeline(uid, certCode){
       <div>
         <div class="tlabel">${esc(r.training_events?.title||r.event_code)}</div>
         <div class="small">${esc(r.training_events?.description||'')}</div>
-        ${ok?`<div class="small">Completed: ${new Date(rec.approved_at||rec.completed_at).toLocaleString()}${rec.approved_by?` • by ${esc(rec.approved_by.slice(0,8))}`:''}</div>`:''}
+        ${ok?`<div class="small">Completed: ${esc(fmtDate(rec.approved_at||rec.completed_at))}${rec.approved_by?` • by ${esc(rec.approved_by.slice(0,8))}`:''}</div>`:''}
       </div>
       <div>
         ${ok?`<button class="btn-danger" data-remove="${r.event_code}">Remove</button>`
@@ -439,6 +442,99 @@ async function loadTimeline(uid, certCode){
       await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
     };
   });
+}
+
+/* ===== Missions (from v_mission_attendees_detailed) ===== */
+let _ALL_MISSIONS = [];
+let _MIS_STATUS_FILLED = false;
+
+async function loadMissions(uid){
+  // 1) From the view
+  let { data, error } = await sb
+    .from('v_mission_attendees_detailed')
+    .select('mission_id,user_id,attendance')
+    .eq('user_id', uid);
+
+  if(error){
+    $('#misList').innerHTML = `<div class="small" style="color:#ff8f8f">Failed to load: ${esc(error.message)}</div>`;
+    $('#misCount').textContent = '—';
+    return;
+  }
+  data = data || [];
+
+  // 2) Hydrate with missions (title, start_time)
+  const ids = [...new Set(data.map(r => r.mission_id).filter(Boolean))];
+  let lookup = {};
+  if(ids.length){
+    const { data: mrows } = await sb
+      .from('missions')
+      .select('id,title,start_time')
+      .in('id', ids);
+    (mrows||[]).forEach(m => { lookup[m.id] = { title: m.title||'(Untitled)', start_time: m.start_time||null }; });
+  }
+
+  // 3) Merge
+  _ALL_MISSIONS = data.map(r => ({
+    id: r.mission_id,
+    title: lookup[r.mission_id]?.title || '(Untitled)',
+    start_time: lookup[r.mission_id]?.start_time || null,
+    attendance: r.attendance || ''
+  }));
+
+  // Totals
+  $('#misCount').textContent = `${_ALL_MISSIONS.length} total`;
+
+  // Fill status filter (first time)
+  if(!_MIS_STATUS_FILLED){
+    const statuses = [...new Set(_ALL_MISSIONS.map(x => (x.attendance||'').trim()))]
+      .filter(Boolean).sort((a,b)=>a.localeCompare(b));
+    const sel = $('#misStatus');
+    sel.innerHTML = ['<option value="">All statuses</option>'].concat(
+      statuses.map(s => `<option value="${esc(s)}">${esc(s)}</option>`)
+    ).join('');
+    _MIS_STATUS_FILLED = true;
+  }
+
+  // Bind filters
+  $('#misSearch').oninput = renderMissions;
+  $('#misStatus').onchange = renderMissions;
+
+  renderMissions();
+}
+
+function renderMissions(){
+  const box = $('#misList');
+  if(!_ALL_MISSIONS.length){
+    box.innerHTML = `<div class="small" style="color:var(--muted)">No missions found.</div>`;
+    return;
+  }
+
+  const term = ($('#misSearch').value||'').toLowerCase().trim();
+  const want = ($('#misStatus').value||'').toLowerCase();
+
+  const rows = _ALL_MISSIONS.filter(r=>{
+    const t = `${r.title} ${r.attendance}`.toLowerCase();
+    const passTerm = !term || t.includes(term);
+    const passStatus = !want || (r.attendance||'').toLowerCase()===want;
+    return passTerm && passStatus;
+  });
+
+  if(!rows.length){
+    box.innerHTML = `<div class="small" style="color:var(--muted)">No matches.</div>`;
+    return;
+  }
+
+  box.innerHTML = rows.map(r=>`
+    <div class="mis-card">
+      <div class="mis-head">
+        <div class="mis-title">${esc(r.title)}</div>
+        <span class="pill">${esc(r.attendance || '—')}</span>
+      </div>
+      <div class="small" style="margin-top:6px">
+        Starts: ${esc(fmtDate(r.start_time) || '—')}
+      </div>
+    </div>
+  `).join('');
 }
 </script>
 </body>
