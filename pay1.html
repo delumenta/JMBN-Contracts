@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN — Pay Grade Console (Supabase)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#000; --panel:#0b0b0b; --card:#0c0c0c;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+  --ok:#5cd47c; --bad:#ff6b6b; --fs:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
+.wrap{max-width:1100px;margin:0 auto;padding:18px}
+
+/* Brand */
+.brand{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.brand img{width:44px;height:44px;object-fit:contain}
+.brand h1{margin:0;color:var(--accent);font-size:clamp(20px,2.6vw,26px)}
+.brand .tag{color:var(--muted);font-size:12px}
+
+/* Panels */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:14px;box-shadow:0 0 18px rgba(214,180,76,.18)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.hd h3{margin:0;color:var(--accent);font-size:16px}
+.controls{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Inputs / Buttons */
+input[type="number"], input[type="text"], select{
+  background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);
+  font-family:'Play';font-size:13px;min-width:0;
+}
+button{
+  padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);cursor:pointer;font-family:'Play';font-weight:700;font-size:13px
+}
+button:hover{background:var(--accent);color:#000}
+.btn-ok{border-color:var(--ok);color:var(--ok)}
+.btn-bad{border-color:var(--bad);color:var(--bad)}
+.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted);background:#101010}
+
+/* Summary cards */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 14px rgba(214,180,76,.14),inset 0 0 0 1px rgba(214,180,76,.08)}
+.card h4{margin:0 0 6px;color:var(--accent);font-size:14px}
+.stat{font-weight:700;font-size:20px;color:var(--accent)}
+.note{color:var(--muted);font-size:12px}
+
+/* Table */
+.tableWrap{overflow:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:#0b0b0b}
+thead th{position:sticky;top:0;background:#0f0f0f;border-bottom:1px solid var(--border);padding:8px;color:var(--accent);text-align:left;font-size:12px}
+tbody td{padding:8px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle;font-size:13px}
+tbody tr:hover{background:#111}
+tbody td.actions{white-space:nowrap}
+.right{text-align:right}
+.total{font-weight:700;color:var(--accent)}
+.readonly{opacity:.6;pointer-events:none}
+
+/* Footer */
+.footer{color:var(--muted);font-size:12px;margin:14px 0 8px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Brand -->
+  <div class="brand">
+    <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <div>
+      <h1>JMBN — Pay Grade Console</h1>
+      <div class="tag">Base Pay = Mission Payout • Total = Base × (1 + Bonus%/100) + Additional</div>
+    </div>
+  </div>
+
+  <!-- Base Pay (mission payout) -->
+  <div class="panel">
+    <div class="hd">
+      <h3>Base Pay (Mission Payout)</h3>
+      <span class="badge" id="elevBadge">Checking role…</span>
+    </div>
+    <div class="controls">
+      <input id="basePay" type="number" min="0" step="1" placeholder="Enter base mission payout e.g. 20000" style="width:260px">
+      <select id="missionPick" style="min-width:260px">
+        <option value="">— Pull from recent missions (if available) —</option>
+      </select>
+      <button id="applyMission">Use Selected Mission</button>
+      <button id="refreshMissions">Refresh</button>
+    </div>
+    <div class="cards" style="margin-top:10px">
+      <div class="card">
+        <h4>Current Base</h4>
+        <div class="stat" id="statBase">—</div>
+        <div class="note">Chosen mission payout</div>
+      </div>
+      <div class="card">
+        <h4>Average Total (All Grades)</h4>
+        <div class="stat" id="statAvgTotal">—</div>
+        <div class="note">Calculated with current base</div>
+      </div>
+      <div class="card">
+        <h4>Highest Total</h4>
+        <div class="stat" id="statMaxTotal">—</div>
+        <div class="note" id="maxName">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pay Grades -->
+  <div class="panel">
+    <div class="hd">
+      <h3>Pay Grades</h3>
+      <div class="controls">
+        <button id="addRow" class="btn-ok">+ Add Grade</button>
+        <button id="reload">Reload</button>
+      </div>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="min-width:160px">Name</th>
+            <th style="min-width:80px">Code</th>
+            <th style="min-width:120px">Category</th>
+            <th class="right" style="min-width:110px">Bonus %</th>
+            <th class="right" style="min-width:130px">Additional Pay</th>
+            <th class="right" style="min-width:120px">Total (with Base)</th>
+            <th class="actions" style="min-width:120px">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"><tr><td colspan="7" style="padding:12px">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="small" style="margin-top:8px">
+      Total = <b>Base</b> × (1 + <b>Bonus%/100</b>) + <b>Additional</b>
+    </div>
+  </div>
+
+  <div class="footer">JMBN • Supabase • Gold Accents • Play Font</div>
+</div>
+
+<!-- Supabase -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+let sb, session, me, elevated=false;
+const $ = s => document.querySelector(s);
+const tbody = $('#tbody');
+
+function fmt(n){ return (n===undefined || n===null || isNaN(n)) ? '—' : Number(n).toLocaleString(undefined,{maximumFractionDigits:0}); }
+function calcTotal(base, bonusPct, add){
+  const b=Number(base)||0, p=Number(bonusPct)||0, a=Number(add)||0;
+  return Math.max(0, b*(1+p/100)+a);
+}
+
+/* ---------- Auth & bootstrap ---------- */
+document.addEventListener('DOMContentLoaded', async () => {
+  session = await requireAuth(); if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
+
+  // check elevation
+  try{
+    const { data } = await sb.rpc('is_elevated', { u: me });
+    elevated = !!data;
+  }catch(_){ elevated = false; }
+
+  $('#elevBadge').textContent = elevated ? 'Elevated: edit enabled' : 'Viewer: read-only';
+  if(!elevated){
+    document.body.classList.add('readonly');
+    $('#addRow').classList.add('readonly');
+  }
+
+  wireUI();
+  await Promise.all([loadGrades(), loadRecentMissions()]);
+  recalcSummary();
+});
+
+/* ---------- UI wiring ---------- */
+function wireUI(){
+  $('#reload').onclick = async ()=>{ await loadGrades(); recalcSummary(); };
+  $('#addRow').onclick = async ()=>{
+    if(!elevated) return alert('Editing is limited to elevated users.');
+    const row = {
+      name: 'New Grade', code: '', category: 'Other',
+      bonus_percent: 0, additional_pay: 0, sort_order: 999
+    };
+    const { data, error } = await sb.from('pay_grades').insert(row).select().single();
+    if(error) return alert('Add failed: '+error.message);
+    await loadGrades();
+  };
+
+  $('#refreshMissions').onclick = ()=> loadRecentMissions();
+  $('#applyMission').onclick = ()=>{
+    const sel = $('#missionPick').value;
+    if(!sel) return;
+    const amt = Number(sel.split('|AMT=')[1] || 0);
+    $('#basePay').value = amt || 0;
+    recalcSummary();
+  };
+
+  $('#basePay').oninput = recalcSummary;
+}
+
+/* ---------- Load pay grades ---------- */
+let grades = [];
+async function loadGrades(){
+  const { data, error } = await sb
+    .from('pay_grades')
+    .select('id,name,code,category,bonus_percent,additional_pay,sort_order')
+    .order('sort_order', { ascending:true });
+  if(error){ tbody.innerHTML = `<tr><td colspan="7" style="padding:12px;color:#ff9">${error.message}</td></tr>`; return; }
+  grades = data || [];
+  renderTable();
+}
+
+/* ---------- Missions (optional) ---------- */
+async function loadRecentMissions(){
+  const pick = $('#missionPick');
+  pick.innerHTML = `<option value="">— Pull from recent missions (if available) —</option>`;
+  try{
+    const { data, error } = await sb
+      .from('mission_attendees')
+      .select('joined_at, missions:missions(id,title,payout_amount)')
+      .eq('user_id', me)
+      .order('joined_at', { ascending:false })
+      .limit(10);
+    if(error) throw error;
+
+    (data||[]).forEach(rec=>{
+      const t = rec?.missions?.title || 'Mission';
+      const p = Number(rec?.missions?.payout_amount||0);
+      const when = new Date(rec.joined_at).toLocaleString();
+      pick.insertAdjacentHTML('beforeend',
+        `<option value="MID=${rec?.missions?.id||''}|AMT=${p}">${t} — ${fmt(p)} (joined ${when})</option>`);
+    });
+  }catch(_){
+    // silently ignore if schema not present
+  }
+}
+
+/* ---------- Render table ---------- */
+function renderTable(){
+  if(!grades.length){
+    tbody.innerHTML = `<tr><td colspan="7" style="padding:12px">No grades yet.</td></tr>`;
+    recalcSummary();
+    return;
+  }
+  const base = Number($('#basePay').value||0);
+
+  tbody.innerHTML = grades.map(g=>{
+    const total = calcTotal(base, g.bonus_percent, g.additional_pay);
+    return `<tr data-id="${g.id}">
+      <td><input type="text" value="${esc(g.name)}" data-k="name" ${dis()}></td>
+      <td><input type="text" value="${esc(g.code)}" data-k="code" ${dis()} style="width:100px"></td>
+      <td>
+        <select data-k="category" ${dis()}>
+          ${['Officer','Enlisted','Warrant','Other'].map(opt => `<option ${opt===g.category?'selected':''}>${opt}</option>`).join('')}
+        </select>
+      </td>
+      <td class="right"><input type="number" step="0.1" min="0" value="${num(g.bonus_percent)}" data-k="bonus_percent" ${dis()} style="width:110px;text-align:right"></td>
+      <td class="right"><input type="number" step="1"   min="0" value="${num(g.additional_pay)}" data-k="additional_pay" ${dis()} style="width:130px;text-align:right"></td>
+      <td class="right total">${fmt(total)}</td>
+      <td class="actions">
+        <button data-act="dup" ${disBtn()}>Duplicate</button>
+        <button class="btn-bad" data-act="del" ${disBtn()}>Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // wire edits / actions
+  tbody.querySelectorAll('input,select').forEach(el=>{
+    el.oninput = onEditCell;
+  });
+  tbody.querySelectorAll('button').forEach(b=>{
+    b.onclick = onRowAction;
+  });
+}
+
+function dis(){ return elevated ? '' : 'disabled'; }
+function disBtn(){ return elevated ? '' : 'disabled'; }
+function esc(s){ return String(s??'').replace(/"/g,'&quot;'); }
+function num(v){ const n = Number(v); return isNaN(n)?0:n; }
+
+/* ---------- Cell edits ---------- */
+let saveTimer=null;
+async function onEditCell(e){
+  const el = e.currentTarget;
+  const tr = el.closest('tr');
+  const id = tr?.dataset?.id; if(!id) return;
+  const key = el.dataset.k;
+
+  const idx = grades.findIndex(g => g.id === id);
+  if(idx<0) return;
+
+  let val = el.value;
+  if(key==='bonus_percent' || key==='additional_pay') val = Number(val)||0;
+
+  grades[idx][key] = val;
+
+  // optimistic redraw of total
+  const base = Number($('#basePay').value||0);
+  const total = calcTotal(base, grades[idx].bonus_percent, grades[idx].additional_pay);
+  tr.querySelector('.total').textContent = fmt(total);
+
+  // debounce save
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    const payload = {};
+    payload[key] = val;
+    const { error } = await sb.from('pay_grades').update(payload).eq('id', id);
+    if(error) alert('Save failed: '+error.message);
+    recalcSummary();
+  }, 300);
+}
+
+/* ---------- Row actions ---------- */
+async function onRowAction(e){
+  const btn = e.currentTarget;
+  const tr = btn.closest('tr');
+  const id = tr?.dataset?.id; if(!id) return;
+
+  if(btn.dataset.act==='del'){
+    if(!confirm('Delete this grade?')) return;
+    const { error } = await sb.from('pay_grades').delete().eq('id', id);
+    if(error) return alert('Delete failed: '+error.message);
+    grades = grades.filter(g=>g.id!==id);
+    renderTable(); recalcSummary();
+  } else if(btn.dataset.act==='dup'){
+    const g = grades.find(x=>x.id===id);
+    if(!g) return;
+    const copy = {
+      name: g.name + ' (Copy)',
+      code: g.code,
+      category: g.category,
+      bonus_percent: g.bonus_percent,
+      additional_pay: g.additional_pay,
+      sort_order: (g.sort_order||0)+1
+    };
+    const { data, error } = await sb.from('pay_grades').insert(copy).select().single();
+    if(error) return alert('Duplicate failed: '+error.message);
+    await loadGrades();
+  }
+}
+
+/* ---------- Summary ---------- */
+function recalcSummary(){
+  const base = Number($('#basePay').value||0);
+  $('#statBase').textContent = fmt(base);
+
+  if(!grades.length){
+    $('#statAvgTotal').textContent = '—';
+    $('#statMaxTotal').textContent = '—';
+    $('#maxName').textContent = '—';
+    return;
+  }
+  let sum=0, max=-1, maxName='—';
+  grades.forEach(g=>{
+    const t = calcTotal(base, g.bonus_percent, g.additional_pay);
+    sum += t;
+    if(t>max){ max=t; maxName = `${g.name} (${g.code||g.category||''})`; }
+  });
+  $('#statAvgTotal').textContent = fmt(sum/grades.length);
+  $('#statMaxTotal').textContent = fmt(max);
+  $('#maxName').textContent = maxName;
+}
+</script>
+</body>
+</html>
