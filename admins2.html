@@ -50,7 +50,13 @@ button:hover{background:var(--accent);color:#000}
 .mrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px;border:1px solid transparent;border-radius:10px;background:#0a0a0a;cursor:pointer}
 .mrow:hover{background:#111;border-color:rgba(214,180,76,.35)}
 .mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
-.mavatar{width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:#111;display:grid;place-items:center;overflow:hidden}
+
+/* Rank image – remove frame/background */
+.mavatar{
+  width:38px;height:38px;border:none;background:transparent;display:grid;place-items:center;overflow:hidden;
+  box-shadow:none;border-radius:8px;
+}
+.mavatar img{width:100%;height:100%;object-fit:contain;border:none;background:transparent;box-shadow:none}
 
 /* KPIs + bars */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -63,7 +69,7 @@ button:hover{background:var(--accent);color:#000}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certifications grid — 6 per row, NO borders on logo/abbrev */
+/* Certifications grid — 6 per row, small logos, no frame */
 .certGrid{
   display:grid;
   grid-template-columns:repeat(6,1fr);
@@ -76,26 +82,18 @@ button:hover{background:var(--accent);color:#000}
 @media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
 
 .cert{
-  background:transparent;
-  text-align:center;
-  padding:4px;
-  border-radius:6px;
-  transition:transform .15s ease,opacity .15s ease;
+  background:transparent;text-align:center;padding:4px;border-radius:6px;
+  transition:transform .15s ease,opacity .15s ease, filter .15s ease;
 }
 .cert:hover{transform:scale(1.05)}
 .cert.dim{opacity:.45;filter:grayscale(.6)}
+.cert.active{opacity:1 !important;filter:none !important;transform:scale(1.06)}
 
 .cert .thumb{
-  height:64px;
-  background:none; /* no inner bg */
-  border:none;     /* no inner border */
-  display:grid;place-items:center;margin-bottom:4px;padding:0;
+  height:64px;background:none;border:none;display:grid;place-items:center;margin-bottom:4px;padding:0;
 }
 .cert .thumb img{width:auto;max-width:54px;max-height:100%;object-fit:contain}
-.cert .abbrev{
-  font-weight:700;font-size:12px;color:var(--accent);
-  /* no border, no pill */
-}
+.cert .abbrev{font-weight:700;font-size:12px;color:var(--accent)}
 .cert .meta{font-size:10px;color:var(--muted);margin-top:2px}
 
 .small{font-size:12px;color:var(--muted)}
@@ -138,7 +136,7 @@ button:hover{background:var(--accent);color:#000}
     <div class="panel">
       <div class="hd">
         <h3>Inspector</h3>
-        <div style="display:flex;gap:8px;align-items:center">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <select id="rankTrack" title="Rank Track">
             <option value="">— Track —</option>
             <option value="Officer">Officer</option>
@@ -173,6 +171,7 @@ const esc = s => { const d=document.createElement('div'); d.textContent=s??''; r
 const setFill=(el,p)=>{const x=Math.max(0,Math.min(1,Number(p)||0));el.style.width=(x*100)+'%';};
 
 let sb, me, isElev=false, MEMBERS=[], SELECTED=null, RANKS=[];
+let CURRENT_CERT=null; // highlight which cert is active
 
 /* Boot */
 document.addEventListener('DOMContentLoaded', async ()=>{
@@ -248,7 +247,7 @@ function renderMembers(){
   rows.forEach(m=>{
     const row=document.createElement('div'); row.className='mrow';
     row.innerHTML=`
-      <div class="mavatar">${m.current_rank_image_url?`<img src="${esc(m.current_rank_image_url)}" style="width:100%;height:100%;object-fit:contain">`:'👤'}</div>
+      <div class="mavatar">${m.current_rank_image_url?`<img src="${esc(m.current_rank_image_url)}" alt="${esc(m.current_rank_code||'rank')}">`:'👤'}</div>
       <div>
         <div><b>${esc(m.handle||'(no handle)')}</b> <span class="small">• ${esc(m.display_name||'')}</span></div>
         <div class="small">${esc(m.current_rank_category||'Unrated')} — ${esc(m.current_rank_name||'Unrated')}</div>
@@ -304,6 +303,7 @@ async function openMember(userId,rowEl){
     </div>
   `;
 
+  CURRENT_CERT = null; // reset highlight until user picks one
   await Promise.all([loadProgress(userId), loadCerts(userId)]);
 }
 
@@ -345,6 +345,14 @@ async function loadProgress(uid){
 }
 
 /* Certifications (grid + timeline) */
+function highlightCert(code){
+  CURRENT_CERT = code || null;
+  document.querySelectorAll('.cert').forEach(el=>{
+    const c = el.getAttribute('data-code');
+    el.classList.toggle('active', !!code && c===code);
+  });
+}
+
 async function loadCerts(uid){
   const [{ data: catalog }, { data: mine }, { data: reqs }] = await Promise.all([
     sb.from('certifications').select('certification_code,name,image_url,sort_order,is_active').order('sort_order'),
@@ -365,6 +373,7 @@ async function loadCerts(uid){
   (catalog||[]).forEach(c=>{
     const div=document.createElement('div');
     div.className='cert'+(owned.has(c.certification_code)?'':' dim');
+    div.setAttribute('data-code', c.certification_code);
     div.innerHTML = `
       <div class="thumb">${c.image_url ? `<img src="${esc(c.image_url)}" alt="">` : '🏅'}</div>
       <div class="abbrev">${esc(c.certification_code)}</div>
@@ -375,8 +384,9 @@ async function loadCerts(uid){
     `;
     div.querySelector('button').onclick=()=>{
       select.value=c.certification_code;
-      loadTimeline(uid,c.certification_code);
+      highlightCert(c.certification_code);
       $('#tlHint').textContent=c.name;
+      loadTimeline(uid,c.certification_code);
     };
     grid.appendChild(div);
 
@@ -385,7 +395,18 @@ async function loadCerts(uid){
     select.appendChild(opt);
   });
 
-  $('#btnReloadTL').onclick = ()=> loadTimeline(uid, select.value);
+  // keep highlight if we already had one
+  if(CURRENT_CERT){
+    highlightCert(CURRENT_CERT);
+    const opt = Array.from(select.options).find(o=>o.value===CURRENT_CERT);
+    if(opt) select.value = CURRENT_CERT;
+  }
+
+  $('#btnReloadTL').onclick = ()=>{
+    const code = select.value || '';
+    highlightCert(code);
+    loadTimeline(uid, code);
+  };
 }
 
 async function loadTimeline(uid, certCode){
@@ -405,6 +426,7 @@ async function loadTimeline(uid, certCode){
 
   if(!reqs?.length){ tl.innerHTML='<div class="small">No requirements configured.</div>'; return; }
 
+  tl.innerHTML = ''; // (re)build
   reqs.forEach(r=>{
     const rec=done.get(r.event_code); const ok=!!rec;
     const row=document.createElement('div'); row.className='titem'+(ok?' done':'');
