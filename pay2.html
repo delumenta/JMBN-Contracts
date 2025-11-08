@@ -13,7 +13,7 @@
 <style>
 :root{
   --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--row:#0a0a0a;
-  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#7CFC9A;
+  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
   --fs:14px
 }
 *{box-sizing:border-box}
@@ -22,24 +22,29 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .brand img{width:44px;height:44px;object-fit:contain}
 .brand h1{margin:0;color:var(--accent);font-size:clamp(18px,2.6vw,24px)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.grid-1{display:grid;grid-template-columns:1fr;gap:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+
 .card{
   background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;
   box-shadow:0 0 18px rgba(214,180,76,.18)
 }
 .card h3{margin:0 0 8px;color:var(--accent);font-size:16px}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:900px){.kpis{grid-template-columns:1fr}}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px}
+
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
 .kpi .t{color:var(--muted);font-size:12px}
-.kpi .v{font-weight:700;font-size:18px;margin-top:2px}
+.kpi .v{font-weight:700;font-size:20px;margin-top:2px}
 .kpi small{color:var(--muted)}
+
 .table{margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .table header,.row{display:grid;grid-template-columns:160px 1fr 120px 110px 110px 110px;gap:10px;align-items:center}
 .table header{background:#121212;color:var(--accent);padding:10px;font-size:12px}
-.row{padding:10px;border-top:1px solid rgba(255,255,255,.08);background:var(--row)}
+.row{padding:10px;border-top:1px solid rgba(255,255,255,.08);background:var(--row);cursor:pointer}
 .row:nth-child(odd){background:#0d0d0d}
+.row:hover{filter:brightness(1.08)}
+
 .badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;background:#0c0c0c;color:var(--muted)}
 .mono{font-variant-numeric:tabular-nums}
 .right{text-align:right}
@@ -60,13 +65,17 @@ button.link:hover{background:var(--accent);color:#000}
     <h1>JMBN — Earnings & Payouts</h1>
   </div>
 
-  <!-- KPIs -->
-  <div class="kpis">
+  <!-- ROW 1: ORG TOTAL (full width) -->
+  <section class="grid-1">
     <div class="kpi">
       <div class="t">Org cut (lifetime)</div>
       <div class="v mono" id="orgTotal">—</div>
       <small id="orgThisMonth" class="small">MTD: —</small>
     </div>
+  </section>
+
+  <!-- ROW 2: YOUR LIFETIME + LATEST MISSION (two columns) -->
+  <section class="grid-2" style="margin-top:14px">
     <div class="kpi">
       <div class="t">You — lifetime earned</div>
       <div class="v mono" id="youTotal">—</div>
@@ -77,68 +86,75 @@ button.link:hover{background:var(--accent);color:#000}
       <div class="v mono" id="lastMissionEarned">—</div>
       <small id="lastMissionTitle" class="small">—</small>
     </div>
-  </div>
+  </section>
 
-  <div class="grid" style="margin-top:14px">
-    <!-- Your last 10 payouts -->
-    <section class="card">
-      <h3>Your latest 10 mission payouts</h3>
-      <div class="table">
-        <header>
-          <div>Date</div>
-          <div>Mission</div>
-          <div class="right">Pool (after org)</div>
-          <div class="right">Base share</div>
-          <div class="right">Adj. (+/−)</div>
-          <div class="right">Final</div>
-        </header>
-        <div id="rows"></div>
-      </div>
-      <div class="hint">Tip: click a row to see the formula breakdown for that mission.</div>
-      <div id="breakdown" class="note" style="display:none"></div>
-    </section>
+  <!-- ROW 3: RANK (full width) -->
+  <section class="grid-1" style="margin-top:14px">
+    <div class="kpi">
+      <div class="t">Your rank • paygrade • weight</div>
+      <div class="v mono" id="rankLine">—</div>
+      <small id="rankSub" class="small">—</small>
+    </div>
+  </section>
 
-    <!-- Explanation -->
-    <section class="card">
-      <h3>How base pay is calculated</h3>
-      <div class="note">
-        <div class="formula">
-          1) <b>Org cut</b>: <code>org_cut_pct</code> taken from mission payout<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;Pool after cut = <code>payout_auec × (1 − org_cut_pct)</code><br>
-          2) <b>Weighted split</b> by pay grade weight:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;<code>base_share = pool_after_cut × (your_weight / total_weight)</code><br>
-          3) <b>Overrides</b> (optional): manual +/− aUEC per user<br>
-          4) <b>Final</b> = <code>base_share + add_pay_override</code>
-        </div>
-        <hr class="sep">
-        We read weights from <span class="badge">pay_grade_rules</span> via your current rank’s paygrade
-        and compute the org cut using <span class="badge">v_mission_org_cut_effective</span> joined to <span class="badge">missions</span>.
-      </div>
+  <!-- ROW 4: LATEST 10 -->
+  <section class="card" style="margin-top:14px">
+    <h3>Your latest 10 mission payouts</h3>
+    <div class="table">
+      <header>
+        <div>Date</div>
+        <div>Mission</div>
+        <div class="right">Pool (after org)</div>
+        <div class="right">Base share</div>
+        <div class="right">Adj. (+/−)</div>
+        <div class="right">Final</div>
+      </header>
+      <div id="rows"></div>
+    </div>
+    <div class="hint">Tip: click a row to see the formula breakdown for that mission.</div>
+    <div id="breakdown" class="note" style="display:none"></div>
+  </section>
 
-      <h3 style="margin-top:14px">Your lifetime summary</h3>
-      <div class="table">
-        <header>
-          <div>Metric</div><div>Value</div><div></div><div></div><div></div><div></div>
-        </header>
-        <div class="row">
-          <div>Total Base</div><div class="mono" id="sumBase">—</div>
-          <div></div><div></div><div></div><div></div>
-        </div>
-        <div class="row">
-          <div>Total Overrides</div><div class="mono" id="sumBonus">—</div>
-          <div></div><div></div><div></div><div></div>
-        </div>
-        <div class="row">
-          <div><b>Total Earned</b></div><div class="mono" id="sumTotal"><b>—</b></div>
-          <div></div><div></div><div></div><div></div>
-        </div>
+  <!-- ROW 5: EXPLANATION + LIFETIME SUMMARY -->
+  <section class="card" style="margin-top:14px">
+    <h3>How base pay is calculated</h3>
+    <div class="note">
+      <div class="formula">
+        1) <b>Org cut</b>: <code>org_cut_pct</code> taken from mission payout<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;Pool after cut = <code>payout_auec × (1 − org_cut_pct)</code><br>
+        2) <b>Weighted split</b> by pay grade weight:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<code>base_share = pool_after_cut × (your_weight / total_weight)</code><br>
+        3) <b>Overrides</b> (optional): manual +/− aUEC per user<br>
+        4) <b>Final</b> = <code>base_share + add_pay_override</code>
       </div>
+      <hr class="sep">
+      We read weights from <span class="badge">pay_grade_rules</span> via your current rank’s paygrade
+      and compute the org cut using <span class="badge">v_mission_org_cut_effective</span> joined to <span class="badge">missions</span>.
+    </div>
 
-      <div class="hint" style="margin-top:8px">
-        Need a CSV? <button class="link" id="btnExport">Export last 10</button>
+    <h3 style="margin-top:14px">Your lifetime summary</h3>
+    <div class="table">
+      <header>
+        <div>Metric</div><div>Value</div><div></div><div></div><div></div><div></div>
+      </header>
+      <div class="row" style="cursor:default">
+        <div>Total Base</div><div class="mono" id="sumBase">—</div>
+        <div></div><div></div><div></div><div></div>
       </div>
-    </section>
-  </div>
+      <div class="row" style="cursor:default">
+        <div>Total Overrides</div><div class="mono" id="sumBonus">—</div>
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <div class="row" style="cursor:default">
+        <div><b>Total Earned</b></div><div class="mono" id="sumTotal"><b>—</b></div>
+        <div></div><div></div><div></div><div></div>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:8px">
+      Need a CSV? <button class="link" id="btnExport">Export last 10</button>
+    </div>
+  </section>
 </div>
 
 <!-- Supabase -->
@@ -147,10 +163,10 @@ button.link:hover{background:var(--accent);color:#000}
 <script>
 (function(){
   const $ = s => document.querySelector(s);
-  const fmt = n => (n===null||n===undefined) ? '—'
+  const fmt0 = n => (n===null||n===undefined) ? '—'
                : Number(n).toLocaleString('en-US', {maximumFractionDigits:0});
   const fmt2 = n => (n===null||n===undefined) ? '—'
-               : Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+               : Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   const dateOnly = iso => new Date(iso).toLocaleDateString();
 
   let sb, me;
@@ -164,11 +180,12 @@ button.link:hover{background:var(--accent);color:#000}
     await Promise.all([
       loadUserSummary(),
       loadOrgTotals(),
-      loadLatest10()
+      loadLatest10(),
+      loadRankAndWeight()
     ]);
   }
 
-  // ----- YOUR SUMMARY (v_missions_payout_summary)
+  // SUMMARY
   async function loadUserSummary(){
     try{
       const { data, error } = await sb
@@ -179,7 +196,7 @@ button.link:hover{background:var(--accent);color:#000}
       if(error) throw error;
 
       $('#youTotal').textContent   = data ? fmt2(data.total_earned) : '0';
-      $('#youMissions').textContent= data ? `from ${fmt(data.missions_count)} missions` : 'from 0 missions';
+      $('#youMissions').textContent= data ? `from ${fmt0(data.missions_count)} missions` : 'from 0 missions';
       $('#sumBase').textContent    = data ? fmt2(data.total_base) : '0';
       $('#sumBonus').textContent   = data ? fmt2(data.total_bonus) : '0';
       $('#sumTotal').textContent   = data ? fmt2(data.total_earned) : '0';
@@ -188,32 +205,29 @@ button.link:hover{background:var(--accent);color:#000}
     }
   }
 
-  // ----- ORG TOTALS (sum per mission so we don’t double-count per user)
+  // ORG TOTALS
   async function loadOrgTotals(){
     try{
-      // lifetime
-      const { data: life, error: e1 } = await sb
+      const { data: missions, error: e1 } = await sb
         .from('missions')
-        .select('id,payout_auec, created_at')
+        .select('id,payout_auec,created_at')
         .neq('payout_auec', 0)
         .order('created_at', {ascending:false});
       if(e1) throw e1;
 
-      // get effective org cut per mission
-      const map = new Map();
-      // Pull all effective cuts in one go
       const { data: cuts, error: e2 } = await sb
         .from('v_mission_org_cut_effective')
         .select('mission_id, org_cut_pct');
       if(e2) throw e2;
-      for(const c of (cuts||[])) map.set(c.mission_id, Number(c.org_cut_pct||0));
+
+      const cutMap = new Map((cuts||[]).map(c => [c.mission_id, Number(c.org_cut_pct||0)]));
 
       let lifetime = 0, mtd = 0;
       const now = new Date();
       const monthKey = now.getUTCFullYear()+'-'+String(now.getUTCMonth()+1).padStart(2,'0');
 
-      for(const m of (life||[])){
-        const pct = map.get(m.id) ?? 0;
+      for(const m of (missions||[])){
+        const pct  = cutMap.get(m.id) ?? 0;
         const take = Number(m.payout_auec||0) * pct;
         lifetime += take;
 
@@ -229,7 +243,7 @@ button.link:hover{background:var(--accent);color:#000}
     }
   }
 
-  // ----- LATEST 10 (v_missions_payout_live)
+  // LATEST 10
   async function loadLatest10(){
     try{
       const { data, error } = await sb
@@ -242,7 +256,8 @@ button.link:hover{background:var(--accent);color:#000}
 
       const rows = data||[];
       if(rows[0]){
-        $('#lastMissionEarned').textContent = fmt2(rows[0].final_share);
+        const lastFinal = rows[0].final_share ?? (Number(rows[0].base_share||0)+Number(rows[0].add_pay_override||0));
+        $('#lastMissionEarned').textContent = fmt2(lastFinal);
         $('#lastMissionTitle').textContent  = rows[0].title || '—';
       }
 
@@ -253,20 +268,17 @@ button.link:hover{background:var(--accent);color:#000}
           <div class="right mono">${fmt2(r.pool_after_cut)}</div>
           <div class="right mono">${fmt2(r.base_share)}</div>
           <div class="right mono">${fmt2(r.add_pay_override)}</div>
-          <div class="right mono"><b>${fmt2(r.final_share)}</b></div>
+          <div class="right mono"><b>${fmt2(r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0)))}</b></div>
         </div>
       `).join('');
 
-      // click to show breakdown
-      for(const el of document.querySelectorAll('.row')){
-        el.addEventListener('click', () => {
+      document.querySelectorAll('.row').forEach(el=>{
+        el.addEventListener('click', ()=>{
           const r = rows.find(x => x.mission_id === el.dataset.mid);
-          if(!r) return;
-          showBreakdown(r);
+          if(r) showBreakdown(r);
         });
-      }
+      });
 
-      // CSV export (last 10)
       $('#btnExport').onclick = () => exportCSV(rows);
 
     }catch(e){
@@ -274,16 +286,52 @@ button.link:hover{background:var(--accent);color:#000}
     }
   }
 
+  // RANK • PAYGRADE • WEIGHT
+  async function loadRankAndWeight(){
+    try{
+      let prof = null;
+      const q1 = await sb.from('v_profiles_with_rank')
+        .select('user_id,current_rank_name,current_rank_code,paygrade')
+        .eq('user_id', me).maybeSingle();
+      if(!q1.error && q1.data){ prof = q1.data; }
+
+      if(!prof){
+        const { data: p } = await sb.from('profiles').select('current_rank_id').eq('user_id', me).maybeSingle();
+        if(p?.current_rank_id){
+          const { data: r } = await sb.from('ranks').select('name,code,paygrade').eq('id', p.current_rank_id).maybeSingle();
+          if(r){ prof = { current_rank_name:r.name, current_rank_code:r.code, paygrade:r.paygrade }; }
+        }
+      }
+
+      const rankName = prof?.current_rank_name ?? 'Unrated';
+      const paygrade = prof?.paygrade ?? '—';
+
+      let weight = 1, label = null;
+      if(paygrade && paygrade !== '—'){
+        const { data: rule } = await sb.from('pay_grade_rules').select('weight,label').eq('paygrade', paygrade).maybeSingle();
+        if(rule){ weight = Number(rule.weight||1); label = rule.label||null; }
+      }
+
+      $('#rankLine').textContent = `${rankName}${paygrade!=='—' ? ' ('+paygrade+')' : ''} • Weight ${weight.toFixed(2)}`;
+      $('#rankSub').textContent  = label ? `Rule: ${label}` : '—';
+    }catch(e){
+      console.warn('rank+weight:', e.message);
+      $('#rankLine').textContent = 'Unrated • Weight 1.00';
+      $('#rankSub').textContent  = '—';
+    }
+  }
+
   function showBreakdown(r){
     const pct = Number(r.org_cut_pct||0);
     const pctTxt = (pct*100).toFixed(1)+'%';
+    const finalVal = r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0));
     const html = `
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
         <div>
           <b>${r.title||'—'}</b><br>
           <span class="small">${dateOnly(r.mission_date)}</span>
         </div>
-        <div><span class="badge">Paygrade: ${r.paygrade||'—'}</span></div>
+        <div><span class="badge">Paygrade: ${r.paygrade||'—'}</span> <span class="badge">Weight: ${r.weight??'—'}</span></div>
       </div>
       <hr class="sep">
       <div class="formula">
@@ -291,10 +339,9 @@ button.link:hover{background:var(--accent);color:#000}
         org_cut = payout_auec × <b>${pctTxt}</b> = <b>${fmt2(r.org_cut_value)}</b><br>
         pool_after_cut = <b>${fmt2(r.pool_after_cut)}</b><br>
         total_weight = <b>${fmt2(r.total_weight)}</b>, your weight = <b>${fmt2(r.weight)}</b><br>
-        base_share = pool_after_cut × (your_weight / total_weight)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;= <b>${fmt2(r.base_share)}</b><br>
+        base_share = pool_after_cut × (your_weight / total_weight) = <b>${fmt2(r.base_share)}</b><br>
         override = <b>${fmt2(r.add_pay_override)}</b><br>
-        <b>final_share = ${fmt2(r.base_share)} + ${fmt2(r.add_pay_override)} = ${fmt2(r.final_share)}</b>
+        <b>final_share = ${fmt2(r.base_share)} + ${fmt2(r.add_pay_override)} = ${fmt2(finalVal)}</b>
       </div>
     `;
     const box = $('#breakdown');
@@ -309,7 +356,7 @@ button.link:hover{background:var(--accent);color:#000}
       rows.map(r => [
         dateOnly(r.mission_date),
         `"${(r.title||'').replace(/"/g,'""')}"`,
-        r.pool_after_cut, r.base_share, r.add_pay_override, r.final_share
+        r.pool_after_cut, r.base_share, r.add_pay_override, (r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0)))
       ].join(','))
     );
     const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
