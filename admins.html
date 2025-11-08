@@ -28,8 +28,11 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18)}
 .panel .hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
-.panel .hd h3{margin:0;color:var(--accent);font-size:16px}
+.panel .hd h3{margin:0;color:var(--accent);font-size:16px;display:flex;align-items:center;gap:10px}
 .panel .body{padding:12px}
+
+/* small badge */
+.badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--accent);background:#121212}
 
 input[type="search"],select{
   width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'
@@ -49,21 +52,13 @@ button:hover{background:var(--accent);color:#000}
 .mrow:hover{background:#111;border-color:rgba(214,180,76,.35)}
 .mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
 
-/* 🔧 Frameless rank/logo avatar */
+/* Frameless rank/logo avatar */
 .mavatar{
-  width:38px;height:38px;
-  display:grid;place-items:center;overflow:hidden;
-  border:none;               /* no frame */
-  border-radius:0;           /* square, change if you want */
-  background:transparent;    /* no tile */
+  width:38px;height:38px;display:grid;place-items:center;overflow:hidden;
+  border:none;border-radius:0;background:transparent;
 }
 .mavatar img{
-  width:100%;height:100%;
-  object-fit:contain;
-  border:none !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  filter:none !important;
+  width:100%;height:100%;object-fit:contain;border:none !important;background:transparent !important;box-shadow:none !important;filter:none !important;
 }
 
 /* KPIs + bars */
@@ -77,7 +72,7 @@ button:hover{background:var(--accent);color:#000}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certifications grid — smaller images */
+/* Certifications grid */
 .certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:10px}
 .cert .thumb{height:120px;border:1px solid var(--border);border-radius:10px;background:#101010;display:grid;place-items:center;margin-bottom:8px;padding:8px}
@@ -94,13 +89,11 @@ button:hover{background:var(--accent);color:#000}
 .titem.done .tdot{background:var(--border)}
 .tlabel{font-weight:700}
 
-/* Extra safety: any rank images elsewhere */
-.rank-img, .rankLogo, .rankBadge img{
-  border:none !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  border-radius:0 !important;
-}
+/* Missions list */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{border:1px solid var(--border);border-radius:10px;background:#0b0b0b;padding:10px}
+.item h4{margin:0 0 4px;color:var(--accent);font-size:14px}
+.item .meta{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -131,7 +124,7 @@ button:hover{background:var(--accent);color:#000}
     <!-- RIGHT -->
     <div class="panel">
       <div class="hd">
-        <h3>Inspector</h3>
+        <h3>Dashboard</h3>
         <div style="display:flex;gap:8px;align-items:center">
           <select id="rankTrack" title="Rank Track">
             <option value="">— Track —</option>
@@ -151,7 +144,7 @@ button:hover{background:var(--accent);color:#000}
       </div>
 
       <div class="body" id="inspector">
-        <div class="small">Select a member to view and edit their progression & certifications.</div>
+        <div class="small">Select a member to view their dashboard & activity.</div>
       </div>
     </div>
 
@@ -254,7 +247,7 @@ function renderMembers(){
 }
 function markActive(row){document.querySelectorAll('.mrow').forEach(x=>x.classList.remove('active'));row?.classList.add('active');}
 
-/* Inspector */
+/* Dashboard for a member */
 async function openMember(userId,rowEl){
   const res=MEMBERS.find(x=>x.user_id===userId); if(!res) return;
   SELECTED=res; markActive(rowEl); $('#btnPromote').disabled=false;
@@ -264,7 +257,7 @@ async function openMember(userId,rowEl){
   await loadRankOptions(res.current_rank_category||'');
   if(res.current_rank_code) $('#rankCode').value = res.current_rank_code;
 
-  // Full inspector UI (summary + KPIs + bars + Certs + Timeline)
+  // Dashboard UI
   $('#inspector').innerHTML = `
     <div id="summary"></div>
 
@@ -296,9 +289,27 @@ async function openMember(userId,rowEl){
         <div id="timeline" class="timeline" style="margin-top:8px"></div>
       </div>
     </div>
+
+    <div class="panel" style="margin-top:12px">
+      <div class="hd">
+        <h3>Missions <span id="misCount" class="badge">0</span></h3>
+        <div>
+          <button id="misReload" class="pill">Reload</button>
+        </div>
+      </div>
+      <div class="body">
+        <div id="misList" class="list">Loading…</div>
+      </div>
+    </div>
   `;
 
-  await Promise.all([loadProgress(userId), loadCerts(userId)]);
+  await Promise.all([
+    loadProgress(userId),
+    loadCerts(userId),
+    loadMissions(userId)
+  ]);
+
+  $('#misReload').onclick = ()=> loadMissions(userId);
 }
 
 /* Progress */
@@ -432,6 +443,66 @@ async function loadTimeline(uid, certCode){
       await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
     };
   });
+}
+
+/* Missions (uses v_mission_attendees_detailed and joins missions) */
+async function loadMissions(uid){
+  const box = $('#misList'); const count = $('#misCount');
+  box.textContent = 'Loading…';
+  try{
+    // Try a single-call join if FK exists
+    let { data, error } = await sb
+      .from('v_mission_attendees_detailed')
+      .select('mission_id, attendance, missions(id,title,start_time)')
+      .eq('user_id', uid)
+      .order('missions.start_time', { ascending:false })
+      .limit(20);
+
+    // Fallback path if the nested join isn't available
+    if (error || (data && data.length && data[0].missions == null)) {
+      const { data: bare, error: e2 } = await sb
+        .from('v_mission_attendees_detailed')
+        .select('mission_id, attendance')
+        .eq('user_id', uid)
+        .order('mission_id', { ascending:false })
+        .limit(50);
+      if (e2) throw e2;
+
+      const ids = [...new Set((bare||[]).map(r=>r.mission_id))];
+      let map = {};
+      if (ids.length){
+        const { data: mrows } = await sb
+          .from('missions')
+          .select('id,title,start_time')
+          .in('id', ids);
+        map = Object.fromEntries((mrows||[]).map(m=>[m.id, m]));
+      }
+      data = (bare||[]).map(r => ({ ...r, missions: map[r.mission_id] || null }))
+                       .sort((a,b)=> new Date(b.missions?.start_time||0) - new Date(a.missions?.start_time||0))
+                       .slice(0,20);
+    }
+
+    const attended = (data||[]).filter(r => r.attendance && r.attendance.toLowerCase() !== 'withdrawn');
+    count.textContent = String(attended.length);
+
+    if (!data || !data.length){
+      box.innerHTML = '<div class="small">No missions found.</div>';
+      return;
+    }
+
+    box.innerHTML = data.map(r=>{
+      const m = r.missions || {};
+      const when = m.start_time ? new Date(m.start_time).toLocaleString() : '';
+      const att = r.attendance || '—';
+      return `<div class="item">
+        <h4>${esc(m.title || 'Untitled Mission')}</h4>
+        <div class="meta">${when} • Attendance: ${esc(att)}</div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    box.innerHTML = `<div class="small" style="color:#ff9c9c">Failed to load missions: ${esc(e.message||e)}</div>`;
+    count.textContent = '0';
+  }
 }
 </script>
 </body>
