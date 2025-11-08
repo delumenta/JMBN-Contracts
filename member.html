@@ -62,147 +62,77 @@ tr:hover{background:rgba(214,180,76,.08)}
   color:var(--muted);
 }
 
+/* Certification images */
+.certGrid{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.certGrid img{
+  width:28px;height:28px;object-fit:contain;border:none;background:transparent;display:block;
+}
+
 /* Buttons */
 .btn{padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play'}
 .btn:hover{background:var(--accent);color:#000}
-
-/* Modal */
-.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50}
-.modal{
-  background:#0b0b0b;border:1px solid var(--border);border-radius:16px;
-  max-width:760px;width:94vw;padding:20px 18px;box-shadow:0 0 28px rgba(214,180,76,.3)
-}
-.modal h3{margin:0 0 14px;color:var(--accent);font-size:18px;letter-spacing:.3px}
-.modal .header-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.modal .header-row .spacer{flex:1}
-
-/* Rank card in modal — NO frame/background on image */
-.rankCard{
-  display:flex;gap:16px;align-items:center;border:1px solid var(--border);
-  border-radius:14px;padding:14px;background:#0f0f0f
-}
-.rankCard img{
-  width:70px;height:70px;object-fit:contain;
-  border:none;border-radius:0;background:transparent;box-shadow:none;
-}
-
-.meta{font-size:13px;color:var(--muted);line-height:1.55}
-.meta b{color:var(--accent)}
-
-.divider{
-  height:1px;background:linear-gradient(90deg,rgba(214,180,76,.15),rgba(214,180,76,.4),rgba(214,180,76,.15));
-  border:none;margin:16px 0;
-}
-
-/* Section blocks inside modal */
-.section{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px;
-  background:#0f0f0f;
-  margin-bottom:12px;
-}
-.section h4{
-  margin:0 0 10px;
-  color:var(--accent);
-  font-size:14px;
-  letter-spacing:.3px;
-}
-.section .body{font-size:13px;color:var(--text);line-height:1.6}
-.section .muted{color:var(--muted)}
 </style>
 </head>
 <body>
 
-  <!-- Header mount -->
-  <div id="header-container">
-    <div class="brand">
-      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
-      <h1>JMBN</h1>
-    </div>
+<!-- Header -->
+<div id="header-container">
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
+    <h1>JMBN</h1>
   </div>
+</div>
 
-  <script>
-  (async () => {
-    try {
-      const res = await fetch('header.html', { cache: 'no-cache' });
-      if(res.ok){
-        const html = await res.text();
-        document.getElementById('header-container').outerHTML = html;
-        requestAnimationFrame(() => {
-          const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-          document.querySelectorAll('.nav-btn').forEach(a => {
-            const href = (a.getAttribute('href')||'').toLowerCase();
-            if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
-            if(/member/.test(here) && /member/.test(href)){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
-          });
+<script>
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    if(res.ok){
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href')||'').toLowerCase();
+          if (href === here) { a.classList.add('active'); }
+          if(/member/.test(here) && /member/.test(href)){ a.classList.add('active'); }
         });
-      }
-    } catch (e) { console.warn('Header load failed:', e); }
-  })();
-  </script>
+      });
+    }
+  } catch (e) { console.warn('Header load failed:', e); }
+})();
+</script>
 
-  <div class="panel">
-    <div class="controls">
-      <input id="q" type="search" placeholder="Search handle, rank, or specialization…">
-      <span id="count" class="badge">0 members</span>
-    </div>
-
-    <div class="tableWrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:23%">Handle</th>
-            <th style="width:19%">Rank Category</th>
-            <th style="width:20%">Current Rank</th>
-            <th style="width:20%">Specialization</th>
-            <th style="width:13%">Certifications</th>
-            <th style="width:5%"></th>
-          </tr>
-        </thead>
-        <tbody id="tbody">
-          <tr><td colspan="6" style="padding:12px;color:var(--muted)">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="meta" style="padding-top:10px">
-      Attendance counts only missions with status <b>Success / Fail / Abort</b>.
-    </div>
+<div class="panel">
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search handle, rank, or specialization…">
+    <span id="count" class="badge">0 members</span>
   </div>
 
-  <!-- Modal -->
-  <div id="viewMask" class="modal-mask" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="header-row">
-        <h3 id="viewTitle">Member</h3>
-        <div class="spacer"></div>
-        <button class="btn" onclick="closeView()">Close</button>
-      </div>
-
-      <div class="rankCard">
-        <img id="rankImg" alt="Rank">
-        <div class="meta">
-          <div><b>Handle:</b> <span id="vHandle"></span></div>
-          <div><b>Rank Category:</b> <span id="vRankCat"></span></div>
-          <div><b>Current Rank:</b> <span id="vRankName"></span> <span id="vRankCode" class="meta"></span></div>
-          <div><b>Specialization (role chips):</b> <span id="vRoles"></span></div>
-          <div><b>Missions attended:</b> <span id="vAttended"></span></div>
-        </div>
-      </div>
-
-      <hr class="divider">
-
-      <div class="section">
-        <h4>Certifications</h4>
-        <div id="vCertDetails" class="body muted">—</div>
-      </div>
-    </div>
+  <div class="tableWrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:23%">Handle</th>
+          <th style="width:19%">Rank Category</th>
+          <th style="width:20%">Current Rank</th>
+          <th style="width:20%">Specialization</th>
+          <th style="width:13%">Certifications</th>
+          <th style="width:5%"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="6" style="padding:12px;color:var(--muted)">Loading…</td></tr>
+      </tbody>
+    </table>
   </div>
+</div>
 
-  <!-- Supabase -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/auth.js"></script>
+<!-- Supabase -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 
 <script>
 const $ = s => document.querySelector(s);
@@ -217,27 +147,53 @@ function normalizeRoles(r){
 }
 
 let sb=null, ROWS=[];
-const RANK_BUCKET='Ranks';
+const RANK_BUCKET='Ranks', CERT_BUCKET='Certifications';
+
 function rankPublicUrlFromCode(code){
   if(!code) return ''; 
   return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
+function certPublicUrlFromCode(code){
+  if(!code) return ''; 
+  return sb.storage.from(CERT_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
+}
 
 const tbody=$('#tbody'), countEl=$('#count'), q=$('#q');
 
-function render(rows){
+async function getCertImages(userId){
+  try {
+    const { data, error } = await sb
+      .from('v_user_certifications')
+      .select('certification_code,image_url,owned')
+      .eq('user_id', userId);
+    if(error) return [];
+    return (data||[])
+      .filter(c=>c.owned && (c.image_url || c.certification_code))
+      .map(c => c.image_url || certPublicUrlFromCode(c.certification_code));
+  } catch {
+    return [];
+  }
+}
+
+async function render(rows){
   if(!rows?.length){
     tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
     countEl.textContent='0 members';
     return;
   }
 
-  tbody.innerHTML=rows.map(r=>{
+  // build table rows
+  const rendered = await Promise.all(rows.map(async r=>{
     const handle=toTitleCase(r.handle||r.display_name||r.user_id?.slice(0,8)||'—');
     const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
     const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
     const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
     const roles=normalizeRoles(r);
+    const certImgs=await getCertImages(r.user_id);
+
+    const certHTML = certImgs.length
+      ? `<div class="certGrid">${certImgs.map(src=>`<img src="${esc(src)}" alt="" loading="lazy" onerror="this.style.display='none'">`).join('')}</div>`
+      : `<span style="color:var(--muted)">—</span>`;
 
     return `
     <tr>
@@ -250,11 +206,12 @@ function render(rows){
         </div>
       </td>
       <td>${roles.length?`<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>`:`<span style="color:var(--muted)">—</span>`}</td>
-      <td><span style="color:var(--muted)">—</span></td>
+      <td>${certHTML}</td>
       <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
     </tr>`;
-  }).join('');
+  }));
 
+  tbody.innerHTML = rendered.join('');
   countEl.textContent=`${rows.length} member${rows.length===1?'':'s'}`;
 }
 
@@ -267,37 +224,6 @@ function filterRows(){
   });
 }
 
-function closeView(){ $('#viewMask').style.display='none'; }
-window.closeView=closeView;
-
-function viewMember(userId){
-  const r=ROWS.find(x=>x.user_id===userId);
-  if(!r) return;
-  const handle=toTitleCase(r.handle||r.display_name||r.user_id.slice(0,8));
-  const attended=Number(r.missions_attended)||0;
-  const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
-  const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
-  const roles=normalizeRoles(r);
-  const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
-
-  $('#viewTitle').textContent=`Member — ${handle}`;
-  $('#vHandle').textContent=handle;
-  $('#vRankCat').textContent=rankCat;
-  $('#vRankName').textContent=rankName;
-  $('#vRankCode').textContent=r.current_rank_code?`(${r.current_rank_code})`:'';
-  $('#vRoles').innerHTML=roles.length?roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' '):'—';
-  $('#vAttended').textContent=attended;
-  $('#vCertDetails').textContent='—';
-
-  const imgEl=$('#rankImg');
-  imgEl.src=imgUrl||''; imgEl.alt=r.current_rank_code||'Rank';
-  imgEl.style.visibility=imgUrl?'visible':'hidden';
-  imgEl.onerror=()=>{imgEl.style.visibility='hidden';};
-
-  $('#viewMask').style.display='flex';
-}
-window.viewMember=viewMember;
-
 async function loadRoster(){
   const {data,error}=await sb
     .from('v_profiles_detailed')
@@ -309,8 +235,7 @@ async function loadRoster(){
       current_rank_name,
       current_rank_code,
       current_rank_image_url,
-      ingame_role,
-      missions_attended
+      ingame_role
     `)
     .order('current_rank_category',{ascending:true})
     .order('handle',{ascending:true});
@@ -321,10 +246,10 @@ async function loadRoster(){
     return;
   }
   ROWS=data||[];
-  render(filterRows());
+  await render(filterRows());
 }
 
-q.addEventListener('input',()=>render(filterRows()));
+q.addEventListener('input',async()=>await render(filterRows()));
 
 document.addEventListener('DOMContentLoaded',async()=>{
   const session=await requireAuth(); if(!session) return;
