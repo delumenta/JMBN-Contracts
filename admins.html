@@ -17,12 +17,11 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
 
-/* Header (fallback if header.html not found) */
+/* Fallback header */
 .brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand img{width:44px;height:44px;object-fit:contain}
 .brand h1{margin:0;color:var(--accent);font-size:22px}
 
-/* Layout */
 .wrap{max-width:1200px;margin:0 auto;padding:0 16px 40px}
 .grid{display:grid;grid-template-columns:340px 1fr;gap:16px}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
@@ -32,7 +31,6 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .panel .hd h3{margin:0;color:var(--accent);font-size:16px}
 .panel .body{padding:12px}
 
-/* Inputs & buttons */
 input[type="search"],select{
   width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'
 }
@@ -44,14 +42,29 @@ button:hover{background:var(--accent);color:#000}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
 .btn-danger{border-color:var(--bad);color:var(--bad)}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
-.small{font-size:12px;color:var(--muted)}
 
 /* Members list */
 .mlist{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto}
 .mrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px;border:1px solid transparent;border-radius:10px;background:#0a0a0a;cursor:pointer}
 .mrow:hover{background:#111;border-color:rgba(214,180,76,.35)}
 .mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
-.mavatar{width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:#111;display:grid;place-items:center;overflow:hidden}
+
+/* 🔧 Frameless rank/logo avatar */
+.mavatar{
+  width:38px;height:38px;
+  display:grid;place-items:center;overflow:hidden;
+  border:none;               /* no frame */
+  border-radius:0;           /* square, change if you want */
+  background:transparent;    /* no tile */
+}
+.mavatar img{
+  width:100%;height:100%;
+  object-fit:contain;
+  border:none !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  filter:none !important;
+}
 
 /* KPIs + bars */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -64,21 +77,14 @@ button:hover{background:var(--accent);color:#000}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certifications grid — 6 per row, NO borders on logo/abbrev */
-.certGrid{
-  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;justify-items:center;
-}
-@media(max-width:1100px){.certGrid{grid-template-columns:repeat(5,1fr)}}
-@media(max-width:900px){.certGrid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:700px){.certGrid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
-.cert{background:transparent;text-align:center;padding:4px;border-radius:6px;transition:transform .15s ease,opacity .15s ease}
-.cert:hover{transform:scale(1.05)}
-.cert.dim{opacity:.45;filter:grayscale(.6)}
-.cert .thumb{height:64px;background:none;border:none;display:grid;place-items:center;margin-bottom:4px;padding:0}
-.cert .thumb img{width:auto;max-width:54px;max-height:100%;object-fit:contain}
-.cert .abbrev{font-weight:700;font-size:12px;color:var(--accent)}
-.cert .meta{font-size:10px;color:var(--muted);margin-top:2px}
+/* Certifications grid — smaller images */
+.certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:10px}
+.cert .thumb{height:120px;border:1px solid var(--border);border-radius:10px;background:#101010;display:grid;place-items:center;margin-bottom:8px;padding:8px}
+.cert .thumb img{width:auto;max-width:110px;max-height:100%;object-fit:contain}
+.cert .title{font-weight:700}
+.cert.dim{opacity:.6;filter:grayscale(.5)}
+.small{font-size:12px;color:var(--muted)}
 
 /* Timeline */
 .timeline{position:relative;margin-top:10px;padding-left:24px}
@@ -86,13 +92,15 @@ button:hover{background:var(--accent);color:#000}
 .titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
 .tdot{position:absolute;left:6px;top:16px;width:10px;height:10px;border-radius:50%;background:#222;border:2px solid var(--border)}
 .titem.done .tdot{background:var(--border)}
+.tlabel{font-weight:700}
 
-/* Missions card */
-.mis-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.mis-list{display:flex;flex-direction:column;gap:8px}
-.mis-card{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0f0f0f}
-.mis-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.mis-title{color:var(--accent);font-weight:800}
+/* Extra safety: any rank images elsewhere */
+.rank-img, .rankLogo, .rankBadge img{
+  border:none !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+}
 </style>
 </head>
 <body>
@@ -131,14 +139,14 @@ button:hover{background:var(--accent);color:#000}
             <option value="Enlisted">Enlisted</option>
             <option value="Warrant">Warrant</option>
           </select>
-          <button id="btnForce" class="pill">Force Track</button>
+          <button id="btnForce" class="pill" title="Force set user's rank track">Force Set Track</button>
 
           <select id="rankCode" title="Rank Code">
-            <option value="">— Rank —</option>
+            <option value="">— Select Rank —</option>
           </select>
-          <button id="btnSetRank" class="pill">Set Rank</button>
+          <button id="btnSetRank" class="pill" title="Force set a specific rank code">Set Rank</button>
 
-          <button id="btnPromote" class="pill" disabled>Promotion</button>
+          <button id="btnPromote" class="pill" disabled>Run Promotion Check</button>
         </div>
       </div>
 
@@ -157,7 +165,6 @@ button:hover{background:var(--accent);color:#000}
 const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 const setFill=(el,p)=>{const x=Math.max(0,Math.min(1,Number(p)||0));el.style.width=(x*100)+'%';};
-const fmtDate = iso => iso ? new Date(iso).toLocaleString() : '';
 
 let sb, me, isElev=false, MEMBERS=[], SELECTED=null, RANKS=[];
 
@@ -212,7 +219,7 @@ async function loadRankOptions(track=''){
   const want = (track||$('#rankTrack').value||'').toLowerCase();
   const items = RANKS.filter(r=>!want || (r.category||'').toLowerCase()===want);
   const sel = $('#rankCode');
-  sel.innerHTML = '<option value="">— Rank —</option>' +
+  sel.innerHTML = '<option value="">— Select Rank —</option>' +
     items.map(r=>`<option value="${r.code}">${r.code} — ${esc(r.name)}</option>`).join('');
 }
 
@@ -235,7 +242,7 @@ function renderMembers(){
   rows.forEach(m=>{
     const row=document.createElement('div'); row.className='mrow';
     row.innerHTML=`
-      <div class="mavatar">${m.current_rank_image_url?`<img src="${esc(m.current_rank_image_url)}" style="width:100%;height:100%;object-fit:contain">`:'👤'}</div>
+      <div class="mavatar">${m.current_rank_image_url?`<img src="${esc(m.current_rank_image_url)}" alt="rank">`:'👤'}</div>
       <div>
         <div><b>${esc(m.handle||'(no handle)')}</b> <span class="small">• ${esc(m.display_name||'')}</span></div>
         <div class="small">${esc(m.current_rank_category||'Unrated')} — ${esc(m.current_rank_name||'Unrated')}</div>
@@ -257,7 +264,7 @@ async function openMember(userId,rowEl){
   await loadRankOptions(res.current_rank_category||'');
   if(res.current_rank_code) $('#rankCode').value = res.current_rank_code;
 
-  // Inspector UI
+  // Full inspector UI (summary + KPIs + bars + Certs + Timeline)
   $('#inspector').innerHTML = `
     <div id="summary"></div>
 
@@ -267,9 +274,9 @@ async function openMember(userId,rowEl){
       <div class="kpi"><h4>Owned Certs</h4><div class="val" id="k_cer">—</div></div>
     </div>
 
-    <div class="pb"><div class="label">Missions</div><div class="bar"><div id="pbMis" class="fill"></div></div><div class="val" id="vMis">—</div></div>
-    <div class="pb"><div class="label">Hours</div><div class="bar"><div id="pbHrs" class="fill"></div></div><div class="val" id="vHrs">—</div></div>
-    <div class="pb"><div class="label">Certifications</div><div class="bar"><div id="pbCer" class="fill"></div></div><div class="val" id="vCer">—</div></div>
+    <div class="pb"><div class="label">Missions</div><div class="bar"><div id="pbMis" class="fill" style="width:0%"></div></div><div class="val" id="vMis">—</div></div>
+    <div class="pb"><div class="label">Hours</div><div class="bar"><div id="pbHrs" class="fill" style="width:0%"></div></div><div class="val" id="vHrs">—</div></div>
+    <div class="pb"><div class="label">Certifications</div><div class="bar"><div id="pbCer" class="fill" style="width:0%"></div></div><div class="val" id="vCer">—</div></div>
 
     <div class="panel" style="margin-top:12px">
       <div class="hd"><h3>Certifications</h3></div>
@@ -289,25 +296,9 @@ async function openMember(userId,rowEl){
         <div id="timeline" class="timeline" style="margin-top:8px"></div>
       </div>
     </div>
-
-    <div class="panel" style="margin-top:12px">
-      <div class="hd">
-        <h3>Missions Attended</h3>
-        <div class="small" id="misCount">—</div>
-      </div>
-      <div class="body">
-        <div class="mis-controls">
-          <input id="misSearch" type="search" placeholder="Search mission title…">
-          <select id="misStatus" style="max-width:220px">
-            <option value="">All statuses</option>
-          </select>
-        </div>
-        <div id="misList" class="mis-list"><div class="small">Loading…</div></div>
-      </div>
-    </div>
   `;
 
-  await Promise.all([loadProgress(userId), loadCerts(userId), loadMissions(userId)]);
+  await Promise.all([loadProgress(userId), loadCerts(userId)]);
 }
 
 /* Progress */
@@ -368,13 +359,12 @@ async function loadCerts(uid){
   (catalog||[]).forEach(c=>{
     const div=document.createElement('div');
     div.className='cert'+(owned.has(c.certification_code)?'':' dim');
-    div.innerHTML = `
-      <div class="thumb">${c.image_url ? `<img src="${esc(c.image_url)}" alt="">` : '🏅'}</div>
-      <div class="abbrev">${esc(c.certification_code)}</div>
-      <div class="meta">${c.is_active===false?'Inactive • ':''}Reqs: ${byCert.get(c.certification_code)?.length ?? 0}</div>
-      <div style="margin-top:6px">
-        <button class="pill" data-open="${c.certification_code}">Open</button>
-      </div>
+    div.innerHTML=`
+      <div class="thumb">${c.image_url?`<img src="${esc(c.image_url)}" alt="">`:'🏅'}</div>
+      <div class="title">${esc(c.name)}</div>
+      <div class="small">${esc(c.certification_code)}${c.is_active===false?' • (Inactive)':''}</div>
+      <div class="small">Reqs: ${byCert.get(c.certification_code)?.length ?? 0}</div>
+      <div style="margin-top:8px"><button class="pill" data-open="${c.certification_code}">Open Timeline</button></div>
     `;
     div.querySelector('button').onclick=()=>{
       select.value=c.certification_code;
@@ -416,7 +406,7 @@ async function loadTimeline(uid, certCode){
       <div>
         <div class="tlabel">${esc(r.training_events?.title||r.event_code)}</div>
         <div class="small">${esc(r.training_events?.description||'')}</div>
-        ${ok?`<div class="small">Completed: ${esc(fmtDate(rec.approved_at||rec.completed_at))}${rec.approved_by?` • by ${esc(rec.approved_by.slice(0,8))}`:''}</div>`:''}
+        ${ok?`<div class="small">Completed: ${new Date(rec.approved_at||rec.completed_at).toLocaleString()}${rec.approved_by?` • by ${esc(rec.approved_by.slice(0,8))}`:''}</div>`:''}
       </div>
       <div>
         ${ok?`<button class="btn-danger" data-remove="${r.event_code}">Remove</button>`
@@ -442,99 +432,6 @@ async function loadTimeline(uid, certCode){
       await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
     };
   });
-}
-
-/* ===== Missions (from v_mission_attendees_detailed) ===== */
-let _ALL_MISSIONS = [];
-let _MIS_STATUS_FILLED = false;
-
-async function loadMissions(uid){
-  // 1) From the view
-  let { data, error } = await sb
-    .from('v_mission_attendees_detailed')
-    .select('mission_id,user_id,attendance')
-    .eq('user_id', uid);
-
-  if(error){
-    $('#misList').innerHTML = `<div class="small" style="color:#ff8f8f">Failed to load: ${esc(error.message)}</div>`;
-    $('#misCount').textContent = '—';
-    return;
-  }
-  data = data || [];
-
-  // 2) Hydrate with missions (title, start_time)
-  const ids = [...new Set(data.map(r => r.mission_id).filter(Boolean))];
-  let lookup = {};
-  if(ids.length){
-    const { data: mrows } = await sb
-      .from('missions')
-      .select('id,title,start_time')
-      .in('id', ids);
-    (mrows||[]).forEach(m => { lookup[m.id] = { title: m.title||'(Untitled)', start_time: m.start_time||null }; });
-  }
-
-  // 3) Merge
-  _ALL_MISSIONS = data.map(r => ({
-    id: r.mission_id,
-    title: lookup[r.mission_id]?.title || '(Untitled)',
-    start_time: lookup[r.mission_id]?.start_time || null,
-    attendance: r.attendance || ''
-  }));
-
-  // Totals
-  $('#misCount').textContent = `${_ALL_MISSIONS.length} total`;
-
-  // Fill status filter (first time)
-  if(!_MIS_STATUS_FILLED){
-    const statuses = [...new Set(_ALL_MISSIONS.map(x => (x.attendance||'').trim()))]
-      .filter(Boolean).sort((a,b)=>a.localeCompare(b));
-    const sel = $('#misStatus');
-    sel.innerHTML = ['<option value="">All statuses</option>'].concat(
-      statuses.map(s => `<option value="${esc(s)}">${esc(s)}</option>`)
-    ).join('');
-    _MIS_STATUS_FILLED = true;
-  }
-
-  // Bind filters
-  $('#misSearch').oninput = renderMissions;
-  $('#misStatus').onchange = renderMissions;
-
-  renderMissions();
-}
-
-function renderMissions(){
-  const box = $('#misList');
-  if(!_ALL_MISSIONS.length){
-    box.innerHTML = `<div class="small" style="color:var(--muted)">No missions found.</div>`;
-    return;
-  }
-
-  const term = ($('#misSearch').value||'').toLowerCase().trim();
-  const want = ($('#misStatus').value||'').toLowerCase();
-
-  const rows = _ALL_MISSIONS.filter(r=>{
-    const t = `${r.title} ${r.attendance}`.toLowerCase();
-    const passTerm = !term || t.includes(term);
-    const passStatus = !want || (r.attendance||'').toLowerCase()===want;
-    return passTerm && passStatus;
-  });
-
-  if(!rows.length){
-    box.innerHTML = `<div class="small" style="color:var(--muted)">No matches.</div>`;
-    return;
-  }
-
-  box.innerHTML = rows.map(r=>`
-    <div class="mis-card">
-      <div class="mis-head">
-        <div class="mis-title">${esc(r.title)}</div>
-        <span class="pill">${esc(r.attendance || '—')}</span>
-      </div>
-      <div class="small" style="margin-top:6px">
-        Starts: ${esc(fmtDate(r.start_time) || '—')}
-      </div>
-    </div>
-  `).join('');
 }
 </script>
 </body>
