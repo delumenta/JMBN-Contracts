@@ -44,11 +44,11 @@ tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .name{font-weight:700}
 
-/* Rank cell with image beside rank text */
+/* Rank cell — image beside rank text, NO frame/background */
 .rankCell{display:flex;align-items:center;gap:12px}
 .rankCell img{
-  width:28px;height:28px;object-fit:contain;
-  border:1px solid var(--border);border-radius:6px;background:#111;flex:0 0 28px;
+  width:28px;height:28px;object-fit:contain;flex:0 0 28px;
+  border:none;border-radius:0;background:transparent;box-shadow:none;
 }
 
 /* Role chips */
@@ -76,11 +76,15 @@ tr:hover{background:rgba(214,180,76,.08)}
 .modal .header-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .modal .header-row .spacer{flex:1}
 
+/* Rank card in modal — NO frame/background on image */
 .rankCard{
   display:flex;gap:16px;align-items:center;border:1px solid var(--border);
   border-radius:14px;padding:14px;background:#0f0f0f
 }
-.rankCard img{width:70px;height:70px;object-fit:contain;border:1px solid var(--border);border-radius:12px;background:#111}
+.rankCard img{
+  width:70px;height:70px;object-fit:contain;
+  border:none;border-radius:0;background:transparent;box-shadow:none;
+}
 
 .meta{font-size:13px;color:var(--muted);line-height:1.55}
 .meta b{color:var(--accent)}
