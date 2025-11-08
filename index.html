@@ -90,9 +90,12 @@ body::after{
 .member .name{font-weight:900;font-size:20px;color:var(--accent)}
 .rankline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;margin-top:6px}
 .badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#0c0c0c;color:var(--muted)}
+
+/* Rank image — NO frame/background */
 .rankimg{
-  width:120px;height:120px;object-fit:contain;border-radius:10px;border:1px solid var(--border);
-  background:#0c0c0c;display:block;justify-self:end
+  width:120px;height:120px;object-fit:contain;
+  border:none;border-radius:0;background:transparent; /* <- unframed */
+  display:block;justify-self:end;
 }
 
 /* Action grid */
