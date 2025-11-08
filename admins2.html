@@ -2,206 +2,399 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JMBN – Admin Console</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN – Progression</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b; --ok:#5cd47c;
+  --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--border:#d6b44c;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#5cd47c;
   --fs:14px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
-
-/* Fallback header */
-.brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand img{width:44px;height:44px;object-fit:contain}
-.brand h1{margin:0;color:var(--accent);font-size:22px}
-
-.wrap{max-width:1200px;margin:0 auto;padding:0 16px 40px}
-.grid{display:grid;grid-template-columns:340px 1fr;gap:16px}
-@media(max-width:980px){.grid{grid-template-columns:1fr}}
-
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18)}
-.panel .hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
-.panel .hd h3{margin:0;color:var(--accent);font-size:16px}
-.panel .body{padding:12px}
-
-input[type="search"],select{
-  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'
-}
-button{
-  padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);cursor:pointer;font-family:'Play'
-}
-button:hover{background:var(--accent);color:#000}
-.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
-.btn-danger{border-color:var(--bad);color:var(--bad)}
-.btn-ok{border-color:var(--ok);color:var(--ok)}
-
-/* Members list */
-.mlist{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto}
-.mrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px;border:1px solid transparent;border-radius:10px;background:#0a0a0a;cursor:pointer}
-.mrow:hover{background:#111;border-color:rgba(214,180,76,.35)}
-.mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
-
-/* Frameless rank/logo avatar */
-.mavatar{
-  width:38px;height:38px;
-  display:grid;place-items:center;overflow:hidden;
-  border:none;
-  border-radius:0;
-  background:transparent;
-}
-.mavatar img{
-  width:100%;height:100%;
-  object-fit:contain;
-  border:none !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  filter:none !important;
+body{
+  margin:0;padding:14px;background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.25px
 }
 
-/* KPIs + bars */
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.kpi{background:#0c0c0c;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
-.kpi .val{font-size:18px;font-weight:700;color:var(--accent)}
-.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;margin:6px 0}
+/* fallback header */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand img.brand-logo{width:44px;height:44px;object-fit:contain;border:none;background:transparent;box-shadow:none}
+.brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
+
+/* containers */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px;box-shadow:0 0 18px rgba(214,180,76,.20)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
+.h{margin:0 0 8px;color:var(--accent);font-size:16px}
+
+/* rank rows */
+.rankRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.rankNow{display:flex;align-items:center;gap:10px}
+
+/* rank image — NO frame/background */
+.rankImg{width:46px;height:46px;object-fit:contain;border:none;background:transparent;border-radius:10px;box-shadow:none}
+
+.badge{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
+
+/* requirement bars */
+.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;margin:8px 0}
 .pb .label{color:var(--muted);font-size:12px}
 .bar{height:12px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certifications grid — smaller images */
-.certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:10px}
-.cert .thumb{height:120px;border:1px solid var(--border);border-radius:10px;background:#101010;display:grid;place-items:center;margin-bottom:8px;padding:8px}
-.cert .thumb img{width:auto;max-width:110px;max-height:100%;object-fit:contain}
-.cert .title{font-weight:700}
-.cert.dim{opacity:.6;filter:grayscale(.5)}
-.small{font-size:12px;color:var(--muted)}
+/* certifications grid — compact, frameless */
+.certGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px;justify-items:center}
+@media(max-width:1100px){.certGrid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:900px){.certGrid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.certGrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
+.cert{background:transparent;text-align:center;padding:4px 2px 10px;border-radius:8px;transition:transform .15s ease, opacity .15s ease, filter .15s ease}
+.cert:hover{transform:scale(1.05)}
+.cert.dim{opacity:.45;filter:grayscale(.6)}
+.cert .thumb{width:64px;height:64px;display:grid;place-items:center;margin:0 auto 4px;background:none;border:none}
+.cert .thumb img{width:auto;max-width:54px;max-height:100%;object-fit:contain}
+.cert .title{font-weight:700;font-size:12px}
+.cert .code{font-size:10px;color:var(--muted);margin-top:1px}
 
-/* Timeline */
+/* timeline */
+.tlWrap{display:grid;gap:10px}
+.tlHead{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tlHint{font-size:12px;color:var(--muted)}
 .timeline{position:relative;margin-top:10px;padding-left:24px}
 .timeline::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(var(--border),transparent)}
 .titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
 .tdot{position:absolute;left:6px;top:16px;width:10px;height:10px;border-radius:50%;background:#222;border:2px solid var(--border)}
 .titem.done .tdot{background:var(--border)}
 .tlabel{font-weight:700}
+.small{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
 
-<!-- Header mount -->
+<!-- header mount -->
 <div id="header-container">
-  <div class="brand"><img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt=""><h1>JMBN Admin Console</h1></div>
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1>JMBN – Progression</h1>
+  </div>
 </div>
 <script>
-(async()=>{try{
-  const r=await fetch('header.html',{cache:'no-cache'});
-  if(r.ok){document.getElementById('header-container').outerHTML=await r.text();}
-}catch{}})();
+(async () => {
+  try {
+    const res = await fetch('header.html', { cache: 'no-cache' });
+    if(res.ok){
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a=>{
+          const href=(a.getAttribute('href')||'').toLowerCase();
+          if(href===here || (here==='' && href==='index.html')) a.classList.add('active');
+        });
+      });
+    }
+  } catch {}
+})();
 </script>
 
-<div class="wrap">
-  <div class="grid">
-
-    <!-- LEFT -->
-    <div class="panel">
-      <div class="hd"><h3>Members</h3></div>
-      <div class="body">
-        <input id="mSearch" type="search" placeholder="Search handle / name…">
-        <div id="mList" class="mlist" style="margin-top:8px">Loading…</div>
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="panel">
-      <div class="hd">
-        <h3>Dashboard</h3>
-        <div style="display:flex;gap:8px;align-items:center">
-          <select id="rankTrack" title="Rank Track">
-            <option value="">— Track —</option>
-            <option value="Officer">Officer</option>
-            <option value="Enlisted">Enlisted</option>
-            <option value="Warrant">Warrant</option>
-          </select>
-          <button id="btnForce" class="pill" title="Force set user's rank track">Force Set Track</button>
-
-          <select id="rankCode" title="Rank Code">
-            <option value="">— Select Rank —</option>
-          </select>
-          <button id="btnSetRank" class="pill" title="Force set a specific rank code">Set Rank</button>
-
-          <button id="btnPromote" class="pill" disabled>Run Promotion Check</button>
+<div class="panel">
+  <!-- Rank header -->
+  <div class="rankRow">
+    <div class="rankNow">
+      <img id="curImg" class="rankImg" alt="Rank">
+      <div>
+        <div class="h" style="margin:0">Rank Progression</div>
+        <div style="font-size:12px;color:var(--muted)">
+          Current: <b id="curRank">—</b>
+          <span class="badge" id="curPg">PG: —</span>
         </div>
       </div>
+    </div>
+    <div>
+      <button class="badge" id="btnPromote" disabled style="cursor:pointer;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent)">Request Promotion</button>
+    </div>
+  </div>
 
-      <div class="body" id="inspector">
-        <div class="small">Select a member to view and edit their progression & certifications.</div>
+  <!-- Next rank -->
+  <div class="section">
+    <h3 class="h">Next Rank</h3>
+    <div style="display:flex;align-items:center;gap:10px">
+      <img id="nextImg" class="rankImg" alt="Next">
+      <div>
+        <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
+        <div class="badge" id="nextPg">PG: —</div>
       </div>
     </div>
+  </div>
 
+  <!-- Requirements -->
+  <div class="section">
+    <h3 class="h">Requirements</h3>
+    <div class="pb">
+      <div class="label">Missions</div>
+      <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
+      <div class="val" id="valMissions">0 / 0</div>
+    </div>
+    <div class="pb">
+      <div class="label">Hours</div>
+      <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
+      <div class="val" id="valHours">0 / 0</div>
+    </div>
+    <div class="pb">
+      <div class="label">Certifications</div>
+      <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
+      <div class="val" id="valCerts">0 / 0</div>
+    </div>
+    <div style="margin-top:8px" class="small" id="note">Promotion is available when all targets are met.</div>
+  </div>
+
+  <!-- History -->
+  <div class="section">
+    <h3 class="h">History</h3>
+    <div id="history" class="small">Loading…</div>
+  </div>
+
+  <!-- Certifications grid -->
+  <div class="section">
+    <h3 class="h">Certifications</h3>
+    <div id="certGrid" class="certGrid">—</div>
+    <div style="margin-top:8px" class="small">Dim badges are not yet earned.</div>
+  </div>
+
+  <!-- Certifications Timeline (NEW) -->
+  <div class="section">
+    <h3 class="h">Certification Timeline</h3>
+    <div class="tlWrap">
+      <div class="tlHead">
+        <select id="certSelect" style="background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:'Play'">
+          <option value="">— Select a Certification —</option>
+        </select>
+        <button id="btnReloadTL" class="badge" style="cursor:pointer">Load</button>
+        <span id="tlHint" class="tlHint">Pick a certification to view its required trainings.</span>
+      </div>
+      <div id="timeline" class="timeline"></div>
+    </div>
   </div>
 </div>
 
-<!-- libs -->
+<!-- Supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
 const $ = s => document.querySelector(s);
-const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
-const setFill=(el,p)=>{const x=Math.max(0,Math.min(1,Number(p)||0));el.style.width=(x*100)+'%';};
 
-let sb, me, isElev=false, MEMBERS=[], SELECTED=null, RANKS=[];
+let session=null, sb=null, me=null;
 
-/* Boot */
+function setFill(sel, pct){
+  const el = $(sel);
+  const x  = Math.max(0, Math.min(1, Number(pct)||0));
+  el.style.width = (x*100) + '%';
+}
+
+async function fetchRankImage(code){
+  if(!code) return '';
+  try{
+    return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl || '';
+  }catch{ return ''; }
+}
+
+/* ===== Progress + next rank + bars ===== */
+async function loadProgress(){
+  const { data: prog } = await sb.from('v_user_rank_progress').select('*').eq('user_id', me).maybeSingle();
+
+  $('#curRank').textContent = prog?.current_name || '(unranked)';
+  $('#curPg').textContent   = `PG: ${prog?.current_paygrade || '—'}`;
+  $('#nextName').textContent = prog?.next_name || '—';
+  $('#nextPg').textContent   = `PG: ${prog?.next_paygrade || '—'}`;
+
+  const curImg = await fetchRankImage(prog?.current_code);
+  const nxtImg = await fetchRankImage(prog?.next_code);
+  if (curImg){ $('#curImg').src = curImg; $('#curImg').style.visibility='visible'; } else { $('#curImg').style.visibility='hidden'; }
+  if (nxtImg){ $('#nextImg').src = nxtImg; $('#nextImg').style.visibility='visible'; } else { $('#nextImg').style.visibility='hidden'; }
+
+  const { data: up } = await sb.from('v_user_progress').select('*').eq('user_id', me).maybeSingle();
+
+  const m = Number(up?.missions_attended || 0);
+  const h = Number(up?.hours_total || 0);
+  const c = Number(up?.certifications_total || 0);
+
+  const mt = Number(prog?.missions_target || 0);
+  const ht = Number(prog?.hours_target || 0);
+  const ct = Number(prog?.certification_target || 0);
+
+  $('#valMissions').textContent = `${m} / ${mt}`;
+  $('#valHours').textContent    = `${h} / ${ht}`;
+  $('#valCerts').textContent    = `${c} / ${ct}`;
+
+  setFill('#pbMissions', mt ? Math.min(1, m/mt) : 1);
+  setFill('#pbHours',    ht ? Math.min(1, h/ht) : 1);
+  setFill('#pbCerts',    ct ? Math.min(1, c/ct) : 1);
+
+  const allMet = (!!prog?.next_code) && (mt?m>=mt:true) && (ht?h>=ht:true) && (ct?c>=ct:true);
+  $('#btnPromote').disabled = !allMet;
+  $('#note').textContent = !prog?.next_code
+    ? 'You are at the highest rank or next rank is not configured.'
+    : allMet
+      ? 'All requirements met. You can request promotion.'
+      : 'Promotion is available when all targets are met.';
+}
+
+/* ===== Rank history ===== */
+async function loadHistory(){
+  const { data, error } = await sb
+    .from('rank_changes')
+    .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
+    .eq('user_id', me)
+    .order('created_at', { ascending:false })
+    .limit(10);
+  if(error){ $('#history').textContent = 'Failed to load history.'; return; }
+  if(!data?.length){ $('#history').textContent = 'No changes yet.'; return; }
+
+  $('#history').innerHTML = data.map(r=>{
+    const when = new Date(r.created_at).toLocaleString();
+    const who = r.changed_by?.slice(0,8) || 'system';
+    const from = r.from_rank_code || '—';
+    const to   = r.to_rank_code || '—';
+    const why  = r.reason || '';
+    return `<div>• ${when}: ${from} → <b style="color:var(--accent)">${to}</b> by ${who} ${why?`<span class="small">— ${why}</span>`:''}</div>`;
+  }).join('');
+}
+
+/* ===== Certifications grid (owned + catalog) ===== */
+async function loadCertsGridAndSelect(){
+  // Prefer a view if present
+  let gridRows = [];
+  try {
+    const { data } = await sb
+      .from('v_user_certifications')
+      .select('certification_code,name,image_url,owned,sort_order,user_id')
+      .or(`user_id.eq.${me},user_id.is.null`)
+      .order('sort_order', { ascending:true });
+    gridRows = data || [];
+  } catch {
+    // Fallback: join catalog with my owned list
+    const [{ data: catalog }, { data: mine }] = await Promise.all([
+      sb.from('certifications').select('certification_code,name,image_url,sort_order,is_active').order('sort_order'),
+      sb.from('user_certifications').select('certification_code').eq('user_id', me)
+    ]);
+    const ownedSet = new Set((mine||[]).map(x=>x.certification_code));
+    gridRows = (catalog||[]).map(c => ({
+      certification_code: c.certification_code,
+      name: c.name,
+      image_url: c.image_url,
+      sort_order: c.sort_order,
+      owned: ownedSet.has(c.certification_code)
+    }));
+  }
+
+  // Grid
+  const grid = $('#certGrid');
+  if (!gridRows?.length){ grid.textContent = '—'; } else {
+    grid.innerHTML = gridRows.map(row=>{
+      const owned = !!row.owned;
+      const cls   = owned ? 'cert owned' : 'cert dim';
+      const img   = row.image_url || '';
+      const code  = row.certification_code || '';
+      const name  = row.name || code || 'Certification';
+      return `
+        <div class="${cls}" title="${owned?'Obtained':'Not earned'}">
+          <div class="thumb">${img?`<img src="${img}" alt="${name}">`:''}</div>
+          <div class="title">${name}</div>
+          <div class="code">${code}</div>
+        </div>`;
+    }).join('');
+  }
+
+  // Timeline select (use all certifications; put owned first)
+  const select = $('#certSelect');
+  const ownedFirst = [...gridRows].sort((a,b)=> (b.owned===true)-(a.owned===true) || (a.sort_order??999)-(b.sort_order??999));
+  select.innerHTML = '<option value="">— Select a Certification —</option>' +
+    ownedFirst.map(c => `<option value="${c.certification_code}">${c.owned?'★ ':''}${c.certification_code} — ${c.name||c.certification_code}</option>`).join('');
+}
+
+/* ===== Certification Timeline ===== */
+async function loadTimeline(certCode){
+  const tl = $('#timeline');
+  tl.innerHTML = '';
+  if(!certCode){ tl.innerHTML = '<div class="small">Pick a certification.</div>'; return; }
+
+  const [{ data: reqs, error: e1 }, { data: recs, error: e2 }] = await Promise.all([
+    sb.from('certification_requirements')
+      .select('event_code, sort_order, training_events(title, description)')
+      .eq('certification_code', certCode)
+      .order('sort_order'),
+    sb.from('user_training_events')
+      .select('event_code, completed_at, approved_by, approved_at')
+      .eq('user_id', me)
+  ]);
+
+  if(e1){ tl.innerHTML = `<div class="small" style="color:#ff9c9c">${e1.message}</div>`; return; }
+  const done = new Map((recs||[]).map(r=>[r.event_code,r]));
+
+  if(!reqs?.length){
+    tl.innerHTML = '<div class="small">No requirements configured for this certification.</div>';
+    return;
+  }
+
+  reqs.forEach(r=>{
+    const rec = done.get(r.event_code);
+    const ok  = !!rec;
+    const when = rec ? (rec.approved_at || rec.completed_at) : null;
+    const by   = rec?.approved_by ? ` • by ${rec.approved_by.slice(0,8)}` : '';
+    const row = document.createElement('div');
+    row.className = 'titem' + (ok ? ' done' : '');
+    row.innerHTML = `
+      <div class="tdot"></div>
+      <div>
+        <div class="tlabel">${(r.training_events?.title || r.event_code) ?? r.event_code}</div>
+        <div class="small">${r.training_events?.description ? r.training_events.description : ''}</div>
+        ${ok ? `<div class="small">Completed: ${new Date(when).toLocaleString()}${by}</div>` : `<div class="small" style="color:#c9b06a">Pending</div>`}
+      </div>
+      <div>${ok ? '<span class="badge" style="border-color:var(--ok);color:var(--ok)">Done</span>' : ''}</div>
+    `;
+    tl.appendChild(row);
+  });
+}
+
+/* ===== Promote RPC ===== */
+async function promote(){
+  const { data, error } = await sb.rpc('request_promotion', { p_user: me });
+  if(error){ alert('Promotion failed: ' + error.message); return; }
+  if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
+  alert('Promoted to ' + (data.to || 'next rank') + '!');
+  await loadProgress(); await loadHistory();
+}
+
+/* ===== Boot ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  const session = await requireAuth(); if(!session) return;
-  sb = getSupabase(); me = session.user.id;
+  session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
 
-  try{ const { data } = await sb.rpc('is_elevated',{ u: me }); isElev = data===true; }catch{}
-  if(!isElev){ $('#inspector').innerHTML='<div class="small" style="color:#ff6b6b">Access denied — not elevated.</div>'; return; }
-
-  await loadMembers();
-  await loadRankOptions();
-
-  $('#mSearch').oninput = renderMembers;
-  $('#rankTrack').onchange = e => loadRankOptions(e.target.value);
-
-  $('#btnForce').onclick = async ()=>{
-    if(!SELECTED) return alert('Select a member first.');
-    const track=$('#rankTrack').value; if(!track) return alert('Choose a track.');
-    if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${track}?`)) return;
-    const { error } = await sb.rpc('set_rank_track',{ p_user: SELECTED.user_id, p_track: track });
-    if(error) return alert('Force set failed: '+error.message);
-    alert('Track updated ✓'); await openMember(SELECTED.user_id); await loadMembers();
+  $('#btnPromote').onclick = promote;
+  $('#btnReloadTL').onclick = () => loadTimeline($('#certSelect').value);
+  $('#certSelect').onchange = (e) => {
+    const opt = e.target.selectedOptions[0];
+    $('#tlHint').textContent = opt && opt.value ? opt.textContent : 'Pick a certification to view its required trainings.';
   };
 
-  $('#btnSetRank').onclick = async ()=>{
-    if(!SELECTED) return alert('Select a member first.');
-    const code=$('#rankCode').value; if(!code) return alert('Choose a rank.');
-    if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${code}?`)) return;
-    const { error } = await sb.rpc('set_rank_code',{ p_user: SELECTED.user_id, p_code: code });
-    if(error) return alert('Set rank failed: '+error.message);
-    alert('Rank updated ✓'); await openMember(SELECTED.user_id); await loadMembers();
-  };
-
-  $('#btnPromote').onclick = async ()=>{
-    if(!SELECTED) return;
-    const { data, error } = await sb.rpc('request_promotion',{ p_user: SELECTED.user_id });
-    if(error) return alert('Promotion failed: '+error.message);
-    alert(data?.message || (data?.ok?'Promotion OK':'Not eligible yet'));
-    await openMember(SELECTED.user_id);
-  };
+  await loadProgress();
+  await loadHistory();
+  await loadCertsGridAndSelect();
+  // If you want to auto-open first owned certification in the dropdown:
+  const first = Array.from($('#certSelect').options).find(o=>o.value);
+  if(first){ $('#certSelect').value = first.value; $('#tlHint').textContent = first.textContent; await loadTimeline(first.value); }
 });
-
-/* The rest remains identical — ranks, member list, progress, certs, timeline */
 </script>
 </body>
 </html>
