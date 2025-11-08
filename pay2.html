@@ -74,7 +74,7 @@ button.link:hover{background:var(--accent);color:#000}
     </div>
   </section>
 
-  <!-- ROW 2: YOUR LIFETIME + LATEST MISSION (two columns) -->
+  <!-- ROW 2: YOUR LIFETIME + LAST 4 MISSIONS TOTAL (two columns) -->
   <section class="grid-2" style="margin-top:14px">
     <div class="kpi">
       <div class="t">You — lifetime earned</div>
@@ -82,16 +82,16 @@ button.link:hover{background:var(--accent);color:#000}
       <small id="youMissions" class="small">from — missions</small>
     </div>
     <div class="kpi">
-      <div class="t">Latest mission</div>
-      <div class="v mono" id="lastMissionEarned">—</div>
-      <small id="lastMissionTitle" class="small">—</small>
+      <div class="t">Last 4 missions — total earned</div>
+      <div class="v mono" id="last4Total">—</div>
+      <small id="last4Label" class="small">—</small>
     </div>
   </section>
 
-  <!-- ROW 3: RANK (full width) -->
+  <!-- ROW 3: RANK (no paygrade) -->
   <section class="grid-1" style="margin-top:14px">
     <div class="kpi">
-      <div class="t">Your rank • paygrade • weight</div>
+      <div class="t">Your rank • weight</div>
       <div class="v mono" id="rankLine">—</div>
       <small id="rankSub" class="small">—</small>
     </div>
@@ -115,7 +115,7 @@ button.link:hover{background:var(--accent);color:#000}
     <div id="breakdown" class="note" style="display:none"></div>
   </section>
 
-  <!-- ROW 5: EXPLANATION + LIFETIME SUMMARY -->
+  <!-- ROW 5: EXPLANATION ONLY -->
   <section class="card" style="margin-top:14px">
     <h3>How base pay is calculated</h3>
     <div class="note">
@@ -128,31 +128,8 @@ button.link:hover{background:var(--accent);color:#000}
         4) <b>Final</b> = <code>base_share + add_pay_override</code>
       </div>
       <hr class="sep">
-      We read weights from <span class="badge">pay_grade_rules</span> via your current rank’s paygrade
+      We read weights from <span class="badge">pay_grade_rules</span> via your current rank (no paygrade shown)
       and compute the org cut using <span class="badge">v_mission_org_cut_effective</span> joined to <span class="badge">missions</span>.
-    </div>
-
-    <h3 style="margin-top:14px">Your lifetime summary</h3>
-    <div class="table">
-      <header>
-        <div>Metric</div><div>Value</div><div></div><div></div><div></div><div></div>
-      </header>
-      <div class="row" style="cursor:default">
-        <div>Total Base</div><div class="mono" id="sumBase">—</div>
-        <div></div><div></div><div></div><div></div>
-      </div>
-      <div class="row" style="cursor:default">
-        <div>Total Overrides</div><div class="mono" id="sumBonus">—</div>
-        <div></div><div></div><div></div><div></div>
-      </div>
-      <div class="row" style="cursor:default">
-        <div><b>Total Earned</b></div><div class="mono" id="sumTotal"><b>—</b></div>
-        <div></div><div></div><div></div><div></div>
-      </div>
-    </div>
-
-    <div class="hint" style="margin-top:8px">
-      Need a CSV? <button class="link" id="btnExport">Export last 10</button>
     </div>
   </section>
 </div>
@@ -181,11 +158,12 @@ button.link:hover{background:var(--accent);color:#000}
       loadUserSummary(),
       loadOrgTotals(),
       loadLatest10(),
+      loadLast4Total(),
       loadRankAndWeight()
     ]);
   }
 
-  // SUMMARY
+  // SUMMARY (lifetime totals for user)
   async function loadUserSummary(){
     try{
       const { data, error } = await sb
@@ -197,9 +175,6 @@ button.link:hover{background:var(--accent);color:#000}
 
       $('#youTotal').textContent   = data ? fmt2(data.total_earned) : '0';
       $('#youMissions').textContent= data ? `from ${fmt0(data.missions_count)} missions` : 'from 0 missions';
-      $('#sumBase').textContent    = data ? fmt2(data.total_base) : '0';
-      $('#sumBonus').textContent   = data ? fmt2(data.total_bonus) : '0';
-      $('#sumTotal').textContent   = data ? fmt2(data.total_earned) : '0';
     }catch(e){
       console.warn('summary:', e.message);
     }
@@ -243,7 +218,7 @@ button.link:hover{background:var(--accent);color:#000}
     }
   }
 
-  // LATEST 10
+  // LATEST 10 FOR TABLE & BREAKDOWN
   async function loadLatest10(){
     try{
       const { data, error } = await sb
@@ -255,11 +230,6 @@ button.link:hover{background:var(--accent);color:#000}
       if(error) throw error;
 
       const rows = data||[];
-      if(rows[0]){
-        const lastFinal = rows[0].final_share ?? (Number(rows[0].base_share||0)+Number(rows[0].add_pay_override||0));
-        $('#lastMissionEarned').textContent = fmt2(lastFinal);
-        $('#lastMissionTitle').textContent  = rows[0].title || '—';
-      }
 
       $('#rows').innerHTML = rows.map(r => `
         <div class="row" data-mid="${r.mission_id}">
@@ -278,42 +248,61 @@ button.link:hover{background:var(--accent);color:#000}
           if(r) showBreakdown(r);
         });
       });
-
-      $('#btnExport').onclick = () => exportCSV(rows);
-
     }catch(e){
       console.warn('latest10:', e.message);
     }
   }
 
-  // RANK • PAYGRADE • WEIGHT
+  // LAST 4 MISSIONS TOTAL
+  async function loadLast4Total(){
+    try{
+      const { data, error } = await sb
+        .from('v_missions_payout_live')
+        .select('mission_id,mission_date,title,base_share,add_pay_override,final_share')
+        .eq('user_id', me)
+        .order('mission_date', { ascending:false })
+        .limit(4);
+      if(error) throw error;
+
+      const rows = data||[];
+      const total4 = rows.reduce((s,r)=> s + Number(r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0))), 0);
+      $('#last4Total').textContent = fmt2(total4);
+      $('#last4Label').textContent = rows.length
+        ? `${rows.length} recent missions`
+        : 'No recent missions';
+    }catch(e){
+      console.warn('last4:', e.message);
+    }
+  }
+
+  // RANK • WEIGHT (no paygrade shown)
   async function loadRankAndWeight(){
     try{
-      let prof = null;
-      const q1 = await sb.from('v_profiles_with_rank')
+      // try helpful view first
+      let rankName = 'Unrated', weight = 1, ruleLabel = null;
+
+      const vr = await sb.from('v_profiles_with_rank')
         .select('user_id,current_rank_name,current_rank_code,paygrade')
         .eq('user_id', me).maybeSingle();
-      if(!q1.error && q1.data){ prof = q1.data; }
 
-      if(!prof){
-        const { data: p } = await sb.from('profiles').select('current_rank_id').eq('user_id', me).maybeSingle();
-        if(p?.current_rank_id){
-          const { data: r } = await sb.from('ranks').select('name,code,paygrade').eq('id', p.current_rank_id).maybeSingle();
-          if(r){ prof = { current_rank_name:r.name, current_rank_code:r.code, paygrade:r.paygrade }; }
+      let paygrade = vr.data?.paygrade ?? null;
+      if(vr.data?.current_rank_name) rankName = vr.data.current_rank_name;
+
+      if(!rankName || rankName==='Unrated'){
+        const p = await sb.from('profiles').select('current_rank_id').eq('user_id', me).maybeSingle();
+        if(p.data?.current_rank_id){
+          const r = await sb.from('ranks').select('name,paygrade').eq('id', p.data.current_rank_id).maybeSingle();
+          if(r.data){ rankName = r.data.name || 'Unrated'; paygrade = r.data.paygrade || null; }
         }
       }
 
-      const rankName = prof?.current_rank_name ?? 'Unrated';
-      const paygrade = prof?.paygrade ?? '—';
-
-      let weight = 1, label = null;
-      if(paygrade && paygrade !== '—'){
-        const { data: rule } = await sb.from('pay_grade_rules').select('weight,label').eq('paygrade', paygrade).maybeSingle();
-        if(rule){ weight = Number(rule.weight||1); label = rule.label||null; }
+      if(paygrade){
+        const rule = await sb.from('pay_grade_rules').select('weight,label').eq('paygrade', paygrade).maybeSingle();
+        if(rule.data){ weight = Number(rule.data.weight||1); ruleLabel = rule.data.label||null; }
       }
 
-      $('#rankLine').textContent = `${rankName}${paygrade!=='—' ? ' ('+paygrade+')' : ''} • Weight ${weight.toFixed(2)}`;
-      $('#rankSub').textContent  = label ? `Rule: ${label}` : '—';
+      $('#rankLine').textContent = `${rankName} • Weight ${weight.toFixed(2)}`;
+      $('#rankSub').textContent  = ruleLabel ? `Rule: ${ruleLabel}` : '—';
     }catch(e){
       console.warn('rank+weight:', e.message);
       $('#rankLine').textContent = 'Unrated • Weight 1.00';
@@ -331,7 +320,7 @@ button.link:hover{background:var(--accent);color:#000}
           <b>${r.title||'—'}</b><br>
           <span class="small">${dateOnly(r.mission_date)}</span>
         </div>
-        <div><span class="badge">Paygrade: ${r.paygrade||'—'}</span> <span class="badge">Weight: ${r.weight??'—'}</span></div>
+        <div><span class="badge">Weight: ${r.weight??'—'}</span></div>
       </div>
       <hr class="sep">
       <div class="formula">
@@ -348,22 +337,6 @@ button.link:hover{background:var(--accent);color:#000}
     box.innerHTML = html;
     box.style.display = 'block';
     box.scrollIntoView({behavior:'smooth', block:'nearest'});
-  }
-
-  function exportCSV(rows){
-    const header = ['Date','Mission','PoolAfterOrg','BaseShare','Override','Final'];
-    const lines = [header.join(',')].concat(
-      rows.map(r => [
-        dateOnly(r.mission_date),
-        `"${(r.title||'').replace(/"/g,'""')}"`,
-        r.pool_after_cut, r.base_share, r.add_pay_override, (r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0)))
-      ].join(','))
-    );
-    const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'jmbn_earnings_last10.csv'; a.click();
-    URL.revokeObjectURL(url);
   }
 
   boot();
