@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JMBN — Earnings Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000; --panel:#0b0b0b; --card:#0c0c0c; --row:#0a0a0a;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+  --fs:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
+.wrap{max-width:1200px;margin:0 auto;padding:16px}
+.hd{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+h1{margin:0;color:var(--accent);font-size:20px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.14)}
+.panel .ph{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
+.panel .ph h3{margin:0;color:var(--accent);font-size:16px}
+.panel .pb{padding:12px}
+input,select{background:#0a0a0a;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px;font-family:'Play'}
+button{padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);cursor:pointer;font-family:'Play'}
+button:hover{background:var(--accent);color:#000}
+.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
+.small{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:14px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
+.kpi .v{font-size:18px;font-weight:700;color:var(--accent)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* Ledger */
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.table{border:1px solid var(--border);border-radius:12px;overflow:auto}
+.trow{display:grid;grid-template-columns:160px 1fr 110px 150px 110px 120px;gap:8px;padding:10px;border-bottom:1px solid rgba(214,180,76,.15);align-items:center}
+.trow.head{background:#0d0d0d;font-weight:700;color:var(--accent);position:sticky;top:0}
+.trow:nth-child(even){background:#0a0a0a}
+
+.cutbox{display:flex;align-items:center;gap:6px}
+.cutbox input[type="number"]{width:84px}
+.iconbtn{width:34px;height:34px;display:grid;place-items:center;border-radius:10px}
+
+/* Drawer */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--accent);background:#121212}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <h1>Earnings Admin</h1>
+    <a class="pill" href="admin.html">← Back to Admin</a>
+  </div>
+
+  <!-- ORG CUT: single row -->
+  <div class="panel" style="margin-bottom:12px">
+    <div class="ph"><h3>Org Cut</h3><div class="small">Global % used unless a mission override exists</div></div>
+    <div class="pb">
+      <div class="row">
+        <label class="small">Default %</label>
+        <input id="orgCut" type="number" step="0.1" min="0" max="100" style="width:110px">
+        <button id="saveCut">Save</button>
+        <span id="saveMsg" class="small"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: Ledger -->
+    <div class="panel">
+      <div class="ph">
+        <h3>Mission Ledger</h3>
+        <div class="row">
+          <input id="from" type="date">
+          <input id="to" type="date">
+          <select id="status">
+            <option value="">All Status</option>
+            <option>Planned</option><option>Active</option><option>Success</option><option>Fail</option><option>Abort</option>
+          </select>
+          <button id="reload">Reload</button>
+        </div>
+      </div>
+      <div class="pb">
+        <div class="tools small">Use <b>− / +</b> to adjust a mission’s override (auto-saves), or type a value then press <b>Save</b>.</div>
+        <div class="table" id="table">
+          <div class="trow head">
+            <div>Date</div><div>Title</div><div>Payout</div><div>Cut % (Override)</div><div>Org Earned</div><div>Actions</div>
+          </div>
+          <!-- data rows here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: KPIs + last 4 -->
+    <div>
+      <div class="kpis" style="margin-bottom:12px">
+        <div class="kpi"><h4>Org Earned</h4><div id="k_org" class="v">—</div></div>
+        <div class="kpi"><h4>Member Share</h4><div id="k_mem" class="v">—</div></div>
+        <div class="kpi"><h4>Missions</h4><div id="k_cnt" class="v">—</div></div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <h3 style="margin:0;color:var(--accent);font-size:16px">Last 4 Missions (Org)</h3>
+          <span id="last4Total" class="badge">0</span>
+        </div>
+        <div id="last4" class="small" style="margin-top:8px">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+/* ====== CONFIG ====== */
+const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWlheGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const $ = s => document.querySelector(s);
+const esc = s => { const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+const fmt = n => (n===null||n===undefined) ? '—' : Number(n).toLocaleString();
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const STEP = 0.5; // step size for +/- buttons
+
+/* ====== ORG CUT PREF ====== */
+async function loadOrgCut(){
+  const { data } = await sb.from('org_prefs').select('value').eq('key','org_cut_default').maybeSingle();
+  const pct = Number(data?.value ?? 12.5);
+  $('#orgCut').value = pct;
+  return pct;
+}
+async function saveOrgCut(){
+  const pct = Number($('#orgCut').value||0);
+  await sb.from('org_prefs').upsert({ key:'org_cut_default', value:String(pct) });
+  $('#saveMsg').textContent = 'Saved ✓';
+  setTimeout(()=>$('#saveMsg').textContent='',1500);
+}
+
+/* ====== LEDGER ====== */
+function inRange(d, from, to){
+  if(from && d < from) return false;
+  if(to   && d > to)   return false;
+  return true;
+}
+async function fetchOverrides(){
+  const { data } = await sb.from('mission_org_cut_overrides').select('mission_id,cut_pct');
+  const map = new Map();
+  (data||[]).forEach(r=>map.set(r.mission_id, Number(r.cut_pct)));
+  return map;
+}
+async function fetchMissions(){
+  const { data, error } = await sb
+    .from('missions')
+    .select('id,title,start_time,status,payout_auec')
+    .order('start_time', { ascending:false })
+    .limit(400);
+  if(error) throw error;
+  return data||[];
+}
+
+async function upsertOverride(id, pct){
+  pct = clamp(Number(pct||0), 0, 100);
+  await sb.from('mission_org_cut_overrides').upsert({ mission_id:id, cut_pct:pct });
+}
+
+async function clearOverride(id){
+  await sb.from('mission_org_cut_overrides').delete().eq('mission_id', id);
+}
+
+async function reload(){
+  const defCut = Number($('#orgCut').value||0);
+  const ovMap  = await fetchOverrides();
+  const rows   = await fetchMissions();
+
+  const f = $('#from').value ? new Date($('#from').value) : null;
+  const t = $('#to').value   ? new Date($('#to').value)   : null;
+  const st= $('#status').value;
+
+  let orgSum=0, memSum=0, cnt=0;
+  const table = $('#table');
+  table.querySelectorAll('.trow.data').forEach(x=>x.remove());
+
+  const last4 = [];
+  for(const m of rows){
+    const when = m.start_time ? new Date(m.start_time) : null;
+    if(when && !inRange(when, f, t)) continue;
+    if(st && m.status !== st) continue;
+
+    const payout = Number(m.payout_auec||0);
+    const cut = ovMap.get(m.id) ?? defCut;
+    const org = Math.round(payout * (cut/100));
+    const mem = payout - org;
+
+    orgSum += org; memSum += mem; cnt++;
+
+    const row = document.createElement('div');
+    row.className = 'trow data';
+    row.dataset.mid = m.id;
+    row.innerHTML = `
+      <div>${when ? when.toLocaleDateString() : ''}</div>
+      <div>${esc(m.title || '(untitled)')}</div>
+      <div>${fmt(payout)}</div>
+
+      <div class="cutbox">
+        <button class="iconbtn" title="-${STEP}%" data-inc="-${STEP}">−</button>
+        <input type="number" class="cutval" step="0.1" min="0" max="100" value="${cut}">
+        <button class="iconbtn" title="+${STEP}%" data-inc="${STEP}">+</button>
+      </div>
+
+      <div class="orgcalc">${fmt(org)}</div>
+      <div>
+        <button data-save="${m.id}">Save</button>
+        ${ovMap.has(m.id) ? '<button data-clear="'+m.id+'" style="margin-left:6px">Clear</button>' : ''}
+      </div>
+    `;
+    table.appendChild(row);
+
+    if(m.status === 'Success') last4.push({t: when, title: m.title, org});
+  }
+
+  // KPIs
+  $('#k_org').textContent = fmt(orgSum);
+  $('#k_mem').textContent = fmt(memSum);
+  $('#k_cnt').textContent = fmt(cnt);
+
+  // Last 4
+  last4.sort((a,b)=> (b.t?.getTime()||0)-(a.t?.getTime()||0));
+  const slice = last4.slice(0,4);
+  $('#last4Total').textContent = fmt(slice.reduce((s,x)=>s+x.org,0));
+  $('#last4').innerHTML = slice.length
+    ? slice.map(x=>`${x.t?.toLocaleDateString()||''} — ${esc(x.title||'Untitled')} • <b>${fmt(x.org)}</b>`).join('<br>')
+    : 'No recent successful missions.';
+
+  // Event delegation for +/- / Save / Clear / manual input
+  table.onclick = async (e)=>{
+    const row = e.target.closest('.trow.data'); if(!row) return;
+    const id  = row.dataset.mid;
+    const input = row.querySelector('.cutval');
+
+    // +/- buttons
+    if(e.target.matches('[data-inc]')){
+      const delta = Number(e.target.dataset.inc);
+      const next = clamp(Number(input.value||0) + delta, 0, 100);
+      input.value = next;
+
+      // live save on click
+      await upsertOverride(id, next);
+
+      // refresh org calc cell without rebuilding table
+      const payoutTxt = row.children[2].textContent.replace(/,/
