@@ -11,13 +11,13 @@
 <style>
 :root{
   --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b; --ok:#5cd47c;
-  --fs:14px;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+  --bad:#ff6b6b; --ok:#5cd47c; --fs:14px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
 
-/* Fallback header */
+/* Fallback header (replaced if header.html loads) */
 .brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .brand img{width:44px;height:44px;object-fit:contain}
 .brand h1{margin:0;color:var(--accent);font-size:22px}
@@ -31,9 +31,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .panel .hd h3{margin:0;color:var(--accent);font-size:16px;display:flex;align-items:center;gap:10px}
 .panel .body{padding:12px}
 
-/* small badge */
 .badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--accent);background:#121212}
-
 input[type="search"],select{
   width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'
 }
@@ -45,6 +43,7 @@ button:hover{background:var(--accent);color:#000}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
 .btn-danger{border-color:var(--bad);color:var(--bad)}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
+.small{font-size:12px;color:var(--muted)}
 
 /* Members list */
 .mlist{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto}
@@ -52,14 +51,9 @@ button:hover{background:var(--accent);color:#000}
 .mrow:hover{background:#111;border-color:rgba(214,180,76,.35)}
 .mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
 
-/* Frameless rank/logo avatar */
-.mavatar{
-  width:38px;height:38px;display:grid;place-items:center;overflow:hidden;
-  border:none;border-radius:0;background:transparent;
-}
-.mavatar img{
-  width:100%;height:100%;object-fit:contain;border:none !important;background:transparent !important;box-shadow:none !important;filter:none !important;
-}
+/* Frameless avatar (no gold frame around logo) */
+.mavatar{width:38px;height:38px;display:grid;place-items:center;overflow:hidden;border:none;background:transparent}
+.mavatar img{width:100%;height:100%;object-fit:contain;border:none;background:transparent;box-shadow:none;filter:none}
 
 /* KPIs + bars */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -72,22 +66,27 @@ button:hover{background:var(--accent);color:#000}
 .fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
 .pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
 
-/* Certifications grid */
-.certGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.cert{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:10px}
-.cert .thumb{height:120px;border:1px solid var(--border);border-radius:10px;background:#101010;display:grid;place-items:center;margin-bottom:8px;padding:8px}
-.cert .thumb img{width:auto;max-width:110px;max-height:100%;object-fit:contain}
-.cert .title{font-weight:700}
-.cert.dim{opacity:.6;filter:grayscale(.5)}
-.small{font-size:12px;color:var(--muted)}
+/* Certifications — compact 6-up, no borders, abbrev only */
+.certGrid{
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;
+}
+@media(max-width:1100px){ .certGrid{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
+@media(max-width:780px){  .certGrid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:520px){  .certGrid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 
-/* Timeline */
-.timeline{position:relative;margin-top:10px;padding-left:24px}
-.timeline::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(var(--border),transparent)}
+.cert{background:transparent;border:none;padding:6px;text-align:center}
+.cert.dim{opacity:.6;filter:grayscale(.5)}
+.cert .thumb{height:72px;border:none;background:transparent;padding:0;display:grid;place-items:center;margin-bottom:4px}
+.cert .thumb img{max-height:60px;max-width:60px;width:auto;height:auto;object-fit:contain}
+.cert .abbr{font-weight:700;letter-spacing:.5px;color:var(--accent);font-size:12px}
+.cert .title,.cert .small,.cert .meta,.cert [data-open]{display:none!important}
+
+/* Timeline — remove round dots */
+.timeline{position:relative;margin-top:10px;padding-left:0}
+.timeline::before{left:0;top:0;bottom:0;width:2px;background:linear-gradient(var(--border),transparent);content:"";position:absolute}
 .titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
-.tdot{position:absolute;left:6px;top:16px;width:10px;height:10px;border-radius:50%;background:#222;border:2px solid var(--border)}
-.titem.done .tdot{background:var(--border)}
-.tlabel{font-weight:700}
+.tdot{display:none!important} /* hide circles */
+.titem.done .tlabel{color:var(--accent);}
 
 /* Missions list */
 .list{display:flex;flex-direction:column;gap:8px}
@@ -188,6 +187,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     if(!SELECTED) return alert('Select a member first.');
     const code=$('#rankCode').value; if(!code) return alert('Choose a rank.');
     if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${code}?`)) return;
+    /* IMPORTANT: use named args in correct order */
     const { error } = await sb.rpc('set_rank_code',{ p_user: SELECTED.user_id, p_code: code });
     if(error) return alert('Set rank failed: '+error.message);
     alert('Rank updated ✓'); await openMember(SELECTED.user_id); await loadMembers();
@@ -293,13 +293,9 @@ async function openMember(userId,rowEl){
     <div class="panel" style="margin-top:12px">
       <div class="hd">
         <h3>Missions <span id="misCount" class="badge">0</span></h3>
-        <div>
-          <button id="misReload" class="pill">Reload</button>
-        </div>
+        <div><button id="misReload" class="pill">Reload</button></div>
       </div>
-      <div class="body">
-        <div id="misList" class="list">Loading…</div>
-      </div>
+      <div class="body"><div id="misList" class="list">Loading…</div></div>
     </div>
   `;
 
@@ -349,7 +345,7 @@ async function loadProgress(uid){
   setFill($('#pbCer'), ct?Math.min(1,c/ct):1);
 }
 
-/* Certifications (grid + timeline) */
+/* Certifications (compact grid, abbrev only, no borders/buttons) */
 async function loadCerts(uid){
   const [{ data: catalog }, { data: mine }, { data: reqs }] = await Promise.all([
     sb.from('certifications').select('certification_code,name,image_url,sort_order,is_active').order('sort_order'),
@@ -372,15 +368,15 @@ async function loadCerts(uid){
     div.className='cert'+(owned.has(c.certification_code)?'':' dim');
     div.innerHTML=`
       <div class="thumb">${c.image_url?`<img src="${esc(c.image_url)}" alt="">`:'🏅'}</div>
-      <div class="title">${esc(c.name)}</div>
-      <div class="small">${esc(c.certification_code)}${c.is_active===false?' • (Inactive)':''}</div>
-      <div class="small">Reqs: ${byCert.get(c.certification_code)?.length ?? 0}</div>
-      <div style="margin-top:8px"><button class="pill" data-open="${c.certification_code}">Open Timeline</button></div>
+      <div class="abbr">${esc(c.certification_code)}</div>
     `;
-    div.querySelector('button').onclick=()=>{
+    div.title = c.name || c.certification_code;
+    div.style.cursor = 'pointer';
+    div.onclick = ()=>{
       select.value=c.certification_code;
       loadTimeline(uid,c.certification_code);
-      $('#tlHint').textContent=c.name;
+      $('#tlHint').textContent=c.name || c.certification_code;
+      $('#timeline').scrollIntoView({behavior:'smooth', block:'nearest'});
     };
     grid.appendChild(div);
 
@@ -392,6 +388,7 @@ async function loadCerts(uid){
   $('#btnReloadTL').onclick = ()=> loadTimeline(uid, select.value);
 }
 
+/* Timeline */
 async function loadTimeline(uid, certCode){
   const tl=$('#timeline'); tl.innerHTML='';
   if(!certCode){ tl.innerHTML='<div class="small">Pick a certification.</div>'; return; }
@@ -413,7 +410,6 @@ async function loadTimeline(uid, certCode){
     const rec=done.get(r.event_code); const ok=!!rec;
     const row=document.createElement('div'); row.className='titem'+(ok?' done':'');
     row.innerHTML=`
-      <div class="tdot"></div>
       <div>
         <div class="tlabel">${esc(r.training_events?.title||r.event_code)}</div>
         <div class="small">${esc(r.training_events?.description||'')}</div>
@@ -445,12 +441,11 @@ async function loadTimeline(uid, certCode){
   });
 }
 
-/* Missions (uses v_mission_attendees_detailed and joins missions) */
+/* Missions */
 async function loadMissions(uid){
   const box = $('#misList'); const count = $('#misCount');
   box.textContent = 'Loading…';
   try{
-    // Try a single-call join if FK exists
     let { data, error } = await sb
       .from('v_mission_attendees_detailed')
       .select('mission_id, attendance, missions(id,title,start_time)')
@@ -458,7 +453,6 @@ async function loadMissions(uid){
       .order('missions.start_time', { ascending:false })
       .limit(20);
 
-    // Fallback path if the nested join isn't available
     if (error || (data && data.length && data[0].missions == null)) {
       const { data: bare, error: e2 } = await sb
         .from('v_mission_attendees_detailed')
