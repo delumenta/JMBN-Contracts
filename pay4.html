@@ -36,7 +36,6 @@ button{
   border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);
   border-radius:10px;padding:8px 12px;cursor:pointer
 }
-button:disabled{opacity:.5;cursor:not-allowed}
 button:hover{background:var(--accent);color:#000}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
 .btn-bad{border-color:var(--bad);color:var(--bad)}
@@ -50,6 +49,7 @@ button:hover{background:var(--accent);color:#000}
 .kpi .v{font-size:18px;color:var(--accent);font-weight:700}
 
 .table{width:100%;border-collapse:separate;border-spacing:0 8px}
+.table th{font-size:12px;color:var(--muted);font-weight:400;text-align:left;padding:4px 8px}
 .row{display:grid;grid-template-columns:140px 1fr 120px 240px 120px 220px;gap:10px;align-items:center;
   background:#0a0a0a;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px}
 @media(max-width:1100px){.row{grid-template-columns:130px 1fr 120px 240px 120px}}
@@ -73,7 +73,7 @@ button:hover{background:var(--accent);color:#000}
 /* Drawer */
 .drawer{
   position:fixed;right:0;top:0;bottom:0;width:420px;max-width:96vw;background:#0b0b0b;border-left:1px solid var(--border);
-  box-shadow:-10px 0 30px rgba(214,180,76,.15);transform:translateX(100%);transition:transform .25s ease;z-index:9999
+  box-shadow:-10px 0 30px rgba(214,180,76,.15);transform:translateX(100%);transition:transform .25s ease;z-index:50
 }
 .drawer.open{transform:translateX(0)}
 .dh{display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border)}
@@ -148,12 +148,12 @@ button:hover{background:var(--accent);color:#000}
 <div id="drawer" class="drawer" aria-hidden="true">
   <div class="dh">
     <h3 id="dwTitle">Participants & Overrides</h3>
-    <button id="dwClose" title="Close">✕</button>
+    <button id="drawerClose" title="Close">✕</button>
   </div>
   <div class="db">
     <div class="small" id="dwMeta">—</div>
     <div class="small" style="margin:8px 0 10px">
-      Member pool = payout × (100 − effective org cut) ÷ 100.
+      Member pool = payout × (100 − effective org cut) ÷ 100.  
       Per-user final = fixed (if set) → percent of pool (if set) → equal split.
     </div>
     <div id="uList">Loading…</div>
@@ -172,28 +172,27 @@ let sb, me, GLOBAL = 0, MISSIONS=[], OV={}, drawerMission=null;
 
 // ---------- boot ----------
 document.addEventListener('DOMContentLoaded', async () => {
-  try{
-    const session = await requireAuth(); if(!session) return;
-    sb = getSupabase(); me = session.user.id;
+  const session = await requireAuth(); if(!session) return;
+  sb = getSupabase(); me = session.user.id;
 
-    setDefaultDates();
-    await loadGlobal();
-    await loadLedger();
+  setDefaultDates();
+  await loadGlobal();
+  await loadLedger();
 
-    $('#gSave').onclick = saveGlobal;
-    $('#btnReload').onclick = loadLedger;
-    $('#dwClose').onclick = closeDrawer;
-  }catch(e){
-    $('#list').innerHTML = `<div class="alert">Init failed: ${esc(e?.message||'Unknown')}</div>`;
-  }
+  const closeBtn = $('#drawerClose');
+  if (closeBtn) closeBtn.onclick = closeDrawer;
+
+  const gSave = $('#gSave');
+  if (gSave) gSave.onclick = saveGlobal;
+
+  const reload = $('#btnReload');
+  if (reload) reload.onclick = loadLedger;
 });
 
 function setDefaultDates(){
   const to = new Date(); const from = new Date(); from.setMonth(from.getMonth()-1);
-  const pad = n=>String(n).padStart(2,'0');
-  const dstr = d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  $('#fFrom').value = dstr(from);
-  $('#fTo').value   = dstr(to);
+  $('#fFrom').value = from.toISOString().slice(0,10);
+  $('#fTo').value   = to.toISOString().slice(0,10);
 }
 
 // ---------- GLOBAL CUT ----------
@@ -210,81 +209,64 @@ async function saveGlobal(){
   $('#gCut').value = String(val);
   const note = `Set by ${me.slice(0,8)}`;
   const { error } = await sb.from('org_settings').insert({ org_cut_pct: val, note });
-  if(error){ alert('Saving global failed: '+error.message); return; }
+  if(error){ return alert('Saving global failed: '+error.message); }
   await loadGlobal();
   renderList(); // recompute effective cut for missions without override/snapshot
 }
 
 // ---------- LEDGER ----------
 async function loadLedger(){
-  const uiErr = (msg, extra=null)=>{
-    const more = extra ? `<pre class="small" style="white-space:pre-wrap">${esc(JSON.stringify(extra,null,2))}</pre>` : '';
-    $('#list').innerHTML = `<div class="alert">${msg}${more}</div>`;
-  };
+  const list = $('#list');
+  if(list) list.textContent = 'Loading…';
 
-  try{
-    $('#list').textContent = 'Loading…';
+  const from = $('#fFrom').value ? new Date($('#fFrom').value) : null;
+  const to   = $('#fTo').value ? new Date($('#fTo').value) : null;
+  const status = $('#fStatus')?.value || '';
 
-    let fromVal = $('#fFrom')?.value || '';
-    let toVal   = $('#fTo')?.value   || '';
-    const status = $('#fStatus')?.value || '';
+  let q = sb.from('missions')
+     .select('id,title,start_time,payout_auec,status,org_cut_percent')
+     .order('start_time',{ascending:false});
+  if(from) q = q.gte('start_time', from.toISOString());
+  if(to){ const end = new Date(to); end.setDate(end.getDate()+1); q = q.lt('start_time', end.toISOString()); }
+  if(status) q = q.eq('status', status);
 
-    let q = sb.from('missions')
-      .select('id,title,start_time,payout_auec,status,org_cut_percent')
-      .order('start_time',{ascending:false})
-      .throwOnError();
+  const { data: rows, error } = await q;
+  if(error){ if(list) list.innerHTML = `<div class="alert">${esc(error.message)}</div>`; return; }
+  MISSIONS = rows || [];
 
-    if(fromVal){
-      const from = new Date(fromVal+'T00:00:00');
-      if(!isNaN(from)) q = q.gte('start_time', from.toISOString());
-    }
-    if(toVal){
-      const to = new Date(toVal+'T00:00:00');
-      if(!isNaN(to)){ to.setDate(to.getDate()+1); q = q.lt('start_time', to.toISOString()); }
-    }
-    if(status) q = q.eq('status', status);
-
-    const { data: rows } = await q;
-    MISSIONS = rows || [];
-
-    // mission-level overrides (table uses org_cut_pct)
-    OV = {};
-    if(MISSIONS.length){
-      const ids = MISSIONS.map(m=>m.id);
-      const { data: orows } = await sb.from('mission_org_cut_overrides')
-        .select('mission_id, org_cut_pct')
-        .in('mission_id', ids);
-      (orows||[]).forEach(r=>{ OV[r.mission_id] = r; });
-    }
-
-    renderList();
-    renderLast4();
-
-    if(!MISSIONS.length){
-      $('#list').innerHTML = `<div class="ok">No missions in this window. Try changing the date range or Status.</div>`;
-    }
-  }catch(e){
-    uiErr(`Couldn’t load missions. ${e?.message || 'Unknown error.'}`, e);
+  // mission-level overrides
+  let ov = {};
+  if(MISSIONS.length){
+    const ids = MISSIONS.map(m=>m.id);
+    const { data: orows } = await sb.from('mission_org_cut_overrides')
+      .select('mission_id, org_cut_pct').in('mission_id', ids);
+    (orows||[]).forEach(r=> ov[r.mission_id] = r);
   }
+  OV = ov;
+
+  renderList();
+  renderLast4();
 }
 
 function effectiveCut(m){
   const o = OV[m.id]?.org_cut_pct;
-  const snap = m.org_cut_percent;        // snapshot column on missions
+  const snap = m.org_cut_percent;
   return (o!=null) ? Number(o) : (snap!=null ? Number(snap) : Number(GLOBAL));
 }
-
 function rowBadgeSet(m){
   const bag = [];
   if(OV[m.id]) bag.push(`<span class="tag">override</span>`);
   if(m.org_cut_percent!=null) bag.push(`<span class="tag dim">snapshot</span>`);
-  if(m.status) bag.push(`<span class="tag dim">${m.status}</span>`);
+  if(m.status) bag.push(`<span class="tag dim">${esc(m.status)}</span>`);
   return bag.join(' ');
 }
 
 function renderList(){
-  if(!MISSIONS.length){
-    $('#list').innerHTML = `<div class="small">No missions in this window.</div>`;
+  const list = $('#list');
+  if(!list) return;
+
+  if(!MISSIONS.length){ 
+    list.innerHTML = `<div class="small">No missions in this window.</div>`;
     $('#kOrg').textContent = '–'; $('#kMem').textContent = '–'; $('#kMis').textContent = '0';
     return;
   }
@@ -329,7 +311,7 @@ function renderList(){
       </div>`;
   }).join('');
 
-  $('#list').innerHTML = `
+  list.innerHTML = `
     <div class="table">
       <div class="row" style="background:transparent;border-color:transparent">
         <div class="cell small">Date</div>
@@ -347,17 +329,21 @@ function renderList(){
   $('#kMem').textContent = fmt(totPayout - totOrg);
   $('#kMis').textContent = String(MISSIONS.length);
 
-  // wire controls per-row
-  $('#list').querySelectorAll('.row').forEach(row=>{
+  // wire controls
+  list.querySelectorAll('.row').forEach(row=>{
     const id = row.dataset.id;
     const inp = row.querySelector('input[type="number"]');
-    row.querySelector('[data-minus]').onclick = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) - 0.5)); };
-    row.querySelector('[data-plus]').onclick  = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) + 0.5)); };
-    row.querySelector('[data-save]').onclick  = ()=> saveMissionOverride(id, inp.value);
-    const clr = row.querySelector('[data-clear]');
-    if(clr) clr.onclick = ()=> clearMissionOverride(id);
-    const btnP = row.querySelector('[data-participants]');
-    btnP.onclick = ()=> openDrawer(id);
+    const minus = row.querySelector('[data-minus]');
+    const plus  = row.querySelector('[data-plus]');
+    const save  = row.querySelector('[data-save]');
+    const clr   = row.querySelector('[data-clear]');
+    const btnP  = row.querySelector('[data-participants]');
+
+    if(minus && inp) minus.onclick = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) - 0.5)); };
+    if(plus && inp)  plus.onclick  = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) + 0.5)); };
+    if(save && inp)  save.onclick  = ()=> saveMissionOverride(id, inp.value);
+    if(clr)          clr.onclick   = ()=> clearMissionOverride(id);
+    if(btnP)         btnP.onclick  = ()=> openDrawer(id);
   });
 }
 
@@ -381,10 +367,12 @@ async function clearMissionOverride(missionId){
 
 // ---------- LAST 4 ----------
 async function renderLast4(){
+  const box = $('#last4');
+  if(!box) return;
   const { data, error } = await sb.from('missions')
     .select('id,title,start_time,payout_auec,status,org_cut_percent')
     .order('start_time',{ascending:false}).limit(4);
-  if(error || !data?.length){ $('#last4').innerHTML='—'; $('#lastCount').textContent='0'; return; }
+  if(error || !data?.length){ box.innerHTML='—'; $('#lastCount').textContent='0'; return; }
 
   const ids = data.map(m=>m.id);
   const { data: over } = await sb.from('mission_org_cut_overrides')
@@ -392,14 +380,14 @@ async function renderLast4(){
   const map = Object.fromEntries((over||[]).map(r=>[r.mission_id, r.org_cut_pct]));
 
   $('#lastCount').textContent = String(data.length);
-  $('#last4').innerHTML = data.map(m=>{
+  box.innerHTML = data.map(m=>{
     const eff = (map[m.id]!=null) ? map[m.id] : (m.org_cut_percent!=null ? m.org_cut_percent : GLOBAL);
     const payout = Number(m.payout_auec||0);
     const orgEarn = payout * eff/100;
     return `
       <div class="row" style="grid-template-columns:180px 1fr 120px 160px 120px">
         <div class="cell small">${new Date(m.start_time).toLocaleString()}</div>
-        <div class="cell">${esc(m.title||'Untitled')} <span class="tag dim">${m.status||''}</span></div>
+        <div class="cell">${esc(m.title||'Untitled')} <span class="tag dim">${esc(m.status||'')}</span></div>
         <div class="cell"><b>${fmt(payout)}</b></div>
         <div class="cell small">Cut: <b>${eff}%</b></div>
         <div class="cell"><b>${fmt(orgEarn)}</b></div>
@@ -410,30 +398,31 @@ async function renderLast4(){
 // ---------- PARTICIPANTS DRAWER (per-user overrides) ----------
 function openDrawer(missionId){
   drawerMission = missionId;
-  $('#drawer').classList.add('open');
-  $('#drawer').setAttribute('aria-hidden','false');
+  const dr = $('#drawer');
+  if(dr) dr.classList.add('open');
   loadParticipants(missionId);
 }
 function closeDrawer(){
-  $('#drawer').classList.remove('open');
-  $('#drawer').setAttribute('aria-hidden','true');
-  $('#uList').innerHTML='';
+  const dr = $('#drawer');
+  if(dr) dr.classList.remove('open');
+  const ul = $('#uList'); if(ul) ul.innerHTML='';
   drawerMission=null;
 }
 
 async function loadParticipants(missionId){
-  $('#uList').innerHTML = 'Loading…';
+  const uList = $('#uList');
+  if(uList) uList.innerHTML = 'Loading…';
+
   const mission = MISSIONS.find(m=>m.id===missionId);
   $('#dwTitle').textContent = 'Participants & Overrides';
   $('#dwMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
 
-  // attendees (prefer your view)
+  // attendees
   let attendees = [];
   try{
-    const { data, error } = await sb.from('v_mission_attendees_detailed')
+    const { data } = await sb.from('v_mission_attendees_detailed')
       .select('user_id, attendance, handle, display_name')
       .eq('mission_id', missionId);
-    if(error) throw error;
     attendees = data||[];
   }catch{
     const { data: at } = await sb.from('mission_attendees').select('user_id, attendance').eq('mission_id', missionId);
@@ -460,11 +449,11 @@ async function loadParticipants(missionId){
   const equalPct = active.length? (100 / active.length) : 0;
 
   if(!attendees.length){
-    $('#uList').innerHTML = `<div class="small">No attendees recorded for this mission.</div>`;
+    if(uList) uList.innerHTML = `<div class="small">No attendees recorded for this mission.</div>`;
     return;
   }
 
-  $('#uList').innerHTML = attendees.map(a=>{
+  if(uList) uList.innerHTML = attendees.map(a=>{
     const ov = mapOv[a.user_id] || {};
     const useFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
     const pct = (ov.share_pct!=null) ? Number(ov.share_pct) : equalPct;
@@ -498,7 +487,7 @@ async function loadParticipants(missionId){
   }).join('');
 
   // wire each row
-  $('#uList').querySelectorAll('.urow').forEach(row=>{
+  (uList||document).querySelectorAll('.urow').forEach(row=>{
     const uid = row.dataset.uid;
     const ipPct = row.querySelector('[data-pct]');
     const ipFix = row.querySelector('[data-fixed]');
@@ -507,17 +496,19 @@ async function loadParticipants(missionId){
     const save  = row.querySelector('[data-saveu]');
     const clear = row.querySelector('[data-clearu]');
 
-    minus.onclick = ()=>{ ipPct.value = String(clampPct((Number(ipPct.value)||0) - 0.5)); ipFix.value=''; };
-    plus.onclick  = ()=>{ ipPct.value = String(clampPct((Number(ipPct.value)||0) + 0.5)); ipFix.value=''; };
+    if(minus && ipPct && ipFix) minus.onclick = ()=>{ ipPct.value = String(clampPct((Number(ipPct.value)||0) - 0.5)); ipFix.value=''; };
+    if(plus && ipPct && ipFix)  plus.onclick  = ()=>{ ipPct.value = String(clampPct((Number(ipPct.value)||0) + 0.5)); ipFix.value=''; };
 
-    save.onclick = async ()=>{
-      const share_pct = ipPct.value==='' ? null : clampPct(ipPct.value);
-      const share_fixed_auec = ipFix.value==='' ? null : Math.max(0, Number(ipFix.value)||0);
-      const payload = { mission_id: missionId, user_id: uid, share_pct, share_fixed_auec, updated_by: me };
-      const { error } = await sb.from('mission_user_overrides').upsert(payload).select().maybeSingle();
-      if(error) return alert('Save failed: '+error.message);
-      loadParticipants(missionId);
-    };
+    if(save){
+      save.onclick = async ()=>{
+        const share_pct = ipPct?.value==='' ? null : clampPct(ipPct?.value);
+        const share_fixed_auec = ipFix?.value==='' ? null : Math.max(0, Number(ipFix?.value)||0);
+        const payload = { mission_id: missionId, user_id: uid, share_pct, share_fixed_auec, updated_by: me };
+        const { error } = await sb.from('mission_user_overrides').upsert(payload).select().maybeSingle();
+        if(error) return alert('Save failed: '+error.message);
+        loadParticipants(missionId);
+      };
+    }
 
     if(clear){
       clear.onclick = async ()=>{
