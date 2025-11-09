@@ -36,6 +36,7 @@ button{
   border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);
   border-radius:10px;padding:8px 12px;cursor:pointer
 }
+button:disabled{opacity:.5;cursor:not-allowed}
 button:hover{background:var(--accent);color:#000}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
 .btn-bad{border-color:var(--bad);color:var(--bad)}
@@ -49,7 +50,6 @@ button:hover{background:var(--accent);color:#000}
 .kpi .v{font-size:18px;color:var(--accent);font-weight:700}
 
 .table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.table th{font-size:12px;color:var(--muted);font-weight:400;text-align:left;padding:4px 8px}
 .row{display:grid;grid-template-columns:140px 1fr 120px 240px 120px 220px;gap:10px;align-items:center;
   background:#0a0a0a;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px}
 @media(max-width:1100px){.row{grid-template-columns:130px 1fr 120px 240px 120px}}
@@ -73,7 +73,7 @@ button:hover{background:var(--accent);color:#000}
 /* Drawer */
 .drawer{
   position:fixed;right:0;top:0;bottom:0;width:420px;max-width:96vw;background:#0b0b0b;border-left:1px solid var(--border);
-  box-shadow:-10px 0 30px rgba(214,180,76,.15);transform:translateX(100%);transition:transform .25s ease;z-index:50
+  box-shadow:-10px 0 30px rgba(214,180,76,.15);transform:translateX(100%);transition:transform .25s ease;z-index:9999
 }
 .drawer.open{transform:translateX(0)}
 .dh{display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border)}
@@ -148,12 +148,12 @@ button:hover{background:var(--accent);color:#000}
 <div id="drawer" class="drawer" aria-hidden="true">
   <div class="dh">
     <h3 id="dwTitle">Participants & Overrides</h3>
-    <button id="dwClose">✕</button>
+    <button id="dwClose" title="Close">✕</button>
   </div>
   <div class="db">
     <div class="small" id="dwMeta">—</div>
     <div class="small" style="margin:8px 0 10px">
-      Member pool = payout × (100 − effective org cut) ÷ 100.  
+      Member pool = payout × (100 − effective org cut) ÷ 100.
       Per-user final = fixed (if set) → percent of pool (if set) → equal split.
     </div>
     <div id="uList">Loading…</div>
@@ -172,22 +172,28 @@ let sb, me, GLOBAL = 0, MISSIONS=[], OV={}, drawerMission=null;
 
 // ---------- boot ----------
 document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth(); if(!session) return;
-  sb = getSupabase(); me = session.user.id;
+  try{
+    const session = await requireAuth(); if(!session) return;
+    sb = getSupabase(); me = session.user.id;
 
-  setDefaultDates();
-  await loadGlobal();
-  await loadLedger();
+    setDefaultDates();
+    await loadGlobal();
+    await loadLedger();
 
-  $('#gSave').onclick = saveGlobal;
-  $('#btnReload').onclick = loadLedger;
-  $('#dwClose').onclick = closeDrawer;
+    $('#gSave').onclick = saveGlobal;
+    $('#btnReload').onclick = loadLedger;
+    $('#dwClose').onclick = closeDrawer;
+  }catch(e){
+    $('#list').innerHTML = `<div class="alert">Init failed: ${esc(e?.message||'Unknown')}</div>`;
+  }
 });
 
 function setDefaultDates(){
   const to = new Date(); const from = new Date(); from.setMonth(from.getMonth()-1);
-  $('#fFrom').value = from.toISOString().slice(0,10);
-  $('#fTo').value   = to.toISOString().slice(0,10);
+  const pad = n=>String(n).padStart(2,'0');
+  const dstr = d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  $('#fFrom').value = dstr(from);
+  $('#fTo').value   = dstr(to);
 }
 
 // ---------- GLOBAL CUT ----------
@@ -204,47 +210,70 @@ async function saveGlobal(){
   $('#gCut').value = String(val);
   const note = `Set by ${me.slice(0,8)}`;
   const { error } = await sb.from('org_settings').insert({ org_cut_pct: val, note });
-  if(error){ return alert('Saving global failed: '+error.message); }
+  if(error){ alert('Saving global failed: '+error.message); return; }
   await loadGlobal();
   renderList(); // recompute effective cut for missions without override/snapshot
 }
 
 // ---------- LEDGER ----------
 async function loadLedger(){
-  $('#list').textContent = 'Loading…';
-  const from = $('#fFrom').value ? new Date($('#fFrom').value) : null;
-  const to   = $('#fTo').value ? new Date($('#fTo').value) : null;
-  const status = $('#fStatus').value;
+  const uiErr = (msg, extra=null)=>{
+    const more = extra ? `<pre class="small" style="white-space:pre-wrap">${esc(JSON.stringify(extra,null,2))}</pre>` : '';
+    $('#list').innerHTML = `<div class="alert">${msg}${more}</div>`;
+  };
 
-  let q = sb.from('missions')
-     .select('id,title,start_time,payout_auec,status,org_cut_percent')
-     .order('start_time',{ascending:false});
-  if(from) q = q.gte('start_time', from.toISOString());
-  if(to){ const end = new Date(to); end.setDate(end.getDate()+1); q = q.lt('start_time', end.toISOString()); }
-  if(status) q = q.eq('status', status);
+  try{
+    $('#list').textContent = 'Loading…';
 
-  const { data: rows, error } = await q;
-  if(error){ $('#list').innerHTML = `<div class="alert">${error.message}</div>`; return; }
-  MISSIONS = rows || [];
+    let fromVal = $('#fFrom')?.value || '';
+    let toVal   = $('#fTo')?.value   || '';
+    const status = $('#fStatus')?.value || '';
 
-  // mission-level overrides
-  let ov = {};
-  if(MISSIONS.length){
-    const ids = MISSIONS.map(m=>m.id);
-    const { data: orows } = await sb.from('mission_org_cut_overrides')
-      .select('mission_id, org_cut_pct').in('mission_id', ids);
-    (orows||[]).forEach(r=> ov[r.mission_id] = r);
+    let q = sb.from('missions')
+      .select('id,title,start_time,payout_auec,status,org_cut_percent')
+      .order('start_time',{ascending:false})
+      .throwOnError();
+
+    if(fromVal){
+      const from = new Date(fromVal+'T00:00:00');
+      if(!isNaN(from)) q = q.gte('start_time', from.toISOString());
+    }
+    if(toVal){
+      const to = new Date(toVal+'T00:00:00');
+      if(!isNaN(to)){ to.setDate(to.getDate()+1); q = q.lt('start_time', to.toISOString()); }
+    }
+    if(status) q = q.eq('status', status);
+
+    const { data: rows } = await q;
+    MISSIONS = rows || [];
+
+    // mission-level overrides (table uses org_cut_pct)
+    OV = {};
+    if(MISSIONS.length){
+      const ids = MISSIONS.map(m=>m.id);
+      const { data: orows } = await sb.from('mission_org_cut_overrides')
+        .select('mission_id, org_cut_pct')
+        .in('mission_id', ids);
+      (orows||[]).forEach(r=>{ OV[r.mission_id] = r; });
+    }
+
+    renderList();
+    renderLast4();
+
+    if(!MISSIONS.length){
+      $('#list').innerHTML = `<div class="ok">No missions in this window. Try changing the date range or Status.</div>`;
+    }
+  }catch(e){
+    uiErr(`Couldn’t load missions. ${e?.message || 'Unknown error.'}`, e);
   }
-  OV = ov;
-
-  renderList();
-  renderLast4();
 }
+
 function effectiveCut(m){
   const o = OV[m.id]?.org_cut_pct;
-  const snap = m.org_cut_percent;
+  const snap = m.org_cut_percent;        // snapshot column on missions
   return (o!=null) ? Number(o) : (snap!=null ? Number(snap) : Number(GLOBAL));
 }
+
 function rowBadgeSet(m){
   const bag = [];
   if(OV[m.id]) bag.push(`<span class="tag">override</span>`);
@@ -252,8 +281,9 @@ function rowBadgeSet(m){
   if(m.status) bag.push(`<span class="tag dim">${m.status}</span>`);
   return bag.join(' ');
 }
+
 function renderList(){
-  if(!MISSIONS.length){ 
+  if(!MISSIONS.length){
     $('#list').innerHTML = `<div class="small">No missions in this window.</div>`;
     $('#kOrg').textContent = '–'; $('#kMem').textContent = '–'; $('#kMis').textContent = '0';
     return;
@@ -317,7 +347,7 @@ function renderList(){
   $('#kMem').textContent = fmt(totPayout - totOrg);
   $('#kMis').textContent = String(MISSIONS.length);
 
-  // wire controls
+  // wire controls per-row
   $('#list').querySelectorAll('.row').forEach(row=>{
     const id = row.dataset.id;
     const inp = row.querySelector('input[type="number"]');
@@ -330,6 +360,7 @@ function renderList(){
     btnP.onclick = ()=> openDrawer(id);
   });
 }
+
 async function saveMissionOverride(missionId, val){
   const pct = clampPct(val);
   if(isNaN(pct)) return alert('Enter a number 0–100.');
@@ -339,6 +370,7 @@ async function saveMissionOverride(missionId, val){
   OV[missionId] = { mission_id: missionId, org_cut_pct: pct };
   renderList();
 }
+
 async function clearMissionOverride(missionId){
   if(!confirm('Remove mission override?')) return;
   const { error } = await sb.from('mission_org_cut_overrides').delete().eq('mission_id', missionId);
@@ -376,8 +408,18 @@ async function renderLast4(){
 }
 
 // ---------- PARTICIPANTS DRAWER (per-user overrides) ----------
-function openDrawer(missionId){ drawerMission = missionId; $('#drawer').classList.add('open'); loadParticipants(missionId); }
-function closeDrawer(){ $('#drawer').classList.remove('open'); $('#uList').innerHTML=''; drawerMission=null; }
+function openDrawer(missionId){
+  drawerMission = missionId;
+  $('#drawer').classList.add('open');
+  $('#drawer').setAttribute('aria-hidden','false');
+  loadParticipants(missionId);
+}
+function closeDrawer(){
+  $('#drawer').classList.remove('open');
+  $('#drawer').setAttribute('aria-hidden','true');
+  $('#uList').innerHTML='';
+  drawerMission=null;
+}
 
 async function loadParticipants(missionId){
   $('#uList').innerHTML = 'Loading…';
@@ -385,13 +427,13 @@ async function loadParticipants(missionId){
   $('#dwTitle').textContent = 'Participants & Overrides';
   $('#dwMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
 
-  // attendees
-  // Prefer your view if available, else manual join
+  // attendees (prefer your view)
   let attendees = [];
   try{
-    const { data } = await sb.from('v_mission_attendees_detailed')
+    const { data, error } = await sb.from('v_mission_attendees_detailed')
       .select('user_id, attendance, handle, display_name')
       .eq('mission_id', missionId);
+    if(error) throw error;
     attendees = data||[];
   }catch{
     const { data: at } = await sb.from('mission_attendees').select('user_id, attendance').eq('mission_id', missionId);
@@ -417,11 +459,11 @@ async function loadParticipants(missionId){
   const active = attendees.filter(a => (a.attendance||'').toLowerCase() !== 'withdrawn');
   const equalPct = active.length? (100 / active.length) : 0;
 
-  // Build rows
   if(!attendees.length){
     $('#uList').innerHTML = `<div class="small">No attendees recorded for this mission.</div>`;
     return;
   }
+
   $('#uList').innerHTML = attendees.map(a=>{
     const ov = mapOv[a.user_id] || {};
     const useFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
@@ -474,7 +516,6 @@ async function loadParticipants(missionId){
       const payload = { mission_id: missionId, user_id: uid, share_pct, share_fixed_auec, updated_by: me };
       const { error } = await sb.from('mission_user_overrides').upsert(payload).select().maybeSingle();
       if(error) return alert('Save failed: '+error.message);
-      // Refresh just this mission’s participants view
       loadParticipants(missionId);
     };
 
@@ -488,9 +529,6 @@ async function loadParticipants(missionId){
     }
   });
 }
-
-// util
-function escapeHtml(s){ const d=document.createElement('div'); d.textContent = s??''; return d.innerHTML; }
 </script>
 </body>
 </html>
