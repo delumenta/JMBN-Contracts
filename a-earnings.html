@@ -253,4 +253,45 @@ async function reload(){
       await upsertOverride(id, next);
 
       // refresh org calc cell without rebuilding table
-      const payoutTxt = row.children[2].textContent.replace(/,/
+      const payoutTxt = row.children[2].textContent.replace(/,/g,'') || '0';
+      const payout = Number(payoutTxt);
+      const org = Math.round(payout * (next/100));
+      row.querySelector('.orgcalc').textContent = fmt(org);
+      return;
+    }
+
+    // Save typed value
+    if(e.target.matches('[data-save]')){
+      const val = Number(input.value||0);
+      await upsertOverride(id, val);
+      await reload();
+      return;
+    }
+
+    // Clear override
+    if(e.target.matches('[data-clear]')){
+      await clearOverride(id);
+      await reload();
+      return;
+    }
+  };
+}
+
+/* ====== BOOT ====== */
+(async ()=>{
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user){ /* gate if you want */ }
+
+  $('#saveCut').onclick = async ()=>{ await saveOrgCut(); await reload(); };
+  $('#reload').onclick = reload;
+
+  const pct = await loadOrgCut();
+  const today = new Date(); const past = new Date(); past.setDate(today.getDate()-30);
+  $('#to').value = today.toISOString().slice(0,10);
+  $('#from').value = past.toISOString().slice(0,10);
+
+  await reload();
+})();
+</script>
+</body>
+</html>
