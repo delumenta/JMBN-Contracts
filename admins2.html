@@ -1,503 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JMBN – Admin Console</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Mission Log — Contract Manager</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --bad:#ff6b6b; --ok:#5cd47c; --fs:14px;
+  /* JMBN palette */
+  --bg:#000; --border:#d6b44c; --accent:#f2d675; --accent2:#e7c760;
+  --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+
+  /* Bezel lines */
+  --stroke:#2e2612;   /* inner edge (warm) */
+  --bezel:#0b0b0b;    /* panel base */
+
+  --fs-base:14px; --fs-small:11px; --fs-table:13px; --fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
-
-/* Fallback header (replaced if header.html loads) */
-.brand{display:flex;align-items:center;gap:10px;margin:12px 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand img{width:44px;height:44px;object-fit:contain}
-.brand h1{margin:0;color:var(--accent);font-size:22px}
-
-.wrap{max-width:1200px;margin:0 auto;padding:0 16px 40px}
-.grid{display:grid;grid-template-columns:340px 1fr;gap:16px}
-@media(max-width:980px){.grid{grid-template-columns:1fr}}
-
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18)}
-.panel .hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
-.panel .hd h3{margin:0;color:var(--accent);font-size:16px;display:flex;align-items:center;gap:10px}
-.panel .body{padding:12px}
-
-.badge{border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--accent);background:#121212}
-input[type="search"],select{
-  width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Play'
+html,body{height:100%}
+body{
+  margin:0;color:var(--text);font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  font-size:var(--fs-base);
 }
-button{
-  padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);cursor:pointer;font-family:'Play'
+
+/* Shared header mount */
+#header-container{margin:12px 12px 0}
+
+/* Main panel */
+.panel{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 10px rgba(214,180,76,.15);margin:12px}
+.panel-inner{padding:12px}
+
+/* Tabs (GENERAL + HISTORY only) */
+.tabs{display:flex;gap:8px;margin:4px 0 10px}
+.tab{
+  padding:8px 12px;border:1px solid var(--border);border-radius:8px;
+  background:linear-gradient(180deg,#0e0e0e,#0a0a0a);
+  color:var(--accent);letter-spacing:.35px;cursor:pointer;transition:.15s;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.14);
 }
-button:hover{background:var(--accent);color:#000}
-.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;background:#121212;color:var(--accent)}
-.btn-danger{border-color:var(--bad);color:var(--bad)}
-.btn-ok{border-color:var(--ok);color:var(--ok)}
-.small{font-size:12px;color:var(--muted)}
+.tab:hover{filter:brightness(1.08)}
+.tab.active{box-shadow:0 0 0 1px rgba(214,180,76,.35), inset 0 0 0 1px rgba(214,180,76,.25)}
 
-/* Members list */
-.mlist{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto}
-.mrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px;border:1px solid transparent;border-radius:10px;background:#0a0a0a;cursor:pointer}
-.mrow:hover{background:#111;border-color:rgba(214,180,76,.35)}
-.mrow.active{background:rgba(214,180,76,.12);border-color:var(--border)}
-
-/* Frameless avatar (no gold frame around logo) */
-.mavatar{width:38px;height:38px;display:grid;place-items:center;overflow:hidden;border:none;background:transparent}
-.mavatar img{width:100%;height:100%;object-fit:contain;border:none;background:transparent;box-shadow:none;filter:none}
-
-/* KPIs + bars */
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.kpi{background:#0c0c0c;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
-.kpi .val{font-size:18px;font-weight:700;color:var(--accent)}
-.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;margin:6px 0}
-.pb .label{color:var(--muted);font-size:12px}
-.bar{height:12px;background:#0a0a0a;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-.fill{height:100%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
-.pb .val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
-
-/* Certifications — compact 6-up, no borders, abbrev only */
-.certGrid{
-  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;
+/* Controls & KPI */
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+input,select{
+  background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'
 }
-@media(max-width:1100px){ .certGrid{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
-@media(max-width:780px){  .certGrid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
-@media(max-width:520px){  .certGrid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+button,.small-btn{
+  padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s
+}
+button:hover,.small-btn:hover{background:var(--accent);color:#000}
 
-.cert{background:transparent;border:none;padding:6px;text-align:center}
-.cert.dim{opacity:.6;filter:grayscale(.5)}
-.cert .thumb{height:72px;border:none;background:transparent;padding:0;display:grid;place-items:center;margin-bottom:4px}
-.cert .thumb img{max-height:60px;max-width:60px;width:auto;height:auto;object-fit:contain}
-.cert .abbr{font-weight:700;letter-spacing:.5px;color:var(--accent);font-size:12px}
-.cert .title,.cert .small,.cert .meta,.cert [data-open]{display:none!important}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0}
+@media(max-width:880px){.kpis{grid-template-columns:1fr}}
+.kpi{
+  background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;
+  box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08)
+}
+.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
 
-/* Timeline — remove round dots */
-.timeline{position:relative;margin-top:10px;padding-left:0}
-.timeline::before{left:0;top:0;bottom:0;width:2px;background:linear-gradient(var(--border),transparent);content:"";position:absolute}
-.titem{position:relative;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:10px}
-.tdot{display:none!important} /* hide circles */
-.titem.done .tlabel{color:var(--accent);}
+/* Two-pane */
+.mgrid{display:grid;grid-template-columns:360px 1fr;gap:12px}
+@media(max-width:1100px){.mgrid{grid-template-columns:1fr}}
+.mlist{
+  min-height:420px;max-height:72vh;overflow:auto;border:1px solid var(--stroke);border-radius:10px;background:var(--bezel);
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.06)
+}
+.mitem{
+  padding:10px 12px;border-bottom:1px solid rgba(214,180,76,.08);cursor:pointer;
+  background:linear-gradient(180deg,#0d0d0d,#0a0a0a);transition:.12s
+}
+.mitem:hover{background:#131313}
+.mitem.active{outline:1px solid var(--border)}
+.mtitle{color:var(--accent);font-weight:700;margin-bottom:3px}
+.mmeta{font-size:12px;color:var(--muted)}
+.mchips{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.mchip{
+  border:1px solid var(--stroke);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)
+}
 
-/* Missions list */
-.list{display:flex;flex-direction:column;gap:8px}
-.item{border:1px solid var(--border);border-radius:10px;background:#0b0b0b;padding:10px}
-.item h4{margin:0 0 4px;color:var(--accent);font-size:14px}
-.item .meta{font-size:12px;color:var(--muted)}
+/* Inspector */
+.inspector{
+  min-height:420px;border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#090909);
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.06);padding:12px
+}
+.inspector h2{color:var(--accent);margin:0 0 6px;font-size:16px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.35),transparent);margin:10px 0}
+.small{font-size:var(--fs-small);color:var(--muted)}
+.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
+.pill.res{color:#f2d675;border-color:#f2d675}
+.pill.op{color:#7bd88f;border-color:#7bd88f}
+.mono{font-variant-numeric:tabular-nums}
+.nowrap{white-space:nowrap}
+
+/* GOLD CTA — used by Accept, Attendance, Open */
+.btn-cta{
+  padding:10px 14px;border-radius:8px;border:1px solid var(--border);
+  background:linear-gradient(180deg,var(--accent),var(--accent2));
+  color:#000;font-weight:700;letter-spacing:.35px;transition:.15s;
+  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(0,0,0,.15);
+}
+.btn-cta:hover{filter:brightness(1.05)}
+
+/* Ongoing strip */
+.ongoing-head{padding:8px 12px;color:var(--muted);background:#111;border-top:1px solid rgba(214,180,76,.12)}
+.ongoing-item{padding:8px 12px;border-top:1px dashed rgba(214,180,76,.1);font-size:12px;color:var(--muted)}
+.ongoing-title{color:var(--accent);font-weight:700}
+
+/* Attendance Modal */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
+.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+.modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
+.modal .chip .x:hover{background:#111;color:#ff6b6b}
+.modal .chip select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text);font-family:'Play';font-size:12px}
+.modal .list{display:flex;gap:8px;flex-wrap:wrap}
+.chip[data-attendance="not_going"]{border-color:rgba(255,107,107,.6);color:#ff6b6b}
 </style>
 </head>
 <body>
+  <!-- Shared Header -->
+  <div id="header-container"></div>
+  <script>
+    (async () => {
+      try{
+        const res = await fetch('header.html',{cache:'no-cache'});
+        const html = await res.text();
+        document.getElementById('header-container').outerHTML = html;
+        requestAnimationFrame(()=>{
+          const here = (location.pathname.split('/').pop()||'mission-log.html').toLowerCase();
+          document.querySelectorAll('.nav-btn').forEach(a=>{
+            const href=(a.getAttribute('href')||'').toLowerCase();
+            if(href===here){a.classList.add('active');a.setAttribute('aria-current','page');}
+          });
+        });
+      }catch(e){console.warn('Header load failed:',e);}
+    })();
+  </script>
 
-<!-- Header mount -->
-<div id="header-container">
-  <div class="brand"><img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt=""><h1>JMBN Admin Console</h1></div>
-</div>
-<script>
-(async()=>{try{
-  const r=await fetch('header.html',{cache:'no-cache'});
-  if(r.ok){document.getElementById('header-container').outerHTML=await r.text();}
-}catch{}})();
-</script>
-
-<div class="wrap">
-  <div class="grid">
-
-    <!-- LEFT -->
-    <div class="panel">
-      <div class="hd"><h3>Members</h3></div>
-      <div class="body">
-        <input id="mSearch" type="search" placeholder="Search handle / name…">
-        <div id="mList" class="mlist" style="margin-top:8px">Loading…</div>
+  <!-- Contract Manager Board -->
+  <section class="panel">
+    <div class="panel-inner">
+      <!-- Tabs (GENERAL + HISTORY) -->
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-scope="">GENERAL</div>
+        <div class="tab" data-scope="history">HISTORY</div>
       </div>
-    </div>
 
-    <!-- RIGHT -->
-    <div class="panel">
-      <div class="hd">
-        <h3>Dashboard</h3>
-        <div style="display:flex;gap:8px;align-items:center">
-          <select id="rankTrack" title="Rank Track">
-            <option value="">— Track —</option>
-            <option value="Officer">Officer</option>
-            <option value="Enlisted">Enlisted</option>
-            <option value="Warrant">Warrant</option>
-          </select>
-          <button id="btnForce" class="pill" title="Force set user's rank track">Force Set Track</button>
+      <!-- Controls -->
+      <div class="controls">
+        <input id="search" placeholder="Search contracts (title, type, status, tags, route)">
+        <select id="catFilter">
+          <option value="">All Categories</option>
+          <option value="Resource">Resource</option>
+          <option value="Operations">Operations</option>
+        </select>
+        <select id="statusFilter">
+          <option value="">All Status</option>
+          <option>planned</option>
+          <option>active</option>
+          <option>success</option>
+          <option>fail</option>
+          <option>abort</option>
+        </select>
+        <button class="small-btn" id="btnExport">Export CSV</button>
+      </div>
 
-          <select id="rankCode" title="Rank Code">
-            <option value="">— Select Rank —</option>
-          </select>
-          <button id="btnSetRank" class="pill" title="Force set a specific rank code">Set Rank</button>
-
-          <button id="btnPromote" class="pill" disabled>Run Promotion Check</button>
+      <!-- KPIs -->
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-title">Total Missions</div>
+          <div class="kpi-value" id="kpiCount">0</div>
+          <div class="kpi-sub">after filters</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-title">Resource : Ops</div>
+          <div class="kpi-value" id="kpiMix">0 : 0</div>
+          <div class="kpi-sub">derived from type</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-title">Avg Payout (shown)</div>
+          <div class="kpi-value mono" id="kpiAvg">-</div>
+          <div class="kpi-sub">aUEC</div>
         </div>
       </div>
 
-      <div class="body" id="inspector">
-        <div class="small">Select a member to view their dashboard & activity.</div>
+      <!-- Two Pane -->
+      <div class="mgrid">
+        <!-- Left: Mission List + Ongoing -->
+        <div class="mlist" id="mList"></div>
+
+        <!-- Right: Inspector -->
+        <div class="inspector" id="inspector">
+          <h2>Mission Details</h2>
+          <div class="small">Select a contract on the left to view its briefing.</div>
+        </div>
+      </div>
+
+      <div id="feedEmpty" class="small" style="display:none;margin-top:8px">No missions match your filters.</div>
+    </div>
+  </section>
+
+  <!-- Attendance Modal -->
+  <div id="attModalMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+        <button class="small-btn" onclick="closeAttendance()">Close</button>
+      </div>
+
+      <div class="row">
+        <button id="attIamGoing" class="btn-cta">I’m going</button>
+        <button id="attNotGoing" class="btn-cta">Not going</button>
+        <button id="attWithdraw" class="btn-cta">Withdraw</button>
+        <select id="attSelfRole" style="min-width:180px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"></select>
+        <span class="small">Pick <b>your role</b> (optional).</span>
+      </div>
+
+      <div id="attElevatedTools" class="row" style="display:none">
+        <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+          <option value="">Role (optional)</option>
+        </select>
+        <button id="attAddBtn" class="btn-cta">Add</button>
+        <span class="small">Admin/Owner can add/remove attendees.</span>
+      </div>
+
+      <div class="row">
+        <strong class="small">Attendees:</strong>
+        <div id="attList" class="list"></div>
       </div>
     </div>
-
   </div>
-</div>
 
-<!-- libs -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
+  <!-- Supabase & Auth -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
+
 <script>
-const $ = s => document.querySelector(s);
-const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
-const setFill=(el,p)=>{const x=Math.max(0,Math.min(1,Number(p)||0));el.style.width=(x*100)+'%';};
+/* ========= Helpers ========= */
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
+const fmtDate = iso => {
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleString('en-SG', {
+    day:'numeric', month:'long', year:'numeric',
+    hour:'numeric', minute:'2-digit', hour12:true
+  }).replace(/\s?([ap])m/i,'$1m');
+};
+const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
-let sb, me, isElev=false, MEMBERS=[], SELECTED=null, RANKS=[];
+const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
+function deriveCategory(type){
+  const t=(type||'').toString().trim().toLowerCase();
+  return RESOURCE_TYPES.has(t) ? 'Resource' : 'Operations';
+}
 
-/* Boot */
-document.addEventListener('DOMContentLoaded', async ()=>{
-  const session = await requireAuth(); if(!session) return;
-  sb = getSupabase(); me = session.user.id;
+/* ========= Roles (Attendance) ========= */
+let ROLES=[];
+const DEFAULT_ROLES=[
+  {label:'operations lead'},{label:'pilot'},{label:'copilot'},{label:'escort'},
+  {label:'tactician'},{label:'fps'},{label:'gunner'},{label:'hauler'},
+  {label:'miner'},{label:'salvager'},{label:'engineer'},{label:'medic'},
+  {label:'recon'},{label:'runner'},{label:'logistics'},{label:'security'}
+];
+function roleOptionsHtml(placeholder){
+  const items=(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
+  return `<option value="">${placeholder}</option>`+items;
+}
+async function fetchRoles(sb){
+  const { data, error } = await sb.from('mission_roles').select('label').order('sort_order',{ascending:true}).order('label',{ascending:true});
+  ROLES=(error||!data||!data.length)?DEFAULT_ROLES:data;
+}
 
-  try{ const { data } = await sb.rpc('is_elevated',{ u: me }); isElev = data===true; }catch{}
-  if(!isElev){ $('#inspector').innerHTML='<div class="small" style="color:#ff6b6b">Access denied — not elevated.</div>'; return; }
+/* ========= State ========= */
+let sb=null, session=null;
+let allMissions=[];      // raw
+let filtered=[];         // after filters
+let selectedId=null;     // inspector target
+let currentScope="";     // "", history
 
-  await loadMembers();
-  await loadRankOptions();
-
-  $('#mSearch').oninput = renderMembers;
-  $('#rankTrack').onchange = e => loadRankOptions(e.target.value);
-
-  $('#btnForce').onclick = async ()=>{
-    if(!SELECTED) return alert('Select a member first.');
-    const track=$('#rankTrack').value; if(!track) return alert('Choose a track.');
-    if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${track}?`)) return;
-    const { error } = await sb.rpc('set_rank_track',{ p_user: SELECTED.user_id, p_track: track });
-    if(error) return alert('Force set failed: '+error.message);
-    alert('Track updated ✓'); await openMember(SELECTED.user_id); await loadMembers();
-  };
-
-  $('#btnSetRank').onclick = async ()=>{
-    if(!SELECTED) return alert('Select a member first.');
-    const code=$('#rankCode').value; if(!code) return alert('Choose a rank.');
-    if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${code}?`)) return;
-    /* IMPORTANT: use named args in correct order */
-    const { error } = await sb.rpc('set_rank_code',{ p_user: SELECTED.user_id, p_code: code });
-    if(error) return alert('Set rank failed: '+error.message);
-    alert('Rank updated ✓'); await openMember(SELECTED.user_id); await loadMembers();
-  };
-
-  $('#btnPromote').onclick = async ()=>{
-    if(!SELECTED) return;
-    const { data, error } = await sb.rpc('request_promotion',{ p_user: SELECTED.user_id });
-    if(error) return alert('Promotion failed: '+error.message);
-    alert(data?.message || (data?.ok?'Promotion OK':'Not eligible yet'));
-    await openMember(SELECTED.user_id);
-  };
+/* ========= Tabs ========= */
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  const t=e.target.closest('.tab'); if(!t) return;
+  $$('#tabs .tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  currentScope=t.dataset.scope||"";
+  renderFiltered();
 });
 
-/* Ranks dropdown */
-async function loadRankOptions(track=''){
-  if(!RANKS.length){
-    const { data, error } = await sb.from('ranks').select('code,name,category,sort_order').order('sort_order');
-    if(error){ console.warn(error.message); return; }
-    RANKS=data||[];
-  }
-  const want = (track||$('#rankTrack').value||'').toLowerCase();
-  const items = RANKS.filter(r=>!want || (r.category||'').toLowerCase()===want);
-  const sel = $('#rankCode');
-  sel.innerHTML = '<option value="">— Select Rank —</option>' +
-    items.map(r=>`<option value="${r.code}">${r.code} — ${esc(r.name)}</option>`).join('');
-}
-
-/* Members list */
-async function loadMembers(){
-  const { data, error } = await sb.from('v_profiles_detailed').select(`
-    user_id,handle,display_name,
-    current_rank_category,current_rank_name,current_rank_code,current_rank_image_url
-  `).order('handle');
-
-  if(error){ $('#mList').textContent='Failed to load members: '+error.message; return; }
-  MEMBERS=data||[]; renderMembers();
-}
-function renderMembers(){
-  const q=($('#mSearch').value||'').toLowerCase().trim();
-  const list=$('#mList');
-  const rows=q?MEMBERS.filter(m=>(`${m.handle} ${m.display_name}`).toLowerCase().includes(q)):MEMBERS;
-  if(!rows.length){ list.textContent='No matches.'; return; }
-  list.innerHTML='';
-  rows.forEach(m=>{
-    const row=document.createElement('div'); row.className='mrow';
-    row.innerHTML=`
-      <div class="mavatar">${m.current_rank_image_url?`<img src="${esc(m.current_rank_image_url)}" alt="rank">`:'👤'}</div>
-      <div>
-        <div><b>${esc(m.handle||'(no handle)')}</b> <span class="small">• ${esc(m.display_name||'')}</span></div>
-        <div class="small">${esc(m.current_rank_category||'Unrated')} — ${esc(m.current_rank_name||'Unrated')}</div>
-      </div>
-      <div><button class="pill">Open</button></div>`;
-    row.querySelector('button').onclick=()=>openMember(m.user_id,row);
-    list.appendChild(row);
-  });
-}
-function markActive(row){document.querySelectorAll('.mrow').forEach(x=>x.classList.remove('active'));row?.classList.add('active');}
-
-/* Dashboard for a member */
-async function openMember(userId,rowEl){
-  const res=MEMBERS.find(x=>x.user_id===userId); if(!res) return;
-  SELECTED=res; markActive(rowEl); $('#btnPromote').disabled=false;
-
-  // preselect UI
-  $('#rankTrack').value=res.current_rank_category||'';
-  await loadRankOptions(res.current_rank_category||'');
-  if(res.current_rank_code) $('#rankCode').value = res.current_rank_code;
-
-  // Dashboard UI
-  $('#inspector').innerHTML = `
-    <div id="summary"></div>
-
-    <div class="kpis" style="margin:10px 0">
-      <div class="kpi"><h4>Total Missions</h4><div class="val" id="k_mis">—</div></div>
-      <div class="kpi"><h4>Total Hours</h4><div class="val" id="k_hrs">—</div></div>
-      <div class="kpi"><h4>Owned Certs</h4><div class="val" id="k_cer">—</div></div>
-    </div>
-
-    <div class="pb"><div class="label">Missions</div><div class="bar"><div id="pbMis" class="fill" style="width:0%"></div></div><div class="val" id="vMis">—</div></div>
-    <div class="pb"><div class="label">Hours</div><div class="bar"><div id="pbHrs" class="fill" style="width:0%"></div></div><div class="val" id="vHrs">—</div></div>
-    <div class="pb"><div class="label">Certifications</div><div class="bar"><div id="pbCer" class="fill" style="width:0%"></div></div><div class="val" id="vCer">—</div></div>
-
-    <div class="panel" style="margin-top:12px">
-      <div class="hd"><h3>Certifications</h3></div>
-      <div class="body"><div id="certGrid" class="certGrid">Loading…</div></div>
-    </div>
-
-    <div class="panel" style="margin-top:12px">
-      <div class="hd">
-        <h3>Certification Timeline</h3>
-        <div>
-          <select id="certSelect"></select>
-          <button id="btnReloadTL">Load</button>
-        </div>
-      </div>
-      <div class="body">
-        <div id="tlHint" class="small">Pick a certification to manage completions.</div>
-        <div id="timeline" class="timeline" style="margin-top:8px"></div>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-top:12px">
-      <div class="hd">
-        <h3>Missions <span id="misCount" class="badge">0</span></h3>
-        <div><button id="misReload" class="pill">Reload</button></div>
-      </div>
-      <div class="body"><div id="misList" class="list">Loading…</div></div>
-    </div>
-  `;
-
-  await Promise.all([
-    loadProgress(userId),
-    loadCerts(userId),
-    loadMissions(userId)
-  ]);
-
-  $('#misReload').onclick = ()=> loadMissions(userId);
-}
-
-/* Progress */
-async function loadProgress(uid){
-  const [{ data: prog }, { data: up }] = await Promise.all([
-    sb.from('v_user_rank_progress').select('*').eq('user_id', uid).maybeSingle(),
-    sb.from('v_user_progress').select('*').eq('user_id', uid).maybeSingle()
-  ]);
-
-  const cur = esc(prog?.current_name||'(unranked)');
-  const curPg = esc(prog?.current_paygrade||'—');
-  const nxt = esc(prog?.next_name||'—');
-  const nxtPg = esc(prog?.next_paygrade||'—');
-
-  $('#summary').innerHTML = `
-    <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
-      <div>
-        <div><b>Current:</b> <span style="color:var(--accent)">${cur}</span> <span class="pill">PG: ${curPg}</span></div>
-        <div class="small">Next: ${nxt} <span class="pill">PG: ${nxtPg}</span></div>
-      </div>
-      <div class="small">Targets • M:${prog?.missions_target??0} • H:${prog?.hours_target??0} • C:${prog?.certification_target??0}</div>
-    </div>`;
-
-  const m=Number(up?.missions_attended||0), h=Number(up?.hours_total||0), c=Number(up?.certifications_total||0);
-  const mt=Number(prog?.missions_target||0), ht=Number(prog?.hours_target||0), ct=Number(prog?.certification_target||0);
-
-  $('#k_mis').textContent=String(m);
-  $('#k_hrs').textContent=String(h);
-  $('#k_cer').textContent=String(c);
-
-  $('#vMis').textContent=`${m} / ${mt}`;
-  $('#vHrs').textContent=`${h} / ${ht}`;
-  $('#vCer').textContent=`${c} / ${ct}`;
-
-  setFill($('#pbMis'), mt?Math.min(1,m/mt):1);
-  setFill($('#pbHrs'), ht?Math.min(1,h/ht):1);
-  setFill($('#pbCer'), ct?Math.min(1,c/ct):1);
-}
-
-/* Certifications (compact grid, abbrev only, no borders/buttons) */
-async function loadCerts(uid){
-  const [{ data: catalog }, { data: mine }, { data: reqs }] = await Promise.all([
-    sb.from('certifications').select('certification_code,name,image_url,sort_order,is_active').order('sort_order'),
-    sb.from('user_certifications').select('certification_code').eq('user_id', uid),
-    sb.from('certification_requirements').select('certification_code,event_code')
-  ]);
-
-  const owned = new Set((mine||[]).map(x=>x.certification_code));
-  const byCert = new Map();
-  (reqs||[]).forEach(r=>{
-    if(!byCert.has(r.certification_code)) byCert.set(r.certification_code,[]);
-    byCert.get(r.certification_code).push(r.event_code);
-  });
-
-  const grid=$('#certGrid'); grid.innerHTML='';
-  const select=$('#certSelect'); select.innerHTML='';
-
-  (catalog||[]).forEach(c=>{
-    const div=document.createElement('div');
-    div.className='cert'+(owned.has(c.certification_code)?'':' dim');
-    div.innerHTML=`
-      <div class="thumb">${c.image_url?`<img src="${esc(c.image_url)}" alt="">`:'🏅'}</div>
-      <div class="abbr">${esc(c.certification_code)}</div>
-    `;
-    div.title = c.name || c.certification_code;
-    div.style.cursor = 'pointer';
-    div.onclick = ()=>{
-      select.value=c.certification_code;
-      loadTimeline(uid,c.certification_code);
-      $('#tlHint').textContent=c.name || c.certification_code;
-      $('#timeline').scrollIntoView({behavior:'smooth', block:'nearest'});
-    };
-    grid.appendChild(div);
-
-    const opt=document.createElement('option');
-    opt.value=c.certification_code; opt.textContent=`${c.certification_code} — ${c.name}`;
-    select.appendChild(opt);
-  });
-
-  $('#btnReloadTL').onclick = ()=> loadTimeline(uid, select.value);
-}
-
-/* Timeline */
-async function loadTimeline(uid, certCode){
-  const tl=$('#timeline'); tl.innerHTML='';
-  if(!certCode){ tl.innerHTML='<div class="small">Pick a certification.</div>'; return; }
-
-  const [{ data: reqs }, { data: recs }] = await Promise.all([
-    sb.from('certification_requirements')
-      .select('event_code, sort_order, training_events(title, description)')
-      .eq('certification_code', certCode)
-      .order('sort_order'),
-    sb.from('user_training_events')
-      .select('event_code, completed_at, approved_by, approved_at')
-      .eq('user_id', uid)
-  ]);
-  const done=new Map((recs||[]).map(r=>[r.event_code,r]));
-
-  if(!reqs?.length){ tl.innerHTML='<div class="small">No requirements configured.</div>'; return; }
-
-  reqs.forEach(r=>{
-    const rec=done.get(r.event_code); const ok=!!rec;
-    const row=document.createElement('div'); row.className='titem'+(ok?' done':'');
-    row.innerHTML=`
-      <div>
-        <div class="tlabel">${esc(r.training_events?.title||r.event_code)}</div>
-        <div class="small">${esc(r.training_events?.description||'')}</div>
-        ${ok?`<div class="small">Completed: ${new Date(rec.approved_at||rec.completed_at).toLocaleString()}${rec.approved_by?` • by ${esc(rec.approved_by.slice(0,8))}`:''}</div>`:''}
-      </div>
-      <div>
-        ${ok?`<button class="btn-danger" data-remove="${r.event_code}">Remove</button>`
-            :`<button class="btn-ok" data-add="${r.event_code}">Grant</button>`}
-      </div>`;
-    tl.appendChild(row);
-  });
-
-  tl.querySelectorAll('button[data-add]').forEach(b=>{
-    b.onclick=async ()=>{
-      const { error } = await sb.from('user_training_events').insert({
-        user_id: uid, event_code: b.dataset.add, completed_at: new Date().toISOString()
-      });
-      if(error) return alert('Grant failed: '+error.message);
-      await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
-    };
-  });
-  tl.querySelectorAll('button[data-remove]').forEach(b=>{
-    b.onclick=async ()=>{
-      const { error } = await sb.from('user_training_events')
-        .delete().eq('user_id',uid).eq('event_code',b.dataset.remove);
-      if(error) return alert('Remove failed: '+error.message);
-      await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
-    };
-  });
-}
-
-/* Missions */
-async function loadMissions(uid){
-  const box = $('#misList'); const count = $('#misCount');
-  box.textContent = 'Loading…';
-  try{
-    let { data, error } = await sb
-      .from('v_mission_attendees_detailed')
-      .select('mission_id, attendance, missions(id,title,start_time)')
-      .eq('user_id', uid)
-      .order('missions.start_time', { ascending:false })
-      .limit(20);
-
-    if (error || (data && data.length && data[0].missions == null)) {
-      const { data: bare, error: e2 } = await sb
-        .from('v_mission_attendees_detailed')
-        .select('mission_id, attendance')
-        .eq('user_id', uid)
-        .order('mission_id', { ascending:false })
-        .limit(50);
-      if (e2) throw e2;
-
-      const ids = [...new Set((bare||[]).map(r=>r.mission_id))];
-      let map = {};
-      if (ids.length){
-        const { data: mrows } = await sb
-          .from('missions')
-          .select('id,title,start_time')
-          .in('id', ids);
-        map = Object.fromEntries((mrows||[]).map(m=>[m.id, m]));
-      }
-      data = (bare||[]).map(r => ({ ...r, missions: map[r.mission_id] || null }))
-                       .sort((a,b)=> new Date(b.missions?.start_time||0) - new Date(a.missions?.start_time||0))
-                       .slice(0,20);
-    }
-
-    const attended = (data||[]).filter(r => r.attendance && r.attendance.toLowerCase() !== 'withdrawn');
-    count.textContent = String(attended.length);
-
-    if (!data || !data.length){
-      box.innerHTML = '<div class="small">No missions found.</div>';
-      return;
-    }
-
-    box.innerHTML = data.map(r=>{
-      const m = r.missions || {};
-      const when = m.start_time ? new Date(m.start_time).toLocaleString() : '';
-      const att = r.attendance || '—';
-      return `<div class="item">
-        <h4>${esc(m.title || 'Untitled Mission')}</h4>
-        <div class="meta">${when} • Attendance: ${esc(att)}</div>
-      </div>`;
-    }).join('');
-  }catch(e){
-    box.innerHTML = `<div class="small" style="color:#ff9c9c">Failed to load missions: ${esc(e.message||e)}</div>`;
-    count.textContent = '0';
-  }
-}
-</script>
-</body>
-</html>
+/* ========= Controls ========= */
+$('#search').addEventListener('input', renderFiltered);
+$('#catFilter').addEventListener('input', renderFiltered);
