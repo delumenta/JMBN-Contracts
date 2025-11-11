@@ -244,9 +244,8 @@ tr:hover{background:rgba(214,180,76,.05)}
       <div id="attElevatedTools" class="row" style="display:none">
         <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
         <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-          <option value="">Role (optional)</option>
-          <option>pilot</option><option>escort</option><option>hauler</option><option>miner</option><option>medic</option>
-        </select>
+  <option value="">Role (optional)</option>
+</select>
         <button id="attAddBtn" class="small-btn">Add</button>
         <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
       </div>
@@ -287,7 +286,41 @@ const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
 // Derive category from type without changing DB
 const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
-const ROLE_OPTIONS = ['pilot','escort','hauler','miner','medic','gunner','engineer','recon'];
+
+// --- Roles: fetched from DB with safe defaults ---
+let ROLES = [];
+const DEFAULT_ROLES = [
+  { code: 'operations_lead', label: 'operations lead', weight: 0.9 },
+  { code: 'pilot',           label: 'pilot',           weight: 0.7 },
+  { code: 'copilot',         label: 'copilot',         weight: 0.7 },
+  { code: 'escort',          label: 'escort',          weight: 0.7 },
+  { code: 'tactician',       label: 'tactician',       weight: 0.7 },
+  { code: 'fps',             label: 'fps',             weight: 0.7 },
+  { code: 'gunner',          label: 'gunner',          weight: 0.5 },
+  { code: 'hauler',          label: 'hauler',          weight: 0.5 },
+  { code: 'miner',           label: 'miner',           weight: 0.5 },
+  { code: 'salvager',        label: 'salvager',        weight: 0.5 },
+  { code: 'engineer',        label: 'engineer',        weight: 0.5 },
+  { code: 'medic',           label: 'medic',           weight: 0.5 },
+  { code: 'recon',           label: 'recon',           weight: 0.5 },
+  { code: 'runner',          label: 'runner',          weight: 0.5 },
+  { code: 'logistics',       label: 'logistics',       weight: 0.5 },
+  { code: 'security',        label: 'security',        weight: 0.5 }
+];
+async function fetchRoles(){
+  if(!sb){ ROLES = DEFAULT_ROLES; return; }
+  const { data, error } = await sb
+    .from('mission_roles')
+    .select('code,label,weight,sort_order')
+    .order('sort_order', { ascending: true })
+    .order('label', { ascending: true });
+  ROLES = (error || !data || !data.length) ? DEFAULT_ROLES : data;
+}
+function roleOptionsHtml(placeholder){
+  const items = (ROLES.length?ROLES:DEFAULT_ROLES)
+    .map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
+  return `<option value="">${placeholder}</option>` + items;
+}
 function deriveCategory(type){
   const t=(type||'').toString().trim().toLowerCase();
   if(RESOURCE_TYPES.has(t)) return 'Resource';
@@ -381,6 +414,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   session = await requireAuth();        // redirects to auth.html if not logged in
   if(!session) return;
   sb = getSupabase();
+  await fetchRoles();
   await loadMissions();
   await loadOngoing();
 });
@@ -471,21 +505,22 @@ async function openAttendance(missionId, title=''){
   const isOwner = mission?.submitted_by === session.user.id;
   document.getElementById('attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
 
-  // Prepare self-role dropdown
+  // Prepare self-role & admin add-role dropdowns (ensure roles loaded)
+  if(!ROLES.length) { await fetchRoles(); }
   const roleSel = document.getElementById('attSelfRole');
-  if(roleSel){
-    roleSel.innerHTML = `<option value="">My role (optional)</option>` + ROLE_OPTIONS.map(r=>`<option value="${r}">${r}</option>`).join('');
-    try{
-      const { data: mine } = await sb
-        .from('mission_attendees')
-        .select('role_in_mission')
-        .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id })
-        .limit(1);
-      if(Array.isArray(mine) && mine[0]){
-        roleSel.value = mine[0].role_in_mission || '';
-      }
-    }catch(_){ /* ignore */ }
-  }
+  const addRoleSel = document.getElementById('attAddRole');
+  if(roleSel){ roleSel.innerHTML = roleOptionsHtml('My role (optional)'); }
+  if(addRoleSel){ addRoleSel.innerHTML = roleOptionsHtml('Role (optional)'); }
+  try{
+    const { data: mine } = await sb
+      .from('mission_attendees')
+      .select('role_in_mission')
+      .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id })
+      .limit(1);
+    if(Array.isArray(mine) && mine[0] && roleSel){
+      roleSel.value = mine[0].role_in_mission || '';
+    }
+  }catch(_){ /* ignore */ }
 
   document.getElementById('attIamGoing').onclick = async () => {
     const role = (document.getElementById('attSelfRole').value || '').trim();
@@ -570,7 +605,7 @@ async function loadAttendees(){
     chip.setAttribute('data-attendance', (a.attendance || '').toLowerCase());
 
     // Build role <select>
-    const options = ['<option value="">role</option>', ...ROLE_OPTIONS.map(r=>`<option value="${r}">${r}</option>`)].join('');
+    const options = ['<option value="">role</option>', ...(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`)].join('');
     const selectHtml = `<select data-uid="${a.user_id}" ${canEdit?'':'disabled'}>${options}</select>`;
 
     chip.innerHTML = `
