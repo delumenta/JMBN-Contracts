@@ -14,17 +14,15 @@
 :root{
   --bg:#000; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
   --stroke:#2a2313; --bezel:#0a0a07;
-  --fs-base:14px; --fs-small:11px; --fs-table:13px; --fs-h1:clamp(18px,2.2vw,22px);
+  --fs-base:14px; --fs-small:11px; --fs-table:13px;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0;color:var(--text);font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  background:
+  margin:0;color:var(--text);font-family:'Play',sans-serif;background:
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;
-  font-size:var(--fs-base);
+    #000;font-size:var(--fs-base);
 }
 #header-container{margin:12px 12px 0}
 
@@ -35,9 +33,8 @@ body{
 /* Tabs */
 .tabs{display:flex;gap:8px;margin:4px 0 10px}
 .tab{
-  padding:8px 12px;border:1px solid var(--stroke);border-radius:10px;
-  background:linear-gradient(180deg,#131008,#0b0905);
-  color:var(--accent);letter-spacing:.35px;cursor:pointer;transition:.15s
+  padding:8px 12px;border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#131008,#0b0905);
+  color:var(--accent);cursor:pointer;transition:.15s
 }
 .tab:hover{background:#181307}
 .tab.active{outline:1px solid var(--border); box-shadow:0 0 0 1px rgba(214,180,76,.25) inset}
@@ -45,11 +42,11 @@ body{
 /* Controls & KPI */
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 input,select{
-  background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'
+  background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:9px;color:var(--text);font-size:var(--fs-table)
 }
 button,.small-btn{
   padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s
+  color:var(--accent);border:1px solid var(--border);cursor:pointer;transition:.2s
 }
 button:hover,.small-btn:hover{background:var(--accent);color:#000}
 
@@ -60,10 +57,10 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
   box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08)
 }
 .kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.kpi-value{font-size:22px;font-weight:700;color:var(--accent)}
 .kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
 
-/* Two-pane: left list, right stacked cards */
+/* Grid */
 .mgrid{display:grid;grid-template-columns:360px 1fr;gap:12px}
 @media(max-width:1100px){.mgrid{grid-template-columns:1fr}}
 .mlist{
@@ -81,12 +78,10 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
 .mchips{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
 .mchip{border:1px solid var(--stroke);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
 
-/* Right column stack */
+/* Right column cards */
 .rightcol{display:grid;gap:12px}
-
-/* Card style (reused) */
 .inspector{
-  min-height:200px;border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#0b0b0b,#090909);
+  border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#0b0b0b,#090909);
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.06);padding:12px
 }
 .inspector h2{color:var(--accent);margin:0 0 6px;font-size:16px}
@@ -97,7 +92,7 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
 .pill.op{color:#7bd88f;border-color:#7bd88f}
 .mono{font-variant-numeric:tabular-nums}
 
-/* Gold CTA */
+/* Button */
 .btn-accept{
   padding:10px 14px;border-radius:10px;border:1px solid var(--border);
   background:linear-gradient(180deg,#1a1405,#0c0a04);
@@ -106,201 +101,184 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
 }
 .btn-accept:hover{background:var(--accent);color:#000;box-shadow:0 0 14px rgba(214,180,76,.35)}
 
-/* Ongoing card content */
 .ongoing-item{padding:8px 0;border-top:1px dashed rgba(214,180,76,.12);font-size:12px;color:var(--muted)}
 .ongoing-item:first-child{border-top:none}
 .ongoing-title{color:var(--accent);font-weight:700}
 </style>
 </head>
 <body>
-  <!-- Shared Header -->
-  <div id="header-container"></div>
-  <script>
-    (async () => {
-      try{
-        const res = await fetch('header.html',{cache:'no-cache'});
-        const html = await res.text();
-        document.getElementById('header-container').outerHTML = html;
-        requestAnimationFrame(()=>{
-          const here = (location.pathname.split('/').pop()||'mission-log.html').toLowerCase();
-          document.querySelectorAll('.nav-btn').forEach(a=>{
-            const href=(a.getAttribute('href')||'').toLowerCase();
-            if(href===here){a.classList.add('active');a.setAttribute('aria-current','page');}
-          });
-        });
-      }catch(e){console.warn('Header load failed:',e);}
-    })();
-  </script>
 
-  <!-- Contract Manager Board -->
-  <section class="panel">
-    <div class="panel-inner">
-      <!-- Tabs -->
-      <div class="tabs" id="tabs">
-        <div class="tab active" data-scope="">GENERAL</div>
-        <div class="tab" data-scope="history">HISTORY</div>
-      </div>
+<!-- Header -->
+<div id="header-container"></div>
+<script>
+(async()=>{
+  try{
+    const res=await fetch('header.html',{cache:'no-cache'});
+    const html=await res.text();
+    document.getElementById('header-container').outerHTML=html;
+    requestAnimationFrame(()=>{
+      const here=(location.pathname.split('/').pop()||'mission-log.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a=>{
+        const href=(a.getAttribute('href')||'').toLowerCase();
+        if(href===here)a.classList.add('active');
+      });
+    });
+  }catch(e){console.warn('Header load failed:',e);}
+})();
+</script>
 
-      <!-- Controls -->
-      <div class="controls">
-        <input id="search" placeholder="Search contracts (title, type, status, tags, route)">
-        <select id="catFilter">
-          <option value="">All Categories</option>
-          <option value="Resource">Resource</option>
-          <option value="Operations">Operations</option>
-        </select>
-        <select id="statusFilter">
-          <option value="">All Status</option>
-          <option>planned</option><option>active</option>
-          <option>success</option><option>fail</option><option>abort</option>
-        </select>
-        <button class="small-btn" id="btnExport">Export CSV</button>
-      </div>
-
-      <!-- KPIs -->
-      <div class="kpis">
-        <div class="kpi"><div class="kpi-title">Total Missions</div><div class="kpi-value" id="kpiCount">0</div><div class="kpi-sub">after filters</div></div>
-        <div class="kpi"><div class="kpi-title">Resource : Ops</div><div class="kpi-value" id="kpiMix">0 : 0</div><div class="kpi-sub">derived from type</div></div>
-        <div class="kpi"><div class="kpi-title">Avg Payout (shown)</div><div class="kpi-value mono" id="kpiAvg">-</div><div class="kpi-sub">aUEC</div></div>
-      </div>
-
-      <!-- Two Pane -->
-      <div class="mgrid">
-        <!-- Left: Mission List -->
-        <div class="mlist" id="mList"></div>
-
-        <!-- Right: stacked cards -->
-        <div class="rightcol">
-          <div class="inspector" id="inspector">
-            <h2>Mission Details</h2>
-            <div class="small">Select a contract on the left to view its briefing.</div>
-          </div>
-
-          <div class="inspector" id="ongoingCard">
-            <h2>Ongoing Missions</h2>
-            <div id="ongoingSpace" class="small">None</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="feedEmpty" class="small" style="display:none;margin-top:8px">No missions match your filters.</div>
+<!-- Board -->
+<section class="panel">
+  <div class="panel-inner">
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-scope="">GENERAL</div>
+      <div class="tab" data-scope="history">HISTORY</div>
     </div>
-  </section>
 
-  <!-- Attendance Modal -->
-  <div id="attModalMask" class="modal-mask" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
-        <button class="small-btn" onclick="closeAttendance()">Close</button>
-      </div>
+    <div class="controls">
+      <input id="search" placeholder="Search contracts (title, type, status, tags, route)">
+      <select id="catFilter">
+        <option value="">All Categories</option>
+        <option value="Resource">Resource</option>
+        <option value="Operations">Operations</option>
+      </select>
+      <select id="statusFilter">
+        <option value="">All Status</option>
+        <option>planned</option><option>active</option><option>success</option><option>fail</option><option>abort</option>
+      </select>
+      <button class="small-btn" id="btnExport">Export CSV</button>
+    </div>
 
-      <div class="row">
-        <button id="attIamGoing" class="small-btn">I’m going</button>
-        <button id="attNotGoing" class="small-btn">Not going</button>
-        <button id="attWithdraw" class="small-btn">Withdraw</button>
-        <select id="attSelfRole" style="min-width:180px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"></select>
-        <span class="small">Pick <b>your role</b> (optional).</span>
-      </div>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-title">Total Missions</div><div class="kpi-value" id="kpiCount">0</div><div class="kpi-sub">after filters</div></div>
+      <div class="kpi"><div class="kpi-title">Resource : Ops</div><div class="kpi-value" id="kpiMix">0 : 0</div><div class="kpi-sub">derived from type</div></div>
+      <div class="kpi"><div class="kpi-title">Avg Payout (shown)</div><div class="kpi-value mono" id="kpiAvg">-</div><div class="kpi-sub">aUEC</div></div>
+    </div>
 
-      <div id="attElevatedTools" class="row" style="display:none">
-        <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-          <option value="">Role (optional)</option>
-        </select>
-        <button id="attAddBtn" class="small-btn">Add</button>
-        <span class="small">Admin/Owner can add/remove attendees.</span>
-      </div>
+    <div class="mgrid">
+      <!-- Left: list -->
+      <div class="mlist" id="mList"></div>
 
-      <div class="row">
-        <strong class="small">Attendees:</strong>
-        <div id="attList" class="list"></div>
+      <!-- Right: details + ongoing -->
+      <div class="rightcol">
+        <div class="inspector" id="inspector">
+          <h2>Mission Details</h2>
+          <div class="small">Select a contract on the left to view its briefing.</div>
+        </div>
+
+        <div class="inspector" id="ongoingCard">
+          <h2>Ongoing Missions</h2>
+          <div id="ongoingSpace" class="small">None</div>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Supabase & Auth -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/auth.js"></script>
+<!-- Attendance Modal -->
+<div id="attModalMask" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50">
+  <div class="inspector" style="max-width:760px;width:92vw">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <h2 id="attTitle" style="margin-right:auto;color:var(--accent)">Attendance</h2>
+      <button class="small-btn" onclick="closeAttendance()">Close</button>
+    </div>
+    <div class="hr"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button id="attIamGoing" class="btn-accept">I’m going</button>
+      <button id="attNotGoing" class="btn-accept">Not going</button>
+      <button id="attWithdraw" class="btn-accept">Withdraw</button>
+      <select id="attSelfRole" style="min-width:180px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"></select>
+      <span class="small">Pick <b>your role</b> (optional).</span>
+    </div>
+    <div id="attElevatedTools" style="display:none;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:240px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+      <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"><option value="">Role (optional)</option></select>
+      <button id="attAddBtn" class="btn-accept">Add</button>
+      <span class="small">Admin/Owner can add/remove attendees.</span>
+    </div>
+    <div class="hr"></div>
+    <div>
+      <strong class="small">Attendees:</strong>
+      <div id="attList" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px" class="small">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 
 <script>
-/* ========= Helpers ========= */
+/* ===== Utilities ===== */
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
-const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
-const fmtDate = iso => {
-  if(!iso) return '';
-  const d = new Date(iso);
-  return d.toLocaleString('en-SG',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?([ap])m/i,'$1m');
-};
-const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
+const esc=s=>{const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;};
+const fmtDate=iso=>{if(!iso)return'';const d=new Date(iso);return d.toLocaleString('en-SG',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?([ap])m/i,'$1m');};
+const fmtNum=n=>(n||n===0)?Number(n).toLocaleString():'';
 
-const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
-function deriveCategory(type){ const t=(type||'').toString().trim().toLowerCase(); return RESOURCE_TYPES.has(t) ? 'Resource' : 'Operations'; }
+const RESOURCE_TYPES=new Set(['hauling','cargo','salvage','mining','delivery']);
+const catOf=t=>RESOURCE_TYPES.has((t||'').toLowerCase())?'Resource':'Operations';
 
-/* ========= Roles (Attendance) ========= */
-let ROLES=[];
-const DEFAULT_ROLES=[{label:'operations lead'},{label:'pilot'},{label:'copilot'},{label:'escort'},{label:'tactician'},{label:'fps'},{label:'gunner'},{label:'hauler'},{label:'miner'},{label:'salvager'},{label:'engineer'},{label:'medic'},{label:'recon'},{label:'runner'},{label:'logistics'},{label:'security'}];
-function roleOptionsHtml(ph){ const items=(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`).join(''); return `<option value="">${ph}</option>`+items; }
-async function fetchRoles(sb){ const { data, error } = await sb.from('mission_roles').select('label').order('sort_order',{ascending:true}).order('label',{ascending:true}); ROLES=(error||!data||!data.length)?DEFAULT_ROLES:data; }
+/* ===== State ===== */
+let sb=null, session=null, allMissions=[], filtered=[], selectedId=null, currentScope="";
+let ROLES=[], ATT_MISSION_ID=null;
+const DEFAULT_ROLES=['operations lead','pilot','copilot','escort','tactician','fps','gunner','hauler','miner','salvager','engineer','medic','recon','runner','logistics','security'];
 
-/* ========= State ========= */
-let sb=null, session=null;
-let allMissions=[]; let filtered=[]; let selectedId=null; let currentScope="";
-
-/* ========= Wire UI ========= */
-document.getElementById('tabs').addEventListener('click',(e)=>{
+/* ===== Boot ===== */
+document.getElementById('tabs').addEventListener('click',e=>{
   const t=e.target.closest('.tab'); if(!t) return;
-  $$('#tabs .tab').forEach(x=>x.classList.remove('active'));
-  t.classList.add('active'); currentScope=t.dataset.scope||""; renderFiltered();
+  $$('#tabs .tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
+  currentScope=t.dataset.scope||""; renderFiltered();
 });
-$('#search').addEventListener('input', renderFiltered);
-$('#catFilter').addEventListener('input', renderFiltered);
-$('#statusFilter').addEventListener('input', renderFiltered);
-$('#btnExport').onclick = exportCSV;
+$('#search').addEventListener('input',renderFiltered);
+$('#catFilter').addEventListener('input',renderFiltered);
+$('#statusFilter').addEventListener('input',renderFiltered);
+$('#btnExport').onclick=exportCSV;
 
-/* ========= Boot ========= */
 document.addEventListener('DOMContentLoaded', async ()=>{
   session = await requireAuth(); if(!session) return;
-  sb = getSupabase(); await fetchRoles(sb); await loadMissions();
+  sb = getSupabase();
+  await loadRoles();
+  await loadMissions();
 });
 
-/* ========= Data ========= */
+/* ===== Data ===== */
+async function loadRoles(){
+  try{
+    const { data, error } = await sb.from('mission_roles').select('label').order('sort_order',{ascending:true}).order('label',{ascending:true});
+    ROLES = error || !data?.length ? DEFAULT_ROLES.map(label=>({label})) : data;
+  }catch{ ROLES = DEFAULT_ROLES.map(label=>({label})); }
+}
+
 async function loadMissions(){
   const { data, error } = await sb
     .from('missions')
     .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at,submitted_by')
     .order('created_at',{ascending:false});
-  if(error){ $('#mList').innerHTML=''; $('#feedEmpty').style.display='block'; $('#feedEmpty').textContent='Failed to load missions: '+(error.message||''); return; }
-  allMissions=data||[]; renderFiltered();
+  if(error){ $('#mList').innerHTML='<div class="small">Failed to load missions.</div>'; return; }
+  allMissions = data||[];
+  renderFiltered();
 }
 
-/* ========= Filter + KPIs ========= */
+/* ===== Filter + KPIs ===== */
 function getFiltered(){
-  const q = ($('#search').value||'').toLowerCase();
-  const cat = $('#catFilter').value||'';
-  const st  = ($('#statusFilter').value||'').toLowerCase();
-  let arr = allMissions.slice();
+  const q=($('#search').value||'').toLowerCase();
+  const cat=$('#catFilter').value||'';
+  const st=($('#statusFilter').value||'').toLowerCase();
+  let arr=allMissions.slice();
 
-  if(cat) arr = arr.filter(m => deriveCategory(m.type)===cat);
-  if(st)  arr = arr.filter(m => (m.status||'').toLowerCase()===st);
-  if(q){
-    arr = arr.filter(m => (
-      `${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.destination||''}`
-    ).toLowerCase().includes(q));
-  }
-  if(currentScope==='history'){
-    arr = arr.filter(m => ['success','fail','abort'].includes((m.status||'').toLowerCase()));
-  }
+  if(cat) arr = arr.filter(m=>catOf(m.type)===cat);
+  if(st)  arr = arr.filter(m=>(m.status||'').toLowerCase()===st);
+  if(q)   arr = arr.filter(m => (`${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.destination||''}`.toLowerCase().includes(q)));
+
+  if(currentScope==='history') arr = arr.filter(m=>['success','fail','abort'].includes((m.status||'').toLowerCase()));
   return arr;
 }
 
 function renderFiltered(){
   filtered = getFiltered();
-
   $('#kpiCount').textContent = filtered.length.toLocaleString();
-  const rCount = filtered.filter(x=>deriveCategory(x.type)==='Resource').length;
-  $('#kpiMix').textContent = `${rCount} : ${filtered.length - rCount}`;
+  const r = filtered.filter(x=>catOf(x.type)==='Resource').length;
+  $('#kpiMix').textContent = `${r} : ${filtered.length-r}`;
   const payouts = filtered.map(m=>+m.payout_auec||0).filter(n=>n>0);
   const avg = payouts.length ? Math.round(payouts.reduce((a,b)=>a+b,0)/payouts.length) : 0;
   $('#kpiAvg').textContent = avg ? avg.toLocaleString() : '-';
@@ -310,51 +288,33 @@ function renderFiltered(){
     const m = filtered.find(x=>x.id===selectedId) || allMissions.find(x=>x.id===selectedId);
     renderInspector(m||null);
   }
-  // refresh ongoing whenever filters change (so right card feels alive)
   loadOngoing();
 }
 
-/* ========= List (left) ========= */
+/* ===== List ===== */
 function listItemHtml(m){
-  const cat = deriveCategory(m.type);
-  const route = (m.origin||m.destination)?`${esc(m.origin||'')} → ${esc(m.destination||'')}`:'—';
-  return `
-    <div class="mitem" data-id="${m.id}" onclick="inspect('${m.id}')">
-      <div class="mtitle">${esc(m.title||'(untitled)')}</div>
-      <div class="mmeta">${route} • ${m.start_time?fmtDate(m.start_time):'TBA'}</div>
-      <div class="mchips">
-        ${cat?`<span class="mchip">${cat}</span>`:''}
-        ${m.type?`<span class="mchip">${esc(m.type)}</span>`:''}
-        ${m.status?`<span class="mchip">${esc(m.status)}</span>`:''}
-        ${m.payout_auec?`<span class="mchip mono">${fmtNum(m.payout_auec)} aUEC</span>`:''}
-      </div>
-    </div>`;
+  const cat=catOf(m.type);
+  const route=(m.origin||m.destination)?`${esc(m.origin||'')} → ${esc(m.destination||'')}`:'—';
+  return `<div class="mitem" data-id="${m.id}" onclick="inspect('${m.id}')">
+    <div class="mtitle">${esc(m.title||'(untitled)')}</div>
+    <div class="mmeta">${route} • ${m.start_time?fmtDate(m.start_time):'TBA'}</div>
+    <div class="mchips">
+      ${cat?`<span class="mchip">${cat}</span>`:''}
+      ${m.type?`<span class="mchip">${esc(m.type)}</span>`:''}
+      ${m.status?`<span class="mchip">${esc(m.status)}</span>`:''}
+      ${m.payout_auec?`<span class="mchip mono">${fmtNum(m.payout_auec)} aUEC</span>`:''}
+    </div>
+  </div>`;
 }
-function renderList(rows){
-  const list=$('#mList'); const empty=$('#feedEmpty');
-  if(!rows.length){ list.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display='none';
-  list.innerHTML = rows.map(listItemHtml).join('');
-  if(selectedId){
-    const el = list.querySelector(`.mitem[data-id="${selectedId}"]`);
-    if(el) el.classList.add('active');
-  }
-}
+function renderList(rows){ $('#mList').innerHTML = rows.length ? rows.map(listItemHtml).join('') : '<div class="small">No missions found.</div>'; }
 
-/* ========= Inspector (right) ========= */
-function attachmentsHtml(arr){
-  if(!Array.isArray(arr)||!arr.length) return '<span class="small">None</span>';
-  return arr.map((a,i)=>`<a href="${esc(a?.url||'#')}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(a?.name?.trim()||`Attachment ${i+1}`)}</a>`).join('<br>');
-}
+/* ===== Inspector ===== */
 function renderInspector(m){
   const box=$('#inspector');
-  if(!m){
-    box.innerHTML = `<h2>Mission Details</h2><div class="small">Select a contract on the left to view its briefing.</div>`;
-    return;
-  }
-  selectedId = m.id;
-  const cat = deriveCategory(m.type);
-  box.innerHTML = `
+  if(!m){ box.innerHTML=`<h2>Mission Details</h2><div class="small">Select a contract on the left.</div>`; return; }
+  selectedId=m.id;
+  const cat=catOf(m.type);
+  box.innerHTML=`
     <h2>${esc(m.title||'(untitled)')}</h2>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 2px">
       ${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}
@@ -370,33 +330,22 @@ function renderInspector(m){
       <div style="margin-top:6px"><b>Tags:</b> ${esc(m.tags||'—')}</div>
     </div>
     <div class="hr"></div>
-    <div class="small"><b>Notes</b><br>${esc(m.notes||'—')}</div>
-    <div class="hr"></div>
-    <div class="small"><b>Attachments</b><br>${attachmentsHtml(m.attachments)}</div>
-    <div class="hr"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-accept" onclick="inspect('${m.id}')">OPEN</button>
       <button class="btn-accept" onclick="openAttendance('${m.id}','${esc(m.title||'')}')">ATTENDANCE</button>
-      <button class="btn-accept" onclick="openAttendance('${m.id}','${esc(m.title||'')}')">ACCEPT OFFER</button>
-    </div>
-  `;
-  $$('.mitem').forEach(x=>x.classList.toggle('active', x.dataset.id===m.id));
+    </div>`;
+  $$('.mitem').forEach(x=>x.classList.toggle('active',x.dataset.id===m.id));
 }
 function inspect(id){
-  const m = (filtered.find(x=>x.id===id) || allMissions.find(x=>x.id===id));
+  const m=(filtered.find(x=>x.id===id)||allMissions.find(x=>x.id===id));
   renderInspector(m||null);
-  if(window.matchMedia('(max-width:1100px)').matches){
-    document.getElementById('inspector').scrollIntoView({behavior:'smooth',block:'start'});
-  }
+  if(window.matchMedia('(max-width:1100px)').matches){ document.getElementById('inspector').scrollIntoView({behavior:'smooth',block:'start'}); }
 }
-window.inspect = inspect;
+window.inspect=inspect;
 
-/* ========= Ongoing (right card) ========= */
+/* ===== Ongoing Card ===== */
 async function loadOngoing(){
-  if(!sb || !session) return;
-  const space = document.getElementById('ongoingSpace');
-  if(!space) return;
-  space.innerHTML = '<span class="small">Loading…</span>';
+  if(!sb||!session) return;
+  const space=$('#ongoingSpace'); space.textContent='Loading…';
 
   const { data: att, error: e1 } = await sb
     .from('mission_attendees')
@@ -404,7 +353,7 @@ async function loadOngoing(){
     .eq('user_id', session.user.id)
     .eq('attendance','going');
 
-  if(e1 || !att?.length){ space.innerHTML = 'None'; return; }
+  if(e1 || !att?.length){ space.textContent='None'; return; }
 
   const { data: rows, error: e2 } = await sb
     .from('missions')
@@ -413,12 +362,13 @@ async function loadOngoing(){
     .in('status',['planned','active'])
     .order('start_time',{ascending:true});
 
-  if(e2 || !rows?.length){ space.innerHTML = 'None'; return; }
+  if(e2 || !rows?.length){ space.textContent='None'; return; }
 
   space.innerHTML = rows.map(r=>`
     <div class="ongoing-item">
       <div class="ongoing-title">${esc(r.title||'(untitled)')}</div>
-      <div>${esc(r.status||'')} • ${r.start_time?fmtDate(r.start_time):'TBA'}${r.origin||r.destination?` • ${esc(r.origin||'')} → ${esc(r.destination||'')}`:''}</div>
+      <div>${esc(r.status||'')} • ${r.start_time?fmtDate(r.start_time):'TBA'}
+      ${r.origin||r.destination?` • ${esc(r.origin||'')} → ${esc(r.destination||'')}`:''}</div>
       <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn-accept" onclick="inspect('${r.id}')">OPEN</button>
         <button class="btn-accept" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">ATTENDANCE</button>
@@ -426,64 +376,60 @@ async function loadOngoing(){
     </div>
   `).join('');
 }
-window.refreshOngoing = loadOngoing;
+window.refreshOngoing=loadOngoing;
 
-/* ========= Export CSV ========= */
+/* ===== CSV ===== */
 function exportCSV(){
-  const rows = getFiltered();
+  const rows=getFiltered();
   const cols=['title','category','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
-  const csv=[ cols.join(','), ...rows.map(r=>{
-    const rec={title:r.title||'',category:deriveCategory(r.type),type:r.type||'',status:r.status||'',origin:r.origin||'',destination:r.destination||'',start_time:r.start_time||'',hours:r.hours||'',payout_auec:r.payout_auec||'',tags:r.tags||'',notes:r.notes||''};
+  const csv=[cols.join(','), ...rows.map(r=>{
+    const rec={ title:r.title||'', category:catOf(r.type), type:r.type||'', status:r.status||'', origin:r.origin||'', destination:r.destination||'', start_time:r.start_time||'', hours:r.hours||'', payout_auec:r.payout_auec||'', tags:r.tags||'', notes:r.notes||'' };
     return cols.map(k=>`"${String(rec[k]).replace(/"/g,'""')}"`).join(',');
-  }) ].join('\n');
+  })].join('\n');
   const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 }
 
-/* ========= Attendance ========= */
-let ATT_MISSION_ID=null;
+/* ===== Attendance ===== */
+function roleOptionsHtml(ph){ return `<option value="">${ph}</option>`+(ROLES.map(r=>`<option value="${r.label}">${r.label}</option>`).join('')); }
+
 async function openAttendance(missionId,title=''){
-  ATT_MISSION_ID = missionId;
-  $('#attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
+  ATT_MISSION_ID=missionId;
+  $('#attTitle').textContent=`Attendance — ${title||missionId.slice(0,8)}`;
   $('#attModalMask').style.display='flex';
 
+  $('#attSelfRole').innerHTML=roleOptionsHtml('My role (optional)');
+  $('#attAddRole').innerHTML=roleOptionsHtml('Role (optional)');
+
   const [{ data: elev }, { data: mission }] = await Promise.all([
-    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.rpc('is_elevated',{u:session.user.id}),
     sb.from('missions').select('submitted_by').eq('id', missionId).single()
   ]);
-  const isOwner = mission?.submitted_by === session.user.id;
+  const isOwner = mission?.submitted_by===session.user.id;
   $('#attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
 
-  $('#attSelfRole').innerHTML = roleOptionsHtml('My role (optional)');
-  $('#attAddRole').innerHTML  = roleOptionsHtml('Role (optional)');
-
   try{
-    const { data: mine } = await sb
-      .from('mission_attendees')
-      .select('role_in_mission')
-      .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id })
-      .limit(1);
-    if(Array.isArray(mine)&&mine[0]) $('#attSelfRole').value = mine[0].role_in_mission||'';
-  }catch(_){}
+    const { data: mine } = await sb.from('mission_attendees').select('role_in_mission').match({ mission_id: ATT_MISSION_ID, user_id: session.user.id }).limit(1);
+    if(mine?.[0]) $('#attSelfRole').value = mine[0].role_in_mission||'';
+  }catch{}
 
-  $('#attIamGoing').onclick = async ()=>{
-    const role = ($('#attSelfRole').value||'').trim();
-    await sb.from('mission_attendees').upsert({ mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance:'going', role_in_mission: role||null },{ onConflict:'mission_id,user_id' });
+  $('#attIamGoing').onclick=async()=>{
+    const role=($('#attSelfRole').value||'').trim()||null;
+    await sb.from('mission_attendees').upsert({mission_id:ATT_MISSION_ID,user_id:session.user.id,attendance:'going',role_in_mission:role},{onConflict:'mission_id,user_id'});
     await loadAttendees(); await refreshOngoing();
   };
-  $('#attNotGoing').onclick = async ()=>{
-    await sb.from('mission_attendees').upsert({ mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance:'not_going' },{ onConflict:'mission_id,user_id' });
+  $('#attNotGoing').onclick=async()=>{
+    await sb.from('mission_attendees').upsert({mission_id:ATT_MISSION_ID,user_id:session.user.id,attendance:'not_going'},{onConflict:'mission_id,user_id'});
     await loadAttendees(); await refreshOngoing();
   };
-  $('#attWithdraw').onclick = async ()=>{
-    await sb.from('mission_attendees').delete().match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
+  $('#attWithdraw').onclick=async()=>{
+    await sb.from('mission_attendees').delete().match({mission_id:ATT_MISSION_ID,user_id:session.user.id});
     await loadAttendees(); await refreshOngoing();
   };
-  $('#attAddBtn').onclick = async ()=>{
-    const email = $('#attAddEmail').value.trim();
-    const role  = $('#attAddRole').value || null;
+  $('#attAddBtn').onclick=async()=>{
+    const email=$('#attAddEmail').value.trim(); const role=$('#attAddRole').value||null;
     if(!email){ alert('Enter an email'); return; }
-    const { error } = await sb.rpc('add_attendee_by_email', { p_mission: ATT_MISSION_ID, p_email: email, p_role: role, p_attendance:'going' });
+    const { error } = await sb.rpc('add_attendee_by_email',{p_mission:ATT_MISSION_ID,p_email:email,p_role:role,p_attendance:'going'});
     if(error){ alert('Add failed: '+error.message); return; }
     $('#attAddEmail').value=''; $('#attAddRole').value='';
     await loadAttendees(); await refreshOngoing();
@@ -495,44 +441,43 @@ function closeAttendance(){ $('#attModalMask').style.display='none'; ATT_MISSION
 window.openAttendance=openAttendance; window.closeAttendance=closeAttendance;
 
 async function loadAttendees(){
-  const list = $('#attList');
-  list.innerHTML = '<span class="small">Loading…</span>';
-  const { data, error } = await sb.from('v_mission_attendees_detailed').select('*').eq('mission_id', ATT_MISSION_ID).order('joined_at',{ascending:true});
-  if(error){ list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
-  if(!data?.length){ list.innerHTML = '<span class="small">No attendees yet.</span>'; return; }
+  const list=$('#attList'); list.textContent='Loading…';
+  const { data, error } = await sb.from('v_mission_attendees_detailed').select('*').eq('mission_id',ATT_MISSION_ID).order('joined_at',{ascending:true});
+  if(error){ list.innerHTML=`<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
+  if(!data?.length){ list.textContent='No attendees yet.'; return; }
 
   const [{ data: elev }, { data: mission }] = await Promise.all([
-    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.rpc('is_elevated',{u:session.user.id}),
     sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
   ]);
-  const canManageAll = (elev || mission?.submitted_by === session.user.id);
+  const canManageAll=(elev || mission?.submitted_by===session.user.id);
 
   list.innerHTML='';
   for(const a of data){
-    const chip = document.createElement('div');
-    chip.className='chip';
+    const chip=document.createElement('div');
+    chip.style.cssText='display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px';
     chip.setAttribute('data-attendance',(a.attendance||'').toLowerCase());
-    const options = ['<option value="">role</option>', ...(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`)].join('');
-    chip.innerHTML = `
+    const options=['<option value="">role</option>',...ROLES.map(r=>`<option value="${r.label}">${r.label}</option>`)].join('');
+    chip.innerHTML=`
       <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
-      <select data-uid="${a.user_id}" ${ (canManageAll || a.user_id===session.user.id) ? '' : 'disabled' }>${options}</select>
+      <select data-uid="${a.user_id}" ${ (canManageAll || a.user_id===session.user.id) ? '' : 'disabled' } style="background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text)">${options}</select>
       <span class="small" style="color:var(--muted)">${esc(a.attendance||'')}</span>
-      ${ (canManageAll || a.user_id===session.user.id) ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
+      ${ (canManageAll || a.user_id===session.user.id) ? `<button class="small-btn" data-uid="${a.user_id}" style="padding:2px 6px">x</button>` : '' }
     `;
-    const sel = chip.querySelector('select'); if(sel) sel.value = a.role_in_mission || '';
+    const sel=chip.querySelector('select'); sel.value=a.role_in_mission||'';
     if(sel && (canManageAll || a.user_id===session.user.id)){
-      sel.onchange = async (e)=>{
-        const newRole = e.target.value || null;
-        const targetUser = e.target.getAttribute('data-uid');
-        const { error: upErr } = await sb.from('mission_attendees').update({ role_in_mission: newRole }).match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+      sel.onchange=async(e)=>{
+        const newRole=e.target.value||null;
+        const target=e.target.getAttribute('data-uid');
+        const { error: upErr } = await sb.from('mission_attendees').update({role_in_mission:newRole}).match({mission_id:ATT_MISSION_ID,user_id:target});
         if(upErr){ alert('Update failed: '+upErr.message); e.target.value=a.role_in_mission||''; return; }
         await loadAttendees();
       };
     }
-    const x = chip.querySelector('.x');
-    if(x) x.onclick = async ()=>{
-      const targetUser = x.getAttribute('data-uid');
-      const { error: delErr } = await sb.from('mission_attendees').delete().match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+    const x=chip.querySelector('button.small-btn');
+    if(x) x.onclick=async()=>{
+      const target=x.getAttribute('data-uid');
+      const { error: delErr } = await sb.from('mission_attendees').delete().match({mission_id:ATT_MISSION_ID,user_id:target});
       if(delErr){ alert('Remove failed: '+delErr.message); return; }
       await loadAttendees(); await refreshOngoing();
     };
