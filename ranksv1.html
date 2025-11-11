@@ -283,6 +283,7 @@ const fmtDate = iso => {
   }).replace(/\s?([ap])m/i,'$1m');
 };
 const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
+const toTitle = s => (s||'').replace(/\b([a-z])(\w*)/gi, (m, a, b) => a.toUpperCase()+b.toLowerCase());
 
 // Derive category from type without changing DB
 const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
@@ -318,7 +319,9 @@ async function fetchRoles(){
 }
 function roleOptionsHtml(placeholder){
   const items = (ROLES.length?ROLES:DEFAULT_ROLES)
-    .map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
+    .map(r=>`<option value="${r.label}">${toTitle(r.label)}</option>`).join('');
+  return `<option value="">${toTitle(placeholder)}</option>` + items;
+}">${r.label}</option>`).join('');
   return `<option value="">${placeholder}</option>` + items;
 }
 function deriveCategory(type){
@@ -483,7 +486,7 @@ function renderOngoing(rows, errMsg){
         </div>
       </div>
       <span class=\"pill\">${esc(r.status)}</span>
-      <button class=\"ongoing-open\" onclick=\"openAttendance('${r.id}','${esc(r.title||'')}')\">Attendance</button>
+      <button class=\"ongoing-open\" onclick=\"openBrief('${r.id}','${esc(r.title||'')}')\">Attendance</button>
     </div>
   `).join('');
 }
