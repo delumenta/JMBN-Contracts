@@ -14,7 +14,7 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#111;
   --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
   --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
@@ -52,7 +52,7 @@ body{
 @keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
 
 /* Panels + controls */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 10px rgba(214,180,76,.15)}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 button,.small-btn{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
 button:hover,.small-btn:hover{background:var(--accent);color:#000}
@@ -63,7 +63,7 @@ input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px
 /* KPI */
 .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 6px}
 @media(max-width:880px){.kpis{grid-template-columns:1fr}}
-.kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)}
+.kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08)}
 .kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
 .kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
 .kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
@@ -75,7 +75,7 @@ input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px
   border:1px solid var(--border);
   border-radius:12px;
   padding:10px;
-  box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12);
+  box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08);
 }
 .ongoing-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;color:var(--accent)}
 .ongoing-list{display:flex;flex-direction:column;gap:6px}
@@ -98,7 +98,7 @@ table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
 th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
 th{color:var(--accent);background:#080808;font-weight:500}
 tr:nth-child(even){background:#111}
-tr:hover{background:rgba(214,180,76,.08)}
+tr:hover{background:rgba(214,180,76,.05)}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 .pill.res{color:#f2d675;border-color:#f2d675}
 .pill.op{color:#7bd88f;border-color:#7bd88f}
@@ -204,8 +204,7 @@ tr:hover{background:rgba(214,180,76,.08)}
             <th>Status</th>
             <th>Origin</th>
             <th>Destination</th>
-            <th class="nowrap">Date</th>
-            <th class="nowrap">Hours</th>
+            <th class="nowrap">Date &amp; Time</th>
             <th class="nowrap">Payout (aUEC)</th>
             <th>Tags</th>
             <th>Attachments</th>
@@ -267,7 +266,14 @@ tr:hover{background:rgba(214,180,76,.08)}
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
-const fmtDate=iso=>iso? new Date(iso).toLocaleString() : '';
+const fmtDate = iso => {
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleString('en-SG', {
+    day:'numeric', month:'long', year:'numeric',
+    hour:'numeric', minute:'2-digit', hour12:true
+  }).replace(/\s?([ap])m/i,'$1m');
+};
 const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
 // Derive category from type without changing DB
@@ -302,7 +308,6 @@ function row(r){
     <td>${esc(r.origin||'')}</td>
     <td>${esc(r.destination||'')}</td>
     <td class=\"nowrap mono\">${fmtDate(r.start_time)}</td>
-    <td class=\"mono\">${r.hours ?? ''}</td>
     <td class=\"mono\">${fmtNum(r.payout_auec)}</td>
     <td>${esc(r.tags||'')}</td>
     <td>${attachmentsCell(r.attachments)}</td>
@@ -316,7 +321,7 @@ function render(list){
   const oCount = (list||[]).length - rCount;
   $('#kpiMix').textContent = `${rCount} : ${oCount}`;
   tbody.innerHTML = list.length ? list.map(row).join('') :
-    `<tr><td colspan=\"13\" class=\"small\" style=\"padding:10px\">No missions found.</td></tr>`;
+    `<tr><td colspan=\"12\" class=\"small\" style=\"padding:10px\">No missions found.</td></tr>`;
 }
 
 /* ===== Filter + CSV ===== */
@@ -338,7 +343,7 @@ $('#catFilter').addEventListener('input', ()=>render(getFiltered()));
 
 $('#exportCsv').addEventListener('click', ()=>{
   const rows = getFiltered();
-  const cols = ['title','category','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
+  const cols = ['title','category','type','status','origin','destination','start_time','payout_auec','tags','notes'];
   const csv = [
     cols.join(','),
     ...rows.map(r => cols.map(k=>{
@@ -368,7 +373,7 @@ async function loadMissions(){
     .order('created_at',{ascending:false});
 
   if(error){
-    $('#tbody').innerHTML = `<tr><td colspan=\"13\" class=\"small\" style=\"padding:10px\">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    $('#tbody').innerHTML = `<tr><td colspan=\"12\" class=\"small\" style=\"padding:10px\">Failed to load missions: ${esc(error.message)}</td></tr>`;
     return;
   }
   cache = data || [];
