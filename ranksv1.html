@@ -113,6 +113,8 @@ tr:hover{background:rgba(214,180,76,.05)}
 .modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
 .modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
 .modal .chip .x:hover{background:#111;color:#ff6b6b}
+.modal .chip .edit{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:0 6px}
+.modal .chip .edit:hover{background:#111;color:#000;background:var(--accent)}
 .modal .list{display:flex;gap:8px;flex-wrap:wrap}
 
 /* Optional: visual cue for "not_going" chips */
@@ -278,6 +280,7 @@ const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
 // Derive category from type without changing DB
 const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
+const ROLE_OPTIONS = ['pilot','escort','hauler','miner','medic','gunner','engineer','recon'];
 function deriveCategory(type){
   const t=(type||'').toString().trim().toLowerCase();
   if(RESOURCE_TYPES.has(t)) return 'Resource';
@@ -458,6 +461,16 @@ async function openAttendance(missionId, title=''){
       user_id: session.user.id,
       attendance: 'going'
     }, { onConflict: 'mission_id,user_id' });
+
+    const input = prompt('Assign a role? (e.g. ' + ROLE_OPTIONS.join(', ') + ')
+Leave blank to skip.');
+    const role = (input||'').trim();
+    if(role){
+      await sb.from('mission_attendees')
+        .update({ role_in_mission: role })
+        .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
+    }
+
     await loadAttendees();
     await refreshOngoing();
   };
@@ -533,8 +546,27 @@ async function loadAttendees(){
     chip.innerHTML = `
       <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
       <span class="small" style="color:var(--muted)">${a.role_in_mission ? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</span>
+      ${ (canManageAll || a.user_id === session.user.id) ? `<button class="edit" title="Set role" data-uid="${a.user_id}">role</button>` : '' }
       ${ (canManageAll || a.user_id === session.user.id) ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
     `;
+    const edit = chip.querySelector('.edit');
+    if(edit){
+      edit.onclick = async () => {
+        const targetUser = edit.getAttribute('data-uid');
+        const current = a.role_in_mission || '';
+        const next = prompt('Set role for this attendee (e.g. ' + ROLE_OPTIONS.join(', ') + ')', current || '');
+        if(next!==null){
+          const role = next.trim();
+          const { error: upErr } = await sb
+            .from('mission_attendees')
+            .update({ role_in_mission: role || null })
+            .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+          if(upErr){ alert('Update failed: ' + upErr.message); return; }
+          await loadAttendees();
+        }
+      };
+    }
+
     const x = chip.querySelector('.x');
     if(x){
       x.onclick = async () => {
