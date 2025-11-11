@@ -1,394 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN – Progression</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Mission Log</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
 :root{
-  --bg:#000; --line:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --fs:14px;
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
-html,body{margin:0}
 body{
-  padding:14px; font-family:'Play',system-ui,sans-serif; font-size:var(--fs); color:var(--text);
   background:
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
+  color:var(--text);
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* ↓ Make certification images smaller and consistent */
-.cert .thumb{
-  height:110px;        /* was 160px */
-  padding:8px;         /* a little tighter */
-}
-.cert .thumb img{
-  width:auto;          /* stop using % of card */
-  max-width:110px;     /* hard cap the graphic */
-  max-height:100%;
-  height:auto;
-  object-fit:contain;
-}
+/* Header (fallback styles; actual header injected) */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
 
-/* Optional: tiny tweak per screen size */
-@media (min-width:1200px){
-  .cert .thumb{ height:130px; }
-  .cert .thumb img{ max-width:120px; }
+/* Shiny nav */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  overflow:hidden;
 }
-@media (max-width:900px){
-  .cert .thumb{ height:100px; }
-  .cert .thumb img{ max-width:90px; }
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
+.nav-btn.active::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
+
+/* Panels + controls */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+button,.small-btn{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
+button:hover,.small-btn:hover{background:var(--accent);color:#000}
+.btn-primary{background:var(--accent);color:#000}
+input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+.small{font-size:var(--fs-small);color:var(--muted)}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 6px}
+@media(max-width:880px){.kpis{grid-template-columns:1fr}}
+.kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)}
+.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* Ongoing card */
+.ongoing{
+  margin-top:8px;
+  background:linear-gradient(180deg,#0b0b0b,#080808);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12);
 }
-
-  
-/* Header (replaced by header.html if available) */
-.brand{display:flex;align-items:center;gap:10px;padding-bottom:8px;margin:0 0 10px;border-bottom:1px solid var(--line)}
-.brand-logo{
-  width:44px;height:44px;background:#000;border:none;object-fit:contain;
-  box-shadow:inset 0 0 0 9999px #000; /* hard mask to kill any baked rim */
+.ongoing-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;color:var(--accent)}
+.ongoing-list{display:flex;flex-direction:column;gap:6px}
+.ongoing-item{
+  display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;
+  background:#0c0c0c;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px
 }
-.brand h1{margin:0;color:var(--accent);font-weight:700;font-size:clamp(18px,2.2vw,22px)}
-
-/* Page shell + simple grid (no cards) */
-.shell{max-width:1180px;margin:0 auto}
-.grid{display:grid;grid-template-columns:340px 1fr;gap:18px}
-@media(max-width:1020px){.grid{grid-template-columns:1fr}}
-
-/* Left column blocks */
-.block{padding:8px 0;border-bottom:1px solid rgba(214,180,76,.28)}
-.block:last-child{border-bottom:none}
-.block-title{margin:0 0 8px;color:var(--accent);font-weight:700;font-size:16px}
-
-/* Rows (clean, line-separated) */
-.row{
-  display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
-  padding:8px 2px;border-bottom:1px solid rgba(214,180,76,.22)
+@media(max-width:680px){.ongoing-item{grid-template-columns:1fr}}
+.ongoing-title{font-weight:700;color:var(--accent)}
+.ongoing-meta{font-size:12px;color:var(--muted)}
+.ongoing-open{
+  padding:6px 10px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--accent);cursor:pointer
 }
-.row:last-child{border-bottom:none}
-.row:hover{background:rgba(214,180,76,.06)}
-.kv{display:flex;flex-direction:column}
-.k{color:var(--muted);font-size:12px}
-.v{font-weight:800}
+.ongoing-open:hover{background:var(--accent);color:#000}
 
-/* Rank glyphs with black mask */
-.rankImg{
-  width:46px;height:46px;border-radius:10px;background:#000;object-fit:contain;display:block;
-  box-shadow:inset 0 0 0 9999px #000; /* masks any baked gold frame in PNG */
+/* Table */
+.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
+th{color:var(--accent);background:#080808;font-weight:500}
+tr:nth-child(even){background:#111}
+tr:hover{background:rgba(214,180,76,.08)}
+.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
+.pill.res{color:#f2d675;border-color:#f2d675}
+.pill.op{color:#7bd88f;border-color:#7bd88f}
+.nowrap{white-space:nowrap}
+.mono{font-variant-numeric:tabular-nums}
+
+/* Attendance Modal */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
+.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+.modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
+.modal .chip .x:hover{background:#111;color:#ff6b6b}
+.modal .list{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Optional: visual cue for "not_going" chips */
+.chip[data-attendance="not_going"]{
+  border-color: rgba(255,107,107,.6);
+  color: #ff6b6b;
 }
-
-/* Pills and button */
-.pill{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:6px 12px;border:1px solid var(--line);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);font-size:12px;font-weight:800
-}
-.btn{cursor:pointer;transition:filter .18s ease,transform .06s ease}
-.btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
-
-/* Requirement bars (no boxes) */
-.pb{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;padding:8px 2px;border-bottom:1px solid rgba(214,180,76,.22)}
-.pb:last-child{border-bottom:none}
-.pb .label{color:var(--muted);font-size:12px}
-.track{height:12px;border-radius:999px;background:#0a0a0a;box-shadow:inset 0 0 0 1px rgba(214,180,76,.3);overflow:hidden}
-.fill{height:100%;width:0%;background:linear-gradient(180deg,var(--accent),#d6b44c)}
-.val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
-
-/* Right column sections */
-.section{position:relative;padding-top:4px}
-.ribbon{
-  position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:8px 0;
-  background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.76));border-bottom:1px solid var(--line);
-  backdrop-filter:saturate(1.15) blur(2px)
-}
-.ribbon h2{margin:0;color:var(--accent);font-size:18px}
-.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.5),transparent);border-radius:999px;margin:14px 0}
-
-/* History list */
-.history{margin-top:8px}
-.hitem{padding:10px 2px;border-bottom:1px dashed rgba(214,180,76,.28)}
-.hitem:last-child{border-bottom:none}
-.when{color:var(--muted);font-size:12px}
-.arrow{color:var(--accent)}
-
-/* Certifications grid (no inner cards) */
-.certGrid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;margin-top:10px
-}
-.cert{
-  background:transparent;border-radius:18px;text-align:center;
-  transition:transform .15s ease, box-shadow .2s ease, filter .2s ease; padding:8px 6px 12px;
-}
-.thumb{
-  width:220px;max-width:100%;height:220px;max-height:min(220px,55vw);
-  margin:0 auto 8px;display:flex;align-items:center;justify-content:center;border-radius:14px;
-  background:#0b0b0b;box-shadow:inset 0 0 0 1px rgba(214,180,76,.25)
-}
-.thumb img{max-width:86%;max-height:86%;display:block}
-.cert .title{font-weight:700;margin-top:6px}
-.cert .code{font-size:12px;color:var(--muted)}
-.cert.owned:hover{transform:translateY(-2px);box-shadow:0 0 14px rgba(214,180,76,.25)}
-.cert.dim{opacity:.55;filter:grayscale(.65) contrast(.9)}
-.cert.dim:hover{opacity:.75;filter:grayscale(.35) contrast(1)}
-
-.small{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-
-<!-- Header mount -->
-<div id="header-container" class="brand shell">
-  <img class="brand-logo" alt="JMBN"
-       src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
-  <h1>Rank Progression</h1>
-</div>
-<script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    if (res.ok) {
+  <!-- 🔁 Shared header mount -->
+  <div id="header-container"></div>
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
       const html = await res.text();
       document.getElementById('header-container').outerHTML = html;
+
+      // Highlight current tab (triggers shiny sweep ✨)
       requestAnimationFrame(() => {
-        const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
-        document.querySelectorAll('.nav-btn').forEach(a=>{
-          const href=(a.getAttribute('href')||'').toLowerCase();
-          if(href===here || (here==='' && href==='index.html')) a.classList.add('active');
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href')||'').toLowerCase();
+          if (href === here) {
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
+          }
         });
       });
+    } catch (e) {
+      console.warn('Header load failed:', e);
     }
-  } catch {}
-})();
-</script>
+  })();
+  </script>
 
-<div class="shell">
-  <div class="grid">
-    <!-- LEFT: Overview + Requirements -->
-    <aside>
-      <div class="block">
-        <div class="block-title">Overview</div>
+  <!-- Main Panel -->
+  <div class="panel">
+    <!-- Controls -->
+    <div class="controls">
+      <input id="search" placeholder="Search... (title, type, status, tags)">
+      <select id="catFilter">
+        <option value="">All Categories</option>
+        <option value="Resource">Resource</option>
+        <option value="Operations">Operations</option>
+      </select>
+      <select id="statusFilter">
+        <option value="">All Status</option>
+        <option>planned</option>
+        <option>active</option>
+        <option>success</option>
+        <option>fail</option>
+        <option>abort</option>
+      </select>
+      <button id="exportCsv">Export CSV</button>
+    </div>
 
-        <div class="row">
-          <img id="curImg" class="rankImg" alt="Current Rank">
-          <div class="kv">
-            <div class="k">Current Rank</div>
-            <div class="v" id="curRank">—</div>
-          </div>
-          <span class="pill" id="curPg">PG: —</span>
-        </div>
-
-        <div class="row">
-          <img id="nextImg" class="rankImg" alt="Next Rank">
-          <div class="kv">
-            <div class="k">Next Rank</div>
-            <div class="v" id="nextName">—</div>
-          </div>
-          <span class="pill" id="nextPg">PG: —</span>
-        </div>
-
-        <div class="row" style="justify-content:flex-end">
-          <button class="pill btn" id="btnPromote" disabled title="Becomes available when all targets are met">Request Promotion</button>
-        </div>
+    <!-- KPI -->
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-title">Total Missions</div>
+        <div class="kpi-value" id="kpiCount">0</div>
+        <div class="kpi-sub">after filters</div>
       </div>
-
-      <div class="block">
-        <div class="block-title">Requirements</div>
-
-        <div class="pb">
-          <div class="label">Missions</div>
-          <div class="track"><div id="pbMissions" class="fill"></div></div>
-          <div class="val" id="valMissions">0 / 0</div>
-        </div>
-
-        <div class="pb">
-          <div class="label">Hours</div>
-          <div class="track"><div id="pbHours" class="fill"></div></div>
-          <div class="val" id="valHours">0 / 0</div>
-        </div>
-
-        <div class="pb">
-          <div class="label">Certifications</div>
-          <div class="track"><div id="pbCerts" class="fill"></div></div>
-          <div class="val" id="valCerts">0 / 0</div>
-        </div>
-
-        <div class="small" id="note" style="margin-top:6px">Promotion is available when all targets are met.</div>
+      <div class="kpi">
+        <div class="kpi-title">Resource : Ops</div>
+        <div class="kpi-value" id="kpiMix">0 : 0</div>
+        <div class="kpi-sub">derived from type</div>
       </div>
-    </aside>
+    </div>
 
-    <!-- RIGHT: History + Certifications -->
-    <main>
-      <section class="section">
-        <div class="ribbon"><h2>History</h2></div>
-        <div id="history" class="history">
-          <div class="small">Loading…</div>
-        </div>
-      </section>
+    <!-- Ongoing Missions (user-specific) -->
+    <div class="ongoing">
+      <div class="ongoing-head">
+        <strong>Ongoing Missions</strong>
+        <span class="small" id="ongoingCount">(0)</span>
+      </div>
+      <div id="ongoingList" class="ongoing-list"></div>
+    </div>
 
-      <div class="sep"></div>
-
-      <section class="section">
-        <div class="ribbon"><h2>Certifications</h2></div>
-        <div id="certGrid" class="certGrid">—</div>
-        <div class="small" style="margin-top:8px">Dim badges are not yet earned.</div>
-      </section>
-    </main>
+    <!-- Table -->
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Mission Title</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Origin</th>
+            <th>Destination</th>
+            <th class="nowrap">Date</th>
+            <th class="nowrap">Hours</th>
+            <th class="nowrap">Payout (aUEC)</th>
+            <th>Tags</th>
+            <th>Attachments</th>
+            <th>Notes</th>
+            <th class="nowrap">Attendance</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- Supabase -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
+  <!-- Attendance Modal -->
+  <div id="attModalMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+        <button class="small-btn" onclick="closeAttendance()">Close</button>
+      </div>
+
+      <div class="row">
+        <button id="attIamGoing" class="small-btn">I’m going</button>
+        <button id="attNotGoing" class="small-btn">Not going</button>
+        <button id="attWithdraw" class="small-btn">Withdraw</button>
+        <span class="small">These toggle <b>your</b> attendance.</span>
+      </div>
+
+      <div id="attElevatedTools" class="row" style="display:none">
+        <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+          <option value="">Role (optional)</option>
+          <option>pilot</option><option>escort</option><option>hauler</option><option>miner</option><option>medic</option>
+        </select>
+        <button id="attAddBtn" class="small-btn">Add</button>
+        <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
+      </div>
+
+      <div class="row">
+        <strong class="small">Attendees:</strong>
+        <div id="attList" class="list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔐 Auth & shared client -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
+
 <script>
-const $ = s => document.querySelector(s);
-let session=null, sb=null, me=null;
+/* ===== Active nav highlight (fallback) ===== */
+(function(){
+  const here = location.pathname.split('/').pop() || 'mission-log.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
+  });
+})();
 
-/* Progress bar helper */
-function setFill(sel, pct){
-  const el = $(sel);
-  const x  = Math.max(0, Math.min(1, Number(pct)||0));
-  if(el) el.style.width = (x*100) + '%';
+/* ===== Helpers ===== */
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
+const fmtDate=iso=>iso? new Date(iso).toLocaleString() : '';
+const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
+
+// Derive category from type without changing DB
+const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
+function deriveCategory(type){
+  const t=(type||'').toString().trim().toLowerCase();
+  if(RESOURCE_TYPES.has(t)) return 'Resource';
+  return 'Operations'; // investigation, recon, cqb, vbss, medical, escort, etc.
 }
 
-/* Rank image from bucket */
-async function fetchRankImage(code){
-  if(!code) return '';
-  try{
-    return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl || '';
-  }catch{ return ''; }
+/* ===== State ===== */
+let cache=[]; // all missions
+let session=null, sb=null;
+const tbody = $('#tbody');
+
+/* ===== Render ===== */
+function attachmentsCell(arr){
+  if(!Array.isArray(arr)||!arr.length) return '';
+  return arr.map((a,i)=>{
+    const name = a?.name?.trim() || `Attachment ${i+1}`;
+    const url  = a?.url || '#';
+    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
+  }).join(', ');
+}
+function row(r){
+  const cat = deriveCategory(r.type);
+  return `<tr>
+    <td><b style=\"color:var(--accent)\">${esc(r.title||'(untitled)')}</b></td>
+    <td>${cat?`<span class=\"pill ${cat==='Resource'?'res':'op'}\">${cat}</span>`:''}</td>
+    <td>${r.type?`<span class=\"pill\">${esc(r.type)}</span>`:''}</td>
+    <td>${r.status?`<span class=\"pill\">${esc(r.status)}</span>`:''}</td>
+    <td>${esc(r.origin||'')}</td>
+    <td>${esc(r.destination||'')}</td>
+    <td class=\"nowrap mono\">${fmtDate(r.start_time)}</td>
+    <td class=\"mono\">${r.hours ?? ''}</td>
+    <td class=\"mono\">${fmtNum(r.payout_auec)}</td>
+    <td>${esc(r.tags||'')}</td>
+    <td>${attachmentsCell(r.attachments)}</td>
+    <td>${esc(r.notes||'')}</td>
+    <td><button class=\"small-btn\" onclick=\"openAttendance('${r.id}','${esc(r.title||'')}')\">View</button></td>
+  </tr>`;
+}
+function render(list){
+  $('#kpiCount').textContent = (list||[]).length.toLocaleString();
+  const rCount = (list||[]).filter(x=>deriveCategory(x.type)==='Resource').length;
+  const oCount = (list||[]).length - rCount;
+  $('#kpiMix').textContent = `${rCount} : ${oCount}`;
+  tbody.innerHTML = list.length ? list.map(row).join('') :
+    `<tr><td colspan=\"13\" class=\"small\" style=\"padding:10px\">No missions found.</td></tr>`;
 }
 
-/* Load progression + next rank + bars */
-async function loadProgress(){
-  const { data: prog } = await sb
-    .from('v_user_rank_progress')
-    .select('*')
-    .eq('user_id', me)
-    .maybeSingle();
-
-  $('#curRank').textContent   = prog?.current_name || '(unranked)';
-  $('#curPg').textContent     = `PG: ${prog?.current_paygrade || '—'}`;
-  $('#nextName').textContent  = prog?.next_name || '—';
-  $('#nextPg').textContent    = `PG: ${prog?.next_paygrade || '—'}`;
-
-  const curImg = await fetchRankImage(prog?.current_code);
-  const nxtImg = await fetchRankImage(prog?.next_code);
-  if (curImg){ $('#curImg').src = curImg; $('#curImg').style.visibility='visible'; } else { $('#curImg').style.visibility='hidden'; }
-  if (nxtImg){ $('#nextImg').src = nxtImg; $('#nextImg').style.visibility='visible'; } else { $('#nextImg').style.visibility='hidden'; }
-
-  const { data: up } = await sb
-    .from('v_user_progress')
-    .select('*')
-    .eq('user_id', me)
-    .maybeSingle();
-
-  const m = Number(up?.missions_attended || 0);
-  const h = Number(up?.hours_total || 0);
-  const c = Number(up?.certifications_total || 0);
-
-  const mt = Number(prog?.missions_target || 0);
-  const ht = Number(prog?.hours_target || 0);
-  const ct = Number(prog?.certification_target || 0);
-
-  $('#valMissions').textContent = `${m} / ${mt}`;
-  $('#valHours').textContent    = `${h} / ${ht}`;
-  $('#valCerts').textContent    = `${c} / ${ct}`;
-
-  setFill('#pbMissions', mt ? Math.min(1, m/mt) : 1);
-  setFill('#pbHours',    ht ? Math.min(1, h/ht) : 1);
-  setFill('#pbCerts',    ct ? Math.min(1, c/ct) : 1);
-
-  const allMet = (!!prog?.next_code) && (!mt || m>=mt) && (!ht || h>=ht) && (!ct || c>=ct);
-  $('#btnPromote').disabled = !allMet;
-  $('#note').textContent = !prog?.next_code
-    ? 'You are at the highest rank or next rank is not configured.'
-    : allMet ? 'All requirements met. You can request promotion.'
-             : 'Promotion is available when all targets are met.';
+/* ===== Filter + CSV ===== */
+function getFiltered(){
+  const q = ($('#search').value||'').toLowerCase();
+  const cat = ($('#catFilter').value||'');
+  const st = ($('#statusFilter').value||'').toLowerCase();
+  let arr = cache.slice();
+  if(cat) arr = arr.filter(x => deriveCategory(x.type)===cat);
+  if(st) arr = arr.filter(x => (x.status||'').toLowerCase()===st);
+  if(q) arr = arr.filter(x =>
+    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`
+    .toLowerCase().includes(q));
+  return arr;
 }
+$('#search').addEventListener('input', ()=>render(getFiltered()));
+$('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
+$('#catFilter').addEventListener('input', ()=>render(getFiltered()));
 
-/* Rank history */
-async function loadHistory(){
-  const { data, error } = await sb
-    .from('rank_changes')
-    .select('from_rank_code,to_rank_code,changed_by,created_at,reason')
-    .eq('user_id', me)
-    .order('created_at', { ascending:false })
-    .limit(12);
+$('#exportCsv').addEventListener('click', ()=>{
+  const rows = getFiltered();
+  const cols = ['title','category','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
+  const csv = [
+    cols.join(','),
+    ...rows.map(r => cols.map(k=>{
+      const v = k==='category' ? deriveCategory(r.type) : (r[k]==null?'':String(r[k]).replace(/\"/g,'\"\"'));
+      return `"${v}"`;
+    }).join(','))
+  ].join('
+');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+});
 
-  const host = $('#history');
-  if(error){ host.innerHTML = '<div class="small">Failed to load history.</div>'; return; }
-  if(!data?.length){ host.innerHTML = '<div class="small">No changes yet.</div>'; return; }
-
-  host.innerHTML = data.map(r=>{
-    const when = new Date(r.created_at).toLocaleString();
-    const who  = r.changed_by?.slice(0,8) || 'system';
-    const from = r.from_rank_code || '—';
-    const to   = r.to_rank_code || '—';
-    const why  = r.reason ? ` — <span class="small">${r.reason}</span>` : '';
-    return `<div class="hitem">
-              <span class="when">${when}</span> •
-              ${from} <span class="arrow">→</span> <b style="color:var(--accent)">${to}</b> • by ${who}${why}
-            </div>`;
-  }).join('');
-}
-
-/* Certifications (grid, no inner cards) */
-async function loadCerts(){
-  const { data, error } = await sb
-    .from('v_user_certifications')
-    .select('certification_code,name,image_url,owned,sort_order,user_id')
-    .or(`user_id.eq.${me},user_id.is.null`)
-    .order('sort_order', { ascending:true });
-
-  const grid = $('#certGrid');
-  if (error){ grid.textContent = 'Failed to load certifications.'; return; }
-  if (!data?.length){ grid.textContent = '—'; return; }
-
-  grid.innerHTML = data.map(row=>{
-    const owned = !!row.owned;
-    const cls   = owned ? 'cert owned' : 'cert dim';
-    const img   = row.image_url || '';
-    const code  = row.certification_code || '';
-    const name  = row.name || code || 'Certification';
-    return `
-      <div class="${cls}" title="${owned?'Obtained':'Not earned'}" tabindex="0">
-        <div class="thumb">${img?`<img src="${img}" alt="${name}">`:''}</div>
-        <div class="title">${name}</div>
-        <div class="code">${code}</div>
-      </div>`;
-  }).join('');
-}
-
-/* Promote */
-async function promote(){
-  const { data, error } = await sb.rpc('request_promotion', { p_user: me });
-  if(error){ alert('Promotion failed: ' + error.message); return; }
-  if(!data?.ok){ alert(data?.message || 'Not eligible.'); return; }
-  alert('Promoted to ' + (data.to || 'next rank') + '!');
-  await loadProgress(); await loadHistory();
-}
-
-/* Boot */
+/* ===== Load (uses shared Supabase from auth.js) ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();
+  session = await requireAuth();        // redirects to auth.html if not logged in
   if(!session) return;
   sb = getSupabase();
-  me = session.user.id;
-
-  $('#btnPromote').onclick = promote;
-
-  await loadProgress();
-  await loadHistory();
-  await loadCerts();
+  await loadMissions();
+  await loadOngoing();
 });
+
+async function loadMissions(){
+  const { data, error } = await sb
+    .from('missions')
+    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at')
+    .order('created_at',{ascending:false});
+
+  if(error){
+    $('#tbody').innerHTML = `<tr><td colspan=\"13\" class=\"small\" style=\"padding:10px\">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    return;
+  }
+  cache = data || [];
+  render(getFiltered());
+}
+
+/* ===== Ongoing (user “going” + Planned/Active) ===== */
+async function loadOngoing(){
+  if(!session || !sb) return;
+
+  const { data: att, error: err1 } = await sb
+    .from('mission_attendees')
+    .select('mission_id')
+    .eq('user_id', session.user.id)
+    .eq('attendance', 'going');
+
+  if(err1){ return renderOngoing([], 'Failed to load: ' + err1.message); }
+
+  const ids = (att||[]).map(a => a.mission_id);
+  if(!ids.length){ return renderOngoing([]); }
+
+  const { data: rows, error: err2 } = await sb
+    .from('missions')
+    .select('id,title,status,start_time,origin,destination')
+    .in('id', ids)
+    .in('status', ['planned','active'])
+    .order('start_time', { ascending: true });
+
+  if(err2){ return renderOngoing([], 'Failed to load: ' + err2.message); }
+
+  renderOngoing(rows||[]);
+}
+function renderOngoing(rows, errMsg){
+  const list = document.getElementById('ongoingList');
+  const count = document.getElementById('ongoingCount');
+  count.textContent = `(${rows?.length || 0})`;
+
+  if(errMsg){
+    list.innerHTML = `<div class=\"small\" style=\"color:var(--bad)\">${esc(errMsg)}</div>`;
+    return;
+  }
+  if(!rows || !rows.length){
+    list.innerHTML = `<div class=\"small\">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
+    return;
+  }
+
+  list.innerHTML = rows.map(r => `
+    <div class=\"ongoing-item\">
+      <div>
+        <div class=\"ongoing-title\">${esc(r.title || '(untitled)')}</div>
+        <div class=\"ongoing-meta\">
+          ${esc(r.status || '')} • ${r.start_time ? fmtDate(r.start_time) : 'TBA'}
+          ${r.origin || r.destination ? ` • ${esc(r.origin||'')} → ${esc(r.destination||'')}` : ''}
+        </div>
+      </div>
+      <span class=\"pill\">${esc(r.status)}</span>
+      <button class=\"ongoing-open\" onclick=\"openAttendance('${r.id}','${esc(r.title||'')}')\">Attendance</button>
+    </div>
+  `).join('');
+}
+window.refreshOngoing = loadOngoing;
+
+/* ===== Attendance popup logic ===== */
+let ATT_MISSION_ID = null;
+
+async function openAttendance(missionId, title=''){
+  ATT_MISSION_ID = missionId;
+  document.getElementById('attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
+  document.getElementById('attModalMask').style.display = 'flex';
+
+  // show elevated tools if admin/officer or mission owner
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', missionId).single()
+  ]);
+  const isOwner = mission?.submitted_by === session.user.id;
+  document.getElementById('attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
+
+  document.getElementById('attIamGoing').onclick = async () => {
+    await sb.from('mission_attendees').upsert({
+      mission_id: ATT_MISSION_ID,
+      user_id: session.user.id,
+      attendance: 'going'
+    }, { onConflict: 'mission_id,user_id' });
+    await loadAttendees();
+    await refreshOngoing();
+  };
+
+  document.getElementById('attNotGoing').onclick = async () => {
+    await sb.from('mission_attendees').upsert({
+      mission_id: ATT_MISSION_ID,
+      user_id: session.user.id,
+      attendance: 'not_going'
+    }, { onConflict: 'mission_id,user_id' });
+    await loadAttendees();
+    await refreshOngoing();
+  };
+
+  document.getElementById('attWithdraw').onclick = async () => {
+    await sb.from('mission_attendees')
+      .delete()
+      .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
+    await loadAttendees();
+    await refreshOngoing();
+  };
+
+  document.getElementById('attAddBtn').onclick = async () => {
+    const email = document.getElementById('attAddEmail').value.trim();
+    const role  = document.getElementById('attAddRole').value || null;
+    if(!email){ alert('Enter an email'); return; }
+    const { error } = await sb.rpc('add_attendee_by_email', {
+      p_mission: ATT_MISSION_ID,
+      p_email: email,
+      p_role: role,
+      p_attendance: 'going'
+    });
+    if(error){ alert('Add failed: ' + error.message); return; }
+    document.getElementById('attAddEmail').value=''; document.getElementById('attAddRole').value='';
+    await loadAttendees();
+    await refreshOngoing();
+  };
+
+  await loadAttendees();
+}
+
+function closeAttendance(){
+  document.getElementById('attModalMask').style.display = 'none';
+  ATT_MISSION_ID = null;
+}
+window.openAttendance = openAttendance;
+window.closeAttendance = closeAttendance;
+
+async function loadAttendees(){
+  const list = document.getElementById('attList');
+  list.innerHTML = '<span class="small">Loading…</span>';
+
+  const { data, error } = await sb
+    .from('v_mission_attendees_detailed')
+    .select('*')
+    .eq('mission_id', ATT_MISSION_ID)
+    .order('joined_at', { ascending: true });
+
+  if(error){ list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
+  if(!data?.length){ list.innerHTML = '<span class="small">No attendees yet.</span>'; return; }
+
+  const [{ data: elev }, { data: mission }] = await Promise.all([
+    sb.rpc('is_elevated', { u: session.user.id }),
+    sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
+  ]);
+  const canManageAll = (elev || mission?.submitted_by === session.user.id);
+
+  list.innerHTML = '';
+  for(const a of data){
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.setAttribute('data-attendance', (a.attendance || '').toLowerCase());
+    chip.innerHTML = `
+      <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
+      <span class="small" style="color:var(--muted)">${a.role_in_mission ? '• '+esc(a.role_in_mission)+' ' : ''}${esc(a.attendance||'')}</span>
+      ${ (canManageAll || a.user_id === session.user.id) ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
+    `;
+    const x = chip.querySelector('.x');
+    if(x){
+      x.onclick = async () => {
+        const targetUser = x.getAttribute('data-uid');
+        const { error: delErr } = await sb
+          .from('mission_attendees')
+          .delete()
+          .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+        if(delErr){ alert('Remove failed: ' + delErr.message); return; }
+        await loadAttendees();
+        await refreshOngoing();
+      };
+    }
+    list.appendChild(chip);
+  }
+}
 </script>
 </body>
 </html>
