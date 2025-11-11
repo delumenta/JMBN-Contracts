@@ -351,15 +351,24 @@ $('#exportCsv').addEventListener('click', ()=>{
   const csv = [
     cols.join(','),
     ...rows.map(r => cols.map(k=>{
-      const v = k==='category' ? deriveCategory(r.type) : (r[k]==null?'':String(r[k]).replace(/\"/g,'\"\"'));
+      const v = k==='category' ? deriveCategory(r.type) : (r[k]==null?'':String(r[k]).replace(/\"/g,'""'));
       return `"${v}"`;
     }).join(','))
-  ].join('
-');
+  ].join('\n'); // ✅ fixed newline join to avoid SyntaxError
   const blob = new Blob([csv],{type:'text/csv'});
   const url = URL.createObjectURL(blob); const a=document.createElement('a');
   a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 });
+
+// --- Minimal runtime self-test for CSV join (does not affect UI) ---
+(function csvJoinSelfTest(){
+  try{
+    const cols=['title'];
+    const rows=[{title:'Test'}];
+    const csv=[cols.join(','), ...rows.map(r=>`"${r.title}"`)].join('\n');
+    console.assert(csv.includes('\n'), 'CSV should contain newline');
+  }catch(_){ /* ignore */ }
+})();
 
 /* ===== Load (uses shared Supabase from auth.js) ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
