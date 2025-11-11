@@ -115,11 +115,6 @@ tr:hover{background:rgba(214,180,76,.05)}
 .modal .chip .x:hover{background:#111;color:#ff6b6b}
 .modal .chip .edit{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:0 6px}
 .modal .chip .edit:hover{background:#111;color:#000;background:var(--accent)}
-.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
-.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
-.modal .chip .x:hover{background:#111;color:#ff6b6b}
-.modal .chip .edit{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:0 6px}
-.modal .chip .edit:hover{background:#111;color:#000;background:var(--accent)}
 .modal .chip select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text);font-family:'Play';font-size:12px}
 .modal .list{display:flex;gap:8px;flex-wrap:wrap}
 
@@ -244,8 +239,8 @@ tr:hover{background:rgba(214,180,76,.05)}
       <div id="attElevatedTools" class="row" style="display:none">
         <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
         <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-  <option value="">Role (optional)</option>
-</select>
+          <option value="">Role (optional)</option>
+        </select>
         <button id="attAddBtn" class="small-btn">Add</button>
         <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
       </div>
@@ -283,7 +278,6 @@ const fmtDate = iso => {
   }).replace(/\s?([ap])m/i,'$1m');
 };
 const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
-const toTitle = s => (s||'').replace(/\b([a-z])(\w*)/gi, (m, a, b) => a.toUpperCase()+b.toLowerCase());
 
 // Derive category from type without changing DB
 const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
@@ -319,15 +313,13 @@ async function fetchRoles(){
 }
 function roleOptionsHtml(placeholder){
   const items = (ROLES.length?ROLES:DEFAULT_ROLES)
-    .map(r=>`<option value="${r.label}">${toTitle(r.label)}</option>`).join('');
-  return `<option value="">${toTitle(placeholder)}</option>` + items;
-}">${r.label}</option>`).join('');
+    .map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
   return `<option value="">${placeholder}</option>` + items;
 }
 function deriveCategory(type){
   const t=(type||'').toString().trim().toLowerCase();
   if(RESOURCE_TYPES.has(t)) return 'Resource';
-  return 'Operations'; // investigation, recon, cqb, vbss, medical, escort, etc.
+  return 'Operations';
 }
 
 /* ===== State ===== */
@@ -347,18 +339,18 @@ function attachmentsCell(arr){
 function row(r){
   const cat = deriveCategory(r.type);
   return `<tr>
-    <td><b style=\"color:var(--accent)\">${esc(r.title||'(untitled)')}</b></td>
-    <td>${cat?`<span class=\"pill ${cat==='Resource'?'res':'op'}\">${cat}</span>`:''}</td>
-    <td>${r.type?`<span class=\"pill\">${esc(r.type)}</span>`:''}</td>
-    <td>${r.status?`<span class=\"pill\">${esc(r.status)}</span>`:''}</td>
+    <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
+    <td>${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}</td>
+    <td>${r.type?`<span class="pill">${esc(r.type)}</span>`:''}</td>
+    <td>${r.status?`<span class="pill">${esc(r.status)}</span>`:''}</td>
     <td>${esc(r.origin||'')}</td>
     <td>${esc(r.destination||'')}</td>
-    <td class=\"nowrap mono\">${fmtDate(r.start_time)}</td>
-    <td class=\"mono\">${fmtNum(r.payout_auec)}</td>
+    <td class="nowrap mono">${fmtDate(r.start_time)}</td>
+    <td class="mono">${fmtNum(r.payout_auec)}</td>
     <td>${esc(r.tags||'')}</td>
     <td>${attachmentsCell(r.attachments)}</td>
     <td>${esc(r.notes||'')}</td>
-    <td><button class=\"small-btn\" onclick=\"openAttendance('${r.id}','${esc(r.title||'')}')\">View</button></td>
+    <td><button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">View</button></td>
   </tr>`;
 }
 function render(list){
@@ -367,7 +359,7 @@ function render(list){
   const oCount = (list||[]).length - rCount;
   $('#kpiMix').textContent = `${rCount} : ${oCount}`;
   tbody.innerHTML = list.length ? list.map(row).join('') :
-    `<tr><td colspan=\"12\" class=\"small\" style=\"padding:10px\">No missions found.</td></tr>`;
+    `<tr><td colspan="12" class="small" style="padding:10px">No missions found.</td></tr>`;
 }
 
 /* ===== Filter + CSV ===== */
@@ -396,13 +388,13 @@ $('#exportCsv').addEventListener('click', ()=>{
       const v = k==='category' ? deriveCategory(r.type) : (r[k]==null?'':String(r[k]).replace(/\"/g,'""'));
       return `"${v}"`;
     }).join(','))
-  ].join('\n'); // ✅ fixed newline join to avoid SyntaxError
+  ].join('\n');
   const blob = new Blob([csv],{type:'text/csv'});
   const url = URL.createObjectURL(blob); const a=document.createElement('a');
   a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 });
 
-// --- Minimal runtime self-test for CSV join (does not affect UI) ---
+// --- Minimal runtime self-test for CSV join
 (function csvJoinSelfTest(){
   try{
     const cols=['title'];
@@ -429,7 +421,7 @@ async function loadMissions(){
     .order('created_at',{ascending:false});
 
   if(error){
-    $('#tbody').innerHTML = `<tr><td colspan=\"12\" class=\"small\" style=\"padding:10px\">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    $('#tbody').innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
     return;
   }
   cache = data || [];
@@ -468,25 +460,26 @@ function renderOngoing(rows, errMsg){
   count.textContent = `(${rows?.length || 0})`;
 
   if(errMsg){
-    list.innerHTML = `<div class=\"small\" style=\"color:var(--bad)\">${esc(errMsg)}</div>`;
+    list.innerHTML = `<div class="small" style="color:var(--bad)">${esc(errMsg)}</div>`;
     return;
   }
   if(!rows || !rows.length){
-    list.innerHTML = `<div class=\"small\">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
+    list.innerHTML = `<div class="small">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
     return;
   }
 
   list.innerHTML = rows.map(r => `
-    <div class=\"ongoing-item\">
+    <div class="ongoing-item">
       <div>
-        <div class=\"ongoing-title\">${esc(r.title || '(untitled)')}</div>
-        <div class=\"ongoing-meta\">
+        <div class="ongoing-title">${esc(r.title || '(untitled)')}</div>
+        <div class="ongoing-meta">
           ${esc(r.status || '')} • ${r.start_time ? fmtDate(r.start_time) : 'TBA'}
           ${r.origin || r.destination ? ` • ${esc(r.origin||'')} → ${esc(r.destination||'')}` : ''}
         </div>
       </div>
-      <span class=\"pill\">${esc(r.status)}</span>
-      <button class=\"ongoing-open\" onclick=\"openBrief('${r.id}','${esc(r.title||'')}')\">Attendance</button>
+      <span class="pill">${esc(r.status)}</span>
+      <!-- Changed label + pass 'brief' as mode -->
+      <button class="ongoing-open" onclick="openAttendance('${r.id}','${esc(r.title||'')}', 'brief')">Mission Brief</button>
     </div>
   `).join('');
 }
@@ -495,9 +488,10 @@ window.refreshOngoing = loadOngoing;
 /* ===== Attendance popup logic ===== */
 let ATT_MISSION_ID = null;
 
-async function openAttendance(missionId, title=''){
+async function openAttendance(missionId, title = '', mode = 'attendance'){
   ATT_MISSION_ID = missionId;
-  document.getElementById('attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
+  const heading = (mode === 'brief' ? 'Mission Brief — ' : 'Attendance — ');
+  document.getElementById('attTitle').textContent = heading + (title || missionId.slice(0,8));
   document.getElementById('attModalMask').style.display = 'flex';
 
   // show elevated tools if admin/officer or mission owner
