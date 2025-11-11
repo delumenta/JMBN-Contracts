@@ -231,7 +231,8 @@ tr:hover{background:rgba(214,180,76,.05)}
         <button id="attIamGoing" class="small-btn">I’m going</button>
         <button id="attNotGoing" class="small-btn">Not going</button>
         <button id="attWithdraw" class="small-btn">Withdraw</button>
-        <span class="small">These toggle <b>your</b> attendance.</span>
+        <select id="attSelfRole" style="min-width:180px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"></select>
+        <span class="small">Pick <b>your role</b> (optional). Admin/owner can edit anyone.</span>
       </div>
 
       <div id="attElevatedTools" class="row" style="display:none">
@@ -455,22 +456,30 @@ async function openAttendance(missionId, title=''){
   const isOwner = mission?.submitted_by === session.user.id;
   document.getElementById('attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
 
+  // Prepare self-role dropdown
+  const roleSel = document.getElementById('attSelfRole');
+  if(roleSel){
+    roleSel.innerHTML = `<option value="">My role (optional)</option>` + ROLE_OPTIONS.map(r=>`<option value="${r}">${r}</option>`).join('');
+    try{
+      const { data: mine } = await sb
+        .from('mission_attendees')
+        .select('role_in_mission')
+        .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id })
+        .limit(1);
+      if(Array.isArray(mine) && mine[0]){
+        roleSel.value = mine[0].role_in_mission || '';
+      }
+    }catch(_){ /* ignore */ }
+  }
+
   document.getElementById('attIamGoing').onclick = async () => {
+    const role = (document.getElementById('attSelfRole').value || '').trim();
     await sb.from('mission_attendees').upsert({
       mission_id: ATT_MISSION_ID,
       user_id: session.user.id,
-      attendance: 'going'
+      attendance: 'going',
+      role_in_mission: role || null
     }, { onConflict: 'mission_id,user_id' });
-
-    const input = prompt('Assign a role? (e.g. ' + ROLE_OPTIONS.join(', ') + ')
-Leave blank to skip.');
-    const role = (input||'').trim();
-    if(role){
-      await sb.from('mission_attendees')
-        .update({ role_in_mission: role })
-        .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
-    }
-
     await loadAttendees();
     await refreshOngoing();
   };
