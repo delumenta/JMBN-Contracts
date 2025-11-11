@@ -113,20 +113,15 @@ tr:hover{background:rgba(214,180,76,.05)}
 .modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
 .modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
 .modal .chip .x:hover{background:#111;color:#ff6b6b}
-.modal .chip .edit{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:0 6px}
-.modal .chip .edit:hover{background:#111;color:#000;background:var(--accent)}
 .modal .chip select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text);font-family:'Play';font-size:12px}
 .modal .list{display:flex;gap:8px;flex-wrap:wrap}
 
 /* Optional: visual cue for "not_going" chips */
-.chip[data-attendance="not_going"]{
-  border-color: rgba(255,107,107,.6);
-  color: #ff6b6b;
-}
+.chip[data-attendance="not_going"]{border-color: rgba(255,107,107,.6);color:#ff6b6b}
 </style>
 </head>
 <body>
-  <!-- 🔁 Shared header mount -->
+  <!-- Header mount -->
   <div id="header-container"></div>
   <script>
   (async () => {
@@ -134,21 +129,14 @@ tr:hover{background:rgba(214,180,76,.05)}
       const res = await fetch('header.html', { cache: 'no-cache' });
       const html = await res.text();
       document.getElementById('header-container').outerHTML = html;
-
-      // Highlight current tab (triggers shiny sweep ✨)
       requestAnimationFrame(() => {
-        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        const here = (location.pathname.split('/').pop() || 'mission-log.html').toLowerCase();
         document.querySelectorAll('.nav-btn').forEach(a => {
           const href = (a.getAttribute('href')||'').toLowerCase();
-          if (href === here) {
-            a.classList.add('active');
-            a.setAttribute('aria-current','page');
-          }
+          if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
         });
       });
-    } catch (e) {
-      console.warn('Header load failed:', e);
-    }
+    } catch (e) { console.warn('Header load failed:', e); }
   })();
   </script>
 
@@ -187,7 +175,7 @@ tr:hover{background:rgba(214,180,76,.05)}
       </div>
     </div>
 
-    <!-- Ongoing Missions (user-specific) -->
+    <!-- Ongoing Missions -->
     <div class="ongoing">
       <div class="ongoing-head">
         <strong>Ongoing Missions</strong>
@@ -238,9 +226,7 @@ tr:hover{background:rgba(214,180,76,.05)}
 
       <div id="attElevatedTools" class="row" style="display:none">
         <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-          <option value="">Role (optional)</option>
-        </select>
+        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"></select>
         <button id="attAddBtn" class="small-btn">Add</button>
         <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
       </div>
@@ -252,16 +238,16 @@ tr:hover{background:rgba(214,180,76,.05)}
     </div>
   </div>
 
-  <!-- 🔐 Auth & shared client -->
+  <!-- Auth & Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
 <script>
-/* ===== Active nav highlight (fallback) ===== */
+/* ===== Active nav (fallback) ===== */
 (function(){
-  const here = location.pathname.split('/').pop() || 'mission-log.html';
+  const here = (location.pathname.split('/').pop() || 'mission-log.html');
   document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
+    if((a.getAttribute('href')||'')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
   });
 })();
 
@@ -278,11 +264,16 @@ const fmtDate = iso => {
   }).replace(/\s?([ap])m/i,'$1m');
 };
 const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
+const toTitle = s => (s||'').replace(/\b([a-z])(\w*)/gi, (m, a, b) => a.toUpperCase()+b.toLowerCase());
 
-// Derive category from type without changing DB
+/* Category derivation */
 const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
+function deriveCategory(type){
+  const t=(type||'').toString().trim().toLowerCase();
+  return RESOURCE_TYPES.has(t) ? 'Resource' : 'Operations';
+}
 
-// --- Roles: fetched from DB with safe defaults ---
+/* Roles (DB-backed with safe defaults) */
 let ROLES = [];
 const DEFAULT_ROLES = [
   { code: 'operations_lead', label: 'operations lead', weight: 0.9 },
@@ -313,13 +304,8 @@ async function fetchRoles(){
 }
 function roleOptionsHtml(placeholder){
   const items = (ROLES.length?ROLES:DEFAULT_ROLES)
-    .map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
-  return `<option value="">${placeholder}</option>` + items;
-}
-function deriveCategory(type){
-  const t=(type||'').toString().trim().toLowerCase();
-  if(RESOURCE_TYPES.has(t)) return 'Resource';
-  return 'Operations';
+    .map(r=>`<option value="${r.label}">${toTitle(r.label)}</option>`).join('');
+  return `<option value="">${toTitle(placeholder)}</option>` + items;
 }
 
 /* ===== State ===== */
@@ -341,8 +327,8 @@ function row(r){
   return `<tr>
     <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
     <td>${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}</td>
-    <td>${r.type?`<span class="pill">${esc(r.type)}</span>`:''}</td>
-    <td>${r.status?`<span class="pill">${esc(r.status)}</span>`:''}</td>
+    <td>${r.type?`<span class="pill">${toTitle(esc(r.type))}</span>`:''}</td>
+    <td>${r.status?`<span class="pill">${toTitle(esc(r.status))}</span>`:''}</td>
     <td>${esc(r.origin||'')}</td>
     <td>${esc(r.destination||'')}</td>
     <td class="nowrap mono">${fmtDate(r.start_time)}</td>
@@ -371,8 +357,7 @@ function getFiltered(){
   if(cat) arr = arr.filter(x => deriveCategory(x.type)===cat);
   if(st) arr = arr.filter(x => (x.status||'').toLowerCase()===st);
   if(q) arr = arr.filter(x =>
-    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`
-    .toLowerCase().includes(q));
+    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`.toLowerCase().includes(q));
   return arr;
 }
 $('#search').addEventListener('input', ()=>render(getFiltered()));
@@ -385,28 +370,18 @@ $('#exportCsv').addEventListener('click', ()=>{
   const csv = [
     cols.join(','),
     ...rows.map(r => cols.map(k=>{
-      const v = k==='category' ? deriveCategory(r.type) : (r[k]==null?'':String(r[k]).replace(/\"/g,'""'));
+      const v = k==='category' ? deriveCategory(r.type) : (r[k]==null?'':String(r[k]).replace(/"/g,'""'));
       return `"${v}"`;
     }).join(','))
-  ].join('\n');
+  ].join('\n'); // newline fix
   const blob = new Blob([csv],{type:'text/csv'});
   const url = URL.createObjectURL(blob); const a=document.createElement('a');
   a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 });
 
-// --- Minimal runtime self-test for CSV join
-(function csvJoinSelfTest(){
-  try{
-    const cols=['title'];
-    const rows=[{title:'Test'}];
-    const csv=[cols.join(','), ...rows.map(r=>`"${r.title}"`)].join('\n');
-    console.assert(csv.includes('\n'), 'CSV should contain newline');
-  }catch(_){ /* ignore */ }
-})();
-
-/* ===== Load (uses shared Supabase from auth.js) ===== */
+/* ===== Load (auth + data) ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();        // redirects to auth.html if not logged in
+  session = await requireAuth();        // redirects if not logged in
   if(!session) return;
   sb = getSupabase();
   await fetchRoles();
@@ -464,7 +439,7 @@ function renderOngoing(rows, errMsg){
     return;
   }
   if(!rows || !rows.length){
-    list.innerHTML = `<div class="small">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
+    list.innerHTML = `<div class="small">No ongoing missions yet. Open <b>Mission Brief</b> from the table to join.</div>`;
     return;
   }
 
@@ -473,13 +448,12 @@ function renderOngoing(rows, errMsg){
       <div>
         <div class="ongoing-title">${esc(r.title || '(untitled)')}</div>
         <div class="ongoing-meta">
-          ${esc(r.status || '')} • ${r.start_time ? fmtDate(r.start_time) : 'TBA'}
+          ${toTitle(esc(r.status || ''))} • ${r.start_time ? fmtDate(r.start_time) : 'TBA'}
           ${r.origin || r.destination ? ` • ${esc(r.origin||'')} → ${esc(r.destination||'')}` : ''}
         </div>
       </div>
-      <span class="pill">${esc(r.status)}</span>
-      <!-- Changed label + pass 'brief' as mode -->
-      <button class="ongoing-open" onclick="openAttendance('${r.id}','${esc(r.title||'')}', 'brief')">Mission Brief</button>
+      <span class="pill">${toTitle(esc(r.status))}</span>
+      <button class="ongoing-open" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">Mission Brief</button>
     </div>
   `).join('');
 }
@@ -488,26 +462,26 @@ window.refreshOngoing = loadOngoing;
 /* ===== Attendance popup logic ===== */
 let ATT_MISSION_ID = null;
 
-async function openAttendance(missionId, title = '', mode = 'attendance'){
+async function openAttendance(missionId, title=''){
   ATT_MISSION_ID = missionId;
-  const heading = (mode === 'brief' ? 'Mission Brief — ' : 'Attendance — ');
-  document.getElementById('attTitle').textContent = heading + (title || missionId.slice(0,8));
-  document.getElementById('attModalMask').style.display = 'flex';
+  $('#attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
+  $('#attModalMask').style.display = 'flex';
 
-  // show elevated tools if admin/officer or mission owner
   const [{ data: elev }, { data: mission }] = await Promise.all([
     sb.rpc('is_elevated', { u: session.user.id }),
     sb.from('missions').select('submitted_by').eq('id', missionId).single()
   ]);
   const isOwner = mission?.submitted_by === session.user.id;
-  document.getElementById('attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
+  $('#attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
 
-  // Prepare self-role & admin add-role dropdowns (ensure roles loaded)
+  // drop-downs with Title Case labels
   if(!ROLES.length) { await fetchRoles(); }
-  const roleSel = document.getElementById('attSelfRole');
-  const addRoleSel = document.getElementById('attAddRole');
-  if(roleSel){ roleSel.innerHTML = roleOptionsHtml('My role (optional)'); }
-  if(addRoleSel){ addRoleSel.innerHTML = roleOptionsHtml('Role (optional)'); }
+  const roleSel = $('#attSelfRole');
+  const addRoleSel = $('#attAddRole');
+  if(roleSel){ roleSel.innerHTML = roleOptionsHtml('My Role (Optional)'); }
+  if(addRoleSel){ addRoleSel.innerHTML = roleOptionsHtml('Role (Optional)'); }
+
+  // preload my current role
   try{
     const { data: mine } = await sb
       .from('mission_attendees')
@@ -517,10 +491,10 @@ async function openAttendance(missionId, title = '', mode = 'attendance'){
     if(Array.isArray(mine) && mine[0] && roleSel){
       roleSel.value = mine[0].role_in_mission || '';
     }
-  }catch(_){ /* ignore */ }
+  }catch(_){}
 
-  document.getElementById('attIamGoing').onclick = async () => {
-    const role = (document.getElementById('attSelfRole').value || '').trim();
+  $('#attIamGoing').onclick = async () => {
+    const role = ($('#attSelfRole').value || '').trim();
     await sb.from('mission_attendees').upsert({
       mission_id: ATT_MISSION_ID,
       user_id: session.user.id,
@@ -531,7 +505,7 @@ async function openAttendance(missionId, title = '', mode = 'attendance'){
     await refreshOngoing();
   };
 
-  document.getElementById('attNotGoing').onclick = async () => {
+  $('#attNotGoing').onclick = async () => {
     await sb.from('mission_attendees').upsert({
       mission_id: ATT_MISSION_ID,
       user_id: session.user.id,
@@ -541,7 +515,7 @@ async function openAttendance(missionId, title = '', mode = 'attendance'){
     await refreshOngoing();
   };
 
-  document.getElementById('attWithdraw').onclick = async () => {
+  $('#attWithdraw').onclick = async () => {
     await sb.from('mission_attendees')
       .delete()
       .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
@@ -549,9 +523,9 @@ async function openAttendance(missionId, title = '', mode = 'attendance'){
     await refreshOngoing();
   };
 
-  document.getElementById('attAddBtn').onclick = async () => {
-    const email = document.getElementById('attAddEmail').value.trim();
-    const role  = document.getElementById('attAddRole').value || null;
+  $('#attAddBtn').onclick = async () => {
+    const email = $('#attAddEmail').value.trim();
+    const role  = $('#attAddRole').value || null;
     if(!email){ alert('Enter an email'); return; }
     const { error } = await sb.rpc('add_attendee_by_email', {
       p_mission: ATT_MISSION_ID,
@@ -560,7 +534,7 @@ async function openAttendance(missionId, title = '', mode = 'attendance'){
       p_attendance: 'going'
     });
     if(error){ alert('Add failed: ' + error.message); return; }
-    document.getElementById('attAddEmail').value=''; document.getElementById('attAddRole').value='';
+    $('#attAddEmail').value=''; $('#attAddRole').value='';
     await loadAttendees();
     await refreshOngoing();
   };
@@ -569,14 +543,14 @@ async function openAttendance(missionId, title = '', mode = 'attendance'){
 }
 
 function closeAttendance(){
-  document.getElementById('attModalMask').style.display = 'none';
+  $('#attModalMask').style.display = 'none';
   ATT_MISSION_ID = null;
 }
 window.openAttendance = openAttendance;
 window.closeAttendance = closeAttendance;
 
 async function loadAttendees(){
-  const list = document.getElementById('attList');
+  const list = $('#attList');
   list.innerHTML = '<span class="small">Loading…</span>';
 
   const { data, error } = await sb
@@ -596,27 +570,22 @@ async function loadAttendees(){
 
   list.innerHTML = '';
   for(const a of data){
-    const chip = document.createElement('div');
     const canEdit = (canManageAll || a.user_id === session.user.id);
+    const chip = document.createElement('div');
     chip.className = 'chip';
     chip.setAttribute('data-attendance', (a.attendance || '').toLowerCase());
 
-    // Build role <select>
-    const options = ['<option value="">role</option>', ...(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`)].join('');
-    const selectHtml = `<select data-uid="${a.user_id}" ${canEdit?'':'disabled'}>${options}</select>`;
-
+    const options = ['<option value="">Role</option>', ...(ROLES.length?ROLES:DEFAULT_ROLES)
+      .map(r=>`<option value="${r.label}">${toTitle(r.label)}</option>`)].join('');
     chip.innerHTML = `
       <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
-      ${selectHtml}
-      <span class="small" style="color:var(--muted)">${esc(a.attendance||'')}</span>
+      <select data-uid="${a.user_id}" ${canEdit?'':'disabled'}>${options}</select>
+      <span class="small" style="color:var(--muted)">${toTitle(esc(a.attendance||''))}</span>
       ${ canEdit ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
     `;
 
-    // set current role value
     const sel = chip.querySelector('select');
     if(sel){ sel.value = a.role_in_mission || ''; }
-
-    // handle role changes
     if(sel && canEdit){
       sel.onchange = async (e)=>{
         const newRole = e.target.value || null;
@@ -630,7 +599,6 @@ async function loadAttendees(){
       };
     }
 
-    // remove button
     const x = chip.querySelector('.x');
     if(x){
       x.onclick = async () => {
@@ -644,6 +612,7 @@ async function loadAttendees(){
         await refreshOngoing();
       };
     }
+
     list.appendChild(chip);
   }
 }
