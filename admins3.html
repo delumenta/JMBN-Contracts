@@ -12,13 +12,8 @@
 
 <style>
 :root{
-  /* JMBN palette */
   --bg:#000; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
-
-  /* chrome */
-  --stroke:#2a2313;     /* warm border lines */
-  --bezel:#0a0a07;
-
+  --stroke:#2a2313; --bezel:#0a0a07;
   --fs-base:14px; --fs-small:11px; --fs-table:13px; --fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
@@ -31,11 +26,9 @@ body{
     #000;
   font-size:var(--fs-base);
 }
-
-/* Shared header mount */
 #header-container{margin:12px 12px 0}
 
-/* Main panel (single board) */
+/* Panel */
 .panel{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 10px rgba(214,180,76,.15);margin:12px}
 .panel-inner{padding:12px}
 
@@ -70,7 +63,7 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
 .kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
 .kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
 
-/* List + Inspector (two-pane) */
+/* Two-pane: left list, right stacked cards */
 .mgrid{display:grid;grid-template-columns:360px 1fr;gap:12px}
 @media(max-width:1100px){.mgrid{grid-template-columns:1fr}}
 .mlist{
@@ -86,13 +79,14 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
 .mtitle{color:var(--accent);font-weight:700;margin-bottom:3px}
 .mmeta{font-size:12px;color:var(--muted)}
 .mchips{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
-.mchip{
-  border:1px solid var(--stroke);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)
-}
+.mchip{border:1px solid var(--stroke);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
 
-/* Inspector panel */
+/* Right column stack */
+.rightcol{display:grid;gap:12px}
+
+/* Card style (reused) */
 .inspector{
-  min-height:420px;border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#0b0b0b,#090909);
+  min-height:200px;border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#0b0b0b,#090909);
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.06);padding:12px
 }
 .inspector h2{color:var(--accent);margin:0 0 6px;font-size:16px}
@@ -102,35 +96,20 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
 .pill.res{color:#f2d675;border-color:#f2d675}
 .pill.op{color:#7bd88f;border-color:#7bd88f}
 .mono{font-variant-numeric:tabular-nums}
-.nowrap{white-space:nowrap}
 
-/* Gold CTA (used for Accept, Attendance, Open) */
+/* Gold CTA */
 .btn-accept{
-  padding:10px 14px;border-radius:10px;
-  border:1px solid var(--border);
+  padding:10px 14px;border-radius:10px;border:1px solid var(--border);
   background:linear-gradient(180deg,#1a1405,#0c0a04);
-  color:var(--accent); font-weight:700; letter-spacing:.35px;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.18);
-  transition:.15s ease;
+  color:var(--accent);font-weight:700;letter-spacing:.35px;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.18);transition:.15s ease;
 }
-.btn-accept:hover{ background:var(--accent); color:#000; box-shadow:0 0 14px rgba(214,180,76,.35) }
+.btn-accept:hover{background:var(--accent);color:#000;box-shadow:0 0 14px rgba(214,180,76,.35)}
 
-/* Ongoing strip (bottom of list) */
-.ongoing-head{padding:8px 12px;color:var(--muted);background:#120f08;border-top:1px solid rgba(214,180,76,.08)}
-.ongoing-item{padding:8px 12px;border-top:1px dashed rgba(214,180,76,.12);font-size:12px;color:var(--muted)}
+/* Ongoing card content */
+.ongoing-item{padding:8px 0;border-top:1px dashed rgba(214,180,76,.12);font-size:12px;color:var(--muted)}
+.ongoing-item:first-child{border-top:none}
 .ongoing-title{color:var(--accent);font-weight:700}
-
-/* Attendance Modal */
-.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
-.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
-.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
-.modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
-.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
-.modal .chip .x:hover{background:#111;color:#ff6b6b}
-.modal .chip select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text);font-family:'Play';font-size:12px}
-.modal .list{display:flex;gap:8px;flex-wrap:wrap}
-.chip[data-attendance="not_going"]{border-color:rgba(255,107,107,.6);color:#ff6b6b}
 </style>
 </head>
 <body>
@@ -156,7 +135,7 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
   <!-- Contract Manager Board -->
   <section class="panel">
     <div class="panel-inner">
-      <!-- Tabs (GENERAL + HISTORY only) -->
+      <!-- Tabs -->
       <div class="tabs" id="tabs">
         <div class="tab active" data-scope="">GENERAL</div>
         <div class="tab" data-scope="history">HISTORY</div>
@@ -172,43 +151,35 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
         </select>
         <select id="statusFilter">
           <option value="">All Status</option>
-          <option>planned</option>
-          <option>active</option>
-          <option>success</option>
-          <option>fail</option>
-          <option>abort</option>
+          <option>planned</option><option>active</option>
+          <option>success</option><option>fail</option><option>abort</option>
         </select>
         <button class="small-btn" id="btnExport">Export CSV</button>
       </div>
 
       <!-- KPIs -->
       <div class="kpis">
-        <div class="kpi">
-          <div class="kpi-title">Total Missions</div>
-          <div class="kpi-value" id="kpiCount">0</div>
-          <div class="kpi-sub">after filters</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-title">Resource : Ops</div>
-          <div class="kpi-value" id="kpiMix">0 : 0</div>
-          <div class="kpi-sub">derived from type</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-title">Avg Payout (shown)</div>
-          <div class="kpi-value mono" id="kpiAvg">-</div>
-          <div class="kpi-sub">aUEC</div>
-        </div>
+        <div class="kpi"><div class="kpi-title">Total Missions</div><div class="kpi-value" id="kpiCount">0</div><div class="kpi-sub">after filters</div></div>
+        <div class="kpi"><div class="kpi-title">Resource : Ops</div><div class="kpi-value" id="kpiMix">0 : 0</div><div class="kpi-sub">derived from type</div></div>
+        <div class="kpi"><div class="kpi-title">Avg Payout (shown)</div><div class="kpi-value mono" id="kpiAvg">-</div><div class="kpi-sub">aUEC</div></div>
       </div>
 
       <!-- Two Pane -->
       <div class="mgrid">
-        <!-- Left: Mission List + Ongoing -->
+        <!-- Left: Mission List -->
         <div class="mlist" id="mList"></div>
 
-        <!-- Right: Inspector -->
-        <div class="inspector" id="inspector">
-          <h2>Mission Details</h2>
-          <div class="small">Select a contract on the left to view its briefing.</div>
+        <!-- Right: stacked cards -->
+        <div class="rightcol">
+          <div class="inspector" id="inspector">
+            <h2>Mission Details</h2>
+            <div class="small">Select a contract on the left to view its briefing.</div>
+          </div>
+
+          <div class="inspector" id="ongoingCard">
+            <h2>Ongoing Missions</h2>
+            <div id="ongoingSpace" class="small">None</div>
+          </div>
         </div>
       </div>
 
@@ -260,50 +231,28 @@ const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return
 const fmtDate = iso => {
   if(!iso) return '';
   const d = new Date(iso);
-  return d.toLocaleString('en-SG', {
-    day:'numeric', month:'long', year:'numeric',
-    hour:'numeric', minute:'2-digit', hour12:true
-  }).replace(/\s?([ap])m/i,'$1m');
+  return d.toLocaleString('en-SG',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?([ap])m/i,'$1m');
 };
 const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
 const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
-function deriveCategory(type){
-  const t=(type||'').toString().trim().toLowerCase();
-  return RESOURCE_TYPES.has(t) ? 'Resource' : 'Operations';
-}
+function deriveCategory(type){ const t=(type||'').toString().trim().toLowerCase(); return RESOURCE_TYPES.has(t) ? 'Resource' : 'Operations'; }
 
 /* ========= Roles (Attendance) ========= */
 let ROLES=[];
-const DEFAULT_ROLES=[
-  {label:'operations lead'},{label:'pilot'},{label:'copilot'},{label:'escort'},
-  {label:'tactician'},{label:'fps'},{label:'gunner'},{label:'hauler'},
-  {label:'miner'},{label:'salvager'},{label:'engineer'},{label:'medic'},
-  {label:'recon'},{label:'runner'},{label:'logistics'},{label:'security'}
-];
-function roleOptionsHtml(placeholder){
-  const items=(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
-  return `<option value="">${placeholder}</option>`+items;
-}
-async function fetchRoles(sb){
-  const { data, error } = await sb.from('mission_roles').select('label').order('sort_order',{ascending:true}).order('label',{ascending:true});
-  ROLES=(error||!data||!data.length)?DEFAULT_ROLES:data;
-}
+const DEFAULT_ROLES=[{label:'operations lead'},{label:'pilot'},{label:'copilot'},{label:'escort'},{label:'tactician'},{label:'fps'},{label:'gunner'},{label:'hauler'},{label:'miner'},{label:'salvager'},{label:'engineer'},{label:'medic'},{label:'recon'},{label:'runner'},{label:'logistics'},{label:'security'}];
+function roleOptionsHtml(ph){ const items=(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`).join(''); return `<option value="">${ph}</option>`+items; }
+async function fetchRoles(sb){ const { data, error } = await sb.from('mission_roles').select('label').order('sort_order',{ascending:true}).order('label',{ascending:true}); ROLES=(error||!data||!data.length)?DEFAULT_ROLES:data; }
 
 /* ========= State ========= */
 let sb=null, session=null;
-let allMissions=[];      // raw
-let filtered=[];         // after filters
-let selectedId=null;     // inspector target
-let currentScope="";     // "", history
+let allMissions=[]; let filtered=[]; let selectedId=null; let currentScope="";
 
 /* ========= Wire UI ========= */
 document.getElementById('tabs').addEventListener('click',(e)=>{
   const t=e.target.closest('.tab'); if(!t) return;
   $$('#tabs .tab').forEach(x=>x.classList.remove('active'));
-  t.classList.add('active');
-  currentScope=t.dataset.scope||"";
-  renderFiltered();
+  t.classList.add('active'); currentScope=t.dataset.scope||""; renderFiltered();
 });
 $('#search').addEventListener('input', renderFiltered);
 $('#catFilter').addEventListener('input', renderFiltered);
@@ -312,11 +261,8 @@ $('#btnExport').onclick = exportCSV;
 
 /* ========= Boot ========= */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();
-  if(!session) return;
-  sb = getSupabase();
-  await fetchRoles(sb);
-  await loadMissions();
+  session = await requireAuth(); if(!session) return;
+  sb = getSupabase(); await fetchRoles(sb); await loadMissions();
 });
 
 /* ========= Data ========= */
@@ -325,14 +271,8 @@ async function loadMissions(){
     .from('missions')
     .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at,submitted_by')
     .order('created_at',{ascending:false});
-
-  if(error){
-    $('#mList').innerHTML=''; $('#feedEmpty').style.display='block';
-    $('#feedEmpty').textContent='Failed to load missions: '+(error.message||'');
-    return;
-  }
-  allMissions=data||[];
-  renderFiltered();
+  if(error){ $('#mList').innerHTML=''; $('#feedEmpty').style.display='block'; $('#feedEmpty').textContent='Failed to load missions: '+(error.message||''); return; }
+  allMissions=data||[]; renderFiltered();
 }
 
 /* ========= Filter + KPIs ========= */
@@ -349,15 +289,9 @@ function getFiltered(){
       `${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.destination||''}`
     ).toLowerCase().includes(q));
   }
-
-  // Scope (GENERAL / HISTORY)
-  arr = arr.filter(m=>{
-    if(!currentScope) return true;
-    if(currentScope==='history')
-      return ['success','fail','abort'].includes((m.status||'').toLowerCase());
-    return true;
-  });
-
+  if(currentScope==='history'){
+    arr = arr.filter(m => ['success','fail','abort'].includes((m.status||'').toLowerCase()));
+  }
   return arr;
 }
 
@@ -376,6 +310,8 @@ function renderFiltered(){
     const m = filtered.find(x=>x.id===selectedId) || allMissions.find(x=>x.id===selectedId);
     renderInspector(m||null);
   }
+  // refresh ongoing whenever filters change (so right card feels alive)
+  loadOngoing();
 }
 
 /* ========= List (left) ========= */
@@ -398,25 +334,17 @@ function renderList(rows){
   const list=$('#mList'); const empty=$('#feedEmpty');
   if(!rows.length){ list.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
-  list.innerHTML = rows.map(listItemHtml).join('') + `
-    <div class="ongoing-head">Ongoing (You’re marked as going)</div>
-    <div id="ongoingSpace"></div>
-  `;
+  list.innerHTML = rows.map(listItemHtml).join('');
   if(selectedId){
     const el = list.querySelector(`.mitem[data-id="${selectedId}"]`);
     if(el) el.classList.add('active');
   }
-  loadOngoing();
 }
 
 /* ========= Inspector (right) ========= */
 function attachmentsHtml(arr){
   if(!Array.isArray(arr)||!arr.length) return '<span class="small">None</span>';
-  return arr.map((a,i)=>{
-    const name=a?.name?.trim()||`Attachment ${i+1}`;
-    const url=a?.url||'#';
-    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
-  }).join('<br>');
+  return arr.map((a,i)=>`<a href="${esc(a?.url||'#')}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(a?.name?.trim()||`Attachment ${i+1}`)}</a>`).join('<br>');
 }
 function renderInspector(m){
   const box=$('#inspector');
@@ -463,11 +391,12 @@ function inspect(id){
 }
 window.inspect = inspect;
 
-/* ========= Ongoing (you’re going + planned/active) ========= */
+/* ========= Ongoing (right card) ========= */
 async function loadOngoing(){
   if(!sb || !session) return;
   const space = document.getElementById('ongoingSpace');
   if(!space) return;
+  space.innerHTML = '<span class="small">Loading…</span>';
 
   const { data: att, error: e1 } = await sb
     .from('mission_attendees')
@@ -475,7 +404,7 @@ async function loadOngoing(){
     .eq('user_id', session.user.id)
     .eq('attendance','going');
 
-  if(e1 || !att?.length){ space.innerHTML = `<div class="ongoing-item">None</div>`; return; }
+  if(e1 || !att?.length){ space.innerHTML = 'None'; return; }
 
   const { data: rows, error: e2 } = await sb
     .from('missions')
@@ -484,7 +413,7 @@ async function loadOngoing(){
     .in('status',['planned','active'])
     .order('start_time',{ascending:true});
 
-  if(e2 || !rows?.length){ space.innerHTML = `<div class="ongoing-item">None</div>`; return; }
+  if(e2 || !rows?.length){ space.innerHTML = 'None'; return; }
 
   space.innerHTML = rows.map(r=>`
     <div class="ongoing-item">
@@ -503,30 +432,15 @@ window.refreshOngoing = loadOngoing;
 function exportCSV(){
   const rows = getFiltered();
   const cols=['title','category','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
-  const csv=[
-    cols.join(','),
-    ...rows.map(r=>{
-      const rec = {
-        title:r.title||'',
-        category:deriveCategory(r.type),
-        type:r.type||'',
-        status:r.status||'',
-        origin:r.origin||'',
-        destination:r.destination||'',
-        start_time:r.start_time||'',
-        hours:r.hours||'',
-        payout_auec:r.payout_auec||'',
-        tags:r.tags||'',
-        notes:r.notes||''
-      };
-      return cols.map(k=>`"${String(rec[k]).replace(/"/g,'""')}"`).join(',');
-    })
-  ].join('\n');
+  const csv=[ cols.join(','), ...rows.map(r=>{
+    const rec={title:r.title||'',category:deriveCategory(r.type),type:r.type||'',status:r.status||'',origin:r.origin||'',destination:r.destination||'',start_time:r.start_time||'',hours:r.hours||'',payout_auec:r.payout_auec||'',tags:r.tags||'',notes:r.notes||''};
+    return cols.map(k=>`"${String(rec[k]).replace(/"/g,'""')}"`).join(',');
+  }) ].join('\n');
   const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 }
 
-/* ========= Attendance (reuse) ========= */
+/* ========= Attendance ========= */
 let ATT_MISSION_ID=null;
 async function openAttendance(missionId,title=''){
   ATT_MISSION_ID = missionId;
@@ -542,6 +456,7 @@ async function openAttendance(missionId,title=''){
 
   $('#attSelfRole').innerHTML = roleOptionsHtml('My role (optional)');
   $('#attAddRole').innerHTML  = roleOptionsHtml('Role (optional)');
+
   try{
     const { data: mine } = await sb
       .from('mission_attendees')
@@ -553,15 +468,11 @@ async function openAttendance(missionId,title=''){
 
   $('#attIamGoing').onclick = async ()=>{
     const role = ($('#attSelfRole').value||'').trim();
-    await sb.from('mission_attendees').upsert({
-      mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance:'going', role_in_mission: role||null
-    },{ onConflict:'mission_id,user_id' });
+    await sb.from('mission_attendees').upsert({ mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance:'going', role_in_mission: role||null },{ onConflict:'mission_id,user_id' });
     await loadAttendees(); await refreshOngoing();
   };
   $('#attNotGoing').onclick = async ()=>{
-    await sb.from('mission_attendees').upsert({
-      mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance:'not_going'
-    },{ onConflict:'mission_id,user_id' });
+    await sb.from('mission_attendees').upsert({ mission_id: ATT_MISSION_ID, user_id: session.user.id, attendance:'not_going' },{ onConflict:'mission_id,user_id' });
     await loadAttendees(); await refreshOngoing();
   };
   $('#attWithdraw').onclick = async ()=>{
@@ -572,9 +483,7 @@ async function openAttendance(missionId,title=''){
     const email = $('#attAddEmail').value.trim();
     const role  = $('#attAddRole').value || null;
     if(!email){ alert('Enter an email'); return; }
-    const { error } = await sb.rpc('add_attendee_by_email', {
-      p_mission: ATT_MISSION_ID, p_email: email, p_role: role, p_attendance:'going'
-    });
+    const { error } = await sb.rpc('add_attendee_by_email', { p_mission: ATT_MISSION_ID, p_email: email, p_role: role, p_attendance:'going' });
     if(error){ alert('Add failed: '+error.message); return; }
     $('#attAddEmail').value=''; $('#attAddRole').value='';
     await loadAttendees(); await refreshOngoing();
@@ -588,13 +497,7 @@ window.openAttendance=openAttendance; window.closeAttendance=closeAttendance;
 async function loadAttendees(){
   const list = $('#attList');
   list.innerHTML = '<span class="small">Loading…</span>';
-
-  const { data, error } = await sb
-    .from('v_mission_attendees_detailed')
-    .select('*')
-    .eq('mission_id', ATT_MISSION_ID)
-    .order('joined_at',{ascending:true});
-
+  const { data, error } = await sb.from('v_mission_attendees_detailed').select('*').eq('mission_id', ATT_MISSION_ID).order('joined_at',{ascending:true});
   if(error){ list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
   if(!data?.length){ list.innerHTML = '<span class="small">No attendees yet.</span>'; return; }
 
@@ -621,8 +524,7 @@ async function loadAttendees(){
       sel.onchange = async (e)=>{
         const newRole = e.target.value || null;
         const targetUser = e.target.getAttribute('data-uid');
-        const { error: upErr } = await sb.from('mission_attendees').update({ role_in_mission: newRole })
-          .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
+        const { error: upErr } = await sb.from('mission_attendees').update({ role_in_mission: newRole }).match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
         if(upErr){ alert('Update failed: '+upErr.message); e.target.value=a.role_in_mission||''; return; }
         await loadAttendees();
       };
