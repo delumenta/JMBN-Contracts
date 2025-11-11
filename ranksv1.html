@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Mission Log — mobiGlas Board</title>
+<title>JMBN Mission Log — Contract Manager</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,9 +12,17 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--panel2:#0c0c0c;--glass:#0f0f0f;
-  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
+  /* JMBN palette */
+  --bg:#000; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
+
+  /* SC Contract Manager chrome */
+  --sc-cyan:#7fe8ff;
+  --sc-cyan-d:#3fb9d0;
+  --chrome:#0b0f12;
+  --stroke:#1d2a30;
+  --bezel:#0a0d0f;
+
+  --fs-base:14px; --fs-small:11px; --fs-table:13px; --fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -24,47 +32,28 @@ body{
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
+  font-size:var(--fs-base);
 }
 
-/* Header mount (shared) */
+/* Shared header mount */
 #header-container{margin:12px 12px 0}
 
-/* App grid */
-.app{
-  display:grid;grid-template-columns:220px 1fr 360px;gap:12px;
-  padding:12px;align-items:start;
-}
-@media(max-width:1240px){.app{grid-template-columns:240px 1fr}}
-@media(max-width:1060px){.app{grid-template-columns:1fr}}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 10px rgba(214,180,76,.15)}
+/* Main panel (single board) */
+.panel{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 10px rgba(214,180,76,.15);margin:12px}
 .panel-inner{padding:12px}
 
-/* Left Dock (mobiGlas) */
-.dock{
-  position:sticky;top:12px;align-self:start;backdrop-filter:saturate(1.2) blur(4px);
-  background:linear-gradient(180deg,#0b0b0b,#080808);
+/* Tabs like GENERAL / PERSONAL / ACCEPTED / HISTORY / BEACONS */
+.tabs{display:flex;gap:8px;margin:4px 0 10px}
+.tab{
+  padding:8px 12px;border:1px solid var(--stroke);border-radius:6px;
+  background:linear-gradient(180deg,#0d1418,#0a0f12);
+  color:var(--sc-cyan);letter-spacing:.35px;cursor:pointer;transition:.15s
 }
-.dock h2{margin:0 0 10px;color:var(--accent);font-size:14px;letter-spacing:.6px}
-.dock .dock-row{display:flex;flex-direction:column;gap:8px}
-.dock .dock-btn{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border:1px solid rgba(214,180,76,.35);border-radius:12px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);
-  cursor:pointer;transition:.2s
-}
-.dock .dock-btn:hover{box-shadow:0 0 16px rgba(214,180,76,.25)}
-.dock small{color:var(--muted);font-size:var(--fs-small)}
-.dock .ongoing-list{margin-top:8px;display:flex;flex-direction:column;gap:6px}
-.dock .ongoing-item{
-  border:1px solid rgba(214,180,76,.35);border-radius:10px;background:#0c0c0c;padding:8px
-}
-.dock .ongoing-title{color:var(--accent);font-weight:700}
-.dock .ongoing-meta{font-size:12px;color:var(--muted)}
+.tab:hover{background:#10171c}
+.tab.active{outline:1px solid var(--sc-cyan); box-shadow:0 0 0 1px rgba(127,232,255,.25) inset}
 
-/* Center – Controls + KPIs + Card Feed */
-.controls{
-  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px
-}
+/* Controls & KPI */
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 input,select{
   background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'
 }
@@ -80,34 +69,58 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
   background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;
   box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08)
 }
-.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.kpi-title{font-size:12px;color:#9ccbd6;margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--sc-cyan);line-height:1}
 .kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
 
-.feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media(max-width:1240px){.feed{grid-template-columns:1fr}}
-.card{
-  display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
-  border:1px solid rgba(214,180,76,.35);border-radius:12px;background:#0c0c0c;padding:12px;
-  transition:.2s;cursor:pointer
+/* List + Inspector (two-pane) */
+.mgrid{display:grid;grid-template-columns:360px 1fr;gap:12px}
+@media(max-width:1100px){.mgrid{grid-template-columns:1fr}}
+.mlist{
+  min-height:420px;max-height:72vh;overflow:auto;border:1px solid var(--stroke);border-radius:10px;background:var(--bezel);
+  box-shadow:inset 0 0 0 1px rgba(127,232,255,.06)
 }
-.card:hover{box-shadow:0 0 16px rgba(214,180,76,.25)}
-.card h3{margin:0;color:var(--accent);font-size:16px}
-.card .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mitem{
+  padding:10px 12px;border-bottom:1px solid rgba(127,232,255,.08);cursor:pointer;
+  background:linear-gradient(180deg,#0d1418,#0a0f12);transition:.12s
+}
+.mitem:hover{background:#121a1f}
+.mitem.active{outline:1px solid var(--sc-cyan)}
+.mtitle{color:var(--sc-cyan);font-weight:700;margin-bottom:3px}
+.mmeta{font-size:12px;color:var(--muted)}
+.mchips{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.mchip{
+  border:1px solid var(--stroke);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)
+}
+
+/* Inspector panel */
+.inspector{
+  min-height:420px;border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#0b0f12,#090c0f);
+  box-shadow:inset 0 0 0 1px rgba(127,232,255,.06);padding:12px
+}
+.inspector h2{color:var(--sc-cyan);margin:0 0 6px;font-size:16px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(127,232,255,.35),transparent);margin:10px 0}
+.small{font-size:var(--fs-small);color:var(--muted)}
 .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
 .pill.res{color:#f2d675;border-color:#f2d675}
 .pill.op{color:#7bd88f;border-color:#7bd88f}
-.meta{font-size:12px;color:var(--muted)}
 .mono{font-variant-numeric:tabular-nums}
+.nowrap{white-space:nowrap}
 
-/* Right – Inspector */
-.inspector{
-  position:sticky;top:12px;align-self:start;background:linear-gradient(180deg,#0b0b0b,#080808);
+/* Accept CTA */
+.btn-accept{
+  padding:10px 14px;border-radius:6px;border:1px solid var(--sc-cyan-d);
+  background:linear-gradient(180deg,#14323a,#0f252b); color:#c9fbff; font-weight:700;
+  letter-spacing:.4px; transition:.15s;
 }
-.inspector .empty{color:var(--muted);font-size:13px}
-.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.4),transparent);margin:10px 0}
+.btn-accept:hover{filter:brightness(1.1)}
 
-/* Attendance Modal (reuse) */
+/* Ongoing strip (bottom of list) */
+.ongoing-head{padding:8px 12px;color:#9ccbd6;background:#0c1418;border-top:1px solid rgba(127,232,255,.08)}
+.ongoing-item{padding:8px 12px;border-top:1px dashed rgba(127,232,255,.08);font-size:12px;color:var(--muted)}
+.ongoing-title{color:var(--sc-cyan);font-weight:700}
+
+/* Attendance Modal (reused) */
 .modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
 .modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
 .modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
@@ -118,15 +131,10 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
 .modal .chip select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text);font-family:'Play';font-size:12px}
 .modal .list{display:flex;gap:8px;flex-wrap:wrap}
 .chip[data-attendance="not_going"]{border-color:rgba(255,107,107,.6);color:#ff6b6b}
-
-/* Utility */
-.small{font-size:var(--fs-small);color:var(--muted)}
-.nowrap{white-space:nowrap}
-.hidden{display:none}
 </style>
 </head>
 <body>
-  <!-- Shared header -->
+  <!-- Shared Header -->
   <div id="header-container"></div>
   <script>
     (async () => {
@@ -145,84 +153,73 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
     })();
   </script>
 
-  <!-- App -->
-  <div class="app">
-    <!-- Left Dock -->
-    <aside class="panel dock">
-      <div class="panel-inner">
-        <h2>mobiGlas</h2>
-        <div class="dock-row">
-          <button class="dock-btn" id="btnReset">
-            <span>Reset Filters</span><small>Show all missions</small>
-          </button>
-          <button class="dock-btn" id="btnExport">
-            <span>Export CSV</span><small>Filtered rows</small>
-          </button>
-        </div>
-
-        <div class="hr"></div>
-        <h2>Ongoing</h2>
-        <div id="ongoingList" class="ongoing-list"></div>
-        <div class="small" id="ongoingCount" style="margin-top:4px">(0)</div>
+  <!-- Contract Manager Board -->
+  <section class="panel">
+    <div class="panel-inner">
+      <!-- Tabs -->
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-scope="">GENERAL</div>
+        <div class="tab" data-scope="personal">PERSONAL</div>
+        <div class="tab" data-scope="accepted">ACCEPTED</div>
+        <div class="tab" data-scope="history">HISTORY</div>
+        <div class="tab" data-scope="beacons">BEACONS</div>
       </div>
-    </aside>
 
-    <!-- Center: Controls + KPIs + Feed -->
-    <main class="panel">
-      <div class="panel-inner">
-        <!-- Controls -->
-        <div class="controls">
-          <input id="search" placeholder="Search contracts (title, type, status, tags, route)">
-          <select id="catFilter">
-            <option value="">All Categories</option>
-            <option value="Resource">Resource</option>
-            <option value="Operations">Operations</option>
-          </select>
-          <select id="statusFilter">
-            <option value="">All Status</option>
-            <option>planned</option>
-            <option>active</option>
-            <option>success</option>
-            <option>fail</option>
-            <option>abort</option>
-          </select>
-        </div>
-
-        <!-- KPIs -->
-        <div class="kpis">
-          <div class="kpi">
-            <div class="kpi-title">Total Missions</div>
-            <div class="kpi-value" id="kpiCount">0</div>
-            <div class="kpi-sub">after filters</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-title">Resource : Ops</div>
-            <div class="kpi-value" id="kpiMix">0 : 0</div>
-            <div class="kpi-sub">derived from type</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-title">Avg Payout (shown)</div>
-            <div class="kpi-value mono" id="kpiAvg">-</div>
-            <div class="kpi-sub">aUEC</div>
-          </div>
-        </div>
-
-        <!-- Feed -->
-        <div id="feed" class="feed"></div>
-        <div id="feedEmpty" class="small hidden">No missions match your filters.</div>
+      <!-- Controls -->
+      <div class="controls">
+        <input id="search" placeholder="Search contracts (title, type, status, tags, route)">
+        <select id="catFilter">
+          <option value="">All Categories</option>
+          <option value="Resource">Resource</option>
+          <option value="Operations">Operations</option>
+        </select>
+        <select id="statusFilter">
+          <option value="">All Status</option>
+          <option>planned</option>
+          <option>active</option>
+          <option>success</option>
+          <option>fail</option>
+          <option>abort</option>
+        </select>
+        <button class="small-btn" id="btnExport">Export CSV</button>
       </div>
-    </main>
 
-    <!-- Right: Inspector -->
-    <aside class="panel inspector">
-      <div class="panel-inner" id="inspector">
-        <h2 class="small" style="margin:0 0 6px;color:var(--accent)">Mission Details</h2>
-        <div class="empty">Select a contract from the center feed to view its briefing.</div>
+      <!-- KPIs -->
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-title">Total Missions</div>
+          <div class="kpi-value" id="kpiCount">0</div>
+          <div class="kpi-sub">after filters</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-title">Resource : Ops</div>
+          <div class="kpi-value" id="kpiMix">0 : 0</div>
+          <div class="kpi-sub">derived from type</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-title">Avg Payout (shown)</div>
+          <div class="kpi-value mono" id="kpiAvg">-</div>
+          <div class="kpi-sub">aUEC</div>
+        </div>
       </div>
-    </aside>
-  </div>
 
-  <!-- Attendance Modal (reuse) -->
+      <!-- Two Pane -->
+      <div class="mgrid">
+        <!-- Left: Mission List + Ongoing -->
+        <div class="mlist" id="mList"></div>
+
+        <!-- Right: Inspector -->
+        <div class="inspector" id="inspector">
+          <h2>Mission Details</h2>
+          <div class="small">Select a contract on the left to view its briefing.</div>
+        </div>
+      </div>
+
+      <div id="feedEmpty" class="small" style="display:none;margin-top:8px">No missions match your filters.</div>
+    </div>
+  </section>
+
+  <!-- Attendance Modal -->
   <div id="attModalMask" class="modal-mask" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
@@ -254,12 +251,12 @@ button:hover,.small-btn:hover{background:var(--accent);color:#000}
     </div>
   </div>
 
-  <!-- Supabase + Auth -->
+  <!-- Supabase & Auth -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
 <script>
-/* ===== Helpers ===== */
+/* ========= Helpers ========= */
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
@@ -279,7 +276,7 @@ function deriveCategory(type){
   return RESOURCE_TYPES.has(t) ? 'Resource' : 'Operations';
 }
 
-/* ===== Roles (for Attendance) ===== */
+/* ========= Roles (Attendance) ========= */
 let ROLES=[];
 const DEFAULT_ROLES=[
   {label:'operations lead'},{label:'pilot'},{label:'copilot'},{label:'escort'},
@@ -296,33 +293,36 @@ async function fetchRoles(sb){
   ROLES=(error||!data||!data.length)?DEFAULT_ROLES:data;
 }
 
-/* ===== State ===== */
+/* ========= State ========= */
 let sb=null, session=null;
-let allMissions=[];        // raw rows
-let filtered=[];           // view after filters
-let selectedId=null;       // current inspector target
+let allMissions=[];      // raw
+let filtered=[];         // after filters
+let selectedId=null;     // inspector target
+let currentScope="";     // tabs: "", personal, accepted, history, beacons
 
-/* ===== UI Wiring ===== */
-$('#btnReset').onclick = ()=>{
-  $('#search').value=''; $('#catFilter').value=''; $('#statusFilter').value='';
+/* ========= Wire UI ========= */
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  const t=e.target.closest('.tab'); if(!t) return;
+  $$('#tabs .tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  currentScope=t.dataset.scope||"";
   renderFiltered();
-};
-$('#btnExport').onclick = exportCSV;
+});
 $('#search').addEventListener('input', renderFiltered);
 $('#catFilter').addEventListener('input', renderFiltered);
 $('#statusFilter').addEventListener('input', renderFiltered);
+$('#btnExport').onclick = exportCSV;
 
-/* ===== Boot ===== */
+/* ========= Boot ========= */
 document.addEventListener('DOMContentLoaded', async ()=>{
   session = await requireAuth();
   if(!session) return;
   sb = getSupabase();
   await fetchRoles(sb);
   await loadMissions();
-  await loadOngoing();
 });
 
-/* ===== Data Loads ===== */
+/* ========= Data ========= */
 async function loadMissions(){
   const { data, error } = await sb
     .from('missions')
@@ -330,8 +330,7 @@ async function loadMissions(){
     .order('created_at',{ascending:false});
 
   if(error){
-    $('#feed').innerHTML='';
-    $('#feedEmpty').classList.remove('hidden');
+    $('#mList').innerHTML=''; $('#feedEmpty').style.display='block';
     $('#feedEmpty').textContent='Failed to load missions: '+(error.message||'');
     return;
   }
@@ -339,47 +338,7 @@ async function loadMissions(){
   renderFiltered();
 }
 
-async function loadOngoing(){
-  const { data: att, error: e1 } = await sb
-    .from('mission_attendees')
-    .select('mission_id')
-    .eq('user_id', session.user.id)
-    .eq('attendance','going');
-
-  const list = $('#ongoingList');
-  const count = $('#ongoingCount');
-
-  if(e1){ list.innerHTML = `<div class="small" style="color:var(--bad)">Failed: ${esc(e1.message)}</div>`; count.textContent='(0)'; return; }
-  const ids = (att||[]).map(a=>a.mission_id);
-  if(!ids.length){ list.innerHTML = `<div class="small">No ongoing missions.</div>`; count.textContent='(0)'; return; }
-
-  const { data: rows, error: e2 } = await sb
-    .from('missions')
-    .select('id,title,status,start_time,origin,destination')
-    .in('id', ids)
-    .in('status',['planned','active'])
-    .order('start_time',{ascending:true});
-
-  if(e2){ list.innerHTML = `<div class="small" style="color:var(--bad)">Failed: ${esc(e2.message)}</div>`; count.textContent='(0)'; return; }
-
-  count.textContent = `(${rows?.length||0})`;
-  list.innerHTML = (rows||[]).map(r=>`
-    <div class="ongoing-item">
-      <div class="ongoing-title">${esc(r.title||'(untitled)')}</div>
-      <div class="ongoing-meta">
-        ${esc(r.status||'')} • ${r.start_time?fmtDate(r.start_time):'TBA'}
-        ${r.origin||r.destination?` • ${esc(r.origin||'')} → ${esc(r.destination||'')}`:''}
-      </div>
-      <div style="margin-top:6px">
-        <button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">Attendance</button>
-        <button class="small-btn" onclick="inspect('${r.id}')">Open</button>
-      </div>
-    </div>
-  `).join('');
-}
-window.refreshOngoing = loadOngoing;
-
-/* ===== Filtering + KPIs + Rendering ===== */
+/* ========= Filter + KPIs ========= */
 function getFiltered(){
   const q = ($('#search').value||'').toLowerCase();
   const cat = $('#catFilter').value||'';
@@ -393,57 +352,71 @@ function getFiltered(){
       `${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.destination||''}`
     ).toLowerCase().includes(q));
   }
+
+  // Scope (simple logic; map to your columns later)
+  arr = arr.filter(m=>{
+    if(!currentScope) return true;
+    if(currentScope==='accepted') return (m.status||'').toLowerCase()==='active';
+    if(currentScope==='history')  return ['success','fail','abort'].includes((m.status||'').toLowerCase());
+    if(currentScope==='personal') return (m.tags||'').toLowerCase().includes('personal');
+    if(currentScope==='beacons')  return (m.type||'').toLowerCase()==='beacon';
+    return true;
+  });
+
   return arr;
 }
+
 function renderFiltered(){
   filtered = getFiltered();
-  // KPIs
+
   $('#kpiCount').textContent = filtered.length.toLocaleString();
   const rCount = filtered.filter(x=>deriveCategory(x.type)==='Resource').length;
-  const oCount = filtered.length - rCount;
-  $('#kpiMix').textContent = `${rCount} : ${oCount}`;
+  $('#kpiMix').textContent = `${rCount} : ${filtered.length - rCount}`;
   const payouts = filtered.map(m=>+m.payout_auec||0).filter(n=>n>0);
   const avg = payouts.length ? Math.round(payouts.reduce((a,b)=>a+b,0)/payouts.length) : 0;
   $('#kpiAvg').textContent = avg ? avg.toLocaleString() : '-';
 
-  renderFeed(filtered);
+  renderList(filtered);
   if(selectedId){
-    const found = filtered.find(m=>m.id===selectedId) || allMissions.find(m=>m.id===selectedId);
-    renderInspector(found||null);
+    const m = filtered.find(x=>x.id===selectedId) || allMissions.find(x=>x.id===selectedId);
+    renderInspector(m||null);
   }
 }
-function renderFeed(rows){
-  const el = $('#feed');
-  const empty = $('#feedEmpty');
-  if(!rows.length){ el.innerHTML=''; empty.classList.remove('hidden'); return; }
-  empty.classList.add('hidden');
 
-  el.innerHTML = rows.map(m => {
-    const cat = deriveCategory(m.type);
-    return `
-      <article class="card" onclick="inspect('${m.id}')">
-        <div>
-          <h3>${esc(m.title||'(untitled)')}</h3>
-          <div class="row" style="margin:6px 0 4px">
-            ${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}
-            ${m.type?`<span class="pill">${esc(m.type)}</span>`:''}
-            ${m.status?`<span class="pill">${esc(m.status)}</span>`:''}
-          </div>
-          <div class="meta">
-            ${m.origin||m.destination?`${esc(m.origin||'')} → ${esc(m.destination||'')} • `:''}
-            ${m.start_time?fmtDate(m.start_time):'TBA'}
-          </div>
-        </div>
-        <div class="mono" style="text-align:right">
-          <div style="font-size:12px;color:var(--muted)">Payout</div>
-          <div style="font-size:18px;color:var(--accent);font-weight:700">${fmtNum(m.payout_auec)}</div>
-        </div>
-      </article>
-    `;
-  }).join('');
+/* ========= List (left) ========= */
+function listItemHtml(m){
+  const cat = deriveCategory(m.type);
+  const route = (m.origin||m.destination)?`${esc(m.origin||'')} → ${esc(m.destination||'')}`:'—';
+  return `
+    <div class="mitem" data-id="${m.id}" onclick="inspect('${m.id}')">
+      <div class="mtitle">${esc(m.title||'(untitled)')}</div>
+      <div class="mmeta">${route} • ${m.start_time?fmtDate(m.start_time):'TBA'}</div>
+      <div class="mchips">
+        ${cat?`<span class="mchip">${cat}</span>`:''}
+        ${m.type?`<span class="mchip">${esc(m.type)}</span>`:''}
+        ${m.status?`<span class="mchip">${esc(m.status)}</span>`:''}
+        ${m.payout_auec?`<span class="mchip mono">${fmtNum(m.payout_auec)} aUEC</span>`:''}
+      </div>
+    </div>`;
+}
+function renderList(rows){
+  const list=$('#mList'); const empty=$('#feedEmpty');
+  if(!rows.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  list.innerHTML = rows.map(listItemHtml).join('') + `
+    <div class="ongoing-head">Ongoing (You’re marked as going)</div>
+    <div id="ongoingSpace"></div>
+  `;
+  // keep highlight
+  if(selectedId){
+    const el = list.querySelector(`.mitem[data-id="${selectedId}"]`);
+    if(el) el.classList.add('active');
+  }
+  // load ongoing quietly
+  loadOngoing();
 }
 
-/* ===== Inspector ===== */
+/* ========= Inspector (right) ========= */
 function attachmentsHtml(arr){
   if(!Array.isArray(arr)||!arr.length) return '<span class="small">None</span>';
   return arr.map((a,i)=>{
@@ -452,27 +425,20 @@ function attachmentsHtml(arr){
     return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
   }).join('<br>');
 }
-function tagsHtml(s){
-  if(!s) return '<span class="small">None</span>';
-  return esc(s);
-}
 function renderInspector(m){
-  const box = $('#inspector');
+  const box=$('#inspector');
   if(!m){
-    box.innerHTML = `<h2 class="small" style="margin:0 0 6px;color:var(--accent)">Mission Details</h2>
-      <div class="empty">Select a contract from the center feed to view its briefing.</div>`;
+    box.innerHTML = `<h2>Mission Details</h2><div class="small">Select a contract on the left to view its briefing.</div>`;
     return;
   }
   selectedId = m.id;
   const cat = deriveCategory(m.type);
   box.innerHTML = `
-    <div class="row" style="justify-content:space-between;align-items:center">
-      <h2 style="margin:0;color:var(--accent);font-size:16px">${esc(m.title||'(untitled)')}</h2>
-      <div class="row">
-        ${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}
-        ${m.type?`<span class="pill">${esc(m.type)}</span>`:''}
-        ${m.status?`<span class="pill">${esc(m.status)}</span>`:''}
-      </div>
+    <h2>${esc(m.title||'(untitled)')}</h2>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 2px">
+      ${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}
+      ${m.type?`<span class="pill">${esc(m.type)}</span>`:''}
+      ${m.status?`<span class="pill">${esc(m.status)}</span>`:''}
     </div>
     <div class="hr"></div>
     <div class="small">
@@ -480,29 +446,68 @@ function renderInspector(m){
       <div><b>Start:</b> ${m.start_time?fmtDate(m.start_time):'TBA'}</div>
       <div><b>Hours:</b> ${m.hours?esc(m.hours):'—'}</div>
       <div><b>Payout:</b> <span class="mono">${fmtNum(m.payout_auec)}</span> aUEC</div>
-      <div style="margin-top:6px"><b>Tags:</b> ${tagsHtml(m.tags)}</div>
+      <div style="margin-top:6px"><b>Tags:</b> ${esc(m.tags||'—')}</div>
     </div>
     <div class="hr"></div>
     <div class="small"><b>Notes</b><br>${esc(m.notes||'—')}</div>
     <div class="hr"></div>
     <div class="small"><b>Attachments</b><br>${attachmentsHtml(m.attachments)}</div>
     <div class="hr"></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-accept" onclick="openAttendance('${m.id}','${esc(m.title||'')}')">ACCEPT OFFER</button>
       <button class="small-btn" onclick="openAttendance('${m.id}','${esc(m.title||'')}')">Attendance</button>
-      <button class="small-btn" onclick="scrollToFeed()">Back to Feed</button>
     </div>
   `;
+
+  // highlight selected in list
+  $$('.mitem').forEach(x=>x.classList.toggle('active', x.dataset.id===m.id));
 }
 function inspect(id){
   const m = (filtered.find(x=>x.id===id) || allMissions.find(x=>x.id===id));
   renderInspector(m||null);
-  // On mobile, scroll the inspector into view if stacked
-  if(window.matchMedia('(max-width:1060px)').matches){ document.querySelector('.inspector').scrollIntoView({behavior:'smooth',block:'start'}); }
+  if(window.matchMedia('(max-width:1100px)').matches){
+    document.getElementById('inspector').scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
 window.inspect = inspect;
-function scrollToFeed(){ document.querySelector('main.panel').scrollIntoView({behavior:'smooth',block:'start'}); }
 
-/* ===== Export CSV ===== */
+/* ========= Ongoing (you’re going + planned/active) ========= */
+async function loadOngoing(){
+  if(!sb || !session) return;
+  const space = document.getElementById('ongoingSpace');
+  if(!space) return;
+
+  const { data: att, error: e1 } = await sb
+    .from('mission_attendees')
+    .select('mission_id')
+    .eq('user_id', session.user.id)
+    .eq('attendance','going');
+
+  if(e1 || !att?.length){ space.innerHTML = `<div class="ongoing-item">None</div>`; return; }
+
+  const { data: rows, error: e2 } = await sb
+    .from('missions')
+    .select('id,title,status,start_time,origin,destination')
+    .in('id', att.map(a=>a.mission_id))
+    .in('status',['planned','active'])
+    .order('start_time',{ascending:true});
+
+  if(e2 || !rows?.length){ space.innerHTML = `<div class="ongoing-item">None</div>`; return; }
+
+  space.innerHTML = rows.map(r=>`
+    <div class="ongoing-item">
+      <div class="ongoing-title">${esc(r.title||'(untitled)')}</div>
+      <div>${esc(r.status||'')} • ${r.start_time?fmtDate(r.start_time):'TBA'}${r.origin||r.destination?` • ${esc(r.origin||'')} → ${esc(r.destination||'')}`:''}</div>
+      <div style="margin-top:6px;display:flex;gap:6px">
+        <button class="small-btn" onclick="inspect('${r.id}')">Open</button>
+        <button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">Attendance</button>
+      </div>
+    </div>
+  `).join('');
+}
+window.refreshOngoing = loadOngoing;
+
+/* ========= Export CSV ========= */
 function exportCSV(){
   const rows = getFiltered();
   const cols=['title','category','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
@@ -525,19 +530,17 @@ function exportCSV(){
       return cols.map(k=>`"${String(rec[k]).replace(/"/g,'""')}"`).join(',');
     })
   ].join('\n');
-  const blob = new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob); const a=document.createElement('a');
-  a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+  const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
 }
 
-/* ===== Attendance (reused, wired to inspector buttons) ===== */
+/* ========= Attendance (reuse) ========= */
 let ATT_MISSION_ID=null;
 async function openAttendance(missionId,title=''){
   ATT_MISSION_ID = missionId;
   $('#attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
   $('#attModalMask').style.display='flex';
 
-  // Elevation
   const [{ data: elev }, { data: mission }] = await Promise.all([
     sb.rpc('is_elevated', { u: session.user.id }),
     sb.from('missions').select('submitted_by').eq('id', missionId).single()
@@ -545,7 +548,6 @@ async function openAttendance(missionId,title=''){
   const isOwner = mission?.submitted_by === session.user.id;
   $('#attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
 
-  // Role selects
   $('#attSelfRole').innerHTML = roleOptionsHtml('My role (optional)');
   $('#attAddRole').innerHTML  = roleOptionsHtml('Role (optional)');
   try{
@@ -557,7 +559,6 @@ async function openAttendance(missionId,title=''){
     if(Array.isArray(mine)&&mine[0]) $('#attSelfRole').value = mine[0].role_in_mission||'';
   }catch(_){}
 
-  // Buttons
   $('#attIamGoing').onclick = async ()=>{
     const role = ($('#attSelfRole').value||'').trim();
     await sb.from('mission_attendees').upsert({
