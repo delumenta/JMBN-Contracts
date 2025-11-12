@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN — Earnings Admin (Aurora Ops)</title>
+<title>JMBN — Earnings Admin (Dual-Pane Aurora Ops)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,27 +17,24 @@
   --bad:#ff6b6b; --ok:#5cd47c; --fs:14px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
-a{color:var(--accent);text-decoration:none}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.2px}
 
-/* Shell */
-.wrap{max-width:1180px;margin:16px auto;padding:0 14px 70px}
-.header{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 0 18px rgba(214,180,76,.18);margin-bottom:14px}
-.header img{width:26px;height:26px}
-.header h1{margin:0;font-size:16px;color:var(--accent)}
-
-/* Panels */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18);margin-bottom:14px}
-.hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
-.hd h3{margin:0;font-size:15px;color:var(--accent)}
-.body{padding:12px}
+/* Topbar (sticky) */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  background:linear-gradient(180deg, #0c0c0c 0%, #090909 100%);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 6px 18px rgba(214,180,76,.12);
+}
+.topwrap{max-width:1180px;margin:0 auto;padding:8px 14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:26px;height:26px}
+.brand h1{margin:0;font-size:16px;color:var(--accent)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .small{color:var(--muted);font-size:12px}
-.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--accent);background:#111}
-
-/* Inputs / Buttons */
 input,select,button{font-family:'Play'}
-input[type="number"], input[type="text"], select{
-  background:#0a0a0a;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px 10px
+input[type="number"], input[type="text"], input[type="date"], select{
+  background:#0a0a0a;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 10px
 }
 button{
   border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);
@@ -48,19 +45,38 @@ button:hover{background:var(--accent);color:#000}
 .btn-bad{border-color:var(--bad);color:var(--bad)}
 .pill{border-radius:999px;padding:6px 10px}
 
-/* KPIs */
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:900px){.grid3{grid-template-columns:1fr}}
-.kpi{border:1px solid var(--border);border-radius:12px;padding:10px;background:#0c0c0c;text-align:center}
+/* KPI stripe */
+.kpis{max-width:1180px;margin:10px auto 14px;padding:0 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){.kpis{grid-template-columns:1fr}}
+.kpi{border:1px solid var(--border);border-radius:12px;padding:10px;background:#0c0c0c;text-align:center;box-shadow:0 0 18px rgba(214,180,76,.18)}
 .kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
 .kpi .v{font-size:18px;color:var(--accent);font-weight:700}
 
+/* Main dual-pane */
+.main{max-width:1180px;margin:0 auto;padding:0 14px 80px}
+.split{
+  display:grid; grid-template-columns: var(--left, 42%) 8px 1fr; gap:0; align-items:stretch; min-height:64vh;
+  border:1px solid var(--border); border-radius:14px; overflow:hidden;
+  box-shadow:0 0 20px rgba(214,180,76,.15);
+}
+.left, .right{background:var(--panel)}
+.left{border-right:1px solid var(--border); display:flex; flex-direction:column; min-width:260px}
+.right{display:flex; flex-direction:column; min-width:320px}
+.gutter{
+  background:
+    linear-gradient(180deg, rgba(214,180,76,.18), rgba(214,180,76,.06)),
+    repeating-linear-gradient(180deg, transparent 0 6px, rgba(214,180,76,.15) 6px 7px);
+  cursor:col-resize;
+}
+.section-hd{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.section-hd h3{margin:0;font-size:15px;color:var(--accent)}
+.section-bd{padding:10px 12px;overflow:auto}
+
 /* Ledger rows */
 .table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.row{display:grid;grid-template-columns:140px 1fr 120px 240px 120px 220px;gap:8px;align-items:center;
+.row{display:grid;grid-template-columns:136px 1fr 114px 150px;gap:8px;align-items:center;
   background:var(--row);border:1px solid rgba(214,180,76,.35);border-radius:12px;padding:8px 10px}
-@media(max-width:1120px){.row{grid-template-columns:140px 1fr 110px 230px 120px 160px}}
-@media(max-width:980px){ .row{grid-template-columns:1fr} .right{justify-content:flex-start}}
+.row.sel{outline:2px solid var(--accent)}
 .cell{padding:2px 4px}
 .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .tag{font-size:10px;padding:2px 6px;border:1px solid var(--border);border-radius:999px;color:var(--accent);background:#121212}
@@ -68,22 +84,15 @@ button:hover{background:var(--accent);color:#000}
 .note{font-size:11px;color:var(--muted)}
 .cutCtrl{display:flex;align-items:center;gap:6px}
 .cutCtrl button{width:28px;height:28px;line-height:26px;padding:0}
-.cutCtrl input{width:82px;height:30px;font-size:13px;text-align:center}
-.right{display:flex;gap:8px;align-items:center;justify-content:flex-end}
-.alert{border:1px solid var(--bad);background:#240e0e;color:#ffbcbc;border-radius:10px;padding:8px 10px}
+.cutCtrl input{width:84px;height:30px;font-size:13px;text-align:center}
 
-/* Modal (Participants) */
-.modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:100}
-.modal.open{display:grid}
-.modalCard{
-  width:min(860px,96vw);max-height:86vh;display:flex;flex-direction:column;
-  background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 28px rgba(214,180,76,.22)
-}
-.modalHd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
-.modalHd h3{margin:0;font-size:15px;color:var(--accent)}
-.modalBd{padding:10px 12px;overflow:auto}
+/* Right tabs */
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);padding:8px 10px}
+.tab{padding:6px 10px;border:1px solid var(--border);border-bottom:none;border-radius:9px 9px 0 0;background:#0a0a0a;color:var(--accent);cursor:pointer}
+.tab.active{background:#121212}
+.panelBd{padding:10px 12px;overflow:auto;flex:1}
 
-/* Participant rows */
+/* Participants list */
 .urow{
   display:grid;grid-template-columns: 1fr 110px 124px auto;
   gap:8px;align-items:center;padding:8px 10px;margin-bottom:8px;
@@ -97,83 +106,111 @@ button:hover{background:var(--accent);color:#000}
 .urow .amt{min-width:106px;text-align:right;font-weight:700}
 .urow .act{display:flex;gap:6px;justify-content:flex-end}
 .fixed{background:#121212;border:1px solid var(--border);border-radius:999px;padding:2px 6px;font-size:10px;color:var(--accent)}
-.eqhint{font-size:10px;color:var(--muted)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.footer{display:flex;gap:16px;justify-content:flex-end;align-items:center;border-top:1px solid rgba(214,180,76,.2);padding-top:8px;margin-top:8px}
+.warn{color:#f7c46d}
+
+/* Simple lists in other tabs */
+.list{display:grid;gap:8px}
+.cardline{border:1px solid rgba(214,180,76,.3);border-radius:10px;background:#0a0a0a;padding:10px}
+
+/* Helpers */
+.hide{display:none!important}
+.alert{border:1px solid var(--bad);background:#240e0e;color:#ffbcbc;border-radius:10px;padding:8px 10px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--accent);background:#111}
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <div class="header">
-    <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-    <h1>JMBN — Earnings Admin (Aurora Ops)</h1>
-  </div>
-
-  <!-- Org Cut -->
-  <div class="panel">
-    <div class="hd">
-      <h3>Org Cut</h3>
-      <span class="small">Global % applies unless a mission override exists or the mission has a snapshot.</span>
+<!-- Sticky topbar -->
+<div class="topbar">
+  <div class="topwrap">
+    <div class="brand">
+      <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+      <h1>JMBN — Earnings Admin</h1>
     </div>
-    <div class="body">
-      <div class="meta" style="gap:12px;flex-wrap:wrap">
-        <div class="small">Default %</div>
-        <input id="gCut" type="number" step="0.1" min="0" max="100" style="width:110px" />
-        <button id="gSave">Save</button>
-        <span class="small" id="gStamp">—</span>
-      </div>
+    <div class="filters">
+      <span class="small">Date</span>
+      <input id="fFrom" type="date">
+      <input id="fTo" type="date">
+      <select id="fStatus">
+        <option value="">All Status</option>
+        <option value="planned">Planned</option>
+        <option value="success">Success</option>
+        <option value="abort">Abort</option>
+        <option value="failed">Failed</option>
+      </select>
+      <button id="btnReload">Reload</button>
+      <span class="small">Global cut %</span>
+      <input id="gCut" type="number" step="0.1" min="0" max="100" style="width:98px">
+      <button id="gSave">Save</button>
+      <span class="small" id="gStamp">—</span>
     </div>
-  </div>
-
-  <!-- Mission Ledger -->
-  <div class="panel">
-    <div class="hd">
-      <h3>Mission Ledger</h3>
-      <div class="meta" style="gap:8px;flex-wrap:wrap">
-        <input id="fFrom" type="date">
-        <input id="fTo" type="date">
-        <select id="fStatus">
-          <option value="">All Status</option>
-          <option value="planned">Planned</option>
-          <option value="success">Success</option>
-          <option value="abort">Abort</option>
-          <option value="failed">Failed</option>
-        </select>
-        <button id="btnReload">Reload</button>
-      </div>
-    </div>
-    <div class="body">
-      <div class="grid3" style="margin-bottom:10px">
-        <div class="kpi"><h4>ORG EARNED</h4><div class="v" id="kOrg">–</div></div>
-        <div class="kpi"><h4>MEMBER SHARE</h4><div class="v" id="kMem">–</div></div>
-        <div class="kpi"><h4>MISSIONS</h4><div class="v" id="kMis">–</div></div>
-      </div>
-      <div class="small" style="margin-bottom:8px">Use <b>– / +</b> to nudge a mission’s override. Type a value then press <b>Save</b>. Values are in <b>%</b>.</div>
-      <div id="list">Loading…</div>
-    </div>
-  </div>
-
-  <!-- Last 4 -->
-  <div class="panel">
-    <div class="hd"><h3>Last 4 Missions (Org)</h3><span class="badge" id="lastCount">0</span></div>
-    <div class="body" id="last4">—</div>
   </div>
 </div>
 
-<!-- PARTICIPANTS MODAL -->
-<div id="pModal" class="modal" aria-hidden="true" role="dialog" aria-label="Participants & Overrides">
-  <div class="modalCard">
-    <div class="modalHd">
-      <h3 id="dwTitle">Participants & Overrides</h3>
-      <button id="modalClose" title="Close">✕</button>
-    </div>
-    <div class="modalBd">
-      <div class="small" id="dwMeta">—</div>
-      <div class="small" style="margin:8px 0 10px">
-        Member pool = payout − <span class="badge">org_cut_value</span> (if present) otherwise payout × (1 − org_cut_pct).<br>
-        Default <b>%</b> is weighted by rank from <code>v_missions_payout_live.weight ÷ total_weight</code>.<br>
-        Per-user final = fixed (if set) → percent of pool (if set) → equal split.
+<!-- KPIs -->
+<section class="kpis">
+  <div class="kpi"><h4>ORG EARNED</h4><div class="v" id="kOrg">–</div></div>
+  <div class="kpi"><h4>MEMBER SHARE</h4><div class="v" id="kMem">–</div></div>
+  <div class="kpi"><h4>MISSIONS</h4><div class="v" id="kMis">–</div></div>
+</section>
+
+<!-- Dual pane -->
+<div class="main">
+  <div id="split" class="split" style="--left:42%">
+    <!-- LEFT: Ledger -->
+    <div class="left">
+      <div class="section-hd">
+        <h3>Mission Ledger</h3>
+        <span class="small">↑/↓ to navigate • Enter to edit</span>
       </div>
-      <div id="uList">—</div>
+      <div id="list" class="section-bd">Loading…</div>
+    </div>
+
+    <!-- Draggable gutter -->
+    <div id="gutter" class="gutter" title="Drag to resize"></div>
+
+    <!-- RIGHT: Details -->
+    <div class="right">
+      <div class="section-hd"><h3 id="selTitle">Select a mission…</h3><span id="selMeta" class="small">—</span></div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active" data-tab="participants">Participants</div>
+        <div class="tab" data-tab="orgcut">Org Cut</div>
+        <div class="tab" data-tab="audit">Audit</div>
+      </div>
+
+      <!-- Tab panels -->
+      <div class="panelBd">
+        <div id="tab-participants">
+          <div id="pTools" class="tools hide">
+            <button id="bEq">Distribute equally</button>
+            <button id="bW">Distribute by weight</button>
+            <button id="bZero">Zero all %</button>
+            <button id="bNorm">Normalize to 100%</button>
+            <span class="small">Pool uses <span class="badge">org_cut_value</span> if present, else <code>payout × (1 − org_cut_pct)</code>.</span>
+          </div>
+          <div id="uList">—</div>
+          <div id="pFooter" class="footer hide">
+            <span class="small">Sum %: <b id="sumPct">0.0%</b></span>
+            <span class="small">Total aUEC (est): <b id="sumAmt">0</b></span>
+          </div>
+        </div>
+
+        <div id="tab-orgcut" class="hide">
+          <div class="list" id="cutInfo">
+            <div class="cardline">Select a mission to view its effective cut and override state.</div>
+          </div>
+        </div>
+
+        <div id="tab-audit" class="hide">
+          <div class="list" id="auditList">
+            <div class="cardline">Select a mission to view latest overrides / updates.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -185,27 +222,83 @@ const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 const fmt = n => (n==null || isNaN(n)) ? '–' : Number(n).toLocaleString();
 
-let sb, me, GLOBAL=0, MISSIONS=[], OV={}, currentMission=null;
+let sb, me, GLOBAL=0, MISSIONS=[], OV={}, currentId=null, nameCache=new Map();
 
 /* ---------- Boot ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await requireAuth(); if(!session) return;
   sb = getSupabase(); me = session.user.id;
 
-  setDefaultDates();
+  primeDates();
   await loadGlobal();
   await loadLedger();
 
   $('#gSave').onclick = saveGlobal;
   $('#btnReload').onclick = loadLedger;
-  $('#modalClose').onclick = closeModal;
 
-  // click outside to close
-  $('#pModal').addEventListener('click', (e)=>{ if(e.target.id==='pModal') closeModal(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+  // tabs
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      const tab = t.dataset.tab;
+      ['participants','orgcut','audit'].forEach(id=>{
+        $('#tab-'+id).classList.toggle('hide', id!==tab);
+      });
+    });
+  });
+
+  // splitter
+  initSplitter();
+
+  // keyboard nav
+  document.addEventListener('keydown', onKeyNav);
 });
 
-function setDefaultDates(){
+/* ---------- Splitter (vanilla, persisted) ---------- */
+function initSplitter(){
+  const gutter = $('#gutter');
+  const split  = $('#split');
+
+  // restore
+  const saved = localStorage.getItem('jmbn_split_left');
+  if(saved){ split.style.setProperty('--left', saved); }
+
+  let dragging=false, startX=0, startPct=42;
+  const onDown = (e)=>{
+    dragging=true;
+    startX = (e.touches?e.touches[0].clientX:e.clientX);
+    const cs = getComputedStyle(split).getPropertyValue('--left').trim();
+    startPct = Number(cs.replace('%','')) || 42;
+    document.body.style.cursor='col-resize';
+    e.preventDefault();
+  };
+  const onMove = (e)=>{
+    if(!dragging) return;
+    const x = (e.touches?e.touches[0].clientX:e.clientX);
+    const dx = x - startX;
+    const rect = split.getBoundingClientRect();
+    let pct = startPct + (dx / rect.width)*100;
+    pct = Math.max(26, Math.min(70, pct)); // bounds
+    split.style.setProperty('--left', pct+'%');
+  };
+  const onUp = ()=>{
+    if(!dragging) return;
+    dragging=false;
+    document.body.style.cursor='';
+    localStorage.setItem('jmbn_split_left', getComputedStyle(split).getPropertyValue('--left').trim());
+  };
+
+  gutter.addEventListener('mousedown', onDown);
+  gutter.addEventListener('touchstart', onDown, {passive:false});
+  window.addEventListener('mousemove', onMove, {passive:false});
+  window.addEventListener('touchmove', onMove, {passive:false});
+  window.addEventListener('mouseup', onUp);
+  window.addEventListener('touchend', onUp);
+}
+
+/* ---------- Dates ---------- */
+function primeDates(){
   const to = new Date(); const from = new Date(); from.setMonth(from.getMonth()-1);
   $('#fFrom').value = from.toISOString().slice(0,10);
   $('#fTo').value   = to.toISOString().slice(0,10);
@@ -260,14 +353,13 @@ async function loadLedger(){
   }
 
   renderList();
-  renderLast4();
 }
 
 function effectiveCut(m){
   const o = OV[m.id]?.org_cut_pct;
-  if(o!=null) return Number(o);
-  if(m.org_cut_percent!=null) return Number(m.org_cut_percent);
-  return Number(GLOBAL);
+  if(o!=null) return Number(o); // percent
+  if(m.org_cut_percent!=null) return Number(m.org_cut_percent); // percent
+  return Number(GLOBAL); // percent
 }
 function rowBadgeSet(m){
   const bag = [];
@@ -286,7 +378,7 @@ function renderList(){
   }
   let totOrg=0, totPayout=0;
 
-  const rows = MISSIONS.map(m=>{
+  const rows = MISSIONS.map((m, idx)=>{
     const eff = effectiveCut(m); // %
     const payout = Number(m.payout_auec||0);
     const orgEarn = payout * eff/100;
@@ -298,7 +390,7 @@ function renderList(){
       : `Effective <b>${eff}%</b> (${OV[m.id]?'override':'global'})`;
 
     return `
-      <div class="row" data-id="${m.id}">
+      <div class="row${m.id===currentId?' sel':''}" data-id="${m.id}" data-idx="${idx}" tabindex="0">
         <div class="cell small">${new Date(m.start_time).toLocaleString()}</div>
         <div class="cell">
           <div>${esc(m.title||'Untitled')}</div>
@@ -314,11 +406,6 @@ function renderList(){
           </div>
           <div class="note">${hint}</div>
         </div>
-        <div class="cell"><b>${fmt(orgEarn)}</b></div>
-        <div class="cell right">
-          <button class="pill" data-participants>Participants</button>
-          <button class="btn-bad" data-clear ${OV[m.id]?'':'disabled'}>Clear Override</button>
-        </div>
       </div>`;
   }).join('');
 
@@ -329,8 +416,6 @@ function renderList(){
         <div class="cell small">Title</div>
         <div class="cell small">Payout</div>
         <div class="cell small">Cut % (Override) &amp; Effective</div>
-        <div class="cell small">Org Earned</div>
-        <div class="cell small">Actions</div>
       </div>
       ${rows}
     </div>`;
@@ -340,16 +425,25 @@ function renderList(){
   $('#kMem').textContent = fmt(totPayout - totOrg);
   $('#kMis').textContent = String(MISSIONS.length);
 
-  // wire controls
-  list.querySelectorAll('.row').forEach(row=>{
-    const id = row.dataset.id;
+  // wire controls + selection
+  list.querySelectorAll('.row[data-id]').forEach(row=>{
+    const id  = row.dataset.id;
     const inp = row.querySelector('input[type="number"]');
-    row.querySelector('[data-minus]')?.addEventListener('click', ()=>{ inp.value = String(Math.max(0,(Number(inp.value)||0)-0.5)); });
-    row.querySelector('[data-plus]') ?.addEventListener('click', ()=>{ inp.value = String(Math.min(100,(Number(inp.value)||0)+0.5)); });
-    row.querySelector('[data-save]') ?.addEventListener('click', ()=> saveMissionOverride(id, inp.value));
-    row.querySelector('[data-clear]')?.addEventListener('click', ()=> clearMissionOverride(id));
-    row.querySelector('[data-participants]')?.addEventListener('click', ()=> openModal(id));
+
+    row.addEventListener('click', ()=>selectMission(id));
+    row.addEventListener('dblclick', ()=>selectMission(id));
+    row.addEventListener('keydown', (e)=>{ if(e.key==='Enter') selectMission(id); });
+
+    row.querySelector('[data-minus]')?.addEventListener('click', (e)=>{ e.stopPropagation(); inp.value = String(Math.max(0,(Number(inp.value)||0)-0.5)); });
+    row.querySelector('[data-plus]') ?.addEventListener('click', (e)=>{ e.stopPropagation(); inp.value = String(Math.min(100,(Number(inp.value)||0)+0.5)); });
+    row.querySelector('[data-save]') ?.addEventListener('click', (e)=>{ e.stopPropagation(); saveMissionOverride(id, inp.value); });
   });
+
+  // keep selection highlight accurate
+  if(currentId){
+    const cur = list.querySelector(`.row[data-id="${currentId}"]`);
+    if(cur) cur.classList.add('sel');
+  }
 }
 
 async function saveMissionOverride(missionId, val){
@@ -360,69 +454,31 @@ async function saveMissionOverride(missionId, val){
   if(error) return alert('Save override failed: ' + error.message);
   OV[missionId] = { mission_id: missionId, org_cut_pct: pct };
   renderList();
-}
-async function clearMissionOverride(missionId){
-  if(!confirm('Remove mission override?')) return;
-  const { error } = await sb.from('mission_org_cut_overrides').delete().eq('mission_id', missionId);
-  if(error) return alert('Clear failed: ' + error.message);
-  delete OV[missionId];
-  renderList();
+  if(missionId===currentId) renderOrgCutPane(missionId);
 }
 
-/* ---------- Last 4 ---------- */
-async function renderLast4(){
-  const box = $('#last4');
-  const { data, error } = await sb.from('missions')
-    .select('id,title,start_time,payout_auec,status,org_cut_percent')
-    .order('start_time',{ascending:false}).limit(4);
-  if(error || !data?.length){ box.innerHTML='—'; $('#lastCount').textContent='0'; return; }
+/* ---------- Select mission -> update right pane ---------- */
+function selectMission(id){
+  currentId = id;
+  // highlight
+  document.querySelectorAll('#list .row[data-id]').forEach(el=>el.classList.toggle('sel', el.dataset.id===id));
+  const m = MISSIONS.find(x=>x.id===id);
+  $('#selTitle').textContent = m?.title || 'Untitled';
+  $('#selMeta').textContent  = m ? new Date(m.start_time).toLocaleString() : '—';
 
-  const ids = data.map(m=>m.id);
-  const { data: over } = await sb.from('mission_org_cut_overrides')
-    .select('mission_id, org_cut_pct').in('mission_id', ids);
-  const map = Object.fromEntries((over||[]).map(r=>[r.mission_id, r.org_cut_pct]));
-
-  $('#lastCount').textContent = String(data.length);
-  box.innerHTML = data.map(m=>{
-    const eff = (map[m.id]!=null) ? map[m.id] : (m.org_cut_percent!=null ? m.org_cut_percent : GLOBAL);
-    const payout = Number(m.payout_auec||0);
-    const orgEarn = payout * eff/100;
-    return `
-      <div class="row" style="grid-template-columns:180px 1fr 120px 160px 120px">
-        <div class="cell small">${new Date(m.start_time).toLocaleString()}</div>
-        <div class="cell">${esc(m.title||'Untitled')} <span class="tag dim">${esc(m.status||'')}</span></div>
-        <div class="cell"><b>${fmt(payout)}</b></div>
-        <div class="cell small">Cut: <b>${eff}%</b></div>
-        <div class="cell"><b>${fmt(orgEarn)}</b></div>
-      </div>`;
-  }).join('');
+  // refresh tabs
+  document.querySelector('.tab[data-tab="participants"]').click(); // open participants first
+  loadParticipants(id);
+  renderOrgCutPane(id);
+  renderAuditPane(id);
 }
 
-/* ==================== PARTICIPANTS — Modal ==================== */
-function openModal(missionId){
-  currentMission = missionId;
-  const modal = $('#pModal');
-  modal.classList.add('open');
-  document.body.style.overflow='hidden';
-  loadParticipants(missionId);
-}
-function closeModal(){
-  $('#pModal').classList.remove('open');
-  document.body.style.overflow='';
-  $('#uList').innerHTML='—';
-  $('#dwMeta').textContent='—';
-  currentMission=null;
-}
-
+/* ---------- Participants (right pane) ---------- */
 async function loadParticipants(missionId){
-  const uList = $('#uList');
-  uList.innerHTML = 'Loading…';
+  const list = $('#uList'); const tools=$('#pTools'); const foot=$('#pFooter');
+  list.textContent = 'Loading…'; tools.classList.add('hide'); foot.classList.add('hide');
 
-  const mission = MISSIONS.find(m=>m.id===missionId);
-  $('#dwTitle').textContent = 'Participants & Overrides';
-  $('#dwMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
-
-  // 1) participants from v_missions_payout_live
+  // 1) rows from v_missions_payout_live
   let rows = [];
   try{
     const { data, error } = await sb.from('v_missions_payout_live')
@@ -432,67 +488,67 @@ async function loadParticipants(missionId){
     if(error) throw error;
     rows = data || [];
   }catch(e){
-    uList.innerHTML = `<div class="alert">Failed to load participants: ${esc(e.message)}</div>`;
+    list.innerHTML = `<div class="alert">Failed to load participants: ${esc(e.message)}</div>`;
     return;
   }
-  if(!rows.length){ uList.innerHTML = `<div class="small">No participants found for this mission.</div>`; return; }
+  if(!rows.length){ list.innerHTML = `<div class="small">No participants found.</div>`; return; }
 
-  // 2) handles (prefer handle, ALL CAPS)
+  // 2) names cache (UPPERCASE handles)
   const ids = [...new Set(rows.map(r=>r.user_id).filter(Boolean))];
-  const nameMap = {};
-  if(ids.length){
-    try{
-      const { data: prof } = await sb.from('v_profiles_detailed')
-        .select('user_id, handle, display_name, current_rank_abbrev')
-        .in('user_id', ids);
-      (prof||[]).forEach(p=>{
-        const base = p.handle?.trim() || p.display_name?.trim() || String(p.user_id).slice(0,8);
-        const label = base.toUpperCase();
-        nameMap[p.user_id] = { label, rank: (p.current_rank_abbrev||'').toUpperCase(), handle: p.handle?('@'+p.handle.toUpperCase()):'' };
+  const missing = ids.filter(id=>!nameCache.has(id));
+  if(missing.length){
+    const { data: prof } = await sb.from('v_profiles_detailed')
+      .select('user_id, handle, display_name, current_rank_abbrev')
+      .in('user_id', missing);
+    (prof||[]).forEach(p=>{
+      const base = p.handle?.trim() || p.display_name?.trim() || String(p.user_id).slice(0,8);
+      nameCache.set(p.user_id, {
+        label: base.toUpperCase(),
+        rank: (p.current_rank_abbrev||'').toUpperCase(),
+        handle: p.handle?('@'+p.handle.toUpperCase()):''
       });
-    }catch(_){}
+    });
   }
-  const labelOf = uid => (nameMap[uid]?.label || String(uid).slice(0,8)).toUpperCase();
-  const rankOf  = uid => (nameMap[uid]?.rank || '').toUpperCase();
-  const handleOf= uid => (nameMap[uid]?.handle || '').toUpperCase();
+  const labelOf = uid => (nameCache.get(uid)?.label || String(uid).slice(0,8)).toUpperCase();
+  const rankOf  = uid => (nameCache.get(uid)?.rank  || '').toUpperCase();
+  const handleOf= uid => (nameCache.get(uid)?.handle|| '').toUpperCase();
 
-  // 3) overrides
+  // 3) per-user overrides
   const { data: uov } = await sb.from('mission_user_overrides')
     .select('user_id, share_pct, share_fixed_auec, note')
     .eq('mission_id', missionId);
   const mapOv = Object.fromEntries((uov||[]).map(r=>[r.user_id, r]));
 
-  // 4) pool math (prefer org_cut_value if present)
+  // 4) pool math (prefer org_cut_value)
   const h = rows[0];
   const payout = Number(h.payout_auec||0);
   const cutVal = (h.org_cut_value!=null) ? Number(h.org_cut_value) : null;
   const cutPct = (h.org_cut_pct!=null) ? Number(h.org_cut_pct) : null; // might be 0.2 or 20
-  const pctAsFraction = (cutPct!=null && cutPct>1) ? (cutPct/100) : (cutPct ?? 0);
-  const memberPool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - pctAsFraction));
+  const pctFrac = (cutPct!=null && cutPct>1) ? (cutPct/100) : (cutPct ?? 0);
+  const memberPool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - pctFrac));
 
-  // 5) render rows with WEIGHTED default percent
-  uList.innerHTML = rows.map(r=>{
+  // 5) render + batch tools
+  const totalW = rows[0]?.total_weight || rows.reduce((a,b)=>a+Number(b.weight||0),0) || 1;
+
+  list.innerHTML = rows.map(r=>{
     const uid = r.user_id;
-    const totalW = Number(r.total_weight||0) || rows.reduce((a,b)=>a+Number(b.weight||0),0) || 1;
-    const weight = Number(r.weight||0);
-    const defPct = (weight / totalW) * 100;
-
-    const info = { label: labelOf(uid), rank: rankOf(uid), handle: handleOf(uid), pg: (r.paygrade||'').toUpperCase() };
+    const defPct = (Number(r.weight||0)/Number(totalW))*100;
     const ov = mapOv[uid] || {};
     const hasFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
     const hasPct   = (ov.share_pct!=null);
     const pct = hasPct ? Number(ov.share_pct) : defPct;
     const amount = hasFixed ? Number(ov.share_fixed_auec) : (memberPool * (pct/100));
+    const info = { label: labelOf(uid), rank: rankOf(uid), handle: handleOf(uid), pg: (r.paygrade||'').toUpperCase() };
 
     return `
-      <div class="urow" data-uid="${uid}">
+      <div class="urow" data-uid="${uid}" data-def="${defPct}">
         <div class="name">
           <b>${esc(info.label)}</b>
           <div class="sub">
             ${info.rank?`<span>${esc(info.rank)}</span>`:''}
             ${info.pg?`<span>PG:${esc(info.pg)}</span>`:''}
             ${info.handle?`<span>${esc(info.handle)}</span>`:''}
-            <span class="tag dim">w:<b>${Number(weight).toFixed(2)}</b></span>
+            <span class="tag dim">w:<b>${Number(r.weight||0).toFixed(2)}</b></span>
             <span class="tag dim">default ${defPct.toFixed(1)}%</span>
             ${ov.note?`<span class="tag">${esc(ov.note)}</span>`:''}
           </div>
@@ -508,7 +564,7 @@ async function loadParticipants(missionId){
           <input data-fixed type="number" step="1" min="0" placeholder="fixed aUEC" value="${hasFixed?Number(ov.share_fixed_auec):''}">
         </div>
 
-        <div class="amt">${hasFixed?'<span class="fixed">fixed aUEC</span>':''} ${fmt(amount)}</div>
+        <div class="amt">${hasFixed?'<span class="fixed">fixed</span>':''} ${fmt(amount)}</div>
 
         <div class="act">
           <button class="btn-ok" data-saveu>Save</button>
@@ -517,13 +573,30 @@ async function loadParticipants(missionId){
       </div>`;
   }).join('');
 
-  // wire per-row controls
-  (uList||document).querySelectorAll('.urow').forEach(row=>{
+  tools.classList.remove('hide');
+  foot.classList.remove('hide');
+  wireParticipantRows(missionId, memberPool);
+  updateFooter(memberPool);
+  wireBatchTools(missionId, rows, memberPool, totalW);
+}
+
+function wireParticipantRows(missionId, memberPool){
+  $('#uList').querySelectorAll('.urow').forEach(row=>{
     const uid   = row.dataset.uid;
     const ipPct = row.querySelector('[data-pct]');
     const ipFix = row.querySelector('[data-fixed]');
-    row.querySelector('[data-pct-minus]')?.addEventListener('click', ()=>{ ipPct.value = String(Math.max(0,(Number(ipPct.value)||0)-0.5)); ipFix.value=''; });
-    row.querySelector('[data-pct-plus]') ?.addEventListener('click', ()=>{ ipPct.value = String(Math.min(100,(Number(ipPct.value)||0)+0.5)); ipFix.value=''; });
+
+    row.querySelector('[data-pct-minus]')?.addEventListener('click', ()=>{
+      ipPct.value = String(Math.max(0,(Number(ipPct.value)||0)-0.5)); ipFix.value='';
+      updateFooter(memberPool);
+    });
+    row.querySelector('[data-pct-plus]') ?.addEventListener('click', ()=>{
+      ipPct.value = String(Math.min(100,(Number(ipPct.value)||0)+0.5)); ipFix.value='';
+      updateFooter(memberPool);
+    });
+    [ipPct, ipFix].forEach(inp=>{
+      inp?.addEventListener('input', ()=>{ if(inp===ipPct) ipFix.value=''; else ipPct.value=''; updateFooter(memberPool); });
+    });
 
     row.querySelector('[data-saveu]')?.addEventListener('click', async ()=>{
       const share_pct = ipPct?.value==='' ? null : Math.max(0, Math.min(100, Number(ipPct.value)||0));
@@ -531,16 +604,113 @@ async function loadParticipants(missionId){
       const payload = { mission_id: missionId, user_id: uid, share_pct, share_fixed_auec, updated_by: me };
       const { error } = await sb.from('mission_user_overrides').upsert(payload).select().maybeSingle();
       if(error) return alert('Save failed: '+error.message);
-      loadParticipants(missionId);
+      updateFooter(memberPool);
     });
 
     row.querySelector('[data-clearu]')?.addEventListener('click', async ()=>{
       const { error } = await sb.from('mission_user_overrides')
         .delete().eq('mission_id', missionId).eq('user_id', uid);
       if(error) return alert('Clear failed: '+error.message);
-      loadParticipants(missionId);
+      // reset inputs
+      ipPct.value = ''; ipFix.value='';
+      updateFooter(memberPool);
     });
   });
+}
+
+function updateFooter(memberPool){
+  let sumPct = 0, sumAmt = 0;
+  $('#uList').querySelectorAll('.urow').forEach(row=>{
+    const def = Number(row.dataset.def||0);
+    const ipPct = row.querySelector('[data-pct]');
+    const ipFix = row.querySelector('[data-fixed]');
+    const hasPct  = ipPct && ipPct.value!=='';
+    const hasFix  = ipFix && ipFix.value!=='';
+    const pct = hasPct ? Number(ipPct.value)||0 : def;
+    const amt = hasFix ? Number(ipFix.value)||0 : (memberPool * (pct/100));
+    sumPct += hasFix ? 0 : pct; // fixed doesn't count towards percent pool
+    sumAmt += amt;
+    row.querySelector('.amt').innerHTML = `${hasFix?'<span class="fixed">fixed</span>':''} ${fmt(amt)}`;
+  });
+  $('#sumPct').textContent = sumPct.toFixed(1) + '%';
+  $('#sumAmt').textContent = fmt(sumAmt);
+  $('#sumPct').classList.toggle('warn', Math.abs(sumPct-100)>0.05);
+}
+
+/* Batch tools */
+function wireBatchTools(missionId, rows, memberPool, totalW){
+  const uList = $('#uList');
+  const setPct = (fn)=>{ uList.querySelectorAll('.urow').forEach((row,i)=>{
+      const ipPct = row.querySelector('[data-pct]'); const ipFix=row.querySelector('[data-fixed]');
+      const def = Number(row.dataset.def||0);
+      const v = fn(def, i, row);
+      ipPct.value = String(Math.max(0, Math.min(100, v)));
+      ipFix.value = '';
+    });
+    updateFooter(memberPool);
+  };
+
+  $('#bEq').onclick = ()=> setPct(()=> 100/rows.length);
+  $('#bW').onclick  = ()=> setPct((def)=> def);
+  $('#bZero').onclick = ()=> setPct(()=> 0);
+  $('#bNorm').onclick = ()=>{
+    // normalize current % (ignoring fixed) to 100
+    const vals = [...uList.querySelectorAll('.urow')].map(row=>{
+      const ipPct = row.querySelector('[data-pct]'); const ipFix=row.querySelector('[data-fixed]');
+      const def = Number(row.dataset.def||0);
+      const hasPct = ipPct.value!=='';
+      const hasFix = ipFix.value!=='';
+      return hasFix ? null : (hasPct ? Number(ipPct.value)||0 : def);
+    }).filter(v=>v!=null);
+    const sum = vals.reduce((a,b)=>a+b,0) || 1;
+    let i=0;
+    uList.querySelectorAll('.urow').forEach(row=>{
+      const ipPct = row.querySelector('[data-pct]'); const ipFix=row.querySelector('[data-fixed]');
+      const def = Number(row.dataset.def||0);
+      const hasPct = ipPct.value!=='';
+      const hasFix = ipFix.value!=='';
+      if(hasFix){ ipPct.value=''; return; }
+      const cur = hasPct ? Number(ipPct.value)||0 : def;
+      ipPct.value = String((cur/sum)*100);
+    });
+    updateFooter(memberPool);
+  };
+}
+
+/* ---------- Other tabs ---------- */
+function renderOrgCutPane(missionId){
+  const m = MISSIONS.find(x=>x.id===missionId);
+  if(!m){ $('#cutInfo').innerHTML='<div class="cardline">No mission.</div>'; return; }
+  const eff = effectiveCut(m);
+  const state = OV[m.id] ? 'override' : (m.org_cut_percent!=null ? 'snapshot' : 'global');
+  const payout = Number(m.payout_auec||0);
+  const orgEarn = payout * eff/100;
+
+  $('#cutInfo').innerHTML = `
+    <div class="cardline">Effective cut: <b>${eff}%</b> <span class="tag dim">${state}</span></div>
+    <div class="cardline">Payout: <b>${fmt(payout)}</b> • Org earned: <b>${fmt(orgEarn)}</b></div>
+    <div class="cardline">To change mission override, use the control in the ledger row on the left.</div>
+  `;
+}
+
+async function renderAuditPane(missionId){
+  // if you have an audit table, wire it here; else show a placeholder
+  $('#auditList').innerHTML = `
+    <div class="cardline">Audit not wired — add your audit source here (e.g., triggers on mission_user_overrides/org_cut changes).</div>
+  `;
+}
+
+/* ---------- Keyboard nav on left pane ---------- */
+function onKeyNav(e){
+  if(!['ArrowUp','ArrowDown','Enter'].includes(e.key)) return;
+  const rows = [...document.querySelectorAll('#list .row[data-id]')];
+  if(!rows.length) return;
+  const idx = rows.findIndex(r=>r.dataset.id===currentId);
+  if(e.key==='Enter'){ if(idx>=0) selectMission(rows[idx].dataset.id); return; }
+  const next = e.key==='ArrowUp' ? Math.max(0, idx-1) : Math.min(rows.length-1, (idx<0?0:idx+1));
+  const id = rows[next].dataset.id;
+  selectMission(id);
+  rows[next].scrollIntoView({block:'nearest'});
 }
 </script>
 </body>
