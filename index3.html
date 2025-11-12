@@ -60,7 +60,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 
 .ctrls{display:flex;align-items:center;gap:8px}
 .ctrls input[type="number"]{
-  width:110px;background:#0b0b0b;color:var(--text);border:1px solid var(--border);border-radius:8px;
+  width:120px;background:#0b0b0b;color:var(--text);border:1px solid var(--border);border-radius:8px;
   padding:6px 8px;font-family:inherit
 }
 .btn{
@@ -76,6 +76,11 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:13px}
 .kv .k{color:var(--muted)}
 .sep{border:0;border-top:1px solid rgba(255,255,255,.08);margin:10px 0}
+
+/* Inline log for debugging */
+.log{margin-top:12px;border:1px dashed rgba(214,180,76,.4);border-radius:10px;padding:8px;font-size:12px;color:#f0dca0;background:#0b0b0b}
+.log b{color:var(--accent)}
+.empty{padding:10px;border:1px dashed rgba(255,255,255,.15);border-radius:10px;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
@@ -98,8 +103,9 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
     <!-- LEFT: roster -->
     <div class="card">
       <h3>Participants</h3>
-      <div id="roster"></div>
+      <div id="roster"><div class="empty">Loading roster…</div></div>
       <div class="small">Tip: override is a +/− aUEC amount added after base share. Use 0 to clear.</div>
+      <div class="log" id="log" hidden></div>
     </div>
 
     <!-- RIGHT: facts -->
@@ -114,7 +120,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       </div>
       <hr class="sep">
       <h4>Notes</h4>
-      <div class="small">Names are fetched from <code>v_profiles_detailed</code>. Overrides are stored in <code>mission_user_overrides</code> keyed by <code>(mission_id,user_id)</code>.</div>
+      <div class="small">Names from <code>v_profiles_detailed</code>. Overrides in <code>mission_user_overrides</code> (PK: <code>mission_id,user_id</code>).</div>
     </div>
   </section>
 </div>
@@ -125,130 +131,201 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 <script>
 (function(){
   const $ = s => document.querySelector(s);
-  const fmt0 = n => (n===null||n===undefined)?'—':Number(n).toLocaleString('en-US',{maximumFractionDigits:0});
-  const fmt2 = n => (n===null||n===undefined)?'—':Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-  const pct = n => (n===null||n===undefined)?'—':(Number(n)*100).toFixed(1)+'%';
-  const dateNice = iso => new Date(iso).toLocaleString();
+  const fmt0 = n => (n===null||n===undefined||isNaN(n))?'—':Number(n).toLocaleString('en-US',{maximumFractionDigits:0});
+  const fmt2 = n => (n===null||n===undefined||isNaN(n))?'—':Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const pct = n => (n===null||n===undefined||isNaN(n))?'—':(Number(n)*100).toFixed(1)+'%';
+  const dateNice = iso => iso ? new Date(iso).toLocaleString() : '—';
+  const log = (msg) => { const el = $('#log'); el.hidden = false; el.innerHTML += `<div>${msg}</div>`; };
 
   let sb, me, missionId;
   let cutPct = 0, payout = 0, pool = 0;
-  let roster = [];       // [{user_id, weight, attending, rank_abbrev?}]
-  let nameMap = new Map(); // user_id -> display label
-  let overrides = new Map(); // user_id -> amount
+  let roster = [];               // [{user_id, weight, attending, rank_abbrev?}]
+  const nameMap = new Map();     // user_id -> {label, rank}
+  let overrides = new Map();     // user_id -> amount
 
   async function boot(){
-    const session = await requireAuth(); if(!session) return;
-    sb = getSupabase(); me = session.user.id;
+    try{
+      const session = await requireAuth(); if(!session) return;
+      sb = getSupabase(); me = session.user.id;
 
-    missionId = new URL(location.href).searchParams.get('id');
-    if(!missionId){ alert('No mission id in URL (use ?id=...)'); return; }
+      missionId = new URL(location.href).searchParams.get('id');
+      if(!missionId){ alert('No mission id in URL (use ?id=...)'); return; }
 
-    await loadMission();
-    await loadRoster();
-    await loadOverrides();
+      await loadMission();
+      await loadRoster();          // tries view; then table; then v_missions_payout_live
+      await loadOverrides();
+      await loadNamesFor(roster.map(r=>r.user_id));
 
-    await loadNamesFor(roster.map(r=>r.user_id));
-
-    renderHeader();
-    renderFacts();
-    renderRoster();
+      renderFacts();
+      renderRoster();
+    }catch(e){
+      log(`<b>boot</b>: ${e.message}`);
+      console.warn(e);
+      $('#roster').innerHTML = `<div class="empty">Failed to initialize.</div>`;
+    }
   }
 
   /* -------- Mission -------- */
   async function loadMission(){
-    // mission base info
-    const { data: m } = await sb
-      .from('missions')
-      .select('id,title,payout_auec,created_at')
-      .eq('id', missionId)
-      .maybeSingle();
-    payout = Number(m?.payout_auec||0);
-    $('#mTitle').textContent = m?.title || 'Untitled mission';
-    $('#mWhen').textContent  = m?.created_at ? dateNice(m.created_at) : '—';
+    try{
+      const { data: m, error: em } = await sb
+        .from('missions')
+        .select('id,title,payout_auec,created_at')
+        .eq('id', missionId)
+        .maybeSingle();
+      if(em) log(`<b>missions</b>: ${em.message}`);
+      payout = Number(m?.payout_auec ?? 0);
+      $('#mTitle').textContent = m?.title || 'Untitled mission';
+      $('#mWhen').textContent  = dateNice(m?.created_at);
 
-    // effective org cut
-    const { data: cut } = await sb
-      .from('v_mission_org_cut_effective')
-      .select('org_cut_pct, org_cut_source')
-      .eq('mission_id', missionId)
-      .maybeSingle();
-    cutPct = Number(cut?.org_cut_pct||0);
-    $('#mCutSrc').textContent = cut?.org_cut_source || 'default';
+      const { data: cut, error: ec } = await sb
+        .from('v_mission_org_cut_effective')
+        .select('org_cut_pct, org_cut_source')
+        .eq('mission_id', missionId)
+        .maybeSingle();
+      if(ec) log(`<b>v_mission_org_cut_effective</b>: ${ec.message}`);
+      cutPct = Number(cut?.org_cut_pct ?? 0);
+      $('#mCutSrc').textContent = cut?.org_cut_source || 'default';
 
-    pool = payout * (1 - cutPct);
+      pool = payout * (1 - (isNaN(cutPct)?0:cutPct));
+    }catch(e){
+      log(`<b>loadMission</b>: ${e.message}`);
+    }
   }
 
   /* -------- Roster & weight -------- */
   async function loadRoster(){
-    // Try a nice view first if you already made one
-    let list = [];
+    // 1) Preferred: v_mission_roster_live
     try{
-      const { data } = await sb
+      const { data, error } = await sb
         .from('v_mission_roster_live')
         .select('user_id, weight, attending, rank_abbrev')
         .eq('mission_id', missionId)
         .order('weight', {ascending:false});
-      list = data || [];
-    }catch(_){}
+      if(error) throw error;
+      if(data && data.length){
+        roster = data.map(x => ({
+          user_id: x.user_id,
+          weight: Number(x.weight ?? 0),
+          attending: coerceBool(x.attending),
+          rank_abbrev: x.rank_abbrev || null
+        }));
+        return;
+      }
+    }catch(e){
+      log(`<b>v_mission_roster_live</b>: ${e.message}`);
+    }
 
-    if(!list.length){
-      // Fallback: mission_participants (you may need to adjust column names)
-      const { data } = await sb
+    // 2) Fallback: mission_participants
+    try{
+      const { data, error } = await sb
         .from('mission_participants')
         .select('user_id, weight, attending')
         .eq('mission_id', missionId);
-      list = data || [];
+      if(error) throw error;
+      if(data && data.length){
+        roster = data.map(x => ({
+          user_id: x.user_id,
+          weight: Number(x.weight ?? 0),
+          attending: coerceBool(x.attending),
+          rank_abbrev: null
+        }));
+        return;
+      }
+    }catch(e){
+      log(`<b>mission_participants</b>: ${e.message}`);
     }
-    roster = list;
+
+    // 3) Last resort: v_missions_payout_live
+    try{
+      const { data, error } = await sb
+        .from('v_missions_payout_live')
+        .select('user_id, weight, mission_id')
+        .eq('mission_id', missionId);
+      if(error) throw error;
+      if(data && data.length){
+        roster = data.map(x => ({
+          user_id: x.user_id,
+          weight: Number(x.weight ?? 0),
+          attending: true,
+          rank_abbrev: null
+        }));
+        return;
+      }
+    }catch(e){
+      log(`<b>v_missions_payout_live</b>: ${e.message}`);
+    }
+
+    roster = [];
   }
 
   /* -------- Overrides -------- */
   async function loadOverrides(){
-    const { data } = await sb
-      .from('mission_user_overrides')
-      .select('user_id, amount')
-      .eq('mission_id', missionId);
-    overrides = new Map((data||[]).map(o => [o.user_id, Number(o.amount||0)]));
+    try{
+      const { data, error } = await sb
+        .from('mission_user_overrides')
+        .select('user_id, amount')
+        .eq('mission_id', missionId);
+      if(error) throw error;
+      overrides = new Map((data||[]).map(o => [o.user_id, Number(o.amount ?? 0)]));
+    }catch(e){
+      log(`<b>mission_user_overrides</b>: ${e.message}`);
+      overrides = new Map();
+    }
   }
 
   /* -------- Names -------- */
   async function loadNamesFor(userIds){
-    const ids = Array.from(new Set(userIds));
+    const ids = Array.from(new Set((userIds||[]).filter(Boolean)));
     if(!ids.length) return;
-    const { data, error } = await sb
-      .from('v_profiles_detailed')
-      .select('user_id, handle, display_name, current_rank_abbrev')
-      .in('user_id', ids);
-    if(error){ console.warn('names:', error.message); return; }
-    for(const p of (data||[])){
-      const label = p.display_name?.trim() || p.handle?.trim() || p.user_id.slice(0,8);
-      nameMap.set(p.user_id, {label, rank: p.current_rank_abbrev || null});
+    try{
+      const { data, error } = await sb
+        .from('v_profiles_detailed')
+        .select('user_id, handle, display_name, current_rank_abbrev')
+        .in('user_id', ids);
+      if(error) throw error;
+      for(const p of (data||[])){
+        const label = (p.display_name && p.display_name.trim())
+                    || (p.handle && p.handle.trim())
+                    || (p.user_id ? String(p.user_id).slice(0,8) : '—');
+        nameMap.set(p.user_id, { label, rank: p.current_rank_abbrev || null });
+      }
+    }catch(e){
+      log(`<b>v_profiles_detailed</b>: ${e.message}`);
     }
   }
-  function labelOf(uid){ return nameMap.get(uid)?.label || uid.slice(0,8); }
-  function rankOf(uid){ return nameMap.get(uid)?.rank || roster.find(r=>r.user_id===uid)?.rank_abbrev || ''; }
+  const labelOf = (uid) => nameMap.get(uid)?.label || (uid ? String(uid).slice(0,8) : '—');
+  const rankOf  = (uid) => nameMap.get(uid)?.rank || roster.find(r=>r.user_id===uid)?.rank_abbrev || '';
+
+  const coerceBool = (v) => {
+    if (typeof v === 'boolean') return v;
+    if (v === null || v === undefined) return false;
+    if (typeof v === 'number') return v !== 0;
+    if (typeof v === 'string') return ['t','true','1','y','yes'].includes(v.toLowerCase());
+    return false;
+  };
 
   /* -------- Rendering -------- */
-  function renderHeader(){
-    // already updated while loading
-  }
-
   function renderFacts(){
-    const tWeight = roster.reduce((a,b)=>a+Number(b.weight||0),0);
+    const tWeight = roster.reduce((a,b)=>a + (Number(b.weight||0)||0), 0);
     $('#fPay').textContent    = fmt0(payout);
     $('#fCutPct').textContent = pct(cutPct);
-    $('#fCutVal').textContent = fmt0(payout*cutPct);
+    $('#fCutVal').textContent = fmt0(payout*(isNaN(cutPct)?0:cutPct));
     $('#fPool').textContent   = fmt0(pool);
     $('#fTWeight').textContent= fmt2(tWeight);
   }
 
   function renderRoster(){
-    const tWeight = roster.reduce((a,b)=>a+Number(b.weight||0),0) || 1;
+    if(!roster.length){
+      $('#roster').innerHTML = `<div class="empty">No participants found for this mission.</div>`;
+      return;
+    }
+    const tWeight = roster.reduce((a,b)=>a + (Number(b.weight||0)||0), 0) || 1;
     const html = roster.map(r=>{
       const uid = r.user_id;
       const defPct = (Number(r.weight||0)/tWeight)*100;
       const ov = overrides.get(uid) || 0;
-      const ovActive = Math.abs(ov) > 0;
+      const ovActive = Math.abs(ov) > 0.0001;
       return `
       <div class="member" data-uid="${uid}">
         <div>
@@ -256,14 +333,14 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
           <div class="meta">
             ${r.attending ? `Attending` : `Absent`} • ${rankOf(uid) ? `${rankOf(uid)} • `:''}
             <span class="mono">w:${fmt2(r.weight||0)}</span> •
-            Weighted default: <span class="mono">${defPct.toFixed(1)}%</span> •
+            Weighted default: <span class="mono">${isFinite(defPct)?defPct.toFixed(1):'—'}%</span> •
             Pool(after cut): <span class="mono">${fmt0(pool)}</span>
             ${ovActive ? `<span class="badge tag"><span class="dot ok"></span>override active</span>` : ``}
           </div>
         </div>
         <div class="ctrls">
           <button class="btn minus" title="-1000">−</button>
-          <input type="number" step="100" placeholder="override aUEC" value="${ov}">
+          <input type="number" step="100" inputmode="numeric" placeholder="override aUEC" value="${Number.isFinite(ov)?ov:0}">
           <button class="btn plus" title="+1000">+</button>
           <button class="btn" data-act="save">Save</button>
           <button class="btn red" data-act="clear">Clear</button>
@@ -272,39 +349,47 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
     }).join('');
     $('#roster').innerHTML = html;
 
-    // bind buttons
+    // Bind per-row controls
     document.querySelectorAll('.member').forEach(box=>{
       const uid = box.dataset.uid;
       const input = box.querySelector('input[type="number"]');
-      box.querySelector('.minus').addEventListener('click', ()=>{ input.value = String(Number(input.value||0)-1000); });
-      box.querySelector('.plus').addEventListener('click',  ()=>{ input.value = String(Number(input.value||0)+1000); });
-      box.querySelector('[data-act="save"]').addEventListener('click', ()=> saveOverride(uid, Number(input.value||0)));
-      box.querySelector('[data-act="clear"]').addEventListener('click', ()=> saveOverride(uid, 0));
+      const toNum = () => Number(input.value||0) || 0;
+
+      box.querySelector('.minus').addEventListener('click', ()=>{ input.value = String(toNum() - 1000); });
+      box.querySelector('.plus').addEventListener('click',  ()=>{ input.value = String(toNum() + 1000); });
+
+      box.querySelector('[data-act="save"]').addEventListener('click', async ()=>{
+        await saveOverride(uid, toNum());
+      });
+      box.querySelector('[data-act="clear"]').addEventListener('click', async ()=>{
+        await saveOverride(uid, 0);
+      });
     });
   }
 
   /* -------- Mutations -------- */
   async function saveOverride(userId, amount){
     try{
-      if(amount === 0){
-        // either delete row or upsert 0 — choose your policy; we'll delete
-        await sb.from('mission_user_overrides')
+      if(!userId){ throw new Error('No userId'); }
+      if(Number(amount) === 0){
+        const { error } = await sb.from('mission_user_overrides')
           .delete()
           .eq('mission_id', missionId)
           .eq('user_id', userId);
+        if(error) throw error;
         overrides.set(userId, 0);
       }else{
-        // upsert (mission_id, user_id) with amount
         const { error } = await sb.from('mission_user_overrides').upsert({
           mission_id: missionId,
           user_id: userId,
-          amount: amount
+          amount: Number(amount)
         }, { onConflict: 'mission_id,user_id' });
         if(error) throw error;
-        overrides.set(userId, amount);
+        overrides.set(userId, Number(amount));
       }
-      renderRoster(); // refresh pills and values
+      renderRoster();
     }catch(e){
+      log(`<b>saveOverride</b>: ${e.message}`);
       alert('Failed to save override: '+e.message);
     }
   }
