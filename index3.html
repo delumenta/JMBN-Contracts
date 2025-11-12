@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>JMBN — Earnings Admin (Per-User Overrides)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,14 +20,16 @@
 html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
 a{color:var(--accent);text-decoration:none}
 
+/* Shell */
 .wrap{max-width:1180px;margin:18px auto;padding:0 14px 100px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18);margin-bottom:14px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 18px rgba(214,180,76,.18);margin-bottom:14px;overflow:hidden}
 .hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
 .hd h3{margin:0;font-size:16px;color:var(--accent)}
 .body{padding:12px}
 .small{color:var(--muted);font-size:12px}
 .badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--accent);background:#111}
 
+/* Inputs */
 input,select,button{font-family:'Play'}
 input[type="number"], input[type="text"], select{
   background:#0a0a0a;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px 10px
@@ -41,6 +43,7 @@ button:hover{background:var(--accent);color:#000}
 .btn-bad{border-color:var(--bad);color:var(--bad)}
 .pill{border-radius:999px;padding:6px 10px}
 
+/* KPIs & Ledger */
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(max-width:900px){.grid3{grid-template-columns:1fr}}
 
@@ -49,9 +52,8 @@ button:hover{background:var(--accent);color:#000}
 .kpi .v{font-size:18px;color:var(--accent);font-weight:700}
 
 .table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.row{display:grid;grid-template-columns:140px 1fr 120px 240px 120px 220px;gap:10px;align-items:center;
-  background:#0a0a0a;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px}
-@media(max-width:1100px){.row{grid-template-columns:130px 1fr 120px 240px 120px}}
+.row{display:grid;grid-template-columns:140px 1fr 120px 260px 120px 220px;gap:10px;align-items:center;background:#0a0a0a;border:1px solid rgba(214,180,76,.35);border-radius:12px;padding:8px}
+@media(max-width:1100px){.row{grid-template-columns:130px 1fr 110px 1fr 100px}}
 @media(max-width:900px){ .row{grid-template-columns:1fr} }
 .cell{padding:4px 6px}
 .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -67,22 +69,35 @@ button:hover{background:var(--accent);color:#000}
 
 /* Drawer */
 .drawer{
-  position:fixed;right:0;top:0;bottom:0;width:420px;max-width:96vw;background:#0b0b0b;border-left:1px solid var(--border);
+  position:fixed;right:0;top:0;bottom:0;width:520px;max-width:96vw;background:#0b0b0b;border-left:1px solid var(--border);
   box-shadow:-10px 0 30px rgba(214,180,76,.15);transform:translateX(100%);transition:transform .25s ease;z-index:50
 }
 .drawer.open{transform:translateX(0)}
 .dh{display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border)}
 .dh h3{margin:0;color:var(--accent);font-size:16px}
 .db{padding:12px}
-.urow{display:grid;grid-template-columns:1fr 90px 110px auto;gap:8px;align-items:center;padding:8px;border:1px solid rgba(214,180,76,.3);border-radius:10px;background:#0a0a0a;margin-bottom:8px}
-@media(max-width:430px){.urow{grid-template-columns:1fr}}
-.urow .name{display:flex;flex-direction:column;gap:2px}
-.urow .name b{font-size:14px}
-.urow .name span{font-size:12px;color:var(--muted)}
-.urow .ctrl{display:flex;gap:4px;align-items:center}
-.urow .ctrl input{width:74px;text-align:center}
-.urow .amt{text-align:right;font-weight:700}
+
+/* Drawer header facts */
+.fact{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
+.fact .box{background:#0d0d0d;border:1px solid var(--border);border-radius:10px;padding:8px}
+.fact .k{font-size:11px;color:var(--muted)}
+.fact .v{font-weight:800}
+
+/* Participant card */
+.urow{
+  display:grid;grid-template-columns:1fr 140px 170px auto;gap:10px;align-items:center;
+  padding:10px;border:1px solid rgba(214,180,76,.3);border-radius:12px;background:#0a0a0a;margin-bottom:10px
+}
+@media(max-width:520px){.urow{grid-template-columns:1fr}}
+.urow .name{display:flex;gap:2px;align-items:center}
+.urow .name b{font-size:15px;margin-right:6px}
+.urow .name .sub{font-size:12px;color:var(--muted)}
+.urow .ctrl{display:flex;gap:6px;align-items:center}
+.urow .ctrl input{width:84px;text-align:center}
+.urow .amt{text-align:right;font-weight:800}
 .urow .act{display:flex;gap:6px;justify-content:flex-end}
+.badge-dot{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;background:#101010;color:var(--muted)}
+.badge-dot .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
 </style>
 </head>
 <body>
@@ -145,10 +160,19 @@ button:hover{background:var(--accent);color:#000}
   </div>
   <div class="db">
     <div class="small" id="dwMeta">—</div>
-    <div class="small" style="margin:8px 0 10px">
-      Member pool = payout − org_cut_value (if present) otherwise payout × (1 − org_cut_pct).
-      Per-user final = fixed (if set) → percent of pool (if set) → equal split.
+
+    <!-- quick facts -->
+    <div class="fact" id="dwFacts" style="display:none">
+      <div class="box"><div class="k">Payout (aUEC)</div><div class="v" id="fPay">—</div></div>
+      <div class="box"><div class="k">Pool after cut</div><div class="v" id="fPool">—</div></div>
+      <div class="box"><div class="k">Total weight</div><div class="v" id="fTWeight">—</div></div>
+      <div class="box"><div class="k">Org cut (pct / value)</div><div class="v" id="fCut">—</div></div>
     </div>
+
+    <div class="small" style="margin:6px 0 10px">
+      Default % = <b>weight / total_weight</b>. Final per-user = <b>fixed</b> (if set) → <b>percent of pool</b> (if set) → equal split.
+    </div>
+
     <div id="uList">Loading…</div>
   </div>
 </div>
@@ -373,7 +397,7 @@ async function renderLast4(){
   }).join('');
 }
 
-/* ==================== Participants (names, not numbers) ==================== */
+/* ==================== Participants Drawer ==================== */
 function openDrawer(missionId){
   drawerMission = missionId;
   $('#drawer').classList.add('open');
@@ -386,14 +410,12 @@ function closeDrawer(){
 }
 
 async function loadParticipants(missionId){
-  const uList = $('#uList');
-  uList.innerHTML = 'Loading…';
-
+  const uList = $('#uList'); uList.innerHTML = 'Loading…';
   const mission = MISSIONS.find(m=>m.id===missionId);
   $('#dwTitle').textContent = 'Participants & Overrides';
   $('#dwMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
 
-  // 1) participants from v_missions_payout_live
+  // 1) fetch payout rows (has weights & pool bits)
   let rows = [];
   try{
     const { data, error } = await sb.from('v_missions_payout_live')
@@ -408,7 +430,22 @@ async function loadParticipants(missionId){
   }
   if(!rows.length){ uList.innerHTML = `<div class="small">No participants found for this mission.</div>`; return; }
 
-  // 2) names from v_profiles_detailed
+  // totals for facts + default %
+  const h = rows[0];
+  const payout = Number(h.payout_auec||0);
+  const cutVal = (h.org_cut_value!=null) ? Number(h.org_cut_value) : null;
+  const cutPctRaw = (h.org_cut_pct!=null) ? Number(h.org_cut_pct) : null;
+  const cutPctFr = (cutPctRaw!=null && cutPctRaw>1) ? (cutPctRaw/100) : (cutPctRaw ?? 0);
+  const pool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - cutPctFr));
+  const tWeight = Number(h.total_weight||rows.reduce((a,b)=>a+Number(b.weight||0),0));
+
+  $('#dwFacts').style.display = 'grid';
+  $('#fPay').textContent  = fmt(payout);
+  $('#fPool').textContent = fmt(pool);
+  $('#fTWeight').textContent = (tWeight||tWeight===0) ? tWeight.toFixed(2) : '—';
+  $('#fCut').textContent = `${cutPctRaw!=null?(cutPctFr*100).toFixed(2)+'%':'—'} / ${cutVal!=null?fmt(cutVal):'—'}`;
+
+  // 2) names (v_profiles_detailed, fallback profiles)
   const ids = [...new Set(rows.map(r=>r.user_id).filter(Boolean))];
   const nameMap = {};
   if(ids.length){
@@ -420,48 +457,54 @@ async function loadParticipants(missionId){
         const label = (p.display_name?.trim()) || (p.handle?.trim()) || String(p.user_id).slice(0,8);
         nameMap[p.user_id] = { label, rank: p.current_rank_abbrev||'', handle: p.handle?('@'+p.handle):'' };
       });
+      // Fallback for any missing
+      const missing = ids.filter(id=>!nameMap[id]);
+      if(missing.length){
+        const { data: prof2 } = await sb.from('profiles')
+          .select('user_id, handle, display_name')
+          .in('user_id', missing);
+        (prof2||[]).forEach(p=>{
+          const label = (p.display_name?.trim()) || (p.handle?.trim()) || String(p.user_id).slice(0,8);
+          nameMap[p.user_id] = { label, rank:'', handle: p.handle?('@'+p.handle):'' };
+        });
+      }
     }catch(_){}
   }
   const labelOf = uid => nameMap[uid]?.label || String(uid).slice(0,8);
   const rankOf  = uid => nameMap[uid]?.rank  || '';
   const handleOf= uid => nameMap[uid]?.handle|| '';
 
-  // 3) per-user overrides
+  // 3) user overrides
   const { data: uov } = await sb.from('mission_user_overrides')
     .select('user_id, share_pct, share_fixed_auec, note')
     .eq('mission_id', missionId);
   const mapOv = Object.fromEntries((uov||[]).map(r=>[r.user_id, r]));
 
-  // 4) pool math (prefer org_cut_value if present)
-  const h = rows[0];
-  const payout = Number(h.payout_auec||0);
-  const cutVal = (h.org_cut_value!=null) ? Number(h.org_cut_value) : null;
-  const cutPct = (h.org_cut_pct!=null) ? Number(h.org_cut_pct) : null; // could be 0.2 or 20 depending on view; handle both:
-  const pctAsFraction = (cutPct!=null && cutPct>1) ? (cutPct/100) : (cutPct ?? 0);
-  const memberPool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - pctAsFraction));
-  const equalPct = rows.length ? (100/rows.length) : 0;
-
-  // 5) render (names only)
+  // 4) render rows — default % uses weight/total_weight
   uList.innerHTML = rows.map(r=>{
     const uid = r.user_id;
+    const w = Number(r.weight||0);
+    const defPct = tWeight ? (w / tWeight * 100) : 0;
+
     const info = { label: labelOf(uid), rank: rankOf(uid), handle: handleOf(uid) };
     const ov = mapOv[uid] || {};
     const useFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
     const usePct   = (ov.share_pct!=null);
-    const pct = usePct ? Number(ov.share_pct) : equalPct;
-    const amt = useFixed ? Number(ov.share_fixed_auec) : (memberPool * (pct/100));
+    const pct = usePct ? Number(ov.share_pct) : defPct;
+    const amt = useFixed ? Number(ov.share_fixed_auec) : (pool * (pct/100));
 
     return `
       <div class="urow" data-uid="${uid}">
         <div class="name">
           <b>${esc(info.label)}</b>
-          <span>${info.rank?esc(info.rank)+' • ':''}${esc(info.handle)}${ov.note?` • ${esc(ov.note)}`:''}</span>
+          <span class="sub">${info.rank?esc(info.rank)+' • ':''}${esc(info.handle)}</span>
+          <span class="badge-dot" title="Weighted default share"><span class="dot"></span>default ${defPct.toFixed(1)}%</span>
         </div>
 
         <div class="ctrl">
           <button data-pct-minus>-</button>
           <input data-pct type="number" step="0.5" min="0" max="100"
-                 value="${usePct?pct:''}" placeholder="${equalPct.toFixed(1)}">
+                 value="${usePct?pct.toFixed(1):''}" placeholder="${defPct.toFixed(1)}">
           <button data-pct-plus>+</button>
         </div>
 
@@ -479,7 +522,7 @@ async function loadParticipants(missionId){
       </div>`;
   }).join('');
 
-  // 6) wire per-row controls
+  // 5) wire per-row controls
   (uList||document).querySelectorAll('.urow').forEach(row=>{
     const uid   = row.dataset.uid;
     const ipPct = row.querySelector('[data-pct]');
