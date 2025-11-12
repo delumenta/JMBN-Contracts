@@ -80,7 +80,6 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 /* Inline log for debugging */
 .log{margin-top:12px;border:1px dashed rgba(214,180,76,.4);border-radius:10px;padding:8px;font-size:12px;color:#f0dca0;background:#0b0b0b}
 .log b{color:var(--accent)}
-.empty{padding:10px;border:1px dashed rgba(255,255,255,.15);border-radius:10px;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
@@ -103,7 +102,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
     <!-- LEFT: roster -->
     <div class="card">
       <h3>Participants</h3>
-      <div id="roster"><div class="empty">Loading roster…</div></div>
+      <div id="roster"></div>
       <div class="small">Tip: override is a +/− aUEC amount added after base share. Use 0 to clear.</div>
       <div class="log" id="log" hidden></div>
     </div>
@@ -152,7 +151,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       if(!missionId){ alert('No mission id in URL (use ?id=...)'); return; }
 
       await loadMission();
-      await loadRoster();          // tries view; then table; then v_missions_payout_live
+      await loadRoster();          // tries view; falls back to table; final fallback uses v_missions_payout_live
       await loadOverrides();
       await loadNamesFor(roster.map(r=>r.user_id));
 
@@ -161,13 +160,13 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
     }catch(e){
       log(`<b>boot</b>: ${e.message}`);
       console.warn(e);
-      $('#roster').innerHTML = `<div class="empty">Failed to initialize.</div>`;
     }
   }
 
   /* -------- Mission -------- */
   async function loadMission(){
     try{
+      // mission base info
       const { data: m, error: em } = await sb
         .from('missions')
         .select('id,title,payout_auec,created_at')
@@ -178,6 +177,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       $('#mTitle').textContent = m?.title || 'Untitled mission';
       $('#mWhen').textContent  = dateNice(m?.created_at);
 
+      // effective org cut
       const { data: cut, error: ec } = await sb
         .from('v_mission_org_cut_effective')
         .select('org_cut_pct, org_cut_source')
@@ -195,7 +195,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 
   /* -------- Roster & weight -------- */
   async function loadRoster(){
-    // 1) Preferred: v_mission_roster_live
+    // Attempt 1: v_mission_roster_live
     try{
       const { data, error } = await sb
         .from('v_mission_roster_live')
@@ -216,7 +216,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       log(`<b>v_mission_roster_live</b>: ${e.message}`);
     }
 
-    // 2) Fallback: mission_participants
+    // Attempt 2: mission_participants (adjust names if yours differ)
     try{
       const { data, error } = await sb
         .from('mission_participants')
@@ -236,7 +236,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       log(`<b>mission_participants</b>: ${e.message}`);
     }
 
-    // 3) Last resort: v_missions_payout_live
+    // Attempt 3: derive from v_missions_payout_live (last resort)
     try{
       const { data, error } = await sb
         .from('v_missions_payout_live')
@@ -256,6 +256,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       log(`<b>v_missions_payout_live</b>: ${e.message}`);
     }
 
+    // If still empty
     roster = [];
   }
 
@@ -313,13 +314,10 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
     $('#fCutVal').textContent = fmt0(payout*(isNaN(cutPct)?0:cutPct));
     $('#fPool').textContent   = fmt0(pool);
     $('#fTWeight').textContent= fmt2(tWeight);
+    // header already set in loadMission
   }
 
   function renderRoster(){
-    if(!roster.length){
-      $('#roster').innerHTML = `<div class="empty">No participants found for this mission.</div>`;
-      return;
-    }
     const tWeight = roster.reduce((a,b)=>a + (Number(b.weight||0)||0), 0) || 1;
     const html = roster.map(r=>{
       const uid = r.user_id;
