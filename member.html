@@ -180,7 +180,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
   </div>
 
-  <!-- Modal (RESTORED) -->
+  <!-- Modal -->
   <div id="viewMask" class="modal-mask" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="header-row">
@@ -215,6 +215,7 @@ tr:hover{background:rgba(214,180,76,.08)}
   <script src="js/auth.js"></script>
 
 <script>
+/* ---------- Utilities ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 const toTitleCase = s => s ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()) : '';
@@ -226,6 +227,7 @@ function normalizeRoles(r){
   return String(raw).split(/[,;/]+/).map(s=>toTitleCase(s)).filter(Boolean);
 }
 
+/* ---------- Supabase + buckets ---------- */
 let sb=null, ROWS=[];
 const RANK_BUCKET='Ranks', CERT_BUCKET='Certifications';
 
@@ -238,8 +240,49 @@ function certPublicUrlFromCode(code){
   return sb.storage.from(CERT_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
 
+/* ---------- Rank sorting helpers (highest first) ---------- */
+function rankScore(r){
+  const code = String(r.current_rank_code || '').toUpperCase().trim();
+  // O > W > E ; higher number = higher rank
+  const m = code.match(/^([OWE])-(\d{1,2})$/);
+  if(m){
+    const tier = { O: 300, W: 200, E: 100 }[m[1]] || 0;
+    const n = Number(m[2]) || 0;
+    return tier + n; // O-10 => 310, E-1 => 101
+  }
+
+  // Fallbacks when there's no code — use name hints
+  const name = String(r.current_rank_name || '').toLowerCase();
+  const hints = [
+    ['admiral','general','marshal','commodore','captain of fleet'],
+    ['captain','commander'],
+    ['lieutenant colonel','major','lieutenant commander'],
+    ['lieutenant','ensign'],
+    ['sergeant major','master sergeant','gunnery sergeant'],
+    ['sergeant','corporal'],
+    ['private','recruit','cadet','trainee','unrated','unranked']
+  ];
+  for(let i=0;i<hints.length;i++){
+    if(hints[i].some(k=>name.includes(k))) return 240 - i*10;
+  }
+  return 0; // unknown => bottom
+}
+
+function sortByRank(rows){
+  return (rows||[]).slice().sort((a,b)=>{
+    const diff = rankScore(b) - rankScore(a);
+    if(diff) return diff;
+    // Tie-breakers: category then handle
+    const catA = (a.current_rank_category||'').localeCompare(b.current_rank_category||'');
+    if(catA) return catA;
+    return (a.handle||'').localeCompare(b.handle||'');
+  });
+}
+
+/* ---------- DOM parts ---------- */
 const tbody=$('#tbody'), countEl=$('#count'), q=$('#q');
 
+/* ---------- Render ---------- */
 function render(rows){
   if(!rows?.length){
     tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
@@ -273,6 +316,7 @@ function render(rows){
   countEl.textContent=`${rows.length} member${rows.length===1?'':'s'}`;
 }
 
+/* ---------- Filter + apply ---------- */
 function filterRows(){
   const term=(q.value||'').toLowerCase().trim();
   if(!term) return ROWS;
@@ -282,11 +326,17 @@ function filterRows(){
   });
 }
 
+function applyAndRender(){
+  const filtered = filterRows();
+  const sorted = sortByRank(filtered);
+  render(sorted);
+}
+
+/* ---------- Modal ---------- */
 function closeView(){ $('#viewMask').style.display='none'; }
 window.closeView=closeView;
 
 async function loadCertThumbs(userId){
-  // Load owned cert images for this user; show only images
   const box = $('#vCertThumbs');
   box.innerHTML = '';
   try{
@@ -302,7 +352,6 @@ async function loadCertThumbs(userId){
       .filter(Boolean);
 
     if(!imgs.length){
-      // show nothing at all (per your requirement)
       box.innerHTML = '';
       return;
     }
@@ -329,7 +378,7 @@ function viewMember(userId){
   $('#vHandle').textContent=handle;
   $('#vRankCat').textContent=rankCat;
   $('#vRankName').textContent=rankName;
-  $('#vRankCode').textContent=r.current_rank_code?`(${r.current_rank_code})`:'';
+  $('#vRankCode').textContent=r.current_rank_code?`(${r.current_rank_code})`:''; // e.g. (O-1)
   $('#vRoles').innerHTML=roles.length?roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' '):'—';
   $('#vAttended').textContent=attended;
 
@@ -338,13 +387,13 @@ function viewMember(userId){
   imgEl.style.visibility=imgUrl?'visible':'hidden';
   imgEl.onerror=()=>{imgEl.style.visibility='hidden';};
 
-  // Load ONLY certification images into modal
   loadCertThumbs(userId);
 
   $('#viewMask').style.display='flex';
 }
 window.viewMember=viewMember;
 
+/* ---------- Data load ---------- */
 async function loadRoster(){
   const {data,error}=await sb
     .from('v_profiles_detailed')
@@ -368,10 +417,11 @@ async function loadRoster(){
     return;
   }
   ROWS=data||[];
-  render(filterRows());
+  applyAndRender(); // sort by highest rank first by default
 }
 
-q.addEventListener('input',()=>render(filterRows()));
+/* ---------- Events ---------- */
+q.addEventListener('input', applyAndRender);
 
 document.addEventListener('DOMContentLoaded',async()=>{
   const session=await requireAuth(); if(!session) return;
