@@ -12,8 +12,8 @@
 
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
-  --card:#0c0c0c; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+  --bg:#000; --panel:#0b0b0b; --row:#0a0a0a; --card:#0c0c0c;
+  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
   --bad:#ff6b6b; --ok:#5cd47c; --fs:14px;
 }
 *{box-sizing:border-box}
@@ -21,14 +21,13 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Play',sys
 a{color:var(--accent);text-decoration:none}
 
 /* Shell */
-.wrap{max-width:1180px;margin:16px auto;padding:0 14px 70px;display:grid;grid-template-columns:1fr 420px;gap:14px}
-@media(max-width:1080px){.wrap{grid-template-columns:1fr}}
-.header{grid-column:1/-1;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 0 18px rgba(214,180,76,.18)}
+.wrap{max-width:1180px;margin:16px auto;padding:0 14px 70px}
+.header{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 0 18px rgba(214,180,76,.18);margin-bottom:14px}
 .header img{width:26px;height:26px}
 .header h1{margin:0;font-size:16px;color:var(--accent)}
 
 /* Panels */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18)}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18);margin-bottom:14px}
 .hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
 .hd h3{margin:0;font-size:15px;color:var(--accent)}
 .body{padding:12px}
@@ -73,45 +72,32 @@ button:hover{background:var(--accent);color:#000}
 .right{display:flex;gap:8px;align-items:center;justify-content:flex-end}
 .alert{border:1px solid var(--bad);background:#240e0e;color:#ffbcbc;border-radius:10px;padding:8px 10px}
 
-/* Side drawer (participants) */
-.side{position:sticky;top:16px;height:calc(100dvh - 32px);display:flex;flex-direction:column}
-.aside{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18);height:100%;display:flex;flex-direction:column}
-.aside .hd{padding:10px 12px}
-.aside .body{padding:10px 12px;overflow:auto}
+/* Modal (Participants) */
+.modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:100}
+.modal.open{display:grid}
+.modalCard{
+  width:min(860px,96vw);max-height:86vh;display:flex;flex-direction:column;
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 28px rgba(214,180,76,.22)
+}
+.modalHd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
+.modalHd h3{margin:0;font-size:15px;color:var(--accent)}
+.modalBd{padding:10px 12px;overflow:auto}
 
 /* Participant rows */
 .urow{
-  display:grid;grid-template-columns: 1fr 100px 112px auto;
+  display:grid;grid-template-columns: 1fr 110px 124px auto;
   gap:8px;align-items:center;padding:8px 10px;margin-bottom:8px;
   background:#0a0a0a;border:1px solid rgba(214,180,76,.3);border-radius:12px
 }
 .urow .name{display:flex;flex-direction:column;gap:2px;overflow:hidden}
-.urow .name b{font-size:13px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block}
+.urow .name b{font-size:13px;letter-spacing:.35px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block}
 .urow .sub{display:flex;gap:6px;flex-wrap:wrap;color:var(--muted);font-size:11px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
 .urow .ctrl{display:flex;gap:4px;align-items:center}
-.urow .ctrl input{width:78px;height:30px;font-size:13px;text-align:center}
-.urow .amt{min-width:92px;text-align:right;font-weight:700}
+.urow .ctrl input{width:86px;height:32px;font-size:13px;text-align:center}
+.urow .amt{min-width:106px;text-align:right;font-weight:700}
 .urow .act{display:flex;gap:6px;justify-content:flex-end}
 .fixed{background:#121212;border:1px solid var(--border);border-radius:999px;padding:2px 6px;font-size:10px;color:var(--accent)}
 .eqhint{font-size:10px;color:var(--muted)}
-
-/* Fit & polish overrides from patch */
-@media (max-width:480px){
-  :root{ --fs:13px; }
-}
-.wrap{ padding-bottom:60px }
-.tag{ font-size:10px }
-.small{ font-size:11px }
-.card{ border-left-width:3px }
-.hd{ padding-bottom:6px; margin-bottom:10px }
-
-/* Prevent bg scroll when “drawer” (aside) is focused on mobile full-width */
-body.no-scroll{ overflow:hidden }
-@media(max-width:680px){
-  .side{ position:static; height:auto }
-  .aside{ height:auto }
-}
 </style>
 </head>
 <body>
@@ -122,7 +108,7 @@ body.no-scroll{ overflow:hidden }
     <h1>JMBN — Earnings Admin (Aurora Ops)</h1>
   </div>
 
-  <!-- LEFT: Org Cut + Ledger + Last 4 -->
+  <!-- Org Cut -->
   <div class="panel">
     <div class="hd">
       <h3>Org Cut</h3>
@@ -138,6 +124,7 @@ body.no-scroll{ overflow:hidden }
     </div>
   </div>
 
+  <!-- Mission Ledger -->
   <div class="panel">
     <div class="hd">
       <h3>Mission Ledger</h3>
@@ -165,32 +152,32 @@ body.no-scroll{ overflow:hidden }
     </div>
   </div>
 
+  <!-- Last 4 -->
   <div class="panel">
     <div class="hd"><h3>Last 4 Missions (Org)</h3><span class="badge" id="lastCount">0</span></div>
     <div class="body" id="last4">—</div>
   </div>
+</div>
 
-  <!-- RIGHT: Participants drawer-style aside -->
-  <div class="side">
-    <div class="aside" id="asideBox" aria-live="polite">
-      <div class="hd">
-        <h3>Participants & Overrides</h3>
-        <button id="drawerClose" title="Close">✕</button>
+<!-- PARTICIPANTS MODAL -->
+<div id="pModal" class="modal" aria-hidden="true" role="dialog" aria-label="Participants & Overrides">
+  <div class="modalCard">
+    <div class="modalHd">
+      <h3 id="dwTitle">Participants & Overrides</h3>
+      <button id="modalClose" title="Close">✕</button>
+    </div>
+    <div class="modalBd">
+      <div class="small" id="dwMeta">—</div>
+      <div class="small" style="margin:8px 0 10px">
+        Member pool = payout − <span class="badge">org_cut_value</span> (if present) otherwise payout × (1 − org_cut_pct).<br>
+        Default <b>%</b> is weighted by rank from <code>v_missions_payout_live.weight ÷ total_weight</code>.<br>
+        Per-user final = fixed (if set) → percent of pool (if set) → equal split.
       </div>
-      <div class="body">
-        <div class="small" id="dwMeta">Choose a mission → Participants</div>
-        <div class="small" style="margin:8px 0 10px">
-          Member pool = payout − <span class="badge">org_cut_value</span> (if present) otherwise payout × (1 − org_cut_pct).<br>
-          Default <b>%</b> is weighted by rank from <code>v_missions_payout_live.weight ÷ total_weight</code>.<br>
-          Per-user final = fixed (if set) → percent of pool (if set) → equal split.
-        </div>
-        <div id="uList" class="uList small">—</div>
-      </div>
+      <div id="uList">—</div>
     </div>
   </div>
 </div>
 
-<!-- Supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
@@ -198,7 +185,7 @@ const $ = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 const fmt = n => (n==null || isNaN(n)) ? '–' : Number(n).toLocaleString();
 
-let sb, me, GLOBAL=0, MISSIONS=[], OV={}, drawerMission=null;
+let sb, me, GLOBAL=0, MISSIONS=[], OV={}, currentMission=null;
 
 /* ---------- Boot ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
@@ -211,7 +198,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   $('#gSave').onclick = saveGlobal;
   $('#btnReload').onclick = loadLedger;
-  $('#drawerClose').onclick = closeDrawer;
+  $('#modalClose').onclick = closeModal;
+
+  // click outside to close
+  $('#pModal').addEventListener('click', (e)=>{ if(e.target.id==='pModal') closeModal(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 });
 
 function setDefaultDates(){
@@ -273,7 +264,6 @@ async function loadLedger(){
 }
 
 function effectiveCut(m){
-  // returns percent number (0..100)
   const o = OV[m.id]?.org_cut_pct;
   if(o!=null) return Number(o);
   if(m.org_cut_percent!=null) return Number(m.org_cut_percent);
@@ -297,7 +287,7 @@ function renderList(){
   let totOrg=0, totPayout=0;
 
   const rows = MISSIONS.map(m=>{
-    const eff = effectiveCut(m); // in %
+    const eff = effectiveCut(m); // %
     const payout = Number(m.payout_auec||0);
     const orgEarn = payout * eff/100;
     totOrg += orgEarn; totPayout += payout;
@@ -315,7 +305,6 @@ function renderList(){
           <div class="meta" style="margin-top:4px">${rowBadgeSet(m)}</div>
         </div>
         <div class="cell"><b>${fmt(payout)}</b></div>
-
         <div class="cell">
           <div class="cutCtrl">
             <button data-minus>-</button>
@@ -325,9 +314,7 @@ function renderList(){
           </div>
           <div class="note">${hint}</div>
         </div>
-
         <div class="cell"><b>${fmt(orgEarn)}</b></div>
-
         <div class="cell right">
           <button class="pill" data-participants>Participants</button>
           <button class="btn-bad" data-clear ${OV[m.id]?'':'disabled'}>Clear Override</button>
@@ -361,7 +348,7 @@ function renderList(){
     row.querySelector('[data-plus]') ?.addEventListener('click', ()=>{ inp.value = String(Math.min(100,(Number(inp.value)||0)+0.5)); });
     row.querySelector('[data-save]') ?.addEventListener('click', ()=> saveMissionOverride(id, inp.value));
     row.querySelector('[data-clear]')?.addEventListener('click', ()=> clearMissionOverride(id));
-    row.querySelector('[data-participants]')?.addEventListener('click', ()=> openDrawer(id));
+    row.querySelector('[data-participants]')?.addEventListener('click', ()=> openModal(id));
   });
 }
 
@@ -411,18 +398,20 @@ async function renderLast4(){
   }).join('');
 }
 
-/* ==================== Participants (names, weighted default) ==================== */
-function openDrawer(missionId){
-  drawerMission = missionId;
-  document.body.classList.add('no-scroll');
-  $('#asideBox').scrollTop = 0;
+/* ==================== PARTICIPANTS — Modal ==================== */
+function openModal(missionId){
+  currentMission = missionId;
+  const modal = $('#pModal');
+  modal.classList.add('open');
+  document.body.style.overflow='hidden';
   loadParticipants(missionId);
 }
-function closeDrawer(){
-  document.body.classList.remove('no-scroll');
-  $('#uList').innerHTML='';
-  $('#dwMeta').textContent='Choose a mission → Participants';
-  drawerMission=null;
+function closeModal(){
+  $('#pModal').classList.remove('open');
+  document.body.style.overflow='';
+  $('#uList').innerHTML='—';
+  $('#dwMeta').textContent='—';
+  currentMission=null;
 }
 
 async function loadParticipants(missionId){
@@ -430,6 +419,7 @@ async function loadParticipants(missionId){
   uList.innerHTML = 'Loading…';
 
   const mission = MISSIONS.find(m=>m.id===missionId);
+  $('#dwTitle').textContent = 'Participants & Overrides';
   $('#dwMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
 
   // 1) participants from v_missions_payout_live
@@ -447,7 +437,7 @@ async function loadParticipants(missionId){
   }
   if(!rows.length){ uList.innerHTML = `<div class="small">No participants found for this mission.</div>`; return; }
 
-  // 2) names from v_profiles_detailed
+  // 2) handles (prefer handle, ALL CAPS)
   const ids = [...new Set(rows.map(r=>r.user_id).filter(Boolean))];
   const nameMap = {};
   if(ids.length){
@@ -456,14 +446,15 @@ async function loadParticipants(missionId){
         .select('user_id, handle, display_name, current_rank_abbrev')
         .in('user_id', ids);
       (prof||[]).forEach(p=>{
-        const label = (p.display_name?.trim()) || (p.handle?.trim()) || String(p.user_id).slice(0,8);
-        nameMap[p.user_id] = { label, rank: p.current_rank_abbrev||'', handle: p.handle?('@'+p.handle):'' };
+        const base = p.handle?.trim() || p.display_name?.trim() || String(p.user_id).slice(0,8);
+        const label = base.toUpperCase();
+        nameMap[p.user_id] = { label, rank: (p.current_rank_abbrev||'').toUpperCase(), handle: p.handle?('@'+p.handle.toUpperCase()):'' };
       });
     }catch(_){}
   }
-  const labelOf = uid => nameMap[uid]?.label || String(uid).slice(0,8);
-  const rankOf  = uid => nameMap[uid]?.rank  || '';
-  const handleOf= uid => nameMap[uid]?.handle|| '';
+  const labelOf = uid => (nameMap[uid]?.label || String(uid).slice(0,8)).toUpperCase();
+  const rankOf  = uid => (nameMap[uid]?.rank || '').toUpperCase();
+  const handleOf= uid => (nameMap[uid]?.handle || '').toUpperCase();
 
   // 3) overrides
   const { data: uov } = await sb.from('mission_user_overrides')
@@ -479,14 +470,14 @@ async function loadParticipants(missionId){
   const pctAsFraction = (cutPct!=null && cutPct>1) ? (cutPct/100) : (cutPct ?? 0);
   const memberPool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - pctAsFraction));
 
-  // 5) render rows with WEIGHTED DEFAULT percent: weight/total_weight * 100
+  // 5) render rows with WEIGHTED default percent
   uList.innerHTML = rows.map(r=>{
     const uid = r.user_id;
     const totalW = Number(r.total_weight||0) || rows.reduce((a,b)=>a+Number(b.weight||0),0) || 1;
     const weight = Number(r.weight||0);
     const defPct = (weight / totalW) * 100;
 
-    const info = { label: labelOf(uid), rank: rankOf(uid), handle: handleOf(uid), pg: r.paygrade || '' };
+    const info = { label: labelOf(uid), rank: rankOf(uid), handle: handleOf(uid), pg: (r.paygrade||'').toUpperCase() };
     const ov = mapOv[uid] || {};
     const hasFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
     const hasPct   = (ov.share_pct!=null);
@@ -499,7 +490,7 @@ async function loadParticipants(missionId){
           <b>${esc(info.label)}</b>
           <div class="sub">
             ${info.rank?`<span>${esc(info.rank)}</span>`:''}
-            ${info.pg?`<span>pg:${esc(info.pg)}</span>`:''}
+            ${info.pg?`<span>PG:${esc(info.pg)}</span>`:''}
             ${info.handle?`<span>${esc(info.handle)}</span>`:''}
             <span class="tag dim">w:<b>${Number(weight).toFixed(2)}</b></span>
             <span class="tag dim">default ${defPct.toFixed(1)}%</span>
