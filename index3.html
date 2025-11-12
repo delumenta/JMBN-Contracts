@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN — Mission Payout Editor</title>
+<title>JMBN — Mission Payout Editor + Participants</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +43,10 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .tag .dot{width:8px;height:8px;border-radius:50%}
 .tag .dot.ok{background:var(--ok)}
 .ctrls{display:flex;align-items:center;gap:8px}
-.ctrls input[type="number"]{width:120px;background:#0b0b0b;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-family:inherit}
+input[type="number"], input[type="text"], select{
+  background:#0b0b0b;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-family:inherit
+}
+.num-sm{width:120px}
 .btn{cursor:pointer;border-radius:10px;border:1px solid var(--border);background:#101010;color:var(--text);padding:6px 10px;font-weight:700}
 .btn:hover{box-shadow:0 0 8px rgba(214,180,76,.35)}
 .btn.red{border-color:#ff6b6b}
@@ -56,6 +59,13 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
 .empty{padding:10px;border:1px dashed rgba(255,255,255,.15);border-radius:10px;color:var(--muted);text-align:center}
 .log{margin-top:12px;border:1px dashed rgba(214,180,76,.4);border-radius:10px;padding:8px;font-size:12px;color:#f0dca0;background:#0b0b0b}
 .log b{color:var(--accent)}
+
+.manager{margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:10px;background:#0c0c0c}
+.manager h4{margin:0 0 8px;color:var(--accent);font-size:14px}
+.searchrow{display:grid;grid-template-columns:1fr 120px 110px auto;gap:8px;align-items:center}
+.searchlist{margin-top:8px;max-height:210px;overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:8px}
+.searchitem{padding:8px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:8px;align-items:center;justify-content:space-between}
+.searchitem:first-child{border-top:0}
 </style>
 </head>
 <body>
@@ -78,6 +88,22 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       <h3>Participants</h3>
       <div id="roster"><div class="empty">Loading roster…</div></div>
       <div class="small">Override is a +/− aUEC amount added after base share. Use 0 to clear.</div>
+
+      <!-- Participants Manager -->
+      <div class="manager">
+        <h4>Manage Participants</h4>
+        <div class="searchrow">
+          <input id="q" type="text" placeholder="Search name/handle…" />
+          <input id="qWeight" class="num-sm" type="number" step="0.1" value="1.0" />
+          <select id="qAttend">
+            <option value="true" selected>Attending</option>
+            <option value="false">Absent</option>
+          </select>
+          <button class="btn" id="qSearch">Search</button>
+        </div>
+        <div id="qList" class="searchlist" hidden></div>
+      </div>
+
       <div class="log" id="log" hidden></div>
     </div>
 
@@ -92,7 +118,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
       </div>
       <hr class="sep">
       <h4>Notes</h4>
-      <div class="small">Reads <code>v_missions_payout_live</code>. Writes <code>mission_user_overrides</code>. Names from <code>v_profiles_detailed</code>.</div>
+      <div class="small">Reads <code>v_missions_payout_live</code> • Writes <code>mission_user_overrides</code> & <code>mission_participants</code> • Names from <code>v_profiles_detailed</code>.</div>
     </div>
   </section>
 </div>
@@ -108,35 +134,50 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
   const dateNice = iso => iso ? new Date(iso).toLocaleString() : '—';
   const log = (m)=>{ const el=$('#log'); el.hidden=false; el.innerHTML+=`<div>${m}</div>`; };
 
-  let sb, missionId;
-  let rows = [];                 // rows from v_missions_payout_live for this mission
-  const nameMap = new Map();     // user_id -> { label, rank }
+  let sb, missionId, rows = [];           // v_missions_payout_live rows
+  const nameMap = new Map();              // user_id -> {label, rank}
 
   async function boot(){
     try{
-      // Auth bootstrap (works with your existing auth.js)
-      if (typeof requireAuth === 'function') {
-        const session = await requireAuth(); if(!session) return;
-        sb = getSupabase();
-      } else if (typeof getSupabase === 'function') {
-        sb = getSupabase();
-      } else {
-        log('<b>init</b>: auth.js not found. Please include js/auth.js or inline Supabase init.');
-        return;
-      }
+      const session = await requireAuth(); if(!session) return;
+      sb = getSupabase();
 
       missionId = new URL(location.href).searchParams.get('id');
       if(!missionId){ alert('No mission id in URL (use ?id=...)'); return; }
 
-      await fetchPayoutRows();                 // v_missions_payout_live
-      await fetchNamesForCurrentRows();        // v_profiles_detailed
+      await loadMissionHeader();          // title, payout, cut
+      await fetchPayoutRows();            // read rows
+      await fetchNamesForCurrentRows();   // enrich names
       renderAll();
       bindRowButtons();
-    }catch(e){
-      log(`<b>boot</b>: ${e.message}`);
-    }
+      bindManager();
+    }catch(e){ log(`<b>boot</b>: ${e.message}`); }
   }
 
+  /* ---------- Header (missions + cut) ---------- */
+  async function loadMissionHeader(){
+    try{
+      const { data: m } = await sb.from('missions')
+        .select('title, created_at, payout_auec')
+        .eq('id', missionId).maybeSingle();
+
+      const { data: cut } = await sb.from('v_mission_org_cut_effective')
+        .select('org_cut_pct, org_cut_source')
+        .eq('mission_id', missionId).maybeSingle();
+
+      $('#mTitle').textContent = m?.title || 'Untitled mission';
+      $('#mWhen').textContent  = dateNice(m?.created_at);
+      $('#mCutSrc').textContent= cut?.org_cut_source || 'default';
+
+      const orgPct = Number(cut?.org_cut_pct ?? 0);
+      $('#fPay').textContent   = fmt0(m?.payout_auec ?? 0);
+      $('#fCutPct').textContent= pct(orgPct);
+      $('#fCutVal').textContent= fmt0(Number(m?.payout_auec ?? 0)*orgPct);
+      $('#fPool').textContent  = fmt0(Number(m?.payout_auec ?? 0)*(1-orgPct));
+    }catch(e){ log(`<b>loadMissionHeader</b>: ${e.message}`); }
+  }
+
+  /* ---------- Core payouts ---------- */
   async function fetchPayoutRows(){
     try{
       const { data, error } = await sb
@@ -146,10 +187,7 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
         .order('weight', { ascending:false });
       if(error) throw error;
       rows = data || [];
-    }catch(e){
-      log(`<b>select v_missions_payout_live</b>: ${e.message}`);
-      rows = [];
-    }
+    }catch(e){ log(`<b>select v_missions_payout_live</b>: ${e.message}`); rows=[]; }
   }
 
   async function fetchNamesForCurrentRows(){
@@ -167,32 +205,24 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
                     || String(p.user_id).slice(0,8);
         nameMap.set(p.user_id, { label, rank: p.current_rank_abbrev || '' });
       }
-    }catch(e){
-      log(`<b>select v_profiles_detailed</b>: ${e.message}`);
-    }
+    }catch(e){ log(`<b>select v_profiles_detailed</b>: ${e.message}`); }
   }
 
   function nameOf(uid){ return nameMap.get(uid)?.label || String(uid).slice(0,8); }
   function rankOf(uid){ return nameMap.get(uid)?.rank || ''; }
 
+  /* ---------- Render ---------- */
   function renderAll(){
     if(!rows.length){
-      $('#mTitle').textContent = 'Mission not found';
-      $('#roster').innerHTML = `<div class="empty">No participants found or you lack access.</div>`;
+      $('#roster').innerHTML = `<div class="empty">No participants found.</div>`;
+      $('#fTWeight').textContent = '—';
       return;
     }
     const h = rows[0];
-    $('#mTitle').textContent = h.title || 'Untitled mission';
-    $('#mWhen').textContent  = dateNice(h.mission_date);
-    $('#mCutSrc').textContent= h.org_cut_source || 'default';
-    $('#fPay').textContent   = fmt0(h.payout_auec);
-    $('#fCutPct').textContent= pct(h.org_cut_pct);
-    $('#fCutVal').textContent= fmt0(h.org_cut_value);
-    $('#fPool').textContent  = fmt0(h.pool_after_cut);
-    const totW = h.total_weight ?? rows.reduce((a,b)=>a+Number(b.weight||0),0);
+    const totW = h.total_weight ?? rows.reduce((a,b)=>a+Number(b.weight||0),0) || 0;
     $('#fTWeight').textContent = fmt2(totW);
 
-    const safeTotW = (totW && isFinite(totW)) ? totW : 1;
+    const safeTotW = totW || 1;
     $('#roster').innerHTML = rows.map(r=>{
       const defPct = (Number(r.weight||0)/safeTotW)*100;
       const ov = Number(r.add_pay_override||0);
@@ -212,10 +242,14 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
         </div>
         <div class="ctrls">
           <button class="btn minus" title="-1000">−</button>
-          <input type="number" step="100" inputmode="numeric" placeholder="override aUEC" value="${ov}">
+          <input class="ov num-sm" type="number" step="100" inputmode="numeric" placeholder="override aUEC" value="${ov}">
           <button class="btn plus" title="+1000">+</button>
-          <button class="btn" data-act="save">Save</button>
-          <button class="btn red" data-act="clear">Clear</button>
+          <button class="btn" data-act="save-ov">Save</button>
+          <button class="btn red" data-act="clear-ov">Clear</button>
+          <input class="w num-sm" type="number" step="0.1" title="Weight" value="${Number(r.weight||0)}">
+          <button class="btn" data-act="save-weight">Save w</button>
+          <button class="btn" data-act="toggle-attend">Toggle</button>
+          <button class="btn red" data-act="remove">Remove</button>
         </div>
       </div>`;
     }).join('');
@@ -224,47 +258,148 @@ html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-u
   function bindRowButtons(){
     document.querySelectorAll('.member').forEach(box=>{
       const uid = box.dataset.uid;
-      const input = box.querySelector('input[type="number"]');
-      const toNum = () => Number(input.value||0) || 0;
+      const ovInput = box.querySelector('.ov');
+      const wInput  = box.querySelector('.w');
+      const toNum = (el) => Number(el.value||0) || 0;
 
-      box.querySelector('.minus')?.addEventListener('click', ()=>{ input.value = String(toNum() - 1000); });
-      box.querySelector('.plus')?.addEventListener('click',  ()=>{ input.value = String(toNum() + 1000); });
+      box.querySelector('.minus')?.addEventListener('click', ()=>{ ovInput.value = String(toNum(ovInput) - 1000); });
+      box.querySelector('.plus')?.addEventListener('click',  ()=>{ ovInput.value = String(toNum(ovInput) + 1000); });
 
-      box.querySelector('[data-act="save"]')?.addEventListener('click', async ()=>{
-        await saveOverride(uid, toNum());
+      box.querySelector('[data-act="save-ov"]')?.addEventListener('click', async ()=>{
+        await saveOverride(uid, toNum(ovInput));
       });
-      box.querySelector('[data-act="clear"]')?.addEventListener('click', async ()=>{
+      box.querySelector('[data-act="clear-ov"]')?.addEventListener('click', async ()=>{
         await saveOverride(uid, 0);
+      });
+      box.querySelector('[data-act="save-weight"]')?.addEventListener('click', async ()=>{
+        await saveWeight(uid, Number(wInput.value||0));
+      });
+      box.querySelector('[data-act="toggle-attend"]')?.addEventListener('click', async ()=>{
+        await toggleAttending(uid);
+      });
+      box.querySelector('[data-act="remove"]')?.addEventListener('click', async ()=>{
+        if(confirm('Remove this participant?')) await removeParticipant(uid);
       });
     });
   }
 
+  /* ---------- Overrides (mission_user_overrides) ---------- */
   async function saveOverride(userId, amount){
     try{
       if(!userId) throw new Error('no userId');
       if(Number(amount) === 0){
         const { error } = await sb.from('mission_user_overrides')
-          .delete()
-          .eq('mission_id', missionId)
-          .eq('user_id', userId);
+          .delete().eq('mission_id', missionId).eq('user_id', userId);
         if(error) throw error;
       }else{
         const { error } = await sb.from('mission_user_overrides').upsert({
-          mission_id: missionId,
-          user_id: userId,
-          amount: Number(amount)
+          mission_id: missionId, user_id: userId, amount: Number(amount)
         }, { onConflict: 'mission_id,user_id' });
         if(error) throw error;
       }
-      // Re-pull computed rows so base/final reflect new override
-      await fetchPayoutRows();
-      await fetchNamesForCurrentRows();
-      renderAll();
-      bindRowButtons();
-    }catch(e){
-      log(`<b>saveOverride</b>: ${e.message}`);
-      alert('Failed to save override: '+e.message);
-    }
+      await refreshRows();
+    }catch(e){ log(`<b>saveOverride</b>: ${e.message}`); alert('Failed to save override: '+e.message); }
+  }
+
+  /* ---------- Participants (mission_participants) ---------- */
+  async function saveWeight(userId, weight){
+    try{
+      const { error } = await sb.from('mission_participants')
+        .update({ weight: Number(weight) })
+        .eq('mission_id', missionId).eq('user_id', userId);
+      if(error) throw error;
+      await refreshRows();
+    }catch(e){ log(`<b>saveWeight</b>: ${e.message}`); alert('Failed to save weight: '+e.message); }
+  }
+
+  async function toggleAttending(userId){
+    try{
+      // Read current attending
+      const { data, error } = await sb.from('mission_participants')
+        .select('attending').eq('mission_id', missionId).eq('user_id', userId).maybeSingle();
+      if(error) throw error;
+      const cur = !!(data && (data.attending===true || data.attending==='t' || data.attending===1));
+      const { error: e2 } = await sb.from('mission_participants')
+        .update({ attending: !cur })
+        .eq('mission_id', missionId).eq('user_id', userId);
+      if(e2) throw e2;
+      await refreshRows();
+    }catch(e){ log(`<b>toggleAttending</b>: ${e.message}`); alert('Failed to toggle attending: '+e.message); }
+  }
+
+  async function removeParticipant(userId){
+    try{
+      const { error } = await sb.from('mission_participants')
+        .delete().eq('mission_id', missionId).eq('user_id', userId);
+      if(error) throw error;
+      // Also clear override if any (nice-to-have)
+      await sb.from('mission_user_overrides').delete().eq('mission_id', missionId).eq('user_id', userId);
+      await refreshRows();
+    }catch(e){ log(`<b>removeParticipant</b>: ${e.message}`); alert('Failed to remove: '+e.message); }
+  }
+
+  /* ---------- Add participant (search v_profiles_detailed, insert mission_participants) ---------- */
+  function bindManager(){
+    $('#qSearch').addEventListener('click', doSearch);
+    $('#q').addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
+  }
+
+  async function doSearch(){
+    const q = $('#q').value.trim();
+    const w = Number($('#qWeight').value||1) || 1;
+    const att = $('#qAttend').value === 'true';
+
+    if(!q){ $('#qList').hidden=true; $('#qList').innerHTML=''; return; }
+
+    try{
+      const { data, error } = await sb.from('v_profiles_detailed')
+        .select('user_id, handle, display_name, current_rank_abbrev')
+        .or(`handle.ilike.%${q}%,display_name.ilike.%${q}%`)
+        .limit(20);
+      if(error) throw error;
+
+      const list = (data||[]).map(p=>{
+        const label = (p.display_name?.trim()) || (p.handle?.trim()) || String(p.user_id).slice(0,8);
+        return `
+          <div class="searchitem" data-uid="${p.user_id}">
+            <div>
+              <div><b>${label}</b>${p.current_rank_abbrev?` • ${p.current_rank_abbrev}`:''}</div>
+              <div class="small">${p.handle?('@'+p.handle):''}</div>
+            </div>
+            <button class="btn">Add</button>
+          </div>`;
+      }).join('');
+      $('#qList').innerHTML = list || `<div class="empty">No results.</div>`;
+      $('#qList').hidden = false;
+
+      // Bind add buttons
+      $('#qList').querySelectorAll('.searchitem .btn').forEach(btn=>{
+        btn.addEventListener('click', async (ev)=>{
+          const uid = ev.target.closest('.searchitem').dataset.uid;
+          await addParticipant(uid, w, att);
+          $('#qList').hidden = true; $('#qList').innerHTML = '';
+          $('#q').value = '';
+        });
+      });
+    }catch(e){ log(`<b>search</b>: ${e.message}`); }
+  }
+
+  async function addParticipant(userId, weight, attending){
+    try{
+      const payload = { mission_id: missionId, user_id: userId, weight: Number(weight)||1, attending: !!attending };
+      // upsert so re-adding updates weight/attending
+      const { error } = await sb.from('mission_participants').upsert(payload, { onConflict: 'mission_id,user_id' });
+      if(error) throw error;
+      await refreshRows();
+    }catch(e){ log(`<b>addParticipant</b>: ${e.message}`); alert('Failed to add: '+e.message); }
+  }
+
+  /* ---------- Refresh cycle after any change ---------- */
+  async function refreshRows(){
+    await fetchPayoutRows();
+    await fetchNamesForCurrentRows();
+    renderAll();
+    bindRowButtons();
   }
 
   boot();
