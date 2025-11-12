@@ -49,24 +49,19 @@ button:hover{background:var(--accent);color:#000}
 .kpi .v{font-size:18px;color:var(--accent);font-weight:700}
 
 .table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.table th{font-size:12px;color:var(--muted);font-weight:400;text-align:left;padding:4px 8px}
 .row{display:grid;grid-template-columns:140px 1fr 120px 240px 120px 220px;gap:10px;align-items:center;
   background:#0a0a0a;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px}
 @media(max-width:1100px){.row{grid-template-columns:130px 1fr 120px 240px 120px}}
 @media(max-width:900px){ .row{grid-template-columns:1fr} }
-
 .cell{padding:4px 6px}
 .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .tag{font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:999px;color:var(--accent);background:#121212}
 .tag.dim{opacity:.7}
 .note{font-size:11px;color:var(--muted)}
-
 .cutCtrl{display:flex;align-items:center;gap:6px}
 .cutCtrl button{width:32px;height:32px;padding:0}
 .cutCtrl input{width:90px;text-align:center}
-
 .right{display:flex;gap:8px;align-items:center;justify-content:flex-end}
-
 .alert{border:1px solid var(--bad);background:#240e0e;color:#ffbcbc;border-radius:10px;padding:8px 10px}
 .ok{border:1px solid var(--ok);background:#102014;color:#adffcb;border-radius:10px;padding:8px 10px}
 
@@ -108,7 +103,7 @@ button:hover{background:var(--accent);color:#000}
     </div>
   </div>
 
-  <!-- Filters -->
+  <!-- Filters + Ledger -->
   <div class="panel">
     <div class="hd"><h3>Mission Ledger</h3>
       <div class="meta" style="gap:8px;flex-wrap:wrap">
@@ -130,9 +125,7 @@ button:hover{background:var(--accent);color:#000}
         <div class="kpi"><h4>MEMBER SHARE</h4><div class="v" id="kMem">–</div></div>
         <div class="kpi"><h4>MISSIONS</h4><div class="v" id="kMis">–</div></div>
       </div>
-
       <div class="small" style="margin-bottom:8px">Use <b>– / +</b> to nudge a mission’s override. Type a value then press <b>Save</b>. Values are in <b>%</b>.</div>
-
       <div id="list">Loading…</div>
     </div>
   </div>
@@ -153,7 +146,7 @@ button:hover{background:var(--accent);color:#000}
   <div class="db">
     <div class="small" id="dwMeta">—</div>
     <div class="small" style="margin:8px 0 10px">
-      Member pool = payout × (100 − effective org cut) ÷ 100.  
+      Member pool = payout − org_cut_value (if present) otherwise payout × (1 − org_cut_pct).
       Per-user final = fixed (if set) → percent of pool (if set) → equal split.
     </div>
     <div id="uList">Loading…</div>
@@ -170,7 +163,7 @@ const esc = s => { const d=document.createElement('div'); d.textContent=s??''; r
 
 let sb, me, GLOBAL = 0, MISSIONS=[], OV={}, drawerMission=null;
 
-// ---- boot ----
+/* ---------- boot ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await requireAuth(); if(!session) return;
   sb = getSupabase(); me = session.user.id;
@@ -190,7 +183,7 @@ function setDefaultDates(){
   $('#fTo').value   = to.toISOString().slice(0,10);
 }
 
-// ---- GLOBAL CUT ----
+/* ---------- Global cut ---------- */
 async function loadGlobal(){
   const { data, error } = await sb.from('org_settings')
     .select('org_cut_pct, updated_at').order('updated_at', { ascending:false }).limit(1).maybeSingle();
@@ -209,7 +202,7 @@ async function saveGlobal(){
   renderList();
 }
 
-// ---- LEDGER ----
+/* ---------- Ledger ---------- */
 async function loadLedger(){
   const list = $('#list');
   list.textContent = 'Loading…';
@@ -229,7 +222,7 @@ async function loadLedger(){
   if(error){ list.innerHTML = `<div class="alert">${esc(error.message)}</div>`; return; }
   MISSIONS = rows || [];
 
-  // mission-level overrides
+  // mission-level overrides table
   let ov = {};
   if(MISSIONS.length){
     const ids = MISSIONS.map(m=>m.id);
@@ -326,17 +319,11 @@ function renderList(){
   list.querySelectorAll('.row').forEach(row=>{
     const id = row.dataset.id;
     const inp = row.querySelector('input[type="number"]');
-    const minus = row.querySelector('[data-minus]');
-    const plus  = row.querySelector('[data-plus]');
-    const save  = row.querySelector('[data-save]');
-    const clr   = row.querySelector('[data-clear]');
-    const btnP  = row.querySelector('[data-participants]');
-
-    minus && inp && (minus.onclick = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) - 0.5)); });
-    plus  && inp && (plus.onclick  = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) + 0.5)); });
-    save  && inp && (save.onclick  = ()=> saveMissionOverride(id, inp.value));
-    clr   && (clr.onclick   = ()=> clearMissionOverride(id));
-    btnP  && (btnP.onclick  = ()=> openDrawer(id));
+    row.querySelector('[data-minus]')?.addEventListener('click', ()=>{ inp.value = String(clampPct((Number(inp.value)||0) - 0.5)); });
+    row.querySelector('[data-plus]') ?.addEventListener('click', ()=>{ inp.value = String(clampPct((Number(inp.value)||0) + 0.5)); });
+    row.querySelector('[data-save]') ?.addEventListener('click', ()=> saveMissionOverride(id, inp.value));
+    row.querySelector('[data-clear]')?.addEventListener('click', ()=> clearMissionOverride(id));
+    row.querySelector('[data-participants]')?.addEventListener('click', ()=> openDrawer(id));
   });
 }
 
@@ -357,7 +344,7 @@ async function clearMissionOverride(missionId){
   renderList();
 }
 
-// ---- LAST 4 ----
+/* ---------- Last 4 ---------- */
 async function renderLast4(){
   const box = $('#last4');
   const { data, error } = await sb.from('missions')
@@ -386,7 +373,7 @@ async function renderLast4(){
   }).join('');
 }
 
-// ==================== PARTICIPANTS (names not numbers) ====================
+/* ==================== Participants (names, not numbers) ==================== */
 function openDrawer(missionId){
   drawerMission = missionId;
   $('#drawer').classList.add('open');
@@ -406,11 +393,11 @@ async function loadParticipants(missionId){
   $('#dwTitle').textContent = 'Participants & Overrides';
   $('#dwMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
 
-  // 1) Participants rows (one per user) — from v_missions_payout_live
+  // 1) participants from v_missions_payout_live
   let rows = [];
   try{
     const { data, error } = await sb.from('v_missions_payout_live')
-      .select('user_id, weight, base_share, final_share, total_weight, payout_auec, org_cut_pct, org_cut_source')
+      .select('user_id, weight, base_share, final_share, total_weight, payout_auec, org_cut_pct, org_cut_value')
       .eq('mission_id', missionId)
       .order('weight', { ascending:false });
     if(error) throw error;
@@ -419,12 +406,9 @@ async function loadParticipants(missionId){
     uList.innerHTML = `<div class="alert">Failed to load participants: ${esc(e.message)}</div>`;
     return;
   }
-  if(!rows.length){
-    uList.innerHTML = `<div class="small">No participants found for this mission.</div>`;
-    return;
-  }
+  if(!rows.length){ uList.innerHTML = `<div class="small">No participants found for this mission.</div>`; return; }
 
-  // 2) Names from v_profiles_detailed — map user_id -> {label, rank, handle}
+  // 2) names from v_profiles_detailed
   const ids = [...new Set(rows.map(r=>r.user_id).filter(Boolean))];
   const nameMap = {};
   if(ids.length){
@@ -434,29 +418,30 @@ async function loadParticipants(missionId){
         .in('user_id', ids);
       (prof||[]).forEach(p=>{
         const label = (p.display_name?.trim()) || (p.handle?.trim()) || String(p.user_id).slice(0,8);
-        nameMap[p.user_id] = { label, rank: p.current_rank_abbrev||'', handle: p.handle||'' };
+        nameMap[p.user_id] = { label, rank: p.current_rank_abbrev||'', handle: p.handle?('@'+p.handle):'' };
       });
     }catch(_){}
   }
-  const labelOf = (uid)=> nameMap[uid]?.label || String(uid).slice(0,8);
-  const rankOf  = (uid)=> nameMap[uid]?.rank || '';
-  const handleOf= (uid)=> nameMap[uid]?.handle ? '@'+nameMap[uid].handle : '';
+  const labelOf = uid => nameMap[uid]?.label || String(uid).slice(0,8);
+  const rankOf  = uid => nameMap[uid]?.rank  || '';
+  const handleOf= uid => nameMap[uid]?.handle|| '';
 
-  // 3) Per-user overrides
+  // 3) per-user overrides
   const { data: uov } = await sb.from('mission_user_overrides')
     .select('user_id, share_pct, share_fixed_auec, note')
     .eq('mission_id', missionId);
   const mapOv = Object.fromEntries((uov||[]).map(r=>[r.user_id, r]));
 
-  // 4) Pool math (from the first row)
+  // 4) pool math (prefer org_cut_value if present)
   const h = rows[0];
-  const effCut = Number(h.org_cut_pct||0) * 100 || 0; // if view stores 0.15, convert to %
-  const cutPct = (h.org_cut_pct!=null && h.org_cut_pct<=1) ? (Number(h.org_cut_pct)*100) : Number(h.org_cut_pct||0);
   const payout = Number(h.payout_auec||0);
-  const memberPool = payout * (1 - (cutPct/100));
+  const cutVal = (h.org_cut_value!=null) ? Number(h.org_cut_value) : null;
+  const cutPct = (h.org_cut_pct!=null) ? Number(h.org_cut_pct) : null; // could be 0.2 or 20 depending on view; handle both:
+  const pctAsFraction = (cutPct!=null && cutPct>1) ? (cutPct/100) : (cutPct ?? 0);
+  const memberPool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - pctAsFraction));
   const equalPct = rows.length ? (100/rows.length) : 0;
 
-  // 5) Render — names only (no numeric IDs shown)
+  // 5) render (names only)
   uList.innerHTML = rows.map(r=>{
     const uid = r.user_id;
     const info = { label: labelOf(uid), rank: rankOf(uid), handle: handleOf(uid) };
@@ -494,20 +479,15 @@ async function loadParticipants(missionId){
       </div>`;
   }).join('');
 
-  // 6) Wire per-row controls
+  // 6) wire per-row controls
   (uList||document).querySelectorAll('.urow').forEach(row=>{
     const uid   = row.dataset.uid;
     const ipPct = row.querySelector('[data-pct]');
     const ipFix = row.querySelector('[data-fixed]');
-    const minus = row.querySelector('[data-pct-minus]');
-    const plus  = row.querySelector('[data-pct-plus]');
-    const save  = row.querySelector('[data-saveu]');
-    const clear = row.querySelector('[data-clearu]');
+    row.querySelector('[data-pct-minus]')?.addEventListener('click', ()=>{ ipPct.value = String(Math.max(0, (Number(ipPct.value)||0) - 0.5)); ipFix.value=''; });
+    row.querySelector('[data-pct-plus]') ?.addEventListener('click', ()=>{ ipPct.value = String(Math.min(100,(Number(ipPct.value)||0) + 0.5)); ipFix.value=''; });
 
-    minus && ipPct && ipFix && (minus.onclick = ()=>{ ipPct.value = String(Math.max(0, (Number(ipPct.value)||0) - 0.5)); ipFix.value=''; });
-    plus  && ipPct && ipFix && (plus.onclick  = ()=>{ ipPct.value = String(Math.min(100,(Number(ipPct.value)||0) + 0.5)); ipFix.value=''; });
-
-    save && (save.onclick = async ()=>{
+    row.querySelector('[data-saveu]')?.addEventListener('click', async ()=>{
       const share_pct = ipPct?.value==='' ? null : Math.max(0, Math.min(100, Number(ipPct.value)||0));
       const share_fixed_auec = ipFix?.value==='' ? null : Math.max(0, Number(ipFix.value)||0);
       const payload = { mission_id: missionId, user_id: uid, share_pct, share_fixed_auec, updated_by: me };
@@ -516,7 +496,7 @@ async function loadParticipants(missionId){
       loadParticipants(missionId);
     });
 
-    clear && (clear.onclick = async ()=>{
+    row.querySelector('[data-clearu]')?.addEventListener('click', async ()=>{
       const { error } = await sb.from('mission_user_overrides')
         .delete().eq('mission_id', missionId).eq('user_id', uid);
       if(error) return alert('Clear failed: '+error.message);
