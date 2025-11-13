@@ -385,4 +385,419 @@ mountHeader2();
 <script>
 const $  = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
-const setFill=(
+const setFill=(el,p)=>{const x=Math.max(0,Math.min(1,Number(p)||0));el.style.width=(x*100)+'%';};
+
+let sb, me, isElev=false, MEMBERS=[], SELECTED=null, RANKS=[];
+
+/* Boot */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const session = await requireAuth(); if(!session) return;
+  sb = getSupabase(); me = session.user.id;
+
+  try{
+    const { data } = await sb.rpc('is_elevated',{ u: me });
+    isElev = data===true;
+  }catch{}
+
+  if(!isElev){
+    $('#inspector').innerHTML='<div class="small" style="color:#ff6b6b">Access denied — not elevated.</div>';
+    return;
+  }
+
+  await loadMembers();
+  await loadRankOptions();
+
+  $('#mSearch').oninput = renderMembers;
+  $('#rankTrack').onchange = e => loadRankOptions(e.target.value);
+
+  $('#btnForce').onclick = async ()=>{
+    if(!SELECTED) return alert('Select a member first.');
+    const track=$('#rankTrack').value; if(!track) return alert('Choose a track.');
+    if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${track}?`)) return;
+    const { error } = await sb.rpc('set_rank_track',{ p_user: SELECTED.user_id, p_track: track });
+    if(error) return alert('Force set failed: '+error.message);
+    alert('Track updated ✓');
+    await openMember(SELECTED.user_id);
+    await loadMembers();
+  };
+
+  $('#btnSetRank').onclick = async ()=>{
+    if(!SELECTED) return alert('Select a member first.');
+    const code=$('#rankCode').value; if(!code) return alert('Choose a rank.');
+    if(!confirm(`Force set ${SELECTED.handle||SELECTED.display_name||SELECTED.user_id.slice(0,8)} to ${code}?`)) return;
+    const { error } = await sb.rpc('set_rank_code',{ p_user: SELECTED.user_id, p_code: code });
+    if(error) return alert('Set rank failed: '+error.message);
+    alert('Rank updated ✓');
+    await openMember(SELECTED.user_id);
+    await loadMembers();
+  };
+
+  $('#btnPromote').onclick = async ()=>{
+    if(!SELECTED) return;
+    const { data, error } = await sb.rpc('request_promotion',{ p_user: SELECTED.user_id });
+    if(error) return alert('Promotion failed: '+error.message);
+    alert(data?.message || (data?.ok?'Promotion OK':'Not eligible yet'));
+    await openMember(SELECTED.user_id);
+  };
+});
+
+/* Ranks dropdown */
+async function loadRankOptions(track=''){
+  if(!RANKS.length){
+    const { data, error } = await sb.from('ranks')
+      .select('code,name,category,sort_order')
+      .order('sort_order');
+    if(error){ console.warn(error.message); return; }
+    RANKS=data||[];
+  }
+  const want = (track||$('#rankTrack').value||'').toLowerCase();
+  const items = RANKS.filter(r=>!want || (r.category||'').toLowerCase()===want);
+  const sel = $('#rankCode');
+  sel.innerHTML = '<option value="">— Select Rank —</option>' +
+    items.map(r=>`<option value="${r.code}">${r.code} — ${esc(r.name)}</option>`).join('');
+}
+
+/* Members list */
+async function loadMembers(){
+  const { data, error } = await sb.from('v_profiles_detailed').select(`
+    user_id,handle,display_name,
+    current_rank_category,current_rank_name,current_rank_code,current_rank_image_url
+  `).order('handle');
+
+  if(error){
+    $('#mList').textContent='Failed to load members: '+error.message;
+    return;
+  }
+  MEMBERS=data||[];
+  renderMembers();
+}
+function renderMembers(){
+  const q=($('#mSearch').value||'').toLowerCase().trim();
+  const list=$('#mList');
+  const rows=q
+    ? MEMBERS.filter(m=>(`${m.handle} ${m.display_name}`).toLowerCase().includes(q))
+    : MEMBERS;
+  if(!rows.length){ list.textContent='No matches.'; return; }
+  list.innerHTML='';
+  rows.forEach(m=>{
+    const row=document.createElement('div');
+    row.className='mrow';
+    row.innerHTML=`
+      <div class="mavatar">
+        ${m.current_rank_image_url
+          ? `<img src="${esc(m.current_rank_image_url)}" alt="rank">`
+          : '👤'}
+      </div>
+      <div>
+        <div><b>${esc(m.handle||'(no handle)')}</b>
+          <span class="small">• ${esc(m.display_name||'')}</span>
+        </div>
+        <div class="small">
+          ${esc(m.current_rank_category||'Unrated')} — ${esc(m.current_rank_name||'Unrated')}
+        </div>
+      </div>
+      <div><button class="pill">Open</button></div>`;
+    row.querySelector('button').onclick=()=>openMember(m.user_id,row);
+    list.appendChild(row);
+  });
+}
+function markActive(row){
+  document.querySelectorAll('.mrow').forEach(x=>x.classList.remove('active'));
+  row?.classList.add('active');
+}
+
+/* Dashboard for a member */
+async function openMember(userId,rowEl){
+  const res=MEMBERS.find(x=>x.user_id===userId); if(!res) return;
+  SELECTED=res; markActive(rowEl); $('#btnPromote').disabled=false;
+
+  // preselect UI
+  $('#rankTrack').value=res.current_rank_category||'';
+  await loadRankOptions(res.current_rank_category||'');
+  if(res.current_rank_code) $('#rankCode').value = res.current_rank_code;
+
+  // Dashboard layout
+  $('#inspector').innerHTML = `
+    <div id="summary"></div>
+
+    <div class="kpis">
+      <div class="kpi"><h4>Total Missions</h4><div class="val" id="k_mis">—</div></div>
+      <div class="kpi"><h4>Total Hours</h4><div class="val" id="k_hrs">—</div></div>
+      <div class="kpi"><h4>Owned Certs</h4><div class="val" id="k_cer">—</div></div>
+    </div>
+
+    <div class="pb">
+      <div class="label">Missions</div>
+      <div class="bar"><div id="pbMis" class="fill" style="width:0%"></div></div>
+      <div class="val" id="vMis">—</div>
+    </div>
+    <div class="pb">
+      <div class="label">Hours</div>
+      <div class="bar"><div id="pbHrs" class="fill" style="width:0%"></div></div>
+      <div class="val" id="vHrs">—</div>
+    </div>
+    <div class="pb">
+      <div class="label">Certifications</div>
+      <div class="bar"><div id="pbCer" class="fill" style="width:0%"></div></div>
+      <div class="val" id="vCer">—</div>
+    </div>
+
+    <div class="panel" style="margin-top:12px">
+      <div class="hd"><h3>Certifications</h3></div>
+      <div class="body"><div id="certGrid" class="certGrid">Loading…</div></div>
+    </div>
+
+    <div class="panel" style="margin-top:12px">
+      <div class="hd">
+        <h3>Certification Timeline</h3>
+        <div>
+          <select id="certSelect"></select>
+          <button id="btnReloadTL" class="btn-ghost">Load</button>
+        </div>
+      </div>
+      <div class="body">
+        <div id="tlHint" class="small">Pick a certification to manage completions.</div>
+        <div id="timeline" class="timeline"></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:12px">
+      <div class="hd">
+        <h3>Missions <span id="misCount" class="badge">0</span></h3>
+        <div><button id="misReload" class="pill">Reload</button></div>
+      </div>
+      <div class="body"><div id="misList" class="list">Loading…</div></div>
+    </div>
+  `;
+
+  await Promise.all([
+    loadProgress(userId),
+    loadCerts(userId),
+    loadMissions(userId)
+  ]);
+
+  $('#misReload').onclick = ()=> loadMissions(userId);
+}
+
+/* Progress */
+async function loadProgress(uid){
+  const [{ data: prog }, { data: up }] = await Promise.all([
+    sb.from('v_user_rank_progress').select('*').eq('user_id', uid).maybeSingle(),
+    sb.from('v_user_progress').select('*').eq('user_id', uid).maybeSingle()
+  ]);
+
+  const cur = esc(prog?.current_name||'(unranked)');
+  const curPg = esc(prog?.current_paygrade||'—');
+  const nxt = esc(prog?.next_name||'—');
+  const nxtPg = esc(prog?.next_paygrade||'—');
+
+  $('#summary').innerHTML = `
+    <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+      <div>
+        <div><b>Current:</b>
+          <span style="color:var(--accent)">${cur}</span>
+          <span class="pill">PG: ${curPg}</span>
+        </div>
+        <div class="small">
+          Next: ${nxt} <span class="pill">PG: ${nxtPg}</span>
+        </div>
+      </div>
+      <div class="small">
+        Targets • M:${prog?.missions_target??0}
+        • H:${prog?.hours_target??0}
+        • C:${prog?.certification_target??0}
+      </div>
+    </div>`;
+
+  const m=Number(up?.missions_attended||0),
+        h=Number(up?.hours_total||0),
+        c=Number(up?.certifications_total||0);
+  const mt=Number(prog?.missions_target||0),
+        ht=Number(prog?.hours_target||0),
+        ct=Number(prog?.certification_target||0);
+
+  $('#k_mis').textContent=String(m);
+  $('#k_hrs').textContent=String(h);
+  $('#k_cer').textContent=String(c);
+
+  $('#vMis').textContent=`${m} / ${mt}`;
+  $('#vHrs').textContent=`${h} / ${ht}`;
+  $('#vCer').textContent=`${c} / ${ct}`;
+
+  setFill($('#pbMis'), mt?Math.min(1,m/mt):1);
+  setFill($('#pbHrs'), ht?Math.min(1,h/ht):1);
+  setFill($('#pbCer'), ct?Math.min(1,c/ct):1);
+}
+
+/* Certifications */
+async function loadCerts(uid){
+  const [{ data: catalog }, { data: mine }, { data: reqs }] = await Promise.all([
+    sb.from('certifications')
+      .select('certification_code,name,image_url,sort_order,is_active')
+      .order('sort_order'),
+    sb.from('user_certifications')
+      .select('certification_code')
+      .eq('user_id', uid),
+    sb.from('certification_requirements')
+      .select('certification_code,event_code')
+  ]);
+
+  const owned = new Set((mine||[]).map(x=>x.certification_code));
+  const grid=$('#certGrid'); grid.innerHTML='';
+  const select=$('#certSelect'); select.innerHTML='';
+
+  (catalog||[]).forEach(c=>{
+    const div=document.createElement('div');
+    div.className='cert'+(owned.has(c.certification_code)?'':' dim');
+    div.innerHTML=`
+      <div class="thumb">${c.image_url?`<img src="${esc(c.image_url)}" alt="">`:'🏅'}</div>
+      <div class="abbr">${esc(c.certification_code)}</div>`;
+    div.title = c.name || c.certification_code;
+    div.style.cursor='pointer';
+    div.onclick = ()=>{
+      select.value=c.certification_code;
+      loadTimeline(uid,c.certification_code);
+      $('#tlHint').textContent=c.name || c.certification_code;
+      $('#timeline').scrollIntoView({behavior:'smooth',block:'nearest'});
+    };
+    grid.appendChild(div);
+
+    const opt=document.createElement('option');
+    opt.value=c.certification_code;
+    opt.textContent=`${c.certification_code} — ${c.name}`;
+    select.appendChild(opt);
+  });
+
+  $('#btnReloadTL').onclick = ()=> loadTimeline(uid, select.value);
+}
+
+/* Timeline */
+async function loadTimeline(uid, certCode){
+  const tl=$('#timeline'); tl.innerHTML='';
+  if(!certCode){
+    tl.innerHTML='<div class="small">Pick a certification.</div>';
+    return;
+  }
+
+  const [{ data: reqs }, { data: recs }] = await Promise.all([
+    sb.from('certification_requirements')
+      .select('event_code, sort_order, training_events(title, description)')
+      .eq('certification_code', certCode)
+      .order('sort_order'),
+    sb.from('user_training_events')
+      .select('event_code, completed_at, approved_by, approved_at')
+      .eq('user_id', uid)
+  ]);
+  const done=new Map((recs||[]).map(r=>[r.event_code,r]));
+
+  if(!reqs?.length){
+    tl.innerHTML='<div class="small">No requirements configured.</div>';
+    return;
+  }
+
+  reqs.forEach(r=>{
+    const rec=done.get(r.event_code);
+    const ok=!!rec;
+    const row=document.createElement('div');
+    row.className='titem'+(ok?' done':'');
+    row.innerHTML=`
+      <div>
+        <div class="tlabel">${esc(r.training_events?.title||r.event_code)}</div>
+        <div class="small">${esc(r.training_events?.description||'')}</div>
+        ${ok?`<div class="small">
+          Completed: ${new Date(rec.approved_at||rec.completed_at).toLocaleString()}
+          ${rec.approved_by?` • by ${esc(rec.approved_by.slice(0,8))}`:''}
+        </div>`:''}
+      </div>
+      <div>
+        ${ok
+          ? `<button class="btn-danger" data-remove="${r.event_code}">Remove</button>`
+          : `<button class="btn-ok" data-add="${r.event_code}">Grant</button>`}
+      </div>`;
+    tl.appendChild(row);
+  });
+
+  tl.querySelectorAll('button[data-add]').forEach(b=>{
+    b.onclick=async ()=>{
+      const { error } = await sb.from('user_training_events').insert({
+        user_id: uid,
+        event_code: b.dataset.add,
+        completed_at: new Date().toISOString()
+      });
+      if(error) return alert('Grant failed: '+error.message);
+      await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
+    };
+  });
+  tl.querySelectorAll('button[data-remove]').forEach(b=>{
+    b.onclick=async ()=>{
+      const { error } = await sb.from('user_training_events')
+        .delete().eq('user_id',uid).eq('event_code',b.dataset.remove);
+      if(error) return alert('Remove failed: '+error.message);
+      await Promise.all([loadTimeline(uid,certCode),loadProgress(uid)]);
+    };
+  });
+}
+
+/* Missions */
+async function loadMissions(uid){
+  const box = $('#misList');
+  const count = $('#misCount');
+  box.textContent = 'Loading…';
+  try{
+    let { data, error } = await sb
+      .from('v_mission_attendees_detailed')
+      .select('mission_id, attendance, missions(id,title,start_time)')
+      .eq('user_id', uid)
+      .order('missions.start_time', { ascending:false })
+      .limit(20);
+
+    if (error || (data && data.length && data[0].missions == null)) {
+      const { data: bare, error: e2 } = await sb
+        .from('v_mission_attendees_detailed')
+        .select('mission_id, attendance')
+        .eq('user_id', uid)
+        .order('mission_id', { ascending:false })
+        .limit(50);
+      if (e2) throw e2;
+
+      const ids = [...new Set((bare||[]).map(r=>r.mission_id))];
+      let map = {};
+      if (ids.length){
+        const { data: mrows } = await sb
+          .from('missions')
+          .select('id,title,start_time')
+          .in('id', ids);
+        map = Object.fromEntries((mrows||[]).map(m=>[m.id, m]));
+      }
+      data = (bare||[]).map(r => ({ ...r, missions: map[r.mission_id] || null }))
+                       .sort((a,b)=> new Date(b.missions?.start_time||0) - new Date(a.missions?.start_time||0))
+                       .slice(0,20);
+    }
+
+    const attended = (data||[]).filter(r => r.attendance && r.attendance.toLowerCase() !== 'withdrawn');
+    count.textContent = String(attended.length);
+
+    if (!data || !data.length){
+      box.innerHTML = '<div class="small">No missions found.</div>';
+      return;
+    }
+
+    box.innerHTML = data.map(r=>{
+      const m = r.missions || {};
+      const when = m.start_time ? new Date(m.start_time).toLocaleString() : '';
+      const att = r.attendance || '—';
+      return `<div class="item">
+        <h4>${esc(m.title || 'Untitled Mission')}</h4>
+        <div class="meta">${when} • Attendance: ${esc(att)}</div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    box.innerHTML = `<div class="small" style="color:#ff9c9c">
+      Failed to load missions: ${esc(e.message||e)}
+    </div>`;
+    count.textContent = '0';
+  }
+}
+</script>
+</body>
+</html>
