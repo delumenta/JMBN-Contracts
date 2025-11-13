@@ -22,7 +22,7 @@ body{
   padding:18px;
 }
 
-/* Brand bar */
+/* (brand / toolbar classes left in case you reuse later, but not used) */
 .brand{
   display:flex;
   align-items:center;
@@ -36,8 +36,6 @@ body{
   filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
 }
 .brand h1{margin:0;color:var(--accent);font-size:22px}
-
-/* Toolbar */
 .toolbar{
   display:flex;
   gap:10px;
@@ -206,22 +204,7 @@ button.danger{
 <div id="site-header"></div>
 
 <main class="page">
-  <!-- Header -->
-  <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-    <h1 style="margin-right:auto">JMBN Mission Editor</h1>
-  </div>
-
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <a class="btn-cta" href="mission-log.html" title="Go back">
-      <span class="ic">←</span><span>Back to Mission Log</span>
-    </a>
-    <span class="subtle">
-      View missions on the left. Select to edit; Save, Update, or Delete on the right.
-    </span>
-  </div>
-
+  <!-- main layout, no extra title/toolbar -->
   <div class="wrap">
     <!-- LEFT: Mission list -->
     <div class="panel">
