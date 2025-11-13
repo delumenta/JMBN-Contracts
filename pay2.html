@@ -1,346 +1,823 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN — Earnings & Payouts</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JMBN – Earnings Admin (Weighted Ledger)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--row:#0a0a0a;
-  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs:14px
+  --bg:#000;--panel:#0b0b0b;--sub:#0f0f0f;--row:#0a0a0a;
+  --border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.25px}
-.wrap{max-width:1100px;margin:22px auto;padding:0 14px}
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.brand img{width:44px;height:44px;object-fit:contain}
-.brand h1{margin:0;color:var(--accent);font-size:clamp(18px,2.6vw,24px)}
-
-.grid-1{display:grid;grid-template-columns:1fr;gap:14px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
-
-.card{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;
-  box-shadow:0 0 18px rgba(214,180,76,.18)
+body{
+  margin:0;padding:14px;
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size:var(--fs-base);letter-spacing:.25px;
 }
-.card h3{margin:0 0 8px;color:var(--accent);font-size:16px}
 
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
-.kpi .t{color:var(--muted);font-size:12px}
-.kpi .v{font-weight:700;font-size:20px;margin-top:2px}
-.kpi small{color:var(--muted)}
+/* Brand */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 8px;padding-bottom:6px;
+  border-bottom:1px solid var(--border)
+}
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25))
+}
+.brand h1{
+  font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0
+}
 
-.table{margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.table header,.row{display:grid;grid-template-columns:160px 1fr 120px 110px 110px 110px;gap:10px;align-items:center}
-.table header{background:#121212;color:var(--accent);padding:10px;font-size:12px}
-.row{padding:10px;border-top:1px solid rgba(255,255,255,.08);background:var(--row);cursor:pointer}
-.row:nth-child(odd){background:#0d0d0d}
-.row:hover{filter:brightness(1.08)}
+/* Nav pills */
+.nav{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin:6px 0 12px;
+}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border-radius:999px;
+  border:1px solid var(--ring);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease;
+  font-size:12px;
+}
+.nav-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 12px rgba(214,180,76,.25),inset 0 0 0 1px rgba(214,180,76,.18);
+  background:linear-gradient(180deg,#1a1a1a,#0a0a0a);
+}
+.nav-btn.active{
+  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
+}
+.nav-btn.active::after{
+  content:"";position:absolute;inset:0;border-radius:999px;
+  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
+  transform:translateX(-120%);pointer-events:none;
+  animation:shine 2.6s ease-in-out infinite;
+}
+@keyframes shine{0%{transform:translateX(-120%)}35%{transform:translateX(120%)}100%{transform:translateX(120%)}}
 
-.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;background:#0c0c0c;color:var(--muted)}
+/* Layout */
+.wrap{
+  display:grid;
+  grid-template-columns:minmax(360px,1.1fr) minmax(420px,1.2fr);
+  gap:12px;
+  margin-bottom:12px;
+}
+@media(max-width:980px){
+  .wrap{grid-template-columns:1fr}
+}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.full-panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.rightSticky{position:sticky;top:14px;height:fit-content}
+
+/* Titles */
+.section-title{
+  font-size:13px;color:var(--accent);margin:0 0 4px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.12em;
+}
+.small{font-size:var(--fs-small);color:var(--muted)}
+.subtle{font-size:11px;color:var(--muted)}
+
+/* Blocks */
+.block{
+  background:#0c0c0c;border-radius:12px;border:1px solid var(--border);
+  padding:10px;margin-top:6px;
+  box-shadow:0 0 10px rgba(214,180,76,.16),inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.block-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:6px;
+}
+.block-header-title{font-size:12px;font-weight:700;color:var(--accent)}
+.tag{
+  border-radius:999px;border:1px solid var(--border);
+  padding:2px 8px;font-size:10px;color:var(--muted);background:#050505;
+}
+
+/* Fields */
+.field{
+  display:flex;flex-direction:column;gap:4px;margin-bottom:8px;font-size:12px;color:var(--muted)
+}
+.field-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.field-row-3{
+  display:grid;grid-template-columns:1.1fr 0.9fr 0.9fr;gap:8px;
+}
+input,select{
+  background:#050505;border:1px solid var(--border);border-radius:8px;
+  padding:7px 9px;color:var(--text);
+  font-family:'Play';font-size:var(--fs-table);
+}
+textarea{
+  background:#050505;border:1px solid var(--border);border-radius:8px;
+  padding:7px 9px;color:var(--text);font-family:'Play';font-size:var(--fs-table);
+  resize:vertical;min-height:48px;
+}
+
+/* Toggle switch */
+.switch{
+  position:relative;display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--muted);cursor:pointer;
+}
+.switch-input{display:none}
+.switch-track{
+  width:34px;height:18px;border-radius:999px;
+  background:#111;border:1px solid var(--border);
+  position:relative;flex-shrink:0;
+}
+.switch-thumb{
+  position:absolute;top:1px;left:1px;width:14px;height:14px;border-radius:50%;
+  background:var(--accent);transition:transform .15s ease;
+}
+.switch-input:checked + .switch-track .switch-thumb{
+  transform:translateX(14px);
+}
+
+/* Buttons */
+button{
+  padding:7px 11px;border-radius:10px;border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);cursor:pointer;
+  font-family:'Play';font-size:12px;font-weight:700;
+  transition:.18s;
+}
+button:hover{
+  background:var(--accent);color:#000;
+  box-shadow:0 0 12px rgba(214,180,76,.35);
+}
+.btn-primary{background:var(--accent);color:#000}
+.btn-danger{border-color:var(--bad);color:var(--bad)}
+.btn-ghost{
+  background:transparent;
+  border-radius:999px;
+}
+
+/* KPI bar */
+.kpis{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;
+}
+@media(max-width:720px){.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{
+  background:linear-gradient(180deg,#0b0b0b,#080808);
+  border-radius:10px;border:1px solid var(--border);
+  padding:8px;
+  box-shadow:0 0 14px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.kpi-value{font-size:18px;font-weight:700;color:var(--accent);line-height:1}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .mono{font-variant-numeric:tabular-nums}
-.right{text-align:right}
-.hint{color:var(--muted);font-size:12px;margin-top:8px}
-.note{background:#0c0c0c;border:1px dashed var(--border);border-radius:10px;padding:10px;margin-top:10px;color:var(--text)}
-.formula{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;line-height:1.5}
-hr.sep{border:0;border-top:1px solid rgba(255,255,255,.1);margin:10px 0}
-.small{font-size:12px;color:var(--muted)}
-button.link{border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border-radius:8px;padding:6px 10px;cursor:pointer;font-family:'Play'}
-button.link:hover{background:var(--accent);color:#000}
+
+/* Tables */
+.tableWrap{
+  margin-top:6px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  overflow:auto;
+  max-height:52vh;
+}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table);min-width:640px;}
+th,td{padding:7px 8px;border-bottom:1px solid rgba(214,180,76,.28);text-align:left}
+th{
+  font-size:11px;color:var(--accent);background:#080808;font-weight:500;
+  text-transform:uppercase;letter-spacing:.09em;
+  position:sticky;top:0;z-index:1;
+}
+tbody tr:nth-child(even){background:#111}
+tbody tr:hover{background:rgba(214,180,76,.08)}
+td input{width:100%;padding:4px 6px;font-size:12px}
+td select{width:100%;padding:4px 6px;font-size:12px}
+
+/* Mission overrides search row */
+.controls{
+  display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 6px;
+}
+.controls input[type="search"]{
+  min-width:220px;
+}
+
+/* Pills */
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:2px 8px;border-radius:999px;
+  border:1px solid var(--border);
+  background:#050505;font-size:11px;color:var(--muted);
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.badge{
+  display:inline-block;border-radius:999px;border:1px solid var(--border);
+  padding:2px 7px;font-size:10px;color:var(--muted);background:#050505;
+}
+.text-right{text-align:right}
+.text-center{text-align:center}
+.nowrap{white-space:nowrap}
+.hilite{color:var(--accent);}
+
+/* Tiny helper */
+hr.sep{
+  border:none;border-top:1px dashed rgba(214,180,76,.4);
+  margin:6px 0 4px;
+}
 </style>
 </head>
 <body>
+
+<!-- Header -->
+<div class="brand">
+  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+  <h1>JMBN Earnings Admin – Weighted Ledger Rules</h1>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <a class="nav-btn" href="index.html">Manifest</a>
+  <a class="nav-btn" href="hangar.html">Hangar</a>
+  <a class="nav-btn" href="components.html">Components</a>
+  <a class="nav-btn" href="contracts.html">Contracts</a>
+  <a class="nav-btn" href="mission-log.html">Mission Log</a>
+  <a class="nav-btn" href="earnings-ledger.html">Earnings Ledger</a>
+  <a class="nav-btn active" href="#">Earnings Admin</a>
+</nav>
+
 <div class="wrap">
-
-  <div class="brand">
-    <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-    <h1>JMBN — Earnings & Payouts</h1>
-  </div>
-
-  <!-- ROW 1: ORG TOTAL (full width) -->
-  <section class="grid-1">
-    <div class="kpi">
-      <div class="t">Org cut (lifetime)</div>
-      <div class="v mono" id="orgTotal">—</div>
-      <small id="orgThisMonth" class="small">MTD: —</small>
+  <!-- LEFT: Org rules & rounding -->
+  <section class="panel">
+    <div class="block-header">
+      <div>
+        <div class="section-title">Org Cut Rules</div>
+        <div class="subtle">Top-level settings that the ledger will use as defaults.</div>
+      </div>
+      <span class="tag">ORG-LEVEL</span>
     </div>
-  </section>
 
-  <!-- ROW 2: YOUR LIFETIME + LAST 4 MISSIONS TOTAL (two columns) -->
-  <section class="grid-2" style="margin-top:14px">
-    <div class="kpi">
-      <div class="t">You — lifetime earned</div>
-      <div class="v mono" id="youTotal">—</div>
-      <small id="youMissions" class="small">from — missions</small>
-    </div>
-    <div class="kpi">
-      <div class="t">Last 4 missions — total earned</div>
-      <div class="v mono" id="last4Total">—</div>
-      <small id="last4Label" class="small">—</small>
-    </div>
-  </section>
+    <div class="block">
+      <div class="field-row">
+        <div class="field">
+          <span>Default Org Cut %</span>
+          <input id="orgDefaultPct" type="number" min="0" max="100" step="0.5" value="20">
+        </div>
+        <div class="field">
+          <span>Max Org Cut % (safety cap)</span>
+          <input id="orgMaxPct" type="number" min="0" max="100" step="0.5" value="30">
+        </div>
+      </div>
 
-  <!-- ROW 3: RANK (no paygrade) -->
-  <section class="grid-1" style="margin-top:14px">
-    <div class="kpi">
-      <div class="t">Your rank • weight</div>
-      <div class="v mono" id="rankLine">—</div>
-      <small id="rankSub" class="small">—</small>
-    </div>
-  </section>
+      <div class="field-row">
+        <div class="field">
+          <span>Minimum Crew Payout (per head)</span>
+          <input id="minCrewPayout" type="number" min="0" step="1000" value="5000">
+        </div>
+        <div class="field">
+          <span>Apply Min Payout Rule On</span>
+          <select id="minCrewMode">
+            <option value="afterOrg">After Org Cut</option>
+            <option value="beforeOrg">Before Org Cut</option>
+          </select>
+        </div>
+      </div>
 
-  <!-- ROW 4: LATEST 10 -->
-  <section class="card" style="margin-top:14px">
-    <h3>Your latest 10 mission payouts</h3>
-    <div class="table">
-      <header>
-        <div>Date</div>
-        <div>Mission</div>
-        <div class="right">Pool (after org)</div>
-        <div class="right">Base share</div>
-        <div class="right">Adj. (+/−)</div>
-        <div class="right">Final</div>
-      </header>
-      <div id="rows"></div>
+      <label class="switch">
+        <input id="allowMissionOverride" class="switch-input" type="checkbox" checked>
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span>Allow per-mission org % overrides</span>
+      </label>
     </div>
-    <div class="hint">Tip: click a row to see the formula breakdown for that mission.</div>
-    <div id="breakdown" class="note" style="display:none"></div>
-  </section>
 
-  <!-- ROW 5: EXPLANATION ONLY -->
-  <section class="card" style="margin-top:14px">
-    <h3>How base pay is calculated</h3>
-    <div class="note">
-      <div class="formula">
-        1) <b>Org cut</b>: <code>org_cut_pct</code> taken from mission payout<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;Pool after cut = <code>payout_auec × (1 − org_cut_pct)</code><br>
-        2) <b>Weighted split</b> by pay grade weight:<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<code>base_share = pool_after_cut × (your_weight / total_weight)</code><br>
-        3) <b>Overrides</b> (optional): manual +/− aUEC per user<br>
-        4) <b>Final</b> = <code>base_share + add_pay_override</code>
+    <div class="block" style="margin-top:8px">
+      <div class="block-header">
+        <div class="block-header-title">Rounding Rules</div>
+        <span class="tag">MATH</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <span>Share Calc Mode</span>
+          <select id="shareMode">
+            <option value="weight">By Weight / Weight-Sum</option>
+            <option value="flat">Flat Split (ignore weight)</option>
+          </select>
+        </div>
+        <div class="field">
+          <span>Rounding Style</span>
+          <select id="roundMode">
+            <option value="nearest">Round to nearest 10</option>
+            <option value="down">Always round down</option>
+            <option value="up">Always round up</option>
+            <option value="full">No rounding (full aUEC)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <span>Rounding Granularity</span>
+          <input id="roundStep" type="number" min="1" step="1" value="10">
+        </div>
+        <div class="field">
+          <span>Handle Residuals</span>
+          <select id="residualMode">
+            <option value="highestWeight">Give remainder to highest weight</option>
+            <option value="leader">Give remainder to mission leader</option>
+            <option value="org">Send remainder to org pot</option>
+          </select>
+        </div>
       </div>
       <hr class="sep">
-      We read weights from <span class="badge">pay_grade_rules</span> via your current rank (no paygrade shown)
-      and compute the org cut using <span class="badge">v_mission_org_cut_effective</span> joined to <span class="badge">missions</span>.
+      <div class="subtle" id="rulesSummary">
+        Org takes <span class="hilite">20%</span> by default (max <span class="hilite">30%</span>).  
+        Crew shares are calculated by <span class="hilite">weight</span>, rounded to nearest <span class="hilite">10 aUEC</span>,
+        residuals go to <span class="hilite">highest weight</span>.
+      </div>
+      <div style="display:flex;gap:6px;justify-content:flex-end;margin-top:6px">
+        <button class="btn-ghost" id="resetOrgRules">Reset</button>
+        <button class="btn-primary" id="saveOrgRules">Save Org Rules</button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-label">Org Share (Typical)</div>
+        <div class="kpi-value mono" id="kpiOrgShare">25,000</div>
+        <div class="kpi-sub">On a 125k aUEC mission using current defaults</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Crew Pool (Typical)</div>
+        <div class="kpi-value mono" id="kpiCrewPool">100,000</div>
+        <div class="kpi-sub">Distributed by weight after org cut</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Min Payout Trigger</div>
+        <div class="kpi-sub" id="kpiMinTrigger">
+          Current min per head <span class="hilite">5,000 aUEC</span> • Applies <span class="hilite">after</span> org cut
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: Paygrade weights -->
+  <section class="panel rightSticky">
+    <div class="block-header">
+      <div>
+        <div class="section-title">Paygrade Weights</div>
+        <div class="subtle">These feed into the weighted ledger when splitting the crew pool.</div>
+      </div>
+      <span class="tag">RANK TABLE</span>
+    </div>
+
+    <div class="block">
+      <div class="field-row">
+        <div class="field">
+          <span>Quick Filter (label / code)</span>
+          <input id="pgSearch" type="search" placeholder="Filter by paygrade, label…">
+        </div>
+        <div class="field">
+          <span>Display Category</span>
+          <select id="pgCategory">
+            <option value="">All Categories</option>
+            <option value="Officer">Officer</option>
+            <option value="Enlisted">Enlisted</option>
+            <option value="Recruit">Recruit</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Label</th>
+            <th class="text-right">Weight</th>
+            <th class="text-right">Bonus %</th>
+            <th class="text-right">Flat Add (aUEC)</th>
+          </tr>
+        </thead>
+        <tbody id="pgRows"></tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+      <span class="subtle">Changes are local only for now – wire this to <code>pay_grade_rules</code> later.</span>
+      <div style="display:flex;gap:6px">
+        <button class="btn-ghost" id="revertPg">Revert</button>
+        <button class="btn-primary" id="savePg">Save Weights</button>
+      </div>
     </div>
   </section>
 </div>
 
-<!-- Supabase -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
+<!-- BOTTOM: Mission-level overrides -->
+<section class="full-panel">
+  <div class="block-header">
+    <div>
+      <div class="section-title">Mission Overrides</div>
+      <div class="subtle">
+        Adjust org cut % and lock missions that must not be auto-recalculated.  
+        The weighted ledger will respect these overrides.
+      </div>
+    </div>
+    <span class="tag">PER-MISSION</span>
+  </div>
+
+  <div class="block" style="margin-bottom:6px">
+    <div class="controls">
+      <input id="missionSearch" type="search" placeholder="Search by mission ID / title / tag…">
+      <select id="missionStatus">
+        <option value="">All Status</option>
+        <option>Open</option>
+        <option>Settled</option>
+        <option>Locked</option>
+      </select>
+      <select id="missionOrgBand">
+        <option value="">All Org %</option>
+        <option value="0-10">0–10%</option>
+        <option value="10-20">10–20%</option>
+        <option value="20-30">20–30%</option>
+        <option value="30+">30%+</option>
+      </select>
+      <button id="missionReset" class="btn-ghost">Reset Filters</button>
+      <span class="small">Tip: lock once paid out to avoid retro changes.</span>
+    </div>
+
+    <div class="tableWrap" style="max-height:40vh">
+      <table>
+        <thead>
+          <tr>
+            <th>Mission</th>
+            <th class="nowrap">Status</th>
+            <th class="text-right nowrap">Default Org %</th>
+            <th class="text-right nowrap">Override Org %</th>
+            <th class="text-center">Locked</th>
+            <th class="nowrap">Last Edited By</th>
+          </tr>
+        </thead>
+        <tbody id="missionRows"></tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:6px">
+      <button class="btn-danger" id="clearOverrides">Clear All Overrides</button>
+      <button class="btn-primary" id="saveOverrides">Save Overrides</button>
+    </div>
+  </div>
+
+  <div class="subtle">
+    <span class="pill">
+      <span class="dot"></span>
+      <span>Admin-only: restrict this page via Supabase RLS + <code>role = 'elevated'</code> or similar.</span>
+    </span>
+  </div>
+</section>
+
 <script>
-(function(){
-  const $ = s => document.querySelector(s);
-  const fmt0 = n => (n===null||n===undefined) ? '—'
-               : Number(n).toLocaleString('en-US', {maximumFractionDigits:0});
-  const fmt2 = n => (n===null||n===undefined) ? '—'
-               : Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  const dateOnly = iso => new Date(iso).toLocaleDateString();
+const $ = s => document.querySelector(s);
+const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
 
-  let sb, me;
+/* =========================
+   ORG RULES (left panel)
+   ========================= */
+const orgRulesDefault = {
+  orgDefaultPct:20,
+  orgMaxPct:30,
+  minCrewPayout:5000,
+  minCrewMode:'afterOrg',
+  allowMissionOverride:true,
+  shareMode:'weight',
+  roundMode:'nearest',
+  roundStep:10,
+  residualMode:'highestWeight'
+};
+let orgRules = {...orgRulesDefault};
 
-  async function boot(){
-    const session = await requireAuth();
-    if(!session) return;
-    sb = getSupabase();
-    me = session.user.id;
+function loadOrgRulesToUI(){
+  $('#orgDefaultPct').value = orgRules.orgDefaultPct;
+  $('#orgMaxPct').value = orgRules.orgMaxPct;
+  $('#minCrewPayout').value = orgRules.minCrewPayout;
+  $('#minCrewMode').value = orgRules.minCrewMode;
+  $('#allowMissionOverride').checked = orgRules.allowMissionOverride;
+  $('#shareMode').value = orgRules.shareMode;
+  $('#roundMode').value = orgRules.roundMode;
+  $('#roundStep').value = orgRules.roundStep;
+  $('#residualMode').value = orgRules.residualMode;
+  updateOrgSummary();
+  updateKpiPreview();
+}
+function readOrgRulesFromUI(){
+  orgRules.orgDefaultPct = Number($('#orgDefaultPct').value||0);
+  orgRules.orgMaxPct = Number($('#orgMaxPct').value||0);
+  orgRules.minCrewPayout = Number($('#minCrewPayout').value||0);
+  orgRules.minCrewMode = $('#minCrewMode').value;
+  orgRules.allowMissionOverride = $('#allowMissionOverride').checked;
+  orgRules.shareMode = $('#shareMode').value;
+  orgRules.roundMode = $('#roundMode').value;
+  orgRules.roundStep = Number($('#roundStep').value||1);
+  orgRules.residualMode = $('#residualMode').value;
+}
+function updateOrgSummary(){
+  readOrgRulesFromUI();
+  const r = orgRules;
+  const shareModeText = r.shareMode === 'weight' ? 'weight' :
+                        'flat split';
+  const roundModeText = {
+    nearest:'nearest',
+    down:'down',
+    up:'up',
+    full:'no rounding'
+  }[r.roundMode] || 'nearest';
+  const residualText = {
+    highestWeight:'highest weight',
+    leader:'mission leader',
+    org:'org pot'
+  }[r.residualMode] || 'highest weight';
 
-    await Promise.all([
-      loadUserSummary(),
-      loadOrgTotals(),
-      loadLatest10(),
-      loadLast4Total(),
-      loadRankAndWeight()
-    ]);
+  $('#rulesSummary').innerHTML = `
+    Org takes <span class="hilite">${r.orgDefaultPct}%</span> by default (max
+    <span class="hilite">${r.orgMaxPct}%</span>).  
+    Crew shares are calculated by <span class="hilite">${shareModeText}</span>,
+    rounded <span class="hilite">${roundModeText}</span> to
+    <span class="hilite">${r.roundStep} aUEC</span> steps; residuals go to
+    <span class="hilite">${residualText}</span>.
+  `;
+  $('#kpiMinTrigger').innerHTML = `
+    Current min per head <span class="hilite">${fmt(r.minCrewPayout)} aUEC</span>
+    • Applies <span class="hilite">${r.minCrewMode === 'afterOrg' ? 'after' : 'before'}</span> org cut.
+  `;
+}
+function updateKpiPreview(){
+  // simple preview: assume 125k payout
+  const total = 125000;
+  const orgPct = orgRules.orgDefaultPct;
+  const orgTake = total * (orgPct/100);
+  const crew = total - orgTake;
+  $('#kpiOrgShare').textContent = fmt(Math.round(orgTake));
+  $('#kpiCrewPool').textContent = fmt(Math.round(crew));
+}
+
+/* Hook up listeners for org rules */
+['orgDefaultPct','orgMaxPct','minCrewPayout','minCrewMode','shareMode',
+ 'roundMode','roundStep','residualMode'].forEach(id=>{
+  $('#'+id).addEventListener('input',()=>{
+    updateOrgSummary();
+    updateKpiPreview();
+  });
+});
+$('#allowMissionOverride').addEventListener('change',updateOrgSummary);
+
+$('#resetOrgRules').addEventListener('click',()=>{
+  orgRules = {...orgRulesDefault};
+  loadOrgRulesToUI();
+});
+$('#saveOrgRules').addEventListener('click',()=>{
+  readOrgRulesFromUI();
+  console.log('Org rules to persist / send to Supabase:',orgRules);
+  alert('Org rules saved (local). Wire this to Supabase or config table next.');
+});
+
+/* =========================
+   PAYGRADE WEIGHTS (right)
+   ========================= */
+const paygradesDefault = [
+  {code:'O4', label:'Section Lead',     category:'Officer',  weight:1.8, bonus_pct:10, add_pay:3000},
+  {code:'O3', label:'Flight Officer',   category:'Officer',  weight:1.6, bonus_pct:7,  add_pay:2000},
+  {code:'O2', label:'Junior Officer',   category:'Officer',  weight:1.4, bonus_pct:5,  add_pay:1500},
+  {code:'O1', label:'Probationary Off.',category:'Officer',  weight:1.2, bonus_pct:2,  add_pay:1000},
+  {code:'E4', label:'Specialist',       category:'Enlisted', weight:1.3, bonus_pct:3,  add_pay:800},
+  {code:'E3', label:'Operator',         category:'Enlisted', weight:1.1, bonus_pct:0,  add_pay:500},
+  {code:'E2', label:'Crewman',          category:'Enlisted', weight:1.0, bonus_pct:0,  add_pay:0},
+  {code:'E1', label:'Recruit',          category:'Recruit',  weight:0.8, bonus_pct:0,  add_pay:0}
+];
+let paygrades = paygradesDefault.map(p=>({...p}));
+let pgFiltered = paygrades.slice();
+
+function renderPaygrades(){
+  const tbody = $('#pgRows');
+  if(!pgFiltered.length){
+    tbody.innerHTML = `<tr><td colspan="5" class="subtle">No paygrades match filter.</td></tr>`;
+    return;
   }
+  tbody.innerHTML = pgFiltered.map(pg=>`
+    <tr data-code="${pg.code}">
+      <td>${pg.code}</td>
+      <td>${pg.label}</td>
+      <td class="text-right">
+        <input type="number" step="0.1" value="${pg.weight}" data-field="weight">
+      </td>
+      <td class="text-right">
+        <input type="number" step="0.5" value="${pg.bonus_pct}" data-field="bonus_pct">
+      </td>
+      <td class="text-right">
+        <input type="number" step="100" value="${pg.add_pay}" data-field="add_pay">
+      </td>
+    </tr>
+  `).join('');
+}
 
-  // SUMMARY (lifetime totals for user)
-  async function loadUserSummary(){
-    try{
-      const { data, error } = await sb
-        .from('v_missions_payout_summary')
-        .select('*')
-        .eq('user_id', me)
-        .maybeSingle();
-      if(error) throw error;
+function applyPgFilter(){
+  const q = ($('#pgSearch').value||'').toLowerCase();
+  const cat = $('#pgCategory').value;
+  pgFiltered = paygrades.filter(pg=>{
+    if(cat && pg.category !== cat) return false;
+    if(!q) return true;
+    const hay = (pg.code+' '+pg.label).toLowerCase();
+    return hay.includes(q);
+  });
+  renderPaygrades();
+}
 
-      $('#youTotal').textContent   = data ? fmt2(data.total_earned) : '0';
-      $('#youMissions').textContent= data ? `from ${fmt0(data.missions_count)} missions` : 'from 0 missions';
-    }catch(e){
-      console.warn('summary:', e.message);
-    }
+$('#pgSearch').addEventListener('input',applyPgFilter);
+$('#pgCategory').addEventListener('change',applyPgFilter);
+
+$('#pgRows').addEventListener('input',e=>{
+  const input = e.target;
+  const row = input.closest('tr[data-code]');
+  if(!row) return;
+  const code = row.dataset.code;
+  const field = input.dataset.field;
+  const pg = paygrades.find(p=>p.code===code);
+  if(!pg) return;
+  pg[field] = Number(input.value||0);
+});
+
+$('#revertPg').addEventListener('click',()=>{
+  paygrades = paygradesDefault.map(p=>({...p}));
+  applyPgFilter();
+});
+$('#savePg').addEventListener('click',()=>{
+  console.log('Paygrades to persist / send to Supabase:',paygrades);
+  alert('Paygrade weights saved (local). Wire this to your pay_grade_rules table.');
+});
+
+/* =========================
+   MISSION OVERRIDES (bottom)
+   ========================= */
+const missionDefault = [
+  {id:'MIS-001', title:'RW S2 – 24-box Haul', status:'Open',   default_org_pct:20, override_org_pct:null, locked:false, last_editor:'—'},
+  {id:'MIS-002', title:'Molten Lane – Escort & Haul', status:'Settled', default_org_pct:25, override_org_pct:28, locked:true, last_editor:'VEX'},
+  {id:'MIS-003', title:'Medical Evac – Stanton Rescue', status:'Open',   default_org_pct:15, override_org_pct:null, locked:false, last_editor:'—'},
+  {id:'MIS-004', title:'Arccorp Freight – Bulk Delivery', status:'Locked',default_org_pct:20, override_org_pct:22, locked:true, last_editor:'MALIK'}
+];
+let missions = missionDefault.map(m=>({...m}));
+let missionFiltered = missions.slice();
+
+function renderMissions(){
+  const tbody = $('#missionRows');
+  if(!missionFiltered.length){
+    tbody.innerHTML = `<tr><td colspan="6" class="subtle">No missions match filter.</td></tr>`;
+    return;
   }
-
-  // ORG TOTALS
-  async function loadOrgTotals(){
-    try{
-      const { data: missions, error: e1 } = await sb
-        .from('missions')
-        .select('id,payout_auec,created_at')
-        .neq('payout_auec', 0)
-        .order('created_at', {ascending:false});
-      if(e1) throw e1;
-
-      const { data: cuts, error: e2 } = await sb
-        .from('v_mission_org_cut_effective')
-        .select('mission_id, org_cut_pct');
-      if(e2) throw e2;
-
-      const cutMap = new Map((cuts||[]).map(c => [c.mission_id, Number(c.org_cut_pct||0)]));
-
-      let lifetime = 0, mtd = 0;
-      const now = new Date();
-      const monthKey = now.getUTCFullYear()+'-'+String(now.getUTCMonth()+1).padStart(2,'0');
-
-      for(const m of (missions||[])){
-        const pct  = cutMap.get(m.id) ?? 0;
-        const take = Number(m.payout_auec||0) * pct;
-        lifetime += take;
-
-        const d = new Date(m.created_at);
-        const key = d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');
-        if(key === monthKey) mtd += take;
-      }
-
-      $('#orgTotal').textContent = fmt2(lifetime);
-      $('#orgThisMonth').textContent = 'MTD: ' + fmt2(mtd);
-    }catch(e){
-      console.warn('org totals:', e.message);
-    }
-  }
-
-  // LATEST 10 FOR TABLE & BREAKDOWN
-  async function loadLatest10(){
-    try{
-      const { data, error } = await sb
-        .from('v_missions_payout_live')
-        .select('*')
-        .eq('user_id', me)
-        .order('mission_date', { ascending:false })
-        .limit(10);
-      if(error) throw error;
-
-      const rows = data||[];
-
-      $('#rows').innerHTML = rows.map(r => `
-        <div class="row" data-mid="${r.mission_id}">
-          <div>${dateOnly(r.mission_date)}</div>
-          <div>${(r.title||'—')}</div>
-          <div class="right mono">${fmt2(r.pool_after_cut)}</div>
-          <div class="right mono">${fmt2(r.base_share)}</div>
-          <div class="right mono">${fmt2(r.add_pay_override)}</div>
-          <div class="right mono"><b>${fmt2(r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0)))}</b></div>
-        </div>
-      `).join('');
-
-      document.querySelectorAll('.row').forEach(el=>{
-        el.addEventListener('click', ()=>{
-          const r = rows.find(x => x.mission_id === el.dataset.mid);
-          if(r) showBreakdown(r);
-        });
-      });
-    }catch(e){
-      console.warn('latest10:', e.message);
-    }
-  }
-
-  // LAST 4 MISSIONS TOTAL
-  async function loadLast4Total(){
-    try{
-      const { data, error } = await sb
-        .from('v_missions_payout_live')
-        .select('mission_id,mission_date,title,base_share,add_pay_override,final_share')
-        .eq('user_id', me)
-        .order('mission_date', { ascending:false })
-        .limit(4);
-      if(error) throw error;
-
-      const rows = data||[];
-      const total4 = rows.reduce((s,r)=> s + Number(r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0))), 0);
-      $('#last4Total').textContent = fmt2(total4);
-      $('#last4Label').textContent = rows.length
-        ? `${rows.length} recent missions`
-        : 'No recent missions';
-    }catch(e){
-      console.warn('last4:', e.message);
-    }
-  }
-
-  // RANK • WEIGHT (no paygrade shown)
-  async function loadRankAndWeight(){
-    try{
-      // try helpful view first
-      let rankName = 'Unrated', weight = 1, ruleLabel = null;
-
-      const vr = await sb.from('v_profiles_with_rank')
-        .select('user_id,current_rank_name,current_rank_code,paygrade')
-        .eq('user_id', me).maybeSingle();
-
-      let paygrade = vr.data?.paygrade ?? null;
-      if(vr.data?.current_rank_name) rankName = vr.data.current_rank_name;
-
-      if(!rankName || rankName==='Unrated'){
-        const p = await sb.from('profiles').select('current_rank_id').eq('user_id', me).maybeSingle();
-        if(p.data?.current_rank_id){
-          const r = await sb.from('ranks').select('name,paygrade').eq('id', p.data.current_rank_id).maybeSingle();
-          if(r.data){ rankName = r.data.name || 'Unrated'; paygrade = r.data.paygrade || null; }
-        }
-      }
-
-      if(paygrade){
-        const rule = await sb.from('pay_grade_rules').select('weight,label').eq('paygrade', paygrade).maybeSingle();
-        if(rule.data){ weight = Number(rule.data.weight||1); ruleLabel = rule.data.label||null; }
-      }
-
-      $('#rankLine').textContent = `${rankName} • Weight ${weight.toFixed(2)}`;
-      $('#rankSub').textContent  = ruleLabel ? `Rule: ${ruleLabel}` : '—';
-    }catch(e){
-      console.warn('rank+weight:', e.message);
-      $('#rankLine').textContent = 'Unrated • Weight 1.00';
-      $('#rankSub').textContent  = '—';
-    }
-  }
-
-  function showBreakdown(r){
-    const pct = Number(r.org_cut_pct||0);
-    const pctTxt = (pct*100).toFixed(1)+'%';
-    const finalVal = r.final_share ?? (Number(r.base_share||0)+Number(r.add_pay_override||0));
-    const html = `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-        <div>
-          <b>${r.title||'—'}</b><br>
-          <span class="small">${dateOnly(r.mission_date)}</span>
-        </div>
-        <div><span class="badge">Weight: ${r.weight??'—'}</span></div>
-      </div>
-      <hr class="sep">
-      <div class="formula">
-        payout_auec = <b>${fmt2(r.payout_auec)}</b><br>
-        org_cut = payout_auec × <b>${pctTxt}</b> = <b>${fmt2(r.org_cut_value)}</b><br>
-        pool_after_cut = <b>${fmt2(r.pool_after_cut)}</b><br>
-        total_weight = <b>${fmt2(r.total_weight)}</b>, your weight = <b>${fmt2(r.weight)}</b><br>
-        base_share = pool_after_cut × (your_weight / total_weight) = <b>${fmt2(r.base_share)}</b><br>
-        override = <b>${fmt2(r.add_pay_override)}</b><br>
-        <b>final_share = ${fmt2(r.base_share)} + ${fmt2(r.add_pay_override)} = ${fmt2(finalVal)}</b>
-      </div>
+  tbody.innerHTML = missionFiltered.map(m=>{
+    const orgBand = m.override_org_pct ?? m.default_org_pct;
+    const orgDisplay = orgBand != null ? orgBand.toFixed(1)+'%' : '—';
+    return `
+      <tr data-id="${m.id}">
+        <td>
+          <div class="hilite" style="font-weight:700">${m.title}</div>
+          <div class="subtle">ID: ${m.id}</div>
+        </td>
+        <td class="nowrap">
+          <span class="badge">${m.status}</span>
+        </td>
+        <td class="text-right mono">${m.default_org_pct.toFixed(1)}%</td>
+        <td class="text-right">
+          <input type="number" step="0.5" min="0" max="100"
+            value="${m.override_org_pct ?? ''}"
+            placeholder="—"
+            ${m.locked ? 'disabled' : ''}
+            data-field="override_org_pct">
+        </td>
+        <td class="text-center">
+          <input type="checkbox" data-field="locked" ${m.locked?'checked':''}>
+        </td>
+        <td class="nowrap">
+          <span class="subtle">${m.last_editor || '—'}</span>
+        </td>
+      </tr>
     `;
-    const box = $('#breakdown');
-    box.innerHTML = html;
-    box.style.display = 'block';
-    box.scrollIntoView({behavior:'smooth', block:'nearest'});
-  }
+  }).join('');
+}
 
-  boot();
+function applyMissionFilter(){
+  const q = ($('#missionSearch').value||'').toLowerCase();
+  const st = $('#missionStatus').value;
+  const band = $('#missionOrgBand').value;
+  missionFiltered = missions.filter(m=>{
+    if(st){
+      if(st==='Locked' && !m.locked) return false;
+      if(st!=='Locked' && m.status !== st) return false;
+    }
+    const effOrg = m.override_org_pct ?? m.default_org_pct;
+    if(band){
+      if(band==='0-10' && !(effOrg>=0 && effOrg<10)) return false;
+      if(band==='10-20' && !(effOrg>=10 && effOrg<20)) return false;
+      if(band==='20-30' && !(effOrg>=20 && effOrg<30)) return false;
+      if(band==='30+' && !(effOrg>=30)) return false;
+    }
+    if(!q) return true;
+    const hay = (m.id+' '+m.title).toLowerCase();
+    return hay.includes(q);
+  });
+  renderMissions();
+}
+
+$('#missionSearch').addEventListener('input',applyMissionFilter);
+$('#missionStatus').addEventListener('change',applyMissionFilter);
+$('#missionOrgBand').addEventListener('change',applyMissionFilter);
+$('#missionReset').addEventListener('click',()=>{
+  $('#missionSearch').value='';
+  $('#missionStatus').value='';
+  $('#missionOrgBand').value='';
+  applyMissionFilter();
+});
+
+$('#missionRows').addEventListener('input',e=>{
+  const input = e.target;
+  const row = input.closest('tr[data-id]');
+  if(!row) return;
+  const id = row.dataset.id;
+  const m = missions.find(x=>x.id===id);
+  if(!m) return;
+  const field = input.dataset.field;
+  if(field === 'override_org_pct'){
+    const v = input.value;
+    m.override_org_pct = v==='' ? null : Number(v);
+    if(!m.last_editor || m.last_editor==='—') m.last_editor='ADMIN';
+  }
+});
+$('#missionRows').addEventListener('change',e=>{
+  const input = e.target;
+  const row = input.closest('tr[data-id]');
+  if(!row) return;
+  const id = row.dataset.id;
+  const m = missions.find(x=>x.id===id);
+  if(!m) return;
+  const field = input.dataset.field;
+  if(field === 'locked'){
+    m.locked = input.checked;
+    if(m.locked && (!m.last_editor || m.last_editor==='—')) m.last_editor='ADMIN';
+    applyMissionFilter(); // re-render to disable/enable fields
+  }
+});
+
+$('#clearOverrides').addEventListener('click',()=>{
+  if(!confirm('Clear all mission org % overrides?')) return;
+  missions.forEach(m=>{m.override_org_pct=null;m.locked=false;m.last_editor='—';});
+  applyMissionFilter();
+});
+$('#saveOverrides').addEventListener('click',()=>{
+  console.log('Mission overrides to persist:',missions);
+  alert('Mission overrides saved (local). Connect this to your mission overrides table / view.');
+});
+
+/* INIT */
+loadOrgRulesToUI();
+applyPgFilter();
+applyMissionFilter();
+
+/* Nav auto-active if file name matches */
+(() => {
+  const here = location.pathname.split('/').pop();
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){a.classList.add('active');}
+  });
 })();
 </script>
+
 </body>
 </html>
