@@ -574,7 +574,7 @@ function showToast(msg, bad=false){
   setTimeout(()=>{ el.style.display='none'; }, 3500);
 }
 
-/* ================= ORG RULES ================= */
+/* ============== ORG RULES ============== */
 const orgRulesDefault = {
   id: true,
   org_default_pct:20,
@@ -708,7 +708,7 @@ $('#resetOrgRules').addEventListener('click',()=>{
 });
 $('#saveOrgRules').addEventListener('click',saveOrgRulesToSupabase);
 
-/* ================= PAYGRADE WEIGHTS ================= */
+/* ============== PAYGRADE WEIGHTS ============== */
 let paygrades = [];
 let pgFiltered = [];
 
@@ -791,7 +791,7 @@ async function savePaygradesToSupabase(){
   }
 }
 
-/* ================= MISSIONS & OVERRIDES ================= */
+/* ============== MISSIONS & OVERRIDES ============== */
 let missions = [];
 let missionFiltered = [];
 
@@ -991,7 +991,7 @@ async function saveOverridesToSupabase(){
   await loadMissionsFromSupabase();
 }
 
-/* ================= CREW MODAL (v_missions_payout_live + v_profiles_detailed) ================= */
+/* ============== CREW MODAL (v_missions_payout_live + v_profiles_detailed) ============== */
 const crewModal = $('#crewModal');
 $('#crewModalClose').addEventListener('click',()=>{ crewModal.style.display='none'; });
 crewModal.addEventListener('click',e=>{
@@ -1040,7 +1040,7 @@ async function openCrewModal(mission){
   if(userIds.length){
     const { data: profs, error: e2 } = await sb
       .from('v_profiles_detailed')
-      .select('user_id,handle,display_name,current_rank')
+      .select('user_id,handle,display_name,current_rank_code,current_rank_name')
       .in('user_id', userIds);
     if(e2){
       console.error(e2);
@@ -1056,12 +1056,12 @@ async function openCrewModal(mission){
 
   let totalShare = 0;
   const rows = payouts.map(p=>{
-    const prof = profMap[p.user_id] || {};
+    const prof   = profMap[p.user_id] || {};
     const handle = prof.handle || p.user_id?.slice(0,8) || '—';
-    const name = prof.display_name || '—';
-    const rank = prof.current_rank || p.paygrade || '—';
-    const w = p.weight ?? 0;
-    const share = Number(p.final_share||0);
+    const name   = prof.display_name || prof.handle || '—';
+    const rank   = prof.current_rank_code || prof.current_rank_name || p.paygrade || '—';
+    const w      = p.weight ?? 0;
+    const share  = Number(p.final_share || 0);
     totalShare += share;
     return `
       <tr>
@@ -1081,7 +1081,7 @@ async function openCrewModal(mission){
   `;
 }
 
-/* ================= INIT ================= */
+/* ============== INIT ============== */
 document.addEventListener('DOMContentLoaded', async ()=>{
   const session = await requireAuth();
   if(!session) return;
