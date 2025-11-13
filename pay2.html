@@ -254,6 +254,16 @@ hr.sep{
   border:none;border-top:1px dashed rgba(214,180,76,.4);
   margin:6px 0 4px;
 }
+
+/* Small toast for errors/status */
+.toast{
+  position:fixed;right:16px;bottom:16px;
+  background:#111;border:1px solid var(--border);border-radius:10px;
+  padding:8px 12px;font-size:12px;color:var(--text);
+  box-shadow:0 0 18px rgba(214,180,76,.32);
+  max-width:320px;z-index:40;
+}
+.toast.bad{border-color:var(--bad);color:#ffd0d0}
 </style>
 </head>
 <body>
@@ -290,18 +300,18 @@ hr.sep{
       <div class="field-row">
         <div class="field">
           <span>Default Org Cut %</span>
-          <input id="orgDefaultPct" type="number" min="0" max="100" step="0.5" value="20">
+          <input id="orgDefaultPct" type="number" min="0" max="100" step="0.5">
         </div>
         <div class="field">
           <span>Max Org Cut % (safety cap)</span>
-          <input id="orgMaxPct" type="number" min="0" max="100" step="0.5" value="30">
+          <input id="orgMaxPct" type="number" min="0" max="100" step="0.5">
         </div>
       </div>
 
       <div class="field-row">
         <div class="field">
           <span>Minimum Crew Payout (per head)</span>
-          <input id="minCrewPayout" type="number" min="0" step="1000" value="5000">
+          <input id="minCrewPayout" type="number" min="0" step="1000">
         </div>
         <div class="field">
           <span>Apply Min Payout Rule On</span>
@@ -313,7 +323,7 @@ hr.sep{
       </div>
 
       <label class="switch">
-        <input id="allowMissionOverride" class="switch-input" type="checkbox" checked>
+        <input id="allowMissionOverride" class="switch-input" type="checkbox">
         <span class="switch-track"><span class="switch-thumb"></span></span>
         <span>Allow per-mission org % overrides</span>
       </label>
@@ -347,7 +357,7 @@ hr.sep{
       <div class="field-row">
         <div class="field">
           <span>Rounding Granularity</span>
-          <input id="roundStep" type="number" min="1" step="1" value="10">
+          <input id="roundStep" type="number" min="1" step="1">
         </div>
         <div class="field">
           <span>Handle Residuals</span>
@@ -359,11 +369,7 @@ hr.sep{
         </div>
       </div>
       <hr class="sep">
-      <div class="subtle" id="rulesSummary">
-        Org takes <span class="hilite">20%</span> by default (max <span class="hilite">30%</span>).  
-        Crew shares are calculated by <span class="hilite">weight</span>, rounded to nearest <span class="hilite">10 aUEC</span>,
-        residuals go to <span class="hilite">highest weight</span>.
-      </div>
+      <div class="subtle" id="rulesSummary"></div>
       <div style="display:flex;gap:6px;justify-content:flex-end;margin-top:6px">
         <button class="btn-ghost" id="resetOrgRules">Reset</button>
         <button class="btn-primary" id="saveOrgRules">Save Org Rules</button>
@@ -373,19 +379,17 @@ hr.sep{
     <div class="kpis">
       <div class="kpi">
         <div class="kpi-label">Org Share (Typical)</div>
-        <div class="kpi-value mono" id="kpiOrgShare">25,000</div>
+        <div class="kpi-value mono" id="kpiOrgShare">–</div>
         <div class="kpi-sub">On a 125k aUEC mission using current defaults</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Crew Pool (Typical)</div>
-        <div class="kpi-value mono" id="kpiCrewPool">100,000</div>
+        <div class="kpi-value mono" id="kpiCrewPool">–</div>
         <div class="kpi-sub">Distributed by weight after org cut</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Min Payout Trigger</div>
-        <div class="kpi-sub" id="kpiMinTrigger">
-          Current min per head <span class="hilite">5,000 aUEC</span> • Applies <span class="hilite">after</span> org cut
-        </div>
+        <div class="kpi-sub" id="kpiMinTrigger">–</div>
       </div>
     </div>
   </section>
@@ -434,9 +438,9 @@ hr.sep{
     </div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-      <span class="subtle">Changes are local only for now – wire this to <code>pay_grade_rules</code> later.</span>
+      <span class="subtle">Backed by <code>pay_grade_rules</code> in Supabase.</span>
       <div style="display:flex;gap:6px">
-        <button class="btn-ghost" id="revertPg">Revert</button>
+        <button class="btn-ghost" id="revertPg">Reload</button>
         <button class="btn-primary" id="savePg">Save Weights</button>
       </div>
     </div>
@@ -458,12 +462,13 @@ hr.sep{
 
   <div class="block" style="margin-bottom:6px">
     <div class="controls">
-      <input id="missionSearch" type="search" placeholder="Search by mission ID / title / tag…">
+      <input id="missionSearch" type="search" placeholder="Search by mission ID / title …">
       <select id="missionStatus">
         <option value="">All Status</option>
-        <option>Open</option>
-        <option>Settled</option>
-        <option>Locked</option>
+        <option value="planned">Planned</option>
+        <option value="success">Success</option>
+        <option value="abort">Abort</option>
+        <option value="failed">Failed</option>
       </select>
       <select id="missionOrgBand">
         <option value="">All Org %</option>
@@ -506,91 +511,156 @@ hr.sep{
   </div>
 </section>
 
+<div id="toast" class="toast" style="display:none"></div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 <script>
-const $ = s => document.querySelector(s);
+const $  = s => document.querySelector(s);
 const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
+
+let sb, me;
+
+/* ---------------- Toast helper ---------------- */
+function showToast(msg, bad=false){
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = 'toast' + (bad?' bad':'');
+  el.style.display = 'block';
+  setTimeout(()=>{ el.style.display='none'; }, 3500);
+}
 
 /* =========================
    ORG RULES (left panel)
+   Supabase: org_settings (single row)
+   Columns:
+   id (int PK), org_default_pct, org_max_pct, min_crew_payout,
+   min_crew_mode, allow_mission_override, share_mode,
+   round_mode, round_step, residual_mode, updated_by, updated_at
    ========================= */
 const orgRulesDefault = {
-  orgDefaultPct:20,
-  orgMaxPct:30,
-  minCrewPayout:5000,
-  minCrewMode:'afterOrg',
-  allowMissionOverride:true,
-  shareMode:'weight',
-  roundMode:'nearest',
-  roundStep:10,
-  residualMode:'highestWeight'
+  org_default_pct:20,
+  org_max_pct:30,
+  min_crew_payout:5000,
+  min_crew_mode:'afterOrg',
+  allow_mission_override:true,
+  share_mode:'weight',
+  round_mode:'nearest',
+  round_step:10,
+  residual_mode:'highestWeight'
 };
 let orgRules = {...orgRulesDefault};
 
 function loadOrgRulesToUI(){
-  $('#orgDefaultPct').value = orgRules.orgDefaultPct;
-  $('#orgMaxPct').value = orgRules.orgMaxPct;
-  $('#minCrewPayout').value = orgRules.minCrewPayout;
-  $('#minCrewMode').value = orgRules.minCrewMode;
-  $('#allowMissionOverride').checked = orgRules.allowMissionOverride;
-  $('#shareMode').value = orgRules.shareMode;
-  $('#roundMode').value = orgRules.roundMode;
-  $('#roundStep').value = orgRules.roundStep;
-  $('#residualMode').value = orgRules.residualMode;
+  $('#orgDefaultPct').value = orgRules.org_default_pct;
+  $('#orgMaxPct').value = orgRules.org_max_pct;
+  $('#minCrewPayout').value = orgRules.min_crew_payout;
+  $('#minCrewMode').value = orgRules.min_crew_mode;
+  $('#allowMissionOverride').checked = orgRules.allow_mission_override;
+  $('#shareMode').value = orgRules.share_mode;
+  $('#roundMode').value = orgRules.round_mode;
+  $('#roundStep').value = orgRules.round_step;
+  $('#residualMode').value = orgRules.residual_mode;
   updateOrgSummary();
   updateKpiPreview();
 }
 function readOrgRulesFromUI(){
-  orgRules.orgDefaultPct = Number($('#orgDefaultPct').value||0);
-  orgRules.orgMaxPct = Number($('#orgMaxPct').value||0);
-  orgRules.minCrewPayout = Number($('#minCrewPayout').value||0);
-  orgRules.minCrewMode = $('#minCrewMode').value;
-  orgRules.allowMissionOverride = $('#allowMissionOverride').checked;
-  orgRules.shareMode = $('#shareMode').value;
-  orgRules.roundMode = $('#roundMode').value;
-  orgRules.roundStep = Number($('#roundStep').value||1);
-  orgRules.residualMode = $('#residualMode').value;
+  orgRules.org_default_pct = Number($('#orgDefaultPct').value||0);
+  orgRules.org_max_pct = Number($('#orgMaxPct').value||0);
+  orgRules.min_crew_payout = Number($('#minCrewPayout').value||0);
+  orgRules.min_crew_mode = $('#minCrewMode').value;
+  orgRules.allow_mission_override = $('#allowMissionOverride').checked;
+  orgRules.share_mode = $('#shareMode').value;
+  orgRules.round_mode = $('#roundMode').value;
+  orgRules.round_step = Number($('#roundStep').value||1);
+  orgRules.residual_mode = $('#residualMode').value;
 }
 function updateOrgSummary(){
   readOrgRulesFromUI();
   const r = orgRules;
-  const shareModeText = r.shareMode === 'weight' ? 'weight' :
-                        'flat split';
+  const shareModeText = r.share_mode === 'weight' ? 'weight' : 'flat split';
   const roundModeText = {
     nearest:'nearest',
     down:'down',
     up:'up',
     full:'no rounding'
-  }[r.roundMode] || 'nearest';
+  }[r.round_mode] || 'nearest';
   const residualText = {
     highestWeight:'highest weight',
     leader:'mission leader',
     org:'org pot'
-  }[r.residualMode] || 'highest weight';
+  }[r.residual_mode] || 'highest weight';
 
   $('#rulesSummary').innerHTML = `
-    Org takes <span class="hilite">${r.orgDefaultPct}%</span> by default (max
-    <span class="hilite">${r.orgMaxPct}%</span>).  
+    Org takes <span class="hilite">${r.org_default_pct}%</span> by default (max
+    <span class="hilite">${r.org_max_pct}%</span>).  
     Crew shares are calculated by <span class="hilite">${shareModeText}</span>,
     rounded <span class="hilite">${roundModeText}</span> to
-    <span class="hilite">${r.roundStep} aUEC</span> steps; residuals go to
+    <span class="hilite">${r.round_step} aUEC</span> steps; residuals go to
     <span class="hilite">${residualText}</span>.
   `;
   $('#kpiMinTrigger').innerHTML = `
-    Current min per head <span class="hilite">${fmt(r.minCrewPayout)} aUEC</span>
-    • Applies <span class="hilite">${r.minCrewMode === 'afterOrg' ? 'after' : 'before'}</span> org cut.
+    Current min per head <span class="hilite">${fmt(r.min_crew_payout)} aUEC</span>
+    • Applies <span class="hilite">${r.min_crew_mode === 'afterOrg' ? 'after' : 'before'}</span> org cut.
   `;
 }
 function updateKpiPreview(){
-  // simple preview: assume 125k payout
   const total = 125000;
-  const orgPct = orgRules.orgDefaultPct;
+  const orgPct = orgRules.org_default_pct;
   const orgTake = total * (orgPct/100);
   const crew = total - orgTake;
   $('#kpiOrgShare').textContent = fmt(Math.round(orgTake));
   $('#kpiCrewPool').textContent = fmt(Math.round(crew));
 }
 
-/* Hook up listeners for org rules */
+async function loadOrgRulesFromSupabase(){
+  // assume single row; if empty we keep defaults
+  const { data, error } = await sb
+    .from('org_settings')
+    .select('*')
+    .order('updated_at',{ascending:false})
+    .limit(1)
+    .maybeSingle();
+  if(error){
+    console.error(error);
+    showToast('Failed to load org rules; using defaults', true);
+    orgRules = {...orgRulesDefault};
+  }else if(data){
+    orgRules = {
+      ...orgRulesDefault,
+      ...{
+        org_default_pct: data.org_default_pct ?? orgRulesDefault.org_default_pct,
+        org_max_pct: data.org_max_pct ?? orgRulesDefault.org_max_pct,
+        min_crew_payout: data.min_crew_payout ?? orgRulesDefault.min_crew_payout,
+        min_crew_mode: data.min_crew_mode ?? orgRulesDefault.min_crew_mode,
+        allow_mission_override: data.allow_mission_override ?? orgRulesDefault.allow_mission_override,
+        share_mode: data.share_mode ?? orgRulesDefault.share_mode,
+        round_mode: data.round_mode ?? orgRulesDefault.round_mode,
+        round_step: data.round_step ?? orgRulesDefault.round_step,
+        residual_mode: data.residual_mode ?? orgRulesDefault.residual_mode
+      }
+    };
+  }
+  loadOrgRulesToUI();
+}
+
+async function saveOrgRulesToSupabase(){
+  readOrgRulesFromUI();
+  const payload = {
+    ...orgRules,
+    updated_by: me
+  };
+  const { error } = await sb.from('org_settings').upsert(payload,{onConflict:'id'});
+  if(error){
+    console.error(error);
+    showToast('Failed to save org rules',true);
+  }else{
+    showToast('Org rules saved');
+    await loadOrgRulesFromSupabase();
+  }
+}
+
+/* listeners for org rules */
 ['orgDefaultPct','orgMaxPct','minCrewPayout','minCrewMode','shareMode',
  'roundMode','roundStep','residualMode'].forEach(id=>{
   $('#'+id).addEventListener('input',()=>{
@@ -599,32 +669,20 @@ function updateKpiPreview(){
   });
 });
 $('#allowMissionOverride').addEventListener('change',updateOrgSummary);
-
-$('#resetOrgRules').addEventListener('click',()=>{
+$('#resetOrgRules').addEventListener('click',async ()=>{
   orgRules = {...orgRulesDefault};
   loadOrgRulesToUI();
 });
-$('#saveOrgRules').addEventListener('click',()=>{
-  readOrgRulesFromUI();
-  console.log('Org rules to persist / send to Supabase:',orgRules);
-  alert('Org rules saved (local). Wire this to Supabase or config table next.');
-});
+$('#saveOrgRules').addEventListener('click',saveOrgRulesToSupabase);
 
 /* =========================
    PAYGRADE WEIGHTS (right)
+   Supabase: pay_grade_rules
+   Columns: paygrade (PK), label, category, weight,
+   default_bonus_pct, default_add_pay
    ========================= */
-const paygradesDefault = [
-  {code:'O4', label:'Section Lead',     category:'Officer',  weight:1.8, bonus_pct:10, add_pay:3000},
-  {code:'O3', label:'Flight Officer',   category:'Officer',  weight:1.6, bonus_pct:7,  add_pay:2000},
-  {code:'O2', label:'Junior Officer',   category:'Officer',  weight:1.4, bonus_pct:5,  add_pay:1500},
-  {code:'O1', label:'Probationary Off.',category:'Officer',  weight:1.2, bonus_pct:2,  add_pay:1000},
-  {code:'E4', label:'Specialist',       category:'Enlisted', weight:1.3, bonus_pct:3,  add_pay:800},
-  {code:'E3', label:'Operator',         category:'Enlisted', weight:1.1, bonus_pct:0,  add_pay:500},
-  {code:'E2', label:'Crewman',          category:'Enlisted', weight:1.0, bonus_pct:0,  add_pay:0},
-  {code:'E1', label:'Recruit',          category:'Recruit',  weight:0.8, bonus_pct:0,  add_pay:0}
-];
-let paygrades = paygradesDefault.map(p=>({...p}));
-let pgFiltered = paygrades.slice();
+let paygrades = [];
+let pgFiltered = [];
 
 function renderPaygrades(){
   const tbody = $('#pgRows');
@@ -633,17 +691,17 @@ function renderPaygrades(){
     return;
   }
   tbody.innerHTML = pgFiltered.map(pg=>`
-    <tr data-code="${pg.code}">
-      <td>${pg.code}</td>
-      <td>${pg.label}</td>
+    <tr data-code="${pg.paygrade}">
+      <td>${pg.paygrade}</td>
+      <td>${pg.label||''}</td>
       <td class="text-right">
-        <input type="number" step="0.1" value="${pg.weight}" data-field="weight">
+        <input type="number" step="0.1" value="${pg.weight??1}" data-field="weight">
       </td>
       <td class="text-right">
-        <input type="number" step="0.5" value="${pg.bonus_pct}" data-field="bonus_pct">
+        <input type="number" step="0.5" value="${pg.default_bonus_pct??0}" data-field="default_bonus_pct">
       </td>
       <td class="text-right">
-        <input type="number" step="100" value="${pg.add_pay}" data-field="add_pay">
+        <input type="number" step="100" value="${pg.default_add_pay??0}" data-field="default_add_pay">
       </td>
     </tr>
   `).join('');
@@ -655,7 +713,7 @@ function applyPgFilter(){
   pgFiltered = paygrades.filter(pg=>{
     if(cat && pg.category !== cat) return false;
     if(!q) return true;
-    const hay = (pg.code+' '+pg.label).toLowerCase();
+    const hay = ((pg.paygrade||'')+' '+(pg.label||'')).toLowerCase();
     return hay.includes(q);
   });
   renderPaygrades();
@@ -670,31 +728,52 @@ $('#pgRows').addEventListener('input',e=>{
   if(!row) return;
   const code = row.dataset.code;
   const field = input.dataset.field;
-  const pg = paygrades.find(p=>p.code===code);
+  const pg = paygrades.find(p=>p.paygrade===code);
   if(!pg) return;
   pg[field] = Number(input.value||0);
 });
 
-$('#revertPg').addEventListener('click',()=>{
-  paygrades = paygradesDefault.map(p=>({...p}));
+$('#revertPg').addEventListener('click',loadPaygradesFromSupabase);
+$('#savePg').addEventListener('click',savePaygradesToSupabase);
+
+async function loadPaygradesFromSupabase(){
+  const { data, error } = await sb
+    .from('pay_grade_rules')
+    .select('paygrade,label,category,weight,default_bonus_pct,default_add_pay')
+    .order('weight',{ascending:false});
+  if(error){
+    console.error(error);
+    showToast('Failed to load pay grades',true);
+    paygrades = [];
+  }else{
+    paygrades = data||[];
+  }
   applyPgFilter();
-});
-$('#savePg').addEventListener('click',()=>{
-  console.log('Paygrades to persist / send to Supabase:',paygrades);
-  alert('Paygrade weights saved (local). Wire this to your pay_grade_rules table.');
-});
+}
+
+async function savePaygradesToSupabase(){
+  if(!paygrades.length){
+    showToast('No pay grades to save',true);
+    return;
+  }
+  const { error } = await sb.from('pay_grade_rules').upsert(paygrades,{onConflict:'paygrade'});
+  if(error){
+    console.error(error);
+    showToast('Failed to save pay grades',true);
+  }else{
+    showToast('Paygrade weights saved');
+    await loadPaygradesFromSupabase();
+  }
+}
 
 /* =========================
    MISSION OVERRIDES (bottom)
+   Supabase:
+   - missions (id,title,status,org_cut_percent)
+   - mission_org_cut_overrides(mission_id,org_cut_pct,locked,updated_by,updated_at)
    ========================= */
-const missionDefault = [
-  {id:'MIS-001', title:'RW S2 – 24-box Haul', status:'Open',   default_org_pct:20, override_org_pct:null, locked:false, last_editor:'—'},
-  {id:'MIS-002', title:'Molten Lane – Escort & Haul', status:'Settled', default_org_pct:25, override_org_pct:28, locked:true, last_editor:'VEX'},
-  {id:'MIS-003', title:'Medical Evac – Stanton Rescue', status:'Open',   default_org_pct:15, override_org_pct:null, locked:false, last_editor:'—'},
-  {id:'MIS-004', title:'Arccorp Freight – Bulk Delivery', status:'Locked',default_org_pct:20, override_org_pct:22, locked:true, last_editor:'MALIK'}
-];
-let missions = missionDefault.map(m=>({...m}));
-let missionFiltered = missions.slice();
+let missions = [];
+let missionFiltered = [];
 
 function renderMissions(){
   const tbody = $('#missionRows');
@@ -703,18 +782,18 @@ function renderMissions(){
     return;
   }
   tbody.innerHTML = missionFiltered.map(m=>{
-    const orgBand = m.override_org_pct ?? m.default_org_pct;
-    const orgDisplay = orgBand != null ? orgBand.toFixed(1)+'%' : '—';
+    const orgDisplay = (m.override_org_pct!=null ? m.override_org_pct : m.default_org_pct);
+    const last = m.last_editor || '—';
     return `
       <tr data-id="${m.id}">
         <td>
-          <div class="hilite" style="font-weight:700">${m.title}</div>
+          <div class="hilite" style="font-weight:700">${m.title||'Untitled'}</div>
           <div class="subtle">ID: ${m.id}</div>
         </td>
         <td class="nowrap">
-          <span class="badge">${m.status}</span>
+          <span class="badge">${m.status||''}</span>
         </td>
-        <td class="text-right mono">${m.default_org_pct.toFixed(1)}%</td>
+        <td class="text-right mono">${(m.default_org_pct??0).toFixed(1)}%</td>
         <td class="text-right">
           <input type="number" step="0.5" min="0" max="100"
             value="${m.override_org_pct ?? ''}"
@@ -726,7 +805,7 @@ function renderMissions(){
           <input type="checkbox" data-field="locked" ${m.locked?'checked':''}>
         </td>
         <td class="nowrap">
-          <span class="subtle">${m.last_editor || '—'}</span>
+          <span class="subtle">${last}</span>
         </td>
       </tr>
     `;
@@ -739,10 +818,9 @@ function applyMissionFilter(){
   const band = $('#missionOrgBand').value;
   missionFiltered = missions.filter(m=>{
     if(st){
-      if(st==='Locked' && !m.locked) return false;
-      if(st!=='Locked' && m.status !== st) return false;
+      if((m.status||'') !== st) return false;
     }
-    const effOrg = m.override_org_pct ?? m.default_org_pct;
+    const effOrg = m.override_org_pct ?? m.default_org_pct ?? orgRules.org_default_pct;
     if(band){
       if(band==='0-10' && !(effOrg>=0 && effOrg<10)) return false;
       if(band==='10-20' && !(effOrg>=10 && effOrg<20)) return false;
@@ -750,7 +828,7 @@ function applyMissionFilter(){
       if(band==='30+' && !(effOrg>=30)) return false;
     }
     if(!q) return true;
-    const hay = (m.id+' '+m.title).toLowerCase();
+    const hay = (m.id+' '+(m.title||'')).toLowerCase();
     return hay.includes(q);
   });
   renderMissions();
@@ -777,9 +855,10 @@ $('#missionRows').addEventListener('input',e=>{
   if(field === 'override_org_pct'){
     const v = input.value;
     m.override_org_pct = v==='' ? null : Number(v);
-    if(!m.last_editor || m.last_editor==='—') m.last_editor='ADMIN';
+    if(!m.last_editor || m.last_editor==='—') m.last_editor = me?.slice(0,8) || 'ADMIN';
   }
 });
+
 $('#missionRows').addEventListener('change',e=>{
   const input = e.target;
   const row = input.closest('tr[data-id]');
@@ -790,33 +869,126 @@ $('#missionRows').addEventListener('change',e=>{
   const field = input.dataset.field;
   if(field === 'locked'){
     m.locked = input.checked;
-    if(m.locked && (!m.last_editor || m.last_editor==='—')) m.last_editor='ADMIN';
-    applyMissionFilter(); // re-render to disable/enable fields
+    if(m.locked && (!m.last_editor || m.last_editor==='—')) m.last_editor = me?.slice(0,8) || 'ADMIN';
+    applyMissionFilter();
   }
 });
 
-$('#clearOverrides').addEventListener('click',()=>{
-  if(!confirm('Clear all mission org % overrides?')) return;
-  missions.forEach(m=>{m.override_org_pct=null;m.locked=false;m.last_editor='—';});
+$('#clearOverrides').addEventListener('click',async ()=>{
+  if(!confirm('Clear ALL mission org % overrides?')) return;
+  const { error } = await sb.from('mission_org_cut_overrides').delete().neq('mission_id', null);
+  if(error){
+    console.error(error);
+    showToast('Failed to clear overrides',true);
+  }else{
+    showToast('All overrides cleared');
+    await loadMissionsFromSupabase();
+  }
+});
+
+$('#saveOverrides').addEventListener('click',saveOverridesToSupabase);
+
+async function loadMissionsFromSupabase(){
+  // Load missions (you can tweak select fields to match your schema)
+  const { data: ms, error } = await sb
+    .from('missions')
+    .select('id,title,status,org_cut_percent')
+    .order('start_time',{ascending:false})
+    .limit(200);
+  if(error){
+    console.error(error);
+    showToast('Failed to load missions',true);
+    missions = [];
+    applyMissionFilter();
+    return;
+  }
+  const ids = ms.map(m=>m.id);
+  let overrides = [];
+  if(ids.length){
+    const { data: ov, error: e2 } = await sb
+      .from('mission_org_cut_overrides')
+      .select('mission_id,org_cut_pct,locked,updated_by')
+      .in('mission_id', ids);
+    if(e2){
+      console.error(e2);
+      showToast('Failed to load mission overrides',true);
+    }else{
+      overrides = ov||[];
+    }
+  }
+  const mapOv = {};
+  overrides.forEach(o=>{ mapOv[o.mission_id] = o; });
+
+  missions = ms.map(m=>{
+    const ov = mapOv[m.id] || {};
+    return {
+      id: m.id,
+      title: m.title,
+      status: m.status,
+      default_org_pct: m.org_cut_percent ?? orgRules.org_default_pct,
+      override_org_pct: ov.org_cut_pct ?? null,
+      locked: ov.locked ?? false,
+      last_editor: ov.updated_by ? ov.updated_by.slice(0,8) : '—'
+    };
+  });
   applyMissionFilter();
-});
-$('#saveOverrides').addEventListener('click',()=>{
-  console.log('Mission overrides to persist:',missions);
-  alert('Mission overrides saved (local). Connect this to your mission overrides table / view.');
-});
+}
 
-/* INIT */
-loadOrgRulesToUI();
-applyPgFilter();
-applyMissionFilter();
+async function saveOverridesToSupabase(){
+  if(!missions.length){
+    showToast('No missions to save',true);
+    return;
+  }
+  const ids = missions.map(m=>m.id);
+  // First clear overrides for these missions, then reinsert current state
+  const { error: delErr } = await sb
+    .from('mission_org_cut_overrides')
+    .delete()
+    .in('mission_id', ids);
+  if(delErr){
+    console.error(delErr);
+    showToast('Failed to reset overrides',true);
+    return;
+  }
+  const payload = missions
+    .filter(m=>m.override_org_pct!=null || m.locked)
+    .map(m=>({
+      mission_id: m.id,
+      org_cut_pct: m.override_org_pct,
+      locked: m.locked,
+      updated_by: me
+    }));
+  if(payload.length){
+    const { error } = await sb.from('mission_org_cut_overrides').upsert(payload);
+    if(error){
+      console.error(error);
+      showToast('Failed to save overrides',true);
+      return;
+    }
+  }
+  showToast('Mission overrides saved');
+  await loadMissionsFromSupabase();
+}
 
-/* Nav auto-active if file name matches */
-(() => {
+/* =========================
+   INIT
+   ========================= */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const session = await requireAuth(); // expects your js/auth.js helpers
+  if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
+
+  await loadOrgRulesFromSupabase();
+  await loadPaygradesFromSupabase();
+  await loadMissionsFromSupabase();
+
+  // auto-activate nav link for this file
   const here = location.pathname.split('/').pop();
   document.querySelectorAll('.nav-btn').forEach(a=>{
     if(a.getAttribute('href')===here){a.classList.add('active');}
   });
-})();
+});
 </script>
 
 </body>
