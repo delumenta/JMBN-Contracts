@@ -1,359 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN — Earnings Admin</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JMBN – Admin Console</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
 
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b; --ok:#5cd47c;
-  --fs:14px;
+  --bg:#000;--panel:#0b0b0b;--sub:#0f0f0f;--row:#0a0a0a;
+  --border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#5cd47c;
+  --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:#000;color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
-a{color:var(--accent);text-decoration:none}
+body{
+  margin:0;padding:14px;
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  font-size:var(--fs-base);
+  letter-spacing:.25px;
+}
 
-.wrap{max-width:1180px;margin:18px auto;padding:0 14px 60px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 18px rgba(214,180,76,.18);margin-bottom:14px}
-.hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
-.hd h3{margin:0;font-size:16px;color:var(--accent)}
-.body{padding:12px}
-.small{color:var(--muted);font-size:12px}
-.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--accent);background:#111}
+/* Brand fallback (in case header2.html fails) */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 8px;padding-bottom:6px;
+  border-bottom:1px solid var(--border);
+}
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+}
+.brand h1{
+  margin:0;font-size:var(--fs-h1);font-weight:700;color:var(--accent);
+}
 
-input,select,button{font-family:'Play'}
-input[type="number"], input[type="text"], select{
-  background:#0a0a0a;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px 10px
+/* Layout */
+.page{max-width:1200px;margin:0 auto;}
+.grid{
+  display:grid;
+  grid-template-columns:minmax(320px,0.9fr) minmax(420px,1.1fr);
+  gap:14px;
+}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+/* Panels */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.panel .hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+}
+.panel .hd h3{
+  margin:0;color:var(--accent);font-size:16px;font-weight:700;
+  display:flex;align-items:center;gap:10px;
+}
+.panel .body{padding:10px 12px 12px}
+
+/* Tags / pills / text */
+.badge{
+  display:inline-block;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:2px 7px;
+  font-size:10px;
+  color:var(--muted);
+  background:#050505;
+}
+.pill{
+  display:inline-block;
+  border-radius:999px;
+  border:1px solid var(--border);
+  padding:4px 10px;
+  font-size:12px;
+  background:#050505;
+  color:var(--accent);
+}
+.small{font-size:var(--fs-small);color:var(--muted)}
+
+/* Inputs / buttons */
+input[type="search"],select{
+  width:100%;
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px 10px;
+  color:var(--text);
+  font-family:'Play';
+  font-size:var(--fs-base);
 }
 button{
-  border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);
-  border-radius:10px;padding:8px 12px;cursor:pointer
+  padding:8px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  cursor:pointer;
+  font-family:'Play';
+  font-size:12px;
+  font-weight:700;
+  transition:.18s;
 }
-button:hover{background:var(--accent);color:#000}
+button:hover{
+  background:var(--accent);
+  color:#000;
+  box-shadow:0 0 12px rgba(214,180,76,.35);
+}
+.btn-danger{border-color:var(--bad);color:var(--bad)}
 .btn-ok{border-color:var(--ok);color:var(--ok)}
-.btn-bad{border-color:var(--bad);color:var(--bad)}
-.pill{border-radius:999px;padding:6px 10px}
+.btn-ghost{
+  background:transparent;
+  border-radius:999px;
+}
 
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:900px){.grid3{grid-template-columns:1fr}}
+/* Member list */
+.mlist{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:70vh;
+  overflow:auto;
+}
+.mrow{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid transparent;
+  background:#0a0a0a;
+  cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.08);
+}
+.mrow:hover{
+  background:#111;
+  border-color:rgba(214,180,76,.45);
+}
+.mrow.active{
+  background:rgba(214,180,76,.16);
+  border-color:var(--border);
+}
 
-.kpi{border:1px solid var(--border);border-radius:12px;padding:10px;background:#0c0c0c;text-align:center}
-.kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
-.kpi .v{font-size:18px;color:var(--accent);font-weight:700}
+/* Avatar – frameless, no gold border */
+.mavatar{
+  width:38px;height:38px;
+  display:grid;place-items:center;
+  overflow:hidden;
+  background:transparent;
+  border:none;
+}
+.mavatar img{
+  width:100%;height:100%;object-fit:contain;
+  border:none;background:transparent;box-shadow:none;filter:none;
+}
 
-.table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.table th{font-size:12px;color:var(--muted);font-weight:400;text-align:left;padding:4px 8px}
-.row{display:grid;grid-template-columns:140px 1fr 120px 240px 120px 160px;gap:10px;align-items:center;
-  background:#0a0a0a;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px}
-@media(max-width:1050px){.row{grid-template-columns:130px 1fr 120px 220px 110px 140px}}
-@media(max-width:860px){.row{grid-template-columns:1fr}}
-.cell{padding:4px 6px}
-.meta{display:flex;align-items:center;gap:8px}
-.tag{font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:999px;color:var(--accent);background:#121212}
-.tag.dim{opacity:.7}
-.note{font-size:11px;color:var(--muted)}
+/* KPI cards */
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:10px 0;
+}
+@media(max-width:720px){.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{
+  background:linear-gradient(180deg,#0b0b0b,#080808);
+  border-radius:10px;
+  border:1px solid var(--border);
+  padding:8px;
+  box-shadow:0 0 14px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+  text-align:center;
+}
+.kpi h4{
+  margin:0 0 4px;
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.kpi .val{
+  font-size:18px;
+  font-weight:700;
+  color:var(--accent);
+}
 
-.cutCtrl{display:flex;align-items:center;gap:6px}
-.cutCtrl button{width:32px;height:32px;padding:0}
-.cutCtrl input{width:90px;text-align:center}
+/* Progress bars */
+.pb{
+  display:grid;
+  grid-template-columns:120px 1fr auto;
+  gap:10px;
+  align-items:center;
+  margin:6px 0;
+}
+.pb .label{color:var(--muted);font-size:12px}
+.bar{
+  height:12px;background:#0a0a0a;
+  border-radius:999px;border:1px solid var(--border);
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  background:linear-gradient(180deg,var(--accent),#d6b44c);
+}
+.pb .val{
+  font-variant-numeric:tabular-nums;
+  color:var(--muted);
+  font-size:12px;
+}
 
-.right{display:flex;gap:8px;align-items:center;justify-content:flex-end}
-.lock{opacity:.8}
-.lock .note{color:#a7a07b}
+/* Cert grid – 6-up, logo + abbrev only */
+.certGrid{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:10px;
+}
+@media(max-width:1100px){.certGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:780px){ .certGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:520px){ .certGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-.alert{border:1px solid var(--bad);background:#240e0e;color:#ffbcbc;border-radius:10px;padding:8px 10px}
-.ok{border:1px solid var(--ok);background:#102014;color:#adffcb;border-radius:10px;padding:8px 10px}
+.cert{
+  background:transparent;
+  border:none;
+  padding:6px;
+  text-align:center;
+}
+.cert.dim{opacity:.5;filter:grayscale(.5)}
+.cert .thumb{
+  height:72px;
+  display:grid;place-items:center;
+  margin-bottom:4px;
+}
+.cert .thumb img{
+  max-height:60px;max-width:60px;
+  width:auto;height:auto;object-fit:contain;
+}
+.cert .abbr{
+  font-weight:700;
+  letter-spacing:.5px;
+  color:var(--accent);
+  font-size:12px;
+}
+.cert .title,.cert .small,.cert .meta,[data-open]{display:none!important}
+
+/* Timeline (no dots) */
+.timeline{
+  position:relative;
+  margin-top:10px;
+  padding-left:0;
+}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:2px;
+  background:linear-gradient(var(--border),transparent);
+}
+.titem{
+  position:relative;
+  padding:10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+}
+.titem.done .tlabel{color:var(--accent)}
+.tdot{display:none!important}
+
+/* Missions list */
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.item{
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#0b0b0b;
+  padding:10px;
+  box-shadow:0 0 10px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.08);
+}
+.item h4{margin:0 0 4px;color:var(--accent);font-size:14px}
+.item .meta{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <div style="margin-bottom:8px"><a href="admin.html" class="badge">← Back to Admin</a></div>
-
-  <!-- Global cut -->
-  <div class="panel">
-    <div class="hd"><h3>Org Cut</h3><span class="small">Global % applies unless a mission override exists, or the mission has a snapshot.</span></div>
-    <div class="body">
-      <div class="meta" style="gap:12px;flex-wrap:wrap">
-        <div class="small">Default %</div>
-        <input id="gCut" type="number" step="0.1" min="0" max="100" style="width:110px" />
-        <button id="gSave">Save</button>
-        <span class="small" id="gStamp">—</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Filters -->
-  <div class="panel">
-    <div class="hd"><h3>Mission Ledger</h3>
-      <div class="meta" style="gap:8px;flex-wrap:wrap">
-        <input id="fFrom" type="date">
-        <input id="fTo" type="date">
-        <select id="fStatus">
-          <option value="">All Status</option>
-          <option value="planned">Planned</option>
-          <option value="success">Success</option>
-          <option value="abort">Abort</option>
-          <option value="failed">Failed</option>
-        </select>
-        <button id="btnReload">Reload</button>
-      </div>
-    </div>
-    <div class="body">
-      <div class="grid3" style="margin-bottom:10px">
-        <div class="kpi"><h4>ORG EARNED</h4><div class="v" id="kOrg">–</div></div>
-        <div class="kpi"><h4>MEMBER SHARE</h4><div class="v" id="kMem">–</div></div>
-        <div class="kpi"><h4>MISSIONS</h4><div class="v" id="kMis">–</div></div>
-      </div>
-
-      <div class="small" style="margin-bottom:8px">Use <b>– / +</b> to nudge a mission’s override. Type a value then press <b>Save</b>. Values are in <b>%</b>.</div>
-
-      <div id="list">Loading…</div>
-    </div>
-  </div>
-
-  <!-- Last 4 -->
-  <div class="panel">
-    <div class="hd"><h3>Last 4 Missions (Org)</h3><span class="badge" id="lastCount">0</span></div>
-    <div class="body" id="last4">—</div>
+<!-- Shared header mount (header2.html) -->
+<div id="header2-mount">
+  <!-- Fallback if header2.html fails -->
+  <div class="brand">
+    <img class="brand-logo"
+         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+         alt="JMBN">
+    <h1>JMBN Admin Console</h1>
   </div>
 </div>
 
+<div class="page">
+  <div class="grid">
+
+    <!-- LEFT: Members list -->
+    <section class="panel">
+      <div class="hd">
+        <h3>Members</h3>
+      </div>
+      <div class="body">
+        <input id="mSearch" type="search" placeholder="Search handle / name…">
+        <div id="mList" class="mlist" style="margin-top:8px">Loading…</div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Inspector / dashboard -->
+    <section class="panel">
+      <div class="hd">
+        <h3>Member Dashboard</h3>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="rankTrack" title="Rank Track">
+            <option value="">— Track —</option>
+            <option value="Officer">Officer</option>
+            <option value="Enlisted">Enlisted</option>
+            <option value="Warrant">Warrant</option>
+          </select>
+          <button id="btnForce" class="pill" title="Force set user's rank track">Force Track</button>
+
+          <select id="rankCode" title="Rank Code">
+            <option value="">— Select Rank —</option>
+          </select>
+          <button id="btnSetRank" class="pill" title="Force set a specific rank code">Set Rank</button>
+
+          <button id="btnPromote" class="pill" disabled>Run Promotion Check</button>
+        </div>
+      </div>
+
+      <div class="body" id="inspector">
+        <div class="small">Select a member to view their dashboard &amp; activity.</div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Supabase + auth -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
+
+<!-- Mount shared header2.html & highlight nav -->
 <script>
-const $ = s => document.querySelector(s);
-const fmt = n => (n==null || isNaN(n)) ? '–' : Number(n).toLocaleString();
-const clampPct = v => Math.max(0, Math.min(100, Number(v)||0));
+async function mountHeader2(){
+  const mount = document.getElementById('header2-mount');
+  if(!mount) return;
+  try{
+    const res = await fetch('header2.html',{cache:'no-cache'});
+    if(!res.ok) return;
+    const html = await res.text();
+    mount.innerHTML = html;
 
-let sb, me, GLOBAL = 0, MISSIONS=[], OV={}, NOW = new Date();
-
-// ---------- boot ----------
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth(); if(!session) return;
-  sb = getSupabase(); me = session.user.id;
-
-  setDefaultDates();
-  await loadGlobal();
-  await loadLedger();
-
-  $('#gSave').onclick = saveGlobal;
-  $('#btnReload').onclick = loadLedger;
-});
-
-function setDefaultDates(){
-  const to = new Date(); const from = new Date(); from.setMonth(from.getMonth()-1);
-  $('#fFrom').value = from.toISOString().slice(0,10);
-  $('#fTo').value   = to.toISOString().slice(0,10);
-}
-
-// ---------- global ----------
-async function loadGlobal(){
-  const { data, error } = await sb.from('org_settings')
-    .select('org_cut_pct, updated_at').order('updated_at', { ascending:false }).limit(1).maybeSingle();
-  if(error){ $('#gStamp').textContent = 'Failed to load global'; return; }
-  GLOBAL = Number(data?.org_cut_pct||0);
-  $('#gCut').value = String(GLOBAL);
-  $('#gStamp').textContent = data?.updated_at ? `Updated ${new Date(data.updated_at).toLocaleString()}` : '';
-}
-
-async function saveGlobal(){
-  const val = clampPct($('#gCut').value);
-  $('#gCut').value = String(val);
-  const note = `Set by ${me.slice(0,8)}`;
-  const { error } = await sb.from('org_settings').insert({ org_cut_pct: val, note });
-  if(error){ return alert('Saving global failed: '+error.message); }
-  await loadGlobal(); // refresh
-  // Recompute totals using new GLOBAL (affects only missions without override & without snapshot)
-  renderList();
-}
-
-// ---------- ledger ----------
-async function loadLedger(){
-  $('#list').textContent = 'Loading…';
-  const from = $('#fFrom').value ? new Date($('#fFrom').value) : null;
-  const to   = $('#fTo').value ? new Date($('#fTo').value) : null;
-  const status = $('#fStatus').value;
-
-  // missions for window
-  let q = sb.from('missions')
-     .select('id,title,start_time,payout_auec,status,org_cut_percent')
-     .order('start_time',{ascending:false});
-  if(from) q = q.gte('start_time', from.toISOString());
-  if(to){  // inclusive through end-of-day
-    const end = new Date(to); end.setDate(end.getDate()+1);
-    q = q.lt('start_time', end.toISOString());
+    // highlight this page in header nav if matching link exists
+    const here = (location.pathname.split('/').pop() || 'index.html');
+    const active = mount.querySelector(`.nav-btn[href="${here}"]`);
+    if(active) active.classList.add('active');
+  }catch(err){
+    console.error('Failed to mount header2:', err);
   }
-  if(status) q = q.eq('status', status);
-  const { data: rows, error } = await q;
-
-  if(error){ $('#list').innerHTML = `<div class="alert">${error.message}</div>`; return; }
-  MISSIONS = rows || [];
-
-  // pull overrides for listed missions
-  let ov = {};
-  if(MISSIONS.length){
-    const ids = MISSIONS.map(m=>m.id);
-    const { data: orows } = await sb.from('mission_org_cut_overrides')
-      .select('mission_id, org_cut_pct, updated_at, updated_by, reason')
-      .in('mission_id', ids);
-    (orows||[]).forEach(r=> ov[r.mission_id] = r);
-  }
-  OV = ov;
-
-  renderList();
-  renderLast4();
 }
-
-function effectiveCut(m){
-  const o = OV[m.id]?.org_cut_pct;
-  const snap = m.org_cut_percent; // snapshot frozen when mission first hit 'success'
-  return (o!=null) ? Number(o) : (snap!=null ? Number(snap) : Number(GLOBAL));
-}
-
-function rowBadgeSet(m){
-  const bag = [];
-  if(OV[m.id]) bag.push(`<span class="tag">override</span>`);
-  if(m.org_cut_percent!=null) bag.push(`<span class="tag dim">snapshot</span>`);
-  if(m.status) bag.push(`<span class="tag dim">${m.status}</span>`);
-  return bag.join(' ');
-}
-
-function renderList(){
-  if(!MISSIONS.length){ 
-    $('#list').innerHTML = `<div class="small">No missions in this window.</div>`;
-    $('#kOrg').textContent = '–'; $('#kMem').textContent = '–'; $('#kMis').textContent = '0';
-    return;
-  }
-  let totOrg=0, totPayout=0;
-
-  const rows = MISSIONS.map(m=>{
-    const eff = effectiveCut(m);
-    const payout = Number(m.payout_auec||0);
-    const orgEarn = payout * eff/100;
-    totOrg += orgEarn; totPayout += payout;
-
-    const oVal = (OV[m.id]?.org_cut_pct!=null) ? OV[m.id].org_cut_pct : '';
-    const lockHint = (m.org_cut_percent!=null)
-      ? `<div class="note">Effective uses <b>${eff}%</b> (${OV[m.id]?'override':'snapshot'}`).concat(`) — global changes won’t alter this.</div>`)
-      : `<div class="note">Effective uses <b>${eff}%</b> (${OV[m.id]?'override':'global'})</div>`;
-
-    return `
-      <div class="row" data-id="${m.id}">
-        <div class="cell small">${new Date(m.start_time).toLocaleString()}</div>
-        <div class="cell">
-          <div>${escapeHtml(m.title||'Untitled')}</div>
-          <div class="meta" style="margin-top:4px">${rowBadgeSet(m)}</div>
-        </div>
-        <div class="cell"><b>${fmt(payout)}</b></div>
-
-        <div class="cell">
-          <div class="cutCtrl">
-            <button data-minus>-</button>
-            <input type="number" step="0.1" min="0" max="100" placeholder="override" value="${oVal!==''?oVal:''}">
-            <button data-plus>+</button>
-            <button class="btn-ok" data-save>Save</button>
-          </div>
-          ${lockHint}
-        </div>
-
-        <div class="cell"><b>${fmt(orgEarn)}</b></div>
-
-        <div class="cell right">
-          <button class="btn-bad" data-clear ${OV[m.id]?'':'disabled'}>Clear Override</button>
-        </div>
-      </div>`;
-  }).join('');
-
-  $('#list').innerHTML = `
-    <div class="table">
-      <div class="row" style="background:transparent;border-color:transparent">
-        <div class="cell small">Date</div>
-        <div class="cell small">Title</div>
-        <div class="cell small">Payout</div>
-        <div class="cell small">Cut % (Override) &amp; Effective</div>
-        <div class="cell small">Org Earned</div>
-        <div class="cell small">Actions</div>
-      </div>
-      ${rows}
-    </div>`;
-
-  // KPI
-  $('#kOrg').textContent = fmt(totOrg);
-  $('#kMem').textContent = fmt(totPayout - totOrg);
-  $('#kMis').textContent = String(MISSIONS.length);
-
-  // wire controls
-  $('#list').querySelectorAll('.row').forEach(row=>{
-    const id = row.dataset.id;
-    const inp = row.querySelector('input[type="number"]');
-    row.querySelector('[data-minus]').onclick = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) - 0.5)); };
-    row.querySelector('[data-plus]').onclick  = ()=>{ inp.value = String(clampPct((Number(inp.value)||0) + 0.5)); };
-    row.querySelector('[data-save]').onclick  = ()=> saveOverride(id, inp.value);
-    const clr = row.querySelector('[data-clear]');
-    if(clr) clr.onclick = ()=> clearOverride(id);
-  });
-}
-
-async function saveOverride(missionId, val){
-  const pct = clampPct(val);
-  if(isNaN(pct)) return alert('Enter a number between 0 and 100.');
-  const payload = { mission_id: missionId, org_cut_pct: pct, updated_by: me };
-  const { error } = await sb.from('mission_org_cut_overrides').upsert(payload).select().maybeSingle();
-  if(error){
-    return alert('Save override failed: ' + error.message);
-  }
-  // refresh OV + list (efficiently)
-  OV[missionId] = { mission_id: missionId, org_cut_pct: pct, updated_by: me, updated_at: new Date().toISOString() };
-  renderList();
-}
-
-async function clearOverride(missionId){
-  if(!confirm('Remove this mission’s override?')) return;
-  const { error } = await sb.from('mission_org_cut_overrides').delete().eq('mission_id', missionId);
-  if(error){ return alert('Clear failed: ' + error.message); }
-  delete OV[missionId];
-  renderList();
-}
-
-// ---------- last 4 ----------
-async function renderLast4(){
-  // last 4 by start_time (any status)
-  const { data, error } = await sb.from('missions')
-    .select('id,title,start_time,payout_auec,status,org_cut_percent')
-    .order('start_time',{ascending:false}).limit(4);
-  if(error || !data?.length){ $('#last4').innerHTML='—'; $('#lastCount').textContent='0'; return; }
-
-  const ids = data.map(m=>m.id);
-  const { data: over } = await sb.from('mission_org_cut_overrides')
-    .select('mission_id, org_cut_pct').in('mission_id', ids);
-  const map = Object.fromEntries((over||[]).map(r=>[r.mission_id, r.org_cut_pct]));
-
-  $('#lastCount').textContent = String(data.length);
-  $('#last4').innerHTML = data.map(m=>{
-    const eff = (map[m.id]!=null) ? map[m.id] : (m.org_cut_percent!=null ? m.org_cut_percent : GLOBAL);
-    const payout = Number(m.payout_auec||0);
-    const orgEarn = payout * eff/100;
-    return `
-      <div class="row" style="grid-template-columns:180px 1fr 120px 160px 120px">
-        <div class="cell small">${new Date(m.start_time).toLocaleString()}</div>
-        <div class="cell">${escapeHtml(m.title||'Untitled')} <span class="tag dim">${m.status||''}</span></div>
-        <div class="cell"><b>${fmt(payout)}</b></div>
-        <div class="cell small">Cut: <b>${eff}%</b> ${m.org_cut_percent!=null?'<span class="tag dim">snapshot</span>':(map[m.id]!=null?'<span class="tag">override</span>':'<span class="tag dim">global</span>')}</div>
-        <div class="cell"><b>${fmt(orgEarn)}</b></div>
-      </div>`;
-  }).join('');
-}
-
-// util
-function escapeHtml(s){ const d=document.createElement('div'); d.textContent = s??''; return d.innerHTML; }
+mountHeader2();
 </script>
-</body>
-</html>
+
+<script>
+const $  = s => document.querySelector(s);
+const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+const setFill=(
