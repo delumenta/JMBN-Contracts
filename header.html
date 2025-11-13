@@ -10,11 +10,19 @@
 /* Brand section */
 .brand {
   display:flex;
-  align-items:center;
+  align-items:flex-start;
+  justify-content:space-between;
   gap:10px;
   margin:0 0 8px;
   padding-bottom:6px;
   border-bottom:1px solid var(--border);
+}
+
+/* Left side: logo + title */
+.brand-main{
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 .brand-logo {
   width:44px;
@@ -22,11 +30,31 @@
   object-fit:contain;
   filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
 }
-.brand h1 {
+.brand-title-wrap h1 {
   font-weight:700;
   font-size:clamp(18px,2.2vw,22px);
   color:var(--accent);
   margin:0;
+  letter-spacing:0.08em;
+}
+.brand-subtitle{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.18em;
+  color:rgba(247,241,208,.75);
+}
+
+/* Right side: sector + status */
+.brand-meta{
+  font-size:11px;
+  text-align:right;
+  color:rgba(247,241,208,.8);
+  line-height:1.4;
+}
+.brand-meta .online{
+  color:var(--accent);
+  font-weight:700;
+  letter-spacing:0.12em;
 }
 
 /* Navigation pills */
@@ -52,6 +80,9 @@
   color:var(--accent);
   text-decoration:none;
   font-weight:700;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:0.14em;
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
   transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
   overflow:hidden;
@@ -83,39 +114,4 @@
   );
   border-radius:inherit;
   transform:translateX(-120%);
-  animation:shine 2.8s ease-in-out infinite;
-  pointer-events:none;
-}
-@keyframes shine {
-  0% { transform:translateX(-120%); }
-  35%,100% { transform:translateX(120%); }
-}
-</style>
-
-<!-- === Header + Navigation === -->
-<div class="brand">
-  <img
-    class="brand-logo"
-    src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png"
-    alt="JMBN Logo">
-  <h1>JMBN</h1>
-</div>
-
-<nav class="nav">
-  <!-- Personal Module Section -->
-  <a class="nav-btn personal" href="index.html">Manifest</a>
-  <a class="nav-btn personal" href="hangar.html">Hangar</a>
-  <a class="nav-btn personal" href="loadout.html">Loadout</a>
-  <a class="nav-btn personal" href="components.html">Components</a>
-  <a class="nav-btn personal" href="contracts.html">Contracts</a>
-
-  <!-- Divider -->
-  <span style="border-left:1px solid var(--border);height:20px;margin:0 8px;opacity:.6"></span>
-
-  <!-- Org Module Section -->
-  <a class="nav-btn org" href="mission-log.html">Mission Log</a>
-  <a class="nav-btn org" href="member.html">Member</a>
-  <a class="nav-btn org" href="rank-progression.html">Progression</a>
-</nav>
-
-
+  animation:shine 2.8s ease-in-out
