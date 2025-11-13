@@ -31,7 +31,7 @@ body{
   font-size:var(--fs-base);letter-spacing:.25px;
 }
 
-/* Brand */
+/* Brand (used by header2.html) */
 .brand{
   display:flex;align-items:center;gap:10px;
   margin:0 0 8px;padding-bottom:6px;
@@ -45,7 +45,7 @@ body{
   font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0
 }
 
-/* Nav pills */
+/* Nav pills (used by header2.html) */
 .nav{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;
   margin:6px 0 12px;
@@ -290,22 +290,8 @@ hr.sep{
 </head>
 <body>
 
-<!-- Header -->
-<div class="brand">
-  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-  <h1>JMBN Earnings Admin – Weighted Ledger Rules</h1>
-</div>
-
-<!-- Nav -->
-<nav class="nav">
-  <a class="nav-btn" href="index.html">Manifest</a>
-  <a class="nav-btn" href="hangar.html">Hangar</a>
-  <a class="nav-btn" href="components.html">Components</a>
-  <a class="nav-btn" href="contracts.html">Contracts</a>
-  <a class="nav-btn" href="mission-log.html">Mission Log</a>
-  <a class="nav-btn" href="earnings-ledger.html">Earnings Ledger</a>
-  <a class="nav-btn active" href="#">Earnings Admin</a>
-</nav>
+<!-- Shared header2 mount -->
+<div id="header2-mount"></div>
 
 <div class="wrap">
   <!-- LEFT: Org rules & rounding -->
@@ -559,6 +545,28 @@ hr.sep{
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
+
+<!-- Mount shared header2.html -->
+<script>
+async function mountHeader2(){
+  const mount = document.getElementById('header2-mount');
+  if(!mount) return;
+  try{
+    const res = await fetch('header2.html'); // adjust path if needed
+    const html = await res.text();
+    mount.innerHTML = html;
+
+    // auto-activate nav link for this file
+    const here = (location.pathname.split('/').pop() || 'index.html');
+    const active = mount.querySelector(`.nav-btn[href="${here}"]`);
+    if(active) active.classList.add('active');
+  }catch(err){
+    console.error('Failed to mount header2:', err);
+  }
+}
+mountHeader2();
+</script>
+
 <script>
 const $  = s => document.querySelector(s);
 const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
@@ -1056,25 +1064,24 @@ async function openCrewModal(mission){
 
   let totalShare = 0;
   const rows = payouts.map(p=>{
-const prof   = profMap[p.user_id] || {};
-const handle = prof.handle || p.user_id?.slice(0,8) || '—';
+    const prof   = profMap[p.user_id] || {};
+    const handle = prof.handle || p.user_id?.slice(0,8) || '—';
 
-// If display_name looks like an email, don't show it.
-// You said you only want handle, so we only show a "real" name
-// when it's not an email-looking string.
-let name = '—';
-if (prof.display_name && !prof.display_name.includes('@')) {
-  name = prof.display_name;
-}
+    // Show only non-email display names; otherwise just '—'
+    let name = '—';
+    if(prof.display_name && !prof.display_name.includes('@')){
+      name = prof.display_name;
+    }
 
-const rank  = prof.current_rank_code || prof.current_rank_name || p.paygrade || '—';
-const w     = p.weight ?? 0;
-const share = Number(p.final_share || 0);
+    const rank  = prof.current_rank_code || prof.current_rank_name || p.paygrade || '—';
+    const w     = p.weight ?? 0;
+    const share = Number(p.final_share || 0);
 
     totalShare += share;
     return `
       <tr>
         <td>${handle}</td>
+        <td>${name}</td>
         <td>${rank}</td>
         <td class="text-right mono">${w ? w.toFixed(3) : '—'}</td>
         <td class="text-right mono">${share ? fmt(Math.round(share)) : '—'}</td>
@@ -1099,11 +1106,6 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   await loadOrgRulesFromSupabase();
   await loadPaygradesFromSupabase();
   await loadMissionsFromSupabase();
-
-  const here = location.pathname.split('/').pop();
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){a.classList.add('active');}
-  });
 });
 </script>
 
