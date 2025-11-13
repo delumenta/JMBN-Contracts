@@ -528,7 +528,6 @@ hr.sep{
           <thead>
             <tr>
               <th>Handle</th>
-              <th>Name</th>
               <th>Rank / PG</th>
               <th class="text-right">Weight</th>
               <th class="text-right">Final Share (aUEC)</th>
@@ -1081,9 +1080,8 @@ async function openCrewModal(mission){
     return `
       <tr>
         <td>${handle}</td>
-        <td>${name}</td>
         <td>${rank}</td>
-        <td class="text-right mono">${w ? w.toFixed(3) : '—'}</td>
+        <td class="text-right mono">${w ? w.toFixed(3) : ''}</td>
         <td class="text-right mono">${share ? fmt(Math.round(share)) : '—'}</td>
       </tr>
     `;
