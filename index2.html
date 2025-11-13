@@ -41,11 +41,11 @@ body::after{
 
 /* ===== Announcement Ticket (top banner) ===== */
 .annc-ticket{
-  margin:6px 0 18px;                 /* increased bottom spacing */
+  margin:6px 0 22px;
   background:rgba(10,10,10,.9);
   border:1px dashed var(--border);
   border-radius:12px;
-  padding:12px 14px;                 /* a bit more breathing inside */
+  padding:12px 14px;
   box-shadow:0 0 10px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.08);
 }
 .annc-ticket .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -68,7 +68,7 @@ body::after{
 #postAnnc:hover{background:var(--accent);color:#000;text-decoration:none}
 
 /* Brand header */
-.brand{display:flex;align-items:center;gap:12px;margin:0 0 14px} /* space below brand */
+.brand{display:flex;align-items:center;gap:12px;margin:0 0 16px}
 .brand-logo{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(242,214,117,.35))}
 .brand-text{display:flex;flex-direction:column}
 .brand-text h1{margin:0;font-size:clamp(22px,3vw,32px);color:var(--accent);font-weight:700;line-height:1.1}
@@ -94,7 +94,7 @@ body::after{
 /* Member card (compact) */
 .member{
   display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:center;
-  margin:0 0 18px;                  /* added gap below member card */
+  margin:0 0 22px;
 }
 .member .name{font-weight:900;font-size:18px;color:var(--accent)}
 .rankline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;margin-top:4px}
@@ -102,11 +102,11 @@ body::after{
 .rankimg{width:110px;height:110px;object-fit:contain;border:none;border-radius:0;background:transparent;display:block;justify-self:end}
 
 /* ===== ONE container of three cards ===== */
-.actions-wrap{margin-top:20px}      /* more space above the 3-card row */
+.actions-wrap{margin-top:24px}
 .actions-3{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:16px;                         /* bigger gaps between cards */
+  gap:18px;
 }
 @media(max-width:920px){.actions-3{grid-template-columns:1fr}}
 .action h3{margin:0 0 6px;color:var(--accent);font-size:16px}
@@ -116,9 +116,9 @@ body::after{
   text-decoration:none;border:1px solid var(--border);background:var(--accent);color:#000;font-weight:800;width:fit-content;font-size:13px
 }
 
-/* Action backgrounds + compact height */
+/* Action backgrounds */
 .card.action{
-  min-height:210px;                 /* slightly taller for balance */
+  min-height:210px;
   display:flex;flex-direction:column;justify-content:flex-end;gap:10px;
 }
 .card.action.grow-bg{
@@ -126,20 +126,151 @@ body::after{
     linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
     url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/grow.jpg") center/cover no-repeat;
 }
+.card.action.missions{
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
+    url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/mission.png") center/cover no-repeat;
+}
 .card.action.jmbn-bg{
   background:
     linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
     url("https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/frontpage/jmbn.jpg") center/cover no-repeat;
 }
-.card.action.missions{
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.65)),
-    radial-gradient(600px 220px at 50% 110%, rgba(214,180,76,.18), transparent 60%),
-    rgba(11,11,11,.85);
+
+/* ===== ORG STATUS WIDGET ===== */
+.org-status{
+  margin-top:24px;
+}
+.org-status-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+.org-status-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--accent);
+}
+.org-status-sub{
+  font-size:11px;
+  color:var(--muted);
+}
+.org-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+@media(max-width:900px){
+  .org-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .org-grid{grid-template-columns:1fr}
+}
+.org-stat{
+  border-radius:10px;
+  border:1px solid rgba(214,180,76,.4);
+  background:radial-gradient(circle at top,rgba(242,214,117,.12),rgba(5,5,5,.96));
+  padding:8px 9px;
+}
+.org-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--muted);
+  margin-bottom:3px;
+}
+.org-value{
+  font-size:18px;
+  font-weight:800;
+  color:var(--accent);
+}
+.org-note{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+/* ===== Admin panel teaser (full-width panel like console) ===== */
+.admin-panel{
+  margin-top:26px;
+  background:rgba(7,7,7,.95);
+  border-radius:12px;
+  border:1px solid var(--border);
+  box-shadow:0 0 18px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.14);
+  padding:10px 14px 12px;
+  display:none; /* shown via JS if elevated */
+}
+.admin-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(214,180,76,.5);
+  padding-bottom:6px;
+  margin-bottom:8px;
+}
+.admin-title{
+  font-size:15px;
+  color:var(--accent);
+  font-weight:700;
+}
+.admin-sub{
+  font-size:11px;
+  color:var(--muted);
+}
+.admin-links{
+  font-size:11px;
+  color:var(--muted);
+}
+.admin-links a{
+  color:var(--accent);
+  text-decoration:none;
+}
+.admin-links a:hover{text-decoration:underline}
+.admin-body{
+  font-size:12px;
+  color:var(--text);
+}
+.admin-cta-row{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  justify-content:space-between;
+}
+.admin-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#050505);
+  color:var(--accent);
+  font-size:12px;
+  font-weight:800;
+  text-decoration:none;
+}
+.admin-cta:hover{
+  background:var(--accent);
+  color:#000;
+  box-shadow:0 0 12px rgba(214,180,76,.35);
+}
+.admin-pill{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  font-size:11px;
+  color:var(--muted);
+  background:#050505;
 }
 
 /* Footer */
-.footer{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
+.footer{color:var(--muted);font-size:12px;margin-top:18px;text-align:center}
 
 /* Boot */
 .boot{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease}
@@ -262,9 +393,66 @@ window.addEventListener('error', () => {
       </div>
     </section>
 
+    <!-- ===== ORG STATUS WIDGET (full-width) ===== -->
+    <section class="card org-status" id="orgStatusCard">
+      <div class="org-status-header">
+        <div class="org-status-title">Org Status</div>
+        <div class="org-status-sub">Live snapshot of JMBN activity across the system.</div>
+      </div>
+      <div class="org-grid">
+        <div class="org-stat">
+          <div class="org-label">Registered Members</div>
+          <div class="org-value" id="orgMembers">—</div>
+          <div class="org-note">Profiles in the manifest</div>
+        </div>
+        <div class="org-stat">
+          <div class="org-label">Missions Logged</div>
+          <div class="org-value" id="orgMissions">—</div>
+          <div class="org-note">Total ops on record</div>
+        </div>
+        <div class="org-stat">
+          <div class="org-label">Ops This Week</div>
+          <div class="org-value" id="orgOpsWeek">—</div>
+          <div class="org-note">Created in the last 7 days</div>
+        </div>
+        <div class="org-stat">
+          <div class="org-label">Total Attendance</div>
+          <div class="org-value" id="orgAttendance">—</div>
+          <div class="org-note">Crew slots filled across all missions</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Admin panel teaser (elevated only) ===== -->
+    <section class="admin-panel" id="adminPanelTeaser">
+      <div class="admin-head">
+        <div>
+          <div class="admin-title">Member Management Console</div>
+          <div class="admin-sub">Tools for ranks, certifications, and mission oversight.</div>
+        </div>
+        <div class="admin-links">
+          <a href="admins.html#activity">View activity</a> •
+          <a href="admins.html#ranks">Manage ranks</a> •
+          <a href="admins.html#certs">Grant certs</a>
+        </div>
+      </div>
+      <div class="admin-body">
+        You have elevated access. Use the Admin Console to review member progress, adjust rank tracks,
+        grant certifications, and run promotion checks for your crew.
+      </div>
+      <div class="admin-cta-row">
+        <a class="admin-cta" href="admins.html">
+          ⬈ Open JMBN Admin Console
+        </a>
+        <span class="admin-pill" id="adminHint">
+          Tip: all changes are logged in Supabase for audit.
+        </span>
+      </div>
+    </section>
+
     <div class="footer">
       <span style="color:var(--muted)">Theme:</span> Play • Gold Accents ·
-      <span style="color:var(--muted)">Grid:</span> One 3-up container
+      <span style="color:var(--muted)">Grid:</span> One 3-up container + Org Status
     </div>
   </main>
 </div>
@@ -486,9 +674,20 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
     console.warn('missions count:', e.message);
   }
 
-  /* ---- Elevation ---- */
+  /* ---- Elevation: reuse same RPC as Admin Console ---- */
   let elevated = false;
-  try { const { data } = await sb.rpc('is_elevated', { u: session.user.id }); elevated = !!data; } catch (_) {}
+  try {
+    const { data } = await sb.rpc('is_elevated', { u: session.user.id });
+    elevated = data === true;
+  } catch (e) {
+    console.warn('is_elevated:', e.message);
+  }
+
+  // Show / hide admin teaser panel
+  const adminPanel = document.getElementById('adminPanelTeaser');
+  if (adminPanel && elevated) {
+    adminPanel.style.display = 'block';
+  }
 
   /* ---- Announcement Ticket (latest only) ---- */
   const tTitle = $('#anncTitle'), tMeta = $('#anncMeta'), tBody = $('#anncBody'),
@@ -510,6 +709,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
         tMeta.textContent = '';
         tBody.textContent = '';
         tActions.style.display = elevated ? '' : 'none';
+        if(postLink){ postLink.style.display = elevated ? '' : 'none'; }
         return;
       }
 
@@ -531,8 +731,8 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       tBody.textContent = latest.body || '';
       const canEdit = elevated || latest.posted_by === session.user.id;
       tActions.style.display = (elevated || canEdit) ? '' : 'none';
-
       if(postLink){ postLink.style.display = elevated ? '' : 'none'; }
+
       if(btnEdit){
         btnEdit.onclick = async ()=>{
           if(!latest) return;
@@ -561,6 +761,7 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       tMeta.textContent  = '';
       tBody.textContent  = '';
       tActions.style.display = elevated ? '' : 'none';
+      if(postLink){ postLink.style.display = elevated ? '' : 'none'; }
     }
   }
   await loadAnncTicket();
@@ -581,6 +782,62 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
       }
     };
   }
+
+  /* ---- Org Status counts ---- */
+  try {
+    // Registered members
+    try {
+      const { count, error } = await sb
+        .from('v_profiles_detailed')
+        .select('*', { count: 'exact', head: true });
+      if (!error && typeof count === 'number') {
+        out('#orgMembers', count.toString());
+      }
+    } catch (e) {
+      console.warn('org members:', e.message);
+    }
+
+    // Total missions
+    try {
+      const { count, error } = await sb
+        .from('missions')
+        .select('*', { count: 'exact', head: true });
+      if (!error && typeof count === 'number') {
+        out('#orgMissions', count.toString());
+      }
+    } catch (e) {
+      console.warn('org missions:', e.message);
+    }
+
+    // Ops this week (by created_at)
+    try {
+      const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+      const { count, error } = await sb
+        .from('missions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', weekAgo);
+      if (!error && typeof count === 'number') {
+        out('#orgOpsWeek', count.toString());
+      }
+    } catch (e) {
+      console.warn('org ops week:', e.message);
+    }
+
+    // Total attendance slots filled
+    try {
+      const { count, error } = await sb
+        .from('mission_attendees')
+        .select('*', { count: 'exact', head: true });
+      if (!error && typeof count === 'number') {
+        out('#orgAttendance', count.toString());
+      }
+    } catch (e) {
+      console.warn('org attendance:', e.message);
+    }
+  } catch (e) {
+    console.warn('org status block:', e.message);
+  }
+
 })();
 </script>
 </body>
