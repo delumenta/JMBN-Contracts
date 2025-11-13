@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN — Earnings Admin (Command Slate)</title>
+<title>JMBN — Earnings Admin (Aurora Ops · Modal)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,148 +12,98 @@
 
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --panel-2:#0f0f0f; --row:#0a0a0a;
-  --border:#d6b44c; --glow:rgba(242,214,117,.14);
-  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --ok:#63de8d; --bad:#ff6b6b; --fs:15px;
+  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
+  --line:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+  --ok:#59d58a; --bad:#ff6b6b; --fs:14px;
 }
-/* Base */
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
-a{color:var(--accent);text-decoration:none}
-.small{color:var(--muted);font-size:12px}
-code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
 
-/* Inputs & buttons */
+.wrap{max-width:1180px;margin:18px auto;padding:0 14px 80px}
+
+/* Top bar */
+.top{display:grid;grid-template-columns:1fr auto auto auto auto;gap:10px;align-items:center}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:28px;height:28px}
+.brand h1{margin:0;font-size:18px;letter-spacing:.4px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;justify-self:end}
 input,select,button{font-family:'Play'}
-input[type="number"], input[type="text"], input[type="date"], select{
-  background:#0a0a0a;color:var(--text);border:1px solid rgba(214,180,76,.55);
+input[type="date"],input[type="number"],select{
+  border:1px solid var(--line);background:#0a0a0a;color:var(--text);
   border-radius:10px;padding:8px 10px
 }
 button{
-  border:1px solid rgba(214,180,76,.55);
-  background:linear-gradient(180deg,#121212,#0a0a0a);
-  color:var(--accent); border-radius:10px; padding:8px 12px; cursor:pointer
+  border:1px solid var(--line);background:linear-gradient(180deg,#101010,#070707);
+  color:var(--accent);border-radius:10px;padding:8px 12px;cursor:pointer
 }
 button:hover{background:var(--accent);color:#000}
-.btn-ok{border-color:var(--ok);color:var(--ok)}
-.btn-bad{border-color:var(--bad);color:var(--bad)}
-.pill{border-radius:999px;padding:6px 10px}
 
-/* Topbar */
-.topbar{
-  position:sticky; top:0; z-index:40;
-  background:linear-gradient(180deg,#0f0f0f,#0b0b0b);
-  border-bottom:1px solid rgba(214,180,76,.5);
-  box-shadow:0 10px 30px var(--glow);
-}
-.topwrap{max-width:1240px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
-.brand{display:flex;align-items:center;gap:10px}
-.brand img{width:28px;height:28px}
-.brand h1{margin:0;font-size:18px;color:var(--accent);letter-spacing:.3px}
-.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-
-/* KPI row */
-.kpis{max-width:1240px;margin:12px auto 16px;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:900px){.kpis{grid-template-columns:1fr}}
-.kpi{
-  background:linear-gradient(180deg,#0f0f0f,#0a0a0a);
-  border:1px solid rgba(214,180,76,.6); border-radius:14px; padding:12px;
-  box-shadow:0 0 0 1px rgba(214,180,76,.15) inset, 0 0 20px var(--glow);
-  text-align:center
-}
-.kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;letter-spacing:.8px}
 .kpi .v{font-size:20px;color:var(--accent);font-weight:700}
 
-/* Split pane */
-.main{max-width:1240px;margin:0 auto;padding:0 16px 80px}
-.split{
-  display:grid; grid-template-columns: var(--left, 44%) 10px 1fr; gap:0; min-height:66vh;
-  border:1px solid rgba(214,180,76,.6); border-radius:16px; overflow:hidden;
-  box-shadow:0 0 24px var(--glow);
-}
-.left,.right{background:var(--panel)}
-.left{border-right:1px solid rgba(214,180,76,.5); display:flex; flex-direction:column; min-width:280px}
-.right{display:flex; flex-direction:column; min-width:340px}
-.gutter{
-  background:
-    linear-gradient(180deg, rgba(214,180,76,.35), rgba(214,180,76,.08)),
-    repeating-linear-gradient(180deg, transparent 0 8px, rgba(214,180,76,.2) 8px 9px);
-  cursor:col-resize;
-}
+/* Ledger */
+.board{display:grid;grid-template-columns:1fr;gap:10px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #a98d3a44}
+.hd h3{margin:0;color:var(--accent);font-size:15px}
+.body{padding:10px 10px 12px}
 
-/* Section headers */
-.section-hd{padding:12px 14px;border-bottom:1px solid rgba(214,180,76,.5);display:flex;align-items:center;justify-content:space-between;background:var(--panel-2)}
-.section-hd h3{margin:0;font-size:16px;color:var(--accent)}
-.section-bd{padding:12px;overflow:auto}
-
-/* Ledger cards */
-.ledger{display:grid;gap:10px}
-.card{
-  background:linear-gradient(180deg,#0f0f0f,#0a0a0a);
-  border:1px solid rgba(214,180,76,.45); border-radius:14px; padding:12px;
-  box-shadow:0 0 0 1px rgba(214,180,76,.12) inset;
-}
-.card.sel{box-shadow:0 0 0 2px var(--accent) inset}
-.cardTop{display:grid;grid-template-columns:160px 1fr 130px 240px;gap:12px;align-items:center}
-@media(max-width:1100px){.cardTop{grid-template-columns:150px 1fr 130px}}
-@media(max-width:820px){.cardTop{grid-template-columns:1fr}}
-.title b{display:block;margin-bottom:4px}
-.badges{display:flex;gap:8px;flex-wrap:wrap}
-.tag{font-size:10px;padding:2px 6px;border:1px solid rgba(214,180,76,.55);border-radius:999px;color:var(--accent);background:#141414}
+/* Mission rows */
+.row{display:grid;grid-template-columns:150px 1fr 110px 230px 120px 150px;gap:10px;align-items:center;
+  background:var(--row);border:1px solid #a98d3a55;border-radius:12px;padding:8px;margin-bottom:8px}
+@media(max-width:1080px){.row{grid-template-columns:160px 1fr 100px 210px 110px 140px}}
+@media(max-width:860px){.row{grid-template-columns:1fr}}
+.cell{padding:4px 6px}
+.small{font-size:12px;color:var(--muted)}
+.meta{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:11px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;color:var(--accent);background:#111}
 .tag.dim{opacity:.75}
-.cutWrap{display:flex;flex-direction:column;gap:6px}
 .cutCtrl{display:flex;align-items:center;gap:6px}
-.cutCtrl button{width:30px;height:30px;padding:0;line-height:28px}
-.cutCtrl input{width:90px;text-align:center}
-.note{font-size:11px;color:var(--muted)}
+.cutCtrl button{width:30px;height:30px;padding:0}
+.cutCtrl input{width:80px;text-align:center}
+.right{display:flex;gap:8px;justify-content:flex-end}
 
-/* Tabs on right */
-.tabs{display:flex;gap:8px;border-bottom:1px solid rgba(214,180,76,.5);padding:8px 12px;background:var(--panel-2)}
-.tab{padding:7px 12px;border:1px solid rgba(214,180,76,.5);border-bottom:none;border-radius:10px 10px 0 0;background:#0c0c0c;color:var(--accent);cursor:pointer}
-.tab.active{background:#141414}
-.panelBd{padding:12px;overflow:auto;flex:1}
+/* Alerts */
+.alert{border:1px solid var(--bad);background:#2a1010;color:#ffbbbb;border-radius:10px;padding:8px 10px}
 
-/* Participants list */
-.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
-.urow{
-  display:grid;grid-template-columns:1fr 120px 140px auto;
-  gap:10px;align-items:center;padding:10px 12px;margin-bottom:10px;
-  background:linear-gradient(180deg,#0f0f0f,#0a0a0a);
-  border:1px solid rgba(214,180,76,.35);border-radius:14px;
-}
-.u-name{display:flex;gap:10px;align-items:center;min-width:0}
-.avatar{
-  width:36px;height:36px;border-radius:50%;
-  background:radial-gradient(circle at 30% 30%, rgba(242,214,117,.35), rgba(242,214,117,.05));
-  border:1px solid rgba(214,180,76,.5); display:flex;align-items:center;justify-content:center;
-  color:var(--accent);font-weight:700; letter-spacing:.6px;
-}
-.u-meta{display:flex;gap:6px;flex-wrap:wrap;color:var(--muted);font-size:11px}
-.u-title{display:flex;flex-direction:column;gap:2px;min-width:0}
-.u-title b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.4px}
-.ctrl{display:flex;gap:6px;align-items:center}
-.ctrl input{width:92px;height:34px;font-size:14px;text-align:center}
-.amt{min-width:120px;text-align:right;font-weight:700}
-.fixed{background:#141414;border:1px solid rgba(214,180,76,.55);border-radius:999px;padding:2px 6px;font-size:10px;color:var(--accent)}
-.footer{display:flex;gap:16px;justify-content:flex-end;align-items:center;border-top:1px solid rgba(214,180,76,.2);padding-top:8px;margin-top:6px}
-.warn{color:#f7c46d}
-.hide{display:none!important}
-.alert{border:1px solid var(--bad);background:#240e0e;color:#ffbcbc;border-radius:10px;padding:8px 10px}
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;padding:24px;z-index:60}
+.modal.open{display:flex}
+.sheet{width:min(980px,96vw);max-height:88vh;overflow:auto;background:#0b0b0b;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px #000}
+.sheet .head{display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid #a98d3a44}
+.sheet .head h3{margin:0;font-size:16px;color:var(--accent)}
+.sheet .body{padding:12px}
+
+/* Participant rows */
+.urow{display:grid;grid-template-columns:1fr 112px 120px auto;gap:10px;align-items:center;
+  background:#0d0d0d;border:1px solid #a98d3a44;border-radius:12px;padding:10px;margin-bottom:8px}
+@media(max-width:560px){.urow{grid-template-columns:1fr}}
+.urow .name{display:flex;flex-direction:column;gap:3px}
+.urow .name b{letter-spacing:.8px;font-size:14px}
+.urow .name span{font-size:12px;color:var(--muted)}
+.urow .ctrl{display:flex;gap:4px;align-items:center}
+.urow .ctrl input{width:82px;text-align:center}
+.urow .amt{text-align:right;font-weight:700}
+.urow .act{display:flex;gap:6px;justify-content:flex-end}
+.btn-ok{border-color:var(--ok);color:var(--ok)}
+.btn-bad{border-color:var(--bad);color:var(--bad)}
+.note{font-size:11px;color:var(--muted);margin:6px 0 10px}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<!-- Topbar -->
-<div class="topbar">
-  <div class="topwrap">
+  <div class="top">
     <div class="brand">
-      <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN"/>
-      <h1>JMBN — Earnings Admin</h1>
+      <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+      <h1>JMBN — Earnings Admin (Aurora Ops)</h1>
     </div>
     <div class="filters">
-      <span class="small">From</span><input id="fFrom" type="date">
-      <span class="small">To</span><input id="fTo" type="date">
+      <input id="fFrom" type="date">
+      <input id="fTo" type="date">
       <select id="fStatus">
         <option value="">All Status</option>
         <option value="planned">Planned</option>
@@ -161,62 +111,41 @@ button:hover{background:var(--accent);color:#000}
         <option value="abort">Abort</option>
         <option value="failed">Failed</option>
       </select>
+      <input id="gCut" type="number" step="0.1" min="0" max="100" title="Global cut % (no mission override/snapshot)"/>
       <button id="btnReload">Reload</button>
-      <span class="small">Global cut %</span>
-      <input id="gCut" type="number" step="0.1" min="0" max="100" style="width:98px">
-      <button id="gSave">Save</button>
-      <span class="small" id="gStamp">—</span>
+      <button id="btnSaveGlobal">Save</button>
+      <span id="gStamp" class="small"></span>
     </div>
   </div>
+
+  <div class="kpis">
+    <div class="kpi"><h4>ORG EARNED</h4><div class="v" id="kOrg">–</div></div>
+    <div class="kpi"><h4>MEMBER SHARE</h4><div class="v" id="kMem">–</div></div>
+    <div class="kpi"><h4>MISSIONS</h4><div class="v" id="kMis">–</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="hd"><h3>Mission Ledger</h3><span class="small">Click “Participants” to edit per-user overrides.</span></div>
+    <div class="body" id="list">Loading…</div>
+  </div>
+
 </div>
 
-<!-- KPIs -->
-<section class="kpis">
-  <div class="kpi"><h4>ORG EARNED</h4><div class="v" id="kOrg">–</div></div>
-  <div class="kpi"><h4>MEMBER SHARE</h4><div class="v" id="kMem">–</div></div>
-  <div class="kpi"><h4>MISSIONS</h4><div class="v" id="kMis">–</div></div>
-</section>
-
-<!-- Dual pane -->
-<div class="main">
-  <div id="split" class="split" style="--left:44%">
-    <!-- LEFT -->
-    <div class="left">
-      <div class="section-hd"><h3>Mission Ledger</h3><span class="small">Click a mission to edit.</span></div>
-      <div id="list" class="section-bd">Loading…</div>
+<!-- PARTICIPANTS MODAL -->
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="sheet">
+    <div class="head">
+      <h3 id="mTitle">Participants & Overrides</h3>
+      <button id="modalClose">✕</button>
     </div>
-
-    <div id="gutter" class="gutter" title="Drag to resize"></div>
-
-    <!-- RIGHT -->
-    <div class="right">
-      <div class="section-hd"><h3 id="selTitle">Select a mission…</h3><span id="selMeta" class="small">—</span></div>
-
-      <div class="tabs">
-        <div class="tab active" data-tab="participants">Participants</div>
-        <div class="tab" data-tab="orgcut">Org Cut</div>
-        <div class="tab" data-tab="audit">Audit</div>
+    <div class="body">
+      <div class="small" id="mMeta">—</div>
+      <div class="note">
+        Member pool = payout − org_cut_value (if present) otherwise payout × (1 − org_cut_pct).<br>
+        Default % = weight ÷ total_weight × 100 (rank-weight).<br>
+        Final per user = fixed aUEC (if set) → percent of pool (if set) → default %.
       </div>
-
-      <div class="panelBd">
-        <div id="tab-participants">
-          <div id="pTools" class="tools hide">
-            <button id="bEq">Distribute equally</button>
-            <button id="bW">Distribute by weight</button>
-            <button id="bZero">Zero all %</button>
-            <button id="bNorm">Normalize to 100%</button>
-            <span class="small">Pool uses <code>org_cut_value</code> if present, else <code>payout × (1 − org_cut_pct)</code>.</span>
-          </div>
-          <div id="uList">—</div>
-          <div id="pFooter" class="footer hide">
-            <span class="small">Sum %: <b id="sumPct">0.0%</b></span>
-            <span class="small">Total aUEC (est): <b id="sumAmt">0</b></span>
-          </div>
-        </div>
-
-        <div id="tab-orgcut" class="hide"><div id="cutInfo" class="ledger"><div class="card">—</div></div></div>
-        <div id="tab-audit" class="hide"><div id="auditList" class="ledger"><div class="card">Select a mission to view updates.</div></div></div>
-      </div>
+      <div id="uList">Loading…</div>
     </div>
   </div>
 </div>
@@ -224,395 +153,287 @@ button:hover{background:var(--accent);color:#000}
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
-const $=s=>document.querySelector(s);
-const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML};
-const fmt=n=> (n==null||isNaN(n)) ? '–' : Number(n).toLocaleString();
+/* Utilities */
+const $  = s => document.querySelector(s);
+const fmt= n => (n==null||isNaN(n)) ? '–' : Number(n).toLocaleString();
+const esc= s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+const clampPct = v => Math.max(0, Math.min(100, Number(v)||0));
 
-let sb, me, GLOBAL=0, MISSIONS=[], OV={}, currentId=null, nameCache=new Map();
+let sb, me, GLOBAL=0, MISSIONS=[], OV={}, currentMission=null;
 
 /* Boot */
-document.addEventListener('DOMContentLoaded', async ()=>{
+document.addEventListener('DOMContentLoaded', async () => {
   const session = await requireAuth(); if(!session) return;
   sb = getSupabase(); me = session.user.id;
 
-  primeDates();
+  // dates
+  const to = new Date(), from=new Date(); from.setMonth(from.getMonth()-1);
+  $('#fFrom').value = from.toISOString().slice(0,10);
+  $('#fTo').value   = to.toISOString().slice(0,10);
+
+  $('#btnReload').onclick = loadLedger;
+  $('#btnSaveGlobal').onclick = saveGlobal;
+  $('#modalClose').onclick = closeModal;
+  $('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+
   await loadGlobal();
   await loadLedger();
-
-  $('#gSave').onclick = saveGlobal;
-  $('#btnReload').onclick = loadLedger;
-  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', switchTab));
-
-  initSplitter();
 });
-
-/* Splitter */
-function initSplitter(){
-  const gutter=$('#gutter'), split=$('#split');
-  const saved = localStorage.getItem('jmbn_split_left_cmd');
-  if(saved) split.style.setProperty('--left', saved);
-  let drag=false, sx=0, start=44;
-  const down=e=>{
-    drag=true; sx=(e.touches?e.touches[0].clientX:e.clientX);
-    start=parseFloat(getComputedStyle(split).getPropertyValue('--left'))||44;
-    document.body.style.cursor='col-resize'; e.preventDefault();
-  };
-  const move=e=>{
-    if(!drag) return;
-    const x=(e.touches?e.touches[0].clientX:e.clientX);
-    const rect=split.getBoundingClientRect();
-    let pct=start+((x-sx)/rect.width)*100; pct=Math.max(28,Math.min(70,pct));
-    split.style.setProperty('--left', pct+'%');
-  };
-  const up=()=>{
-    if(!drag) return; drag=false; document.body.style.cursor='';
-    localStorage.setItem('jmbn_split_left_cmd', getComputedStyle(split).getPropertyValue('--left').trim());
-  };
-  gutter.addEventListener('mousedown',down);
-  gutter.addEventListener('touchstart',down,{passive:false});
-  window.addEventListener('mousemove',move,{passive:false});
-  window.addEventListener('touchmove',move,{passive:false});
-  window.addEventListener('mouseup',up);
-  window.addEventListener('touchend',up);
-}
-
-/* Tabs */
-function switchTab(e){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  e.currentTarget.classList.add('active');
-  const which=e.currentTarget.dataset.tab;
-  ['participants','orgcut','audit'].forEach(id=>{
-    $('#tab-'+id).classList.toggle('hide', id!==which);
-  });
-}
-
-/* Dates */
-function primeDates(){
-  const to=new Date(); const from=new Date(); from.setMonth(from.getMonth()-1);
-  $('#fFrom').value=from.toISOString().slice(0,10);
-  $('#fTo').value=to.toISOString().slice(0,10);
-}
 
 /* Global cut */
 async function loadGlobal(){
-  const {data,error}=await sb.from('org_settings')
+  const { data, error } = await sb.from('org_settings')
     .select('org_cut_pct, updated_at').order('updated_at',{ascending:false}).limit(1).maybeSingle();
-  if(error){ $('#gStamp').textContent='Failed to load'; return; }
-  GLOBAL=Number(data?.org_cut_pct||0);
-  $('#gCut').value=String(GLOBAL);
-  $('#gStamp').textContent=data?.updated_at?`Updated ${new Date(data.updated_at).toLocaleString()}`:'';
+  if(error){ $('#gStamp').textContent='load error'; return; }
+  GLOBAL = Number(data?.org_cut_pct||0);
+  $('#gCut').value = String(GLOBAL);
+  $('#gStamp').textContent = data?.updated_at ? `Updated ${new Date(data.updated_at).toLocaleString()}` : '';
 }
 async function saveGlobal(){
-  const v=Math.max(0,Math.min(100,Number($('#gCut').value)||0));
-  $('#gCut').value=String(v);
-  const {error}=await sb.from('org_settings').insert({ org_cut_pct:v, note:`Set by ${me.slice(0,8)}` });
+  const val = clampPct($('#gCut').value);
+  $('#gCut').value = String(val);
+  const note = `Set by ${me.slice(0,8)}`;
+  const { error } = await sb.from('org_settings').insert({ org_cut_pct: val, note });
   if(error) return alert('Saving global failed: '+error.message);
-  await loadGlobal(); renderList();
+  await loadGlobal();
+  renderList();
 }
 
 /* Ledger */
 async function loadLedger(){
-  const box=$('#list'); box.textContent='Loading…';
-  const from=$('#fFrom').value?new Date($('#fFrom').value):null;
-  const to=$('#fTo').value?new Date($('#fTo').value):null;
-  const status=$('#fStatus').value||'';
+  const list = $('#list'); list.textContent='Loading…';
+  const from = $('#fFrom').value ? new Date($('#fFrom').value) : null;
+  const to   = $('#fTo').value ? new Date($('#fTo').value) : null;
+  const status = $('#fStatus').value || '';
 
-  let q=sb.from('missions')
-    .select('id,title,start_time,payout_auec,status,org_cut_percent')
-    .order('start_time',{ascending:false});
-  if(from) q=q.gte('start_time', from.toISOString());
-  if(to){ const end=new Date(to); end.setDate(end.getDate()+1); q=q.lt('start_time', end.toISOString()); }
-  if(status) q=q.eq('status', status);
-  const {data, error}=await q;
-  if(error){ box.innerHTML=`<div class="alert">${esc(error.message)}</div>`; return; }
-  MISSIONS=data||[];
+  let q = sb.from('missions')
+     .select('id,title,start_time,payout_auec,status,org_cut_percent')
+     .order('start_time',{ascending:false});
+  if(from) q = q.gte('start_time', from.toISOString());
+  if(to){ const end=new Date(to); end.setDate(end.getDate()+1); q = q.lt('start_time', end.toISOString()); }
+  if(status) q = q.eq('status', status);
 
-  // overrides
-  OV={};
+  const { data: rows, error } = await q;
+  if(error){ list.innerHTML=`<div class="alert">${esc(error.message)}</div>`; return; }
+  MISSIONS = rows || [];
+
+  // mission overrides table
+  let map={};
   if(MISSIONS.length){
-    const ids=MISSIONS.map(m=>m.id);
-    const {data:ov}=await sb.from('mission_org_cut_overrides').select('mission_id,org_cut_pct').in('mission_id',ids);
-    (ov||[]).forEach(r=>OV[r.mission_id]=r);
+    const ids = MISSIONS.map(m=>m.id);
+    const { data: over } = await sb.from('mission_org_cut_overrides')
+      .select('mission_id, org_cut_pct').in('mission_id', ids);
+    (over||[]).forEach(r=> map[r.mission_id]=r.org_cut_pct);
   }
-
+  OV = map;
   renderList();
 }
 
 function effectiveCut(m){
-  const o=OV[m.id]?.org_cut_pct;
-  if(o!=null) return Number(o);
+  if(OV[m.id]!=null) return Number(OV[m.id]);
   if(m.org_cut_percent!=null) return Number(m.org_cut_percent);
   return Number(GLOBAL);
 }
-function badges(m){
-  const a=[];
-  if(OV[m.id]) a.push('<span class="tag">override</span>');
-  if(m.org_cut_percent!=null) a.push('<span class="tag dim">snapshot</span>');
-  if(m.status) a.push(`<span class="tag dim">${esc(m.status)}</span>`);
-  return a.join(' ');
-}
 
 function renderList(){
-  const box=$('#list');
+  const list = $('#list');
   if(!MISSIONS.length){
-    box.innerHTML='<div class="small">No missions in this window.</div>';
+    list.innerHTML = `<div class="small">No missions in this window.</div>`;
     $('#kOrg').textContent='–'; $('#kMem').textContent='–'; $('#kMis').textContent='0';
     return;
   }
-  let totOrg=0, totPayout=0;
-  box.innerHTML = `<div class="ledger">` + MISSIONS.map(m=>{
-    const eff=effectiveCut(m); const payout=Number(m.payout_auec||0);
-    const orgEarn=payout*eff/100; totOrg+=orgEarn; totPayout+=payout;
-    const oVal=(OV[m.id]?.org_cut_pct!=null)?OV[m.id].org_cut_pct:'';
-    const hint=(m.org_cut_percent!=null)
-      ? `Effective <b>${eff}%</b> (${OV[m.id]?'override':'snapshot'})`
-      : `Effective <b>${eff}%</b> (${OV[m.id]?'override':'global'})`;
-    return `
-      <div class="card ${m.id===currentId?'sel':''}" data-id="${m.id}">
-        <div class="cardTop">
-          <div class="small">${new Date(m.start_time).toLocaleString()}</div>
-          <div class="title"><b>${esc(m.title||'Untitled')}</b><div class="badges">${badges(m)}</div></div>
-          <div><b>${fmt(payout)}</b></div>
-          <div class="cutWrap">
-            <div class="cutCtrl">
-              <button data-minus>-</button>
-              <input type="number" step="0.1" min="0" max="100" placeholder="override %" value="${oVal!==''?oVal:''}">
-              <button data-plus>+</button>
-              <button class="btn-ok" data-save>Save</button>
-            </div>
-            <div class="note">${hint}</div>
-          </div>
-        </div>
-      </div>`;
-  }).join('') + `</div>`;
 
-  // KPIs
-  $('#kOrg').textContent=fmt(totOrg);
-  $('#kMem').textContent=fmt(totPayout - totOrg);
-  $('#kMis').textContent=String(MISSIONS.length);
+  let totOrg=0, totPay=0;
 
-  // wire
-  box.querySelectorAll('.card').forEach(card=>{
-    const id=card.dataset.id;
-    const inp=card.querySelector('input[type="number"]');
-    card.addEventListener('click', ()=>selectMission(id));
-    card.querySelector('[data-minus]')?.addEventListener('click', (e)=>{e.stopPropagation(); inp.value=String(Math.max(0,(Number(inp.value)||0)-0.5));});
-    card.querySelector('[data-plus]') ?.addEventListener('click', (e)=>{e.stopPropagation(); inp.value=String(Math.min(100,(Number(inp.value)||0)+0.5));});
-    card.querySelector('[data-save]') ?.addEventListener('click', (e)=>{e.stopPropagation(); saveMissionOverride(id, inp.value);});
-  });
-}
+  const rows = MISSIONS.map(m=>{
+    const eff = effectiveCut(m);
+    const payout = Number(m.payout_auec||0);
+    const orgEarn = payout * eff/100;
+    totOrg += orgEarn; totPay += payout;
 
-async function saveMissionOverride(missionId,val){
-  const pct=Math.max(0,Math.min(100,Number(val)||0));
-  const {error}=await sb.from('mission_org_cut_overrides').upsert({mission_id:missionId,org_cut_pct:pct,updated_by:me}).select().maybeSingle();
-  if(error) return alert('Save override failed: '+error.message);
-  OV[missionId]={mission_id:missionId,org_cut_pct:pct};
-  renderList(); if(missionId===currentId) renderOrgCutPane(missionId);
-}
-
-function selectMission(id){
-  currentId=id;
-  document.querySelectorAll('#list .card').forEach(c=>c.classList.toggle('sel', c.dataset.id===id));
-  const m=MISSIONS.find(x=>x.id===id);
-  $('#selTitle').textContent=m?.title||'Untitled';
-  $('#selMeta').textContent=m?new Date(m.start_time).toLocaleString():'—';
-  document.querySelector('.tab[data-tab="participants"]').click();
-  loadParticipants(id); renderOrgCutPane(id); renderAuditPane(id);
-}
-
-/* Participants */
-async function loadParticipants(missionId){
-  const list=$('#uList'), tools=$('#pTools'), foot=$('#pFooter');
-  list.textContent='Loading…'; tools.classList.add('hide'); foot.classList.add('hide');
-
-  // 1) Try to get names straight from v_missions_payout_live
-  let rows=[];
-  try{
-    const {data,error}=await sb.from('v_missions_payout_live')
-      .select('user_id, handle, display_name, paygrade, weight, total_weight, payout_auec, org_cut_pct, org_cut_value')
-      .eq('mission_id', missionId)
-      .order('weight',{ascending:false});
-    if(error) throw error;
-    rows=data||[];
-  }catch(e){
-    list.innerHTML=`<div class="alert">Failed to load participants: ${esc(e.message)}</div>`;
-    return;
-  }
-  if(!rows.length){ list.innerHTML='<div class="small">No participants found.</div>'; return; }
-
-  // 2) Fill missing names from v_profiles_detailed if needed
-  const missingIds = rows.filter(r=>!(r.handle||r.display_name)).map(r=>r.user_id);
-  if(missingIds.length){
-    const {data:prof}=await sb.from('v_profiles_detailed')
-      .select('user_id, handle, display_name, current_rank_abbrev')
-      .in('user_id', missingIds);
-    (prof||[]).forEach(p=>{ nameCache.set(p.user_id,{
-      handle:p.handle, display_name:p.display_name, rank:p.current_rank_abbrev
-    }); });
-  }
-
-  const labelFor = (r)=>{
-    const fromRow = (r.handle && r.handle.trim()) || (r.display_name && r.display_name.trim());
-    const fromCache = nameCache.get(r.user_id);
-    const val = fromRow || (fromCache?.handle) || (fromCache?.display_name) || String(r.user_id).slice(0,8);
-    return String(val).toUpperCase();
-  };
-  const rankFor = (r)=>{
-    const fromCache = nameCache.get(r.user_id);
-    return (fromCache?.rank || '').toUpperCase();
-  };
-
-  // 3) per-user overrides
-  const {data:uov}=await sb.from('mission_user_overrides')
-    .select('user_id, share_pct, share_fixed_auec, note')
-    .eq('mission_id', missionId);
-  const mapOv=Object.fromEntries((uov||[]).map(r=>[r.user_id,r]));
-
-  // 4) pool math
-  const h=rows[0];
-  const payout=Number(h.payout_auec||0);
-  const cutVal=(h.org_cut_value!=null)?Number(h.org_cut_value):null;
-  const cutPct=(h.org_cut_pct!=null)?Number(h.org_cut_pct):null;
-  const pctFrac=(cutPct!=null && cutPct>1)?(cutPct/100):(cutPct ?? 0);
-  const memberPool=(cutVal!=null)?(payout-cutVal):(payout*(1-pctFrac));
-
-  const totalW = rows[0]?.total_weight || rows.reduce((a,b)=>a+Number(b.weight||0),0) || 1;
-
-  // 5) render
-  list.innerHTML = rows.map(r=>{
-    const defPct = (Number(r.weight||0)/Number(totalW))*100;
-    const ov = mapOv[r.user_id]||{};
-    const hasFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
-    const hasPct   = (ov.share_pct!=null);
-    const pct = hasPct ? Number(ov.share_pct) : defPct;
-    const amt = hasFixed ? Number(ov.share_fixed_auec) : (memberPool*(pct/100));
-
-    const label = labelFor(r);
-    const initials = label.slice(0,2).replace(/[^A-Z0-9]/g,'') || 'ID';
-    const rank = rankFor(r);
-    const pg = (r.paygrade||'').toUpperCase();
+    const oVal = (OV[m.id]!=null) ? OV[m.id] : '';
+    const hint = (m.org_cut_percent!=null)
+      ? `Effective ${eff}% (${OV[m.id]!=null?'override':'snapshot'})`
+      : `Effective ${eff}% (${OV[m.id]!=null?'override':'global'})`;
 
     return `
-      <div class="urow" data-uid="${r.user_id}" data-def="${defPct}">
-        <div class="u-name">
-          <div class="avatar">${esc(initials)}</div>
-          <div class="u-title">
-            <b>${esc(label)}</b>
-            <div class="u-meta">
-              ${rank?`<span>${esc(rank)}</span>`:''}
-              ${pg?`<span>PG:${esc(pg)}</span>`:''}
-              <span class="tag dim">w:<b>${Number(r.weight||0).toFixed(2)}</b></span>
-              <span class="tag dim">default ${defPct.toFixed(1)}%</span>
-              ${ov.note?`<span class="tag">${esc(ov.note)}</span>`:''}
-            </div>
+      <div class="row" data-id="${m.id}">
+        <div class="cell small">${new Date(m.start_time).toLocaleString()}</div>
+        <div class="cell">
+          <div>${esc(m.title||'Untitled')}</div>
+          <div class="meta" style="margin-top:4px">
+            ${OV[m.id]!=null?'<span class="tag">override</span>':''}
+            ${m.org_cut_percent!=null?'<span class="tag dim">snapshot</span>':''}
+            ${m.status?`<span class="tag dim">${esc(m.status)}</span>`:''}
           </div>
         </div>
-
-        <div class="ctrl">
-          <button data-minus>-</button>
-          <input data-pct type="number" step="0.5" min="0" max="100" value="${hasPct?pct:''}" placeholder="${defPct.toFixed(1)}">
-          <button data-plus>+</button>
+        <div class="cell"><b>${fmt(payout)}</b></div>
+        <div class="cell">
+          <div class="cutCtrl">
+            <button data-minus>-</button>
+            <input type="number" step="0.1" min="0" max="100" placeholder="override %" value="${oVal!==''?oVal:''}">
+            <button data-plus>+</button>
+            <button class="btn-ok" data-save>Save</button>
+          </div>
+          <div class="small">${hint}</div>
         </div>
-
-        <div class="ctrl">
-          <input data-fixed type="number" step="1" min="0" placeholder="fixed aUEC" value="${hasFixed?Number(ov.share_fixed_auec):''}">
-        </div>
-
-        <div class="amt">${hasFixed?'<span class="fixed">fixed</span>':''} ${fmt(amt)}</div>
-
-        <div class="ctrl">
-          <button class="btn-ok" data-saveu>Save</button>
-          <button class="btn-bad" data-clearu ${mapOv[r.user_id]?'':'disabled'}>Clear</button>
+        <div class="cell"><b>${fmt(orgEarn)}</b></div>
+        <div class="cell right">
+          <button data-participants>Participants</button>
+          <button class="btn-bad" data-clear ${OV[m.id]!=null?'':'disabled'}>Clear</button>
         </div>
       </div>`;
   }).join('');
 
-  tools.classList.remove('hide'); foot.classList.remove('hide');
-  wireParticipantRows(missionId, memberPool);
-  updateFooter(memberPool);
-  wireBatchTools(missionId, rows, memberPool);
+  list.innerHTML = rows;
+
+  $('#kOrg').textContent = fmt(totOrg);
+  $('#kMem').textContent = fmt(totPay - totOrg);
+  $('#kMis').textContent = String(MISSIONS.length);
+
+  // wire
+  list.querySelectorAll('.row').forEach(row=>{
+    const id = row.dataset.id;
+    const inp = row.querySelector('input[type="number"]');
+    row.querySelector('[data-minus]').onclick = ()=>{ inp.value=String(clampPct((Number(inp.value)||0)-0.5)); };
+    row.querySelector('[data-plus]').onclick  = ()=>{ inp.value=String(clampPct((Number(inp.value)||0)+0.5)); };
+    row.querySelector('[data-save]').onclick  = ()=> saveMissionOverride(id, inp.value);
+    row.querySelector('[data-clear]').onclick = ()=> clearMissionOverride(id);
+    row.querySelector('[data-participants]').onclick = ()=> openModal(id);
+  });
 }
 
-function wireParticipantRows(missionId, memberPool){
-  $('#uList').querySelectorAll('.urow').forEach(row=>{
-    const uid=row.dataset.uid;
-    const ipPct=row.querySelector('[data-pct]');
-    const ipFix=row.querySelector('[data-fixed]');
-    row.querySelector('[data-minus]')?.addEventListener('click', ()=>{ ipPct.value=String(Math.max(0,(Number(ipPct.value)||0)-0.5)); ipFix.value=''; updateFooter(memberPool); });
-    row.querySelector('[data-plus]') ?.addEventListener('click', ()=>{ ipPct.value=String(Math.min(100,(Number(ipPct.value)||0)+0.5)); ipFix.value=''; updateFooter(memberPool); });
-    [ipPct,ipFix].forEach(inp=>inp?.addEventListener('input', ()=>{ if(inp===ipPct) ipFix.value=''; else ipPct.value=''; updateFooter(memberPool); }));
-    row.querySelector('[data-saveu]')?.addEventListener('click', async ()=>{
-      const share_pct = ipPct.value===''?null:Math.max(0,Math.min(100,Number(ipPct.value)||0));
-      const share_fixed_auec = ipFix.value===''?null:Math.max(0,Number(ipFix.value)||0);
-      const {error}=await sb.from('mission_user_overrides').upsert({mission_id:missionId,user_id:uid,share_pct,share_fixed_auec,updated_by:me}).select().maybeSingle();
+async function saveMissionOverride(missionId, val){
+  const pct = clampPct(val);
+  const { error } = await sb.from('mission_org_cut_overrides')
+    .upsert({ mission_id: missionId, org_cut_pct: pct, updated_by: me });
+  if(error) return alert('Save override failed: '+error.message);
+  OV[missionId]=pct; renderList();
+}
+async function clearMissionOverride(missionId){
+  if(!confirm('Remove mission override?')) return;
+  const { error } = await sb.from('mission_org_cut_overrides').delete().eq('mission_id', missionId);
+  if(error) return alert('Clear failed: '+error.message);
+  delete OV[missionId]; renderList();
+}
+
+/* Modal + participants */
+function openModal(missionId){
+  currentMission = missionId;
+  const mission = MISSIONS.find(m=>m.id===missionId);
+  $('#mTitle').textContent = 'Participants & Overrides';
+  $('#mMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
+  $('#uList').innerHTML = 'Loading…';
+  $('#modal').classList.add('open');
+  loadParticipants(missionId);
+}
+function closeModal(){
+  $('#modal').classList.remove('open');
+  $('#uList').innerHTML='';
+  currentMission=null;
+}
+
+async function loadParticipants(missionId){
+  const box = $('#uList'); box.innerHTML='Loading…';
+
+  // 1) rank-weight rows
+  const { data: rows, error } = await sb
+    .from('v_missions_payout_live')
+    .select('user_id, weight, base_share, final_share, total_weight, payout_auec, org_cut_pct, org_cut_value')
+    .eq('mission_id', missionId)
+    .order('weight',{ascending:false});
+  if(error){ box.innerHTML = `<div class="alert">Failed to load participants: ${esc(error.message)}</div>`; return; }
+  if(!rows?.length){ box.innerHTML = `<div class="small">No participants found for this mission.</div>`; return; }
+
+  // 2) names from v_profiles_detailed
+  const ids = [...new Set(rows.map(r=>r.user_id).filter(Boolean))];
+  const names = {};
+  if(ids.length){
+    try{
+      const { data } = await sb.from('v_profiles_detailed')
+        .select('user_id, handle, display_name, current_rank_abbrev')
+        .in('user_id', ids);
+      (data||[]).forEach(p=>{
+        const raw = p.handle?.trim() || p.display_name?.trim() || p.user_id.slice(0,8);
+        names[p.user_id] = { label: raw.toUpperCase(), rank: p.current_rank_abbrev || '' };
+      });
+    }catch(e){ console.warn('names load:', e.message); }
+  }
+  const labelOf = uid => names[uid]?.label || String(uid).slice(0,8).toUpperCase();
+  const rankOf  = uid => names[uid]?.rank || '';
+
+  // 3) per-user overrides
+  const { data: uov } = await sb.from('mission_user_overrides')
+    .select('user_id, share_pct, share_fixed_auec, note')
+    .eq('mission_id', missionId);
+  const mapOv = Object.fromEntries((uov||[]).map(r=>[r.user_id,r]));
+
+  // 4) pool & default percent (weight-based)
+  const h = rows[0];
+  const payout = Number(h.payout_auec||0);
+  const cutVal = (h.org_cut_value!=null) ? Number(h.org_cut_value) : null;
+  const cutPct = (h.org_cut_pct!=null) ? Number(h.org_cut_pct) : null;
+  const frac = (cutPct!=null && cutPct>1) ? (cutPct/100) : (cutPct ?? 0);
+  const memberPool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - frac));
+  const tWeight = rows.reduce((a,b)=>a+Number(b.weight||0),0) || 1;
+  const defaultPct = uid => {
+    const w = Number(rows.find(r=>r.user_id===uid)?.weight||0);
+    return (w / tWeight) * 100;
+  };
+
+  // 5) render
+  box.innerHTML = rows.map(r=>{
+    const uid = r.user_id;
+    const ov = mapOv[uid] || {};
+    const useFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
+    const usePct   = (ov.share_pct!=null);
+    const pct = usePct ? Number(ov.share_pct) : defaultPct(uid);
+    const amt = useFixed ? Number(ov.share_fixed_auec) : (memberPool * (pct/100));
+
+    return `
+      <div class="urow" data-uid="${uid}">
+        <div class="name">
+          <b>${esc(labelOf(uid))}</b>
+          <span>${rankOf(uid)?esc(rankOf(uid))+' • ':''}w:${Number(r.weight||0).toFixed(2)} • default ${defaultPct(uid).toFixed(1)}%</span>
+        </div>
+        <div class="ctrl">
+          <button data-pct-minus>-</button>
+          <input data-pct type="number" step="0.5" min="0" max="100" value="${usePct?pct:''}" placeholder="${defaultPct(uid).toFixed(1)}">
+          <button data-pct-plus>+</button>
+        </div>
+        <div class="ctrl">
+          <input data-fixed type="number" step="1" min="0" placeholder="fixed aUEC" value="${useFixed?Number(ov.share_fixed_auec):''}">
+        </div>
+        <div class="amt">${useFixed?'<span class="tag">fixed</span> ':''}${fmt(amt)}</div>
+        <div class="act">
+          <button class="btn-ok" data-saveu>Save</button>
+          <button class="btn-bad" data-clearu ${mapOv[uid]?'':'disabled'}>Clear</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  // 6) wiring
+  box.querySelectorAll('.urow').forEach(row=>{
+    const uid   = row.dataset.uid;
+    const ipPct = row.querySelector('[data-pct]');
+    const ipFix = row.querySelector('[data-fixed]');
+    row.querySelector('[data-pct-minus]').onclick = ()=>{ ipPct.value = String(Math.max(0,(Number(ipPct.value)||0)-0.5)); ipFix.value=''; };
+    row.querySelector('[data-pct-plus]').onclick  = ()=>{ ipPct.value = String(Math.min(100,(Number(ipPct.value)||0)+0.5)); ipFix.value=''; };
+    row.querySelector('[data-saveu]').onclick = async ()=>{
+      const share_pct = ipPct.value==='' ? null : clampPct(ipPct.value);
+      const share_fixed_auec = ipFix.value==='' ? null : Math.max(0, Number(ipFix.value)||0);
+      const payload = { mission_id: missionId, user_id: uid, share_pct, share_fixed_auec, updated_by: me };
+      const { error } = await sb.from('mission_user_overrides').upsert(payload).select().maybeSingle();
       if(error) return alert('Save failed: '+error.message);
-      updateFooter(memberPool);
-    });
-    row.querySelector('[data-clearu]')?.addEventListener('click', async ()=>{
-      const {error}=await sb.from('mission_user_overrides').delete().eq('mission_id',missionId).eq('user_id',uid);
+      loadParticipants(missionId);
+    };
+    row.querySelector('[data-clearu]').onclick = async ()=>{
+      const { error } = await sb.from('mission_user_overrides').delete().eq('mission_id', missionId).eq('user_id', uid);
       if(error) return alert('Clear failed: '+error.message);
-      ipPct.value=''; ipFix.value=''; updateFooter(memberPool);
-    });
+      loadParticipants(missionId);
+    };
   });
 }
-
-function updateFooter(memberPool){
-  let sumPct=0, sumAmt=0;
-  $('#uList').querySelectorAll('.urow').forEach(row=>{
-    const def=Number(row.dataset.def||0);
-    const ipPct=row.querySelector('[data-pct]');
-    const ipFix=row.querySelector('[data-fixed]');
-    const hasPct=ipPct.value!==''; const hasFix=ipFix.value!=='';
-    const pct=hasPct?Number(ipPct.value)||0:def;
-    const amt=hasFix?(Number(ipFix.value)||0):(memberPool*(pct/100));
-    sumPct += hasFix?0:pct;
-    sumAmt += amt;
-    row.querySelector('.amt').innerHTML = `${hasFix?'<span class="fixed">fixed</span>':''} ${fmt(amt)}`;
-  });
-  $('#sumPct').textContent=sumPct.toFixed(1)+'%';
-  $('#sumAmt').textContent=fmt(sumAmt);
-  $('#sumPct').classList.toggle('warn', Math.abs(sumPct-100)>0.05);
-}
-
-function wireBatchTools(missionId, rows, memberPool){
-  const uList=$('#uList');
-  const setPct=(fn)=>{ uList.querySelectorAll('.urow').forEach((row,i)=>{
-      const ipPct=row.querySelector('[data-pct]'); const ipFix=row.querySelector('[data-fixed]');
-      const def=Number(row.dataset.def||0); const v=fn(def,i,row);
-      ipPct.value=String(Math.max(0,Math.min(100,v))); ipFix.value='';
-    }); updateFooter(memberPool);
-  };
-  $('#bEq').onclick = ()=> setPct(()=> 100/rows.length);
-  $('#bW').onclick  = ()=> setPct(def=> def);
-  $('#bZero').onclick = ()=> setPct(()=> 0);
-  $('#bNorm').onclick = ()=>{
-    const vals=[...uList.querySelectorAll('.urow')].map(row=>{
-      const ipPct=row.querySelector('[data-pct]'); const ipFix=row.querySelector('[data-fixed]'); const def=Number(row.dataset.def||0);
-      return ipFix.value!=='' ? null : (ipPct.value!=='' ? Number(ipPct.value)||0 : def);
-    }).filter(v=>v!=null);
-    const sum=vals.reduce((a,b)=>a+b,0)||1;
-    uList.querySelectorAll('.urow').forEach(row=>{
-      const ipPct=row.querySelector('[data-pct]'); const ipFix=row.querySelector('[data-fixed]'); const def=Number(row.dataset.def||0);
-      if(ipFix.value!==''){ ipPct.value=''; return; }
-      const cur=ipPct.value!=='' ? Number(ipPct.value)||0 : def;
-      ipPct.value=String((cur/sum)*100);
-    });
-    updateFooter(memberPool);
-  };
-}
-
-/* Org cut / Audit panes */
-function renderOrgCutPane(missionId){
-  const m=MISSIONS.find(x=>x.id===missionId);
-  if(!m){ $('#cutInfo').innerHTML='<div class="card">—</div>'; return; }
-  const eff=effectiveCut(m), payout=Number(m.payout_auec||0), orgEarn=payout*eff/100;
-  const state = OV[m.id] ? 'override' : (m.org_cut_percent!=null ? 'snapshot' : 'global');
-  $('#cutInfo').innerHTML = `
-    <div class="card">Effective cut: <b>${eff}%</b> <span class="tag dim">${state}</span></div>
-    <div class="card">Payout: <b>${fmt(payout)}</b> • Org earned: <b>${fmt(orgEarn)}</b></div>
-    <div class="card small">Change override in the ledger (left).</div>`;
-}
-function renderAuditPane(){ /* plug your audit source here when ready */ }
 </script>
 </body>
 </html>
