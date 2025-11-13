@@ -1,0 +1,113 @@
+<!-- header.html -->
+<style>
+/* === Shared Header & Nav Styles === */
+:root {
+  --border:#d6b44c;
+  --accent:#f2d675;
+  --text:#f7f1d0;
+}
+
+/* Brand section */
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 8px;
+  padding-bottom:6px;
+  border-bottom:1px solid var(--border);
+}
+.brand-logo {
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+}
+.brand h1 {
+  font-weight:700;
+  font-size:clamp(18px,2.2vw,22px);
+  color:var(--accent);
+  margin:0;
+}
+
+/* Navigation pills */
+.nav {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:6px 0 10px;
+}
+.nav-btn {
+  --gold:#f2d675;
+  --gold2:#e7c760;
+  --ring:#d6b44c;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:7px 14px;
+  border:1px solid var(--ring);
+  border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  overflow:hidden;
+}
+.nav-btn:hover {
+  transform:translateY(-1px);
+  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
+  background:linear-gradient(180deg,#1a1a1a,#0a0a0a);
+}
+
+/* === Active Tab + Shiny Sweep === */
+.nav-btn.active {
+  color:#000;
+  background:linear-gradient(180deg,#f2d675,#e7c760);
+  border-color:#d6b44c;
+  box-shadow:0 0 20px rgba(214,180,76,.45);
+  position:relative;
+  overflow:hidden;
+}
+.nav-btn.active::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 30%,
+    rgba(255,255,255,.3) 50%,
+    rgba(255,255,255,0) 70%
+  );
+  border-radius:inherit;
+  transform:translateX(-120%);
+  animation:shine 2.8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes shine {
+  0% { transform:translateX(-120%); }
+  35%,100% { transform:translateX(120%); }
+}
+</style>
+
+<!-- === Header + Navigation === -->
+<div class="brand">
+  <img
+    class="brand-logo"
+    src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png"
+    alt="JMBN Logo">
+  <h1>JMBN Admin Panel</h1>
+</div>
+
+<nav class="nav">
+  <!-- Personal Module Section -->
+  <a class="nav-btn personal" href="index.html">Manifest</a>
+  <a class="nav-btn personal" href="admins.html">Rank & Progression</a>
+  <a class="nav-btn personal" href="a-earnings.html">Pay Weights & Rates</a>
+    <a class="nav-btn personal" href="mission-editor.html">Mission Editor</a>
+
+
+</nav>
+
