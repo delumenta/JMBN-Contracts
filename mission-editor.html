@@ -7,198 +7,381 @@
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 <style>
-:root{ --bg:#000; --panel:#0b0b0b; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a }
+:root{
+  --bg:#000; --panel:#0b0b0b; --border:#d6b44c;
+  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
+}
 *{box-sizing:border-box}
-body{ background:#000; color:var(--text); font-family:'Play',system-ui,sans-serif; margin:0; padding:18px }
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 10px;border-bottom:1px solid var(--border);padding-bottom:8px}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  margin:0;
+}
+.page{
+  padding:18px;
+}
+
+/* Brand bar */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 10px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:8px;
+}
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+}
 .brand h1{margin:0;color:var(--accent);font-size:22px}
-.toolbar{display:flex;gap:10px;align-items:center;margin:10px 0 16px;flex-wrap:wrap}
-.btn-cta{display:inline-flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);text-decoration:none;font-weight:700}
-.btn-cta:hover{background:linear-gradient(180deg,#f2d675,#e7c760);color:#000}
-.ic{width:18px;height:18px;border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;font-size:14px}
+
+/* Toolbar */
+.toolbar{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin:10px 0 16px;
+  flex-wrap:wrap;
+}
+.btn-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:700;
+}
+.btn-cta:hover{
+  background:linear-gradient(180deg,#f2d675,#e7c760);
+  color:#000;
+}
+.ic{
+  width:18px;height:18px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:14px;
+}
 .subtle{color:var(--muted);font-size:12px}
 
 /* 2-column layout */
-.wrap{display:grid;grid-template-columns:340px 1fr;gap:14px}
-@media(max-width:980px){.wrap{grid-template-columns:1fr}}
+.wrap{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:14px;
+}
+@media(max-width:980px){
+  .wrap{grid-template-columns:1fr}
+}
 
-.panel{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 18px rgba(214,180,76,.14)}
-.panel h3{margin:0 0 10px;color:var(--accent);font-size:16px}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 18px rgba(214,180,76,.14);
+}
+.panel h3{
+  margin:0 0 10px;
+  color:var(--accent);
+  font-size:16px;
+}
 
 /* List panel */
-.list-tools{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-input[type="search"]{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--text)}
-.list{display:flex;flex-direction:column;gap:8px;max-height:70vh;overflow:auto;padding-right:4px}
-.item{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--border);border-radius:10px;background:#0a0a0a;cursor:pointer}
+.list-tools{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:8px;
+}
+input[type="search"]{
+  width:100%;
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px 10px;
+  color:var(--text);
+}
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:70vh;
+  overflow:auto;
+  padding-right:4px;
+}
+.item{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#0a0a0a;
+  cursor:pointer;
+}
 .item:hover{background:#111}
 .item-title{font-weight:700}
 .item-sub{font-size:12px;color:var(--muted)}
-.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
-.small-btn{padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--accent);cursor:pointer}
+.badge{
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:11px;
+  color:var(--muted);
+}
+.small-btn{
+  padding:6px 8px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:transparent;
+  color:var(--accent);
+  cursor:pointer;
+}
 .small-btn:hover{background:var(--accent);color:#000}
 
 /* Form side */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
 .form-grid.full{grid-template-columns:1fr}
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
-input,select,textarea{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:'Play'}
+label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+input,select,textarea{
+  width:100%;
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  color:var(--text);
+  font-family:'Play';
+}
 textarea{min-height:90px;resize:vertical}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-button{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);cursor:pointer}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+button{
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  cursor:pointer;
+}
 button:hover{background:var(--accent);color:#000}
-button.danger{border-color:#ff6b6b;color:#ff6b6b}
-.attach-item{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:8px}
+button.danger{
+  border-color:#ff6b6b;
+  color:#ff6b6b;
+}
+.attach-item{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:10px;
+  margin-bottom:8px;
+}
 .attach-item button{padding:6px 10px}
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="brand">
-  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-  <h1 style="margin-right:auto">JMBN Mission Editor</h1>
-</div>
+<!-- GLOBAL HEADER SLOT (header2.html will be injected here) -->
+<div id="site-header"></div>
 
-<!-- Toolbar -->
-<div class="toolbar">
-  <a class="btn-cta" href="mission-log.html" title="Go back"><span class="ic">←</span><span>Back to Mission Log</span></a>
-  <span class="subtle">View missions on the left. Select to edit; Save, Update, or Delete on the right.</span>
-</div>
-
-<div class="wrap">
-  <!-- LEFT: Mission list -->
-  <div class="panel">
-    <h3>All Missions</h3>
-    <div class="list-tools">
-      <input id="search" type="search" placeholder="Search title / tags / status..." />
-      <button id="refresh" class="small-btn" title="Reload">↻</button>
-      <button id="newBtn" class="small-btn" title="Start new">＋ New</button>
-    </div>
-    <div id="list" class="list"></div>
+<main class="page">
+  <!-- Header -->
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1 style="margin-right:auto">JMBN Mission Editor</h1>
   </div>
 
-  <!-- RIGHT: Editor -->
-  <div class="panel">
-    <h3>Mission Details</h3>
-    <div class="form-grid full">
-      <div>
-        <label>Mission Title</label>
-        <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <a class="btn-cta" href="mission-log.html" title="Go back">
+      <span class="ic">←</span><span>Back to Mission Log</span>
+    </a>
+    <span class="subtle">
+      View missions on the left. Select to edit; Save, Update, or Delete on the right.
+    </span>
+  </div>
+
+  <div class="wrap">
+    <!-- LEFT: Mission list -->
+    <div class="panel">
+      <h3>All Missions</h3>
+      <div class="list-tools">
+        <input id="search" type="search" placeholder="Search title / tags / status..." />
+        <button id="refresh" class="small-btn" title="Reload">↻</button>
+        <button id="newBtn" class="small-btn" title="Start new">＋ New</button>
       </div>
+      <div id="list" class="list"></div>
     </div>
 
-    <div class="form-grid">
-      <div>
-        <label>Type</label>
-        <select id="type">
-          <option></option><option>Hauling</option><option>Delivery</option><option>Rescue</option>
-          <option>Bounty</option><option>Investigation</option><option>Salvage</option>
-          <option>Mining</option><option>Exploration</option>
-        </select>
+    <!-- RIGHT: Editor -->
+    <div class="panel">
+      <h3>Mission Details</h3>
+
+      <div class="form-grid full">
+        <div>
+          <label>Mission Title</label>
+          <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
+        </div>
       </div>
-      <div>
-        <label>Status</label>
-        <select id="status">
-          <option></option><option>Planned</option><option>Active</option>
-          <option>Success</option><option>Fail</option><option>Abort</option>
-        </select>
+
+      <div class="form-grid">
+        <div>
+          <label>Type</label>
+          <select id="type">
+            <option></option>
+            <option>Hauling</option><option>Delivery</option><option>Rescue</option>
+            <option>Bounty</option><option>Investigation</option><option>Salvage</option>
+            <option>Mining</option><option>Exploration</option>
+          </select>
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="status">
+            <option></option>
+            <option>Planned</option><option>Active</option>
+            <option>Success</option><option>Fail</option><option>Abort</option>
+          </select>
+        </div>
       </div>
-    </div>
 
-    <div class="form-grid">
-      <div><label>Origin</label><input id="origin" placeholder="e.g., Area18"></div>
-      <div><label>Destination</label><input id="destination" placeholder="e.g., Everus Harbor"></div>
-    </div>
-
-    <div class="form-grid">
-      <div><label>Date</label><input id="date" type="datetime-local"></div>
-      <div><label>No. of Hours</label><input id="hours" type="number" step="0.1"></div>
-    </div>
-
-    <div class="form-grid">
-      <div><label>Payout (aUEC)</label><input id="payout" type="number" step="1"></div>
-      <div><label>Tags (comma separated)</label><input id="tags" placeholder="e.g., hauling, night"></div>
-    </div>
-
-    <div class="form-grid full">
-      <div><label>Attendees</label><input id="attendees" placeholder="e.g., Vex, Kara"></div>
-    </div>
-
-    <!-- Submitted By: read-only display + hidden UUID -->
-    <div class="form-grid full">
-      <div>
-        <label>Submitted By</label>
-        <input id="submittedByDisplay" readonly placeholder="—" title="Automatically set">
-        <input id="submittedBy" type="hidden">
+      <div class="form-grid">
+        <div><label>Origin</label><input id="origin" placeholder="e.g., Area18"></div>
+        <div><label>Destination</label><input id="destination" placeholder="e.g., Everus Harbor"></div>
       </div>
-    </div>
 
-    <div class="form-grid full" style="margin-top:8px">
-      <div>
-        <label>Attachments</label>
-        <div id="attachList"></div>
-        <button id="addAttachBtn" class="small-btn" type="button">Add Attachment</button>
+      <div class="form-grid">
+        <div><label>Date</label><input id="date" type="datetime-local"></div>
+        <div><label>No. of Hours</label><input id="hours" type="number" step="0.1"></div>
       </div>
-    </div>
 
-    <div class="form-grid full" style="margin-top:8px">
-      <div><label>Notes / AAR</label><textarea id="notes" placeholder="Summary, outcomes, lessons learned"></textarea></div>
-    </div>
+      <div class="form-grid">
+        <div><label>Payout (aUEC)</label><input id="payout" type="number" step="1"></div>
+        <div><label>Tags (comma separated)</label><input id="tags" placeholder="e.g., hauling, night"></div>
+      </div>
 
-    <div class="actions">
-      <button id="clearFormBtn" title="Clear the form">Clear Form</button>
-      <button id="saveNewBtn" class="btn primary" title="Save as NEW row">💾 Save New</button>
-      <button id="updateBtn" class="btn" title="Update current row">✎ Update Current</button>
-      <button id="deleteBtn" class="danger" title="Delete current">🗑 Delete</button>
+      <div class="form-grid full">
+        <div><label>Attendees</label><input id="attendees" placeholder="e.g., Vex, Kara"></div>
+      </div>
+
+      <!-- Submitted By: read-only display + hidden UUID -->
+      <div class="form-grid full">
+        <div>
+          <label>Submitted By</label>
+          <input id="submittedByDisplay" readonly placeholder="—" title="Automatically set">
+          <input id="submittedBy" type="hidden">
+        </div>
+      </div>
+
+      <div class="form-grid full" style="margin-top:8px">
+        <div>
+          <label>Attachments</label>
+          <div id="attachList"></div>
+          <button id="addAttachBtn" class="small-btn" type="button">Add Attachment</button>
+        </div>
+      </div>
+
+      <div class="form-grid full" style="margin-top:8px">
+        <div>
+          <label>Notes / AAR</label>
+          <textarea id="notes" placeholder="Summary, outcomes, lessons learned"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="clearFormBtn" title="Clear the form">Clear Form</button>
+        <button id="saveNewBtn"  title="Save as NEW row">💾 Save New</button>
+        <button id="updateBtn"   title="Update current row">✎ Update Current</button>
+        <button id="deleteBtn" class="danger" title="Delete current">🗑 Delete</button>
+      </div>
     </div>
   </div>
-</div>
+</main>
 
 <!-- ===== Supabase + App Logic ===== -->
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-/* ==== CONFIG ==== */
 const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
 
-/* ==== DOM ==== */
-const $ = (id) => document.getElementById(id)
-const listEl = $('list'), searchEl = $('search'), attachList = $('attachList')
+const $  = (id) => document.getElementById(id)
+const listEl     = $('list')
+const searchEl   = $('search')
+const attachList = $('attachList')
 
-let currentId = null              // id of selected mission (if any)
-let cache = []                    // cached missions list (for search)
-let me = { id:null, name:'' }     // current user
+let currentId = null
+let cache     = []
+let me        = { id:null, name:'' }
 
-/* ==== Helpers ==== */
+/* ---------- Header2 loader ---------- */
+async function loadHeader2(){
+  try{
+    const res = await fetch('header2.html')
+    if(!res.ok) return
+    const html = await res.text()
+    const slot = document.getElementById('site-header')
+    if(slot) slot.innerHTML = html
+  }catch(e){
+    console.warn('header2 load failed', e)
+  }
+}
+
+/* ---------- Helpers ---------- */
 function esc(s=''){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML }
-function isoToLocalInput(iso){ if(!iso) return ''; const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}` }
+function isoToLocalInput(iso){
+  if(!iso) return ''
+  const d=new Date(iso); const p=n=>String(n).padStart(2,'0')
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`
+}
 function localInputToISO(v){ return v ? new Date(v).toISOString() : null }
 
 function addAttachRow(name='', url=''){
   const div=document.createElement('div')
   div.className='attach-item'
-  div.innerHTML=`<input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
-                 <input placeholder="URL (https://...)" value="${esc(url)}">
-                 <button type="button" onclick="this.parentElement.remove()">✕</button>`
+  div.innerHTML = `
+    <input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
+    <input placeholder="URL (https://...)" value="${esc(url)}">
+    <button type="button" onclick="this.parentElement.remove()">✕</button>`
   attachList.appendChild(div)
 }
 function collectAttachments(){
   return [...attachList.querySelectorAll('.attach-item')].map(el=>{
-    const label=el.children[0].value.trim(), url=el.children[1].value.trim()
+    const label = el.children[0].value.trim()
+    const url   = el.children[1].value.trim()
     if(!url) return null
     try{ new URL(url) }catch{ return null }
     return { name: label || (url.split('/').pop() || 'link'), url }
   }).filter(Boolean)
 }
 function clearForm(){
-  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','notes'].forEach(id=>$(id).value='')
-  // submittedBy: default to me
-  $('submittedBy').value = me.id || ''
+  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','notes']
+    .forEach(id=>$(id).value='')
+  $('submittedBy').value        = me.id || ''
   $('submittedByDisplay').value = me.name || ''
-  attachList.innerHTML=''; addAttachRow()
+  attachList.innerHTML=''
+  addAttachRow()
   currentId = null
 }
 
@@ -216,38 +399,44 @@ function payloadFromForm(){
     attendees: $('attendees').value || null,
     notes: $('notes').value || null,
     attachments: collectAttachments()
-  };
-  // Only set submitted_by on create (view-only field)
-  if(!currentId) base.submitted_by = me.id;
-  return base;
+  }
+  if(!currentId) base.submitted_by = me.id
+  return base
 }
 
 function fillForm(row){
-  $('title').value = row.title || ''
-  $('type').value = row.type || ''
-  $('status').value = row.status || ''
-  $('origin').value = row.origin || ''
+  $('title').value   = row.title || ''
+  $('type').value    = row.type || ''
+  $('status').value  = row.status || ''
+  $('origin').value  = row.origin || ''
   $('destination').value = row.destination || ''
-  $('date').value = isoToLocalInput(row.start_time)
-  $('hours').value = row.hours ?? ''
-  $('payout').value = row.payout_auec ?? ''
-  $('tags').value = row.tags || ''
+  $('date').value    = isoToLocalInput(row.start_time)
+  $('hours').value   = row.hours ?? ''
+  $('payout').value  = row.payout_auec ?? ''
+  $('tags').value    = row.tags || ''
   $('attendees').value = row.attendees || ''
-  $('notes').value = row.notes || ''
-  // submitted by (read-only UI)
-  $('submittedBy').value = row.submitted_by || ''
-  $('submittedByDisplay').value = row.submitted_by_name || (row.submitted_by === me.id ? me.name : '')
+  $('notes').value   = row.notes || ''
+
+  $('submittedBy').value        = row.submitted_by || ''
+  $('submittedByDisplay').value = row.submitted_by_name ||
+                                  (row.submitted_by === me.id ? me.name : '')
+
   attachList.innerHTML = ''
   if(Array.isArray(row.attachments) && row.attachments.length){
     row.attachments.forEach(a=>addAttachRow(a.name||'', a.url||''))
-  }else addAttachRow()
+  }else{
+    addAttachRow()
+  }
 }
 
-/* ==== List rendering (uses view for name) ==== */
+/* ---------- List rendering ---------- */
 function renderList(rows){
   listEl.innerHTML = ''
   if(!rows.length){
-    listEl.innerHTML = `<div class="item"><div class="item-title">No missions found</div></div>`
+    listEl.innerHTML = `
+      <div class="item">
+        <div class="item-title">No missions found</div>
+      </div>`
     return
   }
   for(const r of rows){
@@ -256,7 +445,11 @@ function renderList(rows){
     el.innerHTML = `
       <div>
         <div class="item-title">${esc(r.title || '(untitled)')}</div>
-        <div class="item-sub">${esc(r.type || '')} • ${esc(r.status || '')} • ${r.start_time ? new Date(r.start_time).toLocaleString() : ''} • by ${esc(r.submitted_by_name||'–')}</div>
+        <div class="item-sub">
+          ${esc(r.type || '')} • ${esc(r.status || '')} •
+          ${r.start_time ? new Date(r.start_time).toLocaleString() : ''} •
+          by ${esc(r.submitted_by_name || '–')}
+        </div>
       </div>
       <div style="display:flex;gap:6px;align-items:center">
         <span class="badge">${esc(r.id.slice(0,8))}</span>
@@ -268,14 +461,15 @@ function renderList(rows){
 }
 function filterList(){
   const q = (searchEl.value || '').toLowerCase()
-  if(!q) { renderList(cache); return }
-  const rows = cache.filter(r=>
-    `${r.title||''} ${r.tags||''} ${r.status||''} ${r.type||''} ${r.submitted_by_name||''}`.toLowerCase().includes(q)
+  if(!q){ renderList(cache); return }
+  const rows = cache.filter(r =>
+    `${r.title||''} ${r.tags||''} ${r.status||''} ${r.type||''} ${r.submitted_by_name||''}`
+      .toLowerCase().includes(q)
   )
   renderList(rows)
 }
 
-/* ==== Supabase ops (use VIEW for names) ==== */
+/* ---------- Supabase ops ---------- */
 async function loadList(){
   const { data, error } = await sb
     .from('v_missions_detailed')
@@ -301,56 +495,65 @@ async function saveNew(){
   if(!payload.title){ alert('Title is required'); return }
   const { data, error } = await sb.from('missions').insert(payload).select().single()
   if(error){ alert('Save failed: '+error.message); return }
-  await loadList(); currentId = data.id; alert('Saved ✓'); openMission(data.id)
+  await loadList()
+  currentId = data.id
+  alert('Saved ✓')
+  openMission(data.id)
 }
 async function updateCurrent(){
   if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return }
   const payload = payloadFromForm()
-  // Ensure we don't change submitter on updates
   delete payload.submitted_by
   const { error } = await sb.from('missions').update(payload).eq('id', currentId)
   if(error){ alert('Update failed: '+error.message); return }
-  await loadList(); alert('Updated ✓')
+  await loadList()
+  alert('Updated ✓')
 }
 async function deleteCurrent(){
   if(!currentId){ alert('No mission selected.'); return }
   if(!confirm('Delete this mission? This cannot be undone.')) return
   const { error } = await sb.from('missions').delete().eq('id', currentId)
   if(error){ alert('Delete failed: '+error.message); return }
-  await loadList(); clearForm(); alert('Deleted 🗑')
+  await loadList()
+  clearForm()
+  alert('Deleted 🗑')
   const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString())
 }
 
-/* ==== Auth bootstrap (fills me.id + me.name) ==== */
+/* ---------- Auth bootstrap ---------- */
 async function initMe(){
-  const { data: { user } } = await sb.auth.getUser()
+  const { data:{ user } } = await sb.auth.getUser()
   if(!user){
-    // Not signed in -> bounce to auth page if you have one
     location.href = 'auth.html'
     return
   }
   me.id = user.id
-  // Try profiles.display_name, else email prefix
+
   let name = user.email?.split('@')[0] || 'User'
-  const { data: prof } = await sb.from('profiles').select('display_name').eq('user_id', user.id).maybeSingle?.() ?? {}
-  if(prof && prof.display_name) name = prof.display_name
+  const { data: prof, error } = await sb
+    .from('profiles')
+    .select('display_name')
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if(!error && prof && prof.display_name) name = prof.display_name
   me.name = name
-  // Prefill submittedBy for new forms
-  $('submittedBy').value = me.id
+
+  $('submittedBy').value        = me.id
   $('submittedByDisplay').value = me.name
 }
 
-/* ==== Wire up ==== */
-$('addAttachBtn').onclick = ()=>addAttachRow()
-$('clearFormBtn').onclick = ()=>{ if(confirm('Clear the form?')) clearForm() }
-$('saveNewBtn').onclick = saveNew
-$('updateBtn').onclick = updateCurrent
-$('deleteBtn').onclick = deleteCurrent
-$('refresh').onclick = loadList
-$('newBtn').onclick = clearForm
-$('search').oninput = filterList
+/* ---------- Wire up ---------- */
+$('addAttachBtn').onclick  = ()=> addAttachRow()
+$('clearFormBtn').onclick  = ()=> { if(confirm('Clear the form?')) clearForm() }
+$('saveNewBtn').onclick    = saveNew
+$('updateBtn').onclick     = updateCurrent
+$('deleteBtn').onclick     = deleteCurrent
+$('refresh').onclick       = loadList
+$('newBtn').onclick        = clearForm
+$('search').oninput        = filterList
 
-// initial
+/* ---------- Init sequence ---------- */
+await loadHeader2()
 await initMe()
 addAttachRow()
 clearForm()
