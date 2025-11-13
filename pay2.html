@@ -135,18 +135,10 @@ body{
 .field-row{
   display:grid;grid-template-columns:1fr 1fr;gap:8px;
 }
-.field-row-3{
-  display:grid;grid-template-columns:1.1fr 0.9fr 0.9fr;gap:8px;
-}
 input,select{
   background:#050505;border:1px solid var(--border);border-radius:8px;
   padding:7px 9px;color:var(--text);
   font-family:'Play';font-size:var(--fs-table);
-}
-textarea{
-  background:#050505;border:1px solid var(--border);border-radius:8px;
-  padding:7px 9px;color:var(--text);font-family:'Play';font-size:var(--fs-table);
-  resize:vertical;min-height:48px;
 }
 
 /* Toggle switch */
@@ -212,7 +204,7 @@ button:hover{
   overflow:auto;
   max-height:52vh;
 }
-table{width:100%;border-collapse:collapse;font-size:var(--fs-table);min-width:640px;}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table);min-width:780px;}
 th,td{padding:7px 8px;border-bottom:1px solid rgba(214,180,76,.28);text-align:left}
 th{
   font-size:11px;color:var(--accent);background:#080808;font-weight:500;
@@ -222,7 +214,6 @@ th{
 tbody tr:nth-child(even){background:#111}
 tbody tr:hover{background:rgba(214,180,76,.08)}
 td input{width:100%;padding:4px 6px;font-size:12px}
-td select{width:100%;padding:4px 6px;font-size:12px}
 
 /* Mission overrides search row */
 .controls{
@@ -255,7 +246,7 @@ hr.sep{
   margin:6px 0 4px;
 }
 
-/* Small toast for errors/status */
+/* Toast */
 .toast{
   position:fixed;right:16px;bottom:16px;
   background:#111;border:1px solid var(--border);border-radius:10px;
@@ -264,6 +255,37 @@ hr.sep{
   max-width:320px;z-index:40;
 }
 .toast.bad{border-color:var(--bad);color:#ffd0d0}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.7);
+  display:flex;align-items:center;justify-content:center;
+  z-index:80;
+}
+.modal{
+  background:#0b0b0b;
+  border:1px solid var(--border);
+  border-radius:12px;
+  max-width:800px;width:95%;
+  max-height:80vh;
+  overflow:auto;
+  box-shadow:0 0 25px rgba(214,180,76,.4);
+  padding:12px;
+}
+.modal-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:12px;margin-bottom:6px;
+}
+.modal-title{
+  font-size:14px;font-weight:700;color:var(--accent);
+}
+.modal-close{
+  border:none;background:transparent;color:var(--accent);
+  font-size:18px;line-height:1;cursor:pointer;padding:0 4px;
+}
+.modal-body{font-size:12px;}
+.modal-body table{min-width:100%;font-size:12px;}
 </style>
 </head>
 <body>
@@ -346,9 +368,9 @@ hr.sep{
         <div class="field">
           <span>Rounding Style</span>
           <select id="roundMode">
-            <option value="nearest">Round to nearest 10</option>
-            <option value="down">Always round down</option>
-            <option value="up">Always round up</option>
+            <option value="nearest">Round to nearest</option>
+            <option value="down">Always down</option>
+            <option value="up">Always up</option>
             <option value="full">No rounding (full aUEC)</option>
           </select>
         </div>
@@ -356,7 +378,7 @@ hr.sep{
 
       <div class="field-row">
         <div class="field">
-          <span>Rounding Granularity</span>
+          <span>Rounding Granularity (aUEC)</span>
           <input id="roundStep" type="number" min="1" step="1">
         </div>
         <div class="field">
@@ -405,20 +427,9 @@ hr.sep{
     </div>
 
     <div class="block">
-      <div class="field-row">
-        <div class="field">
-          <span>Quick Filter (label / code)</span>
-          <input id="pgSearch" type="search" placeholder="Filter by paygrade, label…">
-        </div>
-        <div class="field">
-          <span>Display Category</span>
-          <select id="pgCategory">
-            <option value="">All Categories</option>
-            <option value="Officer">Officer</option>
-            <option value="Enlisted">Enlisted</option>
-            <option value="Recruit">Recruit</option>
-          </select>
-        </div>
+      <div class="field">
+        <span>Quick Filter (label / code)</span>
+        <input id="pgSearch" type="search" placeholder="Filter by paygrade, label…">
       </div>
     </div>
 
@@ -487,10 +498,13 @@ hr.sep{
           <tr>
             <th>Mission</th>
             <th class="nowrap">Status</th>
+            <th class="text-right nowrap">Payout (aUEC)</th>
             <th class="text-right nowrap">Default Org %</th>
+            <th class="text-right nowrap">Crew Pool After Org</th>
             <th class="text-right nowrap">Override Org %</th>
             <th class="text-center">Locked</th>
             <th class="nowrap">Last Edited By</th>
+            <th class="nowrap">Crew</th>
           </tr>
         </thead>
         <tbody id="missionRows"></tbody>
@@ -511,6 +525,36 @@ hr.sep{
   </div>
 </section>
 
+<!-- Crew modal -->
+<div id="crewModal" class="modal-backdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="crewMissionTitle">Mission Crew</div>
+        <div class="subtle" id="crewMissionMeta"></div>
+      </div>
+      <button class="modal-close" id="crewModalClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="subtle" id="crewSummary" style="margin-bottom:4px"></div>
+      <div class="tableWrap" style="max-height:55vh;margin-top:4px">
+        <table>
+          <thead>
+            <tr>
+              <th>Handle</th>
+              <th>Name</th>
+              <th>Rank / PG</th>
+              <th class="text-right">Weight</th>
+              <th class="text-right">Final Share (aUEC)</th>
+            </tr>
+          </thead>
+          <tbody id="crewRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast" style="display:none"></div>
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -521,24 +565,18 @@ const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
 
 let sb, me;
 
-/* ---------------- Toast helper ---------------- */
+/* Toast */
 function showToast(msg, bad=false){
   const el = $('#toast');
   el.textContent = msg;
-  el.className = 'toast' + (bad?' bad':'');
+  el.className = 'toast' + (bad ? ' bad' : '');
   el.style.display = 'block';
   setTimeout(()=>{ el.style.display='none'; }, 3500);
 }
 
-/* =========================
-   ORG RULES (left panel)
-   Supabase: org_settings (single row)
-   Columns:
-   id (int PK), org_default_pct, org_max_pct, min_crew_payout,
-   min_crew_mode, allow_mission_override, share_mode,
-   round_mode, round_step, residual_mode, updated_by, updated_at
-   ========================= */
+/* ================= ORG RULES ================= */
 const orgRulesDefault = {
+  id: true,
   org_default_pct:20,
   org_max_pct:30,
   min_crew_payout:5000,
@@ -594,8 +632,8 @@ function updateOrgSummary(){
   $('#rulesSummary').innerHTML = `
     Org takes <span class="hilite">${r.org_default_pct}%</span> by default (max
     <span class="hilite">${r.org_max_pct}%</span>).  
-    Crew shares are calculated by <span class="hilite">${shareModeText}</span>,
-    rounded <span class="hilite">${roundModeText}</span> to
+    Crew shares use <span class="hilite">${shareModeText}</span>,
+    rounding <span class="hilite">${roundModeText}</span> to
     <span class="hilite">${r.round_step} aUEC</span> steps; residuals go to
     <span class="hilite">${residualText}</span>.
   `;
@@ -614,7 +652,6 @@ function updateKpiPreview(){
 }
 
 async function loadOrgRulesFromSupabase(){
-  // assume single row; if empty we keep defaults
   const { data, error } = await sb
     .from('org_settings')
     .select('*')
@@ -623,7 +660,7 @@ async function loadOrgRulesFromSupabase(){
     .maybeSingle();
   if(error){
     console.error(error);
-    showToast('Failed to load org rules; using defaults', true);
+    showToast('Failed to load org rules; using defaults',true);
     orgRules = {...orgRulesDefault};
   }else if(data){
     orgRules = {
@@ -646,10 +683,7 @@ async function loadOrgRulesFromSupabase(){
 
 async function saveOrgRulesToSupabase(){
   readOrgRulesFromUI();
-  const payload = {
-    ...orgRules,
-    updated_by: me
-  };
+  const payload = { ...orgRules, updated_by: me };
   const { error } = await sb.from('org_settings').upsert(payload,{onConflict:'id'});
   if(error){
     console.error(error);
@@ -660,7 +694,6 @@ async function saveOrgRulesToSupabase(){
   }
 }
 
-/* listeners for org rules */
 ['orgDefaultPct','orgMaxPct','minCrewPayout','minCrewMode','shareMode',
  'roundMode','roundStep','residualMode'].forEach(id=>{
   $('#'+id).addEventListener('input',()=>{
@@ -669,18 +702,13 @@ async function saveOrgRulesToSupabase(){
   });
 });
 $('#allowMissionOverride').addEventListener('change',updateOrgSummary);
-$('#resetOrgRules').addEventListener('click',async ()=>{
+$('#resetOrgRules').addEventListener('click',()=>{
   orgRules = {...orgRulesDefault};
   loadOrgRulesToUI();
 });
 $('#saveOrgRules').addEventListener('click',saveOrgRulesToSupabase);
 
-/* =========================
-   PAYGRADE WEIGHTS (right)
-   Supabase: pay_grade_rules
-   Columns: paygrade (PK), label, category, weight,
-   default_bonus_pct, default_add_pay
-   ========================= */
+/* ================= PAYGRADE WEIGHTS ================= */
 let paygrades = [];
 let pgFiltered = [];
 
@@ -693,15 +721,15 @@ function renderPaygrades(){
   tbody.innerHTML = pgFiltered.map(pg=>`
     <tr data-code="${pg.paygrade}">
       <td>${pg.paygrade}</td>
-      <td>${pg.label||''}</td>
+      <td>${pg.label || ''}</td>
       <td class="text-right">
-        <input type="number" step="0.1" value="${pg.weight??1}" data-field="weight">
+        <input type="number" step="0.1" value="${pg.weight ?? 1}" data-field="weight">
       </td>
       <td class="text-right">
-        <input type="number" step="0.5" value="${pg.default_bonus_pct??0}" data-field="default_bonus_pct">
+        <input type="number" step="0.5" value="${pg.default_bonus_pct ?? 0}" data-field="default_bonus_pct">
       </td>
       <td class="text-right">
-        <input type="number" step="100" value="${pg.default_add_pay??0}" data-field="default_add_pay">
+        <input type="number" step="100" value="${pg.default_add_pay ?? 0}" data-field="default_add_pay">
       </td>
     </tr>
   `).join('');
@@ -709,9 +737,7 @@ function renderPaygrades(){
 
 function applyPgFilter(){
   const q = ($('#pgSearch').value||'').toLowerCase();
-  const cat = $('#pgCategory').value;
   pgFiltered = paygrades.filter(pg=>{
-    if(cat && pg.category !== cat) return false;
     if(!q) return true;
     const hay = ((pg.paygrade||'')+' '+(pg.label||'')).toLowerCase();
     return hay.includes(q);
@@ -720,16 +746,15 @@ function applyPgFilter(){
 }
 
 $('#pgSearch').addEventListener('input',applyPgFilter);
-$('#pgCategory').addEventListener('change',applyPgFilter);
 
 $('#pgRows').addEventListener('input',e=>{
   const input = e.target;
   const row = input.closest('tr[data-code]');
   if(!row) return;
   const code = row.dataset.code;
-  const field = input.dataset.field;
   const pg = paygrades.find(p=>p.paygrade===code);
   if(!pg) return;
+  const field = input.dataset.field;
   pg[field] = Number(input.value||0);
 });
 
@@ -739,14 +764,14 @@ $('#savePg').addEventListener('click',savePaygradesToSupabase);
 async function loadPaygradesFromSupabase(){
   const { data, error } = await sb
     .from('pay_grade_rules')
-    .select('paygrade,label,category,weight,default_bonus_pct,default_add_pay')
+    .select('paygrade,label,weight,default_bonus_pct,default_add_pay')
     .order('weight',{ascending:false});
   if(error){
     console.error(error);
     showToast('Failed to load pay grades',true);
     paygrades = [];
   }else{
-    paygrades = data||[];
+    paygrades = data || [];
   }
   applyPgFilter();
 }
@@ -766,46 +791,44 @@ async function savePaygradesToSupabase(){
   }
 }
 
-/* =========================
-   MISSION OVERRIDES (bottom)
-   Supabase:
-   - missions (id,title,status,org_cut_percent)
-   - mission_org_cut_overrides(mission_id,org_cut_pct,locked,updated_by,updated_at)
-   ========================= */
+/* ================= MISSIONS & OVERRIDES ================= */
 let missions = [];
 let missionFiltered = [];
 
 function renderMissions(){
   const tbody = $('#missionRows');
   if(!missionFiltered.length){
-    tbody.innerHTML = `<tr><td colspan="6" class="subtle">No missions match filter.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" class="subtle">No missions match filter.</td></tr>`;
     return;
   }
   tbody.innerHTML = missionFiltered.map(m=>{
-    const orgDisplay = (m.override_org_pct!=null ? m.override_org_pct : m.default_org_pct);
+    const effOrg = m.override_org_pct ?? m.default_org_pct ?? orgRules.org_default_pct;
+    const payout = m.payout_auec || 0;
+    const crewPool = payout ? Math.round(payout * (1 - effOrg/100)) : 0;
     const last = m.last_editor || '—';
     return `
       <tr data-id="${m.id}">
         <td>
-          <div class="hilite" style="font-weight:700">${m.title||'Untitled'}</div>
+          <div class="hilite" style="font-weight:700">${m.title || 'Untitled'}</div>
           <div class="subtle">ID: ${m.id}</div>
         </td>
-        <td class="nowrap">
-          <span class="badge">${m.status||''}</span>
-        </td>
-        <td class="text-right mono">${(m.default_org_pct??0).toFixed(1)}%</td>
+        <td class="nowrap"><span class="badge">${m.status || ''}</span></td>
+        <td class="text-right mono">${payout ? fmt(payout) : '—'}</td>
+        <td class="text-right mono">${(m.default_org_pct ?? orgRules.org_default_pct).toFixed(1)}%</td>
+        <td class="text-right mono">${payout ? fmt(crewPool) : '—'}</td>
         <td class="text-right">
           <input type="number" step="0.5" min="0" max="100"
-            value="${m.override_org_pct ?? ''}"
-            placeholder="—"
-            ${m.locked ? 'disabled' : ''}
-            data-field="override_org_pct">
+                 value="${m.override_org_pct ?? ''}"
+                 placeholder="—"
+                 ${m.locked ? 'disabled' : ''}
+                 data-field="override_org_pct">
         </td>
         <td class="text-center">
-          <input type="checkbox" data-field="locked" ${m.locked?'checked':''}>
+          <input type="checkbox" data-field="locked" ${m.locked ? 'checked' : ''}>
         </td>
-        <td class="nowrap">
-          <span class="subtle">${last}</span>
+        <td class="nowrap"><span class="subtle">${last}</span></td>
+        <td class="nowrap text-center">
+          <button class="btn-ghost btn-crew" data-id="${m.id}">View</button>
         </td>
       </tr>
     `;
@@ -817,18 +840,16 @@ function applyMissionFilter(){
   const st = $('#missionStatus').value;
   const band = $('#missionOrgBand').value;
   missionFiltered = missions.filter(m=>{
-    if(st){
-      if((m.status||'') !== st) return false;
-    }
+    if(st && (m.status || '') !== st) return false;
     const effOrg = m.override_org_pct ?? m.default_org_pct ?? orgRules.org_default_pct;
     if(band){
       if(band==='0-10' && !(effOrg>=0 && effOrg<10)) return false;
       if(band==='10-20' && !(effOrg>=10 && effOrg<20)) return false;
       if(band==='20-30' && !(effOrg>=20 && effOrg<30)) return false;
-      if(band==='30+' && !(effOrg>=30)) return false;
+      if(band==='30+'   && !(effOrg>=30)) return false;
     }
     if(!q) return true;
-    const hay = (m.id+' '+(m.title||'')).toLowerCase();
+    const hay = (m.id + ' ' + (m.title||'')).toLowerCase();
     return hay.includes(q);
   });
   renderMissions();
@@ -854,8 +875,9 @@ $('#missionRows').addEventListener('input',e=>{
   const field = input.dataset.field;
   if(field === 'override_org_pct'){
     const v = input.value;
-    m.override_org_pct = v==='' ? null : Number(v);
+    m.override_org_pct = v === '' ? null : Number(v);
     if(!m.last_editor || m.last_editor==='—') m.last_editor = me?.slice(0,8) || 'ADMIN';
+    applyMissionFilter(); // recompute crew pool
   }
 });
 
@@ -876,7 +898,7 @@ $('#missionRows').addEventListener('change',e=>{
 
 $('#clearOverrides').addEventListener('click',async ()=>{
   if(!confirm('Clear ALL mission org % overrides?')) return;
-  const { error } = await sb.from('mission_org_cut_overrides').delete().neq('mission_id', null);
+  const { error } = await sb.from('mission_org_cut_overrides').delete().neq('mission_id',null);
   if(error){
     console.error(error);
     showToast('Failed to clear overrides',true);
@@ -889,10 +911,9 @@ $('#clearOverrides').addEventListener('click',async ()=>{
 $('#saveOverrides').addEventListener('click',saveOverridesToSupabase);
 
 async function loadMissionsFromSupabase(){
-  // Load missions (you can tweak select fields to match your schema)
   const { data: ms, error } = await sb
     .from('missions')
-    .select('id,title,status,org_cut_percent')
+    .select('id,title,status,payout_auec,org_cut_percent,start_time')
     .order('start_time',{ascending:false})
     .limit(200);
   if(error){
@@ -913,7 +934,7 @@ async function loadMissionsFromSupabase(){
       console.error(e2);
       showToast('Failed to load mission overrides',true);
     }else{
-      overrides = ov||[];
+      overrides = ov || [];
     }
   }
   const mapOv = {};
@@ -925,6 +946,7 @@ async function loadMissionsFromSupabase(){
       id: m.id,
       title: m.title,
       status: m.status,
+      payout_auec: m.payout_auec ?? 0,
       default_org_pct: m.org_cut_percent ?? orgRules.org_default_pct,
       override_org_pct: ov.org_cut_pct ?? null,
       locked: ov.locked ?? false,
@@ -940,7 +962,6 @@ async function saveOverridesToSupabase(){
     return;
   }
   const ids = missions.map(m=>m.id);
-  // First clear overrides for these missions, then reinsert current state
   const { error: delErr } = await sb
     .from('mission_org_cut_overrides')
     .delete()
@@ -970,11 +991,99 @@ async function saveOverridesToSupabase(){
   await loadMissionsFromSupabase();
 }
 
-/* =========================
-   INIT
-   ========================= */
+/* ================= CREW MODAL (v_missions_payout_live + v_profiles_detailed) ================= */
+const crewModal = $('#crewModal');
+$('#crewModalClose').addEventListener('click',()=>{ crewModal.style.display='none'; });
+crewModal.addEventListener('click',e=>{
+  if(e.target === crewModal) crewModal.style.display='none';
+});
+
+document.body.addEventListener('click',e=>{
+  const btn = e.target.closest('.btn-crew');
+  if(!btn) return;
+  const id = btn.dataset.id;
+  const m = missions.find(x=>x.id===id);
+  if(m) openCrewModal(m);
+});
+
+async function openCrewModal(mission){
+  $('#crewMissionTitle').textContent = mission.title || 'Mission Crew';
+  const payout = mission.payout_auec || 0;
+  $('#crewMissionMeta').innerHTML = `
+    ID: <span class="hilite">${mission.id}</span> •
+    Status: <span class="hilite">${mission.status || 'unknown'}</span> •
+    Payout: <span class="hilite">${payout ? fmt(payout) : '—'} aUEC</span>
+  `;
+  $('#crewRows').innerHTML = `<tr><td colspan="5" class="subtle">Loading…</td></tr>`;
+  $('#crewSummary').textContent = '';
+  crewModal.style.display = 'flex';
+
+  const { data: payouts, error } = await sb
+    .from('v_missions_payout_live')
+    .select('mission_id,user_id,paygrade,weight,final_share')
+    .eq('mission_id', mission.id);
+
+  if(error){
+    console.error(error);
+    $('#crewRows').innerHTML = `<tr><td colspan="5" class="subtle">Failed to load crew payouts.</td></tr>`;
+    showToast('Failed to load crew payouts',true);
+    return;
+  }
+  if(!payouts || !payouts.length){
+    $('#crewRows').innerHTML = `<tr><td colspan="5" class="subtle">No payout rows for this mission yet.</td></tr>`;
+    $('#crewSummary').textContent = 'No participants recorded.';
+    return;
+  }
+
+  const userIds = [...new Set(payouts.map(p=>p.user_id).filter(Boolean))];
+  let profiles = [];
+  if(userIds.length){
+    const { data: profs, error: e2 } = await sb
+      .from('v_profiles_detailed')
+      .select('user_id,handle,display_name,current_rank')
+      .in('user_id', userIds);
+    if(e2){
+      console.error(e2);
+      showToast('Failed to load profile details',true);
+    }else{
+      profiles = profs || [];
+    }
+  }
+  const profMap = {};
+  profiles.forEach(p=>{ profMap[p.user_id] = p; });
+
+  payouts.sort((a,b)=>(b.final_share||0)-(a.final_share||0));
+
+  let totalShare = 0;
+  const rows = payouts.map(p=>{
+    const prof = profMap[p.user_id] || {};
+    const handle = prof.handle || p.user_id?.slice(0,8) || '—';
+    const name = prof.display_name || '—';
+    const rank = prof.current_rank || p.paygrade || '—';
+    const w = p.weight ?? 0;
+    const share = Number(p.final_share||0);
+    totalShare += share;
+    return `
+      <tr>
+        <td>${handle}</td>
+        <td>${name}</td>
+        <td>${rank}</td>
+        <td class="text-right mono">${w ? w.toFixed(3) : '—'}</td>
+        <td class="text-right mono">${share ? fmt(Math.round(share)) : '—'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  $('#crewRows').innerHTML = rows;
+  $('#crewSummary').innerHTML = `
+    Participants: <span class="hilite">${payouts.length}</span>
+    • Total distributed: <span class="hilite">${fmt(Math.round(totalShare))} aUEC</span>
+  `;
+}
+
+/* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  const session = await requireAuth(); // expects your js/auth.js helpers
+  const session = await requireAuth();
   if(!session) return;
   sb = getSupabase();
   me = session.user.id;
@@ -983,7 +1092,6 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   await loadPaygradesFromSupabase();
   await loadMissionsFromSupabase();
 
-  // auto-activate nav link for this file
   const here = location.pathname.split('/').pop();
   document.querySelectorAll('.nav-btn').forEach(a=>{
     if(a.getAttribute('href')===here){a.classList.add('active');}
