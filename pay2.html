@@ -1056,12 +1056,21 @@ async function openCrewModal(mission){
 
   let totalShare = 0;
   const rows = payouts.map(p=>{
-    const prof   = profMap[p.user_id] || {};
-    const handle = prof.handle || p.user_id?.slice(0,8) || '—';
-    const name   = prof.display_name || prof.handle || '—';
-    const rank   = prof.current_rank_code || prof.current_rank_name || p.paygrade || '—';
-    const w      = p.weight ?? 0;
-    const share  = Number(p.final_share || 0);
+const prof   = profMap[p.user_id] || {};
+const handle = prof.handle || p.user_id?.slice(0,8) || '—';
+
+// If display_name looks like an email, don't show it.
+// You said you only want handle, so we only show a "real" name
+// when it's not an email-looking string.
+let name = '—';
+if (prof.display_name && !prof.display_name.includes('@')) {
+  name = prof.display_name;
+}
+
+const rank  = prof.current_rank_code || prof.current_rank_name || p.paygrade || '—';
+const w     = p.weight ?? 0;
+const share = Number(p.final_share || 0);
+
     totalShare += share;
     return `
       <tr>
