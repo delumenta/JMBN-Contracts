@@ -10,9 +10,10 @@
 
 <style>
 :root{
+  --bg:#050816;
   --blue-deep:#050b29;
-  --blue-mid:#0b1f4d;
-  --blue-soft:#0e2b63;
+  --blue-mid:#0d1f4a;
+  --blue-soft:#193b7a;
   --gold:#f2d675;
   --gold-soft:#d6b44c;
   --text:#f7f1d0;
@@ -25,47 +26,63 @@ body{
   align-items:center;
   justify-content:center;
   background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    var(--blue-deep);
+    radial-gradient(1200px 900px at 10% -10%, rgba(242,214,117,.10), transparent 55%),
+    radial-gradient(900px 700px at 130% 110%, rgba(35,103,192,.35), transparent 60%),
+    var(--bg);
   font-family:'Play',system-ui,sans-serif;
   color:var(--text);
 }
 
-/* Card layout */
+/* Container so you can place multiple cards later if you want */
 .card-sheet{
   padding:24px;
 }
 
+/* Main card */
 .member-card{
-  width:340px;
-  height:210px;
-  border-radius:18px;
-  border:2px solid var(--gold-soft);
-  box-shadow:
-    0 0 25px rgba(0,0,0,.8),
-    0 0 0 1px rgba(242,214,117,.25);
-  background:
-    linear-gradient(135deg, rgba(255,255,255,.09), transparent 40%),
-    radial-gradient(circle at 0% 0%, #132c63 0, #050b29 55%);
+  width:360px;
+  height:220px;
+  border-radius:20px;
   position:relative;
+  padding:16px 18px 14px;
   overflow:hidden;
-  padding:16px 18px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,.16), transparent 48%),
+    radial-gradient(circle at 100% 100%, rgba(242,214,117,.12), transparent 55%),
+    linear-gradient(145deg,#020714,#0b1636 45%,#020714 100%);
+  box-shadow:
+    0 20px 35px rgba(0,0,0,.85),
+    0 0 0 1px rgba(242,214,117,.18);
 }
 
-/* Subtle diagonal shine */
+/* Gold border & corner cut detail */
 .member-card::before{
   content:"";
   position:absolute;
-  inset:-40%;
-  background:linear-gradient(
-    120deg,
-    rgba(255,255,255,0) 30%,
-    rgba(255,255,255,.16) 50%,
-    rgba(255,255,255,0) 70%
-  );
-  opacity:.55;
-  transform:translateX(-40%);
+  inset:0;
+  border-radius:20px;
+  border:1.5px solid rgba(242,214,117,.85);
+  pointer-events:none;
+}
+.member-card::after{
+  content:"";
+  position:absolute;
+  width:80px;height:80px;
+  background:linear-gradient(135deg,rgba(242,214,117,.5),transparent 55%);
+  top:-40px;right:-40px;
+  opacity:.65;
+}
+
+/* Subtle HUD grid */
+.card-grid{
+  position:absolute;
+  inset:8px;
+  opacity:.08;
+  background-image:
+    linear-gradient(to right,#fff 1px,transparent 1px),
+    linear-gradient(to bottom,#fff 1px,transparent 1px);
+  background-size:18px 18px;
+  mix-blend-mode:soft-light;
   pointer-events:none;
 }
 
@@ -77,15 +94,20 @@ body{
   flex-direction:column;
 }
 
-/* Header */
+/* HEADER */
 .card-header{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
+  align-items:center;
   margin-bottom:10px;
 }
+.brand-block{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
 .card-title{
-  font-size:13px;
+  font-size:11px;
   letter-spacing:.32em;
   text-transform:uppercase;
   color:var(--gold);
@@ -94,52 +116,89 @@ body{
   font-size:9px;
   color:rgba(247,241,208,.78);
 }
-.card-badge{
+
+/* Emblem chip */
+.card-chip{
+  width:62px;height:34px;
   border-radius:999px;
-  border:1px solid rgba(242,214,117,.7);
-  padding:4px 10px;
-  font-size:9px;
+  border:1px solid rgba(242,214,117,.85);
+  background:
+    radial-gradient(circle at 20% 0%, #2a4fa0, #050b29 60%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
   text-transform:uppercase;
-  letter-spacing:.12em;
-  background:rgba(5,11,41,.7);
+  letter-spacing:.15em;
+  color:var(--gold);
+  box-shadow:0 0 12px rgba(242,214,117,.45);
 }
 
-/* Fields */
-.fields{
+/* NAME STRIP */
+.name-strip{
+  margin:2px 0 10px;
+  padding:7px 10px 6px;
+  border-radius:10px;
+  border:1px solid rgba(242,214,117,.55);
+  background:linear-gradient(120deg,rgba(242,214,117,.22),rgba(5,11,41,.3));
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.name-label{
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:rgba(5,11,41,.15);
+}
+.name-value{
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+}
+.name-id{
+  font-size:9px;
+  text-align:right;
+  color:rgba(247,241,208,.9);
+}
+
+/* BODY FIELDS */
+.card-body{
   flex:1;
   display:grid;
   grid-template-columns:1.3fr 1fr;
   column-gap:16px;
 }
-.field-col-left{
+
+.field-group{
   display:flex;
   flex-direction:column;
   gap:6px;
 }
 .field-label{
-  font-size:9px;
+  font-size:8px;
   text-transform:uppercase;
-  letter-spacing:.15em;
-  color:rgba(247,241,208,.75);
+  letter-spacing:.18em;
+  color:rgba(247,241,208,.7);
 }
 .field-line{
-  margin-top:1px;
-  border-bottom:1px solid rgba(242,214,117,.5);
+  margin-top:2px;
+  border-bottom:1px solid rgba(242,214,117,.6);
   height:16px;
   font-size:11px;
   display:flex;
   align-items:center;
 }
 
-/* Right side (logo / QR placeholder) */
-.field-col-right{
+/* Right column: logo + QR / tag */
+.right-col{
   display:flex;
   flex-direction:column;
   align-items:flex-end;
   justify-content:space-between;
 }
-.logo-circle{
-  width:64px;height:64px;
+.logo-badge{
+  width:70px;height:70px;
   border-radius:50%;
   border:2px solid var(--gold);
   display:flex;
@@ -148,42 +207,40 @@ body{
   font-size:11px;
   text-align:center;
   padding:6px;
-  background:radial-gradient(circle at 30% 0%, #274b9b, #050b29 60%);
+  background:
+    radial-gradient(circle at 25% 0%, #2b56b3, #050b29 62%);
+  color:var(--gold);
 }
-.qr-placeholder{
-  width:68px;height:68px;
-  border-radius:12px;
-  border:1px dashed rgba(242,214,117,.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:9px;
-  color:rgba(247,241,208,.7);
+.tag-pill{
+  border-radius:999px;
+  border:1px solid rgba(242,214,117,.65);
+  padding:4px 10px;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  background:rgba(5,11,41,.75);
 }
 
-/* Footer strip */
+/* FOOTER */
 .card-footer{
   margin-top:6px;
   padding-top:4px;
-  border-top:1px solid rgba(242,214,117,.3);
+  border-top:1px solid rgba(242,214,117,.4);
   display:flex;
   justify-content:space-between;
   align-items:center;
   font-size:8px;
-  color:rgba(247,241,208,.72);
+  color:rgba(247,241,208,.78);
 }
 .card-footer span:nth-child(2){
-  letter-spacing:.18em;
+  letter-spacing:.20em;
   text-transform:uppercase;
 }
 
-/* Print tweaks */
+/* Print */
 @media print{
   body{background:white;}
-  .member-card{
-    box-shadow:none;
-    margin:0;
-  }
+  .member-card{box-shadow:none;margin:0;}
 }
 </style>
 </head>
@@ -191,52 +248,70 @@ body{
 
 <div class="card-sheet">
   <div class="member-card">
+    <div class="card-grid"></div>
     <div class="member-card-inner">
+
+      <!-- Header -->
       <div class="card-header">
-        <div>
+        <div class="brand-block">
           <div class="card-title">JMBN MEMBER CARD</div>
           <div class="card-sub">Jump-Beacon Mercantile Network</div>
         </div>
-        <div class="card-badge">Verified Member</div>
+        <div class="card-chip">JMBN</div>
       </div>
 
-      <div class="fields">
-        <!-- Left side: text fields -->
-        <div class="field-col-left">
-          <div>
-            <div class="field-label">Name</div>
-            <div class="field-line">&nbsp;</div>
-          </div>
+      <!-- Name strip (you can type over in browser before printing) -->
+      <div class="name-strip">
+        <div>
+          <div class="name-label">Certified Operator</div>
+          <div class="name-value">&nbsp;</div>
+        </div>
+        <div class="name-id">
+          ID: __________________<br>
+          Issue: ____ / ____ / ______
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body">
+        <!-- Left fields -->
+        <div class="field-group">
           <div>
             <div class="field-label">Rank</div>
             <div class="field-line">&nbsp;</div>
           </div>
           <div>
-            <div class="field-label">Role</div>
+            <div class="field-label">Primary Role</div>
             <div class="field-line">&nbsp;</div>
           </div>
           <div>
-            <div class="field-label">Member ID</div>
+            <div class="field-label">Callsign / Handle</div>
+            <div class="field-line">&nbsp;</div>
+          </div>
+          <div>
+            <div class="field-label">Division</div>
             <div class="field-line">&nbsp;</div>
           </div>
         </div>
 
-        <!-- Right side: logo + QR -->
-        <div class="field-col-right">
-          <div class="logo-circle">
-            JMBN<br>LOGO
+        <!-- Right: logo + tag -->
+        <div class="right-col">
+          <div class="logo-badge">
+            JMBN<br>SECTOR<br>OPS
           </div>
-          <div class="qr-placeholder">
-            QR / CODE
+          <div class="tag-pill">
+            Orientation • Onboarding
           </div>
         </div>
       </div>
 
+      <!-- Footer -->
       <div class="card-footer">
         <span>Issued by JMBN Command</span>
-        <span>ORIENTATION • ONBOARDING • DUTY</span>
+        <span>DISCIPLINE • COHERENCE • EXECUTION</span>
         <span>www.jmbn.org</span>
       </div>
+
     </div>
   </div>
 </div>
