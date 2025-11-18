@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>JMBN – Contracts (Hauling Session)</title>
+<title>JMBN – Contracts</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,20 +72,51 @@ body{
   border-radius:999px;
 }
 
-/* Layout */
-.grid{
-  display:grid;
-  grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr);
-  gap:16px;
+/* Top actions */
+.top-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
 }
-@media (max-width:900px){
-  .grid{grid-template-columns:1fr;}
+.status-main{
+  font-size:11px;
+  color:var(--muted);
 }
-.panel{
+.status-main.ok{color:var(--accent);}
+.status-main.err{color:var(--bad);}
+.btn{
+  appearance:none;
+  border:none;
+  outline:none;
+  cursor:pointer;
+  font-family:'Play',system-ui,sans-serif;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  padding:7px 16px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:radial-gradient(circle at top,var(--accent),#614c14);
+  color:#000;
+  box-shadow:0 0 12px rgba(242,214,117,.35);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.btn-secondary{
+  background:transparent;
+  color:var(--accent);
+  box-shadow:none;
+}
+
+/* Saved sessions layout */
+.sessions-panel{
   background:linear-gradient(135deg,rgba(214,180,76,.05),transparent);
-  border:1px solid rgba(214,180,76,.4);
   border-radius:16px;
-  padding:14px 14px 16px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:14px;
   box-shadow:0 0 20px rgba(0,0,0,.7);
 }
 .panel-header{
@@ -105,7 +136,123 @@ body{
   color:var(--muted);
 }
 
-/* Session info */
+/* Cards */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:12px;
+}
+.card{
+  border-radius:14px;
+  border:1px solid rgba(214,180,76,.55);
+  background:rgba(5,5,5,.9);
+  padding:10px;
+  font-size:12px;
+}
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+.card-title{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--accent);
+}
+.card-sub{
+  font-size:11px;
+  color:var(--muted);
+}
+.contract-block{
+  border-top:1px dashed rgba(214,180,76,.35);
+  padding-top:6px;
+  margin-top:6px;
+}
+.contract-name{
+  font-size:12px;
+  color:var(--accent);
+}
+.contract-line{
+  font-size:11px;
+  color:var(--muted);
+}
+.badge{
+  display:inline-block;
+  padding:2px 6px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.7);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+}
+
+/* ===== Big Intake Modal ===== */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.modal-backdrop.open{
+  display:flex;
+}
+.modal{
+  width:100%;
+  max-width:1100px;
+  max-height:90vh;
+  background:radial-gradient(circle at top,rgba(242,214,117,.12),#050505);
+  border-radius:18px;
+  border:1px solid var(--border);
+  padding:12px 14px 14px;
+  box-shadow:0 0 24px rgba(0,0,0,.9);
+  display:flex;
+  flex-direction:column;
+}
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+.modal-title{
+  font-size:13px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.modal-body{
+  flex:1;
+  overflow:auto;
+}
+.modal-footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:8px;
+}
+
+/* Inside intake modal: two panels */
+.grid-intake{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr);
+  gap:12px;
+}
+@media (max-width:900px){
+  .grid-intake{grid-template-columns:1fr;}
+}
+.panel-inner{
+  background:linear-gradient(135deg,rgba(214,180,76,.05),transparent);
+  border:1px solid rgba(214,180,76,.4);
+  border-radius:14px;
+  padding:10px;
+}
+
+/* Session & screenshot inside modal */
 .session-kpis{
   display:flex;
   flex-wrap:wrap;
@@ -131,15 +278,14 @@ body{
   font-size:13px;
 }
 
-/* Upload / paste */
 .upload-box{
   border:1px dashed rgba(214,180,76,.55);
   border-radius:12px;
-  padding:10px;
+  padding:8px;
   background:rgba(5,5,5,.75);
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:6px;
 }
 .upload-row{
   display:flex;
@@ -151,41 +297,6 @@ input[type="file"]{
   font-size:var(--fs-small);
   color:var(--muted);
 }
-.btn{
-  appearance:none;
-  border:none;
-  outline:none;
-  cursor:pointer;
-  font-family:inherit;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  padding:7px 14px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:radial-gradient(circle at top,var(--accent),#614c14);
-  color:#000;
-  box-shadow:0 0 12px rgba(242,214,117,.35);
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-}
-.btn-secondary{
-  background:transparent;
-  color:var(--accent);
-  box-shadow:none;
-}
-.btn-ghost{
-  background:transparent;
-  color:var(--accent);
-  border-color:rgba(214,180,76,.4);
-  box-shadow:none;
-}
-.btn:disabled{
-  opacity:.4;
-  cursor:default;
-  box-shadow:none;
-}
 .status{
   font-size:11px;
   color:var(--muted);
@@ -193,16 +304,15 @@ input[type="file"]{
 .status-ok{color:var(--accent);}
 .status-err{color:var(--bad);}
 
-/* Preview + OCR */
 .preview-wrap{
   display:flex;
-  gap:10px;
+  gap:8px;
   align-items:flex-start;
-  margin-top:8px;
+  margin-top:6px;
 }
 .preview{
-  flex:0 0 190px;
-  max-height:190px;
+  flex:0 0 170px;
+  max-height:170px;
   border-radius:10px;
   border:1px solid rgba(214,180,76,.45);
   overflow:hidden;
@@ -215,8 +325,8 @@ input[type="file"]{
 }
 .ocr-raw{
   flex:1;
-  min-height:90px;
-  max-height:190px;
+  min-height:80px;
+  max-height:170px;
   background:#050505;
   border-radius:10px;
   border:1px solid rgba(214,180,76,.25);
@@ -227,12 +337,12 @@ input[type="file"]{
   overflow:auto;
 }
 
-/* Contract editor */
+/* Contract editor inside modal */
 .contract-meta{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:8px 10px;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 @media (max-width:700px){
   .contract-meta{grid-template-columns:1fr 1fr;}
@@ -260,15 +370,12 @@ select{
   font-family:inherit;
 }
 input::placeholder{color:#75653a;}
-select{
-  padding-right:24px;
-}
+select{padding-right:24px;}
 
-/* Cargo card */
 .cargo-list{
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:8px;
 }
 .cargo-card{
   border-radius:12px;
@@ -289,16 +396,6 @@ select{
   letter-spacing:.16em;
   color:var(--accent);
 }
-.badge{
-  display:inline-block;
-  padding:2px 6px;
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.7);
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.14em;
-}
-.badge-contract{color:var(--accent);}
 .subtable{
   margin-top:4px;
 }
@@ -333,73 +430,17 @@ select{
   font-family:inherit;
   font-size:11px;
 }
-.small-input:focus{
-  outline:none;
-}
-
-/* Actions */
+.small-input:focus{outline:none;}
 .form-actions{
-  margin-top:10px;
+  margin-top:8px;
   display:flex;
   flex-wrap:wrap;
   gap:8px;
 }
 
-/* Modal */
-.modal-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.85);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-}
-.modal-backdrop.open{
-  display:flex;
-}
-.modal{
-  width:100%;
+/* Small confirm modal (already had) */
+#confirmModal .modal{
   max-width:420px;
-  background:radial-gradient(circle at top,rgba(242,214,117,.15),#050505);
-  border-radius:18px;
-  border:1px solid var(--border);
-  padding:14px 16px 16px;
-  box-shadow:0 0 24px rgba(0,0,0,.9);
-}
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px;
-}
-.modal-title{
-  font-size:13px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--accent);
-}
-.modal-body{
-  font-size:12px;
-  color:var(--muted);
-  margin-bottom:10px;
-}
-.modal-body dl{margin:0;}
-.modal-body dt{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  color:var(--muted);
-}
-.modal-body dd{
-  margin:0 0 6px;
-  font-size:12px;
-  color:var(--text);
-}
-.modal-footer{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
 }
 </style>
 </head>
@@ -417,92 +458,123 @@ select{
     <div class="brand-tag">OPS // CONTRACT INTAKE</div>
   </header>
 
-  <div class="grid">
-    <!-- LEFT: session + screenshot intake -->
-    <section class="panel">
-      <div class="panel-header">
-        <div class="panel-title">Session & Screenshot Intake</div>
-        <div class="panel-meta">Session auto-created • Paste or upload contract</div>
-      </div>
+  <!-- Top actions -->
+  <div class="top-actions">
+    <div class="status-main" id="mainStatus">Initialising…</div>
+    <button class="btn" type="button" id="openIntakeBtn">+ New Contract / Scan</button>
+  </div>
 
-      <div class="session-kpis">
-        <div class="kpi">
-          <div class="kpi-label">Session ID</div>
-          <div class="kpi-value" id="kpiSessionId">—</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-label">Submitted By</div>
-          <div class="kpi-value" id="kpiSubmittedBy">—</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-label">Active Contract</div>
-          <div class="kpi-value" id="kpiActiveContract">New Contract</div>
-        </div>
-      </div>
+  <!-- Saved sessions -->
+  <section class="sessions-panel">
+    <div class="panel-header">
+      <div class="panel-title">Saved Sessions</div>
+      <div class="panel-meta">Each card shows a hauling session and its contracts</div>
+    </div>
+    <div class="cards-grid" id="sessionsGrid">
+      <!-- Cards injected here -->
+    </div>
+  </section>
+</div>
 
-      <div class="upload-box" id="pasteZone">
-        <div class="upload-row">
-          <input type="file" id="screenshotInput" accept="image/*">
-          <button class="btn" id="scanBtn">Scan Image</button>
-          <button class="btn btn-secondary" id="clearBtn" type="button">Clear</button>
-        </div>
-        <div class="status" id="statusLine">
-          Tip: Use <b>Win+Shift+S</b> in-game, copy the contract, click here and press <b>Ctrl+V</b>.
-        </div>
-      </div>
+<!-- ===== Intake Modal (big – screenshot + editor) ===== -->
+<div class="modal-backdrop" id="intakeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Contract – Session Intake</div>
+      <button type="button" class="btn-secondary" id="intakeCloseBtn">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-intake">
+        <!-- Left: Session & screenshot -->
+        <section class="panel-inner">
+          <div class="panel-header">
+            <div class="panel-title">Session & Screenshot Intake</div>
+            <div class="panel-meta">Session is auto-created • Paste or upload contract</div>
+          </div>
 
-      <div class="preview-wrap">
-        <div class="preview">
-          <img id="previewImg" alt="Screenshot preview" style="display:none;">
-        </div>
-        <div class="ocr-raw" id="ocrOutput"></div>
-      </div>
-    </section>
+          <div class="session-kpis">
+            <div class="kpi">
+              <div class="kpi-label">Session ID</div>
+              <div class="kpi-value" id="kpiSessionId">—</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Submitted By</div>
+              <div class="kpi-value" id="kpiSubmittedBy">—</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Active Contract</div>
+              <div class="kpi-value" id="kpiActiveContract">New Contract</div>
+            </div>
+          </div>
 
-    <!-- RIGHT: contract + cargo editor -->
-    <section class="panel">
-      <div class="panel-header">
-        <div class="panel-title">Contract Editor</div>
-        <div class="panel-meta">Auto-filled from OCR • Multiple cargo types, load & offload</div>
-      </div>
+          <div class="upload-box" id="pasteZone">
+            <div class="upload-row">
+              <input type="file" id="screenshotInput" accept="image/*">
+              <button class="btn" id="scanBtn">Scan Image</button>
+              <button class="btn btn-secondary" id="clearBtn" type="button">Clear</button>
+            </div>
+            <div class="status" id="statusLine">
+              Tip: Use <b>Win+Shift+S</b> in-game, copy the contract, click here and press <b>Ctrl+V</b>.
+            </div>
+          </div>
 
-      <div class="contract-meta">
-        <div class="form-field">
-          <label for="contractName">Contract Name</label>
-          <input id="contractName" type="text" placeholder="e.g. Covalex Waste Run">
-        </div>
-        <div class="form-field">
-          <label for="contractType">Type</label>
-          <select id="contractType">
-            <option value="hauling">Hauling</option>
-            <option value="delivery">Delivery</option>
-            <option value="salvage">Salvage</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label for="reward">Reward (aUEC)</label>
-          <input id="reward" type="number" min="0" step="1" placeholder="42000">
-        </div>
-      </div>
+          <div class="preview-wrap">
+            <div class="preview">
+              <img id="previewImg" alt="Screenshot preview" style="display:none;">
+            </div>
+            <div class="ocr-raw" id="ocrOutput"></div>
+          </div>
+        </section>
 
-      <div class="cargo-list" id="cargoList">
-        <!-- Cargo cards injected here -->
-      </div>
+        <!-- Right: contract editor -->
+        <section class="panel-inner">
+          <div class="panel-header">
+            <div class="panel-title">Contract Editor</div>
+            <div class="panel-meta">Auto-filled from OCR • Multi-cargo, load & offload</div>
+          </div>
 
-      <div class="form-actions">
-        <button class="btn btn-secondary" type="button" id="addCargoBtn">+ Add Cargo Type</button>
-        <button class="btn" type="button" id="saveContractBtn">Save Contract to DB</button>
+          <div class="contract-meta">
+            <div class="form-field">
+              <label for="contractName">Contract Name</label>
+              <input id="contractName" type="text" placeholder="e.g. Covalex Waste Run">
+            </div>
+            <div class="form-field">
+              <label for="contractType">Type</label>
+              <select id="contractType">
+                <option value="hauling">Hauling</option>
+                <option value="delivery">Delivery</option>
+                <option value="salvage">Salvage</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="reward">Reward (aUEC)</label>
+              <input id="reward" type="number" min="0" step="1" placeholder="42000">
+            </div>
+          </div>
+
+          <div class="cargo-list" id="cargoList">
+            <!-- Cargo cards injected here -->
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-secondary" type="button" id="addCargoBtn">+ Add Cargo Type</button>
+            <button class="btn" type="button" id="saveContractBtn">Save Contract to DB</button>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" type="button" id="intakeCancelBtn">Close</button>
+    </div>
   </div>
 </div>
 
-<!-- Confirm Contract Modal -->
+<!-- ===== Small Confirm Modal ===== -->
 <div class="modal-backdrop" id="confirmModal">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title">Confirm Detected Contract</div>
-      <button type="button" class="btn-ghost" id="modalCloseBtn" title="Close">✕</button>
+      <button type="button" class="btn-secondary" id="modalCloseBtn">✕</button>
     </div>
     <div class="modal-body">
       <p style="margin-top:0;margin-bottom:6px;">
@@ -524,18 +596,26 @@ select{
   </div>
 </div>
 
-<!-- Libraries -->
+<!-- ===== Scripts ===== -->
+<!-- Your existing auth / supabase client -->
+<script src="js/auth.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-(async function(){
-  // ====== CONFIG: FILL THESE IN ======
-  const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co";
-  const SUPABASE_ANON_KEY = "YOUR-ANON-KEY";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+(function(){
+  // We assume js/auth.js created window.supabase
+  const supabase = window.supabase;
 
-  // ====== DOM ELEMENTS ======
+  const mainStatus      = document.getElementById('mainStatus');
+  const openIntakeBtn   = document.getElementById('openIntakeBtn');
+  const sessionsGrid    = document.getElementById('sessionsGrid');
+
+  const intakeModal     = document.getElementById('intakeModal');
+  const intakeCloseBtn  = document.getElementById('intakeCloseBtn');
+  const intakeCancelBtn = document.getElementById('intakeCancelBtn');
+
+  // intake elements
   const screenshotInput = document.getElementById('screenshotInput');
   const scanBtn         = document.getElementById('scanBtn');
   const clearBtn        = document.getElementById('clearBtn');
@@ -555,7 +635,7 @@ select{
   const addCargoBtn     = document.getElementById('addCargoBtn');
   const saveContractBtn = document.getElementById('saveContractBtn');
 
-  // Modal
+  // small confirm modal
   const confirmModal    = document.getElementById('confirmModal');
   const modalReward     = document.getElementById('modalReward');
   const modalContractor = document.getElementById('modalContractor');
@@ -564,351 +644,336 @@ select{
   const modalCancelBtn  = document.getElementById('modalCancelBtn');
   const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
-  // ====== STATE ======
   let currentUser = null;
   let currentSessionId = null;
 
-  // in-memory model for one contract
-  // { cargoTypes: [ { id, name, loadings: [{location,scu}], offloadings: [...] } ] }
-  let activeContractModel = {
-    contractorName: null,
-    reward: null,
-    legs: [],      // raw parsed legs
-    cargoTypes: [] // structured for UI/DB
+  const activeContractModel = {
+    contractorName:null,
+    reward:null,
+    legs:[],
+    cargoTypes:[]
   };
 
-  function setStatus(text, type){
+  function setMainStatus(text, type){
+    mainStatus.textContent = text;
+    mainStatus.classList.remove('ok','err');
+    if(type==='ok') mainStatus.classList.add('ok');
+    if(type==='err') mainStatus.classList.add('err');
+  }
+  function setStatus(text,type){
     statusLine.textContent = text;
     statusLine.classList.remove('status-ok','status-err');
-    if(type === 'ok') statusLine.classList.add('status-ok');
-    if(type === 'err') statusLine.classList.add('status-err');
+    if(type==='ok') statusLine.classList.add('status-ok');
+    if(type==='err') statusLine.classList.add('status-err');
+  }
+
+  function openIntake(){
+    intakeModal.classList.add('open');
+  }
+  function closeIntake(){
+    intakeModal.classList.remove('open');
+  }
+
+  function openConfirmModal(header, legs, cargoTypes){
+    modalReward.textContent     = header.reward ? Number(header.reward).toLocaleString() + ' aUEC' : '—';
+    modalContractor.textContent = header.contractor || '—';
+    if(legs.length){
+      const totalSCU = legs.reduce((s,l)=>s+(l.required||0),0);
+      const cargoNames = cargoTypes.map(c=>c.name).join(', ');
+      modalLegs.textContent = `${legs.length} leg(s) • ${totalSCU} SCU • Cargo: ${cargoNames}`;
+    }else{
+      modalLegs.textContent = 'None detected';
+    }
+    confirmModal.classList.add('open');
+  }
+  function closeConfirm(){
+    confirmModal.classList.remove('open');
   }
 
   function loadPreviewFromBlob(blob){
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = e=>{
       previewImg.src = e.target.result;
       previewImg.style.display = 'block';
     };
     reader.readAsDataURL(blob);
   }
 
-  // ====== SUPABASE HELPER ======
+  // === Auth / Session ===
+  async function waitForUser(){
+    return new Promise(resolve=>{
+      const sub = supabase.auth.onAuthStateChange((evt, session)=>{
+        if(session?.user){
+          sub.data.subscription.unsubscribe();
+          resolve(session.user);
+        }
+      });
+      supabase.auth.getUser().then(({data})=>{
+        if(data?.user){
+          sub.data.subscription.unsubscribe();
+          resolve(data.user);
+        }
+      });
+    });
+  }
+
   async function initUserAndSession(){
-    const { data, error } = await supabase.auth.getUser();
-    if(error || !data.user){
-      setStatus('Not logged in. Supabase auth required.', 'err');
+    currentUser = await waitForUser();
+    if(!currentUser){
+      setMainStatus('Not logged in. Please log in first.', 'err');
       return;
     }
-    currentUser = data.user;
+    setMainStatus('Logged in as ' + (currentUser.email || currentUser.id), 'ok');
     kpiSubmittedBy.textContent = currentUser.email || currentUser.id;
 
-    // Create a new session immediately
-    const { data: session, error: sErr } = await supabase
+    // create a fresh session
+    const { data: session, error } = await supabase
       .from('sessions')
       .insert({ submitted_by: currentUser.id })
       .select()
       .single();
 
-    if(sErr){
-      console.error(sErr);
-      setStatus('Failed to create session in DB.', 'err');
+    if(error){
+      console.error(error);
+      setMainStatus('Failed to create session in DB.', 'err');
       return;
     }
     currentSessionId = session.id;
     kpiSessionId.textContent = session.id;
     setStatus('Session created. Ready to scan contracts.', 'ok');
+
+    await loadSessions();
   }
 
-  // ====== OCR PARSING ======
+  // === Parsing helpers ===
   function parseHeader(text){
     const header = { reward:null, contractor:null };
-
     let m = text.match(/Reward\s+(?:[a-z]\s*)?([\d,]+)/i);
     if(m && m[1]) header.reward = m[1].replace(/,/g,'');
-
     m = text.match(/Contracted\s+By\s+(.+)/i);
     if(m && m[1]) header.contractor = m[1].trim();
-
     return header;
   }
 
-  // Parse "Collect X from ... . Deliver 0/2 SCU to ... ."
   function parseLegs(text){
     const cleaned = text.replace(/\r/g,'');
     const collectRe = /Collect\s+(.+?)\s+from\s+(.+?)\./gi;
     const deliverRe = /Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
 
-    const collects = [];
-    const delivers = [];
-
+    const collects=[]; const delivers=[];
     let m;
-    while((m = collectRe.exec(cleaned)) !== null){
-      collects.push({
-        cargoType: m[1].trim(),
-        origin:    m[2].trim()
-      });
+    while((m=collectRe.exec(cleaned))!==null){
+      collects.push({ cargoType:m[1].trim(), origin:m[2].trim() });
     }
-    while((m = deliverRe.exec(cleaned)) !== null){
+    while((m=deliverRe.exec(cleaned))!==null){
       delivers.push({
-        delivered:   parseInt(m[1],10),
-        required:    parseInt(m[2],10),
-        destination: m[3].trim()
+        delivered:parseInt(m[1],10),
+        required:parseInt(m[2],10),
+        destination:m[3].trim()
       });
     }
-    const legs = [];
-    const count = Math.min(collects.length, delivers.length);
-    for(let i=0;i<count;i++){
+    const legs=[];
+    const n = Math.min(collects.length,delivers.length);
+    for(let i=0;i<n;i++){
       legs.push({
-        leg:         i+1,
-        cargoType:   collects[i].cargoType,
-        origin:      collects[i].origin,
-        destination: delivers[i].destination,
-        delivered:   delivers[i].delivered,
-        required:    delivers[i].required
+        leg:i+1,
+        cargoType:collects[i].cargoType,
+        origin:collects[i].origin,
+        destination:delivers[i].destination,
+        delivered:delivers[i].delivered,
+        required:delivers[i].required
       });
     }
     return legs;
   }
 
   function buildCargoModelFromLegs(legs){
-    const map = new Map(); // cargoType -> {name, loadings, offloadings}
-
+    const map = new Map();
     for(const leg of legs){
       const key = leg.cargoType || 'Unknown';
       if(!map.has(key)){
-        map.set(key, {
-          name: key,
-          loadings: [],
-          offloadings: []
-        });
+        map.set(key,{ name:key, loadings:[], offloadings:[] });
       }
       const entry = map.get(key);
-
-      // For now, assume each leg's required SCU is moved once from origin to destination
-      entry.loadings.push({
-        location: leg.origin,
-        scu: leg.required
-      });
-      entry.offloadings.push({
-        location: leg.destination,
-        scu: leg.required
-      });
+      entry.loadings.push({ location:leg.origin, scu:leg.required });
+      entry.offloadings.push({ location:leg.destination, scu:leg.required });
     }
-
     return Array.from(map.values());
   }
 
-  function openConfirmModal(header, legs, cargoTypes){
-    modalReward.textContent     = header.reward ? Number(header.reward).toLocaleString() + ' aUEC' : '—';
-    modalContractor.textContent = header.contractor || '—';
-
-    if(legs.length){
-      const totalSCU = legs.reduce((sum,l)=>sum + (l.required || 0), 0);
-      const cargoNames = cargoTypes.map(c=>c.name).join(', ');
-      modalLegs.textContent = `${legs.length} leg(s) • ${totalSCU} SCU • Cargo: ${cargoNames}`;
-    } else {
-      modalLegs.textContent = 'None detected';
-    }
-
-    confirmModal.classList.add('open');
-  }
-  function closeConfirmModal(){
-    confirmModal.classList.remove('open');
-  }
-
-  // ====== UI RENDERING: CARGO CARDS ======
+  // === Render cargo editor ===
   function renderCargoList(){
-    cargoList.innerHTML = '';
-    activeContractModel.cargoTypes.forEach((cargo, idx) => {
-      const card = document.createElement('div');
-      card.className = 'cargo-card';
-      card.dataset.index = idx;
+    cargoList.innerHTML='';
+    activeContractModel.cargoTypes.forEach((cargo,idx)=>{
+      const card=document.createElement('div');
+      card.className='cargo-card';
 
-      const header = document.createElement('div');
-      header.className = 'cargo-header';
+      const header=document.createElement('div');
+      header.className='cargo-header';
 
-      const title = document.createElement('div');
-      title.className = 'cargo-title';
-      title.textContent = cargo.name || `Cargo ${idx+1}`;
+      const title=document.createElement('div');
+      title.className='cargo-title';
+      title.textContent=cargo.name || `Cargo ${idx+1}`;
 
-      const right = document.createElement('div');
-      right.style.display = 'flex';
-      right.style.alignItems = 'center';
-      right.style.gap = '6px';
-
-      const badge = document.createElement('span');
-      badge.className = 'badge badge-contract';
-      badge.textContent = 'CARGO';
-
-      const delBtn = document.createElement('button');
-      delBtn.type = 'button';
-      delBtn.className = 'btn-ghost';
-      delBtn.textContent = 'Remove';
-      delBtn.style.fontSize = '10px';
-      delBtn.addEventListener('click', () => {
+      const right=document.createElement('div');
+      right.style.display='flex';
+      right.style.alignItems='center';
+      right.style.gap='6px';
+      const badge=document.createElement('span');
+      badge.className='badge';
+      badge.textContent='CARGO';
+      const delBtn=document.createElement('button');
+      delBtn.type='button';
+      delBtn.className='btn-secondary';
+      delBtn.textContent='Remove';
+      delBtn.style.fontSize='10px';
+      delBtn.addEventListener('click',()=>{
         activeContractModel.cargoTypes.splice(idx,1);
         renderCargoList();
       });
-
       right.appendChild(badge);
       right.appendChild(delBtn);
       header.appendChild(title);
       header.appendChild(right);
       card.appendChild(header);
 
-      // editable cargo name
-      const nameField = document.createElement('div');
-      nameField.className = 'form-field';
-      const nameLabel = document.createElement('label');
-      nameLabel.textContent = 'Cargo Type Name';
-      const nameInput = document.createElement('input');
-      nameInput.type = 'text';
-      nameInput.value = cargo.name;
-      nameInput.placeholder = 'Waste / Scrap / Boxes';
-      nameInput.addEventListener('input', e => {
-        cargo.name = e.target.value;
-      });
+      const nameField=document.createElement('div');
+      nameField.className='form-field';
+      const nameLabel=document.createElement('label');
+      nameLabel.textContent='Cargo Type Name';
+      const nameInput=document.createElement('input');
+      nameInput.type='text';
+      nameInput.value=cargo.name;
+      nameInput.placeholder='Waste / Scrap / Boxes';
+      nameInput.addEventListener('input',e=>cargo.name=e.target.value);
       nameField.appendChild(nameLabel);
       nameField.appendChild(nameInput);
       card.appendChild(nameField);
 
-      // Loading subtable
-      const loadWrap = document.createElement('div');
-      loadWrap.className = 'subtable';
-      const loadTitle = document.createElement('div');
-      loadTitle.className = 'subtable-title';
-      loadTitle.textContent = 'Loading';
+      // Loading table
+      const loadWrap=document.createElement('div');
+      loadWrap.className='subtable';
+      const loadTitle=document.createElement('div');
+      loadTitle.className='subtable-title';
+      loadTitle.textContent='Loading';
       loadWrap.appendChild(loadTitle);
-
-      const loadTable = document.createElement('table');
-      const loadHead = document.createElement('thead');
-      loadHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+      const loadTable=document.createElement('table');
+      const loadHead=document.createElement('thead');
+      loadHead.innerHTML='<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
       loadTable.appendChild(loadHead);
-      const loadBody = document.createElement('tbody');
-
-      cargo.loadings.forEach((row, li) => {
-        const tr = document.createElement('tr');
-
-        const tdLoc = document.createElement('td');
-        const inLoc = document.createElement('input');
-        inLoc.className = 'small-input';
-        inLoc.value = row.location;
-        inLoc.addEventListener('input', e => row.location = e.target.value);
+      const loadBody=document.createElement('tbody');
+      cargo.loadings.forEach((row,li)=>{
+        const tr=document.createElement('tr');
+        const tdLoc=document.createElement('td');
+        const inLoc=document.createElement('input');
+        inLoc.className='small-input';
+        inLoc.value=row.location;
+        inLoc.addEventListener('input',e=>row.location=e.target.value);
         tdLoc.appendChild(inLoc);
         tr.appendChild(tdLoc);
 
-        const tdScu = document.createElement('td');
-        const inScu = document.createElement('input');
-        inScu.className = 'small-input';
-        inScu.type = 'number';
-        inScu.value = row.scu;
-        inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+        const tdScu=document.createElement('td');
+        const inScu=document.createElement('input');
+        inScu.className='small-input';
+        inScu.type='number';
+        inScu.value=row.scu;
+        inScu.addEventListener('input',e=>row.scu=Number(e.target.value||0));
         tdScu.appendChild(inScu);
         tr.appendChild(tdScu);
 
-        const tdDel = document.createElement('td');
-        const rm = document.createElement('button');
-        rm.type = 'button';
-        rm.className = 'btn-ghost';
-        rm.textContent = '✕';
-        rm.style.fontSize = '10px';
-        rm.addEventListener('click', () => {
+        const tdDel=document.createElement('td');
+        const rm=document.createElement('button');
+        rm.type='button';
+        rm.className='btn-secondary';
+        rm.textContent='✕';
+        rm.style.fontSize='10px';
+        rm.addEventListener('click',()=>{
           cargo.loadings.splice(li,1);
           renderCargoList();
         });
         tdDel.appendChild(rm);
         tr.appendChild(tdDel);
-
         loadBody.appendChild(tr);
       });
-
-      const addLoadTr = document.createElement('tr');
-      const addLoadTd = document.createElement('td');
-      addLoadTd.colSpan = 3;
-      const addLoadBtn = document.createElement('button');
-      addLoadBtn.type = 'button';
-      addLoadBtn.className = 'btn-ghost';
-      addLoadBtn.textContent = '+ Add Loading Row';
-      addLoadBtn.style.fontSize = '10px';
-      addLoadBtn.addEventListener('click', () => {
-        cargo.loadings.push({location:'', scu:0});
+      const addLoadTr=document.createElement('tr');
+      const addLoadTd=document.createElement('td');
+      addLoadTd.colSpan=3;
+      const addLoadBtn=document.createElement('button');
+      addLoadBtn.type='button';
+      addLoadBtn.className='btn-secondary';
+      addLoadBtn.textContent='+ Add Loading Row';
+      addLoadBtn.style.fontSize='10px';
+      addLoadBtn.addEventListener('click',()=>{
+        cargo.loadings.push({location:'',scu:0});
         renderCargoList();
       });
       addLoadTd.appendChild(addLoadBtn);
       addLoadTr.appendChild(addLoadTd);
       loadBody.appendChild(addLoadTr);
-
       loadTable.appendChild(loadBody);
       loadWrap.appendChild(loadTable);
       card.appendChild(loadWrap);
 
-      // Offloading subtable
-      const offWrap = document.createElement('div');
-      offWrap.className = 'subtable';
-      const offTitle = document.createElement('div');
-      offTitle.className = 'subtable-title';
-      offTitle.textContent = 'Offloading';
+      // Offloading table
+      const offWrap=document.createElement('div');
+      offWrap.className='subtable';
+      const offTitle=document.createElement('div');
+      offTitle.className='subtable-title';
+      offTitle.textContent='Offloading';
       offWrap.appendChild(offTitle);
-
-      const offTable = document.createElement('table');
-      const offHead = document.createElement('thead');
-      offHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+      const offTable=document.createElement('table');
+      const offHead=document.createElement('thead');
+      offHead.innerHTML='<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
       offTable.appendChild(offHead);
-      const offBody = document.createElement('tbody');
-
-      cargo.offloadings.forEach((row, oi) => {
-        const tr = document.createElement('tr');
-
-        const tdLoc = document.createElement('td');
-        const inLoc = document.createElement('input');
-        inLoc.className = 'small-input';
-        inLoc.value = row.location;
-        inLoc.addEventListener('input', e => row.location = e.target.value);
+      const offBody=document.createElement('tbody');
+      cargo.offloadings.forEach((row,oi)=>{
+        const tr=document.createElement('tr');
+        const tdLoc=document.createElement('td');
+        const inLoc=document.createElement('input');
+        inLoc.className='small-input';
+        inLoc.value=row.location;
+        inLoc.addEventListener('input',e=>row.location=e.target.value);
         tdLoc.appendChild(inLoc);
         tr.appendChild(tdLoc);
 
-        const tdScu = document.createElement('td');
-        const inScu = document.createElement('input');
-        inScu.className = 'small-input';
-        inScu.type = 'number';
-        inScu.value = row.scu;
-        inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+        const tdScu=document.createElement('td');
+        const inScu=document.createElement('input');
+        inScu.className='small-input';
+        inScu.type='number';
+        inScu.value=row.scu;
+        inScu.addEventListener('input',e=>row.scu=Number(e.target.value||0));
         tdScu.appendChild(inScu);
         tr.appendChild(tdScu);
 
-        const tdDel = document.createElement('td');
-        const rm = document.createElement('button');
-        rm.type = 'button';
-        rm.className = 'btn-ghost';
-        rm.textContent = '✕';
-        rm.style.fontSize = '10px';
-        rm.addEventListener('click', () => {
+        const tdDel=document.createElement('td');
+        const rm=document.createElement('button');
+        rm.type='button';
+        rm.className='btn-secondary';
+        rm.textContent='✕';
+        rm.style.fontSize='10px';
+        rm.addEventListener('click',()=>{
           cargo.offloadings.splice(oi,1);
           renderCargoList();
         });
         tdDel.appendChild(rm);
         tr.appendChild(tdDel);
-
         offBody.appendChild(tr);
       });
-
-      const addOffTr = document.createElement('tr');
-      const addOffTd = document.createElement('td');
-      addOffTd.colSpan = 3;
-      const addOffBtn = document.createElement('button');
-      addOffBtn.type = 'button';
-      addOffBtn.className = 'btn-ghost';
-      addOffBtn.textContent = '+ Add Offloading Row';
-      addOffBtn.style.fontSize = '10px';
-      addOffBtn.addEventListener('click', () => {
-        cargo.offloadings.push({location:'', scu:0});
+      const addOffTr=document.createElement('tr');
+      const addOffTd=document.createElement('td');
+      addOffTd.colSpan=3;
+      const addOffBtn=document.createElement('button');
+      addOffBtn.type='button';
+      addOffBtn.className='btn-secondary';
+      addOffBtn.textContent='+ Add Offloading Row';
+      addOffBtn.style.fontSize='10px';
+      addOffBtn.addEventListener('click',()=>{
+        cargo.offloadings.push({location:'',scu:0});
         renderCargoList();
       });
       addOffTd.appendChild(addOffBtn);
       addOffTr.appendChild(addOffTd);
       offBody.appendChild(addOffTr);
-
       offTable.appendChild(offBody);
       offWrap.appendChild(offTable);
       card.appendChild(offWrap);
@@ -917,79 +982,73 @@ select{
     });
   }
 
-  // ====== OCR FLOW ======
+  // === OCR flow ===
   async function runOCROnBlob(blob){
-    ocrOutput.textContent = '';
-    setStatus('Scanning image…', 'ok');
-    scanBtn.disabled = true;
+    ocrOutput.textContent='';
+    setStatus('Scanning image…','ok');
+    scanBtn.disabled=true;
 
     try{
       const { data:{ text } } = await Tesseract.recognize(blob,'eng',{
         logger:m=>{
-          if(m.status === 'recognizing text'){
-            const pct = Math.round((m.progress || 0)*100);
-            setStatus(`Recognising text… ${pct}%`, 'ok');
+          if(m.status==='recognizing text'){
+            const pct=Math.round((m.progress||0)*100);
+            setStatus(`Recognising text… ${pct}%`,'ok');
           }
         }
       });
-      const trimmed = text.trim();
-      ocrOutput.textContent = trimmed;
+      const trimmed=text.trim();
+      ocrOutput.textContent=trimmed;
 
-      const header = parseHeader(trimmed);
-      const legs   = parseLegs(trimmed);
-      const cargoTypes = buildCargoModelFromLegs(legs);
+      const header=parseHeader(trimmed);
+      const legs=parseLegs(trimmed);
+      const cargoTypes=buildCargoModelFromLegs(legs);
 
-      activeContractModel.legs = legs;
-      activeContractModel.cargoTypes = cargoTypes;
-      activeContractModel.contractorName = header.contractor || null;
-      activeContractModel.reward = header.reward ? Number(header.reward) : null;
+      activeContractModel.legs=legs;
+      activeContractModel.cargoTypes=cargoTypes;
+      activeContractModel.contractorName=header.contractor||null;
+      activeContractModel.reward=header.reward?Number(header.reward):null;
 
-      // Autofill UI fields
-      if(header.reward){
-        rewardEl.value = header.reward;
+      if(header.reward) rewardEl.value=header.reward;
+      if(header.contractor && !contractNameEl.value){
+        contractNameEl.value=header.contractor;
       }
-      if(header.contractor){
-        if(!contractNameEl.value){
-          contractNameEl.value = header.contractor;
-        }
-      }
-      kpiActiveContract.textContent = contractNameEl.value || 'New Contract';
+      kpiActiveContract.textContent=contractNameEl.value || 'New Contract';
 
       renderCargoList();
-      openConfirmModal(header, legs, cargoTypes);
-      setStatus('Scan complete. Review contract, cargo, loading & offloading.', 'ok');
+      openConfirmModal(header,legs,cargoTypes);
+      setStatus('Scan complete. Review contract, cargo, loading & offloading.','ok');
     }catch(err){
       console.error(err);
-      setStatus('Error during OCR. Try a clearer / higher-res screenshot.', 'err');
+      setStatus('Error during OCR. Try a clearer screenshot.','err');
     }finally{
-      scanBtn.disabled = false;
+      scanBtn.disabled=false;
     }
   }
 
-  // ====== SAVE CONTRACT TO DB ======
+  // === Save to DB ===
   async function saveContractToDB(){
     if(!currentUser || !currentSessionId){
-      setStatus('No user or session found. Cannot save.', 'err');
+      setStatus('No user/session found. Cannot save.','err');
       return;
     }
-    const name   = contractNameEl.value || 'Unnamed Contract';
-    const ctype  = contractTypeEl.value || 'hauling';
+    const name = contractNameEl.value || 'Unnamed Contract';
+    const ctype = contractTypeEl.value || 'hauling';
     const reward = rewardEl.value ? Number(rewardEl.value) : null;
 
-    if(activeContractModel.cargoTypes.length === 0){
-      setStatus('No cargo types. Add at least one before saving.', 'err');
+    if(activeContractModel.cargoTypes.length===0){
+      setStatus('No cargo types. Add at least one before saving.','err');
       return;
     }
 
-    setStatus('Saving contract to DB…', 'ok');
-    saveContractBtn.disabled = true;
+    setStatus('Saving contract to DB…','ok');
+    saveContractBtn.disabled=true;
 
     try{
-      // Insert contract
-      const { data: contract, error: cErr } = await supabase
+      const { data: contract, error:cErr } = await supabase
         .from('contracts')
         .insert({
-          session_id:   currentSessionId,
+          session_id: currentSessionId,
           submitted_by: currentUser.id,
           contract_name: name,
           contract_type: ctype,
@@ -997,14 +1056,11 @@ select{
         })
         .select()
         .single();
-
       if(cErr) throw cErr;
+      const contractId=contract.id;
 
-      const contractId = contract.id;
-
-      // For each cargo type, insert cargo row, then load & offload rows
       for(const cargo of activeContractModel.cargoTypes){
-        const { data: cargoRow, error: ctErr } = await supabase
+        const { data:cargoRow, error:ctErr } = await supabase
           .from('contract_cargo_types')
           .insert({
             contract_id: contractId,
@@ -1012,71 +1068,180 @@ select{
           })
           .select()
           .single();
-
         if(ctErr) throw ctErr;
-        const cargoTypeId = cargoRow.id;
+        const cargoTypeId=cargoRow.id;
 
-        // Loading
         for(const l of cargo.loadings){
           if(!l.location) continue;
           await supabase.from('contract_loading').insert({
-            cargo_type_id: cargoTypeId,
-            location: l.location,
-            scu: l.scu || 0
+            cargo_type_id:cargoTypeId,
+            location:l.location,
+            scu:l.scu||0
           });
         }
-
-        // Offloading
         for(const o of cargo.offloadings){
           if(!o.location) continue;
           await supabase.from('contract_offloading').insert({
-            cargo_type_id: cargoTypeId,
-            location: o.location,
-            scu: o.scu || 0
+            cargo_type_id:cargoTypeId,
+            location:o.location,
+            scu:o.scu||0
           });
         }
       }
 
-      setStatus('Contract saved to DB under this session.', 'ok');
+      setStatus('Contract saved.','ok');
+      await loadSessions();
     }catch(err){
       console.error(err);
-      setStatus('Error saving contract to DB.', 'err');
+      setStatus('Error saving contract.','err');
     }finally{
-      saveContractBtn.disabled = false;
+      saveContractBtn.disabled=false;
     }
   }
 
-  // ====== EVENT HANDLERS ======
-  scanBtn.addEventListener('click', () => {
-    const file = screenshotInput.files && screenshotInput.files[0];
+  // === Load sessions + cards ===
+  async function loadSessions(){
+    if(!currentUser) return;
+    sessionsGrid.innerHTML='';
+
+    const { data:sessions, error } = await supabase
+      .from('sessions')
+      .select('id, created_at')
+      .order('created_at',{ascending:false});
+
+    if(error){
+      console.error(error);
+      sessionsGrid.textContent='Error loading sessions.';
+      return;
+    }
+    if(!sessions || sessions.length===0){
+      const empty=document.createElement('div');
+      empty.style.fontSize='12px';
+      empty.style.color='var(--muted)';
+      empty.textContent='No sessions yet. Click “New Contract / Scan” to start.';
+      sessionsGrid.appendChild(empty);
+      return;
+    }
+
+    for(const s of sessions){
+      const card=document.createElement('div');
+      card.className='card';
+
+      const header=document.createElement('div');
+      header.className='card-header';
+      const title=document.createElement('div');
+      title.className='card-title';
+      title.textContent='SESSION';
+      const meta=document.createElement('div');
+      meta.className='card-sub';
+      const date=new Date(s.created_at);
+      meta.textContent=date.toLocaleString();
+      header.appendChild(title);
+      header.appendChild(meta);
+      card.appendChild(header);
+
+      const sid=document.createElement('div');
+      sid.className='card-sub';
+      sid.textContent='ID: ' + s.id;
+      card.appendChild(sid);
+
+      // fetch contracts + nested cargo for this session
+      const { data:contracts, error:cerr } = await supabase
+        .from('contracts')
+        .select(`
+          id,
+          contract_name,
+          reward,
+          contract_cargo_types (
+            id,
+            cargo_type,
+            contract_loading ( location, scu ),
+            contract_offloading ( location, scu )
+          )
+        `)
+        .eq('session_id', s.id);
+
+      if(cerr){
+        console.error(cerr);
+      }else if(contracts && contracts.length){
+        contracts.forEach((c, idx)=>{
+          const block=document.createElement('div');
+          block.className='contract-block';
+
+          const cname=document.createElement('div');
+          cname.className='contract-name';
+          cname.textContent=(idx+1)+'. '+(c.contract_name || 'Contract');
+          block.appendChild(cname);
+
+          if(c.reward){
+            const rw=document.createElement('div');
+            rw.className='contract-line';
+            rw.textContent='Reward: ' + Number(c.reward).toLocaleString() + ' aUEC';
+            block.appendChild(rw);
+          }
+
+          (c.contract_cargo_types || []).forEach(ct=>{
+            // use first loading/offloading row for summary
+            const load = (ct.contract_loading && ct.contract_loading[0]) || null;
+            const off  = (ct.contract_offloading && ct.contract_offloading[0]) || null;
+
+            const line1=document.createElement('div');
+            line1.className='contract-line';
+            const startLoc = load ? load.location : 'Unknown';
+            const endLoc   = off  ? off.location  : 'Unknown';
+            line1.textContent = (startLoc || 'Unknown') + '  >  ' + (endLoc || 'Unknown');
+            block.appendChild(line1);
+
+            const line2=document.createElement('div');
+            line2.className='contract-line';
+            const scu = load ? load.scu : (off ? off.scu : 0);
+            line2.textContent = (scu || 0) + ' SCU ' + (ct.cargo_type || '');
+            block.appendChild(line2);
+          });
+
+          card.appendChild(block);
+        });
+      }
+
+      sessionsGrid.appendChild(card);
+    }
+  }
+
+  // === Event listeners ===
+  openIntakeBtn.addEventListener('click',openIntake);
+  intakeCloseBtn.addEventListener('click',closeIntake);
+  intakeCancelBtn.addEventListener('click',closeIntake);
+
+  scanBtn.addEventListener('click',()=>{
+    const file=screenshotInput.files && screenshotInput.files[0];
     if(!file){
-      setStatus('No file selected. Either choose an image or paste with Ctrl+V.', 'err');
+      setStatus('No file selected. Or paste an image with Ctrl+V.','err');
       return;
     }
     loadPreviewFromBlob(file);
     runOCROnBlob(file);
   });
 
-  clearBtn.addEventListener('click', () => {
-    screenshotInput.value = '';
-    previewImg.src = '';
-    previewImg.style.display = 'none';
-    ocrOutput.textContent = '';
-    setStatus('Cleared image and OCR output.', 'ok');
+  clearBtn.addEventListener('click',()=>{
+    screenshotInput.value='';
+    previewImg.src='';
+    previewImg.style.display='none';
+    ocrOutput.textContent='';
+    setStatus('Cleared image and OCR output.','ok');
   });
 
   pasteZone.addEventListener('click',()=>pasteZone.focus());
-  window.addEventListener('paste', e => {
-    const items = e.clipboardData && e.clipboardData.items;
+  window.addEventListener('paste',e=>{
+    const items=e.clipboardData && e.clipboardData.items;
     if(!items) return;
     for(let i=0;i<items.length;i++){
-      const item = items[i];
+      const item=items[i];
       if(item.type && item.type.startsWith('image/')){
-        const blob = item.getAsFile();
+        const blob=item.getAsFile();
         if(blob){
           e.preventDefault();
           loadPreviewFromBlob(blob);
-          setStatus('Pasted image detected – scanning…', 'ok');
+          setStatus('Pasted image detected – scanning…','ok');
           runOCROnBlob(blob);
         }
         break;
@@ -1084,30 +1249,29 @@ select{
     }
   });
 
-  addCargoBtn.addEventListener('click', () => {
-    activeContractModel.cargoTypes.push({
-      name: '',
-      loadings: [],
-      offloadings: []
-    });
+  addCargoBtn.addEventListener('click',()=>{
+    activeContractModel.cargoTypes.push({name:'',loadings:[],offloadings:[]});
     renderCargoList();
   });
 
-  saveContractBtn.addEventListener('click', saveContractToDB);
+  saveContractBtn.addEventListener('click',saveContractToDB);
 
-  // Modal buttons
-  modalCloseBtn.addEventListener('click', closeConfirmModal);
-  modalCancelBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Detection cancelled. You can edit or rescan.', 'ok');
+  modalCloseBtn.addEventListener('click',closeConfirm);
+  modalCancelBtn.addEventListener('click',()=>{
+    closeConfirm();
+    setStatus('Detection cancelled. You can edit or rescan.','ok');
   });
-  modalConfirmBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Contract parsed. Review cargo, loading, offloading and Save to DB.', 'ok');
+  modalConfirmBtn.addEventListener('click',()=>{
+    closeConfirm();
+    setStatus('Contract parsed. Review then save to DB.','ok');
   });
 
-  // ====== INIT ======
-  await initUserAndSession();
+  // === Init ===
+  if(!supabase){
+    setMainStatus('Supabase client not found. Check js/auth.js.', 'err');
+    return;
+  }
+  initUserAndSession();
 })();
 </script>
 </body>
