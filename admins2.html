@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Member Roster</title>
+<title>JMBN Contracts</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,246 +22,182 @@ body{
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
-  margin:0;
-  padding:0;
-  letter-spacing:.25px;
-  font-size:var(--fs-base);
-  min-height:100vh;
+  color:var(--text); font-family:'Play',system-ui,sans-serif;
+  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
 }
 
-/* Fallback header visuals (before header.html mounts) */
+/* Header mount fallback visuals */
 .brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:0;
-  padding:14px 18px 10px;
-  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 8px;padding-bottom:6px;
+  border-bottom:1px solid var(--border)
 }
 .brand-logo{
   width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25))
 }
 .brand h1{
-  font-weight:700;
-  font-size:var(--fs-h1);
-  color:var(--accent);
-  margin:0;
+  font-weight:700;font-size:var(--fs-h1);
+  color:var(--accent);margin:0
 }
 
-/* Main page shell (matches spacing of other pages) */
-.page-shell{
-  max-width:1200px;
-  margin:18px auto 28px;
-  padding:0 18px 24px;
-}
-
-/* Panel & table */
+/* Panel */
 .panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px;
-  margin-top:4px;
-  box-shadow:0 0 22px rgba(214,180,76,.22);
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:12px;margin-top:8px;
+  box-shadow:0 0 18px rgba(214,180,76,.22)
 }
+
+/* Controls */
 .controls{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:10px;
-  align-items:center;
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin-bottom:10px;align-items:center
 }
 input[type="search"]{
-  background:#0a0a0a;
-  border:1px solid var(--border);
-  border-radius:999px;
-  padding:9px 14px;
-  color:var(--text);
-  font-size:var(--fs-table);
-  min-width:260px;
+  background:#0a0a0a;border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;
+  color:var(--text);font-size:var(--fs-table);
+  min-width:260px
 }
 .badge{
-  border:1px solid var(--border);
-  padding:6px 10px;
-  border-radius:999px;
-  color:var(--accent);
-  font-weight:700;
+  border:1px solid var(--border);padding:6px 10px;
+  border-radius:999px;color:var(--accent);font-weight:700;
+  font-size:12px
 }
+
+/* Table */
 .tableWrap{
-  border:1px solid var(--border);
-  border-radius:12px;
-  overflow:auto;
-  max-height:70vh;
+  border:1px solid var(--border);border-radius:12px;
+  overflow:auto;max-height:70vh;
+  background:#050505;
 }
 table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:var(--fs-table);
+  width:100%;border-collapse:collapse;
+  font-size:var(--fs-table)
 }
 th,td{
   border-bottom:1px solid rgba(214,180,76,.3);
-  padding:10px;
-  text-align:left;
-  vertical-align:middle;
+  padding:10px;text-align:left;vertical-align:middle
 }
 th{
-  color:var(--accent);
-  background:#080808;
-  font-weight:600;
-  position:sticky;
-  top:0;
-  z-index:1;
+  color:var(--accent);background:#080808;
+  font-weight:600;position:sticky;top:0;z-index:1;
+  font-size:12px
 }
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .name{font-weight:700}
 
-/* Rank cell — image beside rank text, NO frame/background */
-.rankCell{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.rankCell img{
-  width:28px;height:28px;object-fit:contain;flex:0 0 28px;
-  border:none;border-radius:0;background:transparent;box-shadow:none;
-}
-
-/* Role chips */
-.roles{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.role-chip{
+/* Pills & labels */
+.pill{
+  display:inline-block;border-radius:999px;
+  padding:3px 10px;font-size:11px;
   border:1px solid var(--border);
-  border-radius:999px;
-  padding:4px 10px;
-  font-size:12px;
-  background:#0c0c0c;
-  color:var(--muted);
+  background:#0c0c0c;color:var(--muted)
 }
+.status-pill{
+  border-color:var(--border);
+  color:var(--accent);
+}
+.status-pill[data-status="Open"]{color:#7af59d;border-color:#7af59d}
+.status-pill[data-status="In Progress"]{color:#ffd86b;border-color:#ffd86b}
+.status-pill[data-status="Completed"]{color:#7af59d;border-color:#7af59d}
+.status-pill[data-status="Cancelled"]{color:var(--bad);border-color:var(--bad)}
 
 /* Buttons */
 .btn{
-  padding:8px 12px;
-  border-radius:10px;
+  padding:7px 11px;border-radius:10px;
   background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);
-  border:1px solid var(--border);
-  cursor:pointer;
-  font-family:'Play';
-  font-size:12px;
+  color:var(--accent);border:1px solid var(--border);
+  cursor:pointer;font-family:'Play';
+  font-size:12px;transition:.2s
 }
-.btn:hover{
-  background:var(--accent);
-  color:#000;
-}
+.btn:hover{background:var(--accent);color:#000}
 
-/* Modal (centered, same glow/spacing as other pages) */
-.modal-mask{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
-}
-.modal{
-  background:#0b0b0b;
-  border:1px solid var(--border);
-  border-radius:18px;
-  max-width:820px;
-  width:94vw;
-  padding:20px 22px 18px;
-  box-shadow:0 0 28px rgba(214,180,76,.35);
-}
-.modal h3{
-  margin:0 0 14px;
-  color:var(--accent);
-  font-size:18px;
-  letter-spacing:.3px;
-}
-.modal .header-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:14px;
-}
-.modal .header-row .spacer{flex:1}
-
-/* Rank card in modal — NO frame/background on image */
-.rankCard{
-  display:flex;
-  gap:16px;
-  align-items:center;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  background:#0f0f0f;
-}
-.rankCard img{
-  width:70px;
-  height:70px;
-  object-fit:contain;
-  border:none;
-  border-radius:0;
-  background:transparent;
-  box-shadow:none;
-}
-
+/* Meta */
 .meta{
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.55;
+  font-size:12px;color:var(--muted);
+  padding-top:10px;line-height:1.5
 }
 .meta b{color:var(--accent)}
 
+/* Modal */
+.modal-mask{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  display:none;align-items:center;justify-content:center;z-index:50
+}
+.modal{
+  background:#0b0b0b;border:1px solid var(--border);border-radius:16px;
+  max-width:840px;width:94vw;padding:18px 18px 16px;
+  box-shadow:0 0 28px rgba(214,180,76,.3)
+}
+.modal h3{
+  margin:0 0 10px;color:var(--accent);
+  font-size:18px;letter-spacing:.3px
+}
+.modal .header-row{
+  display:flex;align-items:center;gap:12px;margin-bottom:6px
+}
+.modal .header-row .spacer{flex:1}
+
+/* Contract header card */
+.contractCard{
+  border:1px solid var(--border);border-radius:14px;
+  padding:14px;background:#101010;
+  display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.2fr);
+  gap:12px
+}
+@media(max-width:720px){
+  .contractCard{grid-template-columns:1fr}
+}
+.contractTitle{
+  font-size:16px;font-weight:700;color:var(--accent);
+  margin-bottom:4px
+}
+.contractSub{
+  font-size:12px;color:var(--muted);margin-bottom:6px
+}
+.metaList{
+  font-size:13px;color:var(--text);line-height:1.55
+}
+.metaList b{color:var(--accent)}
+
+/* Sections inside modal */
 .divider{
   height:1px;
   background:linear-gradient(90deg,rgba(214,180,76,.15),rgba(214,180,76,.4),rgba(214,180,76,.15));
-  border:none;
-  margin:16px 0;
+  border:none;margin:14px 0;
 }
-
-/* Section blocks inside modal */
 .section{
   border:1px solid var(--border);
   border-radius:12px;
-  padding:14px;
+  padding:12px;
   background:#0f0f0f;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 .section h4{
-  margin:0 0 10px;
+  margin:0 0 8px;
   color:var(--accent);
   font-size:14px;
   letter-spacing:.3px;
 }
-.section .body{font-size:13px;color:var(--text);line-height:1.6}
+.section .body{
+  font-size:13px;color:var(--text);line-height:1.6;
+  white-space:pre-wrap;word-break:break-word;
+}
 .section .muted{color:var(--muted)}
 
-/* Certifications-only gallery in modal */
-.certThumbs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center;
+/* Simple grid in modal */
+.grid-two{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  font-size:13px;color:var(--text)
 }
-.certThumbs img{
-  width:56px;
-  height:56px;
-  object-fit:contain;
-  display:block;
-  border:none;
-  background:transparent;
-  box-shadow:none;
-  border-radius:0;
-}
+@media(max-width:640px){.grid-two{grid-template-columns:1fr}}
+.grid-two b{color:var(--accent)}
+.mono{font-variant-numeric:tabular-nums}
+
+/* Small util */
+.nowrap{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -270,11 +206,12 @@ tr:hover{background:rgba(214,180,76,.08)}
   <div id="header-container">
     <div class="brand">
       <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
-      <h1>JMBN</h1>
+      <h1>JMBN Contracts</h1>
     </div>
   </div>
 
   <script>
+  // Inject shared header + nav
   (async () => {
     try {
       const res = await fetch('header.html', { cache: 'no-cache' });
@@ -282,296 +219,314 @@ tr:hover{background:rgba(214,180,76,.08)}
         const html = await res.text();
         document.getElementById('header-container').outerHTML = html;
         requestAnimationFrame(() => {
-          const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+          const here = (location.pathname.split('/').pop() || 'contracts.html').toLowerCase();
           document.querySelectorAll('.nav-btn').forEach(a => {
             const href = (a.getAttribute('href')||'').toLowerCase();
-            if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
-            if(/member/.test(here) && /member/.test(href)){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
+            if (href === here) {
+              a.classList.add('active');
+              a.setAttribute('aria-current','page');
+            }
           });
         });
       }
-    } catch (e) { console.warn('Header load failed:', e); }
+    } catch (e) {
+      console.warn('Header load failed:', e);
+    }
   })();
   </script>
 
-  <main class="page-shell">
-    <div class="panel">
-      <div class="controls">
-        <input id="q" type="search" placeholder="Search handle, rank, or specialization…">
-        <span id="count" class="badge">0 members</span>
-      </div>
-
-      <div class="tableWrap">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:23%">Handle</th>
-              <th style="width:19%">Rank Category</th>
-              <th style="width:20%">Current Rank</th>
-              <th style="width:20%">Specialization</th>
-              <th style="width:13%">Certifications</th>
-              <th style="width:5%"></th>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-            <tr><td colspan="6" style="padding:12px;color:var(--muted)">Loading…</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="meta" style="padding-top:10px">
-        Attendance counts only missions with status <b>Success / Fail / Abort</b>.
-      </div>
+  <div class="panel">
+    <div class="controls">
+      <input id="q" type="search" placeholder="Search title, origin, destination, commodity, or tags…">
+      <span id="count" class="badge">0 contracts</span>
     </div>
-  </main>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">Title</th>
+            <th style="width:13%">Category</th>
+            <th style="width:13%">Type</th>
+            <th style="width:12%">Commodity</th>
+            <th style="width:16%">Route</th>
+            <th style="width:8%">Payout</th>
+            <th style="width:9%">Status</th>
+            <th style="width:12%">Posted By</th>
+            <th style="width:5%" class="nowrap">View</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="9" style="padding:12px;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="meta">
+      Contracts are read from the <b>contracts</b> table (or view).  
+      Adjust the <code>loadContracts()</code> query in the script if your table name or columns differ.
+    </div>
+  </div>
 
   <!-- Modal -->
   <div id="viewMask" class="modal-mask" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="header-row">
-        <h3 id="viewTitle">Member</h3>
+        <h3 id="viewTitle">Contract</h3>
         <div class="spacer"></div>
-        <button class="btn" onclick="closeView()">Close</button>
+        <button class="btn" type="button" onclick="closeView()">Close</button>
       </div>
 
-      <div class="rankCard">
-        <img id="rankImg" alt="Rank">
-        <div class="meta">
-          <div><b>Handle:</b> <span id="vHandle"></span></div>
-          <div><b>Rank Category:</b> <span id="vRankCat"></span></div>
-          <div><b>Current Rank:</b> <span id="vRankName"></span> <span id="vRankCode" class="meta"></span></div>
-          <div><b>Specialization (role chips):</b> <span id="vRoles"></span></div>
-          <div><b>Missions attended:</b> <span id="vAttended"></span></div>
+      <div class="contractCard">
+        <div>
+          <div class="contractTitle" id="vTitle"></div>
+          <div class="contractSub" id="vSubline"></div>
+          <div class="metaList">
+            <div><b>Category:</b> <span id="vCategory"></span></div>
+            <div><b>Type:</b> <span id="vType"></span></div>
+            <div><b>Status:</b> <span id="vStatus"></span></div>
+            <div><b>Priority:</b> <span id="vPriority"></span></div>
+          </div>
+        </div>
+        <div>
+          <div class="grid-two">
+            <div><b>Origin</b><br><span id="vOrigin"></span></div>
+            <div><b>Destination</b><br><span id="vDestination"></span></div>
+            <div><b>Commodity</b><br><span id="vCommodity"></span></div>
+            <div><b>Quantity</b><br><span id="vQuantity" class="mono"></span></div>
+            <div><b>Payout</b><br><span id="vPayout" class="mono"></span></div>
+            <div><b>Tags</b><br><span id="vTags"></span></div>
+          </div>
         </div>
       </div>
 
       <hr class="divider">
 
       <div class="section">
-        <h4>Certifications</h4>
-        <!-- ONLY images below, no labels/text -->
-        <div id="vCertThumbs" class="certThumbs"></div>
+        <h4>Route & Timing</h4>
+        <div class="body">
+          <div class="grid-two">
+            <div>
+              <b>Created At</b><br>
+              <span id="vCreated"></span>
+            </div>
+            <div>
+              <b>Expires At</b><br>
+              <span id="vExpires"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h4>Posted By</h4>
+        <div class="body">
+          <div><b>Posted By:</b> <span id="vPostedBy"></span></div>
+          <div><b>Internal ID:</b> <span id="vId" class="mono"></span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h4>Notes / Conditions</h4>
+        <div class="body" id="vNotes"></div>
       </div>
     </div>
   </div>
 
-  <!-- Supabase -->
+  <!-- Supabase & Auth -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
 <script>
 /* ---------- Utilities ---------- */
-const $ = s => document.querySelector(s);
+const $  = s => document.querySelector(s);
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 const toTitleCase = s => s ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()) : '';
+const fmtNum = n => (n||n===0) ? Number(n).toLocaleString() : '';
+const fmtAuec = n => n||n===0 ? fmtNum(n)+' aUEC' : '—';
+const fmtDate = iso => {
+  if(!iso) return '—';
+  const d = new Date(iso);
+  if(Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleString();
+};
 
-function normalizeRoles(r){
-  const raw = r.ingame_role ?? null;
-  if(!raw) return [];
-  if(Array.isArray(raw)) return raw.map(toTitleCase).filter(Boolean);
-  return String(raw).split(/[,;/]+/).map(s=>toTitleCase(s)).filter(Boolean);
-}
+/* ---------- State ---------- */
+let sb = null;
+let ROWS = [];
 
-/* ---------- Supabase + buckets ---------- */
-let sb=null, ROWS=[];
-const RANK_BUCKET='Ranks', CERT_BUCKET='Certifications';
-
-function rankPublicUrlFromCode(code){
-  if(!code) return '';
-  return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
-}
-function certPublicUrlFromCode(code){
-  if(!code) return '';
-  return sb.storage.from(CERT_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
-}
-
-/* ---------- Rank sorting helpers (highest first) ---------- */
-function rankScore(r){
-  const code = String(r.current_rank_code || '').toUpperCase().trim();
-  // O > W > E ; higher number = higher rank
-  const m = code.match(/^([OWE])-(\d{1,2})$/);
-  if(m){
-    const tier = { O: 300, W: 200, E: 100 }[m[1]] || 0;
-    const n = Number(m[2]) || 0;
-    return tier + n; // O-10 => 310, E-1 => 101
-  }
-
-  // Fallbacks when there's no code — use name hints
-  const name = String(r.current_rank_name || '').toLowerCase();
-  const hints = [
-    ['admiral','general','marshal','commodore','captain of fleet'],
-    ['captain','commander'],
-    ['lieutenant colonel','major','lieutenant commander'],
-    ['lieutenant','ensign'],
-    ['sergeant major','master sergeant','gunnery sergeant'],
-    ['sergeant','corporal'],
-    ['private','recruit','cadet','trainee','unrated','unranked']
-  ];
-  for(let i=0;i<hints.length;i++){
-    if(hints[i].some(k=>name.includes(k))) return 240 - i*10;
-  }
-  return 0; // unknown => bottom
-}
-
-function sortByRank(rows){
-  return (rows||[]).slice().sort((a,b)=>{
-    const diff = rankScore(b) - rankScore(a);
-    if(diff) return diff;
-    // Tie-breakers: category then handle
-    const catA = (a.current_rank_category||'').localeCompare(b.current_rank_category||'');
-    if(catA) return catA;
-    return (a.handle||'').localeCompare(b.handle||'');
-  });
-}
-
-/* ---------- DOM parts ---------- */
-const tbody=$('#tbody'), countEl=$('#count'), q=$('#q');
+const tbody   = $('#tbody');
+const countEl = $('#count');
+const q       = $('#q');
 
 /* ---------- Render ---------- */
+function statusPill(status){
+  if(!status) return '<span class="pill status-pill" data-status="">—</span>';
+  const s = String(status).trim();
+  return `<span class="pill status-pill" data-status="${esc(s)}">${esc(s)}</span>`;
+}
+
 function render(rows){
   if(!rows?.length){
-    tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
-    countEl.textContent='0 members';
+    tbody.innerHTML = `<tr><td colspan="9" style="padding:12px;color:var(--muted)">No contracts found</td></tr>`;
+    countEl.textContent = '0 contracts';
     return;
   }
 
-  tbody.innerHTML=rows.map(r=>{
-    const handle=toTitleCase(r.handle||r.display_name||r.user_id?.slice(0,8)||'—');
-    const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
-    const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
-    const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
-    const roles=normalizeRoles(r);
+  tbody.innerHTML = rows.map(r=>{
+    const title   = r.title ? r.title : '(untitled)';
+    const category= r.category || '—';
+    const type    = r.type || '—';
+    const commodity = r.commodity || '—';
+    const route   = (r.origin || r.destination)
+      ? `${r.origin || '—'} → ${r.destination || '—'}`
+      : '—';
+    const payout  = fmtNum(r.payout_auec);
+    const status  = r.status || '';
+    const posted  = r.posted_by || '—';
 
     return `
-    <tr>
-      <td class="name">${esc(handle)}</td>
-      <td>${esc(rankCat)}</td>
-      <td>
-        <div class="rankCell">
-          ${imgUrl?`<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">`:''}
-          <span>${esc(rankName)}</span>
-        </div>
-      </td>
-      <td>${roles.length?`<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>`:`<span style="color:var(--muted)">—</span>`}</td>
-      <td><span style="color:var(--muted)">—</span></td>
-      <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
-    </tr>`;
+      <tr>
+        <td class="name">${esc(title)}</td>
+        <td>${esc(category)}</td>
+        <td>${esc(type)}</td>
+        <td>${esc(commodity)}</td>
+        <td>${esc(route)}</td>
+        <td class="mono nowrap">${payout ? payout : '—'}</td>
+        <td>${statusPill(status)}</td>
+        <td>${esc(posted)}</td>
+        <td><button class="btn" type="button" onclick="viewContract('${r.id}')">View</button></td>
+      </tr>`;
   }).join('');
 
-  countEl.textContent=`${rows.length} member${rows.length===1?'':'s'}`;
+  countEl.textContent = `${rows.length} contract${rows.length===1?'':'s'}`;
 }
 
 /* ---------- Filter + apply ---------- */
 function filterRows(){
-  const term=(q.value||'').toLowerCase().trim();
+  const term = (q.value || '').toLowerCase().trim();
   if(!term) return ROWS;
   return ROWS.filter(r=>{
-    const all=`${r.handle||''} ${r.display_name||''} ${r.current_rank_category||''} ${r.current_rank_name||''} ${r.current_rank_code||''} ${normalizeRoles(r).join(' ')}`.toLowerCase();
+    const all = [
+      r.title, r.category, r.type, r.status,
+      r.origin, r.destination, r.commodity,
+      r.tags, r.posted_by
+    ].map(x=>x||'').join(' ').toLowerCase();
     return all.includes(term);
   });
 }
 
 function applyAndRender(){
   const filtered = filterRows();
-  const sorted = sortByRank(filtered);
-  render(sorted);
+  // basic sort: open first, then by created_at desc
+  const order = { 'Open':1, 'In Progress':2, 'Completed':3, 'Cancelled':4 };
+  filtered.sort((a,b)=>{
+    const sa = order[a.status] || 99;
+    const sb2= order[b.status] || 99;
+    if(sa !== sb2) return sa - sb2;
+    const ca = a.created_at || '';
+    const cb = b.created_at || '';
+    return (cb || '').localeCompare(ca || '');
+  });
+  render(filtered);
 }
 
 /* ---------- Modal ---------- */
 function closeView(){ $('#viewMask').style.display='none'; }
-window.closeView=closeView;
+window.closeView = closeView;
 
-async function loadCertThumbs(userId){
-  const box = $('#vCertThumbs');
-  box.innerHTML = '';
+function viewContract(id){
+  const r = ROWS.find(x=>String(x.id)===String(id));
+  if(!r) return;
+
+  $('#viewTitle').textContent = `Contract — ${r.title || '(untitled)'}`;
+  $('#vTitle').textContent    = r.title || '(untitled)';
+  $('#vSubline').textContent  = r.route_label || ''; // optional custom label if you ever add it
+
+  $('#vCategory').textContent = r.category || '—';
+  $('#vType').textContent     = r.type || '—';
+  $('#vStatus').innerHTML     = statusPill(r.status || '').replace('pill','pill'); // reuse styles
+  $('#vPriority').textContent = r.priority || '—';
+
+  $('#vOrigin').textContent      = r.origin || '—';
+  $('#vDestination').textContent = r.destination || '—';
+  $('#vCommodity').textContent   = r.commodity || '—';
+  $('#vQuantity').textContent    = r.quantity ? fmtNum(r.quantity) : '—';
+  $('#vPayout').textContent      = fmtAuec(r.payout_auec);
+  $('#vTags').textContent        = r.tags || '—';
+
+  $('#vCreated').textContent  = fmtDate(r.created_at);
+  $('#vExpires').textContent  = fmtDate(r.expires_at);
+
+  $('#vPostedBy').textContent = r.posted_by || '—';
+  $('#vId').textContent       = r.id || '—';
+
+  $('#vNotes').textContent    = r.notes || '—';
+
+  $('#viewMask').style.display = 'flex';
+}
+window.viewContract = viewContract;
+
+/* ---------- Data load ---------- */
+/*
+  Adjust the select() list if your table has different columns.
+  Expected columns (recommended):
+  id (uuid or text),
+  title, category, type, status,
+  commodity, quantity, origin, destination,
+  payout_auec, priority, tags, notes,
+  posted_by, created_at, expires_at, route_label (optional).
+*/
+async function loadContracts(){
   try{
     const { data, error } = await sb
-      .from('v_user_certifications')
-      .select('certification_code,image_url,owned')
-      .eq('user_id', userId);
-    if(error){ console.warn(error.message); return; }
+      .from('contracts')
+      .select(`
+        id,
+        title,
+        category,
+        type,
+        status,
+        commodity,
+        quantity,
+        origin,
+        destination,
+        payout_auec,
+        priority,
+        tags,
+        notes,
+        posted_by,
+        created_at,
+        expires_at,
+        route_label
+      `)
+      .order('created_at',{ascending:false});
 
-    const imgs = (data||[])
-      .filter(c => c.owned)
-      .map(c => c.image_url || certPublicUrlFromCode(c.certification_code))
-      .filter(Boolean);
-
-    if(!imgs.length){
-      box.innerHTML = '';
+    if(error){
+      console.warn(error);
+      tbody.innerHTML = `<tr><td colspan="9" style="padding:12px;color:var(--bad)">Failed to load: ${esc(error.message)}</td></tr>`;
+      countEl.textContent = '0 contracts';
       return;
     }
 
-    box.innerHTML = imgs
-      .map(src => `<img src="${esc(src)}" alt="" loading="lazy" onerror="this.style.display='none'">`)
-      .join('');
+    ROWS = data || [];
+    applyAndRender();
   }catch(e){
-    console.warn('cert thumbs:', e.message);
+    tbody.innerHTML = `<tr><td colspan="9" style="padding:12px;color:var(--bad)">Unexpected error loading contracts.</td></tr>`;
+    countEl.textContent = '0 contracts';
+    console.warn('loadContracts error:', e);
   }
-}
-
-function viewMember(userId){
-  const r=ROWS.find(x=>x.user_id===userId);
-  if(!r) return;
-  const handle=toTitleCase(r.handle||r.display_name||r.user_id.slice(0,8));
-  const attended=Number(r.missions_attended)||0;
-  const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
-  const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
-  const roles=normalizeRoles(r);
-  const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
-
-  $('#viewTitle').textContent=`Member — ${handle}`;
-  $('#vHandle').textContent=handle;
-  $('#vRankCat').textContent=rankCat;
-  $('#vRankName').textContent=rankName;
-  $('#vRankCode').textContent=r.current_rank_code?`(${r.current_rank_code})`:''; // e.g. (O-1)
-  $('#vRoles').innerHTML=roles.length?roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' '):'—';
-  $('#vAttended').textContent=attended;
-
-  const imgEl=$('#rankImg');
-  imgEl.src=imgUrl||''; imgEl.alt=r.current_rank_code||'Rank';
-  imgEl.style.visibility=imgUrl?'visible':'hidden';
-  imgEl.onerror=()=>{imgEl.style.visibility='hidden';};
-
-  loadCertThumbs(userId);
-
-  $('#viewMask').style.display='flex';
-}
-window.viewMember=viewMember;
-
-/* ---------- Data load ---------- */
-async function loadRoster(){
-  const {data,error}=await sb
-    .from('v_profiles_detailed')
-    .select(`
-      user_id,
-      handle,
-      display_name,
-      current_rank_category,
-      current_rank_name,
-      current_rank_code,
-      current_rank_image_url,
-      ingame_role,
-      missions_attended
-    `)
-    .order('current_rank_category',{ascending:true})
-    .order('handle',{ascending:true});
-
-  if(error){
-    tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--bad)">Failed to load: ${esc(error.message)}</td></tr>`;
-    countEl.textContent='0 members';
-    return;
-  }
-  ROWS=data||[];
-  applyAndRender(); // sort by highest rank first by default
 }
 
 /* ---------- Events ---------- */
 q.addEventListener('input', applyAndRender);
 
-document.addEventListener('DOMContentLoaded',async()=>{
-  const session=await requireAuth(); if(!session) return;
-  sb=getSupabase();
-  loadRoster();
+/* ---------- Bootstrap with auth ---------- */
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth(); // from js/auth.js
+  if(!session) return;
+  sb = getSupabase();                 // from js/auth.js
+  loadContracts();
 });
 </script>
 </body>
