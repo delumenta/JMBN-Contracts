@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JMBN Contracts</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
+  --bg:#000;--panel:#0b0b0b;--card:#141414;--row:#0a0a0a;
+  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;
 }
 *{box-sizing:border-box}
 body{
@@ -22,392 +25,1581 @@ body{
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
   color:var(--text);
-  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
+  font-family:'Play',system-ui,sans-serif;
+  margin:0;
+  padding:0;
+  font-size:var(--fs-base);
 }
 
-/* Header + Nav (styles only; content injected from header.html) */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
-.nav-btn{
-  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+/* Full-width header container */
+#header-container{
+  width:100%;
+  background:#000;
+}
+
+/* Fallback brand header (only visible if header.html fails to load) */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 12px;
+  padding:10px 14px 8px;
+  border-bottom:1px solid var(--border);
+}
+.brand-logo{
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 6px rgba(242,214,117,.3));
+}
+.brand h1{
+  font-size:20px;
+  color:var(--accent);
+  margin:0;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+}
+
+/* Page frame (content area) */
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:14px;
+}
+
+/* Top actions */
+.top-bar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.status-main{
+  font-size:11px;
+  color:var(--muted);
+}
+.status-main.ok{color:var(--accent);}
+.status-main.err{color:var(--bad);}
+
+/* Buttons */
+.btn{
+  padding:8px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:'Play';
+  font-size:12px;
+  border:1px solid var(--border);
+  background:radial-gradient(circle at top,var(--accent),#614c14);
+  color:#000;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 0 14px rgba(242,214,117,.25);
+}
+.btn-secondary{
+  background:#0b0b0b;
+  color:var(--accent);
+  border:1px solid var(--border);
+  box-shadow:none;
+}
+.btn-danger{
+  background:#1a0000;
+  color:#ff8a8a;
+  border-color:#ff6b6b;
+}
+.btn:disabled{
+  opacity:.6;
+  cursor:default;
+}
+
+/* Saved sessions panel */
+.section-panel{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  background:#0b0b0b;
+  box-shadow:0 0 22px rgba(214,180,76,.2);
+}
+.panel-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.panel-title{
+  color:var(--accent);
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+}
+.panel-meta{
+  font-size:11px;
+  color:var(--muted);
+}
+
+/* Cards grid */
+.cards-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+/* Expandable session card */
+.card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#111;
+  color:var(--text);
+  box-shadow:0 0 16px rgba(0,0,0,.6);
   overflow:hidden;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
-.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
-.nav-btn.active::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
-  border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
+.card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 22px rgba(242,214,117,.28);
+  border-color:var(--accent);
 }
-@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 12px;
+  cursor:pointer;
+}
+.card-header-main{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.card-session-id{
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.card-sub{
+  font-size:11px;
+  color:var(--muted);
+}
+.card-kpis{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.card-kpi{
+  font-size:10px;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.5);
+  color:var(--accent);
+}
+.card-toggle{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  color:var(--muted);
+}
+.card-toggle-icon{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  transition:transform .18s ease;
+}
+.card.open .card-toggle-icon{
+  transform:rotate(90deg);
+}
 
-/* Panels + controls */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
-button:hover{background:var(--accent);color:#000}
-.btn-primary{background:var(--accent);color:#000}
-input,select,textarea{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
-textarea{resize:vertical}
+/* Collapsible body */
+.card-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .28s ease;
+  border-top:1px solid rgba(214,180,76,.35);
+}
+.card-body-inner{
+  padding:10px 12px 10px;
+}
 
-/* Labels */
-label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+/* Contract blocks inside session */
+.contract-block{
+  border-radius:10px;
+  border:1px solid rgba(214,180,76,.4);
+  background:rgba(5,5,5,.95);
+  padding:8px 8px 9px;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.contract-name{
+  font-size:12px;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  margin-bottom:3px;
+}
+.contract-line{
+  font-size:11px;
+  color:var(--muted);
+}
+.contract-actions{
+  margin-top:6px;
+  display:flex;
+  gap:6px;
+  justify-content:flex-end;
+}
 
-/* KPI cards */
-.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 6px}
-@media(max-width:880px){.kpis{grid-template-columns:1fr}}
-.kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 14px rgba(214,180,76,.18), inset 0 0 0 1px rgba(214,180,76,.12)}
-.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
-.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
+/* Modal base */
+.modal-mask{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.modal-mask.open{
+  display:flex;
+}
+.modal{
+  width:95%;
+  max-width:1000px;
+  max-height:90vh;
+  overflow:auto;
+  background:#0b0b0b;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px 16px 16px;
+  box-shadow:0 0 28px rgba(214,180,76,.3);
+}
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.modal-title{
+  color:var(--accent);
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+}
 
-/* Table */
-.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
-table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
-th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
-th{color:var(--accent);background:#080808;font-weight:500;font-size:12px}
-tr:nth-child(even){background:#111}
-tr:hover{background:rgba(214,180,76,.08)}
-.small{font-size:var(--fs-small);color:var(--muted)}
-.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
+/* Intake modal layout */
+.modal-body{
+  font-size:var(--fs-base);
+}
+.grid-intake{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr);
+  gap:12px;
+}
+@media (max-width:900px){
+  .grid-intake{grid-template-columns:1fr;}
+}
+.panel-inner{
+  background:linear-gradient(135deg,rgba(214,180,76,.05),transparent);
+  border:1px solid rgba(214,180,76,.4);
+  border-radius:14px;
+  padding:10px;
+}
 
-/* Modal */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:10}
-.modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;width:95%;max-width:520px;box-shadow:0 0 25px rgba(214,180,76,.3)}
-.modal h2{color:var(--accent);margin:0 0 10px}
-.form-grid{display:grid;gap:8px}
-.modal-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+/* KPIs */
+.session-kpis{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+.kpi{
+  flex:1 1 150px;
+  min-width:0;
+  border-radius:10px;
+  padding:6px 8px;
+  border:1px solid rgba(214,180,76,.5);
+  background:radial-gradient(circle at top,rgba(242,214,117,.22),rgba(10,10,10,.9));
+  font-size:11px;
+}
+.kpi-label{
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+.kpi-value{
+  font-size:13px;
+}
+
+/* Upload / OCR area */
+.upload-box{
+  border:1px dashed var(--border);
+  padding:8px;
+  border-radius:12px;
+  background:#111;
+  margin-bottom:8px;
+}
+.upload-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  margin-bottom:6px;
+}
+.preview-wrap{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+}
+.preview{
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  width:220px;
+  height:140px;
+  background:#000;
+}
+.preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.ocr-box{
+  flex:1;
+  height:140px;
+  background:#050505;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px;
+  color:var(--muted);
+  font-size:12px;
+  white-space:pre-wrap;
+  overflow:auto;
+}
+.status{
+  font-size:11px;
+  color:var(--muted);
+}
+.status-ok{color:var(--accent);}
+.status-err{color:var(--bad);}
+
+/* Contract editor */
+.contract-editor{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  background:#111;
+}
+.meta-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:8px;
+}
+@media (max-width:700px){
+  .meta-grid{grid-template-columns:1fr 1fr;}
+}
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+}
+input[type="text"],
+input[type="number"],
+select{
+  background:var(--card);
+  border-radius:8px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:7px 8px;
+  font-size:var(--fs-base);
+  color:var(--text);
+  font-family:inherit;
+}
+input::placeholder{color:#75653a;}
+
+.cargo-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:8px;
+}
+.cargo-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px 8px 10px;
+  background:#0f0f0f;
+}
+.cargo-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+.cargo-title{
+  margin:0;
+  color:var(--accent);
+  font-size:12px;
+  text-transform:uppercase;
+}
+.badge{
+  display:inline-block;
+  padding:2px 6px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.7);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+}
+
+.subtable{
+  margin-top:4px;
+}
+.subtable-title{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  margin-bottom:2px;
+}
+.subtable table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--fs-small);
+}
+.subtable th,
+.subtable td{
+  padding:4px 6px;
+  text-align:left;
+}
+.subtable th{
+  color:var(--accent);
+  border-bottom:1px solid rgba(214,180,76,.4);
+}
+.subtable tbody tr:nth-child(odd){background:var(--row);}
+.subtable tbody tr:nth-child(even){background:#050505;}
+.small-input{
+  width:100%;
+  background:transparent;
+  border:none;
+  color:var(--text);
+  font-family:inherit;
+  font-size:11px;
+}
+.small-input:focus{outline:none;}
+
+.form-actions{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:flex-end;
+}
+
+/* Small confirm modal reuse */
+#confirmModal .modal{
+  max-width:420px;
+}
+
+/* Utility */
+.muted{
+  color:var(--muted);
+  font-size:11px;
+}
 </style>
 </head>
 <body>
 
-  <!-- 🔁 Shared header injected here -->
-  <div id="header-container"></div>
-  <script>
-    // Load shared header and highlight the active tab
-    fetch('header.html')
-      .then(r=>r.text())
-      .then(html=>{
-        document.getElementById('header-container').innerHTML = html;
-        const here = location.pathname.split('/').pop() || 'contracts.html';
-        document.querySelectorAll('.nav-btn').forEach(a=>{
-          if(a.getAttribute('href')===here){
-            a.classList.add('active'); a.setAttribute('aria-current','page');
+<!-- Full-width universal header (header.html) -->
+<div id="header-container">
+  <!-- Fallback content if header.html fails -->
+  <div class="brand">
+    <img class="brand-logo"
+         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png"
+         alt="JMBN">
+    <h1>JMBN // CONTRACTS</h1>
+  </div>
+</div>
+
+<script>
+(async () => {
+  try{
+    const res = await fetch('header.html',{ cache:'no-cache' });
+    if(res.ok){
+      const html = await res.text();
+      document.getElementById('header-container').innerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href') || '').toLowerCase();
+          if(href === here){
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
+          }
+          if(/contract/.test(here) && /contract/.test(href)){
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
           }
         });
       });
-  </script>
+    }
+  }catch(e){
+    console.warn('Header load failed:', e);
+  }
+})();
+</script>
 
-  <div class="panel">
-    <div class="controls">
-      <input id="search" placeholder="Search… (name, commodity, type, origin, destination, notes)">
-      <select id="typeFilter" title="Filter by Type">
-        <option value="">All Types</option>
-        <option>Hauling</option>
-        <option>Mining</option>
-        <option>Cargo</option>
-        <option>Medical</option>
-      </select>
-      <button id="addBtn" class="btn-primary">Add Contract</button>
-      <button id="saveBtn">Save</button>
-      <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Clear All</button>
-      <button id="exportJSON">Export JSON</button>
-      <button id="importJSON" class="btn-primary">Import JSON</button>
-    </div>
+<!-- Main content -->
+<div class="page">
 
-    <!-- KPI -->
-    <div class="kpis">
-      <div class="kpi">
-        <div class="kpi-title">Total Contracts</div>
-        <div class="kpi-value" id="kpiCount">0</div>
-        <div class="kpi-sub" id="kpiCountSub">after filters</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-title">Total Payout (aUEC)</div>
-        <div class="kpi-value" id="kpiTotal">0</div>
-        <div class="kpi-sub">sum of rewards</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-title">Average Payout / Contract</div>
-        <div class="kpi-value" id="kpiAvg">0</div>
-        <div class="kpi-sub">based on filtered list</div>
-      </div>
-    </div>
-
-    <div class="tableWrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Contract</th>
-            <th>Commodity</th>
-            <th>Type</th>
-            <th>Origin</th>
-            <th>Destination</th>
-            <th>Reward (aUEC)</th>
-            <th>Status</th>
-            <th>Notes</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="status-main" id="mainStatus">Initialising…</div>
+    <button class="btn" id="openIntakeBtn">+ New Contract / Scan</button>
   </div>
 
-  <!-- Modal: Add -->
-  <div class="modal-bg" id="modal-bg">
-    <div class="modal">
-      <h2>Add Contract</h2>
-      <div class="form-grid">
-        <label>Contract Name *<input id="cName" placeholder="e.g., RW S2 — 24-box Haul"></label>
-        <label>Commodity<select id="cCommodity" title="Commodity"></select></label>
-        <label>Type of Mission
-          <select id="cType" title="Type">
-            <option>Hauling</option><option>Mining</option><option>Cargo</option><option>Medical</option>
-          </select>
-        </label>
-        <label>Origin<select id="cOrigin" title="Origin"></select></label>
-        <label>Destination<select id="cDest" title="Destination"></select></label>
-        <label>Reward (aUEC)<input id="cReward" placeholder="e.g., 48000"></label>
-        <label>Status
-          <select id="cStatus"><option>Available</option><option>Accepted</option><option>Completed</option></select>
-        </label>
-        <label>Notes<textarea id="cNotes" rows="3" placeholder="e.g., Night run, clear weather"></textarea></label>
-      </div>
-      <div class="modal-buttons">
-        <button id="cancelModal">Cancel</button>
-        <button id="saveModal" class="btn-primary">Add</button>
+  <!-- Saved sessions -->
+  <section class="section-panel">
+    <div class="panel-header">
+      <div class="panel-title">Saved Sessions</div>
+      <div class="panel-meta">Each card is a hauling session with its contracts &amp; cargo</div>
+    </div>
+    <div class="cards-grid" id="sessionsGrid">
+      <div class="muted">Loading sessions…</div>
+    </div>
+  </section>
+</div>
+
+<!-- Intake Modal -->
+<div class="modal-mask" id="intakeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Contract – Session Intake</div>
+      <button type="button" class="btn-secondary" id="intakeCloseBtn">Close</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-intake">
+        <!-- LEFT: Session + screenshot -->
+        <section class="panel-inner">
+          <div class="panel-header" style="margin-bottom:6px;">
+            <div class="panel-title" style="font-size:12px;">Session &amp; Screenshot Intake</div>
+            <div class="panel-meta">Session auto-creates on first save</div>
+          </div>
+
+          <div class="session-kpis">
+            <div class="kpi">
+              <div class="kpi-label">Session ID</div>
+              <div class="kpi-value" id="kpiSessionId">—</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Submitted By</div>
+              <div class="kpi-value" id="kpiSubmittedBy">—</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Active Contract</div>
+              <div class="kpi-value" id="kpiActiveContract">New Contract</div>
+            </div>
+          </div>
+
+          <div class="upload-box" id="pasteZone">
+            <div class="upload-row">
+              <input type="file" id="screenshotInput" accept="image/*">
+              <button class="btn" type="button" id="scanBtn">Scan Image</button>
+              <button class="btn btn-secondary" type="button" id="clearBtn">Clear</button>
+            </div>
+            <div class="status" id="statusLine">
+              Tip: Use <b>Win+Shift+S</b> in-game, copy the contract, click here and press <b>Ctrl+V</b>.
+            </div>
+          </div>
+
+          <div class="preview-wrap">
+            <div class="preview">
+              <img id="previewImg" alt="Screenshot preview" style="display:none;">
+            </div>
+            <div class="ocr-box" id="ocrOutput"></div>
+          </div>
+        </section>
+
+        <!-- RIGHT: Contract editor -->
+        <section class="panel-inner">
+          <div class="panel-header" style="margin-bottom:6px;">
+            <div class="panel-title" style="font-size:12px;">Contract Editor</div>
+            <div class="panel-meta">OCR will try to autofill reward &amp; legs</div>
+          </div>
+
+          <div class="contract-editor">
+            <div class="meta-grid">
+              <div class="form-field">
+                <label for="contractName">Contract Name</label>
+                <input id="contractName" type="text" placeholder="e.g. Covalex Waste Run">
+              </div>
+              <div class="form-field">
+                <label for="contractType">Type</label>
+                <select id="contractType">
+                  <option value="hauling">Hauling</option>
+                  <option value="delivery">Delivery</option>
+                  <option value="salvage">Salvage</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="reward">Reward (aUEC)</label>
+                <input id="reward" type="number" min="0" step="1" placeholder="42000">
+              </div>
+            </div>
+
+            <div class="cargo-list" id="cargoList"></div>
+
+            <div class="form-actions">
+              <button class="btn-secondary" type="button" id="addCargoBtn">+ Add Cargo Type</button>
+              <button class="btn" type="button" id="saveContractBtn">Save Contract</button>
+            </div>
+
+            <div class="muted">
+              Once saved, this contract will appear under its session in the audit list.
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Modal: Edit -->
-  <div class="modal-bg" id="edit-modal-bg">
-    <div class="modal">
-      <h2>Edit Contract</h2>
-      <div class="form-grid">
-        <label>Contract Name *<input id="eName"></label>
-        <label>Commodity<select id="eCommodity"></select></label>
-        <label>Type of Mission
-          <select id="eType"><option>Hauling</option><option>Mining</option><option>Cargo</option><option>Medical</option></select>
-        </label>
-        <label>Origin<select id="eOrigin"></select></label>
-        <label>Destination<select id="eDest"></select></label>
-        <label>Reward (aUEC)<input id="eReward"></label>
-        <label>Status
-          <select id="eStatus"><option>Available</option><option>Accepted</option><option>Completed</option></select>
-        </label>
-        <label>Notes<textarea id="eNotes" rows="3"></textarea></label>
-      </div>
-      <div class="modal-buttons">
-        <button id="cancelEdit">Cancel</button>
-        <button id="saveEdit" class="btn-primary">Save Changes</button>
-      </div>
+<!-- Small confirm modal for OCR summary -->
+<div class="modal-mask" id="confirmModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Confirm Detected Contract</div>
+      <button type="button" class="btn-secondary" id="modalCloseBtn">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="muted" style="margin-top:0;margin-bottom:6px;">
+        We parsed this contract from your screenshot. Confirm it looks okay before editing or saving.
+      </p>
+      <dl style="font-size:13px;">
+        <dt>Reward</dt>
+        <dd id="modalReward">–</dd>
+        <dt>Contractor</dt>
+        <dd id="modalContractor">–</dd>
+        <dt>Legs / Cargo</dt>
+        <dd id="modalLegs">–</dd>
+      </dl>
+    </div>
+    <div class="modal-header" style="justify-content:flex-end;margin-top:6px;">
+      <button type="button" class="btn-secondary" id="modalCancelBtn">Cancel</button>
+      <button type="button" class="btn" id="modalConfirmBtn">Confirm</button>
     </div>
   </div>
+</div>
 
-  <!-- 🔐 Auth -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/auth.js"></script>
+<!-- JS libs -->
+<script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 
 <script>
-/* ===== Storage + helpers ===== */
-const STORE='jmbn-contracts';
-const $=s=>document.querySelector(s);
-const $$=s=>Array.from(document.querySelectorAll(s));
-const uid=()=> 'CT-'+Math.random().toString(36).slice(2,8);
-function esc(s=''){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
-function parseAUEC(val){ if(val==null) return 0; const n=Number(String(val).replace(/[^\d.-]/g,'')); return Number.isFinite(n)? n : 0; }
-function fmt(n){ try{ return Number(n).toLocaleString('en-US'); }catch{ return String(n); } }
+/* ===== JMBN CONTRACTS – INLINE JS ===== */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
 
-/* ===== DATA LISTS ===== */
-const originList = `Ambitious Dream Station (CRU-L1), Anderson (HDMS-Anderson), ARC-L1 Wide Forest Station, ARC-L2 Lively Pathway Station, ARC-L3 Modern Express Station, ARC-L4 Faint Glen Station, ARC-L5 Yellow Core Station, ArcCorp Mining Area 045, ArcCorp Mining Area 048, ArcCorp Mining Area 056, ArcCorp Mining Area 061, ArcCorp Mining Area 141, ArcCorp Mining Area 157, Area18 (Riker Memorial Spaceport), Arid Reach, Ashland, Astor’s Clearing, Baijini Point, Beautiful Glen Station (CRU-L5), Benson Mining Outpost, Blackrock Exchange, Bloodshot Ridge, Bountiful Harvest Hydroponics, Brio’s Breaker Yard, Bud’s Growery, Bueno Ravine, Canard View, Casillo (HDPC-Casillo), Chawla’s Beach, Checkmate, Covalex Distribution Centre S1DC06, Covalex Distribution Centre S4DC05, CRU-L1 Ambitious Dream Station, CRU-L4 Shallow Fields Station, CRU-L5 Beautiful Glen Station, Cry-Astro Processing Plant 19-02, Cry-Astro Processing Plant 34-12, Cutter’s Rig, Deakins Research Outpost, Devlin Scrap & Salvage, Dudley & Daughters, Dunboro, Dupree Industrial Manufacturing Facility, Endgame, Endless Odyssey Station (MIC-L3), Everus Harbor, Faithful Dream Station (HUR-L2), Faint Glen Station (ARC-L4), Fallow Field, Farnesway (HDPC-Farnesway), Finn’s Folley, Frostbite, Frigid Knot, Gallete Family Farms, Gaslight, Goner’s Deal, Golden Riviera (The Golden Riviera), Grim HEX, Greycat Stanton I Production Complex-B, Greycat Stanton IV Production Complex A, Hadley (HDMS-Hadley), Harper’s Point, Hickes Research Outpost, High Course Station (HUR-L5), Humboldt Mines, HUR-L1 Green Glade Station, HUR-L2 Faithful Dream Station, HUR-L3 Thundering Express Station, HUR-L4 Melodic Fields Station, HUR-L5 High Course Station, Jackson’s Swap, Jumptown, Kabir’s Outpost, Kudre Ore, Last Landings, Lathan (HDMS-Lathan), Lively Pathway Station (ARC-L2), Lorville (Teasa Spaceport), Long Forest Station (MIC-L2), Loveridge Mineral Reserve, Ludlow, Magnus Gateway, Maker’s Point, Megumi Refueling, Melodic Fields Station (HUR-L4), MIC-L1 Shallow Frontier Station, MIC-L2 Long Forest Station, MIC-L3 Endless Odyssey Station, MIC-L4 Red Crossroads Station, MIC-L5 Modern Icarus Station, Modern Express Station (ARC-L3), Modern Icarus Station (MIC-L5), Moreland Hills, Necropolis (The Necropolis), New Babbage Interstellar Spaceport, Norgaard (HDMS-Norgaard), NT-999-XX, Nuen Waste Management, Oparei (HDMS-Oparei), Orbituary, Orinth (Reclamation & Disposal Orinth), Orison (August Dunlow Spaceport), Orphanage (The Orphanage), Outpost 54, Paradise Cove, Patch City, Pickers Field, Pinewood (HDMS-Pinewood), Private Property (PRIVATE PROPERTY), Pyro Gateway, Rappel, Raven’s Roost, Razor’s Edge, Rayari Anvik Research Outpost, Rayari Cantwell Research Outpost, Rayari Deltana Research Outpost, Rayari Kaltag Research Outpost, Rayari McGrath Research Outpost, Rat’s Nest, Riker Memorial Spaceport (Area18), Rod’s Fuel ’N Supplies, Rough Landing, Ruin Station, Rustville, Ryder (HDMS-Ryder), Sacren’s Plot, Sakura Sun Goldenrod Workcenter, Sakura Sun Magnolia Workcenter, Samson & Son’s Salvage Center, SCD-1 (Shubin Mining Facility SCD-1), Seer’s Canyon, Seraphim Station, Shady Glen Farms, Shallow Fields Station (CRU-L4), Shallow Frontier Station (MIC-L1), Shepherd’s Rest, Shubin Mining Facility SAL-2, Shubin Mining Facility SAL-5, Shubin Mining Facility SCD-1, Shubin Mining Facility SM0-10, Shubin Mining Facility SM0-13, Shubin Mining Facility SM0-18, Shubin Mining Facility SM0-22, Shubin Mining Facility SMCa-6, Shubin Mining Facility SMCa-8, S4DC05 (Covalex Distribution Centre S4DC05), S4LD01 (Microtech Logistics Depot S4LD01), S4LD13 (Microtech Logistics Depot S4LD13), Stanhope (HDMS-Stanhope), Starlight Service Station, Sunset Mesa, Teasa Spaceport (Lorville), Terra Gateway, Terra Mills HydroFarm, Thedus (HDMS-Thedus), Thundering Express Station (HUR-L3), Tram & Myers Mining, Port Tressler, Weeping Cove, Wide Forest Station (ARC-L1), Woodruff (HDMS-Woodruff), XenoThreat Security Station, Yellow Core Station (ARC-L5), Zephyr`.split(',');
-const commodities = `AcryliPlex Composite, Agricium, Agricium (Ore), Agricultural Supplies, Altruciatoxin, Aluminum, Aluminum (Ore), Aluminium, Aluminium (Ore), Amioshi Plague, Ammonia, Aphorite, Apoxygenite, Argon, Astatine, Atlasium, Beryl, Beryl (Raw), Bexalite, Bexalite (Raw), Bioplastic, Blue Bilva, Borase, Borase (Ore), CK13-GID Seed Blend, Carbon, Carbon Silk, Chlorine, Cobalt, CompBoard, Construction Materials, Copper, Copper (Ore), Corundum, Corundum (Raw), DCSR2, Decari Pod, Degnous Root, Diamond, Diamond (Raw), Diamond Laminate, Diluthermex, Distilled Spirits, Dolivine, Dopple, Dymantium, DynaFlex, E-Tam, Elespo, Fireworks, Fluorine, Fotia Seedpod, Freeze, Fresh Food, Gasping Weevil Eggs, Glow, Gold, Gold (Ore), Golden Medmon, HLX99 Hyperprocessors, Hadanite, Heart of the woods, Helium, Hephaestanite, Hephaestanite (Ore), HexaPolyMesh Coating, Human Food Bars, Hydrogen, Hydrogen Fuel, Inert Materials, Iodine, Iron, Iron (Ore), Janalite, Jumping Limes, Kopion Horn, Laranite, Laranite (Ore), Lastaprene, Luminalia Gift, Lunes, Lycara, Mala, Marok Gem, Maze, MedPens, Medical Supplies, Mercury, Methane, Neograph, Neon, Nitrogen, Omnapoxy, Osoian Hides, Oxypen, Oza, Partillium, Pingala Seeds, Pitambu, Potassium, Pressurized Ice, Processed Food, Prota, Quantainium, Quantainium (Raw), Quantum Fuel, Quartz, Quartz (Raw), RS1 Odyssey Spacesuits, Ranta Dung, Raw Ice, Recycled Material Composite, Redfin Energy Modulators, Revenant Pod, Revenant Tree Pollen, Riccite, SLAM, Sarilus, Scrap, Ship Ammunition, Silicon, Silnex, Souvenirs, Steel, Stileron, Stims, Stone Bug Shell, Sunset Berries, Taranite, Taranite (Raw), Thermal Foam, Thrust, Tin, Titanium, Titanium (Ore), Tritium, Tungsten, Tungsten (Ore), Uncut SLAM, Waste, WiDoW, XaPyen, ZetaProlanide`.split(',');
+let sb = null;
+let currentUser = null;
+let currentSession = null;
+let editingContractId = null; // null = creating new
 
-/* Populate selects */
-function populateSelect(sel, list){
-  if(!sel) return;
-  sel.innerHTML = '';
-  const o0 = document.createElement('option');
-  o0.value = ''; o0.textContent = '-- select --';
-  sel.appendChild(o0);
-  list.forEach(v=>{
-    const t=(v||'').trim(); if(!t) return;
-    const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o);
+// Model for current contract being edited
+const activeContractModel = {
+  contractorName:null,
+  reward:null,
+  legs:[],
+  cargoTypes:[]
+};
+
+// Status helpers
+function setMainStatus(text,type){
+  const el = $('#mainStatus');
+  if(!el) return;
+  el.textContent = text;
+  el.classList.remove('ok','err');
+  if(type === 'ok')  el.classList.add('ok');
+  if(type === 'err') el.classList.add('err');
+}
+function setStatus(text,type){
+  const el = $('#statusLine');
+  if(!el) return;
+  el.textContent = text;
+  el.classList.remove('status-ok','status-err');
+  if(type === 'ok')  el.classList.add('status-ok');
+  if(type === 'err') el.classList.add('status-err');
+}
+
+/* ---------- Session helpers ---------- */
+async function ensureSession(){
+  if(currentSession) return currentSession;
+  const { data, error } = await sb
+    .from('sessions')
+    .insert({ submitted_by: currentUser.id })
+    .select()
+    .single();
+  if(error){
+    console.error(error);
+    setMainStatus('Failed to create session in DB.', 'err');
+    return null;
+  }
+  currentSession = data;
+  if($('#kpiSessionId')) $('#kpiSessionId').textContent = data.id;
+  setStatus('Session created. Ready to scan & save contracts.', 'ok');
+  return data;
+}
+
+/* ---------- Cargo editor rendering ---------- */
+function renderCargoList(){
+  const wrap = $('#cargoList');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+
+  activeContractModel.cargoTypes.forEach((cargo, idx) => {
+    const card = document.createElement('div');
+    card.className = 'cargo-card';
+
+    const header = document.createElement('div');
+    header.className = 'cargo-header';
+
+    const title = document.createElement('h4');
+    title.className = 'cargo-title';
+    title.textContent = cargo.name || \`Cargo \${idx+1}\`;
+    header.appendChild(title);
+
+    const right = document.createElement('div');
+    right.style.display = 'flex';
+    right.style.alignItems = 'center';
+    right.style.gap = '6px';
+
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = 'CARGO TYPE';
+    right.appendChild(badge);
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn-secondary';
+    delBtn.textContent = 'Remove';
+    delBtn.style.fontSize = '10px';
+    delBtn.addEventListener('click', () => {
+      activeContractModel.cargoTypes.splice(idx,1);
+      renderCargoList();
+    });
+    right.appendChild(delBtn);
+
+    header.appendChild(right);
+    card.appendChild(header);
+
+    // Name field
+    const nameField = document.createElement('div');
+    nameField.className = 'form-field';
+    const nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Cargo Name';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = cargo.name || '';
+    nameInput.placeholder = 'Waste / Scrap / Boxes';
+    nameInput.addEventListener('input', e => {
+      cargo.name = e.target.value;
+      title.textContent = cargo.name || \`Cargo \${idx+1}\`;
+    });
+    nameField.appendChild(nameLabel);
+    nameField.appendChild(nameInput);
+    card.appendChild(nameField);
+
+    // Loading table
+    const loadWrap = document.createElement('div');
+    loadWrap.className = 'subtable';
+    const loadTitle = document.createElement('div');
+    loadTitle.className = 'subtable-title';
+    loadTitle.textContent = 'Loading (from)';
+    loadWrap.appendChild(loadTitle);
+
+    const loadTable = document.createElement('table');
+    const loadHead = document.createElement('thead');
+    loadHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+    loadTable.appendChild(loadHead);
+
+    const loadBody = document.createElement('tbody');
+    cargo.loadings.forEach((row, li) => {
+      const tr = document.createElement('tr');
+
+      const tdLoc = document.createElement('td');
+      const inLoc = document.createElement('input');
+      inLoc.className = 'small-input';
+      inLoc.value = row.location;
+      inLoc.placeholder = 'Pick-up';
+      inLoc.addEventListener('input', e => row.location = e.target.value);
+      tdLoc.appendChild(inLoc);
+      tr.appendChild(tdLoc);
+
+      const tdScu = document.createElement('td');
+      const inScu = document.createElement('input');
+      inScu.className = 'small-input';
+      inScu.type = 'number';
+      inScu.value = row.scu;
+      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+      tdScu.appendChild(inScu);
+      tr.appendChild(tdScu);
+
+      const tdDel = document.createElement('td');
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'btn-secondary';
+      rm.textContent = '✕';
+      rm.style.fontSize = '10px';
+      rm.addEventListener('click', () => {
+        cargo.loadings.splice(li,1);
+        renderCargoList();
+      });
+      tdDel.appendChild(rm);
+      tr.appendChild(tdDel);
+
+      loadBody.appendChild(tr);
+    });
+
+    const addLoadTr = document.createElement('tr');
+    const addLoadTd = document.createElement('td');
+    addLoadTd.colSpan = 3;
+    const addLoadBtn = document.createElement('button');
+    addLoadBtn.type = 'button';
+    addLoadBtn.className = 'btn-secondary';
+    addLoadBtn.textContent = '+ Add Loading Row';
+    addLoadBtn.style.fontSize = '10px';
+    addLoadBtn.addEventListener('click', () => {
+      cargo.loadings.push({ location:'', scu:0 });
+      renderCargoList();
+    });
+    addLoadTd.appendChild(addLoadBtn);
+    addLoadTr.appendChild(addLoadTd);
+    loadBody.appendChild(addLoadTr);
+
+    loadTable.appendChild(loadBody);
+    loadWrap.appendChild(loadTable);
+    card.appendChild(loadWrap);
+
+    // Offloading table
+    const offWrap = document.createElement('div');
+    offWrap.className = 'subtable';
+    const offTitle = document.createElement('div');
+    offTitle.className = 'subtable-title';
+    offTitle.textContent = 'Offloading (to)';
+    offWrap.appendChild(offTitle);
+
+    const offTable = document.createElement('table');
+    const offHead = document.createElement('thead');
+    offHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+    offTable.appendChild(offHead);
+
+    const offBody = document.createElement('tbody');
+    cargo.offloadings.forEach((row, oi) => {
+      const tr = document.createElement('tr');
+
+      const tdLoc = document.createElement('td');
+      const inLoc = document.createElement('input');
+      inLoc.className = 'small-input';
+      inLoc.value = row.location;
+      inLoc.placeholder = 'Drop-off';
+      inLoc.addEventListener('input', e => row.location = e.target.value);
+      tdLoc.appendChild(inLoc);
+      tr.appendChild(tdLoc);
+
+      const tdScu = document.createElement('td');
+      const inScu = document.createElement('input');
+      inScu.className = 'small-input';
+      inScu.type = 'number';
+      inScu.value = row.scu;
+      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+      tdScu.appendChild(inScu);
+      tr.appendChild(tdScu);
+
+      const tdDel = document.createElement('td');
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'btn-secondary';
+      rm.textContent = '✕';
+      rm.style.fontSize = '10px';
+      rm.addEventListener('click', () => {
+        cargo.offloadings.splice(oi,1);
+        renderCargoList();
+      });
+      tdDel.appendChild(rm);
+      tr.appendChild(tdDel);
+
+      offBody.appendChild(tr);
+    });
+
+    const addOffTr = document.createElement('tr');
+    const addOffTd = document.createElement('td');
+    addOffTd.colSpan = 3;
+    const addOffBtn = document.createElement('button');
+    addOffBtn.type = 'button';
+    addOffBtn.className = 'btn-secondary';
+    addOffBtn.textContent = '+ Add Offloading Row';
+    addOffBtn.style.fontSize = '10px';
+    addOffBtn.addEventListener('click', () => {
+      cargo.offloadings.push({ location:'', scu:0 });
+      renderCargoList();
+    });
+    addOffTd.appendChild(addOffBtn);
+    addOffTr.appendChild(addOffTd);
+    offBody.appendChild(addOffTr);
+
+    offTable.appendChild(offBody);
+    offWrap.appendChild(offTable);
+    card.appendChild(offWrap);
+
+    wrap.appendChild(card);
   });
 }
 
-let contracts=[];
-
-/* Load + Save */
-function load(){
-  const raw=localStorage.getItem(STORE);
-  contracts = raw ? JSON.parse(raw) : [];
-  contracts.forEach(c=>{ if(c.commodity==null)c.commodity=''; if(c.type==null)c.type=''; });
-
-  populateSelect(document.getElementById('cCommodity'), commodities);
-  populateSelect(document.getElementById('cOrigin'), originList);
-  populateSelect(document.getElementById('cDest'), originList);
-
-  render();
-}
-function save(){ localStorage.setItem(STORE, JSON.stringify(contracts)); }
-document.getElementById('saveBtn').onclick=save;
-document.getElementById('resetBtn').onclick=()=>{ if(confirm('Clear all contracts?')){ contracts=[]; save(); render(); } };
-
-/* Add Modal */
-const addBG=document.getElementById('modal-bg');
-document.getElementById('addBtn').onclick=()=>{ addBG.style.display='flex'; };
-document.getElementById('cancelModal').onclick=()=>{ addBG.style.display='none'; clearAddForm(); };
-document.getElementById('saveModal').onclick=()=>{
-  const name=document.getElementById('cName').value.trim(); if(!name){ alert('Name required'); return; }
-  const now=new Date().toLocaleString();
-  const obj={
-    id:uid(), time:now, name,
-    commodity: document.getElementById('cCommodity').value.trim(),
-    type: document.getElementById('cType').value,
-    origin: document.getElementById('cOrigin').value.trim(),
-    destination: document.getElementById('cDest').value.trim(),
-    reward: document.getElementById('cReward').value.trim(),
-    status: document.getElementById('cStatus').value,
-    notes: document.getElementById('cNotes').value.trim()
-  };
-  contracts.push(obj);
-  save(); render(); addBG.style.display='none'; clearAddForm();
-};
-function clearAddForm(){
-  ['cName','cReward','cNotes'].forEach(id=>document.getElementById(id).value='');
-  ['cCommodity','cOrigin','cDest','cType','cStatus'].forEach(id=>document.getElementById(id).selectedIndex=0);
+/* ---------- OCR parsing ---------- */
+function parseHeader(text){
+  const header = { reward:null, contractor:null };
+  let m = text.match(/Reward\s+(?:[a-z]\s*)?([\d,]+)/i);
+  if(m && m[1]) header.reward = m[1].replace(/,/g,'');
+  m = text.match(/Contracted\s+By\s+(.+)/i);
+  if(m && m[1]) header.contractor = m[1].trim();
+  return header;
 }
 
-/* KPIs */
-function updateKPIs(arr){
-  const count = arr.length;
-  let total = 0;
-  for(const c of arr){ total += parseAUEC(c.reward); }
-  const avg = count ? total / count : 0;
-  document.getElementById('kpiCount').textContent = fmt(count);
-  document.getElementById('kpiTotal').textContent = fmt(total);
-  document.getElementById('kpiAvg').textContent   = fmt(Math.round(avg));
+function parseLegs(text){
+  const cleaned = text.replace(/\r/g,'');
+  const collectRe = /Collect\s+(.+?)\s+from\s+(.+?)\./gi;
+  const deliverRe = /Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
+
+  const collects = [];
+  const delivers = [];
+  let m;
+
+  while((m = collectRe.exec(cleaned)) !== null){
+    collects.push({ cargoType:m[1].trim(), origin:m[2].trim() });
+  }
+  while((m = deliverRe.exec(cleaned)) !== null){
+    delivers.push({
+      delivered:parseInt(m[1],10),
+      required:parseInt(m[2],10),
+      destination:m[3].trim()
+    });
+  }
+
+  const legs = [];
+  const n = Math.min(collects.length, delivers.length);
+  for(let i=0;i<n;i++){
+    legs.push({
+      leg:i+1,
+      cargoType:collects[i].cargoType,
+      origin:collects[i].origin,
+      destination:delivers[i].destination,
+      delivered:delivers[i].delivered,
+      required:delivers[i].required
+    });
+  }
+  return legs;
 }
 
-/* Filter + Render */
-function getFiltered(){
-  const q=(document.getElementById('search').value||'').toLowerCase();
-  const tf=(document.getElementById('typeFilter').value||'').toLowerCase();
-  let arr=contracts.slice();
-  if(tf) arr=arr.filter(x=>(x.type||'').toLowerCase()===tf);
-  if(q) arr=arr.filter(x=>
-    `${x.name} ${x.commodity||''} ${x.type||''} ${x.origin||''} ${x.destination||''} ${x.notes||''}`.toLowerCase().includes(q)
-  );
-  return arr;
-}
-function render(){
-  const arr=getFiltered();
-  updateKPIs(arr);
-  document.getElementById('rows').innerHTML=arr.map(c=>`
-    <tr>
-      <td>${esc(c.time||'-')}</td>
-      <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
-      <td>${esc(c.commodity||'-')}</td>
-      <td>${c.type?`<span class="badge">${esc(c.type)}</span>`:'-'}</td>
-      <td>${esc(c.origin||'')}</td>
-      <td>${esc(c.destination||'')}</td>
-      <td>${esc(c.reward||'')}</td>
-      <td>${c.status?`<span class="badge">${esc(c.status)}</span>`:''}</td>
-      <td>${esc(c.notes||'')}</td>
-      <td style="white-space:nowrap">
-        <button data-act="edit" data-id="${c.id}">Edit</button>
-        <button data-act="del" data-id="${c.id}" style="border-color:var(--bad);color:var(--bad)">Del</button>
-      </td>
-    </tr>`).join('');
-
-  Array.from(document.querySelectorAll('#rows button[data-act]')).forEach(b=>{
-    const id=b.dataset.id;
-    if(b.dataset.act==='edit') b.onclick=()=>edit(id);
-    if(b.dataset.act==='del')  b.onclick=()=>{ if(confirm('Delete this contract?')){ contracts=contracts.filter(x=>x.id!==id); save(); render(); } };
-  });
-}
-document.getElementById('search').addEventListener('input', render);
-document.getElementById('typeFilter').addEventListener('input', render);
-
-/* Edit modal */
-const editBG=document.getElementById('edit-modal-bg');
-document.getElementById('cancelEdit').onclick=()=>{ editBG.style.display='none'; };
-
-function edit(id){
-  const c=contracts.find(x=>x.id===id); if(!c) return;
-  populateSelect(document.getElementById('eCommodity'), commodities);
-  populateSelect(document.getElementById('eOrigin'), originList);
-  populateSelect(document.getElementById('eDest'), originList);
-
-  document.getElementById('eName').value = c.name||'';
-  document.getElementById('eCommodity').value = c.commodity||'';
-  document.getElementById('eType').value = c.type||'';
-  document.getElementById('eOrigin').value = c.origin||'';
-  document.getElementById('eDest').value = c.destination||'';
-  document.getElementById('eReward').value = c.reward||'';
-  document.getElementById('eStatus').value = c.status||'Available';
-  document.getElementById('eNotes').value = c.notes||'';
-
-  editBG.style.display='flex';
-
-  document.getElementById('saveEdit').onclick = () => {
-    c.name = document.getElementById('eName').value.trim();
-    c.commodity = document.getElementById('eCommodity').value.trim();
-    c.type = document.getElementById('eType').value;
-    c.origin = document.getElementById('eOrigin').value.trim();
-    c.destination = document.getElementById('eDest').value.trim();
-    c.reward = document.getElementById('eReward').value.trim();
-    c.status = document.getElementById('eStatus').value;
-    c.notes = document.getElementById('eNotes').value.trim();
-    save(); render(); editBG.style.display='none';
-  };
+function buildCargoModelFromLegs(legs){
+  const map = new Map();
+  for(const leg of legs){
+    const key = leg.cargoType || 'Unknown';
+    if(!map.has(key)){
+      map.set(key,{ name:key, loadings:[], offloadings:[] });
+    }
+    const entry = map.get(key);
+    entry.loadings.push({ location:leg.origin, scu:leg.required });
+    entry.offloadings.push({ location:leg.destination, scu:leg.required });
+  }
+  return Array.from(map.values());
 }
 
-/* Export / Import */
-document.getElementById('exportJSON').onclick=()=>{
-  const blob=new Blob([JSON.stringify(contracts,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='jmbn-contracts.json';a.click();
-  URL.revokeObjectURL(url);
-};
-document.getElementById('importJSON').onclick=()=>{
-  const inp=document.createElement('input');inp.type='file';inp.accept='application/json';
-  inp.onchange=()=>{
-    const f=inp.files?.[0];if(!f)return;
-    const r=new FileReader();
-    r.onload=()=>{
-      try{
-        const arr=JSON.parse(r.result);
-        if(!Array.isArray(arr)) throw new Error('Invalid JSON');
-        arr.forEach(x=>{ if(!x.id) x.id=uid(); if(x.commodity==null) x.commodity=''; if(x.type==null) x.type=''; });
-        if(confirm('Merge with existing? Click Cancel to REPLACE.')){
-          const map=new Map(contracts.map(x=>[x.id,x])); arr.forEach(x=>map.set(x.id,x)); contracts=[...map.values()];
-        }else{ contracts=arr; }
-        save(); render(); alert('Import complete');
-      }catch(e){ alert('Import failed: '+e.message); }
-    };
-    r.readAsText(f);
-  };
-  inp.click();
-};
+/* ---------- OCR flow ---------- */
+async function runOCROnBlob(blob){
+  const ocrOutput = $('#ocrOutput');
+  const scanBtn   = $('#scanBtn');
+  if(!ocrOutput || !scanBtn) return;
 
-/* Init (Auth gate) */
+  ocrOutput.textContent = '';
+  setStatus('Scanning image…','ok');
+  scanBtn.disabled = true;
+
+  try{
+    const { data:{ text } } = await Tesseract.recognize(blob,'eng',{
+      logger:m=>{
+        if(m.status === 'recognizing text'){
+          const pct = Math.round((m.progress||0)*100);
+          setStatus(\`Recognising text… \${pct}%\`,'ok');
+        }
+      }
+    });
+
+    const trimmed = text.trim();
+    ocrOutput.textContent = trimmed;
+
+    const header = parseHeader(trimmed);
+    const legs   = parseLegs(trimmed);
+    const cargo  = buildCargoModelFromLegs(legs);
+
+    activeContractModel.legs       = legs;
+    activeContractModel.cargoTypes = cargo;
+    activeContractModel.contractorName = header.contractor || null;
+    activeContractModel.reward     = header.reward ? Number(header.reward) : null;
+
+    const rewardEl = $('#reward');
+    const nameEl   = $('#contractName');
+    if(header.reward && rewardEl) rewardEl.value = header.reward;
+    if(header.contractor && nameEl && !nameEl.value){
+      nameEl.value = header.contractor;
+    }
+    if($('#kpiActiveContract')){
+      $('#kpiActiveContract').textContent = nameEl?.value || 'New Contract';
+    }
+
+    renderCargoList();
+    openConfirmModal(header, legs, cargo);
+    setStatus('Scan complete. Review parsed data before saving.','ok');
+  }catch(err){
+    console.error(err);
+    setStatus('Error during OCR. Try a clearer screenshot.','err');
+  }finally{
+    scanBtn.disabled = false;
+  }
+}
+
+/* ---------- Confirm modal ---------- */
+function openConfirmModal(header, legs, cargoTypes){
+  const mask = $('#confirmModal');
+  if(!mask) return;
+  const modalReward     = $('#modalReward');
+  const modalContractor = $('#modalContractor');
+  const modalLegs       = $('#modalLegs');
+
+  if(modalReward){
+    modalReward.textContent = header.reward
+      ? Number(header.reward).toLocaleString() + ' aUEC'
+      : '—';
+  }
+  if(modalContractor){
+    modalContractor.textContent = header.contractor || '—';
+  }
+
+  if(modalLegs){
+    if(legs.length){
+      const totalSCU   = legs.reduce((s,l)=>s+(l.required||0),0);
+      const cargoNames = cargoTypes.map(c=>c.name).join(', ');
+      modalLegs.textContent = \`\${legs.length} leg(s) • \${totalSCU} SCU • Cargo: \${cargoNames || '—'}\`;
+    }else{
+      modalLegs.textContent = 'None detected';
+    }
+  }
+  mask.classList.add('open');
+}
+function closeConfirmModal(){
+  const mask = $('#confirmModal');
+  if(mask) mask.classList.remove('open');
+}
+
+/* ---------- Saved sessions cards ---------- */
+async function loadSessions(){
+  const grid = $('#sessionsGrid');
+  if(!grid) return;
+
+  const { data:sessions, error } = await sb
+    .from('sessions')
+    .select('id, created_at')
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.error(error);
+    grid.innerHTML = '<div class="muted">Error loading sessions.</div>';
+    return;
+  }
+  if(!sessions || !sessions.length){
+    grid.innerHTML = '<div class="muted">No sessions yet. Use “New Contract / Scan” to start.</div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+
+  for(const s of sessions){
+    const { data:contracts, error:cErr } = await sb
+      .from('contracts')
+      .select(\`
+        id,
+        contract_name,
+        contract_type,
+        reward,
+        contract_cargo_types (
+          id,
+          cargo_type,
+          contract_loading ( location, scu ),
+          contract_offloading ( location, scu )
+        )
+      \`)
+      .eq('session_id', s.id)
+      .order('id',{ascending:true});
+
+    if(cErr){
+      console.error(cErr);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const header = document.createElement('div');
+    header.className = 'card-header';
+
+    const main = document.createElement('div');
+    main.className = 'card-header-main';
+
+    const sid = document.createElement('div');
+    sid.className = 'card-session-id';
+    sid.textContent = 'SESSION ' + s.id.slice(0,8);
+    main.appendChild(sid);
+
+    const sub = document.createElement('div');
+    sub.className = 'card-sub';
+    const d = new Date(s.created_at);
+    sub.textContent = d.toLocaleString();
+    main.appendChild(sub);
+
+    header.appendChild(main);
+
+    const right = document.createElement('div');
+    right.className = 'card-toggle';
+
+    const kpis = document.createElement('div');
+    kpis.className = 'card-kpis';
+
+    const cCount = (contracts || []).length;
+    const k1 = document.createElement('span');
+    k1.className = 'card-kpi';
+    k1.textContent = cCount + ' contract' + (cCount === 1 ? '' : 's');
+    kpis.appendChild(k1);
+
+    right.appendChild(kpis);
+
+    const toggle = document.createElement('div');
+    toggle.className = 'card-toggle-icon';
+    toggle.textContent = '>';
+    right.appendChild(toggle);
+
+    header.appendChild(right);
+    card.appendChild(header);
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    const bodyInner = document.createElement('div');
+    bodyInner.className = 'card-body-inner';
+
+    if(contracts && contracts.length){
+      contracts.forEach((c, idx) => {
+        const block = document.createElement('div');
+        block.className = 'contract-block';
+
+        const name = document.createElement('div');
+        name.className = 'contract-name';
+        name.textContent = (idx+1) + '. ' + (c.contract_name || 'Contract');
+        block.appendChild(name);
+
+        if(c.reward != null){
+          const rw = document.createElement('div');
+          rw.className = 'contract-line';
+          rw.textContent = 'Reward: ' + Number(c.reward).toLocaleString() + ' aUEC';
+          block.appendChild(rw);
+        }
+
+        (c.contract_cargo_types || []).forEach(ct => {
+          const load = (ct.contract_loading && ct.contract_loading[0]) || null;
+          const off  = (ct.contract_offloading && ct.contract_offloading[0]) || null;
+
+          const line1 = document.createElement('div');
+          line1.className = 'contract-line';
+          const startLoc = load ? load.location : 'Unknown';
+          const endLoc   = off  ? off.location  : 'Unknown';
+          line1.textContent = (startLoc || 'Unknown') + '  >  ' + (endLoc || 'Unknown');
+          block.appendChild(line1);
+
+          const line2 = document.createElement('div');
+          line2.className = 'contract-line';
+          const scu = load ? load.scu : (off ? off.scu : 0);
+          line2.textContent = (scu || 0) + ' SCU ' + (ct.cargo_type || '');
+          block.appendChild(line2);
+        });
+
+        // Edit / Delete actions
+        const actions = document.createElement('div');
+        actions.className = 'contract-actions';
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = 'btn-secondary';
+        editBtn.textContent = 'Edit';
+        editBtn.style.fontSize = '10px';
+        editBtn.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          openContractForEdit(s, c);
+        });
+        actions.appendChild(editBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'btn-danger';
+        delBtn.textContent = 'Delete';
+        delBtn.style.fontSize = '10px';
+        delBtn.addEventListener('click', async (ev) => {
+          ev.stopPropagation();
+          await deleteContract(c);
+        });
+        actions.appendChild(delBtn);
+
+        block.appendChild(actions);
+
+        bodyInner.appendChild(block);
+      });
+    }else{
+      const empty = document.createElement('div');
+      empty.className = 'muted';
+      empty.textContent = 'No contracts saved under this session yet.';
+      bodyInner.appendChild(empty);
+    }
+
+    body.appendChild(bodyInner);
+    card.appendChild(body);
+
+    // Toggle behaviour
+    header.addEventListener('click', () => {
+      const isOpen = card.classList.contains('open');
+      if(isOpen){
+        card.classList.remove('open');
+        body.style.maxHeight = '0';
+      }else{
+        card.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+
+    grid.appendChild(card);
+  }
+}
+
+/* ---------- Delete contract ---------- */
+async function deleteContract(contract){
+  if(!confirm('Delete this contract? This cannot be undone.')) return;
+  try{
+    setStatus('Deleting contract…','ok');
+    // remove child cargo rows then contract
+    await sb.from('contract_cargo_types').delete().eq('contract_id', contract.id);
+    await sb.from('contracts').delete().eq('id', contract.id);
+    setStatus('Contract deleted.','ok');
+    await loadSessions();
+  }catch(err){
+    console.error(err);
+    setStatus('Error deleting contract.','err');
+  }
+}
+
+/* ---------- Edit contract ---------- */
+function openContractForEdit(session, contract){
+  currentSession = session;
+  editingContractId = contract.id;
+
+  if($('#kpiSessionId')) $('#kpiSessionId').textContent = session.id;
+  if($('#kpiActiveContract')) $('#kpiActiveContract').textContent = contract.contract_name || 'Contract';
+
+  const nameEl   = $('#contractName');
+  const typeEl   = $('#contractType');
+  const rewardEl = $('#reward');
+
+  if(nameEl)   nameEl.value   = contract.contract_name || '';
+  if(typeEl)   typeEl.value   = contract.contract_type || 'hauling';
+  if(rewardEl) rewardEl.value = contract.reward ?? '';
+
+  activeContractModel.cargoTypes = (contract.contract_cargo_types || []).map(ct => ({
+    name: ct.cargo_type || '',
+    loadings: (ct.contract_loading || []).map(l => ({ location:l.location, scu:l.scu })),
+    offloadings: (ct.contract_offloading || []).map(o => ({ location:o.location, scu:o.scu }))
+  }));
+
+  renderCargoList();
+  openIntake();
+  setStatus('Editing existing contract. Adjust fields and click Save Contract.','ok');
+}
+
+/* ---------- Intake modal helpers ---------- */
+function openIntake(){
+  const m = $('#intakeModal');
+  if(!m) return;
+  m.classList.add('open');
+}
+function closeIntake(){
+  const m = $('#intakeModal');
+  if(!m) return;
+  m.classList.remove('open');
+}
+
+/* Reset editor for a brand new contract */
+function resetEditorForNew(){
+  editingContractId = null;
+  if($('#contractName')) $('#contractName').value = '';
+  if($('#contractType')) $('#contractType').value = 'hauling';
+  if($('#reward')) $('#reward').value = '';
+  activeContractModel.cargoTypes = [];
+  activeContractModel.legs = [];
+  renderCargoList();
+  if($('#kpiActiveContract')) $('#kpiActiveContract').textContent = 'New Contract';
+  if($('#kpiSessionId')) $('#kpiSessionId').textContent = currentSession ? currentSession.id : '—';
+}
+
+/* ---------- Init wiring ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth();   // redirects to auth.html if not logged in
-  if (!session) return;
-  load();
+  const session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  currentUser = session.user;
+  setMainStatus('Logged in as ' + (currentUser.email || currentUser.id), 'ok');
+  if($('#kpiSubmittedBy')) $('#kpiSubmittedBy').textContent = currentUser.email || currentUser.id;
+
+  // UI refs
+  const openIntakeBtn   = $('#openIntakeBtn');
+  const intakeCloseBtn  = $('#intakeCloseBtn');
+  const scanBtn         = $('#scanBtn');
+  const clearBtn        = $('#clearBtn');
+  const screenshotInput = $('#screenshotInput');
+  const pasteZone       = $('#pasteZone');
+  const previewImg      = $('#previewImg');
+  const addCargoBtn     = $('#addCargoBtn');
+  const saveContractBtn = $('#saveContractBtn');
+
+  const modalCloseBtn   = $('#modalCloseBtn');
+  const modalCancelBtn  = $('#modalCancelBtn');
+  const modalConfirmBtn = $('#modalConfirmBtn');
+
+  // Events – modal open/close
+  if(openIntakeBtn){
+    openIntakeBtn.addEventListener('click', () => {
+      resetEditorForNew();
+      openIntake();
+    });
+  }
+  if(intakeCloseBtn) intakeCloseBtn.addEventListener('click', closeIntake);
+
+  // Clear
+  if(clearBtn){
+    clearBtn.addEventListener('click', () => {
+      if(screenshotInput) screenshotInput.value = '';
+      if(previewImg){
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+      }
+      const ocrOutput = $('#ocrOutput');
+      if(ocrOutput) ocrOutput.textContent = '';
+      activeContractModel.legs = [];
+      activeContractModel.cargoTypes = [];
+      renderCargoList();
+      setStatus('Cleared image and OCR output.','ok');
+    });
+  }
+
+  // Scan button
+  if(scanBtn){
+    scanBtn.addEventListener('click', () => {
+      if(!screenshotInput || !screenshotInput.files || !screenshotInput.files[0]){
+        setStatus('No file selected. Or paste an image with Ctrl+V.','err');
+        return;
+      }
+      const file = screenshotInput.files[0];
+      const reader = new FileReader();
+      reader.onload = e => {
+        if(previewImg){
+          previewImg.src = e.target.result;
+          previewImg.style.display = 'block';
+        }
+      };
+      reader.readAsDataURL(file);
+      runOCROnBlob(file);
+    });
+  }
+
+  // Paste-from-clipboard
+  if(pasteZone){
+    pasteZone.addEventListener('click', () => pasteZone.focus());
+  }
+  window.addEventListener('paste', e => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if(!items) return;
+    for(let i=0; i<items.length; i++){
+      const item = items[i];
+      if(item.type && item.type.startsWith('image/')){
+        const blob = item.getAsFile();
+        if(blob){
+          e.preventDefault();
+          const reader = new FileReader();
+          reader.onload = ev => {
+            if(previewImg){
+              previewImg.src = ev.target.result;
+              previewImg.style.display = 'block';
+            }
+          };
+          reader.readAsDataURL(blob);
+          setStatus('Pasted image detected – scanning…','ok');
+          runOCROnBlob(blob);
+        }
+        break;
+      }
+    }
+  });
+
+  // Add cargo manually
+  if(addCargoBtn){
+    addCargoBtn.addEventListener('click', () => {
+      activeContractModel.cargoTypes.push({
+        name:'',
+        loadings:[],
+        offloadings:[]
+      });
+      renderCargoList();
+    });
+  }
+
+  // Save contract (create or update)
+  if(saveContractBtn){
+    saveContractBtn.addEventListener('click', async () => {
+      const sess = await ensureSession();
+      if(!sess) return;
+
+      const nameEl   = $('#contractName');
+      const typeEl   = $('#contractType');
+      const rewardEl = $('#reward');
+
+      const name   = nameEl?.value || 'Unnamed Contract';
+      const ctype  = typeEl?.value || 'hauling';
+      const reward = rewardEl?.value ? Number(rewardEl.value) : null;
+
+      if(!activeContractModel.cargoTypes.length){
+        setStatus('Add at least one cargo type before saving.','err');
+        return;
+      }
+
+      saveContractBtn.disabled = true;
+      setStatus('Saving contract…','ok');
+
+      try{
+        let contractId = editingContractId;
+
+        if(!contractId){
+          // NEW
+          const { data:contract, error:cErr } = await sb
+            .from('contracts')
+            .insert({
+              session_id:  sess.id,
+              submitted_by: currentUser.id,
+              contract_name: name,
+              contract_type: ctype,
+              reward: reward
+            })
+            .select()
+            .single();
+          if(cErr) throw cErr;
+          contractId = contract.id;
+          editingContractId = contractId;
+        }else{
+          // UPDATE contract row
+          const { error:uErr } = await sb
+            .from('contracts')
+            .update({
+              contract_name: name,
+              contract_type: ctype,
+              reward: reward
+            })
+            .eq('id', contractId);
+          if(uErr) throw uErr;
+
+          // wipe old cargo rows
+          const { data:cargoIds, error:selErr } = await sb
+            .from('contract_cargo_types')
+            .select('id')
+            .eq('contract_id', contractId);
+          if(selErr) throw selErr;
+
+          const ids = (cargoIds || []).map(r => r.id);
+          if(ids.length){
+            await sb.from('contract_loading').delete().in('cargo_type_id', ids);
+            await sb.from('contract_offloading').delete().in('cargo_type_id', ids);
+            await sb.from('contract_cargo_types').delete().in('id', ids);
+          }
+        }
+
+        // reinsert cargo types + legs
+        for(const cargo of activeContractModel.cargoTypes){
+          const { data:cargoRow, error:ctErr } = await sb
+            .from('contract_cargo_types')
+            .insert({
+              contract_id: contractId,
+              cargo_type:  cargo.name || 'Unknown'
+            })
+            .select()
+            .single();
+          if(ctErr) throw ctErr;
+
+          const cargoTypeId = cargoRow.id;
+
+          for(const l of (cargo.loadings || [])){
+            if(!l.location) continue;
+            await sb.from('contract_loading').insert({
+              cargo_type_id: cargoTypeId,
+              location:      l.location,
+              scu:           l.scu || 0
+            });
+          }
+          for(const o of (cargo.offloadings || [])){
+            if(!o.location) continue;
+            await sb.from('contract_offloading').insert({
+              cargo_type_id: cargoTypeId,
+              location:      o.location,
+              scu:           o.scu || 0
+            });
+          }
+        }
+
+        setStatus('Contract saved.','ok');
+        await loadSessions();
+      }catch(err){
+        console.error(err);
+        setStatus('Error saving contract.','err');
+      }finally{
+        saveContractBtn.disabled = false;
+      }
+    });
+  }
+
+  // Confirm modal buttons
+  if(modalCloseBtn)  modalCloseBtn.addEventListener('click', closeConfirmModal);
+  if(modalCancelBtn) modalCancelBtn.addEventListener('click', () => {
+    closeConfirmModal();
+    setStatus('Detection cancelled. You can edit or rescan.','ok');
+  });
+  if(modalConfirmBtn) modalConfirmBtn.addEventListener('click', () => {
+    closeConfirmModal();
+    setStatus('Contract parsed. Review & adjust before saving.','ok');
+  });
+
+  // Initial load of sessions list
+  await loadSessions();
 });
 </script>
 </body>
