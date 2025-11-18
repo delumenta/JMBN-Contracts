@@ -1,439 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN — Earnings Admin (Aurora Ops · Modal)</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Mission Editor</title>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
-
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --sub:#0f0f0f; --row:#0a0a0a;
-  --line:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --ok:#59d58a; --bad:#ff6b6b; --fs:14px;
+  --bg:#000; --panel:#0b0b0b; --border:#d6b44c;
+  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs)}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  margin:0;
+}
+.page{
+  padding:18px;
+}
 
-.wrap{max-width:1180px;margin:18px auto;padding:0 14px 80px}
+/* (brand / toolbar classes left in case you reuse later, but not used) */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 10px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:8px;
+}
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+}
+.brand h1{margin:0;color:var(--accent);font-size:22px}
+.toolbar{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin:10px 0 16px;
+  flex-wrap:wrap;
+}
+.btn-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:700;
+}
+.btn-cta:hover{
+  background:linear-gradient(180deg,#f2d675,#e7c760);
+  color:#000;
+}
+.ic{
+  width:18px;height:18px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:14px;
+}
+.subtle{color:var(--muted);font-size:12px}
 
-/* Top bar */
-.top{display:grid;grid-template-columns:1fr auto auto auto auto;gap:10px;align-items:center}
-.brand{display:flex;align-items:center;gap:10px}
-.brand img{width:28px;height:28px}
-.brand h1{margin:0;font-size:18px;letter-spacing:.4px}
-.filters{display:flex;gap:8px;flex-wrap:wrap;justify-self:end}
-input,select,button{font-family:'Play'}
-input[type="date"],input[type="number"],select{
-  border:1px solid var(--line);background:#0a0a0a;color:var(--text);
-  border-radius:10px;padding:8px 10px
+/* 2-column layout */
+.wrap{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:14px;
+}
+@media(max-width:980px){
+  .wrap{grid-template-columns:1fr}
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 18px rgba(214,180,76,.14);
+}
+.panel h3{
+  margin:0 0 10px;
+  color:var(--accent);
+  font-size:16px;
+}
+
+/* List panel */
+.list-tools{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:8px;
+}
+input[type="search"]{
+  width:100%;
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px 10px;
+  color:var(--text);
+}
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:70vh;
+  overflow:auto;
+  padding-right:4px;
+}
+.item{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#0a0a0a;
+  cursor:pointer;
+}
+.item:hover{background:#111}
+.item-title{font-weight:700}
+.item-sub{font-size:12px;color:var(--muted)}
+.badge{
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:11px;
+  color:var(--muted);
+}
+.small-btn{
+  padding:6px 8px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:transparent;
+  color:var(--accent);
+  cursor:pointer;
+}
+.small-btn:hover{background:var(--accent);color:#000}
+
+/* Form side */
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.form-grid.full{grid-template-columns:1fr}
+label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+input,select,textarea{
+  width:100%;
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  color:var(--text);
+  font-family:'Play';
+}
+textarea{min-height:90px;resize:vertical}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
 button{
-  border:1px solid var(--line);background:linear-gradient(180deg,#101010,#070707);
-  color:var(--accent);border-radius:10px;padding:8px 12px;cursor:pointer
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  cursor:pointer;
 }
 button:hover{background:var(--accent);color:#000}
-
-/* KPIs */
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 16px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
-.kpi h4{margin:0 0 6px;color:var(--muted);font-size:11px;letter-spacing:.8px}
-.kpi .v{font-size:20px;color:var(--accent);font-weight:700}
-
-/* Ledger */
-.board{display:grid;grid-template-columns:1fr;gap:10px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #a98d3a44}
-.hd h3{margin:0;color:var(--accent);font-size:15px}
-.body{padding:10px 10px 12px}
-
-/* Mission rows */
-.row{display:grid;grid-template-columns:150px 1fr 110px 230px 120px 150px;gap:10px;align-items:center;
-  background:var(--row);border:1px solid #a98d3a55;border-radius:12px;padding:8px;margin-bottom:8px}
-@media(max-width:1080px){.row{grid-template-columns:160px 1fr 100px 210px 110px 140px}}
-@media(max-width:860px){.row{grid-template-columns:1fr}}
-.cell{padding:4px 6px}
-.small{font-size:12px;color:var(--muted)}
-.meta{display:flex;gap:8px;flex-wrap:wrap}
-.tag{font-size:11px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;color:var(--accent);background:#111}
-.tag.dim{opacity:.75}
-.cutCtrl{display:flex;align-items:center;gap:6px}
-.cutCtrl button{width:30px;height:30px;padding:0}
-.cutCtrl input{width:80px;text-align:center}
-.right{display:flex;gap:8px;justify-content:flex-end}
-
-/* Alerts */
-.alert{border:1px solid var(--bad);background:#2a1010;color:#ffbbbb;border-radius:10px;padding:8px 10px}
-
-/* Modal */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;padding:24px;z-index:60}
-.modal.open{display:flex}
-.sheet{width:min(980px,96vw);max-height:88vh;overflow:auto;background:#0b0b0b;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px #000}
-.sheet .head{display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid #a98d3a44}
-.sheet .head h3{margin:0;font-size:16px;color:var(--accent)}
-.sheet .body{padding:12px}
-
-/* Participant rows */
-.urow{display:grid;grid-template-columns:1fr 112px 120px auto;gap:10px;align-items:center;
-  background:#0d0d0d;border:1px solid #a98d3a44;border-radius:12px;padding:10px;margin-bottom:8px}
-@media(max-width:560px){.urow{grid-template-columns:1fr}}
-.urow .name{display:flex;flex-direction:column;gap:3px}
-.urow .name b{letter-spacing:.8px;font-size:14px}
-.urow .name span{font-size:12px;color:var(--muted)}
-.urow .ctrl{display:flex;gap:4px;align-items:center}
-.urow .ctrl input{width:82px;text-align:center}
-.urow .amt{text-align:right;font-weight:700}
-.urow .act{display:flex;gap:6px;justify-content:flex-end}
-.btn-ok{border-color:var(--ok);color:var(--ok)}
-.btn-bad{border-color:var(--bad);color:var(--bad)}
-.note{font-size:11px;color:var(--muted);margin:6px 0 10px}
+button.danger{
+  border-color:#ff6b6b;
+  color:#ff6b6b;
+}
+.attach-item{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:10px;
+  margin-bottom:8px;
+}
+.attach-item button{padding:6px 10px}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="top">
-    <div class="brand">
-      <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-      <h1>JMBN — Earnings Admin (Aurora Ops)</h1>
-    </div>
-    <div class="filters">
-      <input id="fFrom" type="date">
-      <input id="fTo" type="date">
-      <select id="fStatus">
-        <option value="">All Status</option>
-        <option value="planned">Planned</option>
-        <option value="success">Success</option>
-        <option value="abort">Abort</option>
-        <option value="failed">Failed</option>
-      </select>
-      <input id="gCut" type="number" step="0.1" min="0" max="100" title="Global cut % (no mission override/snapshot)"/>
-      <button id="btnReload">Reload</button>
-      <button id="btnSaveGlobal">Save</button>
-      <span id="gStamp" class="small"></span>
-    </div>
-  </div>
+<!-- GLOBAL HEADER SLOT (header2.html will be injected here) -->
+<div id="site-header"></div>
 
-  <div class="kpis">
-    <div class="kpi"><h4>ORG EARNED</h4><div class="v" id="kOrg">–</div></div>
-    <div class="kpi"><h4>MEMBER SHARE</h4><div class="v" id="kMem">–</div></div>
-    <div class="kpi"><h4>MISSIONS</h4><div class="v" id="kMis">–</div></div>
-  </div>
-
-  <div class="panel">
-    <div class="hd"><h3>Mission Ledger</h3><span class="small">Click “Participants” to edit per-user overrides.</span></div>
-    <div class="body" id="list">Loading…</div>
-  </div>
-
-</div>
-
-<!-- PARTICIPANTS MODAL -->
-<div id="modal" class="modal" aria-hidden="true">
-  <div class="sheet">
-    <div class="head">
-      <h3 id="mTitle">Participants & Overrides</h3>
-      <button id="modalClose">✕</button>
-    </div>
-    <div class="body">
-      <div class="small" id="mMeta">—</div>
-      <div class="note">
-        Member pool = payout − org_cut_value (if present) otherwise payout × (1 − org_cut_pct).<br>
-        Default % = weight ÷ total_weight × 100 (rank-weight).<br>
-        Final per user = fixed aUEC (if set) → percent of pool (if set) → default %.
+<main class="page">
+  <!-- main layout, no extra title/toolbar -->
+  <div class="wrap">
+    <!-- LEFT: Mission list -->
+    <div class="panel">
+      <h3>All Missions</h3>
+      <div class="list-tools">
+        <input id="search" type="search" placeholder="Search title / tags / status..." />
+        <button id="refresh" class="small-btn" title="Reload">↻</button>
+        <button id="newBtn" class="small-btn" title="Start new">＋ New</button>
       </div>
-      <div id="uList">Loading…</div>
+      <div id="list" class="list"></div>
+    </div>
+
+    <!-- RIGHT: Editor -->
+    <div class="panel">
+      <h3>Mission Details</h3>
+
+      <div class="form-grid full">
+        <div>
+          <label>Mission Title</label>
+          <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div>
+          <label>Type</label>
+          <select id="type">
+            <option></option>
+            <option>Hauling</option><option>Delivery</option><option>Rescue</option>
+            <option>Bounty</option><option>Investigation</option><option>Salvage</option>
+            <option>Mining</option><option>Exploration</option>
+          </select>
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="status">
+            <option></option>
+            <option>Planned</option><option>Active</option>
+            <option>Success</option><option>Fail</option><option>Abort</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div><label>Origin</label><input id="origin" placeholder="e.g., Area18"></div>
+        <div><label>Destination</label><input id="destination" placeholder="e.g., Everus Harbor"></div>
+      </div>
+
+      <div class="form-grid">
+        <div><label>Date</label><input id="date" type="datetime-local"></div>
+        <div><label>No. of Hours</label><input id="hours" type="number" step="0.1"></div>
+      </div>
+
+      <div class="form-grid">
+        <div><label>Payout (aUEC)</label><input id="payout" type="number" step="1"></div>
+        <div><label>Tags (comma separated)</label><input id="tags" placeholder="e.g., hauling, night"></div>
+      </div>
+
+      <div class="form-grid full">
+        <div><label>Attendees</label><input id="attendees" placeholder="e.g., Vex, Kara"></div>
+      </div>
+
+      <!-- Submitted By: read-only display + hidden UUID -->
+      <div class="form-grid full">
+        <div>
+          <label>Submitted By</label>
+          <input id="submittedByDisplay" readonly placeholder="—" title="Automatically set">
+          <input id="submittedBy" type="hidden">
+        </div>
+      </div>
+
+      <div class="form-grid full" style="margin-top:8px">
+        <div>
+          <label>Attachments</label>
+          <div id="attachList"></div>
+          <button id="addAttachBtn" class="small-btn" type="button">Add Attachment</button>
+        </div>
+      </div>
+
+      <div class="form-grid full" style="margin-top:8px">
+        <div>
+          <label>Notes / AAR</label>
+          <textarea id="notes" placeholder="Summary, outcomes, lessons learned"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="clearFormBtn" title="Clear the form">Clear Form</button>
+        <button id="saveNewBtn"  title="Save as NEW row">💾 Save New</button>
+        <button id="updateBtn"   title="Update current row">✎ Update Current</button>
+        <button id="deleteBtn" class="danger" title="Delete current">🗑 Delete</button>
+      </div>
     </div>
   </div>
-</div>
+</main>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-<script>
-/* Utilities */
-const $  = s => document.querySelector(s);
-const fmt= n => (n==null||isNaN(n)) ? '–' : Number(n).toLocaleString();
-const esc= s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
-const clampPct = v => Math.max(0, Math.min(100, Number(v)||0));
+<!-- ===== Supabase + App Logic ===== -->
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-let sb, me, GLOBAL=0, MISSIONS=[], OV={}, currentMission=null;
+const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
 
-/* Boot */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth(); if(!session) return;
-  sb = getSupabase(); me = session.user.id;
+const $  = (id) => document.getElementById(id)
+const listEl     = $('list')
+const searchEl   = $('search')
+const attachList = $('attachList')
 
-  // dates
-  const to = new Date(), from=new Date(); from.setMonth(from.getMonth()-1);
-  $('#fFrom').value = from.toISOString().slice(0,10);
-  $('#fTo').value   = to.toISOString().slice(0,10);
+let currentId = null
+let cache     = []
+let me        = { id:null, name:'' }
 
-  $('#btnReload').onclick = loadLedger;
-  $('#btnSaveGlobal').onclick = saveGlobal;
-  $('#modalClose').onclick = closeModal;
-  $('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
-
-  await loadGlobal();
-  await loadLedger();
-});
-
-/* Global cut */
-async function loadGlobal(){
-  const { data, error } = await sb.from('org_settings')
-    .select('org_cut_pct, updated_at').order('updated_at',{ascending:false}).limit(1).maybeSingle();
-  if(error){ $('#gStamp').textContent='load error'; return; }
-  GLOBAL = Number(data?.org_cut_pct||0);
-  $('#gCut').value = String(GLOBAL);
-  $('#gStamp').textContent = data?.updated_at ? `Updated ${new Date(data.updated_at).toLocaleString()}` : '';
-}
-async function saveGlobal(){
-  const val = clampPct($('#gCut').value);
-  $('#gCut').value = String(val);
-  const note = `Set by ${me.slice(0,8)}`;
-  const { error } = await sb.from('org_settings').insert({ org_cut_pct: val, note });
-  if(error) return alert('Saving global failed: '+error.message);
-  await loadGlobal();
-  renderList();
-}
-
-/* Ledger */
-async function loadLedger(){
-  const list = $('#list'); list.textContent='Loading…';
-  const from = $('#fFrom').value ? new Date($('#fFrom').value) : null;
-  const to   = $('#fTo').value ? new Date($('#fTo').value) : null;
-  const status = $('#fStatus').value || '';
-
-  let q = sb.from('missions')
-     .select('id,title,start_time,payout_auec,status,org_cut_percent')
-     .order('start_time',{ascending:false});
-  if(from) q = q.gte('start_time', from.toISOString());
-  if(to){ const end=new Date(to); end.setDate(end.getDate()+1); q = q.lt('start_time', end.toISOString()); }
-  if(status) q = q.eq('status', status);
-
-  const { data: rows, error } = await q;
-  if(error){ list.innerHTML=`<div class="alert">${esc(error.message)}</div>`; return; }
-  MISSIONS = rows || [];
-
-  // mission overrides table
-  let map={};
-  if(MISSIONS.length){
-    const ids = MISSIONS.map(m=>m.id);
-    const { data: over } = await sb.from('mission_org_cut_overrides')
-      .select('mission_id, org_cut_pct').in('mission_id', ids);
-    (over||[]).forEach(r=> map[r.mission_id]=r.org_cut_pct);
+/* ---------- Header2 loader ---------- */
+async function loadHeader2(){
+  try{
+    const res = await fetch('header2.html')
+    if(!res.ok) return
+    const html = await res.text()
+    const slot = document.getElementById('site-header')
+    if(slot) slot.innerHTML = html
+  }catch(e){
+    console.warn('header2 load failed', e)
   }
-  OV = map;
-  renderList();
 }
 
-function effectiveCut(m){
-  if(OV[m.id]!=null) return Number(OV[m.id]);
-  if(m.org_cut_percent!=null) return Number(m.org_cut_percent);
-  return Number(GLOBAL);
+/* ---------- Helpers ---------- */
+function esc(s=''){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML }
+function isoToLocalInput(iso){
+  if(!iso) return ''
+  const d=new Date(iso); const p=n=>String(n).padStart(2,'0')
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`
+}
+function localInputToISO(v){ return v ? new Date(v).toISOString() : null }
+
+function addAttachRow(name='', url=''){
+  const div=document.createElement('div')
+  div.className='attach-item'
+  div.innerHTML = `
+    <input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
+    <input placeholder="URL (https://...)" value="${esc(url)}">
+    <button type="button" onclick="this.parentElement.remove()">✕</button>`
+  attachList.appendChild(div)
+}
+function collectAttachments(){
+  return [...attachList.querySelectorAll('.attach-item')].map(el=>{
+    const label = el.children[0].value.trim()
+    const url   = el.children[1].value.trim()
+    if(!url) return null
+    try{ new URL(url) }catch{ return null }
+    return { name: label || (url.split('/').pop() || 'link'), url }
+  }).filter(Boolean)
+}
+function clearForm(){
+  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','notes']
+    .forEach(id=>$(id).value='')
+  $('submittedBy').value        = me.id || ''
+  $('submittedByDisplay').value = me.name || ''
+  attachList.innerHTML=''
+  addAttachRow()
+  currentId = null
 }
 
-function renderList(){
-  const list = $('#list');
-  if(!MISSIONS.length){
-    list.innerHTML = `<div class="small">No missions in this window.</div>`;
-    $('#kOrg').textContent='–'; $('#kMem').textContent='–'; $('#kMis').textContent='0';
-    return;
+function payloadFromForm(){
+  const base = {
+    title: $('title').value.trim(),
+    type: $('type').value || null,
+    status: $('status').value || null,
+    origin: $('origin').value || null,
+    destination: $('destination').value || null,
+    start_time: localInputToISO($('date').value),
+    hours: Number($('hours').value || 0),
+    payout_auec: Number($('payout').value || 0),
+    tags: $('tags').value || null,
+    attendees: $('attendees').value || null,
+    notes: $('notes').value || null,
+    attachments: collectAttachments()
   }
-
-  let totOrg=0, totPay=0;
-
-  const rows = MISSIONS.map(m=>{
-    const eff = effectiveCut(m);
-    const payout = Number(m.payout_auec||0);
-    const orgEarn = payout * eff/100;
-    totOrg += orgEarn; totPay += payout;
-
-    const oVal = (OV[m.id]!=null) ? OV[m.id] : '';
-    const hint = (m.org_cut_percent!=null)
-      ? `Effective ${eff}% (${OV[m.id]!=null?'override':'snapshot'})`
-      : `Effective ${eff}% (${OV[m.id]!=null?'override':'global'})`;
-
-    return `
-      <div class="row" data-id="${m.id}">
-        <div class="cell small">${new Date(m.start_time).toLocaleString()}</div>
-        <div class="cell">
-          <div>${esc(m.title||'Untitled')}</div>
-          <div class="meta" style="margin-top:4px">
-            ${OV[m.id]!=null?'<span class="tag">override</span>':''}
-            ${m.org_cut_percent!=null?'<span class="tag dim">snapshot</span>':''}
-            ${m.status?`<span class="tag dim">${esc(m.status)}</span>`:''}
-          </div>
-        </div>
-        <div class="cell"><b>${fmt(payout)}</b></div>
-        <div class="cell">
-          <div class="cutCtrl">
-            <button data-minus>-</button>
-            <input type="number" step="0.1" min="0" max="100" placeholder="override %" value="${oVal!==''?oVal:''}">
-            <button data-plus>+</button>
-            <button class="btn-ok" data-save>Save</button>
-          </div>
-          <div class="small">${hint}</div>
-        </div>
-        <div class="cell"><b>${fmt(orgEarn)}</b></div>
-        <div class="cell right">
-          <button data-participants>Participants</button>
-          <button class="btn-bad" data-clear ${OV[m.id]!=null?'':'disabled'}>Clear</button>
-        </div>
-      </div>`;
-  }).join('');
-
-  list.innerHTML = rows;
-
-  $('#kOrg').textContent = fmt(totOrg);
-  $('#kMem').textContent = fmt(totPay - totOrg);
-  $('#kMis').textContent = String(MISSIONS.length);
-
-  // wire
-  list.querySelectorAll('.row').forEach(row=>{
-    const id = row.dataset.id;
-    const inp = row.querySelector('input[type="number"]');
-    row.querySelector('[data-minus]').onclick = ()=>{ inp.value=String(clampPct((Number(inp.value)||0)-0.5)); };
-    row.querySelector('[data-plus]').onclick  = ()=>{ inp.value=String(clampPct((Number(inp.value)||0)+0.5)); };
-    row.querySelector('[data-save]').onclick  = ()=> saveMissionOverride(id, inp.value);
-    row.querySelector('[data-clear]').onclick = ()=> clearMissionOverride(id);
-    row.querySelector('[data-participants]').onclick = ()=> openModal(id);
-  });
+  if(!currentId) base.submitted_by = me.id
+  return base
 }
 
-async function saveMissionOverride(missionId, val){
-  const pct = clampPct(val);
-  const { error } = await sb.from('mission_org_cut_overrides')
-    .upsert({ mission_id: missionId, org_cut_pct: pct, updated_by: me });
-  if(error) return alert('Save override failed: '+error.message);
-  OV[missionId]=pct; renderList();
-}
-async function clearMissionOverride(missionId){
-  if(!confirm('Remove mission override?')) return;
-  const { error } = await sb.from('mission_org_cut_overrides').delete().eq('mission_id', missionId);
-  if(error) return alert('Clear failed: '+error.message);
-  delete OV[missionId]; renderList();
-}
+function fillForm(row){
+  $('title').value   = row.title || ''
+  $('type').value    = row.type || ''
+  $('status').value  = row.status || ''
+  $('origin').value  = row.origin || ''
+  $('destination').value = row.destination || ''
+  $('date').value    = isoToLocalInput(row.start_time)
+  $('hours').value   = row.hours ?? ''
+  $('payout').value  = row.payout_auec ?? ''
+  $('tags').value    = row.tags || ''
+  $('attendees').value = row.attendees || ''
+  $('notes').value   = row.notes || ''
 
-/* Modal + participants */
-function openModal(missionId){
-  currentMission = missionId;
-  const mission = MISSIONS.find(m=>m.id===missionId);
-  $('#mTitle').textContent = 'Participants & Overrides';
-  $('#mMeta').innerHTML = `${esc(mission?.title||'Untitled')} • ${new Date(mission?.start_time).toLocaleString()}`;
-  $('#uList').innerHTML = 'Loading…';
-  $('#modal').classList.add('open');
-  loadParticipants(missionId);
-}
-function closeModal(){
-  $('#modal').classList.remove('open');
-  $('#uList').innerHTML='';
-  currentMission=null;
-}
+  $('submittedBy').value        = row.submitted_by || ''
+  $('submittedByDisplay').value = row.submitted_by_name ||
+                                  (row.submitted_by === me.id ? me.name : '')
 
-async function loadParticipants(missionId){
-  const box = $('#uList'); box.innerHTML='Loading…';
-
-  // 1) rank-weight rows
-  const { data: rows, error } = await sb
-    .from('v_missions_payout_live')
-    .select('user_id, weight, base_share, final_share, total_weight, payout_auec, org_cut_pct, org_cut_value')
-    .eq('mission_id', missionId)
-    .order('weight',{ascending:false});
-  if(error){ box.innerHTML = `<div class="alert">Failed to load participants: ${esc(error.message)}</div>`; return; }
-  if(!rows?.length){ box.innerHTML = `<div class="small">No participants found for this mission.</div>`; return; }
-
-  // 2) names from v_profiles_detailed
-  const ids = [...new Set(rows.map(r=>r.user_id).filter(Boolean))];
-  const names = {};
-  if(ids.length){
-    try{
-      const { data } = await sb.from('v_profiles_detailed')
-        .select('user_id, handle, display_name, current_rank_abbrev')
-        .in('user_id', ids);
-      (data||[]).forEach(p=>{
-        const raw = p.handle?.trim() || p.display_name?.trim() || p.user_id.slice(0,8);
-        names[p.user_id] = { label: raw.toUpperCase(), rank: p.current_rank_abbrev || '' };
-      });
-    }catch(e){ console.warn('names load:', e.message); }
+  attachList.innerHTML = ''
+  if(Array.isArray(row.attachments) && row.attachments.length){
+    row.attachments.forEach(a=>addAttachRow(a.name||'', a.url||''))
+  }else{
+    addAttachRow()
   }
-  const labelOf = uid => names[uid]?.label || String(uid).slice(0,8).toUpperCase();
-  const rankOf  = uid => names[uid]?.rank || '';
-
-  // 3) per-user overrides
-  const { data: uov } = await sb.from('mission_user_overrides')
-    .select('user_id, share_pct, share_fixed_auec, note')
-    .eq('mission_id', missionId);
-  const mapOv = Object.fromEntries((uov||[]).map(r=>[r.user_id,r]));
-
-  // 4) pool & default percent (weight-based)
-  const h = rows[0];
-  const payout = Number(h.payout_auec||0);
-  const cutVal = (h.org_cut_value!=null) ? Number(h.org_cut_value) : null;
-  const cutPct = (h.org_cut_pct!=null) ? Number(h.org_cut_pct) : null;
-  const frac = (cutPct!=null && cutPct>1) ? (cutPct/100) : (cutPct ?? 0);
-  const memberPool = (cutVal!=null) ? (payout - cutVal) : (payout * (1 - frac));
-  const tWeight = rows.reduce((a,b)=>a+Number(b.weight||0),0) || 1;
-  const defaultPct = uid => {
-    const w = Number(rows.find(r=>r.user_id===uid)?.weight||0);
-    return (w / tWeight) * 100;
-  };
-
-  // 5) render
-  box.innerHTML = rows.map(r=>{
-    const uid = r.user_id;
-    const ov = mapOv[uid] || {};
-    const useFixed = (ov.share_fixed_auec!=null && !isNaN(Number(ov.share_fixed_auec)));
-    const usePct   = (ov.share_pct!=null);
-    const pct = usePct ? Number(ov.share_pct) : defaultPct(uid);
-    const amt = useFixed ? Number(ov.share_fixed_auec) : (memberPool * (pct/100));
-
-    return `
-      <div class="urow" data-uid="${uid}">
-        <div class="name">
-          <b>${esc(labelOf(uid))}</b>
-          <span>${rankOf(uid)?esc(rankOf(uid))+' • ':''}w:${Number(r.weight||0).toFixed(2)} • default ${defaultPct(uid).toFixed(1)}%</span>
-        </div>
-        <div class="ctrl">
-          <button data-pct-minus>-</button>
-          <input data-pct type="number" step="0.5" min="0" max="100" value="${usePct?pct:''}" placeholder="${defaultPct(uid).toFixed(1)}">
-          <button data-pct-plus>+</button>
-        </div>
-        <div class="ctrl">
-          <input data-fixed type="number" step="1" min="0" placeholder="fixed aUEC" value="${useFixed?Number(ov.share_fixed_auec):''}">
-        </div>
-        <div class="amt">${useFixed?'<span class="tag">fixed</span> ':''}${fmt(amt)}</div>
-        <div class="act">
-          <button class="btn-ok" data-saveu>Save</button>
-          <button class="btn-bad" data-clearu ${mapOv[uid]?'':'disabled'}>Clear</button>
-        </div>
-      </div>`;
-  }).join('');
-
-  // 6) wiring
-  box.querySelectorAll('.urow').forEach(row=>{
-    const uid   = row.dataset.uid;
-    const ipPct = row.querySelector('[data-pct]');
-    const ipFix = row.querySelector('[data-fixed]');
-    row.querySelector('[data-pct-minus]').onclick = ()=>{ ipPct.value = String(Math.max(0,(Number(ipPct.value)||0)-0.5)); ipFix.value=''; };
-    row.querySelector('[data-pct-plus]').onclick  = ()=>{ ipPct.value = String(Math.min(100,(Number(ipPct.value)||0)+0.5)); ipFix.value=''; };
-    row.querySelector('[data-saveu]').onclick = async ()=>{
-      const share_pct = ipPct.value==='' ? null : clampPct(ipPct.value);
-      const share_fixed_auec = ipFix.value==='' ? null : Math.max(0, Number(ipFix.value)||0);
-      const payload = { mission_id: missionId, user_id: uid, share_pct, share_fixed_auec, updated_by: me };
-      const { error } = await sb.from('mission_user_overrides').upsert(payload).select().maybeSingle();
-      if(error) return alert('Save failed: '+error.message);
-      loadParticipants(missionId);
-    };
-    row.querySelector('[data-clearu]').onclick = async ()=>{
-      const { error } = await sb.from('mission_user_overrides').delete().eq('mission_id', missionId).eq('user_id', uid);
-      if(error) return alert('Clear failed: '+error.message);
-      loadParticipants(missionId);
-    };
-  });
 }
+
+/* ---------- List rendering ---------- */
+function renderList(rows){
+  listEl.innerHTML = ''
+  if(!rows.length){
+    listEl.innerHTML = `
+      <div class="item">
+        <div class="item-title">No missions found</div>
+      </div>`
+    return
+  }
+  for(const r of rows){
+    const el=document.createElement('div')
+    el.className='item'
+    el.innerHTML = `
+      <div>
+        <div class="item-title">${esc(r.title || '(untitled)')}</div>
+        <div class="item-sub">
+          ${esc(r.type || '')} • ${esc(r.status || '')} •
+          ${r.start_time ? new Date(r.start_time).toLocaleString() : ''} •
+          by ${esc(r.submitted_by_name || '–')}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="badge">${esc(r.id.slice(0,8))}</span>
+        <button class="small-btn" data-id="${r.id}">Open</button>
+      </div>`
+    el.querySelector('button').onclick = ()=> openMission(r.id)
+    listEl.appendChild(el)
+  }
+}
+function filterList(){
+  const q = (searchEl.value || '').toLowerCase()
+  if(!q){ renderList(cache); return }
+  const rows = cache.filter(r =>
+    `${r.title||''} ${r.tags||''} ${r.status||''} ${r.type||''} ${r.submitted_by_name||''}`
+      .toLowerCase().includes(q)
+  )
+  renderList(rows)
+}
+
+/* ---------- Supabase ops ---------- */
+async function loadList(){
+  const { data, error } = await sb
+    .from('v_missions_detailed')
+    .select('id,title,type,status,start_time,created_at,tags,submitted_by_name')
+    .order('created_at',{ascending:false})
+  if(error){ alert('Failed to load list: '+error.message); return }
+  cache = data || []
+  renderList(cache)
+}
+async function openMission(id){
+  const { data, error } = await sb
+    .from('v_missions_detailed')
+    .select('*')
+    .eq('id', id)
+    .single()
+  if(error){ alert('Failed to open: '+error.message); return }
+  currentId = id
+  fillForm(data)
+  const u = new URL(location.href); u.searchParams.set('id', id); history.replaceState(null,'',u.toString())
+}
+async function saveNew(){
+  const payload = payloadFromForm()
+  if(!payload.title){ alert('Title is required'); return }
+  const { data, error } = await sb.from('missions').insert(payload).select().single()
+  if(error){ alert('Save failed: '+error.message); return }
+  await loadList()
+  currentId = data.id
+  alert('Saved ✓')
+  openMission(data.id)
+}
+async function updateCurrent(){
+  if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return }
+  const payload = payloadFromForm()
+  delete payload.submitted_by
+  const { error } = await sb.from('missions').update(payload).eq('id', currentId)
+  if(error){ alert('Update failed: '+error.message); return }
+  await loadList()
+  alert('Updated ✓')
+}
+async function deleteCurrent(){
+  if(!currentId){ alert('No mission selected.'); return }
+  if(!confirm('Delete this mission? This cannot be undone.')) return
+  const { error } = await sb.from('missions').delete().eq('id', currentId)
+  if(error){ alert('Delete failed: '+error.message); return }
+  await loadList()
+  clearForm()
+  alert('Deleted 🗑')
+  const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString())
+}
+
+/* ---------- Auth bootstrap ---------- */
+async function initMe(){
+  const { data:{ user } } = await sb.auth.getUser()
+  if(!user){
+    location.href = 'auth.html'
+    return
+  }
+  me.id = user.id
+
+  let name = user.email?.split('@')[0] || 'User'
+  const { data: prof, error } = await sb
+    .from('profiles')
+    .select('display_name')
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if(!error && prof && prof.display_name) name = prof.display_name
+  me.name = name
+
+  $('submittedBy').value        = me.id
+  $('submittedByDisplay').value = me.name
+}
+
+/* ---------- Wire up ---------- */
+$('addAttachBtn').onclick  = ()=> addAttachRow()
+$('clearFormBtn').onclick  = ()=> { if(confirm('Clear the form?')) clearForm() }
+$('saveNewBtn').onclick    = saveNew
+$('updateBtn').onclick     = updateCurrent
+$('deleteBtn').onclick     = deleteCurrent
+$('refresh').onclick       = loadList
+$('newBtn').onclick        = clearForm
+$('search').oninput        = filterList
+
+/* ---------- Init sequence ---------- */
+await loadHeader2()
+await initMe()
+addAttachRow()
+clearForm()
+await loadList()
+
+// deep link ?id=...
+const qs = new URLSearchParams(location.search)
+if(qs.get('id')) openMission(qs.get('id'))
 </script>
 </body>
 </html>
