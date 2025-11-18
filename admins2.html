@@ -3,20 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Contracts</title>
+<title>JMBN Member Roster</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--card:#141414;--row:#0a0a0a;
-  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
 body{
@@ -27,1434 +25,553 @@ body{
   color:var(--text);
   font-family:'Play',system-ui,sans-serif;
   margin:0;
-  padding:14px;
+  padding:0;
+  letter-spacing:.25px;
   font-size:var(--fs-base);
+  min-height:100vh;
 }
 
-/* Header mount fallback (same idea as member.html) */
+/* Fallback header visuals (before header.html mounts) */
 .brand{
   display:flex;
   align-items:center;
   gap:10px;
-  margin:0 0 12px;
-  padding-bottom:8px;
+  margin:0;
+  padding:14px 18px 10px;
   border-bottom:1px solid var(--border);
 }
 .brand-logo{
-  width:44px;
-  height:44px;
-  object-fit:contain;
-  filter:drop-shadow(0 0 6px rgba(242,214,117,.3));
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
 }
 .brand h1{
-  font-size:20px;
+  font-weight:700;
+  font-size:var(--fs-h1);
   color:var(--accent);
   margin:0;
-  letter-spacing:.25em;
-  text-transform:uppercase;
 }
 
-/* Page frame */
-.page{
+/* Main page shell (matches spacing of other pages) */
+.page-shell{
   max-width:1200px;
-  margin:0 auto;
+  margin:18px auto 28px;
+  padding:0 18px 24px;
 }
 
-/* Top actions */
-.top-bar{
+/* Panel & table */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px;
+  margin-top:4px;
+  box-shadow:0 0 22px rgba(214,180,76,.22);
+}
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+  align-items:center;
+}
+input[type="search"]{
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:9px 14px;
+  color:var(--text);
+  font-size:var(--fs-table);
+  min-width:260px;
+}
+.badge{
+  border:1px solid var(--border);
+  padding:6px 10px;
+  border-radius:999px;
+  color:var(--accent);
+  font-weight:700;
+}
+.tableWrap{
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:auto;
+  max-height:70vh;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--fs-table);
+}
+th,td{
+  border-bottom:1px solid rgba(214,180,76,.3);
+  padding:10px;
+  text-align:left;
+  vertical-align:middle;
+}
+th{
+  color:var(--accent);
+  background:#080808;
+  font-weight:600;
+  position:sticky;
+  top:0;
+  z-index:1;
+}
+tr:nth-child(even){background:#111}
+tr:hover{background:rgba(214,180,76,.08)}
+.name{font-weight:700}
+
+/* Rank cell — image beside rank text, NO frame/background */
+.rankCell{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.rankCell img{
+  width:28px;height:28px;object-fit:contain;flex:0 0 28px;
+  border:none;border-radius:0;background:transparent;box-shadow:none;
+}
+
+/* Role chips */
+.roles{
   display:flex;
   flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
+  gap:8px;
 }
-.status-main{
-  font-size:11px;
+.role-chip{
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:4px 10px;
+  font-size:12px;
+  background:#0c0c0c;
   color:var(--muted);
 }
-.status-main.ok{color:var(--accent);}
-.status-main.err{color:var(--bad);}
 
 /* Buttons */
 .btn{
-  padding:8px 14px;
-  border-radius:999px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  border:1px solid var(--border);
   cursor:pointer;
   font-family:'Play';
   font-size:12px;
-  border:1px solid var(--border);
-  background:radial-gradient(circle at top,var(--accent),#614c14);
+}
+.btn:hover{
+  background:var(--accent);
   color:#000;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  box-shadow:0 0 14px rgba(242,214,117,.25);
-}
-.btn-secondary{
-  background:#0b0b0b;
-  color:var(--accent);
-  border:1px solid var(--border);
-  box-shadow:none;
-}
-.btn:disabled{
-  opacity:.6;
-  cursor:default;
 }
 
-/* Saved sessions panel */
-.section-panel{
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  background:#0b0b0b;
-  box-shadow:0 0 22px rgba(214,180,76,.2);
-}
-.panel-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:8px;
-}
-.panel-title{
-  color:var(--accent);
-  font-size:14px;
-  text-transform:uppercase;
-  letter-spacing:.2em;
-}
-.panel-meta{
-  font-size:11px;
-  color:var(--muted);
-}
-
-/* Cards grid */
-.cards-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-}
-
-/* Expandable session card */
-.card{
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:#111;
-  color:var(--text);
-  box-shadow:0 0 16px rgba(0,0,0,.6);
-  overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.card:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 22px rgba(242,214,117,.28);
-  border-color:var(--accent);
-}
-.card-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 12px;
-  cursor:pointer;
-}
-.card-header-main{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-.card-session-id{
-  font-size:12px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--accent);
-}
-.card-sub{
-  font-size:11px;
-  color:var(--muted);
-}
-.card-kpis{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-.card-kpi{
-  font-size:10px;
-  padding:3px 8px;
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.5);
-  color:var(--accent);
-}
-.card-toggle{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-size:11px;
-  color:var(--muted);
-}
-.card-toggle-icon{
-  width:16px;
-  height:16px;
-  border-radius:50%;
-  border:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:10px;
-  transition:transform .18s ease;
-}
-.card.open .card-toggle-icon{
-  transform:rotate(90deg);
-}
-
-/* Collapsible body */
-.card-body{
-  max-height:0;
-  overflow:hidden;
-  transition:max-height .28s ease;
-  border-top:1px solid rgba(214,180,76,.35);
-}
-.card-body-inner{
-  padding:10px 12px 10px;
-}
-
-/* Contract blocks inside session */
-.contract-block{
-  border-radius:10px;
-  border:1px solid rgba(214,180,76,.4);
-  background:rgba(5,5,5,.95);
-  padding:8px 8px 9px;
-  font-size:12px;
-  margin-bottom:6px;
-}
-.contract-name{
-  font-size:12px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  margin-bottom:3px;
-}
-.contract-line{
-  font-size:11px;
-  color:var(--muted);
-}
-
-/* Modal base */
+/* Modal (centered, same glow/spacing as other pages) */
 .modal-mask{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.8);
+  background:rgba(0,0,0,.7);
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:999;
-}
-.modal-mask.open{
-  display:flex;
+  z-index:1000;
 }
 .modal{
-  width:95%;
-  max-width:1000px;
-  max-height:90vh;
-  overflow:auto;
   background:#0b0b0b;
   border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px 16px 16px;
-  box-shadow:0 0 28px rgba(214,180,76,.3);
+  border-radius:18px;
+  max-width:820px;
+  width:94vw;
+  padding:20px 22px 18px;
+  box-shadow:0 0 28px rgba(214,180,76,.35);
 }
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-.modal-title{
+.modal h3{
+  margin:0 0 14px;
   color:var(--accent);
-  font-size:14px;
-  text-transform:uppercase;
-  letter-spacing:.2em;
+  font-size:18px;
+  letter-spacing:.3px;
 }
-
-/* Intake modal layout */
-.modal-body{
-  font-size:var(--fs-base);
-}
-.grid-intake{
-  display:grid;
-  grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr);
-  gap:12px;
-}
-@media (max-width:900px){
-  .grid-intake{grid-template-columns:1fr;}
-}
-.panel-inner{
-  background:linear-gradient(135deg,rgba(214,180,76,.05),transparent);
-  border:1px solid rgba(214,180,76,.4);
-  border-radius:14px;
-  padding:10px;
-}
-
-/* KPIs */
-.session-kpis{
+.modal .header-row{
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:8px;
-}
-.kpi{
-  flex:1 1 150px;
-  min-width:0;
-  border-radius:10px;
-  padding:6px 8px;
-  border:1px solid rgba(214,180,76,.5);
-  background:radial-gradient(circle at top,rgba(242,214,117,.22),rgba(10,10,10,.9));
-  font-size:11px;
-}
-.kpi-label{
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  color:var(--muted);
-  margin-bottom:2px;
-}
-.kpi-value{
-  font-size:13px;
-}
-
-/* Upload / OCR area */
-.upload-box{
-  border:1px dashed var(--border);
-  padding:8px;
-  border-radius:12px;
-  background:#111;
-  margin-bottom:8px;
-}
-.upload-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
   align-items:center;
-  margin-bottom:6px;
+  gap:12px;
+  margin-bottom:14px;
 }
-.preview-wrap{
-  display:flex;
-  gap:8px;
-  align-items:flex-start;
-}
-.preview{
-  border:1px solid var(--border);
-  border-radius:8px;
-  overflow:hidden;
-  width:220px;
-  height:140px;
-  background:#000;
-}
-.preview img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.ocr-box{
-  flex:1;
-  height:140px;
-  background:#050505;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:8px;
-  color:var(--muted);
-  font-size:12px;
-  white-space:pre-wrap;
-  overflow:auto;
-}
-.status{
-  font-size:11px;
-  color:var(--muted);
-}
-.status-ok{color:var(--accent);}
-.status-err{color:var(--bad);}
+.modal .header-row .spacer{flex:1}
 
-/* Contract editor */
-.contract-editor{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;
-  background:#111;
-}
-.meta-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  margin-bottom:8px;
-}
-@media (max-width:700px){
-  .meta-grid{grid-template-columns:1fr 1fr;}
-}
-.form-field{
+/* Rank card in modal — NO frame/background on image */
+.rankCard{
   display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-label{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  color:var(--muted);
-}
-input[type="text"],
-input[type="number"],
-select{
-  background:var(--card);
-  border-radius:8px;
-  border:1px solid rgba(214,180,76,.4);
-  padding:7px 8px;
-  font-size:var(--fs-base);
-  color:var(--text);
-  font-family:inherit;
-}
-input::placeholder{color:#75653a;}
-
-.cargo-list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-bottom:8px;
-}
-.cargo-card{
+  gap:16px;
+  align-items:center;
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:8px 8px 10px;
+  border-radius:14px;
+  padding:14px;
   background:#0f0f0f;
 }
-.cargo-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px;
-}
-.cargo-title{
-  margin:0;
-  color:var(--accent);
-  font-size:12px;
-  text-transform:uppercase;
-}
-.badge{
-  display:inline-block;
-  padding:2px 6px;
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.7);
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.14em;
-}
-
-.subtable{
-  margin-top:4px;
-}
-.subtable-title{
-  font-size:11px;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  margin-bottom:2px;
-}
-.subtable table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:var(--fs-small);
-}
-.subtable th,
-.subtable td{
-  padding:4px 6px;
-  text-align:left;
-}
-.subtable th{
-  color:var(--accent);
-  border-bottom:1px solid rgba(214,180,76,.4);
-}
-.subtable tbody tr:nth-child(odd){background:var(--row);}
-.subtable tbody tr:nth-child(even){background:#050505;}
-.small-input{
-  width:100%;
-  background:transparent;
+.rankCard img{
+  width:70px;
+  height:70px;
+  object-fit:contain;
   border:none;
-  color:var(--text);
-  font-family:inherit;
-  font-size:11px;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
 }
-.small-input:focus{outline:none;}
 
-.form-actions{
-  margin-top:8px;
+.meta{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.55;
+}
+.meta b{color:var(--accent)}
+
+.divider{
+  height:1px;
+  background:linear-gradient(90deg,rgba(214,180,76,.15),rgba(214,180,76,.4),rgba(214,180,76,.15));
+  border:none;
+  margin:16px 0;
+}
+
+/* Section blocks inside modal */
+.section{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  background:#0f0f0f;
+  margin-bottom:12px;
+}
+.section h4{
+  margin:0 0 10px;
+  color:var(--accent);
+  font-size:14px;
+  letter-spacing:.3px;
+}
+.section .body{font-size:13px;color:var(--text);line-height:1.6}
+.section .muted{color:var(--muted)}
+
+/* Certifications-only gallery in modal */
+.certThumbs{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
-  justify-content:flex-end;
+  align-items:center;
 }
-
-/* Small confirm modal reuse */
-#confirmModal .modal{
-  max-width:420px;
-}
-
-/* Utility */
-.muted{
-  color:var(--muted);
-  font-size:11px;
+.certThumbs img{
+  width:56px;
+  height:56px;
+  object-fit:contain;
+  display:block;
+  border:none;
+  background:transparent;
+  box-shadow:none;
+  border-radius:0;
 }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <!-- Header mount (same pattern as member.html) -->
+  <!-- Header mount -->
   <div id="header-container">
     <div class="brand">
-      <img class="brand-logo"
-           src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png"
-           alt="JMBN">
-      <h1>JMBN // CONTRACTS</h1>
+      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
+      <h1>JMBN</h1>
     </div>
   </div>
 
   <script>
   (async () => {
-    try{
-      const res = await fetch('header.html',{ cache:'no-cache' });
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
       if(res.ok){
         const html = await res.text();
         document.getElementById('header-container').outerHTML = html;
         requestAnimationFrame(() => {
           const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
           document.querySelectorAll('.nav-btn').forEach(a => {
-            const href = (a.getAttribute('href') || '').toLowerCase();
-            if(href === here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
-            if(/contract/.test(here) && /contract/.test(href)){
-              a.classList.add('active');
-              a.setAttribute('aria-current','page');
-            }
+            const href = (a.getAttribute('href')||'').toLowerCase();
+            if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
+            if(/member/.test(here) && /member/.test(href)){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
           });
         });
       }
-    }catch(e){
-      console.warn('Header load failed:', e);
-    }
+    } catch (e) { console.warn('Header load failed:', e); }
   })();
   </script>
 
-  <!-- Top bar -->
-  <div class="top-bar">
-    <div class="status-main" id="mainStatus">Initialising…</div>
-    <button class="btn" id="openIntakeBtn">+ New Contract / Scan</button>
-  </div>
+  <main class="page-shell">
+    <div class="panel">
+      <div class="controls">
+        <input id="q" type="search" placeholder="Search handle, rank, or specialization…">
+        <span id="count" class="badge">0 members</span>
+      </div>
 
-  <!-- Saved sessions -->
-  <section class="section-panel">
-    <div class="panel-header">
-      <div class="panel-title">Saved Sessions</div>
-      <div class="panel-meta">Each card is a hauling session with its contracts & cargo</div>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:23%">Handle</th>
+              <th style="width:19%">Rank Category</th>
+              <th style="width:20%">Current Rank</th>
+              <th style="width:20%">Specialization</th>
+              <th style="width:13%">Certifications</th>
+              <th style="width:5%"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="6" style="padding:12px;color:var(--muted)">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="meta" style="padding-top:10px">
+        Attendance counts only missions with status <b>Success / Fail / Abort</b>.
+      </div>
     </div>
-    <div class="cards-grid" id="sessionsGrid">
-      <div class="muted">Loading sessions…</div>
-    </div>
-  </section>
-</div>
+  </main>
 
-<!-- Intake Modal -->
-<div class="modal-mask" id="intakeModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">New Contract – Session Intake</div>
-      <button type="button" class="btn-secondary" id="intakeCloseBtn">Close</button>
-    </div>
-    <div class="modal-body">
-      <div class="grid-intake">
-        <!-- LEFT: Session + screenshot -->
-        <section class="panel-inner">
-          <div class="panel-header" style="margin-bottom:6px;">
-            <div class="panel-title" style="font-size:12px;">Session & Screenshot Intake</div>
-            <div class="panel-meta">Session auto-creates on first save</div>
-          </div>
+  <!-- Modal -->
+  <div id="viewMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="header-row">
+        <h3 id="viewTitle">Member</h3>
+        <div class="spacer"></div>
+        <button class="btn" onclick="closeView()">Close</button>
+      </div>
 
-          <div class="session-kpis">
-            <div class="kpi">
-              <div class="kpi-label">Session ID</div>
-              <div class="kpi-value" id="kpiSessionId">—</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-label">Submitted By</div>
-              <div class="kpi-value" id="kpiSubmittedBy">—</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-label">Active Contract</div>
-              <div class="kpi-value" id="kpiActiveContract">New Contract</div>
-            </div>
-          </div>
+      <div class="rankCard">
+        <img id="rankImg" alt="Rank">
+        <div class="meta">
+          <div><b>Handle:</b> <span id="vHandle"></span></div>
+          <div><b>Rank Category:</b> <span id="vRankCat"></span></div>
+          <div><b>Current Rank:</b> <span id="vRankName"></span> <span id="vRankCode" class="meta"></span></div>
+          <div><b>Specialization (role chips):</b> <span id="vRoles"></span></div>
+          <div><b>Missions attended:</b> <span id="vAttended"></span></div>
+        </div>
+      </div>
 
-          <div class="upload-box" id="pasteZone">
-            <div class="upload-row">
-              <input type="file" id="screenshotInput" accept="image/*">
-              <button class="btn" type="button" id="scanBtn">Scan Image</button>
-              <button class="btn btn-secondary" type="button" id="clearBtn">Clear</button>
-            </div>
-            <div class="status" id="statusLine">
-              Tip: Use <b>Win+Shift+S</b> in-game, copy the contract, click here and press <b>Ctrl+V</b>.
-            </div>
-          </div>
+      <hr class="divider">
 
-          <div class="preview-wrap">
-            <div class="preview">
-              <img id="previewImg" alt="Screenshot preview" style="display:none;">
-            </div>
-            <div class="ocr-box" id="ocrOutput"></div>
-          </div>
-        </section>
-
-        <!-- RIGHT: Contract editor -->
-        <section class="panel-inner">
-          <div class="panel-header" style="margin-bottom:6px;">
-            <div class="panel-title" style="font-size:12px;">Contract Editor</div>
-            <div class="panel-meta">OCR will try to autofill reward & legs</div>
-          </div>
-
-          <div class="contract-editor">
-            <div class="meta-grid">
-              <div class="form-field">
-                <label for="contractName">Contract Name</label>
-                <input id="contractName" type="text" placeholder="e.g. Covalex Waste Run">
-              </div>
-              <div class="form-field">
-                <label for="contractType">Type</label>
-                <select id="contractType">
-                  <option value="hauling">Hauling</option>
-                  <option value="delivery">Delivery</option>
-                  <option value="salvage">Salvage</option>
-                </select>
-              </div>
-              <div class="form-field">
-                <label for="reward">Reward (aUEC)</label>
-                <input id="reward" type="number" min="0" step="1" placeholder="42000">
-              </div>
-            </div>
-
-            <div class="cargo-list" id="cargoList"></div>
-
-            <div class="form-actions">
-              <button class="btn-secondary" type="button" id="addCargoBtn">+ Add Cargo Type</button>
-              <button class="btn" type="button" id="saveContractBtn">Save Contract</button>
-            </div>
-
-            <div class="muted">
-              Once saved, this contract will appear under its session in the audit list.
-            </div>
-          </div>
-        </section>
+      <div class="section">
+        <h4>Certifications</h4>
+        <!-- ONLY images below, no labels/text -->
+        <div id="vCertThumbs" class="certThumbs"></div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Small confirm modal for OCR summary -->
-<div class="modal-mask" id="confirmModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Confirm Detected Contract</div>
-      <button type="button" class="btn-secondary" id="modalCloseBtn">✕</button>
-    </div>
-    <div class="modal-body">
-      <p class="muted" style="margin-top:0;margin-bottom:6px;">
-        We parsed this contract from your screenshot. Confirm it looks okay before editing or saving.
-      </p>
-      <dl style="font-size:13px;">
-        <dt>Reward</dt>
-        <dd id="modalReward">–</dd>
-        <dt>Contractor</dt>
-        <dd id="modalContractor">–</dd>
-        <dt>Legs / Cargo</dt>
-        <dd id="modalLegs">–</dd>
-      </dl>
-    </div>
-    <div class="modal-header" style="justify-content:flex-end;margin-top:6px;">
-      <button type="button" class="btn-secondary" id="modalCancelBtn">Cancel</button>
-      <button type="button" class="btn" id="modalConfirmBtn">Confirm</button>
-    </div>
-  </div>
-</div>
-
-<!-- JS libs -->
-<script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
 
 <script>
-/* ===== JMBN CONTRACTS – INLINE JS (matching member.html style) ===== */
-const $  = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
+/* ---------- Utilities ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+const toTitleCase = s => s ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()) : '';
 
-let sb = null;
-let currentUser = null;
-let currentSession = null;
-
-// Model for current contract being edited
-const activeContractModel = {
-  contractorName:null,
-  reward:null,
-  legs:[],
-  cargoTypes:[]
-};
-
-// Status helpers
-function setMainStatus(text,type){
-  const el = $('#mainStatus');
-  if(!el) return;
-  el.textContent = text;
-  el.classList.remove('ok','err');
-  if(type === 'ok')  el.classList.add('ok');
-  if(type === 'err') el.classList.add('err');
-}
-function setStatus(text,type){
-  const el = $('#statusLine');
-  if(!el) return;
-  el.textContent = text;
-  el.classList.remove('status-ok','status-err');
-  if(type === 'ok')  el.classList.add('status-ok');
-  if(type === 'err') el.classList.add('status-err');
+function normalizeRoles(r){
+  const raw = r.ingame_role ?? null;
+  if(!raw) return [];
+  if(Array.isArray(raw)) return raw.map(toTitleCase).filter(Boolean);
+  return String(raw).split(/[,;/]+/).map(s=>toTitleCase(s)).filter(Boolean);
 }
 
-/* ---------- Session helpers ---------- */
-async function ensureSession(){
-  if(currentSession) return currentSession;
-  const { data, error } = await sb
-    .from('sessions')
-    .insert({ submitted_by: currentUser.id })
-    .select()
-    .single();
-  if(error){
-    console.error(error);
-    setMainStatus('Failed to create session in DB.', 'err');
-    return null;
+/* ---------- Supabase + buckets ---------- */
+let sb=null, ROWS=[];
+const RANK_BUCKET='Ranks', CERT_BUCKET='Certifications';
+
+function rankPublicUrlFromCode(code){
+  if(!code) return '';
+  return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
+}
+function certPublicUrlFromCode(code){
+  if(!code) return '';
+  return sb.storage.from(CERT_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
+}
+
+/* ---------- Rank sorting helpers (highest first) ---------- */
+function rankScore(r){
+  const code = String(r.current_rank_code || '').toUpperCase().trim();
+  // O > W > E ; higher number = higher rank
+  const m = code.match(/^([OWE])-(\d{1,2})$/);
+  if(m){
+    const tier = { O: 300, W: 200, E: 100 }[m[1]] || 0;
+    const n = Number(m[2]) || 0;
+    return tier + n; // O-10 => 310, E-1 => 101
   }
-  currentSession = data;
-  if($('#kpiSessionId')) $('#kpiSessionId').textContent = data.id;
-  setStatus('Session created. Ready to scan & save contracts.', 'ok');
-  return data;
+
+  // Fallbacks when there's no code — use name hints
+  const name = String(r.current_rank_name || '').toLowerCase();
+  const hints = [
+    ['admiral','general','marshal','commodore','captain of fleet'],
+    ['captain','commander'],
+    ['lieutenant colonel','major','lieutenant commander'],
+    ['lieutenant','ensign'],
+    ['sergeant major','master sergeant','gunnery sergeant'],
+    ['sergeant','corporal'],
+    ['private','recruit','cadet','trainee','unrated','unranked']
+  ];
+  for(let i=0;i<hints.length;i++){
+    if(hints[i].some(k=>name.includes(k))) return 240 - i*10;
+  }
+  return 0; // unknown => bottom
 }
 
-/* ---------- Cargo editor rendering ---------- */
-function renderCargoList(){
-  const wrap = $('#cargoList');
-  if(!wrap) return;
-  wrap.innerHTML = '';
-
-  activeContractModel.cargoTypes.forEach((cargo, idx) => {
-    const card = document.createElement('div');
-    card.className = 'cargo-card';
-
-    const header = document.createElement('div');
-    header.className = 'cargo-header';
-
-    const title = document.createElement('h4');
-    title.className = 'cargo-title';
-    title.textContent = cargo.name || `Cargo ${idx+1}`;
-    header.appendChild(title);
-
-    const right = document.createElement('div');
-    right.style.display = 'flex';
-    right.style.alignItems = 'center';
-    right.style.gap = '6px';
-
-    const badge = document.createElement('span');
-    badge.className = 'badge';
-    badge.textContent = 'CARGO TYPE';
-    right.appendChild(badge);
-
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.className = 'btn-secondary';
-    delBtn.textContent = 'Remove';
-    delBtn.style.fontSize = '10px';
-    delBtn.addEventListener('click', () => {
-      activeContractModel.cargoTypes.splice(idx,1);
-      renderCargoList();
-    });
-    right.appendChild(delBtn);
-
-    header.appendChild(right);
-    card.appendChild(header);
-
-    // Name field
-    const nameField = document.createElement('div');
-    nameField.className = 'form-field';
-    const nameLabel = document.createElement('label');
-    nameLabel.textContent = 'Cargo Name';
-    const nameInput = document.createElement('input');
-    nameInput.type = 'text';
-    nameInput.value = cargo.name || '';
-    nameInput.placeholder = 'Waste / Scrap / Boxes';
-    nameInput.addEventListener('input', e => {
-      cargo.name = e.target.value;
-      title.textContent = cargo.name || `Cargo ${idx+1}`;
-    });
-    nameField.appendChild(nameLabel);
-    nameField.appendChild(nameInput);
-    card.appendChild(nameField);
-
-    // Loading table
-    const loadWrap = document.createElement('div');
-    loadWrap.className = 'subtable';
-    const loadTitle = document.createElement('div');
-    loadTitle.className = 'subtable-title';
-    loadTitle.textContent = 'Loading (from)';
-    loadWrap.appendChild(loadTitle);
-
-    const loadTable = document.createElement('table');
-    const loadHead = document.createElement('thead');
-    loadHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
-    loadTable.appendChild(loadHead);
-
-    const loadBody = document.createElement('tbody');
-    cargo.loadings.forEach((row, li) => {
-      const tr = document.createElement('tr');
-
-      const tdLoc = document.createElement('td');
-      const inLoc = document.createElement('input');
-      inLoc.className = 'small-input';
-      inLoc.value = row.location;
-      inLoc.placeholder = 'Pick-up';
-      inLoc.addEventListener('input', e => row.location = e.target.value);
-      tdLoc.appendChild(inLoc);
-      tr.appendChild(tdLoc);
-
-      const tdScu = document.createElement('td');
-      const inScu = document.createElement('input');
-      inScu.className = 'small-input';
-      inScu.type = 'number';
-      inScu.value = row.scu;
-      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
-      tdScu.appendChild(inScu);
-      tr.appendChild(tdScu);
-
-      const tdDel = document.createElement('td');
-      const rm = document.createElement('button');
-      rm.type = 'button';
-      rm.className = 'btn-secondary';
-      rm.textContent = '✕';
-      rm.style.fontSize = '10px';
-      rm.addEventListener('click', () => {
-        cargo.loadings.splice(li,1);
-        renderCargoList();
-      });
-      tdDel.appendChild(rm);
-      tr.appendChild(tdDel);
-
-      loadBody.appendChild(tr);
-    });
-
-    const addLoadTr = document.createElement('tr');
-    const addLoadTd = document.createElement('td');
-    addLoadTd.colSpan = 3;
-    const addLoadBtn = document.createElement('button');
-    addLoadBtn.type = 'button';
-    addLoadBtn.className = 'btn-secondary';
-    addLoadBtn.textContent = '+ Add Loading Row';
-    addLoadBtn.style.fontSize = '10px';
-    addLoadBtn.addEventListener('click', () => {
-      cargo.loadings.push({ location:'', scu:0 });
-      renderCargoList();
-    });
-    addLoadTd.appendChild(addLoadBtn);
-    addLoadTr.appendChild(addLoadTd);
-    loadBody.appendChild(addLoadTr);
-
-    loadTable.appendChild(loadBody);
-    loadWrap.appendChild(loadTable);
-    card.appendChild(loadWrap);
-
-    // Offloading table
-    const offWrap = document.createElement('div');
-    offWrap.className = 'subtable';
-    const offTitle = document.createElement('div');
-    offTitle.className = 'subtable-title';
-    offTitle.textContent = 'Offloading (to)';
-    offWrap.appendChild(offTitle);
-
-    const offTable = document.createElement('table');
-    const offHead = document.createElement('thead');
-    offHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
-    offTable.appendChild(offHead);
-
-    const offBody = document.createElement('tbody');
-    cargo.offloadings.forEach((row, oi) => {
-      const tr = document.createElement('tr');
-
-      const tdLoc = document.createElement('td');
-      const inLoc = document.createElement('input');
-      inLoc.className = 'small-input';
-      inLoc.value = row.location;
-      inLoc.placeholder = 'Drop-off';
-      inLoc.addEventListener('input', e => row.location = e.target.value);
-      tdLoc.appendChild(inLoc);
-      tr.appendChild(tdLoc);
-
-      const tdScu = document.createElement('td');
-      const inScu = document.createElement('input');
-      inScu.className = 'small-input';
-      inScu.type = 'number';
-      inScu.value = row.scu;
-      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
-      tdScu.appendChild(inScu);
-      tr.appendChild(tdScu);
-
-      const tdDel = document.createElement('td');
-      const rm = document.createElement('button');
-      rm.type = 'button';
-      rm.className = 'btn-secondary';
-      rm.textContent = '✕';
-      rm.style.fontSize = '10px';
-      rm.addEventListener('click', () => {
-        cargo.offloadings.splice(oi,1);
-        renderCargoList();
-      });
-      tdDel.appendChild(rm);
-      tr.appendChild(tdDel);
-
-      offBody.appendChild(tr);
-    });
-
-    const addOffTr = document.createElement('tr');
-    const addOffTd = document.createElement('td');
-    addOffTd.colSpan = 3;
-    const addOffBtn = document.createElement('button');
-    addOffBtn.type = 'button';
-    addOffBtn.className = 'btn-secondary';
-    addOffBtn.textContent = '+ Add Offloading Row';
-    addOffBtn.style.fontSize = '10px';
-    addOffBtn.addEventListener('click', () => {
-      cargo.offloadings.push({ location:'', scu:0 });
-      renderCargoList();
-    });
-    addOffTd.appendChild(addOffBtn);
-    addOffTr.appendChild(addOffTd);
-    offBody.appendChild(addOffTr);
-
-    offTable.appendChild(offBody);
-    offWrap.appendChild(offTable);
-    card.appendChild(offWrap);
-
-    wrap.appendChild(card);
+function sortByRank(rows){
+  return (rows||[]).slice().sort((a,b)=>{
+    const diff = rankScore(b) - rankScore(a);
+    if(diff) return diff;
+    // Tie-breakers: category then handle
+    const catA = (a.current_rank_category||'').localeCompare(b.current_rank_category||'');
+    if(catA) return catA;
+    return (a.handle||'').localeCompare(b.handle||'');
   });
 }
 
-/* ---------- OCR parsing ---------- */
-function parseHeader(text){
-  const header = { reward:null, contractor:null };
-  let m = text.match(/Reward\s+(?:[a-z]\s*)?([\d,]+)/i);
-  if(m && m[1]) header.reward = m[1].replace(/,/g,'');
-  m = text.match(/Contracted\s+By\s+(.+)/i);
-  if(m && m[1]) header.contractor = m[1].trim();
-  return header;
+/* ---------- DOM parts ---------- */
+const tbody=$('#tbody'), countEl=$('#count'), q=$('#q');
+
+/* ---------- Render ---------- */
+function render(rows){
+  if(!rows?.length){
+    tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
+    countEl.textContent='0 members';
+    return;
+  }
+
+  tbody.innerHTML=rows.map(r=>{
+    const handle=toTitleCase(r.handle||r.display_name||r.user_id?.slice(0,8)||'—');
+    const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
+    const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
+    const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
+    const roles=normalizeRoles(r);
+
+    return `
+    <tr>
+      <td class="name">${esc(handle)}</td>
+      <td>${esc(rankCat)}</td>
+      <td>
+        <div class="rankCell">
+          ${imgUrl?`<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">`:''}
+          <span>${esc(rankName)}</span>
+        </div>
+      </td>
+      <td>${roles.length?`<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>`:`<span style="color:var(--muted)">—</span>`}</td>
+      <td><span style="color:var(--muted)">—</span></td>
+      <td><button class="btn" onclick="viewMember('${r.user_id}')">View</button></td>
+    </tr>`;
+  }).join('');
+
+  countEl.textContent=`${rows.length} member${rows.length===1?'':'s'}`;
 }
 
-function parseLegs(text){
-  const cleaned = text.replace(/\r/g,'');
-  const collectRe = /Collect\s+(.+?)\s+from\s+(.+?)\./gi;
-  const deliverRe = /Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
-
-  const collects = [];
-  const delivers = [];
-  let m;
-
-  while((m = collectRe.exec(cleaned)) !== null){
-    collects.push({ cargoType:m[1].trim(), origin:m[2].trim() });
-  }
-  while((m = deliverRe.exec(cleaned)) !== null){
-    delivers.push({
-      delivered:parseInt(m[1],10),
-      required:parseInt(m[2],10),
-      destination:m[3].trim()
-    });
-  }
-
-  const legs = [];
-  const n = Math.min(collects.length, delivers.length);
-  for(let i=0;i<n;i++){
-    legs.push({
-      leg:i+1,
-      cargoType:collects[i].cargoType,
-      origin:collects[i].origin,
-      destination:delivers[i].destination,
-      delivered:delivers[i].delivered,
-      required:delivers[i].required
-    });
-  }
-  return legs;
+/* ---------- Filter + apply ---------- */
+function filterRows(){
+  const term=(q.value||'').toLowerCase().trim();
+  if(!term) return ROWS;
+  return ROWS.filter(r=>{
+    const all=`${r.handle||''} ${r.display_name||''} ${r.current_rank_category||''} ${r.current_rank_name||''} ${r.current_rank_code||''} ${normalizeRoles(r).join(' ')}`.toLowerCase();
+    return all.includes(term);
+  });
 }
 
-function buildCargoModelFromLegs(legs){
-  const map = new Map();
-  for(const leg of legs){
-    const key = leg.cargoType || 'Unknown';
-    if(!map.has(key)){
-      map.set(key,{ name:key, loadings:[], offloadings:[] });
-    }
-    const entry = map.get(key);
-    entry.loadings.push({ location:leg.origin, scu:leg.required });
-    entry.offloadings.push({ location:leg.destination, scu:leg.required });
-  }
-  return Array.from(map.values());
+function applyAndRender(){
+  const filtered = filterRows();
+  const sorted = sortByRank(filtered);
+  render(sorted);
 }
 
-/* ---------- OCR flow ---------- */
-async function runOCROnBlob(blob){
-  const ocrOutput = $('#ocrOutput');
-  const scanBtn   = $('#scanBtn');
-  if(!ocrOutput || !scanBtn) return;
+/* ---------- Modal ---------- */
+function closeView(){ $('#viewMask').style.display='none'; }
+window.closeView=closeView;
 
-  ocrOutput.textContent = '';
-  setStatus('Scanning image…','ok');
-  scanBtn.disabled = true;
-
+async function loadCertThumbs(userId){
+  const box = $('#vCertThumbs');
+  box.innerHTML = '';
   try{
-    const { data:{ text } } = await Tesseract.recognize(blob,'eng',{
-      logger:m=>{
-        if(m.status === 'recognizing text'){
-          const pct = Math.round((m.progress||0)*100);
-          setStatus(`Recognising text… ${pct}%`,'ok');
-        }
-      }
-    });
+    const { data, error } = await sb
+      .from('v_user_certifications')
+      .select('certification_code,image_url,owned')
+      .eq('user_id', userId);
+    if(error){ console.warn(error.message); return; }
 
-    const trimmed = text.trim();
-    ocrOutput.textContent = trimmed;
+    const imgs = (data||[])
+      .filter(c => c.owned)
+      .map(c => c.image_url || certPublicUrlFromCode(c.certification_code))
+      .filter(Boolean);
 
-    const header = parseHeader(trimmed);
-    const legs   = parseLegs(trimmed);
-    const cargo  = buildCargoModelFromLegs(legs);
-
-    activeContractModel.legs       = legs;
-    activeContractModel.cargoTypes = cargo;
-    activeContractModel.contractorName = header.contractor || null;
-    activeContractModel.reward     = header.reward ? Number(header.reward) : null;
-
-    const rewardEl = $('#reward');
-    const nameEl   = $('#contractName');
-    if(header.reward && rewardEl) rewardEl.value = header.reward;
-    if(header.contractor && nameEl && !nameEl.value){
-      nameEl.value = header.contractor;
-    }
-    if($('#kpiActiveContract')){
-      $('#kpiActiveContract').textContent = nameEl?.value || 'New Contract';
+    if(!imgs.length){
+      box.innerHTML = '';
+      return;
     }
 
-    renderCargoList();
-    openConfirmModal(header, legs, cargo);
-    setStatus('Scan complete. Review parsed data before saving.','ok');
-  }catch(err){
-    console.error(err);
-    setStatus('Error during OCR. Try a clearer screenshot.','err');
-  }finally{
-    scanBtn.disabled = false;
+    box.innerHTML = imgs
+      .map(src => `<img src="${esc(src)}" alt="" loading="lazy" onerror="this.style.display='none'">`)
+      .join('');
+  }catch(e){
+    console.warn('cert thumbs:', e.message);
   }
 }
 
-/* ---------- Confirm modal ---------- */
-function openConfirmModal(header, legs, cargoTypes){
-  const mask = $('#confirmModal');
-  if(!mask) return;
-  const modalReward     = $('#modalReward');
-  const modalContractor = $('#modalContractor');
-  const modalLegs       = $('#modalLegs');
+function viewMember(userId){
+  const r=ROWS.find(x=>x.user_id===userId);
+  if(!r) return;
+  const handle=toTitleCase(r.handle||r.display_name||r.user_id.slice(0,8));
+  const attended=Number(r.missions_attended)||0;
+  const rankCat=r.current_rank_category?toTitleCase(r.current_rank_category):'—';
+  const rankName=r.current_rank_name?toTitleCase(r.current_rank_name):'Unrated';
+  const roles=normalizeRoles(r);
+  const imgUrl=r.current_rank_image_url||rankPublicUrlFromCode(r.current_rank_code);
 
-  if(modalReward){
-    modalReward.textContent = header.reward
-      ? Number(header.reward).toLocaleString() + ' aUEC'
-      : '—';
-  }
-  if(modalContractor){
-    modalContractor.textContent = header.contractor || '—';
-  }
+  $('#viewTitle').textContent=`Member — ${handle}`;
+  $('#vHandle').textContent=handle;
+  $('#vRankCat').textContent=rankCat;
+  $('#vRankName').textContent=rankName;
+  $('#vRankCode').textContent=r.current_rank_code?`(${r.current_rank_code})`:''; // e.g. (O-1)
+  $('#vRoles').innerHTML=roles.length?roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' '):'—';
+  $('#vAttended').textContent=attended;
 
-  if(modalLegs){
-    if(legs.length){
-      const totalSCU   = legs.reduce((s,l)=>s+(l.required||0),0);
-      const cargoNames = cargoTypes.map(c=>c.name).join(', ');
-      modalLegs.textContent = `${legs.length} leg(s) • ${totalSCU} SCU • Cargo: ${cargoNames || '—'}`;
-    }else{
-      modalLegs.textContent = 'None detected';
-    }
-  }
-  mask.classList.add('open');
+  const imgEl=$('#rankImg');
+  imgEl.src=imgUrl||''; imgEl.alt=r.current_rank_code||'Rank';
+  imgEl.style.visibility=imgUrl?'visible':'hidden';
+  imgEl.onerror=()=>{imgEl.style.visibility='hidden';};
+
+  loadCertThumbs(userId);
+
+  $('#viewMask').style.display='flex';
 }
-function closeConfirmModal(){
-  const mask = $('#confirmModal');
-  if(mask) mask.classList.remove('open');
-}
+window.viewMember=viewMember;
 
-/* ---------- Saved sessions cards ---------- */
-async function loadSessions(){
-  const grid = $('#sessionsGrid');
-  if(!grid) return;
-
-  const { data:sessions, error } = await sb
-    .from('sessions')
-    .select('id, created_at')
-    .order('created_at',{ascending:false});
+/* ---------- Data load ---------- */
+async function loadRoster(){
+  const {data,error}=await sb
+    .from('v_profiles_detailed')
+    .select(`
+      user_id,
+      handle,
+      display_name,
+      current_rank_category,
+      current_rank_name,
+      current_rank_code,
+      current_rank_image_url,
+      ingame_role,
+      missions_attended
+    `)
+    .order('current_rank_category',{ascending:true})
+    .order('handle',{ascending:true});
 
   if(error){
-    console.error(error);
-    grid.innerHTML = '<div class="muted">Error loading sessions.</div>';
+    tbody.innerHTML=`<tr><td colspan="6" style="padding:12px;color:var(--bad)">Failed to load: ${esc(error.message)}</td></tr>`;
+    countEl.textContent='0 members';
     return;
   }
-  if(!sessions || !sessions.length){
-    grid.innerHTML = '<div class="muted">No sessions yet. Use “New Contract / Scan” to start.</div>';
-    return;
-  }
-
-  grid.innerHTML = '';
-
-  for(const s of sessions){
-    const { data:contracts, error:cErr } = await sb
-      .from('contracts')
-      .select(`
-        id,
-        contract_name,
-        reward,
-        contract_cargo_types (
-          id,
-          cargo_type,
-          contract_loading ( location, scu ),
-          contract_offloading ( location, scu )
-        )
-      `)
-      .eq('session_id', s.id)
-      .order('id',{ascending:true});
-
-    if(cErr){
-      console.error(cErr);
-    }
-
-    // Build card
-    const card = document.createElement('div');
-    card.className = 'card';
-
-    const header = document.createElement('div');
-    header.className = 'card-header';
-
-    const main = document.createElement('div');
-    main.className = 'card-header-main';
-
-    const sid = document.createElement('div');
-    sid.className = 'card-session-id';
-    sid.textContent = 'SESSION ' + s.id.slice(0,8);
-    main.appendChild(sid);
-
-    const sub = document.createElement('div');
-    sub.className = 'card-sub';
-    const d = new Date(s.created_at);
-    sub.textContent = d.toLocaleString();
-    main.appendChild(sub);
-
-    header.appendChild(main);
-
-    const right = document.createElement('div');
-    right.className = 'card-toggle';
-
-    const kpis = document.createElement('div');
-    kpis.className = 'card-kpis';
-
-    const cCount = (contracts || []).length;
-    const k1 = document.createElement('span');
-    k1.className = 'card-kpi';
-    k1.textContent = cCount + ' contract' + (cCount === 1 ? '' : 's');
-    kpis.appendChild(k1);
-
-    right.appendChild(kpis);
-
-    const toggle = document.createElement('div');
-    toggle.className = 'card-toggle-icon';
-    toggle.textContent = '>';
-    right.appendChild(toggle);
-
-    header.appendChild(right);
-    card.appendChild(header);
-
-    // Body
-    const body = document.createElement('div');
-    body.className = 'card-body';
-    const bodyInner = document.createElement('div');
-    bodyInner.className = 'card-body-inner';
-
-    if(contracts && contracts.length){
-      contracts.forEach((c, idx) => {
-        const block = document.createElement('div');
-        block.className = 'contract-block';
-
-        const name = document.createElement('div');
-        name.className = 'contract-name';
-        name.textContent = (idx+1) + '. ' + (c.contract_name || 'Contract');
-        block.appendChild(name);
-
-        if(c.reward != null){
-          const rw = document.createElement('div');
-          rw.className = 'contract-line';
-          rw.textContent = 'Reward: ' + Number(c.reward).toLocaleString() + ' aUEC';
-          block.appendChild(rw);
-        }
-
-        (c.contract_cargo_types || []).forEach(ct => {
-          const load = (ct.contract_loading && ct.contract_loading[0]) || null;
-          const off  = (ct.contract_offloading && ct.contract_offloading[0]) || null;
-
-          const line1 = document.createElement('div');
-          line1.className = 'contract-line';
-          const startLoc = load ? load.location : 'Unknown';
-          const endLoc   = off  ? off.location  : 'Unknown';
-          line1.textContent = (startLoc || 'Unknown') + '  >  ' + (endLoc || 'Unknown');
-          block.appendChild(line1);
-
-          const line2 = document.createElement('div');
-          line2.className = 'contract-line';
-          const scu = load ? load.scu : (off ? off.scu : 0);
-          line2.textContent = (scu || 0) + ' SCU ' + (ct.cargo_type || '');
-          block.appendChild(line2);
-        });
-
-        bodyInner.appendChild(block);
-      });
-    }else{
-      const empty = document.createElement('div');
-      empty.className = 'muted';
-      empty.textContent = 'No contracts saved under this session yet.';
-      bodyInner.appendChild(empty);
-    }
-
-    body.appendChild(bodyInner);
-    card.appendChild(body);
-
-    // Toggle behaviour
-    header.addEventListener('click', () => {
-      const isOpen = card.classList.contains('open');
-      if(isOpen){
-        card.classList.remove('open');
-        body.style.maxHeight = '0';
-      }else{
-        card.classList.add('open');
-        body.style.maxHeight = body.scrollHeight + 'px';
-      }
-    });
-
-    grid.appendChild(card);
-  }
+  ROWS=data||[];
+  applyAndRender(); // sort by highest rank first by default
 }
 
-/* ---------- Intake modal helpers ---------- */
-function openIntake(){
-  const m = $('#intakeModal');
-  if(!m) return;
-  m.classList.add('open');
-}
-function closeIntake(){
-  const m = $('#intakeModal');
-  if(!m) return;
-  m.classList.remove('open');
-}
+/* ---------- Events ---------- */
+q.addEventListener('input', applyAndRender);
 
-/* ---------- Init wiring ---------- */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth();
-  if(!session) return;
-  sb = getSupabase();
-  currentUser = session.user;
-  setMainStatus('Logged in as ' + (currentUser.email || currentUser.id), 'ok');
-  if($('#kpiSubmittedBy')) $('#kpiSubmittedBy').textContent = currentUser.email || currentUser.id;
-
-  // UI refs
-  const openIntakeBtn   = $('#openIntakeBtn');
-  const intakeCloseBtn  = $('#intakeCloseBtn');
-  const scanBtn         = $('#scanBtn');
-  const clearBtn        = $('#clearBtn');
-  const screenshotInput = $('#screenshotInput');
-  const pasteZone       = $('#pasteZone');
-  const previewImg      = $('#previewImg');
-  const addCargoBtn     = $('#addCargoBtn');
-  const saveContractBtn = $('#saveContractBtn');
-
-  const modalCloseBtn   = $('#modalCloseBtn');
-  const modalCancelBtn  = $('#modalCancelBtn');
-  const modalConfirmBtn = $('#modalConfirmBtn');
-
-  // Events – modal open/close
-  if(openIntakeBtn)  openIntakeBtn.addEventListener('click', openIntake);
-  if(intakeCloseBtn) intakeCloseBtn.addEventListener('click', closeIntake);
-
-  // Clear
-  if(clearBtn){
-    clearBtn.addEventListener('click', () => {
-      if(screenshotInput) screenshotInput.value = '';
-      if(previewImg){
-        previewImg.src = '';
-        previewImg.style.display = 'none';
-      }
-      const ocrOutput = $('#ocrOutput');
-      if(ocrOutput) ocrOutput.textContent = '';
-      activeContractModel.legs = [];
-      activeContractModel.cargoTypes = [];
-      renderCargoList();
-      setStatus('Cleared image and OCR output.','ok');
-    });
-  }
-
-  // Scan button
-  if(scanBtn){
-    scanBtn.addEventListener('click', () => {
-      if(!screenshotInput || !screenshotInput.files || !screenshotInput.files[0]){
-        setStatus('No file selected. Or paste an image with Ctrl+V.','err');
-        return;
-      }
-      const file = screenshotInput.files[0];
-      const reader = new FileReader();
-      reader.onload = e => {
-        if(previewImg){
-          previewImg.src = e.target.result;
-          previewImg.style.display = 'block';
-        }
-      };
-      reader.readAsDataURL(file);
-      runOCROnBlob(file);
-    });
-  }
-
-  // Paste-from-clipboard
-  if(pasteZone){
-    pasteZone.addEventListener('click', () => pasteZone.focus());
-  }
-  window.addEventListener('paste', e => {
-    const items = e.clipboardData && e.clipboardData.items;
-    if(!items) return;
-    for(let i=0; i<items.length; i++){
-      const item = items[i];
-      if(item.type && item.type.startsWith('image/')){
-        const blob = item.getAsFile();
-        if(blob){
-          e.preventDefault();
-          const reader = new FileReader();
-          reader.onload = ev => {
-            if(previewImg){
-              previewImg.src = ev.target.result;
-              previewImg.style.display = 'block';
-            }
-          };
-          reader.readAsDataURL(blob);
-          setStatus('Pasted image detected – scanning…','ok');
-          runOCROnBlob(blob);
-        }
-        break;
-      }
-    }
-  });
-
-  // Add cargo manually
-  if(addCargoBtn){
-    addCargoBtn.addEventListener('click', () => {
-      activeContractModel.cargoTypes.push({
-        name:'',
-        loadings:[],
-        offloadings:[]
-      });
-      renderCargoList();
-    });
-  }
-
-  // Save contract
-  if(saveContractBtn){
-    saveContractBtn.addEventListener('click', async () => {
-      const sess = await ensureSession();
-      if(!sess) return;
-
-      const nameEl   = $('#contractName');
-      const typeEl   = $('#contractType');
-      const rewardEl = $('#reward');
-
-      const name   = nameEl?.value || 'Unnamed Contract';
-      const ctype  = typeEl?.value || 'hauling';
-      const reward = rewardEl?.value ? Number(rewardEl.value) : null;
-
-      if(!activeContractModel.cargoTypes.length){
-        setStatus('Add at least one cargo type before saving.','err');
-        return;
-      }
-
-      saveContractBtn.disabled = true;
-      setStatus('Saving contract…','ok');
-
-      try{
-        const { data:contract, error:cErr } = await sb
-          .from('contracts')
-          .insert({
-            session_id:  sess.id,
-            submitted_by: currentUser.id,
-            contract_name: name,
-            contract_type: ctype,
-            reward: reward
-          })
-          .select()
-          .single();
-        if(cErr) throw cErr;
-
-        const contractId = contract.id;
-
-        for(const cargo of activeContractModel.cargoTypes){
-          const { data:cargoRow, error:ctErr } = await sb
-            .from('contract_cargo_types')
-            .insert({
-              contract_id: contractId,
-              cargo_type:  cargo.name || 'Unknown'
-            })
-            .select()
-            .single();
-          if(ctErr) throw ctErr;
-
-          const cargoTypeId = cargoRow.id;
-
-          for(const l of (cargo.loadings || [])){
-            if(!l.location) continue;
-            await sb.from('contract_loading').insert({
-              cargo_type_id: cargoTypeId,
-              location:      l.location,
-              scu:           l.scu || 0
-            });
-          }
-          for(const o of (cargo.offloadings || [])){
-            if(!o.location) continue;
-            await sb.from('contract_offloading').insert({
-              cargo_type_id: cargoTypeId,
-              location:      o.location,
-              scu:           o.scu || 0
-            });
-          }
-        }
-
-        setStatus('Contract saved.', 'ok');
-        await loadSessions();
-      }catch(err){
-        console.error(err);
-        setStatus('Error saving contract.', 'err');
-      }finally{
-        saveContractBtn.disabled = false;
-      }
-    });
-  }
-
-  // Confirm modal buttons
-  if(modalCloseBtn)  modalCloseBtn.addEventListener('click', closeConfirmModal);
-  if(modalCancelBtn) modalCancelBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Detection cancelled. You can edit or rescan.','ok');
-  });
-  if(modalConfirmBtn) modalConfirmBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Contract parsed. Review & adjust before saving.','ok');
-  });
-
-  // Initial load of sessions list
-  await loadSessions();
+document.addEventListener('DOMContentLoaded',async()=>{
+  const session=await requireAuth(); if(!session) return;
+  sb=getSupabase();
+  loadRoster();
 });
 </script>
 </body>
