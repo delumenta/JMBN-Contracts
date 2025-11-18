@@ -149,6 +149,12 @@ input[type="file"]{
   color:var(--accent);
   box-shadow:none;
 }
+.btn-ghost{
+  background:transparent;
+  color:var(--accent);
+  border-color:rgba(214,180,76,.4);
+  box-shadow:none;
+}
 .btn:disabled{
   opacity:.4;
   cursor:default;
@@ -304,6 +310,65 @@ tbody tr:nth-child(even){background:#050505;}
   letter-spacing:.14em;
 }
 .badge-contract{color:var(--accent);}
+
+/* === Confirm Modal === */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.modal-backdrop.open{
+  display:flex;
+}
+.modal{
+  width:100%;
+  max-width:420px;
+  background:radial-gradient(circle at top,rgba(242,214,117,.15),#050505);
+  border-radius:18px;
+  border:1px solid var(--border);
+  padding:14px 16px 16px;
+  box-shadow:0 0 24px rgba(0,0,0,.9);
+}
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+.modal-title{
+  font-size:13px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.modal-body{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+.modal-body dl{
+  margin:0;
+}
+.modal-body dt{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+}
+.modal-body dd{
+  margin:0 0 6px;
+  font-size:12px;
+  color:var(--text);
+}
+.modal-footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+}
 </style>
 </head>
 <body>
@@ -448,6 +513,35 @@ tbody tr:nth-child(even){background:#050505;}
   </div>
 </div>
 
+<!-- Confirm Contract Modal -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Confirm Detected Contract</div>
+      <button type="button" class="btn-ghost" id="modalCloseBtn" title="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-top:0;margin-bottom:6px;">
+        We parsed this contract from your screenshot. Please confirm it looks right before you edit or save.
+      </p>
+      <dl>
+        <dt>Reward</dt>
+        <dd id="modalReward">–</dd>
+        <dt>Availability</dt>
+        <dd id="modalAvail">–</dd>
+        <dt>Contracted By</dt>
+        <dd id="modalContractor">–</dd>
+        <dt>Objectives Detected</dt>
+        <dd id="modalLegs">–</dd>
+      </dl>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" id="modalCancelBtn">Cancel</button>
+      <button type="button" class="btn" id="modalConfirmBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tesseract.js -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
@@ -476,6 +570,16 @@ tbody tr:nth-child(even){background:#050505;}
   const contractForm    = document.getElementById('contractForm');
   const resetBtn        = document.getElementById('resetBtn');
 
+  // Modal elements
+  const confirmModal    = document.getElementById('confirmModal');
+  const modalReward     = document.getElementById('modalReward');
+  const modalAvail      = document.getElementById('modalAvail');
+  const modalContractor = document.getElementById('modalContractor');
+  const modalLegs       = document.getElementById('modalLegs');
+  const modalCloseBtn   = document.getElementById('modalCloseBtn');
+  const modalCancelBtn  = document.getElementById('modalCancelBtn');
+  const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
   function setStatus(text,type){
     statusLine.textContent = text;
     statusLine.classList.remove('status-ok','status-err');
@@ -492,7 +596,7 @@ tbody tr:nth-child(even){background:#050505;}
     reader.readAsDataURL(blob);
   }
 
-  // === Parsing helpers for your contract screenshot ===
+  // === Parsing helpers ===
   function parseHeader(text){
     const header = { reward:null, availability:null, contractor:null };
 
@@ -512,16 +616,16 @@ tbody tr:nth-child(even){background:#050505;}
   }
 
   function parseObjectives(text){
-    const cleaned = text.replace(/\r/g,''); // normalise line breaks
+    const cleaned = text.replace(/\r/g,'');
     const regex = /Collect\s+(\w+)\s+from\s+(.+?)\.\s*[\n\s]*Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
     const result = [];
     let m;
     let leg = 1;
     while((m = regex.exec(cleaned)) !== null){
-      const cargoType   = m[1];                // Waste / Scrap
+      const cargoType   = m[1];
       const origin      = m[2].trim();
-      const delivered   = parseInt(m[3],10);   // 0
-      const required    = parseInt(m[4],10);   // 2 / 3
+      const delivered   = parseInt(m[3],10);
+      const required    = parseInt(m[4],10);
       const destination = m[5].trim();
 
       result.push({
@@ -568,8 +672,22 @@ tbody tr:nth-child(even){background:#050505;}
     });
   }
 
+  function openConfirmModal(header, objectives){
+    // Fill modal summary
+    modalReward.textContent     = header.reward ? Number(header.reward).toLocaleString() + ' aUEC' : '—';
+    modalAvail.textContent      = header.availability || '—';
+    modalContractor.textContent = header.contractor || '—';
+    modalLegs.textContent       = objectives.length ? objectives.length + ' leg(s)' : 'None detected';
+
+    confirmModal.classList.add('open');
+  }
+
+  function closeConfirmModal(){
+    confirmModal.classList.remove('open');
+  }
+
   function applyDetections(text){
-    const header = parseHeader(text);
+    const header     = parseHeader(text);
     const objectives = parseObjectives(text);
 
     // Header → form + KPIs
@@ -611,6 +729,9 @@ tbody tr:nth-child(even){background:#050505;}
       const pad = n=>String(n).padStart(2,'0');
       tsField.value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
     }
+
+    // Open confirmation modal so user knows "what's next"
+    openConfirmModal(header, objectives);
   }
 
   async function runOCROnBlob(blob){
@@ -629,7 +750,7 @@ tbody tr:nth-child(even){background:#050505;}
       });
       const trimmed = text.trim();
       ocrOutput.textContent = trimmed;
-      setStatus('Scan complete. Parsed values applied – please double-check.', 'ok');
+      setStatus('Scan complete. Parsed values ready – check the confirmation box.', 'ok');
       applyDetections(trimmed);
     }catch(err){
       console.error(err);
@@ -659,7 +780,7 @@ tbody tr:nth-child(even){background:#050505;}
     setStatus('Cleared image and OCR output.', 'ok');
   });
 
-  // Paste support: user can Ctrl+V an image directly
+  // Paste support: Ctrl+V an image directly
   pasteZone.addEventListener('click',()=>pasteZone.focus());
   window.addEventListener('paste',e=>{
     const items = e.clipboardData && e.clipboardData.items;
@@ -680,6 +801,17 @@ tbody tr:nth-child(even){background:#050505;}
     }
   });
 
+  // Modal buttons
+  modalCloseBtn.addEventListener('click', closeConfirmModal);
+  modalCancelBtn.addEventListener('click', ()=>{
+    closeConfirmModal();
+    setStatus('Detection cancelled. You can clear or rescan another contract.', 'ok');
+  });
+  modalConfirmBtn.addEventListener('click', ()=>{
+    closeConfirmModal();
+    setStatus('Contract parsed. Review the fields and press Save when ready.', 'ok');
+  });
+
   // Form reset
   resetBtn.addEventListener('click',()=>{
     contractForm.reset();
@@ -690,10 +822,10 @@ tbody tr:nth-child(even){background:#050505;}
     setStatus('Form reset. Screenshot data remains until you clear it.', 'ok');
   });
 
-  // Dummy submit (you can later wire to Supabase)
+  // Dummy submit (can hook to Supabase later)
   contractForm.addEventListener('submit',e=>{
     e.preventDefault();
-    setStatus('Saved (locally only for now). Hook this into Supabase when ready.', 'ok');
+    setStatus('Saved (local only). Later we can wire this to Supabase / ledger.', 'ok');
   });
 })();
 </script>
