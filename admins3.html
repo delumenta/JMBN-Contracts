@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JMBN – Contracts (Hauling / Objective Scan)</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JMBN – Contracts (Hauling Session)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,7 +75,7 @@ body{
 /* Layout */
 .grid{
   display:grid;
-  grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr);
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr);
   gap:16px;
 }
 @media (max-width:900px){
@@ -103,6 +103,32 @@ body{
 .panel-meta{
   font-size:11px;
   color:var(--muted);
+}
+
+/* Session info */
+.session-kpis{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+.kpi{
+  flex:1 1 140px;
+  min-width:0;
+  border-radius:10px;
+  padding:6px 8px;
+  border:1px solid rgba(214,180,76,.5);
+  background:radial-gradient(circle at top,rgba(242,214,117,.2),rgba(10,10,10,.9));
+  font-size:11px;
+}
+.kpi-label{
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+.kpi-value{
+  font-size:13px;
 }
 
 /* Upload / paste */
@@ -201,14 +227,15 @@ input[type="file"]{
   overflow:auto;
 }
 
-/* Form & KPIs */
-.form-grid{
+/* Contract editor */
+.contract-meta{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px 12px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px 10px;
+  margin-bottom:10px;
 }
 @media (max-width:700px){
-  .form-grid{grid-template-columns:1fr;}
+  .contract-meta{grid-template-columns:1fr 1fr;}
 }
 .form-field{
   display:flex;
@@ -223,9 +250,7 @@ label{
 }
 input[type="text"],
 input[type="number"],
-input[type="datetime-local"],
-select,
-textarea{
+select{
   background:var(--card);
   border-radius:8px;
   border:1px solid rgba(214,180,76,.4);
@@ -234,72 +259,36 @@ textarea{
   color:var(--text);
   font-family:inherit;
 }
-input::placeholder,textarea::placeholder{color:#75653a;}
-textarea{
-  min-height:70px;
-  resize:vertical;
+input::placeholder{color:#75653a;}
+select{
+  padding-right:24px;
 }
-.form-actions{
-  margin-top:10px;
+
+/* Cargo card */
+.cargo-list{
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
+  flex-direction:column;
+  gap:10px;
 }
-.kpi-row{
+.cargo-card{
+  border-radius:12px;
+  border:1px solid rgba(214,180,76,.6);
+  background:rgba(5,5,5,.9);
+  padding:8px 8px 10px;
+}
+.cargo-header{
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:8px;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+  margin-bottom:6px;
 }
-.kpi{
-  flex:1 1 120px;
-  min-width:0;
-  border-radius:10px;
-  padding:6px 8px;
-  border:1px solid rgba(214,180,76,.5);
-  background:radial-gradient(circle at top,rgba(242,214,117,.2),rgba(10,10,10,.9));
-  font-size:11px;
-}
-.kpi-label{
+.cargo-title{
+  font-size:12px;
   text-transform:uppercase;
   letter-spacing:.16em;
-  color:var(--muted);
-  margin-bottom:2px;
-}
-.kpi-value{
-  font-size:13px;
-}
-
-/* Objectives table */
-.table-wrap{
-  margin-top:10px;
-  border-radius:12px;
-  border:1px solid rgba(214,180,76,.55);
-  overflow:hidden;
-  background:rgba(5,5,5,.9);
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:var(--fs-small);
-}
-thead{
-  background:linear-gradient(90deg,rgba(214,180,76,.2),rgba(10,10,10,1));
-}
-th,td{
-  padding:6px 8px;
-  text-align:left;
-}
-th{
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  font-weight:700;
   color:var(--accent);
-  border-bottom:1px solid rgba(214,180,76,.45);
 }
-tbody tr:nth-child(odd){background:var(--row);}
-tbody tr:nth-child(even){background:#050505;}
-
 .badge{
   display:inline-block;
   padding:2px 6px;
@@ -310,8 +299,53 @@ tbody tr:nth-child(even){background:#050505;}
   letter-spacing:.14em;
 }
 .badge-contract{color:var(--accent);}
+.subtable{
+  margin-top:4px;
+}
+.subtable-title{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  margin-bottom:2px;
+}
+.subtable table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--fs-small);
+}
+.subtable th,
+.subtable td{
+  padding:4px 6px;
+  text-align:left;
+}
+.subtable th{
+  color:var(--accent);
+  border-bottom:1px solid rgba(214,180,76,.4);
+}
+.subtable tbody tr:nth-child(odd){background:var(--row);}
+.subtable tbody tr:nth-child(even){background:#050505;}
+.small-input{
+  width:100%;
+  background:transparent;
+  border:none;
+  color:var(--text);
+  font-family:inherit;
+  font-size:11px;
+}
+.small-input:focus{
+  outline:none;
+}
 
-/* === Confirm Modal === */
+/* Actions */
+.form-actions{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+/* Modal */
 .modal-backdrop{
   position:fixed;
   inset:0;
@@ -350,9 +384,7 @@ tbody tr:nth-child(even){background:#050505;}
   color:var(--muted);
   margin-bottom:10px;
 }
-.modal-body dl{
-  margin:0;
-}
+.modal-body dl{margin:0;}
 .modal-body dt{
   font-size:11px;
   text-transform:uppercase;
@@ -379,18 +411,33 @@ tbody tr:nth-child(even){background:#050505;}
       <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
       <div class="brand-title-wrap">
         <h1>JMBN // CONTRACTS</h1>
-        <div class="brand-subtitle">Objective Scanner • Hauling / Waste / Scrap</div>
+        <div class="brand-subtitle">Hauling Session • Multi-Contract • Multi-Cargo</div>
       </div>
     </div>
     <div class="brand-tag">OPS // CONTRACT INTAKE</div>
   </header>
 
   <div class="grid">
-    <!-- LEFT: screenshot intake -->
+    <!-- LEFT: session + screenshot intake -->
     <section class="panel">
       <div class="panel-header">
-        <div class="panel-title">Screenshot Intake</div>
-        <div class="panel-meta">Paste (Ctrl+V) or upload contract screenshot</div>
+        <div class="panel-title">Session & Screenshot Intake</div>
+        <div class="panel-meta">Session auto-created • Paste or upload contract</div>
+      </div>
+
+      <div class="session-kpis">
+        <div class="kpi">
+          <div class="kpi-label">Session ID</div>
+          <div class="kpi-value" id="kpiSessionId">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Submitted By</div>
+          <div class="kpi-value" id="kpiSubmittedBy">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Active Contract</div>
+          <div class="kpi-value" id="kpiActiveContract">New Contract</div>
+        </div>
       </div>
 
       <div class="upload-box" id="pasteZone">
@@ -400,7 +447,7 @@ tbody tr:nth-child(even){background:#050505;}
           <button class="btn btn-secondary" id="clearBtn" type="button">Clear</button>
         </div>
         <div class="status" id="statusLine">
-          Tip: Use <b>Win+Shift+S</b> in-game to snip the contract, then click this box and press <b>Ctrl+V</b>.
+          Tip: Use <b>Win+Shift+S</b> in-game, copy the contract, click here and press <b>Ctrl+V</b>.
         </div>
       </div>
 
@@ -412,102 +459,39 @@ tbody tr:nth-child(even){background:#050505;}
       </div>
     </section>
 
-    <!-- RIGHT: contract form -->
+    <!-- RIGHT: contract + cargo editor -->
     <section class="panel">
       <div class="panel-header">
-        <div class="panel-title">Contract Edit</div>
-        <div class="panel-meta">Auto-filled from contract text • Manually adjustable</div>
+        <div class="panel-title">Contract Editor</div>
+        <div class="panel-meta">Auto-filled from OCR • Multiple cargo types, load & offload</div>
       </div>
 
-      <div class="kpi-row">
-        <div class="kpi">
-          <div class="kpi-label">Contract Reward</div>
-          <div class="kpi-value" id="kpiReward">—</div>
+      <div class="contract-meta">
+        <div class="form-field">
+          <label for="contractName">Contract Name</label>
+          <input id="contractName" type="text" placeholder="e.g. Covalex Waste Run">
         </div>
-        <div class="kpi">
-          <div class="kpi-label">Availability</div>
-          <div class="kpi-value" id="kpiAvail">—</div>
+        <div class="form-field">
+          <label for="contractType">Type</label>
+          <select id="contractType">
+            <option value="hauling">Hauling</option>
+            <option value="delivery">Delivery</option>
+            <option value="salvage">Salvage</option>
+          </select>
         </div>
-        <div class="kpi">
-          <div class="kpi-label">Contracted By</div>
-          <div class="kpi-value" id="kpiContractor">—</div>
+        <div class="form-field">
+          <label for="reward">Reward (aUEC)</label>
+          <input id="reward" type="number" min="0" step="1" placeholder="42000">
         </div>
       </div>
 
-      <form id="contractForm">
-        <div class="form-grid">
-          <div class="form-field">
-            <label for="contractId">Contract ID / Ref</label>
-            <input id="contractId" type="text" placeholder="e.g. AUTO-SCAN-001">
-          </div>
-          <div class="form-field">
-            <label for="missionName">Mission Name</label>
-            <input id="missionName" type="text" placeholder="e.g. Waste Collection – CRU-L1 & CRU-L4">
-          </div>
+      <div class="cargo-list" id="cargoList">
+        <!-- Cargo cards injected here -->
+      </div>
 
-          <div class="form-field">
-            <label for="reward">Reward (aUEC)</label>
-            <input id="reward" type="number" min="0" step="1" placeholder="42000">
-          </div>
-          <div class="form-field">
-            <label for="contractor">Contracted By</label>
-            <input id="contractor" type="text" placeholder="e.g. Covalex Independent Contractors">
-          </div>
-
-          <div class="form-field">
-            <label for="origin">Primary Origin (Leg 1)</label>
-            <input id="origin" type="text" placeholder="e.g. CRU-L1 Ambitious Dream Station">
-          </div>
-          <div class="form-field">
-            <label for="destination">Primary Destination (Leg 1)</label>
-            <input id="destination" type="text" placeholder="e.g. Seraphim Station">
-          </div>
-
-          <div class="form-field">
-            <label for="cargoType">Primary Cargo Type (Leg 1)</label>
-            <input id="cargoType" type="text" placeholder="Waste / Scrap / Boxes">
-          </div>
-          <div class="form-field">
-            <label for="requiredSCU">Required SCU (Leg 1)</label>
-            <input id="requiredSCU" type="number" min="0" step="1" placeholder="2">
-          </div>
-
-          <div class="form-field">
-            <label for="availability">Contract Availability</label>
-            <input id="availability" type="text" placeholder="e.g. 2h 9m">
-          </div>
-          <div class="form-field">
-            <label for="timestamp">Timestamp (logged)</label>
-            <input id="timestamp" type="datetime-local">
-          </div>
-        </div>
-
-        <div class="form-field" style="margin-top:8px;">
-          <label for="notes">Notes</label>
-          <textarea id="notes" placeholder="Multi-leg contract, number of stations, sharing rules, etc."></textarea>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn">Save (local only)</button>
-          <button type="button" class="btn btn-secondary" id="resetBtn">Reset Form</button>
-        </div>
-      </form>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:10%;">Leg</th>
-              <th style="width:18%;">Cargo</th>
-              <th style="width:32%;">Load From</th>
-              <th style="width:32%;">Offload To</th>
-              <th style="width:8%;">SCU</th>
-            </tr>
-          </thead>
-          <tbody id="objectivesBody">
-            <!-- Auto-filled from parsed objectives -->
-          </tbody>
-        </table>
+      <div class="form-actions">
+        <button class="btn btn-secondary" type="button" id="addCargoBtn">+ Add Cargo Type</button>
+        <button class="btn" type="button" id="saveContractBtn">Save Contract to DB</button>
       </div>
     </section>
   </div>
@@ -522,16 +506,14 @@ tbody tr:nth-child(even){background:#050505;}
     </div>
     <div class="modal-body">
       <p style="margin-top:0;margin-bottom:6px;">
-        We parsed this contract from your screenshot. Please confirm it looks right before you edit or save.
+        We parsed this contract from your screenshot. Confirm it looks right before saving.
       </p>
       <dl>
         <dt>Reward</dt>
         <dd id="modalReward">–</dd>
-        <dt>Availability</dt>
-        <dd id="modalAvail">–</dd>
-        <dt>Contracted By</dt>
+        <dt>Contractor</dt>
         <dd id="modalContractor">–</dd>
-        <dt>Objectives Detected</dt>
+        <dt>Legs / Cargo</dt>
         <dd id="modalLegs">–</dd>
       </dl>
     </div>
@@ -542,10 +524,18 @@ tbody tr:nth-child(even){background:#050505;}
   </div>
 </div>
 
-<!-- Tesseract.js -->
+<!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-(function(){
+(async function(){
+  // ====== CONFIG: FILL THESE IN ======
+  const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co";
+  const SUPABASE_ANON_KEY = "YOUR-ANON-KEY";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ====== DOM ELEMENTS ======
   const screenshotInput = document.getElementById('screenshotInput');
   const scanBtn         = document.getElementById('scanBtn');
   const clearBtn        = document.getElementById('clearBtn');
@@ -554,74 +544,98 @@ tbody tr:nth-child(even){background:#050505;}
   const previewImg      = document.getElementById('previewImg');
   const ocrOutput       = document.getElementById('ocrOutput');
 
-  const rewardField     = document.getElementById('reward');
-  const contractorField = document.getElementById('contractor');
-  const availabilityFld = document.getElementById('availability');
-  const originField     = document.getElementById('origin');
-  const destField       = document.getElementById('destination');
-  const cargoField      = document.getElementById('cargoType');
-  const reqSCUField     = document.getElementById('requiredSCU');
-  const tsField         = document.getElementById('timestamp');
+  const kpiSessionId    = document.getElementById('kpiSessionId');
+  const kpiSubmittedBy  = document.getElementById('kpiSubmittedBy');
+  const kpiActiveContract = document.getElementById('kpiActiveContract');
 
-  const kpiReward       = document.getElementById('kpiReward');
-  const kpiAvail        = document.getElementById('kpiAvail');
-  const kpiContractor   = document.getElementById('kpiContractor');
-  const objectivesBody  = document.getElementById('objectivesBody');
-  const contractForm    = document.getElementById('contractForm');
-  const resetBtn        = document.getElementById('resetBtn');
+  const contractNameEl  = document.getElementById('contractName');
+  const contractTypeEl  = document.getElementById('contractType');
+  const rewardEl        = document.getElementById('reward');
+  const cargoList       = document.getElementById('cargoList');
+  const addCargoBtn     = document.getElementById('addCargoBtn');
+  const saveContractBtn = document.getElementById('saveContractBtn');
 
-  // Modal elements
+  // Modal
   const confirmModal    = document.getElementById('confirmModal');
   const modalReward     = document.getElementById('modalReward');
-  const modalAvail      = document.getElementById('modalAvail');
   const modalContractor = document.getElementById('modalContractor');
   const modalLegs       = document.getElementById('modalLegs');
   const modalCloseBtn   = document.getElementById('modalCloseBtn');
   const modalCancelBtn  = document.getElementById('modalCancelBtn');
   const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
-  function setStatus(text,type){
+  // ====== STATE ======
+  let currentUser = null;
+  let currentSessionId = null;
+
+  // in-memory model for one contract
+  // { cargoTypes: [ { id, name, loadings: [{location,scu}], offloadings: [...] } ] }
+  let activeContractModel = {
+    contractorName: null,
+    reward: null,
+    legs: [],      // raw parsed legs
+    cargoTypes: [] // structured for UI/DB
+  };
+
+  function setStatus(text, type){
     statusLine.textContent = text;
     statusLine.classList.remove('status-ok','status-err');
-    if(type==='ok')  statusLine.classList.add('status-ok');
-    if(type==='err') statusLine.classList.add('status-err');
+    if(type === 'ok') statusLine.classList.add('status-ok');
+    if(type === 'err') statusLine.classList.add('status-err');
   }
 
   function loadPreviewFromBlob(blob){
     const reader = new FileReader();
-    reader.onload = e=>{
+    reader.onload = e => {
       previewImg.src = e.target.result;
       previewImg.style.display = 'block';
     };
     reader.readAsDataURL(blob);
   }
 
-  // === Parsing helpers ===
+  // ====== SUPABASE HELPER ======
+  async function initUserAndSession(){
+    const { data, error } = await supabase.auth.getUser();
+    if(error || !data.user){
+      setStatus('Not logged in. Supabase auth required.', 'err');
+      return;
+    }
+    currentUser = data.user;
+    kpiSubmittedBy.textContent = currentUser.email || currentUser.id;
 
-  // Header (Reward, Availability, Contracted By)
+    // Create a new session immediately
+    const { data: session, error: sErr } = await supabase
+      .from('sessions')
+      .insert({ submitted_by: currentUser.id })
+      .select()
+      .single();
+
+    if(sErr){
+      console.error(sErr);
+      setStatus('Failed to create session in DB.', 'err');
+      return;
+    }
+    currentSessionId = session.id;
+    kpiSessionId.textContent = session.id;
+    setStatus('Session created. Ready to scan contracts.', 'ok');
+  }
+
+  // ====== OCR PARSING ======
   function parseHeader(text){
-    const header = { reward:null, availability:null, contractor:null };
+    const header = { reward:null, contractor:null };
 
-    // "Reward 42,000" or "Reward a 42,000"
     let m = text.match(/Reward\s+(?:[a-z]\s*)?([\d,]+)/i);
     if(m && m[1]) header.reward = m[1].replace(/,/g,'');
 
-    // "Contract Availability 2h 9m"
-    m = text.match(/Contract\s+Availability\s+([0-9hHmM\s]+)/i);
-    if(m && m[1]) header.availability = m[1].trim();
-
-    // "Contracted By Covalex Independent Contractors"
     m = text.match(/Contracted\s+By\s+(.+)/i);
     if(m && m[1]) header.contractor = m[1].trim();
 
     return header;
   }
 
-  // Objectives: pair each "Collect X from ..." with the next "Deliver 0/2 SCU to ..."
-  function parseObjectives(text){
+  // Parse "Collect X from ... . Deliver 0/2 SCU to ... ."
+  function parseLegs(text){
     const cleaned = text.replace(/\r/g,'');
-
-    // Allow cargo names with spaces until "from"
     const collectRe = /Collect\s+(.+?)\s+from\s+(.+?)\./gi;
     const deliverRe = /Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
 
@@ -631,140 +645,279 @@ tbody tr:nth-child(even){background:#050505;}
     let m;
     while((m = collectRe.exec(cleaned)) !== null){
       collects.push({
-        cargoType: m[1].trim(),    // Waste / Scrap / Delivery Boxes etc
-        origin:    m[2].trim(),
-        start:     m.index
+        cargoType: m[1].trim(),
+        origin:    m[2].trim()
       });
     }
     while((m = deliverRe.exec(cleaned)) !== null){
       delivers.push({
         delivered:   parseInt(m[1],10),
         required:    parseInt(m[2],10),
-        destination: m[3].trim(),
-        start:       m.index
+        destination: m[3].trim()
       });
     }
-
     const legs = [];
     const count = Math.min(collects.length, delivers.length);
     for(let i=0;i<count;i++){
-      const c = collects[i];
-      const d = delivers[i];
       legs.push({
         leg:         i+1,
-        cargoType:   c.cargoType,
-        origin:      c.origin,
-        destination: d.destination,
-        delivered:   d.delivered,
-        required:    d.required
+        cargoType:   collects[i].cargoType,
+        origin:      collects[i].origin,
+        destination: delivers[i].destination,
+        delivered:   delivers[i].delivered,
+        required:    delivers[i].required
       });
     }
     return legs;
   }
 
-  function fillObjectivesTable(objectives){
-    objectivesBody.innerHTML = '';
-    objectives.forEach(obj=>{
-      const tr  = document.createElement('tr');
+  function buildCargoModelFromLegs(legs){
+    const map = new Map(); // cargoType -> {name, loadings, offloadings}
 
-      const tdLeg = document.createElement('td');
-      const badge = document.createElement('span');
-      badge.className = 'badge badge-contract';
-      badge.textContent = 'LEG ' + obj.leg;
-      tdLeg.appendChild(badge);
-      tr.appendChild(tdLeg);
+    for(const leg of legs){
+      const key = leg.cargoType || 'Unknown';
+      if(!map.has(key)){
+        map.set(key, {
+          name: key,
+          loadings: [],
+          offloadings: []
+        });
+      }
+      const entry = map.get(key);
 
-      const tdCargo = document.createElement('td');
-      tdCargo.textContent = obj.cargoType;
-      tr.appendChild(tdCargo);
+      // For now, assume each leg's required SCU is moved once from origin to destination
+      entry.loadings.push({
+        location: leg.origin,
+        scu: leg.required
+      });
+      entry.offloadings.push({
+        location: leg.destination,
+        scu: leg.required
+      });
+    }
 
-      const tdFrom = document.createElement('td');
-      tdFrom.textContent = obj.origin;
-      tr.appendChild(tdFrom);
-
-      const tdTo = document.createElement('td');
-      tdTo.textContent = obj.destination;
-      tr.appendChild(tdTo);
-
-      const tdSCU = document.createElement('td');
-      tdSCU.textContent = `${obj.delivered}/${obj.required}`;
-      tr.appendChild(tdSCU);
-
-      objectivesBody.appendChild(tr);
-    });
+    return Array.from(map.values());
   }
 
-  function openConfirmModal(header, objectives){
-    const legsCount = objectives.length;
-    const totalSCU  = objectives.reduce((sum,o)=>sum + (o.required || 0), 0);
-    const uniqueCargo = Array.from(new Set(objectives.map(o=>o.cargoType))).filter(Boolean);
-
+  function openConfirmModal(header, legs, cargoTypes){
     modalReward.textContent     = header.reward ? Number(header.reward).toLocaleString() + ' aUEC' : '—';
-    modalAvail.textContent      = header.availability || '—';
     modalContractor.textContent = header.contractor || '—';
 
-    if(legsCount){
-      const cargoPart = uniqueCargo.length ? ` • Cargo: ${uniqueCargo.join(', ')}` : '';
-      modalLegs.textContent = `${legsCount} leg(s) • ${totalSCU} SCU total${cargoPart}`;
-    }else{
+    if(legs.length){
+      const totalSCU = legs.reduce((sum,l)=>sum + (l.required || 0), 0);
+      const cargoNames = cargoTypes.map(c=>c.name).join(', ');
+      modalLegs.textContent = `${legs.length} leg(s) • ${totalSCU} SCU • Cargo: ${cargoNames}`;
+    } else {
       modalLegs.textContent = 'None detected';
     }
 
     confirmModal.classList.add('open');
   }
-
   function closeConfirmModal(){
     confirmModal.classList.remove('open');
   }
 
-  function applyDetections(text){
-    const header     = parseHeader(text);
-    const objectives = parseObjectives(text);
+  // ====== UI RENDERING: CARGO CARDS ======
+  function renderCargoList(){
+    cargoList.innerHTML = '';
+    activeContractModel.cargoTypes.forEach((cargo, idx) => {
+      const card = document.createElement('div');
+      card.className = 'cargo-card';
+      card.dataset.index = idx;
 
-    // Header → form + KPIs
-    if(header.reward){
-      rewardField.value = header.reward;
-      kpiReward.textContent = Number(header.reward).toLocaleString();
-    } else {
-      kpiReward.textContent = '—';
-    }
+      const header = document.createElement('div');
+      header.className = 'cargo-header';
 
-    if(header.availability){
-      availabilityFld.value = header.availability;
-      kpiAvail.textContent  = header.availability;
-    } else {
-      kpiAvail.textContent = '—';
-    }
+      const title = document.createElement('div');
+      title.className = 'cargo-title';
+      title.textContent = cargo.name || `Cargo ${idx+1}`;
 
-    if(header.contractor){
-      contractorField.value = header.contractor;
-      kpiContractor.textContent = header.contractor;
-    } else {
-      kpiContractor.textContent = '—';
-    }
+      const right = document.createElement('div');
+      right.style.display = 'flex';
+      right.style.alignItems = 'center';
+      right.style.gap = '6px';
 
-    // Objectives (multi-leg)
-    fillObjectivesTable(objectives);
+      const badge = document.createElement('span');
+      badge.className = 'badge badge-contract';
+      badge.textContent = 'CARGO';
 
-    if(objectives.length > 0){
-      const first = objectives[0]; // Leg 1 → primary fields
-      cargoField.value  = first.cargoType;
-      originField.value = first.origin;
-      destField.value   = first.destination;
-      reqSCUField.value = first.required;
-    }
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'btn-ghost';
+      delBtn.textContent = 'Remove';
+      delBtn.style.fontSize = '10px';
+      delBtn.addEventListener('click', () => {
+        activeContractModel.cargoTypes.splice(idx,1);
+        renderCargoList();
+      });
 
-    // Default timestamp if empty
-    if(!tsField.value){
-      const now = new Date();
-      const pad = n=>String(n).padStart(2,'0');
-      tsField.value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
-    }
+      right.appendChild(badge);
+      right.appendChild(delBtn);
+      header.appendChild(title);
+      header.appendChild(right);
+      card.appendChild(header);
 
-    // Open confirmation modal
-    openConfirmModal(header, objectives);
+      // editable cargo name
+      const nameField = document.createElement('div');
+      nameField.className = 'form-field';
+      const nameLabel = document.createElement('label');
+      nameLabel.textContent = 'Cargo Type Name';
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.value = cargo.name;
+      nameInput.placeholder = 'Waste / Scrap / Boxes';
+      nameInput.addEventListener('input', e => {
+        cargo.name = e.target.value;
+      });
+      nameField.appendChild(nameLabel);
+      nameField.appendChild(nameInput);
+      card.appendChild(nameField);
+
+      // Loading subtable
+      const loadWrap = document.createElement('div');
+      loadWrap.className = 'subtable';
+      const loadTitle = document.createElement('div');
+      loadTitle.className = 'subtable-title';
+      loadTitle.textContent = 'Loading';
+      loadWrap.appendChild(loadTitle);
+
+      const loadTable = document.createElement('table');
+      const loadHead = document.createElement('thead');
+      loadHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+      loadTable.appendChild(loadHead);
+      const loadBody = document.createElement('tbody');
+
+      cargo.loadings.forEach((row, li) => {
+        const tr = document.createElement('tr');
+
+        const tdLoc = document.createElement('td');
+        const inLoc = document.createElement('input');
+        inLoc.className = 'small-input';
+        inLoc.value = row.location;
+        inLoc.addEventListener('input', e => row.location = e.target.value);
+        tdLoc.appendChild(inLoc);
+        tr.appendChild(tdLoc);
+
+        const tdScu = document.createElement('td');
+        const inScu = document.createElement('input');
+        inScu.className = 'small-input';
+        inScu.type = 'number';
+        inScu.value = row.scu;
+        inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+        tdScu.appendChild(inScu);
+        tr.appendChild(tdScu);
+
+        const tdDel = document.createElement('td');
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn-ghost';
+        rm.textContent = '✕';
+        rm.style.fontSize = '10px';
+        rm.addEventListener('click', () => {
+          cargo.loadings.splice(li,1);
+          renderCargoList();
+        });
+        tdDel.appendChild(rm);
+        tr.appendChild(tdDel);
+
+        loadBody.appendChild(tr);
+      });
+
+      const addLoadTr = document.createElement('tr');
+      const addLoadTd = document.createElement('td');
+      addLoadTd.colSpan = 3;
+      const addLoadBtn = document.createElement('button');
+      addLoadBtn.type = 'button';
+      addLoadBtn.className = 'btn-ghost';
+      addLoadBtn.textContent = '+ Add Loading Row';
+      addLoadBtn.style.fontSize = '10px';
+      addLoadBtn.addEventListener('click', () => {
+        cargo.loadings.push({location:'', scu:0});
+        renderCargoList();
+      });
+      addLoadTd.appendChild(addLoadBtn);
+      addLoadTr.appendChild(addLoadTd);
+      loadBody.appendChild(addLoadTr);
+
+      loadTable.appendChild(loadBody);
+      loadWrap.appendChild(loadTable);
+      card.appendChild(loadWrap);
+
+      // Offloading subtable
+      const offWrap = document.createElement('div');
+      offWrap.className = 'subtable';
+      const offTitle = document.createElement('div');
+      offTitle.className = 'subtable-title';
+      offTitle.textContent = 'Offloading';
+      offWrap.appendChild(offTitle);
+
+      const offTable = document.createElement('table');
+      const offHead = document.createElement('thead');
+      offHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+      offTable.appendChild(offHead);
+      const offBody = document.createElement('tbody');
+
+      cargo.offloadings.forEach((row, oi) => {
+        const tr = document.createElement('tr');
+
+        const tdLoc = document.createElement('td');
+        const inLoc = document.createElement('input');
+        inLoc.className = 'small-input';
+        inLoc.value = row.location;
+        inLoc.addEventListener('input', e => row.location = e.target.value);
+        tdLoc.appendChild(inLoc);
+        tr.appendChild(tdLoc);
+
+        const tdScu = document.createElement('td');
+        const inScu = document.createElement('input');
+        inScu.className = 'small-input';
+        inScu.type = 'number';
+        inScu.value = row.scu;
+        inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+        tdScu.appendChild(inScu);
+        tr.appendChild(tdScu);
+
+        const tdDel = document.createElement('td');
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn-ghost';
+        rm.textContent = '✕';
+        rm.style.fontSize = '10px';
+        rm.addEventListener('click', () => {
+          cargo.offloadings.splice(oi,1);
+          renderCargoList();
+        });
+        tdDel.appendChild(rm);
+        tr.appendChild(tdDel);
+
+        offBody.appendChild(tr);
+      });
+
+      const addOffTr = document.createElement('tr');
+      const addOffTd = document.createElement('td');
+      addOffTd.colSpan = 3;
+      const addOffBtn = document.createElement('button');
+      addOffBtn.type = 'button';
+      addOffBtn.className = 'btn-ghost';
+      addOffBtn.textContent = '+ Add Offloading Row';
+      addOffBtn.style.fontSize = '10px';
+      addOffBtn.addEventListener('click', () => {
+        cargo.offloadings.push({location:'', scu:0});
+        renderCargoList();
+      });
+      addOffTd.appendChild(addOffBtn);
+      addOffTr.appendChild(addOffTd);
+      offBody.appendChild(addOffTr);
+
+      offTable.appendChild(offBody);
+      offWrap.appendChild(offTable);
+      card.appendChild(offWrap);
+
+      cargoList.appendChild(card);
+    });
   }
 
+  // ====== OCR FLOW ======
   async function runOCROnBlob(blob){
     ocrOutput.textContent = '';
     setStatus('Scanning image…', 'ok');
@@ -781,8 +934,30 @@ tbody tr:nth-child(even){background:#050505;}
       });
       const trimmed = text.trim();
       ocrOutput.textContent = trimmed;
-      setStatus('Scan complete. Parsed values ready – check the confirmation box.', 'ok');
-      applyDetections(trimmed);
+
+      const header = parseHeader(trimmed);
+      const legs   = parseLegs(trimmed);
+      const cargoTypes = buildCargoModelFromLegs(legs);
+
+      activeContractModel.legs = legs;
+      activeContractModel.cargoTypes = cargoTypes;
+      activeContractModel.contractorName = header.contractor || null;
+      activeContractModel.reward = header.reward ? Number(header.reward) : null;
+
+      // Autofill UI fields
+      if(header.reward){
+        rewardEl.value = header.reward;
+      }
+      if(header.contractor){
+        if(!contractNameEl.value){
+          contractNameEl.value = header.contractor;
+        }
+      }
+      kpiActiveContract.textContent = contractNameEl.value || 'New Contract';
+
+      renderCargoList();
+      openConfirmModal(header, legs, cargoTypes);
+      setStatus('Scan complete. Review contract, cargo, loading & offloading.', 'ok');
     }catch(err){
       console.error(err);
       setStatus('Error during OCR. Try a clearer / higher-res screenshot.', 'err');
@@ -791,8 +966,88 @@ tbody tr:nth-child(even){background:#050505;}
     }
   }
 
-  // === Handlers ===
-  scanBtn.addEventListener('click',()=>{
+  // ====== SAVE CONTRACT TO DB ======
+  async function saveContractToDB(){
+    if(!currentUser || !currentSessionId){
+      setStatus('No user or session found. Cannot save.', 'err');
+      return;
+    }
+    const name   = contractNameEl.value || 'Unnamed Contract';
+    const ctype  = contractTypeEl.value || 'hauling';
+    const reward = rewardEl.value ? Number(rewardEl.value) : null;
+
+    if(activeContractModel.cargoTypes.length === 0){
+      setStatus('No cargo types. Add at least one before saving.', 'err');
+      return;
+    }
+
+    setStatus('Saving contract to DB…', 'ok');
+    saveContractBtn.disabled = true;
+
+    try{
+      // Insert contract
+      const { data: contract, error: cErr } = await supabase
+        .from('contracts')
+        .insert({
+          session_id:   currentSessionId,
+          submitted_by: currentUser.id,
+          contract_name: name,
+          contract_type: ctype,
+          reward: reward
+        })
+        .select()
+        .single();
+
+      if(cErr) throw cErr;
+
+      const contractId = contract.id;
+
+      // For each cargo type, insert cargo row, then load & offload rows
+      for(const cargo of activeContractModel.cargoTypes){
+        const { data: cargoRow, error: ctErr } = await supabase
+          .from('contract_cargo_types')
+          .insert({
+            contract_id: contractId,
+            cargo_type: cargo.name || 'Unknown'
+          })
+          .select()
+          .single();
+
+        if(ctErr) throw ctErr;
+        const cargoTypeId = cargoRow.id;
+
+        // Loading
+        for(const l of cargo.loadings){
+          if(!l.location) continue;
+          await supabase.from('contract_loading').insert({
+            cargo_type_id: cargoTypeId,
+            location: l.location,
+            scu: l.scu || 0
+          });
+        }
+
+        // Offloading
+        for(const o of cargo.offloadings){
+          if(!o.location) continue;
+          await supabase.from('contract_offloading').insert({
+            cargo_type_id: cargoTypeId,
+            location: o.location,
+            scu: o.scu || 0
+          });
+        }
+      }
+
+      setStatus('Contract saved to DB under this session.', 'ok');
+    }catch(err){
+      console.error(err);
+      setStatus('Error saving contract to DB.', 'err');
+    }finally{
+      saveContractBtn.disabled = false;
+    }
+  }
+
+  // ====== EVENT HANDLERS ======
+  scanBtn.addEventListener('click', () => {
     const file = screenshotInput.files && screenshotInput.files[0];
     if(!file){
       setStatus('No file selected. Either choose an image or paste with Ctrl+V.', 'err');
@@ -802,21 +1057,18 @@ tbody tr:nth-child(even){background:#050505;}
     runOCROnBlob(file);
   });
 
-  clearBtn.addEventListener('click',()=>{
+  clearBtn.addEventListener('click', () => {
     screenshotInput.value = '';
     previewImg.src = '';
     previewImg.style.display = 'none';
     ocrOutput.textContent = '';
-    objectivesBody.innerHTML = '';
     setStatus('Cleared image and OCR output.', 'ok');
   });
 
-  // Paste support: Ctrl+V an image directly
   pasteZone.addEventListener('click',()=>pasteZone.focus());
-  window.addEventListener('paste',e=>{
+  window.addEventListener('paste', e => {
     const items = e.clipboardData && e.clipboardData.items;
     if(!items) return;
-
     for(let i=0;i<items.length;i++){
       const item = items[i];
       if(item.type && item.type.startsWith('image/')){
@@ -832,32 +1084,30 @@ tbody tr:nth-child(even){background:#050505;}
     }
   });
 
+  addCargoBtn.addEventListener('click', () => {
+    activeContractModel.cargoTypes.push({
+      name: '',
+      loadings: [],
+      offloadings: []
+    });
+    renderCargoList();
+  });
+
+  saveContractBtn.addEventListener('click', saveContractToDB);
+
   // Modal buttons
   modalCloseBtn.addEventListener('click', closeConfirmModal);
-  modalCancelBtn.addEventListener('click', ()=>{
+  modalCancelBtn.addEventListener('click', () => {
     closeConfirmModal();
-    setStatus('Detection cancelled. You can clear or rescan another contract.', 'ok');
+    setStatus('Detection cancelled. You can edit or rescan.', 'ok');
   });
-  modalConfirmBtn.addEventListener('click', ()=>{
+  modalConfirmBtn.addEventListener('click', () => {
     closeConfirmModal();
-    setStatus('Contract parsed. Review the fields and press Save when ready.', 'ok');
+    setStatus('Contract parsed. Review cargo, loading, offloading and Save to DB.', 'ok');
   });
 
-  // Form reset
-  resetBtn.addEventListener('click',()=>{
-    contractForm.reset();
-    kpiReward.textContent     = '—';
-    kpiAvail.textContent      = '—';
-    kpiContractor.textContent = '—';
-    objectivesBody.innerHTML  = '';
-    setStatus('Form reset. Screenshot data remains until you clear it.', 'ok');
-  });
-
-  // Dummy submit (can hook to Supabase later)
-  contractForm.addEventListener('submit',e=>{
-    e.preventDefault();
-    setStatus('Saved (local only). Later we can wire this to Supabase / ledger.', 'ok');
-  });
+  // ====== INIT ======
+  await initUserAndSession();
 })();
 </script>
 </body>
