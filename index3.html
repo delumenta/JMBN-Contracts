@@ -1,550 +1,866 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Mission Editor</title>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
-<style>
-:root{
-  --bg:#000; --panel:#0b0b0b; --border:#d6b44c;
-  --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-}
-*{box-sizing:border-box}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
-  margin:0;
-}
-.page{
-  padding:18px;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN Contracts</title>
 
-/* (brand / toolbar classes left in case you reuse later, but not used) */
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:0 0 10px;
-  border-bottom:1px solid var(--border);
-  padding-bottom:8px;
-}
-.brand-logo{
-  width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
-}
-.brand h1{margin:0;color:var(--accent);font-size:22px}
-.toolbar{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  margin:10px 0 16px;
-  flex-wrap:wrap;
-}
-.btn-cta{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:9px 12px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);
-  text-decoration:none;
-  font-weight:700;
-}
-.btn-cta:hover{
-  background:linear-gradient(180deg,#f2d675,#e7c760);
-  color:#000;
-}
-.ic{
-  width:18px;height:18px;
-  border:1px solid var(--border);
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:14px;
-}
-.subtle{color:var(--muted);font-size:12px}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
-/* 2-column layout */
-.wrap{
-  display:grid;
-  grid-template-columns:340px 1fr;
-  gap:14px;
-}
-@media(max-width:980px){
-  .wrap{grid-template-columns:1fr}
-}
+  <style>
+    :root{
+      --bg:#000;--panel:#0b0b0b;--sub:#101010;--row:#0a0a0a;
+      --border:#d6b44c;--card:#141414;
+      --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+      --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:
+        radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+        radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+        #000;
+      color:var(--text);
+      font-family:'Play',system-ui,sans-serif;
+      padding:14px;
+      font-size:var(--fs-base);
+      letter-spacing:.25px;
+    }
 
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 0 18px rgba(214,180,76,.14);
-}
-.panel h3{
-  margin:0 0 10px;
-  color:var(--accent);
-  font-size:16px;
-}
+    /* Header mount fallback (same idea as member.html) */
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin:0 0 8px;
+      padding-bottom:6px;
+      border-bottom:1px solid var(--border);
+    }
+    .brand-logo{
+      width:44px;height:44px;object-fit:contain;
+      filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+    }
+    .brand h1{
+      font-weight:700;
+      font-size:var(--fs-h1);
+      color:var(--accent);
+      margin:0;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
 
-/* List panel */
-.list-tools{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  margin-bottom:8px;
-}
-input[type="search"]{
-  width:100%;
-  background:#0a0a0a;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:8px 10px;
-  color:var(--text);
-}
-.list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  max-height:70vh;
-  overflow:auto;
-  padding-right:4px;
-}
-.item{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#0a0a0a;
-  cursor:pointer;
-}
-.item:hover{background:#111}
-.item-title{font-weight:700}
-.item-sub{font-size:12px;color:var(--muted)}
-.badge{
-  border:1px solid var(--border);
-  border-radius:999px;
-  padding:2px 8px;
-  font-size:11px;
-  color:var(--muted);
-}
-.small-btn{
-  padding:6px 8px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:transparent;
-  color:var(--accent);
-  cursor:pointer;
-}
-.small-btn:hover{background:var(--accent);color:#000}
+    /* Main contracts panel (match member panel spacing/feel) */
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      margin-top:8px;
+      box-shadow:0 0 18px rgba(214,180,76,.22);
+    }
+    .panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .panel-title{
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:13px;
+      color:var(--accent);
+    }
+    .panel-sub{
+      font-size:var(--fs-small);
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.16em;
+    }
 
-/* Form side */
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.form-grid.full{grid-template-columns:1fr}
-label{
-  display:block;
-  font-size:12px;
-  color:var(--muted);
-  margin-bottom:4px;
-}
-input,select,textarea{
-  width:100%;
-  background:#0a0a0a;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:10px;
-  color:var(--text);
-  font-family:'Play';
-}
-textarea{min-height:90px;resize:vertical}
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      margin-bottom:10px;
+    }
 
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-button{
-  padding:10px 14px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);
-  cursor:pointer;
-}
-button:hover{background:var(--accent);color:#000}
-button.danger{
-  border-color:#ff6b6b;
-  color:#ff6b6b;
-}
-.attach-item{
-  display:grid;
-  grid-template-columns:1fr 1fr auto;
-  gap:10px;
-  margin-bottom:8px;
-}
-.attach-item button{padding:6px 10px}
-</style>
+    .btn{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg,#0c0c0c,#060606);
+      color:var(--accent);
+      cursor:pointer;
+      font-family:'Play';
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+    }
+    .btn:hover{
+      background:var(--accent);
+      color:#000;
+    }
+    .btn-secondary{
+      background:#0b0b0b;
+      color:var(--accent);
+      border:1px solid var(--border);
+    }
+    .btn-secondary:hover{
+      background:rgba(214,180,76,.12);
+      color:var(--accent);
+    }
+
+    /* Saved sessions grid (audit trail) */
+    .sessions-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:10px;
+    }
+    .card{
+      background:#111;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:10px;
+      box-shadow:0 0 16px rgba(0,0,0,.6);
+      font-size:12px;
+    }
+    .card-header-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:6px;
+    }
+    .card-header{
+      font-size:12px;
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .card-actions{
+      display:flex;
+      gap:4px;
+      flex-shrink:0;
+    }
+    .chip-btn{
+      border-radius:999px;
+      border:1px solid var(--border);
+      padding:3px 8px;
+      font-size:10px;
+      background:#0b0b0b;
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      cursor:pointer;
+    }
+    .chip-btn:hover{
+      background:rgba(214,180,76,.12);
+    }
+    .chip-btn.danger{
+      border-color:var(--bad);
+      color:var(--bad);
+    }
+    .card-line{
+      color:var(--muted);
+      margin-bottom:2px;
+    }
+    .card-footer-line{
+      margin-top:4px;
+      font-size:10px;
+      color:var(--muted);
+    }
+
+    /* Modal (same style language as member modal) */
+    .modal-mask{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+    }
+    .modal{
+      background:#0b0b0b;
+      border:1px solid var(--border);
+      border-radius:16px;
+      max-width:960px;
+      width:96vw;
+      max-height:90vh;
+      box-shadow:0 0 28px rgba(214,180,76,.3);
+      padding:18px 16px;
+      overflow:auto;
+    }
+    .modal-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .modal-title{
+      color:var(--accent);
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:.2em;
+    }
+
+    .modal-body{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);
+      gap:12px;
+    }
+    @media(max-width:900px){
+      .modal-body{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* Left side: OCR & image */
+    .upload-box{
+      border-radius:12px;
+      border:1px dashed var(--border);
+      background:#111;
+      padding:10px;
+      font-size:12px;
+    }
+    .preview{
+      border:1px solid var(--border);
+      border-radius:8px;
+      overflow:hidden;
+      width:100%;
+      max-width:260px;
+      height:150px;
+      background:#000;
+      margin-top:6px;
+      margin-bottom:6px;
+    }
+    .preview img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .ocr-box{
+      height:140px;
+      background:#050505;
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:8px;
+      color:var(--muted);
+      font-size:11px;
+      white-space:pre-wrap;
+      overflow:auto;
+      margin-top:4px;
+    }
+    .status-line{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    /* Right side: contract form */
+    .contract-editor{
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#111;
+      padding:10px;
+      font-size:12px;
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      margin-bottom:8px;
+    }
+    @media(max-width:720px){
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--muted);
+      display:block;
+      margin-bottom:2px;
+    }
+    input[type="text"],
+    input[type="number"],
+    select{
+      width:100%;
+      padding:7px 9px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:#050505;
+      color:var(--text);
+      font-family:'Play';
+      font-size:12px;
+    }
+    input[type="text"]::placeholder{
+      color:#6d5c2a;
+    }
+
+    .cargo-list{
+      margin-bottom:8px;
+    }
+    .cargo-card{
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#0f0f0f;
+      padding:8px;
+      margin-bottom:8px;
+    }
+    .cargo-card h4{
+      margin:0 0 4px;
+      color:var(--accent);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+    }
+    .cargo-row{
+      margin-bottom:4px;
+    }
+    .cargo-row input{
+      font-size:11px;
+    }
+    .cargo-row input:first-child{
+      width:58%;
+      margin-right:4px;
+    }
+    .cargo-row input:last-child{
+      width:36%;
+    }
+
+    .meta-footnote{
+      font-size:10px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+  </style>
 </head>
 <body>
 
-<!-- GLOBAL HEADER SLOT (header2.html will be injected here) -->
-<div id="site-header"></div>
+  <!-- Header mount: this will be replaced by header.html so it stretches like your other pages -->
+  <div id="header-container">
+    <div class="brand">
+      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+      <h1>JMBN // CONTRACTS</h1>
+    </div>
+  </div>
 
-<main class="page">
-  <!-- main layout, no extra title/toolbar -->
-  <div class="wrap">
-    <!-- LEFT: Mission list -->
-    <div class="panel">
-      <h3>All Missions</h3>
-      <div class="list-tools">
-        <input id="search" type="search" placeholder="Search title / tags / status..." />
-        <button id="refresh" class="small-btn" title="Reload">↻</button>
-        <button id="newBtn" class="small-btn" title="Start new">＋ New</button>
+  <script>
+  // Inject shared header/nav like member.html and highlight Contracts tab
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
+      if(res.ok){
+        const html = await res.text();
+        document.getElementById('header-container').outerHTML = html;
+        requestAnimationFrame(() => {
+          const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+          document.querySelectorAll('.nav-btn').forEach(a => {
+            const href = (a.getAttribute('href')||'').toLowerCase();
+            if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
+            // Fuzzy match for contracts pages
+            if(/contract/.test(here) && /contract/.test(href)){
+              a.classList.add('active');
+              a.setAttribute('aria-current','page');
+            }
+          });
+        });
+      }
+    } catch (e) { console.warn('Header load failed:', e); }
+  })();
+  </script>
+
+  <!-- Main panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Hauling & Ops Contracts</div>
+        <div class="panel-sub">Scan • Parse • Save</div>
       </div>
-      <div id="list" class="list"></div>
+      <button class="btn" id="openIntake">+ New Contract / Scan</button>
     </div>
 
-    <!-- RIGHT: Editor -->
-    <div class="panel">
-      <h3>Mission Details</h3>
+    <div class="panel-sub" style="margin-bottom:6px;">Saved Sessions (Audit Trail)</div>
+    <div id="sessionsGrid" class="sessions-grid">
+      <div class="card-line">Loading sessions…</div>
+    </div>
+  </div>
 
-      <div class="form-grid full">
-        <div>
-          <label>Mission Title</label>
-          <input id="title" placeholder="e.g., RW S2 — 24-box Haul">
+  <!-- Intake Modal -->
+  <div id="intakeMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title">New Contract Session</div>
+        <button class="btn-secondary" id="closeIntake">Close</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- LEFT: OCR / screenshot -->
+        <div class="upload-box" id="pasteZone">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);">
+              Image / Screenshot
+            </div>
+            <button class="btn-secondary" id="scanBtn" type="button">Run OCR</button>
+          </div>
+          <input type="file" id="screenshotInput" accept="image/*" style="margin-top:6px;font-size:11px;">
+          <div class="preview"><img id="previewImg" style="display:none;" alt=""></div>
+          <div class="ocr-box" id="ocrOutput"></div>
+          <div class="status-line" id="statusLine">Paste an image (Ctrl+V) or select a file, then Run OCR.</div>
         </div>
-      </div>
 
-      <div class="form-grid">
-        <div>
-          <label>Type</label>
-          <select id="type">
-            <option></option>
-            <option>Hauling</option><option>Delivery</option><option>Rescue</option>
-            <option>Bounty</option><option>Investigation</option><option>Salvage</option>
-            <option>Mining</option><option>Exploration</option>
-          </select>
+        <!-- RIGHT: Contract editor -->
+        <div class="contract-editor">
+          <div class="form-grid">
+            <div>
+              <label for="contractName">Contract Name</label>
+              <input id="contractName" type="text" placeholder="e.g. Cargo Haul – Orison to Lorville">
+            </div>
+            <div>
+              <label for="contractType">Type</label>
+              <select id="contractType">
+                <option value="hauling">Hauling</option>
+                <option value="ops">Operations</option>
+                <option value="escort">Escort</option>
+                <option value="bounty">Bounty</option>
+              </select>
+            </div>
+            <div>
+              <label for="reward">Reward (aUEC)</label>
+              <input id="reward" type="number" min="0" step="1" placeholder="e.g. 250000">
+            </div>
+          </div>
+
+          <div id="cargoList" class="cargo-list"></div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+            <button type="button" class="btn-secondary" id="addCargo">+ Add Cargo Type</button>
+            <button type="button" class="btn" id="saveContract">Save Contract</button>
+          </div>
+
+          <div class="meta-footnote">
+            OCR Autofill: tries to grab the contract title and first aUEC amount from the scan.
+          </div>
         </div>
-        <div>
-          <label>Status</label>
-          <select id="status">
-            <option></option>
-            <option>Planned</option><option>Active</option>
-            <option>Success</option><option>Fail</option><option>Abort</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-grid">
-        <div><label>Origin</label><input id="origin" placeholder="e.g., Area18"></div>
-        <div><label>Destination</label><input id="destination" placeholder="e.g., Everus Harbor"></div>
-      </div>
-
-      <div class="form-grid">
-        <div><label>Date</label><input id="date" type="datetime-local"></div>
-        <div><label>No. of Hours</label><input id="hours" type="number" step="0.1"></div>
-      </div>
-
-      <div class="form-grid">
-        <div><label>Payout (aUEC)</label><input id="payout" type="number" step="1"></div>
-        <div><label>Tags (comma separated)</label><input id="tags" placeholder="e.g., hauling, night"></div>
-      </div>
-
-      <div class="form-grid full">
-        <div><label>Attendees</label><input id="attendees" placeholder="e.g., Vex, Kara"></div>
-      </div>
-
-      <!-- Submitted By: read-only display + hidden UUID -->
-      <div class="form-grid full">
-        <div>
-          <label>Submitted By</label>
-          <input id="submittedByDisplay" readonly placeholder="—" title="Automatically set">
-          <input id="submittedBy" type="hidden">
-        </div>
-      </div>
-
-      <div class="form-grid full" style="margin-top:8px">
-        <div>
-          <label>Attachments</label>
-          <div id="attachList"></div>
-          <button id="addAttachBtn" class="small-btn" type="button">Add Attachment</button>
-        </div>
-      </div>
-
-      <div class="form-grid full" style="margin-top:8px">
-        <div>
-          <label>Notes / AAR</label>
-          <textarea id="notes" placeholder="Summary, outcomes, lessons learned"></textarea>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button id="clearFormBtn" title="Clear the form">Clear Form</button>
-        <button id="saveNewBtn"  title="Save as NEW row">💾 Save New</button>
-        <button id="updateBtn"   title="Update current row">✎ Update Current</button>
-        <button id="deleteBtn" class="danger" title="Delete current">🗑 Delete</button>
       </div>
     </div>
   </div>
-</main>
 
-<!-- ===== Supabase + App Logic ===== -->
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+  <!-- Libs -->
+  <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
 
-const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
+  <script>
+  // ---------- Helpers ----------
+  const $id  = id => document.getElementById(id);
 
-const $  = (id) => document.getElementById(id)
-const listEl     = $('list')
-const searchEl   = $('search')
-const attachList = $('attachList')
+  let sb = null;
+  let currentSession = null;
+  let activeModel = { cargo: [] };
+  let currentUser = null;
+  let SESSIONS = [];
+  let currentImageFile = null;
 
-let currentId = null
-let cache     = []
-let me        = { id:null, name:'' }
+  const screenshotInput = $id('screenshotInput');
+  const previewImg      = $id('previewImg');
+  const ocrOutput       = $id('ocrOutput');
+  const statusLine      = $id('statusLine');
+  const pasteZone       = $id('pasteZone');
+  const intakeMask      = $id('intakeMask');
+  const openIntakeBtn   = $id('openIntake');
+  const closeIntakeBtn  = $id('closeIntake');
+  const addCargoBtn     = $id('addCargo');
+  const saveContractBtn = $id('saveContract');
+  const sessionsGrid    = $id('sessionsGrid');
+  const scanBtn         = $id('scanBtn');
+  const contractNameEl  = $id('contractName');
+  const contractTypeEl  = $id('contractType');
+  const rewardEl        = $id('reward');
+  const cargoList       = $id('cargoList');
 
-/* ---------- Header2 loader ---------- */
-async function loadHeader2(){
-  try{
-    const res = await fetch('header2.html')
-    if(!res.ok) return
-    const html = await res.text()
-    const slot = document.getElementById('site-header')
-    if(slot) slot.innerHTML = html
-  }catch(e){
-    console.warn('header2 load failed', e)
+  function openModal(){
+    intakeMask.style.display = 'flex';
+    intakeMask.setAttribute('aria-hidden','false');
   }
-}
-
-/* ---------- Helpers ---------- */
-function esc(s=''){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML }
-function isoToLocalInput(iso){
-  if(!iso) return ''
-  const d=new Date(iso); const p=n=>String(n).padStart(2,'0')
-  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`
-}
-function localInputToISO(v){ return v ? new Date(v).toISOString() : null }
-
-function addAttachRow(name='', url=''){
-  const div=document.createElement('div')
-  div.className='attach-item'
-  div.innerHTML = `
-    <input placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
-    <input placeholder="URL (https://...)" value="${esc(url)}">
-    <button type="button" onclick="this.parentElement.remove()">✕</button>`
-  attachList.appendChild(div)
-}
-function collectAttachments(){
-  return [...attachList.querySelectorAll('.attach-item')].map(el=>{
-    const label = el.children[0].value.trim()
-    const url   = el.children[1].value.trim()
-    if(!url) return null
-    try{ new URL(url) }catch{ return null }
-    return { name: label || (url.split('/').pop() || 'link'), url }
-  }).filter(Boolean)
-}
-function clearForm(){
-  ['title','type','status','origin','destination','date','hours','payout','tags','attendees','notes']
-    .forEach(id=>$(id).value='')
-  $('submittedBy').value        = me.id || ''
-  $('submittedByDisplay').value = me.name || ''
-  attachList.innerHTML=''
-  addAttachRow()
-  currentId = null
-}
-
-function payloadFromForm(){
-  const base = {
-    title: $('title').value.trim(),
-    type: $('type').value || null,
-    status: $('status').value || null,
-    origin: $('origin').value || null,
-    destination: $('destination').value || null,
-    start_time: localInputToISO($('date').value),
-    hours: Number($('hours').value || 0),
-    payout_auec: Number($('payout').value || 0),
-    tags: $('tags').value || null,
-    attendees: $('attendees').value || null,
-    notes: $('notes').value || null,
-    attachments: collectAttachments()
+  function closeModal(){
+    intakeMask.style.display = 'none';
+    intakeMask.setAttribute('aria-hidden','true');
   }
-  if(!currentId) base.submitted_by = me.id
-  return base
-}
 
-function fillForm(row){
-  $('title').value   = row.title || ''
-  $('type').value    = row.type || ''
-  $('status').value  = row.status || ''
-  $('origin').value  = row.origin || ''
-  $('destination').value = row.destination || ''
-  $('date').value    = isoToLocalInput(row.start_time)
-  $('hours').value   = row.hours ?? ''
-  $('payout').value  = row.payout_auec ?? ''
-  $('tags').value    = row.tags || ''
-  $('attendees').value = row.attendees || ''
-  $('notes').value   = row.notes || ''
-
-  $('submittedBy').value        = row.submitted_by || ''
-  $('submittedByDisplay').value = row.submitted_by_name ||
-                                  (row.submitted_by === me.id ? me.name : '')
-
-  attachList.innerHTML = ''
-  if(Array.isArray(row.attachments) && row.attachments.length){
-    row.attachments.forEach(a=>addAttachRow(a.name||'', a.url||''))
-  }else{
-    addAttachRow()
+  function resetForm(isNewSession=true){
+    if(isNewSession){
+      currentSession = null;
+    }
+    activeModel = { cargo: [] };
+    cargoList.innerHTML = '';
+    contractNameEl.value = '';
+    rewardEl.value = '';
+    contractTypeEl.value = 'hauling';
+    ocrOutput.textContent = '';
+    statusLine.textContent = 'Paste an image (Ctrl+V) or select a file, then Run OCR.';
+    previewImg.style.display = 'none';
+    previewImg.src = '';
+    currentImageFile = null;
   }
-}
 
-/* ---------- List rendering ---------- */
-function renderList(rows){
-  listEl.innerHTML = ''
-  if(!rows.length){
-    listEl.innerHTML = `
-      <div class="item">
-        <div class="item-title">No missions found</div>
-      </div>`
-    return
+  // ---------- OCR ----------
+  async function runOCR(){
+    if(!currentImageFile){
+      statusLine.textContent = 'No image loaded yet.';
+      return;
+    }
+    statusLine.textContent = 'Scanning image…';
+    try{
+      const { data } = await Tesseract.recognize(currentImageFile, 'eng');
+      const text = (data && data.text) ? data.text.trim() : '';
+      ocrOutput.textContent = text || '(No text detected)';
+      statusLine.textContent = 'OCR complete. Autofilling fields…';
+      autofillFromOCR(text);
+    }catch(e){
+      console.error(e);
+      statusLine.textContent = 'OCR failed: ' + e.message;
+    }
   }
-  for(const r of rows){
-    const el=document.createElement('div')
-    el.className='item'
-    el.innerHTML = `
-      <div>
-        <div class="item-title">${esc(r.title || '(untitled)')}</div>
-        <div class="item-sub">
-          ${esc(r.type || '')} • ${esc(r.status || '')} •
-          ${r.start_time ? new Date(r.start_time).toLocaleString() : ''} •
-          by ${esc(r.submitted_by_name || '–')}
+
+  function handleImageFile(file){
+    if(!file) return;
+    currentImageFile = file;
+    const url = URL.createObjectURL(file);
+    previewImg.src = url;
+    previewImg.style.display = 'block';
+    statusLine.textContent = 'Image loaded. Click "Run OCR" to parse text.';
+  }
+
+  function autofillFromOCR(text){
+    if(!text) return;
+    const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+
+    if(lines.length){
+      // First non-empty line as a guess for title
+      if(!contractNameEl.value){
+        contractNameEl.value = lines[0].slice(0,80);
+      }
+    }
+
+    // Try to find the first aUEC-ish number
+    const rewardMatch = text.match(/([\d,]+)\s*(a?UEC)/i);
+    if(rewardMatch && !rewardEl.value){
+      const num = rewardMatch[1].replace(/,/g,'');
+      if(!Number.isNaN(Number(num))){
+        rewardEl.value = num;
+      }
+    }
+  }
+
+  // Paste from clipboard into upload box
+  pasteZone.addEventListener('paste', e=>{
+    const item = [...(e.clipboardData.items||[])].find(i=>i.type.startsWith('image/'));
+    if(!item) return;
+    const file = item.getAsFile();
+    if(file){
+      handleImageFile(file);
+    }
+  });
+
+  screenshotInput.addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if(file) handleImageFile(file);
+  });
+
+  scanBtn.addEventListener('click', runOCR);
+
+  // ---------- Cargo handling ----------
+  function addCargoCard(data={ type:'', loading:[], offloading:[] }){
+    const idx = activeModel.cargo.length;
+    activeModel.cargo.push({ type:data.type||'', loading:data.loading||[], offloading:data.offloading||[] });
+
+    const card = document.createElement('div');
+    card.className = 'cargo-card';
+    card.innerHTML = `
+      <h4>Cargo Type</h4>
+      <input data-idx="${idx}" data-field="type" type="text" placeholder="e.g. Waste / Laranite" value="${data.type||''}" style="width:100%;margin-bottom:6px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Loading</div>
+      <div data-idx="${idx}" data-section="loading"></div>
+      <button class="btn-secondary" type="button" data-idx="${idx}" data-add-load style="margin-top:3px;margin-bottom:6px;">+ Add Loading</button>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Offloading</div>
+      <div data-idx="${idx}" data-section="offloading"></div>
+      <button class="btn-secondary" type="button" data-idx="${idx}" data-add-off style="margin-top:3px;">+ Add Offloading</button>
+    `;
+    cargoList.appendChild(card);
+
+    // Render existing loading/offloading rows if any
+    data.loading?.forEach(entry => addLoadOff(idx,'loading',entry));
+    data.offloading?.forEach(entry => addLoadOff(idx,'offloading',entry));
+  }
+
+  function addLoadOff(idx, section, existing={ location:'', scu:'' }){
+    const container = cargoList.querySelector(`[data-idx="${idx}"][data-section="${section}"]`);
+    if(!container) return;
+
+    const entry = { location: existing.location||'', scu: existing.scu||'' };
+    activeModel.cargo[idx][section].push(entry);
+
+    const rowIdx = activeModel.cargo[idx][section].length - 1;
+
+    const row = document.createElement('div');
+    row.className = 'cargo-row';
+    row.innerHTML = `
+      <input type="text" placeholder="Location" data-idx="${idx}" data-sec="${section}"
+             data-row="${rowIdx}" data-field="location" value="${entry.location||''}">
+      <input type="number" placeholder="SCU" data-idx="${idx}" data-sec="${section}"
+             data-row="${rowIdx}" data-field="scu" value="${entry.scu||''}">
+    `;
+    container.appendChild(row);
+  }
+
+  cargoList.addEventListener('click', e=>{
+    const t = e.target;
+    if(t.dataset.addLoad !== undefined){
+      addLoadOff(Number(t.dataset.idx),'loading');
+    }
+    if(t.dataset.addOff !== undefined){
+      addLoadOff(Number(t.dataset.idx),'offloading');
+    }
+  });
+
+  cargoList.addEventListener('input', e=>{
+    const t = e.target;
+    const idx = t.dataset.idx;
+    const field = t.dataset.field;
+    const sec = t.dataset.sec;
+    const row = t.dataset.row;
+    if(idx === undefined) return;
+
+    if(field && sec === undefined){
+      activeModel.cargo[idx][field] = t.value;
+    }else if(sec && row !== undefined && field){
+      activeModel.cargo[idx][sec][row][field] = t.value;
+    }
+  });
+
+  addCargoBtn.addEventListener('click', ()=>addCargoCard());
+
+  // ---------- Supabase / Sessions ----------
+  async function ensureSession(){
+    if(currentSession) return currentSession;
+    const { data, error } = await sb
+      .from('sessions')
+      .insert({ submitted_by: currentUser.user.id })
+      .select()
+      .single();
+    if(error){
+      console.error(error);
+      alert('Failed to create session: ' + error.message);
+      return null;
+    }
+    currentSession = data;
+    return data;
+  }
+
+  async function saveContract(){
+    const sess = await ensureSession();
+    if(!sess) return;
+
+    const name = contractNameEl.value.trim();
+    if(!name){
+      alert('Contract name is required.');
+      return;
+    }
+
+    const reward = Number(rewardEl.value || 0);
+
+    const { data:contract, error } = await sb
+      .from('contracts')
+      .insert({
+        session_id:  sess.id,
+        submitted_by: currentUser.user.id,
+        contract_name: name,
+        reward: reward,
+        contract_type: contractTypeEl.value
+      })
+      .select()
+      .single();
+
+    if(error){
+      console.error(error);
+      alert('Failed to save contract: ' + error.message);
+      return;
+    }
+
+    // Save cargo rows
+    for(const c of activeModel.cargo){
+      const { data:ct, error:errCT } = await sb
+        .from('contract_cargo_types')
+        .insert({
+          contract_id: contract.id,
+          cargo_type: c.type || ''
+        })
+        .select()
+        .single();
+      if(errCT){
+        console.warn(errCT);
+        continue;
+      }
+
+      for(const ld of c.loading){
+        await sb.from('contract_loading').insert({
+          cargo_type_id: ct.id,
+          location: ld.location,
+          scu: Number(ld.scu || 0)
+        });
+      }
+      for(const ofd of c.offloading){
+        await sb.from('contract_offloading').insert({
+          cargo_type_id: ct.id,
+          location: ofd.location,
+          scu: Number(ofd.scu || 0)
+        });
+      }
+    }
+
+    alert('Contract saved into session.');
+    resetForm(false);       // keep currentSession so more contracts can be added
+    await loadSessions();   // refresh audit cards
+  }
+
+  saveContractBtn.addEventListener('click', saveContract);
+
+  // Load sessions + cards
+  async function loadSessions(){
+    if(!sb || !currentUser) return;
+
+    const { data:sessions, error } = await sb
+      .from('sessions')
+      .select('*')
+      .eq('submitted_by', currentUser.user.id)
+      .order('created_at',{ ascending:false });
+
+    if(error){
+      console.error(error);
+      sessionsGrid.innerHTML = '<div class="card-line" style="color:var(--bad)">Failed to load sessions.</div>';
+      return;
+    }
+
+    SESSIONS = sessions || [];
+
+    if(!SESSIONS.length){
+      sessionsGrid.innerHTML = '<div class="card-line">No sessions yet — start with “New Contract / Scan”.</div>';
+      return;
+    }
+
+    sessionsGrid.innerHTML = '';
+
+    for(const s of SESSIONS){
+      const { data:contracts } = await sb
+        .from('contracts')
+        .select('*')
+        .eq('session_id', s.id);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const created = s.created_at ? new Date(s.created_at) : null;
+      const createdStr = created
+        ? created.toLocaleString('en-SG',{ hour12:false })
+        : 'Unknown';
+
+      const contractsHtml = (contracts && contracts.length)
+        ? contracts.map(c => `
+            <div class="card-line">
+              <b>${c.contract_name}</b> – ${c.reward?.toLocaleString?.('en-SG') || c.reward || 0} aUEC
+            </div>
+          `).join('')
+        : `<div class="card-line">No contracts recorded yet.</div>`;
+
+      card.innerHTML = `
+        <div class="card-header-row">
+          <div class="card-header">Session ${s.id.slice(0,8)}</div>
+          <div class="card-actions">
+            <button class="chip-btn" data-session-action="edit" data-session-id="${s.id}">Edit</button>
+            <button class="chip-btn danger" data-session-action="delete" data-session-id="${s.id}">Delete</button>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <span class="badge">${esc(r.id.slice(0,8))}</span>
-        <button class="small-btn" data-id="${r.id}">Open</button>
-      </div>`
-    el.querySelector('button').onclick = ()=> openMission(r.id)
-    listEl.appendChild(el)
+        ${contractsHtml}
+        <div class="card-footer-line">
+          Created: ${createdStr}
+        </div>
+      `;
+      sessionsGrid.appendChild(card);
+    }
   }
-}
-function filterList(){
-  const q = (searchEl.value || '').toLowerCase()
-  if(!q){ renderList(cache); return }
-  const rows = cache.filter(r =>
-    `${r.title||''} ${r.tags||''} ${r.status||''} ${r.type||''} ${r.submitted_by_name||''}`
-      .toLowerCase().includes(q)
-  )
-  renderList(rows)
-}
 
-/* ---------- Supabase ops ---------- */
-async function loadList(){
-  const { data, error } = await sb
-    .from('v_missions_detailed')
-    .select('id,title,type,status,start_time,created_at,tags,submitted_by_name')
-    .order('created_at',{ascending:false})
-  if(error){ alert('Failed to load list: '+error.message); return }
-  cache = data || []
-  renderList(cache)
-}
-async function openMission(id){
-  const { data, error } = await sb
-    .from('v_missions_detailed')
-    .select('*')
-    .eq('id', id)
-    .single()
-  if(error){ alert('Failed to open: '+error.message); return }
-  currentId = id
-  fillForm(data)
-  const u = new URL(location.href); u.searchParams.set('id', id); history.replaceState(null,'',u.toString())
-}
-async function saveNew(){
-  const payload = payloadFromForm()
-  if(!payload.title){ alert('Title is required'); return }
-  const { data, error } = await sb.from('missions').insert(payload).select().single()
-  if(error){ alert('Save failed: '+error.message); return }
-  await loadList()
-  currentId = data.id
-  alert('Saved ✓')
-  openMission(data.id)
-}
-async function updateCurrent(){
-  if(!currentId){ alert('No mission selected. Use Save New or choose one from the list.'); return }
-  const payload = payloadFromForm()
-  delete payload.submitted_by
-  const { error } = await sb.from('missions').update(payload).eq('id', currentId)
-  if(error){ alert('Update failed: '+error.message); return }
-  await loadList()
-  alert('Updated ✓')
-}
-async function deleteCurrent(){
-  if(!currentId){ alert('No mission selected.'); return }
-  if(!confirm('Delete this mission? This cannot be undone.')) return
-  const { error } = await sb.from('missions').delete().eq('id', currentId)
-  if(error){ alert('Delete failed: '+error.message); return }
-  await loadList()
-  clearForm()
-  alert('Deleted 🗑')
-  const u = new URL(location.href); u.searchParams.delete('id'); history.replaceState(null,'',u.toString())
-}
+  // Edit / Delete actions (session level)
+  sessionsGrid.addEventListener('click', async e=>{
+    const btn = e.target.closest('[data-session-action]');
+    if(!btn) return;
+    const action = btn.dataset.sessionAction;
+    const id     = btn.dataset.sessionId;
+    if(!id) return;
 
-/* ---------- Auth bootstrap ---------- */
-async function initMe(){
-  const { data:{ user } } = await sb.auth.getUser()
-  if(!user){
-    location.href = 'auth.html'
-    return
-  }
-  me.id = user.id
+    const sess = SESSIONS.find(s => s.id === id);
+    if(!sess) return;
 
-  let name = user.email?.split('@')[0] || 'User'
-  const { data: prof, error } = await sb
-    .from('profiles')
-    .select('display_name')
-    .eq('user_id', user.id)
-    .maybeSingle()
-  if(!error && prof && prof.display_name) name = prof.display_name
-  me.name = name
+    if(action === 'delete'){
+      if(!confirm('Delete this session and its contracts?')){
+        return;
+      }
+      try{
+        const { error } = await sb
+          .from('sessions')
+          .delete()
+          .eq('id', id);
+        if(error){
+          alert('Failed to delete session: ' + error.message);
+        }else{
+          if(currentSession && currentSession.id === id){
+            currentSession = null;
+          }
+          await loadSessions();
+        }
+      }catch(err){
+        console.error(err);
+        alert('Failed to delete session: ' + err.message);
+      }
+    }
 
-  $('submittedBy').value        = me.id
-  $('submittedByDisplay').value = me.name
-}
+    if(action === 'edit'){
+      // "Edit" = reopen intake bound to this session so you can add more contracts
+      currentSession = sess;
+      resetForm(false); // keep session, clear fields
+      statusLine.textContent = `Editing existing session ${sess.id.slice(0,8)} — scan and save more contracts.`;
+      openModal();
+    }
+  });
 
-/* ---------- Wire up ---------- */
-$('addAttachBtn').onclick  = ()=> addAttachRow()
-$('clearFormBtn').onclick  = ()=> { if(confirm('Clear the form?')) clearForm() }
-$('saveNewBtn').onclick    = saveNew
-$('updateBtn').onclick     = updateCurrent
-$('deleteBtn').onclick     = deleteCurrent
-$('refresh').onclick       = loadList
-$('newBtn').onclick        = clearForm
-$('search').oninput        = filterList
+  // ---------- Open/close modal buttons ----------
+  openIntakeBtn.addEventListener('click', ()=>{
+    resetForm(true);
+    openModal();
+  });
+  closeIntakeBtn.addEventListener('click', closeModal);
 
-/* ---------- Init sequence ---------- */
-await loadHeader2()
-await initMe()
-addAttachRow()
-clearForm()
-await loadList()
-
-// deep link ?id=...
-const qs = new URLSearchParams(location.search)
-if(qs.get('id')) openMission(qs.get('id'))
-</script>
+  // ---------- Bootstrapping ----------
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    const session = await requireAuth();
+    if(!session) return;
+    currentUser = session;
+    sb = getSupabase();
+    await loadSessions();
+  });
+  </script>
 </body>
 </html>
