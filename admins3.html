@@ -81,8 +81,81 @@ button:hover{background:var(--accent);color:#000}
 .session-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px}
 @media(max-width:720px){.session-grid{grid-template-columns:1fr}}
 
-/* Contracts */
-#contractsContainer{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+/* Contracts summary (main view) */
+.contracts-summary{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin:8px 0 6px;font-size:12px;color:var(--muted)
+}
+.contracts-summary span{color:var(--accent);font-weight:700}
+
+/* History cards */
+.history-panel{margin-top:14px}
+.history-title{font-size:13px;color:var(--accent);font-weight:700;margin-bottom:4px}
+.history-wrap{display:flex;flex-direction:column;gap:8px}
+.history-card{
+  background:#101010;border:1px solid var(--border);border-radius:10px;
+  padding:9px 10px;box-shadow:0 0 12px rgba(214,180,76,.18)
+}
+.history-head{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;
+  font-size:12px;color:var(--muted);margin-bottom:4px
+}
+.history-head .tag{
+  padding:2px 6px;border-radius:999px;border:1px solid var(--border);font-size:10px
+}
+.history-main{font-size:12px}
+.history-main b{color:var(--accent)}
+.history-meta{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* Footer controls */
+.footer-actions{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:10px
+}
+.small-note{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* Audit table */
+.audit-panel{margin-top:16px}
+.audit-head{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.audit-wrap{
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  max-height:220px;background:#050505
+}
+.audit-table{width:100%;border-collapse:collapse;font-size:11px}
+.audit-table th,.audit-table td{
+  padding:6px 7px;border-bottom:1px solid rgba(214,180,76,.25);text-align:left
+}
+.audit-table th{
+  background:#080808;color:var(--accent);position:sticky;top:0;z-index:1
+}
+.audit-table tr:nth-child(even){background:#101010}
+.audit-table tr:hover{background:rgba(214,180,76,.08)}
+.audit-before-after{font-family:monospace;font-size:10px;white-space:nowrap}
+
+/* ===== Modal: Contract editor ===== */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.82);
+  display:none;align-items:center;justify-content:center;z-index:20;
+}
+.modal{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  width:96%;max-width:960px;max-height:90vh;display:flex;flex-direction:column;
+  box-shadow:0 0 26px rgba(214,180,76,.4)
+}
+.modal-header{
+  padding:10px 12px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:8px
+}
+.modal-header h2{margin:0;font-size:15px;color:var(--accent)}
+.modal-body{
+  padding:10px 12px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px
+}
+.modal-footer{
+  padding:8px 12px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:8px
+}
+
+/* Contracts editor (inside modal) */
+#contractsContainer{display:flex;flex-direction:column;gap:12px;margin-top:4px}
 .contract-card{
   background:var(--card);border:1px solid var(--border);border-radius:12px;
   padding:10px;box-shadow:0 0 12px rgba(214,180,76,.18)
@@ -116,30 +189,6 @@ button:hover{background:var(--accent);color:#000}
 }
 @media(max-width:640px){.leg-row{grid-template-columns:1fr}}
 .leg-row button{padding:6px 8px;font-size:11px}
-
-/* Footer controls */
-.footer-actions{
-  display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px
-}
-.small-note{font-size:11px;color:var(--muted);margin-top:6px}
-
-/* Audit table */
-.audit-panel{margin-top:16px}
-.audit-head{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px}
-.audit-wrap{
-  border:1px solid var(--border);border-radius:10px;overflow:hidden;
-  max-height:220px;background:#050505
-}
-.audit-table{width:100%;border-collapse:collapse;font-size:11px}
-.audit-table th,.audit-table td{
-  padding:6px 7px;border-bottom:1px solid rgba(214,180,76,.25);text-align:left
-}
-.audit-table th{
-  background:#080808;color:var(--accent);position:sticky;top:0;z-index:1
-}
-.audit-table tr:nth-child(even){background:#101010}
-.audit-table tr:hover{background:rgba(214,180,76,.08)}
-.audit-before-after{font-family:monospace;font-size:10px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -186,16 +235,24 @@ button:hover{background:var(--accent);color:#000}
     </label>
   </div>
 
-  <!-- Contracts container -->
-  <div id="contractsContainer"></div>
+  <!-- Contracts summary + open editor -->
+  <div class="contracts-summary">
+    <div>Contracts in this session: <span id="contractCount">0</span></div>
+    <button id="openEditorBtn">Open Contract Editor</button>
+  </div>
 
   <!-- Bottom actions -->
   <div class="footer-actions">
-    <button id="addContractBtn">Add Another Contract</button>
     <button id="submitAllBtn" class="btn-primary">Submit All</button>
   </div>
   <div class="small-note">
-    Each session ID can contain multiple contracts. Each contract can contain multiple cargo types, each with multiple loading and offloading legs.
+    Use the Contract Editor to define routes (cargo, loading and offloading legs). When you submit, a summary card for this run is added to the history.
+  </div>
+
+  <!-- History -->
+  <div class="history-panel">
+    <div class="history-title">History (this session)</div>
+    <div class="history-wrap" id="historyWrap"></div>
   </div>
 
   <!-- Audit Trail -->
@@ -216,6 +273,23 @@ button:hover{background:var(--accent);color:#000}
     </div>
     <div class="small-note">
       Audit entries are stored locally in your browser together with this session. Clearing all sessions will delete the audit trail.
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Contract Editor -->
+<div class="modal-bg" id="contractsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Contract Editor</h2>
+      <button type="button" id="closeEditorBtn" class="btn-ghost">Close</button>
+    </div>
+    <div class="modal-body">
+      <div id="contractsContainer"></div>
+      <button id="addContractBtn" type="button" class="btn-ghost" style="margin-top:4px">Add Another Contract</button>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="editorDoneBtn" class="btn-primary">Done</button>
     </div>
   </div>
 </div>
@@ -251,11 +325,12 @@ function buildOptions(list, current='', firstLabel='-- select --'){
 }
 
 /* ===== Data model =====
-Session: { id, createdAt, currentLocation, ship, contracts: [Contract], audit:[Audit] }
+Session: { id, createdAt, currentLocation, ship, contracts:[Contract], audit:[Audit], history:[History] }
 Contract: { id, name, reward, cargoGroups:[CargoGroup] }
 CargoGroup: { id, cargoType, loadings:[Leg], offloadings:[Leg] }
 Leg: { id, scu, location }
 Audit: { id, ts, action, target, before, after }
+History: { id, ts, sessionId, start, ship, totalReward, totalSCU, contractCount, cargoCount }
 ========================= */
 let sessions = {};
 let currentSessionId = null;
@@ -289,7 +364,6 @@ function logAudit(action, target, before='', after=''){
     before: String(before ?? ''),
     after: String(after ?? '')
   });
-  // keep latest 300 entries
   if(s.audit.length>300) s.audit.length = 300;
   saveSessions();
   renderAudit();
@@ -305,7 +379,8 @@ function createSession(){
     currentLocation: '',
     ship: '',
     contracts: [],
-    audit: []
+    audit: [],
+    history: []
   };
   currentSessionId = id;
   saveSessions();
@@ -330,6 +405,7 @@ function ensureSession(){
     currentSessionId = fromUrl;
     const s = sessions[fromUrl];
     if(!Array.isArray(s.audit)) s.audit=[];
+    if(!Array.isArray(s.history)) s.history=[];
     return s;
   }
   return createSession();
@@ -440,7 +516,9 @@ function contractCardHtml(contract, idx){
 
 function renderContracts(){
   const s = getSession(); if(!s) return;
-  if(!s.contracts.length){
+  const count = s.contracts.length;
+  document.getElementById('contractCount').textContent = count;
+  if(!count){
     contractsContainer.innerHTML = `<div class="small-note">No contracts yet. Click <b>Add Another Contract</b> to start.</div>`;
     return;
   }
@@ -466,6 +544,37 @@ function renderAudit(){
         ${esc(ev.before)}${ev.before!=='' || ev.after!=='' ? ' → ' : ''}${esc(ev.after)}
       </td>
     </tr>`;
+  }).join('');
+}
+
+/* History render */
+function renderHistory(){
+  const s = getSession(); if(!s) return;
+  const wrap = document.getElementById('historyWrap');
+  const list = Array.isArray(s.history) ? s.history : [];
+  if(!list.length){
+    wrap.innerHTML = `<div class="small-note">No submissions yet. Build a route and click <b>Submit All</b>.</div>`;
+    return;
+  }
+  wrap.innerHTML = list.map(h=>{
+    const time = new Date(h.ts);
+    return `
+      <div class="history-card">
+        <div class="history-head">
+          <div>${time.toLocaleString()}</div>
+          <div class="tag">Session ${esc(h.sessionId)}</div>
+        </div>
+        <div class="history-main">
+          <div><b>Ship:</b> ${esc(h.ship || '-')} &nbsp; | &nbsp; <b>Start:</b> ${esc(h.start || '-')}</div>
+          <div><b>Total Reward:</b> ${esc(h.totalReward)} aUEC &nbsp; | &nbsp;
+              <b>Total SCU:</b> ${esc(h.totalSCU)}</div>
+          <div><b>Contracts:</b> ${h.contractCount} &nbsp; | &nbsp;
+              <b>Cargo Types:</b> ${h.cargoCount}</div>
+        </div>
+        <div class="history-meta">
+          Snapshot saved on submit. Use Export to get full JSON payload for this run.
+        </div>
+      </div>`;
   }).join('');
 }
 
@@ -540,14 +649,13 @@ function removeLeg(contractId, cargoId, legId, kind){
   const g=c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
   const list = (kind==='off') ? g.offloadings : g.loadings;
   const before = list.length;
-  const label = kind==='off'?'Offload leg':'Load leg';
   const newList = list.filter(l=>l.id!==legId);
   if(kind==='off') g.offloadings = newList;
   else g.loadings = newList;
   if(newList.length!==before){
     saveSessions();
     renderContracts();
-    logAudit('Remove', label, cargoId, legId);
+    logAudit('Remove', kind==='off'?'Offload leg':'Load leg', cargoId, legId);
   }
 }
 
@@ -571,10 +679,58 @@ function wireTopLevelHandlers(){
     if(old!==nv) logAudit('Update','Ship', old, nv);
   });
 
-  document.getElementById('addContractBtn').addEventListener('click', ()=>{
-    addContract();
+  // history / submit
+  document.getElementById('submitAllBtn').addEventListener('click', ()=>{
+    const s=getSession(); if(!s){alert('No session loaded');return;}
+    if(!s.contracts.length){alert('No contracts in this session yet.');return;}
+
+    // compute summary
+    let totalReward = 0;
+    let totalSCU = 0;
+    let cargoCount = 0;
+    s.contracts.forEach(c=>{
+      const r = Number(c.reward || 0);
+      if(Number.isFinite(r)) totalReward += r;
+      (c.cargoGroups||[]).forEach(g=>{
+        cargoCount++;
+        (g.loadings||[]).forEach(l=>{
+          const v = Number(l.scu || 0);
+          if(Number.isFinite(v)) totalSCU += v;
+        });
+      });
+    });
+
+    const snap = {
+      id: uid('HS'),
+      ts: new Date().toISOString(),
+      sessionId: s.id,
+      start: s.currentLocation || '',
+      ship: s.ship || '',
+      totalReward,
+      totalSCU,
+      contractCount: s.contracts.length,
+      cargoCount
+    };
+    if(!Array.isArray(s.history)) s.history=[];
+    s.history.unshift(snap);
+    saveSessions();
+    renderHistory();
+    logAudit('Submit','Session', '', snap.id);
+
+    // JSON for copying / export
+    const json = JSON.stringify(s,null,2);
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(json).then(()=>{
+        alert('Session JSON copied to clipboard. History card added below.');
+      }).catch(()=>{
+        alert('Session JSON:\n\n'+json);
+      });
+    }else{
+      alert('Session JSON:\n\n'+json);
+    }
   });
 
+  // New session / clear / export raw
   document.getElementById('newSessionBtn').addEventListener('click', ()=>{
     if(!confirm('Start a new session? Current one will remain saved.')) return;
     createSession();
@@ -582,6 +738,7 @@ function wireTopLevelHandlers(){
     renderSessionFields();
     renderContracts();
     renderAudit();
+    renderHistory();
   });
 
   document.getElementById('clearAllSessionsBtn').addEventListener('click', ()=>{
@@ -593,6 +750,7 @@ function wireTopLevelHandlers(){
     renderSessionFields();
     renderContracts();
     renderAudit();
+    renderHistory();
   });
 
   document.getElementById('exportSessionBtn').addEventListener('click', ()=>{
@@ -607,25 +765,27 @@ function wireTopLevelHandlers(){
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
+    logAudit('Export','Session JSON', '', '');
   });
 
-  document.getElementById('submitAllBtn').addEventListener('click', ()=>{
-    const s=getSession(); if(!s){alert('No session loaded');return;}
-    if(!s.contracts.length){alert('No contracts in this session yet.');return;}
-    const json = JSON.stringify(s,null,2);
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(json).then(()=>{
-        alert('Session JSON copied to clipboard. You can paste it into mission notes / Discord.');
-      }).catch(()=>{
-        alert('Session JSON:\n\n'+json);
-      });
-    }else{
-      alert('Session JSON:\n\n'+json);
-    }
-    logAudit('Export','Submit All', '', 'Copied JSON');
+  /* Modal open/close */
+  const modal = document.getElementById('contractsModal');
+  document.getElementById('openEditorBtn').addEventListener('click', ()=>{
+    modal.style.display='flex';
+  });
+  document.getElementById('closeEditorBtn').addEventListener('click', ()=>{
+    modal.style.display='none';
+  });
+  document.getElementById('editorDoneBtn').addEventListener('click', ()=>{
+    modal.style.display='none';
   });
 
-  // Delegated handlers for contracts / cargo / legs
+  // Add contract (inside modal)
+  document.getElementById('addContractBtn').addEventListener('click', ()=>{
+    addContract();
+  });
+
+  // Delegated handlers for contracts / cargo / legs (inside modal)
   contractsContainer.addEventListener('click', (e)=>{
     const contractCard = e.target.closest('.contract-card');
     const contractId = contractCard?.dataset.contractId;
@@ -757,6 +917,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderSessionFields();
   renderContracts();
   renderAudit();
+  renderHistory();
   wireTopLevelHandlers();
 
   // If it’s a brand-new empty session, start with one contract + cargo + basic legs
