@@ -30,14 +30,20 @@
       letter-spacing:.25px;
     }
 
-    /* Header mount fallback (same idea as member.html) */
+    /* Header mount fallback (stretched bar, still replaced by header.html) */
+    #header-container{
+      margin:0 0 10px;
+    }
     .brand{
       display:flex;
       align-items:center;
+      justify-content:space-between;
       gap:10px;
       margin:0 0 8px;
-      padding-bottom:6px;
-      border-bottom:1px solid var(--border);
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:linear-gradient(90deg,rgba(214,180,76,.18),rgba(0,0,0,.8),rgba(214,180,76,.12));
     }
     .brand-logo{
       width:44px;height:44px;object-fit:contain;
@@ -109,6 +115,13 @@
       background:#0b0b0b;
       color:var(--accent);
       border:1px solid var(--border);
+      cursor:pointer;
+      font-family:'Play';
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      padding:6px 10px;
+      border-radius:999px;
     }
     .btn-secondary:hover{
       background:rgba(214,180,76,.12);
@@ -171,6 +184,19 @@
     .card-line{
       color:var(--muted);
       margin-bottom:2px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:6px;
+    }
+    .card-line b{
+      color:var(--accent);
+      font-weight:700;
+    }
+    .contract-actions{
+      display:inline-flex;
+      gap:4px;
+      flex-shrink:0;
     }
     .card-footer-line{
       margin-top:4px;
@@ -350,7 +376,7 @@
 </head>
 <body>
 
-  <!-- Header mount: this will be replaced by header.html so it stretches like your other pages -->
+  <!-- Header mount: kept as header.html injection -->
   <div id="header-container">
     <div class="brand">
       <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
@@ -474,6 +500,8 @@
   let currentUser = null;
   let SESSIONS = [];
   let currentImageFile = null;
+  let editingContract = null;   // currently edited contract (if any)
+  let CONTRACT_CACHE = {};      // cache contracts by id for quick lookup
 
   const screenshotInput = $id('screenshotInput');
   const previewImg      = $id('previewImg');
@@ -504,6 +532,7 @@
   function resetForm(isNewSession=true){
     if(isNewSession){
       currentSession = null;
+      editingContract = null;
     }
     activeModel = { cargo: [] };
     cargoList.innerHTML = '';
@@ -550,7 +579,6 @@
     const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
 
     if(lines.length){
-      // First non-empty line as a guess for title
       if(!contractNameEl.value){
         contractNameEl.value = lines[0].slice(0,80);
       }
@@ -683,17 +711,37 @@
 
     const reward = Number(rewardEl.value || 0);
 
-    const { data:contract, error } = await sb
-      .from('contracts')
-      .insert({
-        session_id:  sess.id,
-        submitted_by: currentUser.user.id,
-        contract_name: name,
-        reward: reward,
-        contract_type: contractTypeEl.value
-      })
-      .select()
-      .single();
+    let contract = null;
+    let error = null;
+
+    if(editingContract){
+      const result = await sb
+        .from('contracts')
+        .update({
+          contract_name: name,
+          reward: reward,
+          contract_type: contractTypeEl.value
+        })
+        .eq('id', editingContract.id)
+        .select()
+        .single();
+      contract = result.data;
+      error = result.error;
+    }else{
+      const result = await sb
+        .from('contracts')
+        .insert({
+          session_id:  sess.id,
+          submitted_by: currentUser.user.id,
+          contract_name: name,
+          reward: reward,
+          contract_type: contractTypeEl.value
+        })
+        .select()
+        .single();
+      contract = result.data;
+      error = result.error;
+    }
 
     if(error){
       console.error(error);
@@ -701,7 +749,24 @@
       return;
     }
 
-    // Save cargo rows
+    // If editing, wipe existing cargo & legs first
+    if(editingContract){
+      const { data:cargoTypes, error:ctErr } = await sb
+        .from('contract_cargo_types')
+        .select('id')
+        .eq('contract_id', contract.id);
+
+      if(ctErr){
+        console.warn(ctErr);
+      }else if(cargoTypes && cargoTypes.length){
+        const ids = cargoTypes.map(ct=>ct.id);
+        await sb.from('contract_loading').delete().in('cargo_type_id', ids);
+        await sb.from('contract_offloading').delete().in('cargo_type_id', ids);
+        await sb.from('contract_cargo_types').delete().in('id', ids);
+      }
+    }
+
+    // Save cargo rows (fresh for both new + edited)
     for(const c of activeModel.cargo){
       const { data:ct, error:errCT } = await sb
         .from('contract_cargo_types')
@@ -732,7 +797,9 @@
       }
     }
 
-    alert('Contract saved into session.');
+    alert(editingContract ? 'Contract updated.' : 'Contract saved into session.');
+
+    editingContract = null;
     resetForm(false);       // keep currentSession so more contracts can be added
     await loadSessions();   // refresh audit cards
   }
@@ -756,6 +823,7 @@
     }
 
     SESSIONS = sessions || [];
+    CONTRACT_CACHE = {};
 
     if(!SESSIONS.length){
       sessionsGrid.innerHTML = '<div class="card-line">No sessions yet — start with “New Contract / Scan”.</div>';
@@ -768,10 +836,10 @@
       const { data:contracts } = await sb
         .from('contracts')
         .select('*')
-        .eq('session_id', s.id);
+        .eq('session_id', s.id)
+        .order('created_at', { ascending:true });
 
-      const card = document.createElement('div');
-      card.className = 'card';
+      (contracts || []).forEach(c => { CONTRACT_CACHE[c.id] = c; });
 
       const created = s.created_at ? new Date(s.created_at) : null;
       const createdStr = created
@@ -781,11 +849,19 @@
       const contractsHtml = (contracts && contracts.length)
         ? contracts.map(c => `
             <div class="card-line">
-              <b>${c.contract_name}</b> – ${c.reward?.toLocaleString?.('en-SG') || c.reward || 0} aUEC
+              <span>
+                <b>${c.contract_name}</b> – ${c.reward?.toLocaleString?.('en-SG') || c.reward || 0} aUEC
+              </span>
+              <span class="contract-actions">
+                <button class="chip-btn" data-contract-action="edit" data-contract-id="${c.id}">Edit</button>
+                <button class="chip-btn danger" data-contract-action="delete" data-contract-id="${c.id}">Delete</button>
+              </span>
             </div>
           `).join('')
         : `<div class="card-line">No contracts recorded yet.</div>`;
 
+      const card = document.createElement('div');
+      card.className = 'card';
       card.innerHTML = `
         <div class="card-header-row">
           <div class="card-header">Session ${s.id.slice(0,8)}</div>
@@ -803,8 +879,129 @@
     }
   }
 
-  // Edit / Delete actions (session level)
+  // Load a single contract (and cargo) into editor for editing
+  async function loadContractForEdit(id){
+    if(!sb || !currentUser) return;
+
+    let contract = CONTRACT_CACHE[id];
+    if(!contract){
+      const { data, error } = await sb
+        .from('contracts')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if(error){
+        console.error(error);
+        alert('Failed to load contract: ' + error.message);
+        return;
+      }
+      contract = data;
+    }
+
+    editingContract = contract;
+
+    // Ensure currentSession points to this contract's session
+    let sess = SESSIONS.find(s => s.id === contract.session_id);
+    if(!sess){
+      const { data, error } = await sb
+        .from('sessions')
+        .select('*')
+        .eq('id', contract.session_id)
+        .single();
+      if(error){
+        console.warn('Failed to fetch session for contract:', error);
+        currentSession = { id: contract.session_id };
+      }else{
+        sess = data;
+        SESSIONS.push(sess);
+        currentSession = sess;
+      }
+    }else{
+      currentSession = sess;
+    }
+
+    // Load cargo model
+    const { data:cargoTypes, error:ctErr } = await sb
+      .from('contract_cargo_types')
+      .select('id,cargo_type')
+      .eq('contract_id', contract.id);
+
+    if(ctErr){
+      console.error(ctErr);
+      alert('Failed to load cargo: ' + ctErr.message);
+      return;
+    }
+
+    activeModel = { cargo: [] };
+    cargoList.innerHTML = '';
+
+    if(cargoTypes && cargoTypes.length){
+      for(const ct of cargoTypes){
+        const [loadingRes, offRes] = await Promise.all([
+          sb.from('contract_loading').select('location,scu').eq('cargo_type_id', ct.id),
+          sb.from('contract_offloading').select('location,scu').eq('cargo_type_id', ct.id)
+        ]);
+
+        const loading = loadingRes.data || [];
+        const offloading = offRes.data || [];
+
+        addCargoCard({
+          type: ct.cargo_type,
+          loading,
+          offloading
+        });
+      }
+    }
+
+    // Populate basic fields
+    contractNameEl.value = contract.contract_name || '';
+    rewardEl.value = contract.reward || '';
+    contractTypeEl.value = contract.contract_type || 'hauling';
+
+    ocrOutput.textContent = '';
+    statusLine.textContent = `Editing contract ${contract.contract_name || ''} in session ${String(contract.session_id).slice(0,8)}.`;
+
+    openModal();
+  }
+
+  // Edit / Delete actions (session & contract level)
   sessionsGrid.addEventListener('click', async e=>{
+    // Contract-level actions first
+    const cBtn = e.target.closest('[data-contract-action]');
+    if(cBtn){
+      const action = cBtn.dataset.contractAction;
+      const id     = cBtn.dataset.contractId;
+      if(!id) return;
+
+      if(action === 'delete'){
+        if(!confirm('Delete this contract?')) return;
+        try{
+          const { error } = await sb
+            .from('contracts')
+            .delete()
+            .eq('id', id);
+          if(error){
+            alert('Failed to delete contract: ' + error.message);
+          }else{
+            if(editingContract && editingContract.id === id){
+              editingContract = null;
+              resetForm(false);
+            }
+            await loadSessions();
+          }
+        }catch(err){
+          console.error(err);
+          alert('Failed to delete contract: ' + err.message);
+        }
+      }
+
+      if(action === 'edit'){
+        await loadContractForEdit(id);
+      }
+      return;
+    }
+
+    // Session-level actions
     const btn = e.target.closest('[data-session-action]');
     if(!btn) return;
     const action = btn.dataset.sessionAction;
