@@ -1,1063 +1,1606 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JMBN Contracts</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Contracts</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
-  <style>
-    :root{
-      --bg:#000;--panel:#0b0b0b;--sub:#101010;--row:#0a0a0a;
-      --border:#d6b44c;--card:#141414;
-      --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-      --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      background:
-        radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-        radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-        #000;
-      color:var(--text);
-      font-family:'Play',system-ui,sans-serif;
-      padding:14px;
-      font-size:var(--fs-base);
-      letter-spacing:.25px;
-    }
+<style>
+:root{
+  --bg:#000;--panel:#0b0b0b;--card:#141414;--row:#0a0a0a;
+  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;
+}
+*{box-sizing:border-box}
+body{
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  margin:0;
+  padding:0;
+  font-size:var(--fs-base);
+}
 
-    /* Header mount fallback (stretched bar, still replaced by header.html) */
-    #header-container{
-      margin:0 0 10px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin:0 0 8px;
-      padding:10px 12px;
-      border-radius:10px;
-      border:1px solid var(--border);
-      background:linear-gradient(90deg,rgba(214,180,76,.18),rgba(0,0,0,.8),rgba(214,180,76,.12));
-    }
-    .brand-logo{
-      width:44px;height:44px;object-fit:contain;
-      filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
-    }
-    .brand h1{
-      font-weight:700;
-      font-size:var(--fs-h1);
-      color:var(--accent);
-      margin:0;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
+/* Full-width header container */
+#header-container{
+  width:100%;
+  background:#000;
+}
 
-    /* Main contracts panel (match member panel spacing/feel) */
-    .panel{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:12px;
-      margin-top:8px;
-      box-shadow:0 0 18px rgba(214,180,76,.22);
-    }
-    .panel-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .panel-title{
-      text-transform:uppercase;
-      letter-spacing:.18em;
-      font-size:13px;
-      color:var(--accent);
-    }
-    .panel-sub{
-      font-size:var(--fs-small);
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
+/* Fallback brand header (only visible if header.html fails to load) */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 12px;
+  padding:10px 14px 8px;
+  border-bottom:1px solid var(--border);
+}
+.brand-logo{
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 6px rgba(242,214,117,.3));
+}
+.brand h1{
+  font-size:20px;
+  color:var(--accent);
+  margin:0;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+}
 
-    .controls{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      margin-bottom:10px;
-    }
+/* Page frame (content area) */
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:14px;
+}
 
-    .btn{
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:linear-gradient(180deg,#0c0c0c,#060606);
-      color:var(--accent);
-      cursor:pointer;
-      font-family:'Play';
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-    }
-    .btn:hover{
-      background:var(--accent);
-      color:#000;
-    }
-    .btn-secondary{
-      background:#0b0b0b;
-      color:var(--accent);
-      border:1px solid var(--border);
-      cursor:pointer;
-      font-family:'Play';
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      padding:6px 10px;
-      border-radius:999px;
-    }
-    .btn-secondary:hover{
-      background:rgba(214,180,76,.12);
-      color:var(--accent);
-    }
+/* Top actions */
+.top-bar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.status-main{
+  font-size:11px;
+  color:var(--muted);
+}
+.status-main.ok{color:var(--accent);}
+.status-main.err{color:var(--bad);}
 
-    /* Saved sessions grid (audit trail) */
-    .sessions-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-      gap:10px;
-    }
-    .card{
-      background:#111;
-      border-radius:12px;
-      border:1px solid var(--border);
-      padding:10px;
-      box-shadow:0 0 16px rgba(0,0,0,.6);
-      font-size:12px;
-    }
-    .card-header-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      margin-bottom:6px;
-    }
-    .card-header{
-      font-size:12px;
-      color:var(--accent);
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .card-actions{
-      display:flex;
-      gap:4px;
-      flex-shrink:0;
-    }
-    .chip-btn{
-      border-radius:999px;
-      border:1px solid var(--border);
-      padding:3px 8px;
-      font-size:10px;
-      background:#0b0b0b;
-      color:var(--accent);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      cursor:pointer;
-    }
-    .chip-btn:hover{
-      background:rgba(214,180,76,.12);
-    }
-    .chip-btn.danger{
-      border-color:var(--bad);
-      color:var(--bad);
-    }
-    .card-line{
-      color:var(--muted);
-      margin-bottom:2px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:6px;
-    }
-    .card-line b{
-      color:var(--accent);
-      font-weight:700;
-    }
-    .contract-actions{
-      display:inline-flex;
-      gap:4px;
-      flex-shrink:0;
-    }
-    .card-footer-line{
-      margin-top:4px;
-      font-size:10px;
-      color:var(--muted);
-    }
+/* Buttons */
+.btn{
+  padding:8px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:'Play';
+  font-size:12px;
+  border:1px solid var(--border);
+  background:radial-gradient(circle at top,var(--accent),#614c14);
+  color:#000;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 0 14px rgba(242,214,117,.25);
+}
+.btn-secondary{
+  background:#0b0b0b;
+  color:var(--accent);
+  border:1px solid var(--border);
+  box-shadow:none;
+}
+.btn-danger{
+  background:#1a0000;
+  color:#ff8a8a;
+  border-color:#ff6b6b;
+}
+.btn:disabled{
+  opacity:.6;
+  cursor:default;
+}
 
-    /* Modal (same style language as member modal) */
-    .modal-mask{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.75);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:50;
-    }
-    .modal{
-      background:#0b0b0b;
-      border:1px solid var(--border);
-      border-radius:16px;
-      max-width:960px;
-      width:96vw;
-      max-height:90vh;
-      box-shadow:0 0 28px rgba(214,180,76,.3);
-      padding:18px 16px;
-      overflow:auto;
-    }
-    .modal-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .modal-title{
-      color:var(--accent);
-      font-size:14px;
-      text-transform:uppercase;
-      letter-spacing:.2em;
-    }
+/* Saved sessions panel */
+.section-panel{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  background:#0b0b0b;
+  box-shadow:0 0 22px rgba(214,180,76,.2);
+}
+.panel-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.panel-title{
+  color:var(--accent);
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+}
+.panel-meta{
+  font-size:11px;
+  color:var(--muted);
+}
 
-    .modal-body{
-      display:grid;
-      grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);
-      gap:12px;
-    }
-    @media(max-width:900px){
-      .modal-body{
-        grid-template-columns:1fr;
-      }
-    }
+/* Cards grid */
+.cards-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
 
-    /* Left side: OCR & image */
-    .upload-box{
-      border-radius:12px;
-      border:1px dashed var(--border);
-      background:#111;
-      padding:10px;
-      font-size:12px;
-    }
-    .preview{
-      border:1px solid var(--border);
-      border-radius:8px;
-      overflow:hidden;
-      width:100%;
-      max-width:260px;
-      height:150px;
-      background:#000;
-      margin-top:6px;
-      margin-bottom:6px;
-    }
-    .preview img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .ocr-box{
-      height:140px;
-      background:#050505;
-      border:1px solid var(--border);
-      border-radius:8px;
-      padding:8px;
-      color:var(--muted);
-      font-size:11px;
-      white-space:pre-wrap;
-      overflow:auto;
-      margin-top:4px;
-    }
-    .status-line{
-      margin-top:4px;
-      font-size:11px;
-      color:var(--muted);
-    }
+/* Expandable session card */
+.card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#111;
+  color:var(--text);
+  box-shadow:0 0 16px rgba(0,0,0,.6);
+  overflow:hidden;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 22px rgba(242,214,117,.28);
+  border-color:var(--accent);
+}
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 12px;
+  cursor:pointer;
+}
+.card-header-main{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.card-session-id{
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.card-sub{
+  font-size:11px;
+  color:var(--muted);
+}
+.card-kpis{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.card-kpi{
+  font-size:10px;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.5);
+  color:var(--accent);
+}
+.card-toggle{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  color:var(--muted);
+}
+.card-toggle-icon{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  transition:transform .18s ease;
+}
+.card.open .card-toggle-icon{
+  transform:rotate(90deg);
+}
 
-    /* Right side: contract form */
-    .contract-editor{
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#111;
-      padding:10px;
-      font-size:12px;
-    }
-    .form-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:8px;
-      margin-bottom:8px;
-    }
-    @media(max-width:720px){
-      .form-grid{
-        grid-template-columns:1fr;
-      }
-    }
-    label{
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      color:var(--muted);
-      display:block;
-      margin-bottom:2px;
-    }
-    input[type="text"],
-    input[type="number"],
-    select{
-      width:100%;
-      padding:7px 9px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      background:#050505;
-      color:var(--text);
-      font-family:'Play';
-      font-size:12px;
-    }
-    input[type="text"]::placeholder{
-      color:#6d5c2a;
-    }
+/* Collapsible body */
+.card-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .28s ease;
+  border-top:1px solid rgba(214,180,76,.35);
+}
+.card-body-inner{
+  padding:10px 12px 10px;
+}
 
-    .cargo-list{
-      margin-bottom:8px;
-    }
-    .cargo-card{
-      border-radius:10px;
-      border:1px solid var(--border);
-      background:#0f0f0f;
-      padding:8px;
-      margin-bottom:8px;
-    }
-    .cargo-card h4{
-      margin:0 0 4px;
-      color:var(--accent);
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
-    .cargo-row{
-      margin-bottom:4px;
-    }
-    .cargo-row input{
-      font-size:11px;
-    }
-    .cargo-row input:first-child{
-      width:58%;
-      margin-right:4px;
-    }
-    .cargo-row input:last-child{
-      width:36%;
-    }
+/* Contract blocks inside session */
+.contract-block{
+  border-radius:10px;
+  border:1px solid rgba(214,180,76,.4);
+  background:rgba(5,5,5,.95);
+  padding:8px 8px 9px;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.contract-name{
+  font-size:12px;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  margin-bottom:3px;
+}
+.contract-line{
+  font-size:11px;
+  color:var(--muted);
+}
+.contract-actions{
+  margin-top:6px;
+  display:flex;
+  gap:6px;
+  justify-content:flex-end;
+}
 
-    .meta-footnote{
-      font-size:10px;
-      color:var(--muted);
-      margin-top:6px;
-    }
-  </style>
+/* Modal base */
+.modal-mask{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.modal-mask.open{
+  display:flex;
+}
+.modal{
+  width:95%;
+  max-width:1000px;
+  max-height:90vh;
+  overflow:auto;
+  background:#0b0b0b;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px 16px 16px;
+  box-shadow:0 0 28px rgba(214,180,76,.3);
+}
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.modal-title{
+  color:var(--accent);
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+}
+
+/* Intake modal layout */
+.modal-body{
+  font-size:var(--fs-base);
+}
+.grid-intake{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr);
+  gap:12px;
+}
+@media (max-width:900px){
+  .grid-intake{grid-template-columns:1fr;}
+}
+.panel-inner{
+  background:linear-gradient(135deg,rgba(214,180,76,.05),transparent);
+  border:1px solid rgba(214,180,76,.4);
+  border-radius:14px;
+  padding:10px;
+}
+
+/* KPIs */
+.session-kpis{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+.kpi{
+  flex:1 1 150px;
+  min-width:0;
+  border-radius:10px;
+  padding:6px 8px;
+  border:1px solid rgba(214,180,76,.5);
+  background:radial-gradient(circle at top,rgba(242,214,117,.22),rgba(10,10,10,.9));
+  font-size:11px;
+}
+.kpi-label{
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+.kpi-value{
+  font-size:13px;
+}
+
+/* Upload / OCR area */
+.upload-box{
+  border:1px dashed var(--border);
+  padding:8px;
+  border-radius:12px;
+  background:#111;
+  margin-bottom:8px;
+}
+.upload-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  margin-bottom:6px;
+}
+.preview-wrap{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+}
+.preview{
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  width:220px;
+  height:140px;
+  background:#000;
+}
+.preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.ocr-box{
+  flex:1;
+  height:140px;
+  background:#050505;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px;
+  color:var(--muted);
+  font-size:12px;
+  white-space:pre-wrap;
+  overflow:auto;
+}
+.status{
+  font-size:11px;
+  color:var(--muted);
+}
+.status-ok{color:var(--accent);}
+.status-err{color:var(--bad);}
+
+/* Contract editor */
+.contract-editor{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  background:#111;
+}
+.meta-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:8px;
+}
+@media (max-width:700px){
+  .meta-grid{grid-template-columns:1fr 1fr;}
+}
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+}
+input[type="text"],
+input[type="number"],
+select{
+  background:var(--card);
+  border-radius:8px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:7px 8px;
+  font-size:var(--fs-base);
+  color:var(--text);
+  font-family:inherit;
+}
+input::placeholder{color:#75653a;}
+
+.cargo-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:8px;
+}
+.cargo-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px 8px 10px;
+  background:#0f0f0f;
+}
+.cargo-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+.cargo-title{
+  margin:0;
+  color:var(--accent);
+  font-size:12px;
+  text-transform:uppercase;
+}
+.badge{
+  display:inline-block;
+  padding:2px 6px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.7);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+}
+
+.subtable{
+  margin-top:4px;
+}
+.subtable-title{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  margin-bottom:2px;
+}
+.subtable table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--fs-small);
+}
+.subtable th,
+.subtable td{
+  padding:4px 6px;
+  text-align:left;
+}
+.subtable th{
+  color:var(--accent);
+  border-bottom:1px solid rgba(214,180,76,.4);
+}
+.subtable tbody tr:nth-child(odd){background:var(--row);}
+.subtable tbody tr:nth-child(even){background:#050505;}
+.small-input{
+  width:100%;
+  background:transparent;
+  border:none;
+  color:var(--text);
+  font-family:inherit;
+  font-size:11px;
+}
+.small-input:focus{outline:none;}
+
+.form-actions{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:flex-end;
+}
+
+/* Small confirm modal reuse */
+#confirmModal .modal{
+  max-width:420px;
+}
+
+/* Utility */
+.muted{
+  color:var(--muted);
+  font-size:11px;
+}
+</style>
 </head>
 <body>
 
-  <!-- Header mount: kept as header.html injection -->
-  <div id="header-container">
-    <div class="brand">
-      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-      <h1>JMBN // CONTRACTS</h1>
-    </div>
+<!-- Full-width universal header (header.html) -->
+<div id="header-container">
+  <!-- Fallback content if header.html fails -->
+  <div class="brand">
+    <img class="brand-logo"
+         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png"
+         alt="JMBN">
+    <h1>JMBN // CONTRACTS</h1>
   </div>
+</div>
 
-  <script>
-  // Inject shared header/nav like member.html and highlight Contracts tab
-  (async () => {
-    try {
-      const res = await fetch('header.html', { cache: 'no-cache' });
-      if(res.ok){
-        const html = await res.text();
-        document.getElementById('header-container').outerHTML = html;
-        requestAnimationFrame(() => {
-          const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-          document.querySelectorAll('.nav-btn').forEach(a => {
-            const href = (a.getAttribute('href')||'').toLowerCase();
-            if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
-            // Fuzzy match for contracts pages
-            if(/contract/.test(here) && /contract/.test(href)){
-              a.classList.add('active');
-              a.setAttribute('aria-current','page');
-            }
-          });
+<script>
+(async () => {
+  try{
+    const res = await fetch('header.html',{ cache:'no-cache' });
+    if(res.ok){
+      const html = await res.text();
+      document.getElementById('header-container').innerHTML = html;
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href') || '').toLowerCase();
+          if(href === here){
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
+          }
+          if(/contract/.test(here) && /contract/.test(href)){
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
+          }
         });
-      }
-    } catch (e) { console.warn('Header load failed:', e); }
-  })();
-  </script>
+      });
+    }
+  }catch(e){
+    console.warn('Header load failed:', e);
+  }
+})();
+</script>
 
-  <!-- Main panel -->
-  <div class="panel">
-    <div class="panel-header">
-      <div>
-        <div class="panel-title">Hauling & Ops Contracts</div>
-        <div class="panel-sub">Scan • Parse • Save</div>
-      </div>
-      <button class="btn" id="openIntake">+ New Contract / Scan</button>
-    </div>
+<!-- Main content -->
+<div class="page">
 
-    <div class="panel-sub" style="margin-bottom:6px;">Saved Sessions (Audit Trail)</div>
-    <div id="sessionsGrid" class="sessions-grid">
-      <div class="card-line">Loading sessions…</div>
-    </div>
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="status-main" id="mainStatus">Initialising…</div>
+    <button class="btn" id="openIntakeBtn">+ New Contract / Scan</button>
   </div>
 
-  <!-- Intake Modal -->
-  <div id="intakeMask" class="modal-mask" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="modal-header">
-        <div class="modal-title">New Contract Session</div>
-        <button class="btn-secondary" id="closeIntake">Close</button>
-      </div>
+  <!-- Saved sessions -->
+  <section class="section-panel">
+    <div class="panel-header">
+      <div class="panel-title">Saved Sessions</div>
+      <div class="panel-meta">Each card is a hauling session with its contracts &amp; cargo</div>
+    </div>
+    <div class="cards-grid" id="sessionsGrid">
+      <div class="muted">Loading sessions…</div>
+    </div>
+  </section>
+</div>
 
-      <div class="modal-body">
-        <!-- LEFT: OCR / screenshot -->
-        <div class="upload-box" id="pasteZone">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);">
-              Image / Screenshot
-            </div>
-            <button class="btn-secondary" id="scanBtn" type="button">Run OCR</button>
+<!-- Intake Modal -->
+<div class="modal-mask" id="intakeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Contract – Session Intake</div>
+      <button type="button" class="btn-secondary" id="intakeCloseBtn">Close</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-intake">
+        <!-- LEFT: Session + screenshot -->
+        <section class="panel-inner">
+          <div class="panel-header" style="margin-bottom:6px;">
+            <div class="panel-title" style="font-size:12px;">Session &amp; Screenshot Intake</div>
+            <div class="panel-meta">Session auto-creates on first save</div>
           </div>
-          <input type="file" id="screenshotInput" accept="image/*" style="margin-top:6px;font-size:11px;">
-          <div class="preview"><img id="previewImg" style="display:none;" alt=""></div>
-          <div class="ocr-box" id="ocrOutput"></div>
-          <div class="status-line" id="statusLine">Paste an image (Ctrl+V) or select a file, then Run OCR.</div>
-        </div>
+
+          <div class="session-kpis">
+            <div class="kpi">
+              <div class="kpi-label">Session ID</div>
+              <div class="kpi-value" id="kpiSessionId">—</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Submitted By</div>
+              <div class="kpi-value" id="kpiSubmittedBy">—</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Active Contract</div>
+              <div class="kpi-value" id="kpiActiveContract">New Contract</div>
+            </div>
+          </div>
+
+          <div class="upload-box" id="pasteZone">
+            <div class="upload-row">
+              <input type="file" id="screenshotInput" accept="image/*">
+              <button class="btn" type="button" id="scanBtn">Scan Image</button>
+              <button class="btn btn-secondary" type="button" id="clearBtn">Clear</button>
+            </div>
+            <div class="status" id="statusLine">
+              Tip: Use <b>Win+Shift+S</b> in-game, copy the contract, click here and press <b>Ctrl+V</b>.
+            </div>
+          </div>
+
+          <div class="preview-wrap">
+            <div class="preview">
+              <img id="previewImg" alt="Screenshot preview" style="display:none;">
+            </div>
+            <div class="ocr-box" id="ocrOutput"></div>
+          </div>
+        </section>
 
         <!-- RIGHT: Contract editor -->
-        <div class="contract-editor">
-          <div class="form-grid">
-            <div>
-              <label for="contractName">Contract Name</label>
-              <input id="contractName" type="text" placeholder="e.g. Cargo Haul – Orison to Lorville">
-            </div>
-            <div>
-              <label for="contractType">Type</label>
-              <select id="contractType">
-                <option value="hauling">Hauling</option>
-                <option value="ops">Operations</option>
-                <option value="escort">Escort</option>
-                <option value="bounty">Bounty</option>
-              </select>
-            </div>
-            <div>
-              <label for="reward">Reward (aUEC)</label>
-              <input id="reward" type="number" min="0" step="1" placeholder="e.g. 250000">
-            </div>
+        <section class="panel-inner">
+          <div class="panel-header" style="margin-bottom:6px;">
+            <div class="panel-title" style="font-size:12px;">Contract Editor</div>
+            <div class="panel-meta">OCR will try to autofill reward &amp; legs</div>
           </div>
 
-          <div id="cargoList" class="cargo-list"></div>
+          <div class="contract-editor">
+            <div class="meta-grid">
+              <div class="form-field">
+                <label for="contractName">Contract Name</label>
+                <input id="contractName" type="text" placeholder="e.g. Covalex Waste Run">
+              </div>
+              <div class="form-field">
+                <label for="contractType">Type</label>
+                <select id="contractType">
+                  <option value="hauling">Hauling</option>
+                  <option value="delivery">Delivery</option>
+                  <option value="salvage">Salvage</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="reward">Reward (aUEC)</label>
+                <input id="reward" type="number" min="0" step="1" placeholder="42000">
+              </div>
+            </div>
 
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
-            <button type="button" class="btn-secondary" id="addCargo">+ Add Cargo Type</button>
-            <button type="button" class="btn" id="saveContract">Save Contract</button>
-          </div>
+            <div class="cargo-list" id="cargoList"></div>
 
-          <div class="meta-footnote">
-            OCR Autofill: tries to grab the contract title and first aUEC amount from the scan.
+            <div class="form-actions">
+              <button class="btn-secondary" type="button" id="addCargoBtn">+ Add Cargo Type</button>
+              <button class="btn" type="button" id="saveContractBtn">Save Contract</button>
+            </div>
+
+            <div class="muted">
+              Once saved, this contract will appear under its session in the audit list.
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Libs -->
-  <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/auth.js"></script>
+<!-- Small confirm modal for OCR summary -->
+<div class="modal-mask" id="confirmModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Confirm Detected Contract</div>
+      <button type="button" class="btn-secondary" id="modalCloseBtn">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="muted" style="margin-top:0;margin-bottom:6px;">
+        We parsed this contract from your screenshot. Confirm it looks okay before editing or saving.
+      </p>
+      <dl style="font-size:13px;">
+        <dt>Reward</dt>
+        <dd id="modalReward">–</dd>
+        <dt>Contractor</dt>
+        <dd id="modalContractor">–</dd>
+        <dt>Legs / Cargo</dt>
+        <dd id="modalLegs">–</dd>
+      </dl>
+    </div>
+    <div class="modal-header" style="justify-content:flex-end;margin-top:6px;">
+      <button type="button" class="btn-secondary" id="modalCancelBtn">Cancel</button>
+      <button type="button" class="btn" id="modalConfirmBtn">Confirm</button>
+    </div>
+  </div>
+</div>
 
-  <script>
-  // ---------- Helpers ----------
-  const $id  = id => document.getElementById(id);
+<!-- JS libs -->
+<script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 
-  let sb = null;
-  let currentSession = null;
-  let activeModel = { cargo: [] };
-  let currentUser = null;
-  let SESSIONS = [];
-  let currentImageFile = null;
-  let editingContract = null;   // currently edited contract (if any)
-  let CONTRACT_CACHE = {};      // cache contracts by id for quick lookup
+<script>
+/* ===== JMBN CONTRACTS – INLINE JS ===== */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
 
-  const screenshotInput = $id('screenshotInput');
-  const previewImg      = $id('previewImg');
-  const ocrOutput       = $id('ocrOutput');
-  const statusLine      = $id('statusLine');
-  const pasteZone       = $id('pasteZone');
-  const intakeMask      = $id('intakeMask');
-  const openIntakeBtn   = $id('openIntake');
-  const closeIntakeBtn  = $id('closeIntake');
-  const addCargoBtn     = $id('addCargo');
-  const saveContractBtn = $id('saveContract');
-  const sessionsGrid    = $id('sessionsGrid');
-  const scanBtn         = $id('scanBtn');
-  const contractNameEl  = $id('contractName');
-  const contractTypeEl  = $id('contractType');
-  const rewardEl        = $id('reward');
-  const cargoList       = $id('cargoList');
+let sb = null;
+let currentUser = null;
+let currentSession = null;
+let editingContractId = null; // null = creating new
 
-  function openModal(){
-    intakeMask.style.display = 'flex';
-    intakeMask.setAttribute('aria-hidden','false');
+// Model for current contract being edited
+const activeContractModel = {
+  contractorName:null,
+  reward:null,
+  legs:[],
+  cargoTypes:[]
+};
+
+// Status helpers
+function setMainStatus(text,type){
+  const el = $('#mainStatus');
+  if(!el) return;
+  el.textContent = text;
+  el.classList.remove('ok','err');
+  if(type === 'ok')  el.classList.add('ok');
+  if(type === 'err') el.classList.add('err');
+}
+function setStatus(text,type){
+  const el = $('#statusLine');
+  if(!el) return;
+  el.textContent = text;
+  el.classList.remove('status-ok','status-err');
+  if(type === 'ok')  el.classList.add('status-ok');
+  if(type === 'err') el.classList.add('status-err');
+}
+
+/* ---------- Session helpers ---------- */
+async function ensureSession(){
+  if(currentSession) return currentSession;
+  const { data, error } = await sb
+    .from('sessions')
+    .insert({ submitted_by: currentUser.id })
+    .select()
+    .single();
+  if(error){
+    console.error(error);
+    setMainStatus('Failed to create session in DB.', 'err');
+    return null;
   }
-  function closeModal(){
-    intakeMask.style.display = 'none';
-    intakeMask.setAttribute('aria-hidden','true');
-  }
+  currentSession = data;
+  if($('#kpiSessionId')) $('#kpiSessionId').textContent = data.id;
+  setStatus('Session created. Ready to scan & save contracts.', 'ok');
+  return data;
+}
 
-  function resetForm(isNewSession=true){
-    if(isNewSession){
-      currentSession = null;
-      editingContract = null;
-    }
-    activeModel = { cargo: [] };
-    cargoList.innerHTML = '';
-    contractNameEl.value = '';
-    rewardEl.value = '';
-    contractTypeEl.value = 'hauling';
-    ocrOutput.textContent = '';
-    statusLine.textContent = 'Paste an image (Ctrl+V) or select a file, then Run OCR.';
-    previewImg.style.display = 'none';
-    previewImg.src = '';
-    currentImageFile = null;
-  }
+/* ---------- Cargo editor rendering ---------- */
+function renderCargoList(){
+  const wrap = $('#cargoList');
+  if(!wrap) return;
+  wrap.innerHTML = '';
 
-  // ---------- OCR ----------
-  async function runOCR(){
-    if(!currentImageFile){
-      statusLine.textContent = 'No image loaded yet.';
-      return;
-    }
-    statusLine.textContent = 'Scanning image…';
-    try{
-      const { data } = await Tesseract.recognize(currentImageFile, 'eng');
-      const text = (data && data.text) ? data.text.trim() : '';
-      ocrOutput.textContent = text || '(No text detected)';
-      statusLine.textContent = 'OCR complete. Autofilling fields…';
-      autofillFromOCR(text);
-    }catch(e){
-      console.error(e);
-      statusLine.textContent = 'OCR failed: ' + e.message;
-    }
-  }
-
-  function handleImageFile(file){
-    if(!file) return;
-    currentImageFile = file;
-    const url = URL.createObjectURL(file);
-    previewImg.src = url;
-    previewImg.style.display = 'block';
-    statusLine.textContent = 'Image loaded. Click "Run OCR" to parse text.';
-  }
-
-  function autofillFromOCR(text){
-    if(!text) return;
-    const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
-
-    if(lines.length){
-      if(!contractNameEl.value){
-        contractNameEl.value = lines[0].slice(0,80);
-      }
-    }
-
-    // Try to find the first aUEC-ish number
-    const rewardMatch = text.match(/([\d,]+)\s*(a?UEC)/i);
-    if(rewardMatch && !rewardEl.value){
-      const num = rewardMatch[1].replace(/,/g,'');
-      if(!Number.isNaN(Number(num))){
-        rewardEl.value = num;
-      }
-    }
-  }
-
-  // Paste from clipboard into upload box
-  pasteZone.addEventListener('paste', e=>{
-    const item = [...(e.clipboardData.items||[])].find(i=>i.type.startsWith('image/'));
-    if(!item) return;
-    const file = item.getAsFile();
-    if(file){
-      handleImageFile(file);
-    }
-  });
-
-  screenshotInput.addEventListener('change', e=>{
-    const file = e.target.files[0];
-    if(file) handleImageFile(file);
-  });
-
-  scanBtn.addEventListener('click', runOCR);
-
-  // ---------- Cargo handling ----------
-  function addCargoCard(data={ type:'', loading:[], offloading:[] }){
-    const idx = activeModel.cargo.length;
-    activeModel.cargo.push({ type:data.type||'', loading:data.loading||[], offloading:data.offloading||[] });
-
+  activeContractModel.cargoTypes.forEach((cargo, idx) => {
     const card = document.createElement('div');
     card.className = 'cargo-card';
-    card.innerHTML = `
-      <h4>Cargo Type</h4>
-      <input data-idx="${idx}" data-field="type" type="text" placeholder="e.g. Waste / Laranite" value="${data.type||''}" style="width:100%;margin-bottom:6px;">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Loading</div>
-      <div data-idx="${idx}" data-section="loading"></div>
-      <button class="btn-secondary" type="button" data-idx="${idx}" data-add-load style="margin-top:3px;margin-bottom:6px;">+ Add Loading</button>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Offloading</div>
-      <div data-idx="${idx}" data-section="offloading"></div>
-      <button class="btn-secondary" type="button" data-idx="${idx}" data-add-off style="margin-top:3px;">+ Add Offloading</button>
-    `;
-    cargoList.appendChild(card);
 
-    // Render existing loading/offloading rows if any
-    data.loading?.forEach(entry => addLoadOff(idx,'loading',entry));
-    data.offloading?.forEach(entry => addLoadOff(idx,'offloading',entry));
-  }
+    const header = document.createElement('div');
+    header.className = 'cargo-header';
 
-  function addLoadOff(idx, section, existing={ location:'', scu:'' }){
-    const container = cargoList.querySelector(`[data-idx="${idx}"][data-section="${section}"]`);
-    if(!container) return;
+    const title = document.createElement('h4');
+    title.className = 'cargo-title';
+    title.textContent = cargo.name || \`Cargo \${idx+1}\`;
+    header.appendChild(title);
 
-    const entry = { location: existing.location||'', scu: existing.scu||'' };
-    activeModel.cargo[idx][section].push(entry);
+    const right = document.createElement('div');
+    right.style.display = 'flex';
+    right.style.alignItems = 'center';
+    right.style.gap = '6px';
 
-    const rowIdx = activeModel.cargo[idx][section].length - 1;
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = 'CARGO TYPE';
+    right.appendChild(badge);
 
-    const row = document.createElement('div');
-    row.className = 'cargo-row';
-    row.innerHTML = `
-      <input type="text" placeholder="Location" data-idx="${idx}" data-sec="${section}"
-             data-row="${rowIdx}" data-field="location" value="${entry.location||''}">
-      <input type="number" placeholder="SCU" data-idx="${idx}" data-sec="${section}"
-             data-row="${rowIdx}" data-field="scu" value="${entry.scu||''}">
-    `;
-    container.appendChild(row);
-  }
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn-secondary';
+    delBtn.textContent = 'Remove';
+    delBtn.style.fontSize = '10px';
+    delBtn.addEventListener('click', () => {
+      activeContractModel.cargoTypes.splice(idx,1);
+      renderCargoList();
+    });
+    right.appendChild(delBtn);
 
-  cargoList.addEventListener('click', e=>{
-    const t = e.target;
-    if(t.dataset.addLoad !== undefined){
-      addLoadOff(Number(t.dataset.idx),'loading');
-    }
-    if(t.dataset.addOff !== undefined){
-      addLoadOff(Number(t.dataset.idx),'offloading');
-    }
+    header.appendChild(right);
+    card.appendChild(header);
+
+    // Name field
+    const nameField = document.createElement('div');
+    nameField.className = 'form-field';
+    const nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Cargo Name';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = cargo.name || '';
+    nameInput.placeholder = 'Waste / Scrap / Boxes';
+    nameInput.addEventListener('input', e => {
+      cargo.name = e.target.value;
+      title.textContent = cargo.name || \`Cargo \${idx+1}\`;
+    });
+    nameField.appendChild(nameLabel);
+    nameField.appendChild(nameInput);
+    card.appendChild(nameField);
+
+    // Loading table
+    const loadWrap = document.createElement('div');
+    loadWrap.className = 'subtable';
+    const loadTitle = document.createElement('div');
+    loadTitle.className = 'subtable-title';
+    loadTitle.textContent = 'Loading (from)';
+    loadWrap.appendChild(loadTitle);
+
+    const loadTable = document.createElement('table');
+    const loadHead = document.createElement('thead');
+    loadHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+    loadTable.appendChild(loadHead);
+
+    const loadBody = document.createElement('tbody');
+    cargo.loadings.forEach((row, li) => {
+      const tr = document.createElement('tr');
+
+      const tdLoc = document.createElement('td');
+      const inLoc = document.createElement('input');
+      inLoc.className = 'small-input';
+      inLoc.value = row.location;
+      inLoc.placeholder = 'Pick-up';
+      inLoc.addEventListener('input', e => row.location = e.target.value);
+      tdLoc.appendChild(inLoc);
+      tr.appendChild(tdLoc);
+
+      const tdScu = document.createElement('td');
+      const inScu = document.createElement('input');
+      inScu.className = 'small-input';
+      inScu.type = 'number';
+      inScu.value = row.scu;
+      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+      tdScu.appendChild(inScu);
+      tr.appendChild(tdScu);
+
+      const tdDel = document.createElement('td');
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'btn-secondary';
+      rm.textContent = '✕';
+      rm.style.fontSize = '10px';
+      rm.addEventListener('click', () => {
+        cargo.loadings.splice(li,1);
+        renderCargoList();
+      });
+      tdDel.appendChild(rm);
+      tr.appendChild(tdDel);
+
+      loadBody.appendChild(tr);
+    });
+
+    const addLoadTr = document.createElement('tr');
+    const addLoadTd = document.createElement('td');
+    addLoadTd.colSpan = 3;
+    const addLoadBtn = document.createElement('button');
+    addLoadBtn.type = 'button';
+    addLoadBtn.className = 'btn-secondary';
+    addLoadBtn.textContent = '+ Add Loading Row';
+    addLoadBtn.style.fontSize = '10px';
+    addLoadBtn.addEventListener('click', () => {
+      cargo.loadings.push({ location:'', scu:0 });
+      renderCargoList();
+    });
+    addLoadTd.appendChild(addLoadBtn);
+    addLoadTr.appendChild(addLoadTd);
+    loadBody.appendChild(addLoadTr);
+
+    loadTable.appendChild(loadBody);
+    loadWrap.appendChild(loadTable);
+    card.appendChild(loadWrap);
+
+    // Offloading table
+    const offWrap = document.createElement('div');
+    offWrap.className = 'subtable';
+    const offTitle = document.createElement('div');
+    offTitle.className = 'subtable-title';
+    offTitle.textContent = 'Offloading (to)';
+    offWrap.appendChild(offTitle);
+
+    const offTable = document.createElement('table');
+    const offHead = document.createElement('thead');
+    offHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
+    offTable.appendChild(offHead);
+
+    const offBody = document.createElement('tbody');
+    cargo.offloadings.forEach((row, oi) => {
+      const tr = document.createElement('tr');
+
+      const tdLoc = document.createElement('td');
+      const inLoc = document.createElement('input');
+      inLoc.className = 'small-input';
+      inLoc.value = row.location;
+      inLoc.placeholder = 'Drop-off';
+      inLoc.addEventListener('input', e => row.location = e.target.value);
+      tdLoc.appendChild(inLoc);
+      tr.appendChild(tdLoc);
+
+      const tdScu = document.createElement('td');
+      const inScu = document.createElement('input');
+      inScu.className = 'small-input';
+      inScu.type = 'number';
+      inScu.value = row.scu;
+      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
+      tdScu.appendChild(inScu);
+      tr.appendChild(tdScu);
+
+      const tdDel = document.createElement('td');
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'btn-secondary';
+      rm.textContent = '✕';
+      rm.style.fontSize = '10px';
+      rm.addEventListener('click', () => {
+        cargo.offloadings.splice(oi,1);
+        renderCargoList();
+      });
+      tdDel.appendChild(rm);
+      tr.appendChild(tdDel);
+
+      offBody.appendChild(tr);
+    });
+
+    const addOffTr = document.createElement('tr');
+    const addOffTd = document.createElement('td');
+    addOffTd.colSpan = 3;
+    const addOffBtn = document.createElement('button');
+    addOffBtn.type = 'button';
+    addOffBtn.className = 'btn-secondary';
+    addOffBtn.textContent = '+ Add Offloading Row';
+    addOffBtn.style.fontSize = '10px';
+    addOffBtn.addEventListener('click', () => {
+      cargo.offloadings.push({ location:'', scu:0 });
+      renderCargoList();
+    });
+    addOffTd.appendChild(addOffBtn);
+    addOffTr.appendChild(addOffTd);
+    offBody.appendChild(addOffTr);
+
+    offTable.appendChild(offBody);
+    offWrap.appendChild(offTable);
+    card.appendChild(offWrap);
+
+    wrap.appendChild(card);
   });
+}
 
-  cargoList.addEventListener('input', e=>{
-    const t = e.target;
-    const idx = t.dataset.idx;
-    const field = t.dataset.field;
-    const sec = t.dataset.sec;
-    const row = t.dataset.row;
-    if(idx === undefined) return;
+/* ---------- OCR parsing ---------- */
+function parseHeader(text){
+  const header = { reward:null, contractor:null };
+  let m = text.match(/Reward\s+(?:[a-z]\s*)?([\d,]+)/i);
+  if(m && m[1]) header.reward = m[1].replace(/,/g,'');
+  m = text.match(/Contracted\s+By\s+(.+)/i);
+  if(m && m[1]) header.contractor = m[1].trim();
+  return header;
+}
 
-    if(field && sec === undefined){
-      activeModel.cargo[idx][field] = t.value;
-    }else if(sec && row !== undefined && field){
-      activeModel.cargo[idx][sec][row][field] = t.value;
-    }
-  });
+function parseLegs(text){
+  const cleaned = text.replace(/\r/g,'');
+  const collectRe = /Collect\s+(.+?)\s+from\s+(.+?)\./gi;
+  const deliverRe = /Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
 
-  addCargoBtn.addEventListener('click', ()=>addCargoCard());
+  const collects = [];
+  const delivers = [];
+  let m;
 
-  // ---------- Supabase / Sessions ----------
-  async function ensureSession(){
-    if(currentSession) return currentSession;
-    const { data, error } = await sb
-      .from('sessions')
-      .insert({ submitted_by: currentUser.user.id })
-      .select()
-      .single();
-    if(error){
-      console.error(error);
-      alert('Failed to create session: ' + error.message);
-      return null;
-    }
-    currentSession = data;
-    return data;
+  while((m = collectRe.exec(cleaned)) !== null){
+    collects.push({ cargoType:m[1].trim(), origin:m[2].trim() });
+  }
+  while((m = deliverRe.exec(cleaned)) !== null){
+    delivers.push({
+      delivered:parseInt(m[1],10),
+      required:parseInt(m[2],10),
+      destination:m[3].trim()
+    });
   }
 
-  async function saveContract(){
-    const sess = await ensureSession();
-    if(!sess) return;
+  const legs = [];
+  const n = Math.min(collects.length, delivers.length);
+  for(let i=0;i<n;i++){
+    legs.push({
+      leg:i+1,
+      cargoType:collects[i].cargoType,
+      origin:collects[i].origin,
+      destination:delivers[i].destination,
+      delivered:delivers[i].delivered,
+      required:delivers[i].required
+    });
+  }
+  return legs;
+}
 
-    const name = contractNameEl.value.trim();
-    if(!name){
-      alert('Contract name is required.');
-      return;
+function buildCargoModelFromLegs(legs){
+  const map = new Map();
+  for(const leg of legs){
+    const key = leg.cargoType || 'Unknown';
+    if(!map.has(key)){
+      map.set(key,{ name:key, loadings:[], offloadings:[] });
+    }
+    const entry = map.get(key);
+    entry.loadings.push({ location:leg.origin, scu:leg.required });
+    entry.offloadings.push({ location:leg.destination, scu:leg.required });
+  }
+  return Array.from(map.values());
+}
+
+/* ---------- OCR flow ---------- */
+async function runOCROnBlob(blob){
+  const ocrOutput = $('#ocrOutput');
+  const scanBtn   = $('#scanBtn');
+  if(!ocrOutput || !scanBtn) return;
+
+  ocrOutput.textContent = '';
+  setStatus('Scanning image…','ok');
+  scanBtn.disabled = true;
+
+  try{
+    const { data:{ text } } = await Tesseract.recognize(blob,'eng',{
+      logger:m=>{
+        if(m.status === 'recognizing text'){
+          const pct = Math.round((m.progress||0)*100);
+          setStatus(\`Recognising text… \${pct}%\`,'ok');
+        }
+      }
+    });
+
+    const trimmed = text.trim();
+    ocrOutput.textContent = trimmed;
+
+    const header = parseHeader(trimmed);
+    const legs   = parseLegs(trimmed);
+    const cargo  = buildCargoModelFromLegs(legs);
+
+    activeContractModel.legs       = legs;
+    activeContractModel.cargoTypes = cargo;
+    activeContractModel.contractorName = header.contractor || null;
+    activeContractModel.reward     = header.reward ? Number(header.reward) : null;
+
+    const rewardEl = $('#reward');
+    const nameEl   = $('#contractName');
+    if(header.reward && rewardEl) rewardEl.value = header.reward;
+    if(header.contractor && nameEl && !nameEl.value){
+      nameEl.value = header.contractor;
+    }
+    if($('#kpiActiveContract')){
+      $('#kpiActiveContract').textContent = nameEl?.value || 'New Contract';
     }
 
-    const reward = Number(rewardEl.value || 0);
+    renderCargoList();
+    openConfirmModal(header, legs, cargo);
+    setStatus('Scan complete. Review parsed data before saving.','ok');
+  }catch(err){
+    console.error(err);
+    setStatus('Error during OCR. Try a clearer screenshot.','err');
+  }finally{
+    scanBtn.disabled = false;
+  }
+}
 
-    let contract = null;
-    let error = null;
+/* ---------- Confirm modal ---------- */
+function openConfirmModal(header, legs, cargoTypes){
+  const mask = $('#confirmModal');
+  if(!mask) return;
+  const modalReward     = $('#modalReward');
+  const modalContractor = $('#modalContractor');
+  const modalLegs       = $('#modalLegs');
 
-    if(editingContract){
-      const result = await sb
-        .from('contracts')
-        .update({
-          contract_name: name,
-          reward: reward,
-          contract_type: contractTypeEl.value
-        })
-        .eq('id', editingContract.id)
-        .select()
-        .single();
-      contract = result.data;
-      error = result.error;
+  if(modalReward){
+    modalReward.textContent = header.reward
+      ? Number(header.reward).toLocaleString() + ' aUEC'
+      : '—';
+  }
+  if(modalContractor){
+    modalContractor.textContent = header.contractor || '—';
+  }
+
+  if(modalLegs){
+    if(legs.length){
+      const totalSCU   = legs.reduce((s,l)=>s+(l.required||0),0);
+      const cargoNames = cargoTypes.map(c=>c.name).join(', ');
+      modalLegs.textContent = \`\${legs.length} leg(s) • \${totalSCU} SCU • Cargo: \${cargoNames || '—'}\`;
     }else{
-      const result = await sb
-        .from('contracts')
-        .insert({
-          session_id:  sess.id,
-          submitted_by: currentUser.user.id,
-          contract_name: name,
-          reward: reward,
-          contract_type: contractTypeEl.value
-        })
-        .select()
-        .single();
-      contract = result.data;
-      error = result.error;
-    }
-
-    if(error){
-      console.error(error);
-      alert('Failed to save contract: ' + error.message);
-      return;
-    }
-
-    // If editing, wipe existing cargo & legs first
-    if(editingContract){
-      const { data:cargoTypes, error:ctErr } = await sb
-        .from('contract_cargo_types')
-        .select('id')
-        .eq('contract_id', contract.id);
-
-      if(ctErr){
-        console.warn(ctErr);
-      }else if(cargoTypes && cargoTypes.length){
-        const ids = cargoTypes.map(ct=>ct.id);
-        await sb.from('contract_loading').delete().in('cargo_type_id', ids);
-        await sb.from('contract_offloading').delete().in('cargo_type_id', ids);
-        await sb.from('contract_cargo_types').delete().in('id', ids);
-      }
-    }
-
-    // Save cargo rows (fresh for both new + edited)
-    for(const c of activeModel.cargo){
-      const { data:ct, error:errCT } = await sb
-        .from('contract_cargo_types')
-        .insert({
-          contract_id: contract.id,
-          cargo_type: c.type || ''
-        })
-        .select()
-        .single();
-      if(errCT){
-        console.warn(errCT);
-        continue;
-      }
-
-      for(const ld of c.loading){
-        await sb.from('contract_loading').insert({
-          cargo_type_id: ct.id,
-          location: ld.location,
-          scu: Number(ld.scu || 0)
-        });
-      }
-      for(const ofd of c.offloading){
-        await sb.from('contract_offloading').insert({
-          cargo_type_id: ct.id,
-          location: ofd.location,
-          scu: Number(ofd.scu || 0)
-        });
-      }
-    }
-
-    alert(editingContract ? 'Contract updated.' : 'Contract saved into session.');
-
-    editingContract = null;
-    resetForm(false);       // keep currentSession so more contracts can be added
-    await loadSessions();   // refresh audit cards
-  }
-
-  saveContractBtn.addEventListener('click', saveContract);
-
-  // Load sessions + cards
-  async function loadSessions(){
-    if(!sb || !currentUser) return;
-
-    const { data:sessions, error } = await sb
-      .from('sessions')
-      .select('*')
-      .eq('submitted_by', currentUser.user.id)
-      .order('created_at',{ ascending:false });
-
-    if(error){
-      console.error(error);
-      sessionsGrid.innerHTML = '<div class="card-line" style="color:var(--bad)">Failed to load sessions.</div>';
-      return;
-    }
-
-    SESSIONS = sessions || [];
-    CONTRACT_CACHE = {};
-
-    if(!SESSIONS.length){
-      sessionsGrid.innerHTML = '<div class="card-line">No sessions yet — start with “New Contract / Scan”.</div>';
-      return;
-    }
-
-    sessionsGrid.innerHTML = '';
-
-    for(const s of SESSIONS){
-      const { data:contracts } = await sb
-        .from('contracts')
-        .select('*')
-        .eq('session_id', s.id)
-        .order('created_at', { ascending:true });
-
-      (contracts || []).forEach(c => { CONTRACT_CACHE[c.id] = c; });
-
-      const created = s.created_at ? new Date(s.created_at) : null;
-      const createdStr = created
-        ? created.toLocaleString('en-SG',{ hour12:false })
-        : 'Unknown';
-
-      const contractsHtml = (contracts && contracts.length)
-        ? contracts.map(c => `
-            <div class="card-line">
-              <span>
-                <b>${c.contract_name}</b> – ${c.reward?.toLocaleString?.('en-SG') || c.reward || 0} aUEC
-              </span>
-              <span class="contract-actions">
-                <button class="chip-btn" data-contract-action="edit" data-contract-id="${c.id}">Edit</button>
-                <button class="chip-btn danger" data-contract-action="delete" data-contract-id="${c.id}">Delete</button>
-              </span>
-            </div>
-          `).join('')
-        : `<div class="card-line">No contracts recorded yet.</div>`;
-
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card-header-row">
-          <div class="card-header">Session ${s.id.slice(0,8)}</div>
-          <div class="card-actions">
-            <button class="chip-btn" data-session-action="edit" data-session-id="${s.id}">Edit</button>
-            <button class="chip-btn danger" data-session-action="delete" data-session-id="${s.id}">Delete</button>
-          </div>
-        </div>
-        ${contractsHtml}
-        <div class="card-footer-line">
-          Created: ${createdStr}
-        </div>
-      `;
-      sessionsGrid.appendChild(card);
+      modalLegs.textContent = 'None detected';
     }
   }
+  mask.classList.add('open');
+}
+function closeConfirmModal(){
+  const mask = $('#confirmModal');
+  if(mask) mask.classList.remove('open');
+}
 
-  // Load a single contract (and cargo) into editor for editing
-  async function loadContractForEdit(id){
-    if(!sb || !currentUser) return;
+/* ---------- Saved sessions cards ---------- */
+async function loadSessions(){
+  const grid = $('#sessionsGrid');
+  if(!grid) return;
 
-    let contract = CONTRACT_CACHE[id];
-    if(!contract){
-      const { data, error } = await sb
-        .from('contracts')
-        .select('*')
-        .eq('id', id)
-        .single();
-      if(error){
-        console.error(error);
-        alert('Failed to load contract: ' + error.message);
-        return;
-      }
-      contract = data;
+  const { data:sessions, error } = await sb
+    .from('sessions')
+    .select('id, created_at')
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.error(error);
+    grid.innerHTML = '<div class="muted">Error loading sessions.</div>';
+    return;
+  }
+  if(!sessions || !sessions.length){
+    grid.innerHTML = '<div class="muted">No sessions yet. Use “New Contract / Scan” to start.</div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+
+  for(const s of sessions){
+    const { data:contracts, error:cErr } = await sb
+      .from('contracts')
+      .select(\`
+        id,
+        contract_name,
+        contract_type,
+        reward,
+        contract_cargo_types (
+          id,
+          cargo_type,
+          contract_loading ( location, scu ),
+          contract_offloading ( location, scu )
+        )
+      \`)
+      .eq('session_id', s.id)
+      .order('id',{ascending:true});
+
+    if(cErr){
+      console.error(cErr);
     }
 
-    editingContract = contract;
+    const card = document.createElement('div');
+    card.className = 'card';
 
-    // Ensure currentSession points to this contract's session
-    let sess = SESSIONS.find(s => s.id === contract.session_id);
-    if(!sess){
-      const { data, error } = await sb
-        .from('sessions')
-        .select('*')
-        .eq('id', contract.session_id)
-        .single();
-      if(error){
-        console.warn('Failed to fetch session for contract:', error);
-        currentSession = { id: contract.session_id };
+    const header = document.createElement('div');
+    header.className = 'card-header';
+
+    const main = document.createElement('div');
+    main.className = 'card-header-main';
+
+    const sid = document.createElement('div');
+    sid.className = 'card-session-id';
+    sid.textContent = 'SESSION ' + s.id.slice(0,8);
+    main.appendChild(sid);
+
+    const sub = document.createElement('div');
+    sub.className = 'card-sub';
+    const d = new Date(s.created_at);
+    sub.textContent = d.toLocaleString();
+    main.appendChild(sub);
+
+    header.appendChild(main);
+
+    const right = document.createElement('div');
+    right.className = 'card-toggle';
+
+    const kpis = document.createElement('div');
+    kpis.className = 'card-kpis';
+
+    const cCount = (contracts || []).length;
+    const k1 = document.createElement('span');
+    k1.className = 'card-kpi';
+    k1.textContent = cCount + ' contract' + (cCount === 1 ? '' : 's');
+    kpis.appendChild(k1);
+
+    right.appendChild(kpis);
+
+    const toggle = document.createElement('div');
+    toggle.className = 'card-toggle-icon';
+    toggle.textContent = '>';
+    right.appendChild(toggle);
+
+    header.appendChild(right);
+    card.appendChild(header);
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    const bodyInner = document.createElement('div');
+    bodyInner.className = 'card-body-inner';
+
+    if(contracts && contracts.length){
+      contracts.forEach((c, idx) => {
+        const block = document.createElement('div');
+        block.className = 'contract-block';
+
+        const name = document.createElement('div');
+        name.className = 'contract-name';
+        name.textContent = (idx+1) + '. ' + (c.contract_name || 'Contract');
+        block.appendChild(name);
+
+        if(c.reward != null){
+          const rw = document.createElement('div');
+          rw.className = 'contract-line';
+          rw.textContent = 'Reward: ' + Number(c.reward).toLocaleString() + ' aUEC';
+          block.appendChild(rw);
+        }
+
+        (c.contract_cargo_types || []).forEach(ct => {
+          const load = (ct.contract_loading && ct.contract_loading[0]) || null;
+          const off  = (ct.contract_offloading && ct.contract_offloading[0]) || null;
+
+          const line1 = document.createElement('div');
+          line1.className = 'contract-line';
+          const startLoc = load ? load.location : 'Unknown';
+          const endLoc   = off  ? off.location  : 'Unknown';
+          line1.textContent = (startLoc || 'Unknown') + '  >  ' + (endLoc || 'Unknown');
+          block.appendChild(line1);
+
+          const line2 = document.createElement('div');
+          line2.className = 'contract-line';
+          const scu = load ? load.scu : (off ? off.scu : 0);
+          line2.textContent = (scu || 0) + ' SCU ' + (ct.cargo_type || '');
+          block.appendChild(line2);
+        });
+
+        // Edit / Delete actions
+        const actions = document.createElement('div');
+        actions.className = 'contract-actions';
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = 'btn-secondary';
+        editBtn.textContent = 'Edit';
+        editBtn.style.fontSize = '10px';
+        editBtn.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          openContractForEdit(s, c);
+        });
+        actions.appendChild(editBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'btn-danger';
+        delBtn.textContent = 'Delete';
+        delBtn.style.fontSize = '10px';
+        delBtn.addEventListener('click', async (ev) => {
+          ev.stopPropagation();
+          await deleteContract(c);
+        });
+        actions.appendChild(delBtn);
+
+        block.appendChild(actions);
+
+        bodyInner.appendChild(block);
+      });
+    }else{
+      const empty = document.createElement('div');
+      empty.className = 'muted';
+      empty.textContent = 'No contracts saved under this session yet.';
+      bodyInner.appendChild(empty);
+    }
+
+    body.appendChild(bodyInner);
+    card.appendChild(body);
+
+    // Toggle behaviour
+    header.addEventListener('click', () => {
+      const isOpen = card.classList.contains('open');
+      if(isOpen){
+        card.classList.remove('open');
+        body.style.maxHeight = '0';
       }else{
-        sess = data;
-        SESSIONS.push(sess);
-        currentSession = sess;
+        card.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
       }
-    }else{
-      currentSession = sess;
-    }
+    });
 
-    // Load cargo model
-    const { data:cargoTypes, error:ctErr } = await sb
-      .from('contract_cargo_types')
-      .select('id,cargo_type')
-      .eq('contract_id', contract.id);
+    grid.appendChild(card);
+  }
+}
 
-    if(ctErr){
-      console.error(ctErr);
-      alert('Failed to load cargo: ' + ctErr.message);
-      return;
-    }
+/* ---------- Delete contract ---------- */
+async function deleteContract(contract){
+  if(!confirm('Delete this contract? This cannot be undone.')) return;
+  try{
+    setStatus('Deleting contract…','ok');
+    // remove child cargo rows then contract
+    await sb.from('contract_cargo_types').delete().eq('contract_id', contract.id);
+    await sb.from('contracts').delete().eq('id', contract.id);
+    setStatus('Contract deleted.','ok');
+    await loadSessions();
+  }catch(err){
+    console.error(err);
+    setStatus('Error deleting contract.','err');
+  }
+}
 
-    activeModel = { cargo: [] };
-    cargoList.innerHTML = '';
+/* ---------- Edit contract ---------- */
+function openContractForEdit(session, contract){
+  currentSession = session;
+  editingContractId = contract.id;
 
-    if(cargoTypes && cargoTypes.length){
-      for(const ct of cargoTypes){
-        const [loadingRes, offRes] = await Promise.all([
-          sb.from('contract_loading').select('location,scu').eq('cargo_type_id', ct.id),
-          sb.from('contract_offloading').select('location,scu').eq('cargo_type_id', ct.id)
-        ]);
+  if($('#kpiSessionId')) $('#kpiSessionId').textContent = session.id;
+  if($('#kpiActiveContract')) $('#kpiActiveContract').textContent = contract.contract_name || 'Contract';
 
-        const loading = loadingRes.data || [];
-        const offloading = offRes.data || [];
+  const nameEl   = $('#contractName');
+  const typeEl   = $('#contractType');
+  const rewardEl = $('#reward');
 
-        addCargoCard({
-          type: ct.cargo_type,
-          loading,
-          offloading
-        });
+  if(nameEl)   nameEl.value   = contract.contract_name || '';
+  if(typeEl)   typeEl.value   = contract.contract_type || 'hauling';
+  if(rewardEl) rewardEl.value = contract.reward ?? '';
+
+  activeContractModel.cargoTypes = (contract.contract_cargo_types || []).map(ct => ({
+    name: ct.cargo_type || '',
+    loadings: (ct.contract_loading || []).map(l => ({ location:l.location, scu:l.scu })),
+    offloadings: (ct.contract_offloading || []).map(o => ({ location:o.location, scu:o.scu }))
+  }));
+
+  renderCargoList();
+  openIntake();
+  setStatus('Editing existing contract. Adjust fields and click Save Contract.','ok');
+}
+
+/* ---------- Intake modal helpers ---------- */
+function openIntake(){
+  const m = $('#intakeModal');
+  if(!m) return;
+  m.classList.add('open');
+}
+function closeIntake(){
+  const m = $('#intakeModal');
+  if(!m) return;
+  m.classList.remove('open');
+}
+
+/* Reset editor for a brand new contract */
+function resetEditorForNew(){
+  editingContractId = null;
+  if($('#contractName')) $('#contractName').value = '';
+  if($('#contractType')) $('#contractType').value = 'hauling';
+  if($('#reward')) $('#reward').value = '';
+  activeContractModel.cargoTypes = [];
+  activeContractModel.legs = [];
+  renderCargoList();
+  if($('#kpiActiveContract')) $('#kpiActiveContract').textContent = 'New Contract';
+  if($('#kpiSessionId')) $('#kpiSessionId').textContent = currentSession ? currentSession.id : '—';
+}
+
+/* ---------- Init wiring ---------- */
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  currentUser = session.user;
+  setMainStatus('Logged in as ' + (currentUser.email || currentUser.id), 'ok');
+  if($('#kpiSubmittedBy')) $('#kpiSubmittedBy').textContent = currentUser.email || currentUser.id;
+
+  // UI refs
+  const openIntakeBtn   = $('#openIntakeBtn');
+  const intakeCloseBtn  = $('#intakeCloseBtn');
+  const scanBtn         = $('#scanBtn');
+  const clearBtn        = $('#clearBtn');
+  const screenshotInput = $('#screenshotInput');
+  const pasteZone       = $('#pasteZone');
+  const previewImg      = $('#previewImg');
+  const addCargoBtn     = $('#addCargoBtn');
+  const saveContractBtn = $('#saveContractBtn');
+
+  const modalCloseBtn   = $('#modalCloseBtn');
+  const modalCancelBtn  = $('#modalCancelBtn');
+  const modalConfirmBtn = $('#modalConfirmBtn');
+
+  // Events – modal open/close
+  if(openIntakeBtn){
+    openIntakeBtn.addEventListener('click', () => {
+      resetEditorForNew();
+      openIntake();
+    });
+  }
+  if(intakeCloseBtn) intakeCloseBtn.addEventListener('click', closeIntake);
+
+  // Clear
+  if(clearBtn){
+    clearBtn.addEventListener('click', () => {
+      if(screenshotInput) screenshotInput.value = '';
+      if(previewImg){
+        previewImg.src = '';
+        previewImg.style.display = 'none';
       }
-    }
-
-    // Populate basic fields
-    contractNameEl.value = contract.contract_name || '';
-    rewardEl.value = contract.reward || '';
-    contractTypeEl.value = contract.contract_type || 'hauling';
-
-    ocrOutput.textContent = '';
-    statusLine.textContent = `Editing contract ${contract.contract_name || ''} in session ${String(contract.session_id).slice(0,8)}.`;
-
-    openModal();
+      const ocrOutput = $('#ocrOutput');
+      if(ocrOutput) ocrOutput.textContent = '';
+      activeContractModel.legs = [];
+      activeContractModel.cargoTypes = [];
+      renderCargoList();
+      setStatus('Cleared image and OCR output.','ok');
+    });
   }
 
-  // Edit / Delete actions (session & contract level)
-  sessionsGrid.addEventListener('click', async e=>{
-    // Contract-level actions first
-    const cBtn = e.target.closest('[data-contract-action]');
-    if(cBtn){
-      const action = cBtn.dataset.contractAction;
-      const id     = cBtn.dataset.contractId;
-      if(!id) return;
-
-      if(action === 'delete'){
-        if(!confirm('Delete this contract?')) return;
-        try{
-          const { error } = await sb
-            .from('contracts')
-            .delete()
-            .eq('id', id);
-          if(error){
-            alert('Failed to delete contract: ' + error.message);
-          }else{
-            if(editingContract && editingContract.id === id){
-              editingContract = null;
-              resetForm(false);
-            }
-            await loadSessions();
-          }
-        }catch(err){
-          console.error(err);
-          alert('Failed to delete contract: ' + err.message);
-        }
-      }
-
-      if(action === 'edit'){
-        await loadContractForEdit(id);
-      }
-      return;
-    }
-
-    // Session-level actions
-    const btn = e.target.closest('[data-session-action]');
-    if(!btn) return;
-    const action = btn.dataset.sessionAction;
-    const id     = btn.dataset.sessionId;
-    if(!id) return;
-
-    const sess = SESSIONS.find(s => s.id === id);
-    if(!sess) return;
-
-    if(action === 'delete'){
-      if(!confirm('Delete this session and its contracts?')){
+  // Scan button
+  if(scanBtn){
+    scanBtn.addEventListener('click', () => {
+      if(!screenshotInput || !screenshotInput.files || !screenshotInput.files[0]){
+        setStatus('No file selected. Or paste an image with Ctrl+V.','err');
         return;
       }
-      try{
-        const { error } = await sb
-          .from('sessions')
-          .delete()
-          .eq('id', id);
-        if(error){
-          alert('Failed to delete session: ' + error.message);
-        }else{
-          if(currentSession && currentSession.id === id){
-            currentSession = null;
-          }
-          await loadSessions();
+      const file = screenshotInput.files[0];
+      const reader = new FileReader();
+      reader.onload = e => {
+        if(previewImg){
+          previewImg.src = e.target.result;
+          previewImg.style.display = 'block';
         }
+      };
+      reader.readAsDataURL(file);
+      runOCROnBlob(file);
+    });
+  }
+
+  // Paste-from-clipboard
+  if(pasteZone){
+    pasteZone.addEventListener('click', () => pasteZone.focus());
+  }
+  window.addEventListener('paste', e => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if(!items) return;
+    for(let i=0; i<items.length; i++){
+      const item = items[i];
+      if(item.type && item.type.startsWith('image/')){
+        const blob = item.getAsFile();
+        if(blob){
+          e.preventDefault();
+          const reader = new FileReader();
+          reader.onload = ev => {
+            if(previewImg){
+              previewImg.src = ev.target.result;
+              previewImg.style.display = 'block';
+            }
+          };
+          reader.readAsDataURL(blob);
+          setStatus('Pasted image detected – scanning…','ok');
+          runOCROnBlob(blob);
+        }
+        break;
+      }
+    }
+  });
+
+  // Add cargo manually
+  if(addCargoBtn){
+    addCargoBtn.addEventListener('click', () => {
+      activeContractModel.cargoTypes.push({
+        name:'',
+        loadings:[],
+        offloadings:[]
+      });
+      renderCargoList();
+    });
+  }
+
+  // Save contract (create or update)
+  if(saveContractBtn){
+    saveContractBtn.addEventListener('click', async () => {
+      const sess = await ensureSession();
+      if(!sess) return;
+
+      const nameEl   = $('#contractName');
+      const typeEl   = $('#contractType');
+      const rewardEl = $('#reward');
+
+      const name   = nameEl?.value || 'Unnamed Contract';
+      const ctype  = typeEl?.value || 'hauling';
+      const reward = rewardEl?.value ? Number(rewardEl.value) : null;
+
+      if(!activeContractModel.cargoTypes.length){
+        setStatus('Add at least one cargo type before saving.','err');
+        return;
+      }
+
+      saveContractBtn.disabled = true;
+      setStatus('Saving contract…','ok');
+
+      try{
+        let contractId = editingContractId;
+
+        if(!contractId){
+          // NEW
+          const { data:contract, error:cErr } = await sb
+            .from('contracts')
+            .insert({
+              session_id:  sess.id,
+              submitted_by: currentUser.id,
+              contract_name: name,
+              contract_type: ctype,
+              reward: reward
+            })
+            .select()
+            .single();
+          if(cErr) throw cErr;
+          contractId = contract.id;
+          editingContractId = contractId;
+        }else{
+          // UPDATE contract row
+          const { error:uErr } = await sb
+            .from('contracts')
+            .update({
+              contract_name: name,
+              contract_type: ctype,
+              reward: reward
+            })
+            .eq('id', contractId);
+          if(uErr) throw uErr;
+
+          // wipe old cargo rows
+          const { data:cargoIds, error:selErr } = await sb
+            .from('contract_cargo_types')
+            .select('id')
+            .eq('contract_id', contractId);
+          if(selErr) throw selErr;
+
+          const ids = (cargoIds || []).map(r => r.id);
+          if(ids.length){
+            await sb.from('contract_loading').delete().in('cargo_type_id', ids);
+            await sb.from('contract_offloading').delete().in('cargo_type_id', ids);
+            await sb.from('contract_cargo_types').delete().in('id', ids);
+          }
+        }
+
+        // reinsert cargo types + legs
+        for(const cargo of activeContractModel.cargoTypes){
+          const { data:cargoRow, error:ctErr } = await sb
+            .from('contract_cargo_types')
+            .insert({
+              contract_id: contractId,
+              cargo_type:  cargo.name || 'Unknown'
+            })
+            .select()
+            .single();
+          if(ctErr) throw ctErr;
+
+          const cargoTypeId = cargoRow.id;
+
+          for(const l of (cargo.loadings || [])){
+            if(!l.location) continue;
+            await sb.from('contract_loading').insert({
+              cargo_type_id: cargoTypeId,
+              location:      l.location,
+              scu:           l.scu || 0
+            });
+          }
+          for(const o of (cargo.offloadings || [])){
+            if(!o.location) continue;
+            await sb.from('contract_offloading').insert({
+              cargo_type_id: cargoTypeId,
+              location:      o.location,
+              scu:           o.scu || 0
+            });
+          }
+        }
+
+        setStatus('Contract saved.','ok');
+        await loadSessions();
       }catch(err){
         console.error(err);
-        alert('Failed to delete session: ' + err.message);
+        setStatus('Error saving contract.','err');
+      }finally{
+        saveContractBtn.disabled = false;
       }
-    }
+    });
+  }
 
-    if(action === 'edit'){
-      // "Edit" = reopen intake bound to this session so you can add more contracts
-      currentSession = sess;
-      resetForm(false); // keep session, clear fields
-      statusLine.textContent = `Editing existing session ${sess.id.slice(0,8)} — scan and save more contracts.`;
-      openModal();
-    }
+  // Confirm modal buttons
+  if(modalCloseBtn)  modalCloseBtn.addEventListener('click', closeConfirmModal);
+  if(modalCancelBtn) modalCancelBtn.addEventListener('click', () => {
+    closeConfirmModal();
+    setStatus('Detection cancelled. You can edit or rescan.','ok');
+  });
+  if(modalConfirmBtn) modalConfirmBtn.addEventListener('click', () => {
+    closeConfirmModal();
+    setStatus('Contract parsed. Review & adjust before saving.','ok');
   });
 
-  // ---------- Open/close modal buttons ----------
-  openIntakeBtn.addEventListener('click', ()=>{
-    resetForm(true);
-    openModal();
-  });
-  closeIntakeBtn.addEventListener('click', closeModal);
-
-  // ---------- Bootstrapping ----------
-  document.addEventListener('DOMContentLoaded', async ()=>{
-    const session = await requireAuth();
-    if(!session) return;
-    currentUser = session;
-    sb = getSupabase();
-    await loadSessions();
-  });
-  </script>
+  // Initial load of sessions list
+  await loadSessions();
+});
+</script>
 </body>
 </html>
