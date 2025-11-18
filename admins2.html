@@ -1,217 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Contracts</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN Contracts</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
-<style>
-:root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
-}
-*{box-sizing:border-box}
-body{
-  background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;
-  color:var(--text); font-family:'Play',system-ui,sans-serif;
-  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
-}
+  <style>
+    :root{
+      --bg:#000;--panel:#0b0b0b;--sub:#101010;--row:#0a0a0a;
+      --border:#d6b44c;--card:#141414;
+      --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+      --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:
+        radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+        radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+        #000;
+      color:var(--text);
+      font-family:'Play',system-ui,sans-serif;
+      padding:14px;
+      font-size:var(--fs-base);
+      letter-spacing:.25px;
+    }
 
-/* Header mount fallback visuals */
-.brand{
-  display:flex;align-items:center;gap:10px;
-  margin:0 0 8px;padding-bottom:6px;
-  border-bottom:1px solid var(--border)
-}
-.brand-logo{
-  width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25))
-}
-.brand h1{
-  font-weight:700;font-size:var(--fs-h1);
-  color:var(--accent);margin:0
-}
+    /* Header mount fallback (same idea as member.html) */
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin:0 0 8px;
+      padding-bottom:6px;
+      border-bottom:1px solid var(--border);
+    }
+    .brand-logo{
+      width:44px;height:44px;object-fit:contain;
+      filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+    }
+    .brand h1{
+      font-weight:700;
+      font-size:var(--fs-h1);
+      color:var(--accent);
+      margin:0;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
 
-/* Panel */
-.panel{
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:12px;padding:12px;margin-top:8px;
-  box-shadow:0 0 18px rgba(214,180,76,.22)
-}
+    /* Main contracts panel (match member panel spacing/feel) */
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      margin-top:8px;
+      box-shadow:0 0 18px rgba(214,180,76,.22);
+    }
+    .panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .panel-title{
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:13px;
+      color:var(--accent);
+    }
+    .panel-sub{
+      font-size:var(--fs-small);
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.16em;
+    }
 
-/* Controls */
-.controls{
-  display:flex;gap:10px;flex-wrap:wrap;
-  margin-bottom:10px;align-items:center
-}
-input[type="search"]{
-  background:#0a0a0a;border:1px solid var(--border);
-  border-radius:8px;padding:9px 12px;
-  color:var(--text);font-size:var(--fs-table);
-  min-width:260px
-}
-.badge{
-  border:1px solid var(--border);padding:6px 10px;
-  border-radius:999px;color:var(--accent);font-weight:700;
-  font-size:12px
-}
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      margin-bottom:10px;
+    }
 
-/* Table */
-.tableWrap{
-  border:1px solid var(--border);border-radius:12px;
-  overflow:auto;max-height:70vh;
-  background:#050505;
-}
-table{
-  width:100%;border-collapse:collapse;
-  font-size:var(--fs-table)
-}
-th,td{
-  border-bottom:1px solid rgba(214,180,76,.3);
-  padding:10px;text-align:left;vertical-align:middle
-}
-th{
-  color:var(--accent);background:#080808;
-  font-weight:600;position:sticky;top:0;z-index:1;
-  font-size:12px
-}
-tr:nth-child(even){background:#111}
-tr:hover{background:rgba(214,180,76,.08)}
-.name{font-weight:700}
+    .btn{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg,#0c0c0c,#060606);
+      color:var(--accent);
+      cursor:pointer;
+      font-family:'Play';
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+    }
+    .btn:hover{
+      background:var(--accent);
+      color:#000;
+    }
+    .btn-secondary{
+      background:#0b0b0b;
+      color:var(--accent);
+      border:1px solid var(--border);
+    }
+    .btn-secondary:hover{
+      background:rgba(214,180,76,.12);
+      color:var(--accent);
+    }
 
-/* Pills & labels */
-.pill{
-  display:inline-block;border-radius:999px;
-  padding:3px 10px;font-size:11px;
-  border:1px solid var(--border);
-  background:#0c0c0c;color:var(--muted)
-}
-.status-pill{
-  border-color:var(--border);
-  color:var(--accent);
-}
-.status-pill[data-status="Open"]{color:#7af59d;border-color:#7af59d}
-.status-pill[data-status="In Progress"]{color:#ffd86b;border-color:#ffd86b}
-.status-pill[data-status="Completed"]{color:#7af59d;border-color:#7af59d}
-.status-pill[data-status="Cancelled"]{color:var(--bad);border-color:var(--bad)}
+    /* Saved sessions grid (audit trail) */
+    .sessions-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:10px;
+    }
+    .card{
+      background:#111;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:10px;
+      box-shadow:0 0 16px rgba(0,0,0,.6);
+      font-size:12px;
+    }
+    .card-header-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:6px;
+    }
+    .card-header{
+      font-size:12px;
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .card-actions{
+      display:flex;
+      gap:4px;
+      flex-shrink:0;
+    }
+    .chip-btn{
+      border-radius:999px;
+      border:1px solid var(--border);
+      padding:3px 8px;
+      font-size:10px;
+      background:#0b0b0b;
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      cursor:pointer;
+    }
+    .chip-btn:hover{
+      background:rgba(214,180,76,.12);
+    }
+    .chip-btn.danger{
+      border-color:var(--bad);
+      color:var(--bad);
+    }
+    .card-line{
+      color:var(--muted);
+      margin-bottom:2px;
+    }
+    .card-footer-line{
+      margin-top:4px;
+      font-size:10px;
+      color:var(--muted);
+    }
 
-/* Buttons */
-.btn{
-  padding:7px 11px;border-radius:10px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);border:1px solid var(--border);
-  cursor:pointer;font-family:'Play';
-  font-size:12px;transition:.2s
-}
-.btn:hover{background:var(--accent);color:#000}
+    /* Modal (same style language as member modal) */
+    .modal-mask{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+    }
+    .modal{
+      background:#0b0b0b;
+      border:1px solid var(--border);
+      border-radius:16px;
+      max-width:960px;
+      width:96vw;
+      max-height:90vh;
+      box-shadow:0 0 28px rgba(214,180,76,.3);
+      padding:18px 16px;
+      overflow:auto;
+    }
+    .modal-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .modal-title{
+      color:var(--accent);
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:.2em;
+    }
 
-/* Meta */
-.meta{
-  font-size:12px;color:var(--muted);
-  padding-top:10px;line-height:1.5
-}
-.meta b{color:var(--accent)}
+    .modal-body{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);
+      gap:12px;
+    }
+    @media(max-width:900px){
+      .modal-body{
+        grid-template-columns:1fr;
+      }
+    }
 
-/* Modal */
-.modal-mask{
-  position:fixed;inset:0;background:rgba(0,0,0,.7);
-  display:none;align-items:center;justify-content:center;z-index:50
-}
-.modal{
-  background:#0b0b0b;border:1px solid var(--border);border-radius:16px;
-  max-width:840px;width:94vw;padding:18px 18px 16px;
-  box-shadow:0 0 28px rgba(214,180,76,.3)
-}
-.modal h3{
-  margin:0 0 10px;color:var(--accent);
-  font-size:18px;letter-spacing:.3px
-}
-.modal .header-row{
-  display:flex;align-items:center;gap:12px;margin-bottom:6px
-}
-.modal .header-row .spacer{flex:1}
+    /* Left side: OCR & image */
+    .upload-box{
+      border-radius:12px;
+      border:1px dashed var(--border);
+      background:#111;
+      padding:10px;
+      font-size:12px;
+    }
+    .preview{
+      border:1px solid var(--border);
+      border-radius:8px;
+      overflow:hidden;
+      width:100%;
+      max-width:260px;
+      height:150px;
+      background:#000;
+      margin-top:6px;
+      margin-bottom:6px;
+    }
+    .preview img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .ocr-box{
+      height:140px;
+      background:#050505;
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:8px;
+      color:var(--muted);
+      font-size:11px;
+      white-space:pre-wrap;
+      overflow:auto;
+      margin-top:4px;
+    }
+    .status-line{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted);
+    }
 
-/* Contract header card */
-.contractCard{
-  border:1px solid var(--border);border-radius:14px;
-  padding:14px;background:#101010;
-  display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.2fr);
-  gap:12px
-}
-@media(max-width:720px){
-  .contractCard{grid-template-columns:1fr}
-}
-.contractTitle{
-  font-size:16px;font-weight:700;color:var(--accent);
-  margin-bottom:4px
-}
-.contractSub{
-  font-size:12px;color:var(--muted);margin-bottom:6px
-}
-.metaList{
-  font-size:13px;color:var(--text);line-height:1.55
-}
-.metaList b{color:var(--accent)}
+    /* Right side: contract form */
+    .contract-editor{
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#111;
+      padding:10px;
+      font-size:12px;
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      margin-bottom:8px;
+    }
+    @media(max-width:720px){
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--muted);
+      display:block;
+      margin-bottom:2px;
+    }
+    input[type="text"],
+    input[type="number"],
+    select{
+      width:100%;
+      padding:7px 9px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:#050505;
+      color:var(--text);
+      font-family:'Play';
+      font-size:12px;
+    }
+    input[type="text"]::placeholder{
+      color:#6d5c2a;
+    }
 
-/* Sections inside modal */
-.divider{
-  height:1px;
-  background:linear-gradient(90deg,rgba(214,180,76,.15),rgba(214,180,76,.4),rgba(214,180,76,.15));
-  border:none;margin:14px 0;
-}
-.section{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  background:#0f0f0f;
-  margin-bottom:10px;
-}
-.section h4{
-  margin:0 0 8px;
-  color:var(--accent);
-  font-size:14px;
-  letter-spacing:.3px;
-}
-.section .body{
-  font-size:13px;color:var(--text);line-height:1.6;
-  white-space:pre-wrap;word-break:break-word;
-}
-.section .muted{color:var(--muted)}
+    .cargo-list{
+      margin-bottom:8px;
+    }
+    .cargo-card{
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#0f0f0f;
+      padding:8px;
+      margin-bottom:8px;
+    }
+    .cargo-card h4{
+      margin:0 0 4px;
+      color:var(--accent);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+    }
+    .cargo-row{
+      margin-bottom:4px;
+    }
+    .cargo-row input{
+      font-size:11px;
+    }
+    .cargo-row input:first-child{
+      width:58%;
+      margin-right:4px;
+    }
+    .cargo-row input:last-child{
+      width:36%;
+    }
 
-/* Simple grid in modal */
-.grid-two{
-  display:grid;grid-template-columns:1fr 1fr;gap:8px;
-  font-size:13px;color:var(--text)
-}
-@media(max-width:640px){.grid-two{grid-template-columns:1fr}}
-.grid-two b{color:var(--accent)}
-.mono{font-variant-numeric:tabular-nums}
-
-/* Small util */
-.nowrap{white-space:nowrap}
-</style>
+    .meta-footnote{
+      font-size:10px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Header mount -->
+  <!-- Header mount: this will be replaced by header.html so it stretches like your other pages -->
   <div id="header-container">
     <div class="brand">
-      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
-      <h1>JMBN Contracts</h1>
+      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+      <h1>JMBN // CONTRACTS</h1>
     </div>
   </div>
 
   <script>
-  // Inject shared header + nav
+  // Inject shared header/nav like member.html and highlight Contracts tab
   (async () => {
     try {
       const res = await fetch('header.html', { cache: 'no-cache' });
@@ -219,315 +367,500 @@ tr:hover{background:rgba(214,180,76,.08)}
         const html = await res.text();
         document.getElementById('header-container').outerHTML = html;
         requestAnimationFrame(() => {
-          const here = (location.pathname.split('/').pop() || 'contracts.html').toLowerCase();
+          const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
           document.querySelectorAll('.nav-btn').forEach(a => {
             const href = (a.getAttribute('href')||'').toLowerCase();
-            if (href === here) {
+            if (href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
+            // Fuzzy match for contracts pages
+            if(/contract/.test(here) && /contract/.test(href)){
               a.classList.add('active');
               a.setAttribute('aria-current','page');
             }
           });
         });
       }
-    } catch (e) {
-      console.warn('Header load failed:', e);
-    }
+    } catch (e) { console.warn('Header load failed:', e); }
   })();
   </script>
 
+  <!-- Main panel -->
   <div class="panel">
-    <div class="controls">
-      <input id="q" type="search" placeholder="Search title, origin, destination, commodity, or tags…">
-      <span id="count" class="badge">0 contracts</span>
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Hauling & Ops Contracts</div>
+        <div class="panel-sub">Scan • Parse • Save</div>
+      </div>
+      <button class="btn" id="openIntake">+ New Contract / Scan</button>
     </div>
 
-    <div class="tableWrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:22%">Title</th>
-            <th style="width:13%">Category</th>
-            <th style="width:13%">Type</th>
-            <th style="width:12%">Commodity</th>
-            <th style="width:16%">Route</th>
-            <th style="width:8%">Payout</th>
-            <th style="width:9%">Status</th>
-            <th style="width:12%">Posted By</th>
-            <th style="width:5%" class="nowrap">View</th>
-          </tr>
-        </thead>
-        <tbody id="tbody">
-          <tr><td colspan="9" style="padding:12px;color:var(--muted)">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="meta">
-      Contracts are read from the <b>contracts</b> table (or view).  
-      Adjust the <code>loadContracts()</code> query in the script if your table name or columns differ.
+    <div class="panel-sub" style="margin-bottom:6px;">Saved Sessions (Audit Trail)</div>
+    <div id="sessionsGrid" class="sessions-grid">
+      <div class="card-line">Loading sessions…</div>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div id="viewMask" class="modal-mask" aria-hidden="true">
+  <!-- Intake Modal -->
+  <div id="intakeMask" class="modal-mask" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
-      <div class="header-row">
-        <h3 id="viewTitle">Contract</h3>
-        <div class="spacer"></div>
-        <button class="btn" type="button" onclick="closeView()">Close</button>
+      <div class="modal-header">
+        <div class="modal-title">New Contract Session</div>
+        <button class="btn-secondary" id="closeIntake">Close</button>
       </div>
 
-      <div class="contractCard">
-        <div>
-          <div class="contractTitle" id="vTitle"></div>
-          <div class="contractSub" id="vSubline"></div>
-          <div class="metaList">
-            <div><b>Category:</b> <span id="vCategory"></span></div>
-            <div><b>Type:</b> <span id="vType"></span></div>
-            <div><b>Status:</b> <span id="vStatus"></span></div>
-            <div><b>Priority:</b> <span id="vPriority"></span></div>
+      <div class="modal-body">
+        <!-- LEFT: OCR / screenshot -->
+        <div class="upload-box" id="pasteZone">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);">
+              Image / Screenshot
+            </div>
+            <button class="btn-secondary" id="scanBtn" type="button">Run OCR</button>
           </div>
+          <input type="file" id="screenshotInput" accept="image/*" style="margin-top:6px;font-size:11px;">
+          <div class="preview"><img id="previewImg" style="display:none;" alt=""></div>
+          <div class="ocr-box" id="ocrOutput"></div>
+          <div class="status-line" id="statusLine">Paste an image (Ctrl+V) or select a file, then Run OCR.</div>
         </div>
-        <div>
-          <div class="grid-two">
-            <div><b>Origin</b><br><span id="vOrigin"></span></div>
-            <div><b>Destination</b><br><span id="vDestination"></span></div>
-            <div><b>Commodity</b><br><span id="vCommodity"></span></div>
-            <div><b>Quantity</b><br><span id="vQuantity" class="mono"></span></div>
-            <div><b>Payout</b><br><span id="vPayout" class="mono"></span></div>
-            <div><b>Tags</b><br><span id="vTags"></span></div>
-          </div>
-        </div>
-      </div>
 
-      <hr class="divider">
-
-      <div class="section">
-        <h4>Route & Timing</h4>
-        <div class="body">
-          <div class="grid-two">
+        <!-- RIGHT: Contract editor -->
+        <div class="contract-editor">
+          <div class="form-grid">
             <div>
-              <b>Created At</b><br>
-              <span id="vCreated"></span>
+              <label for="contractName">Contract Name</label>
+              <input id="contractName" type="text" placeholder="e.g. Cargo Haul – Orison to Lorville">
             </div>
             <div>
-              <b>Expires At</b><br>
-              <span id="vExpires"></span>
+              <label for="contractType">Type</label>
+              <select id="contractType">
+                <option value="hauling">Hauling</option>
+                <option value="ops">Operations</option>
+                <option value="escort">Escort</option>
+                <option value="bounty">Bounty</option>
+              </select>
+            </div>
+            <div>
+              <label for="reward">Reward (aUEC)</label>
+              <input id="reward" type="number" min="0" step="1" placeholder="e.g. 250000">
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="section">
-        <h4>Posted By</h4>
-        <div class="body">
-          <div><b>Posted By:</b> <span id="vPostedBy"></span></div>
-          <div><b>Internal ID:</b> <span id="vId" class="mono"></span></div>
-        </div>
-      </div>
+          <div id="cargoList" class="cargo-list"></div>
 
-      <div class="section">
-        <h4>Notes / Conditions</h4>
-        <div class="body" id="vNotes"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+            <button type="button" class="btn-secondary" id="addCargo">+ Add Cargo Type</button>
+            <button type="button" class="btn" id="saveContract">Save Contract</button>
+          </div>
+
+          <div class="meta-footnote">
+            OCR Autofill: tries to grab the contract title and first aUEC amount from the scan.
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Supabase & Auth -->
+  <!-- Libs -->
+  <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 
-<script>
-/* ---------- Utilities ---------- */
-const $  = s => document.querySelector(s);
-const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
-const toTitleCase = s => s ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()) : '';
-const fmtNum = n => (n||n===0) ? Number(n).toLocaleString() : '';
-const fmtAuec = n => n||n===0 ? fmtNum(n)+' aUEC' : '—';
-const fmtDate = iso => {
-  if(!iso) return '—';
-  const d = new Date(iso);
-  if(Number.isNaN(d.getTime())) return '—';
-  return d.toLocaleString();
-};
+  <script>
+  // ---------- Helpers ----------
+  const $id  = id => document.getElementById(id);
 
-/* ---------- State ---------- */
-let sb = null;
-let ROWS = [];
+  let sb = null;
+  let currentSession = null;
+  let activeModel = { cargo: [] };
+  let currentUser = null;
+  let SESSIONS = [];
+  let currentImageFile = null;
 
-const tbody   = $('#tbody');
-const countEl = $('#count');
-const q       = $('#q');
+  const screenshotInput = $id('screenshotInput');
+  const previewImg      = $id('previewImg');
+  const ocrOutput       = $id('ocrOutput');
+  const statusLine      = $id('statusLine');
+  const pasteZone       = $id('pasteZone');
+  const intakeMask      = $id('intakeMask');
+  const openIntakeBtn   = $id('openIntake');
+  const closeIntakeBtn  = $id('closeIntake');
+  const addCargoBtn     = $id('addCargo');
+  const saveContractBtn = $id('saveContract');
+  const sessionsGrid    = $id('sessionsGrid');
+  const scanBtn         = $id('scanBtn');
+  const contractNameEl  = $id('contractName');
+  const contractTypeEl  = $id('contractType');
+  const rewardEl        = $id('reward');
+  const cargoList       = $id('cargoList');
 
-/* ---------- Render ---------- */
-function statusPill(status){
-  if(!status) return '<span class="pill status-pill" data-status="">—</span>';
-  const s = String(status).trim();
-  return `<span class="pill status-pill" data-status="${esc(s)}">${esc(s)}</span>`;
-}
-
-function render(rows){
-  if(!rows?.length){
-    tbody.innerHTML = `<tr><td colspan="9" style="padding:12px;color:var(--muted)">No contracts found</td></tr>`;
-    countEl.textContent = '0 contracts';
-    return;
+  function openModal(){
+    intakeMask.style.display = 'flex';
+    intakeMask.setAttribute('aria-hidden','false');
+  }
+  function closeModal(){
+    intakeMask.style.display = 'none';
+    intakeMask.setAttribute('aria-hidden','true');
   }
 
-  tbody.innerHTML = rows.map(r=>{
-    const title   = r.title ? r.title : '(untitled)';
-    const category= r.category || '—';
-    const type    = r.type || '—';
-    const commodity = r.commodity || '—';
-    const route   = (r.origin || r.destination)
-      ? `${r.origin || '—'} → ${r.destination || '—'}`
-      : '—';
-    const payout  = fmtNum(r.payout_auec);
-    const status  = r.status || '';
-    const posted  = r.posted_by || '—';
+  function resetForm(isNewSession=true){
+    if(isNewSession){
+      currentSession = null;
+    }
+    activeModel = { cargo: [] };
+    cargoList.innerHTML = '';
+    contractNameEl.value = '';
+    rewardEl.value = '';
+    contractTypeEl.value = 'hauling';
+    ocrOutput.textContent = '';
+    statusLine.textContent = 'Paste an image (Ctrl+V) or select a file, then Run OCR.';
+    previewImg.style.display = 'none';
+    previewImg.src = '';
+    currentImageFile = null;
+  }
 
-    return `
-      <tr>
-        <td class="name">${esc(title)}</td>
-        <td>${esc(category)}</td>
-        <td>${esc(type)}</td>
-        <td>${esc(commodity)}</td>
-        <td>${esc(route)}</td>
-        <td class="mono nowrap">${payout ? payout : '—'}</td>
-        <td>${statusPill(status)}</td>
-        <td>${esc(posted)}</td>
-        <td><button class="btn" type="button" onclick="viewContract('${r.id}')">View</button></td>
-      </tr>`;
-  }).join('');
+  // ---------- OCR ----------
+  async function runOCR(){
+    if(!currentImageFile){
+      statusLine.textContent = 'No image loaded yet.';
+      return;
+    }
+    statusLine.textContent = 'Scanning image…';
+    try{
+      const { data } = await Tesseract.recognize(currentImageFile, 'eng');
+      const text = (data && data.text) ? data.text.trim() : '';
+      ocrOutput.textContent = text || '(No text detected)';
+      statusLine.textContent = 'OCR complete. Autofilling fields…';
+      autofillFromOCR(text);
+    }catch(e){
+      console.error(e);
+      statusLine.textContent = 'OCR failed: ' + e.message;
+    }
+  }
 
-  countEl.textContent = `${rows.length} contract${rows.length===1?'':'s'}`;
-}
+  function handleImageFile(file){
+    if(!file) return;
+    currentImageFile = file;
+    const url = URL.createObjectURL(file);
+    previewImg.src = url;
+    previewImg.style.display = 'block';
+    statusLine.textContent = 'Image loaded. Click "Run OCR" to parse text.';
+  }
 
-/* ---------- Filter + apply ---------- */
-function filterRows(){
-  const term = (q.value || '').toLowerCase().trim();
-  if(!term) return ROWS;
-  return ROWS.filter(r=>{
-    const all = [
-      r.title, r.category, r.type, r.status,
-      r.origin, r.destination, r.commodity,
-      r.tags, r.posted_by
-    ].map(x=>x||'').join(' ').toLowerCase();
-    return all.includes(term);
+  function autofillFromOCR(text){
+    if(!text) return;
+    const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+
+    if(lines.length){
+      // First non-empty line as a guess for title
+      if(!contractNameEl.value){
+        contractNameEl.value = lines[0].slice(0,80);
+      }
+    }
+
+    // Try to find the first aUEC-ish number
+    const rewardMatch = text.match(/([\d,]+)\s*(a?UEC)/i);
+    if(rewardMatch && !rewardEl.value){
+      const num = rewardMatch[1].replace(/,/g,'');
+      if(!Number.isNaN(Number(num))){
+        rewardEl.value = num;
+      }
+    }
+  }
+
+  // Paste from clipboard into upload box
+  pasteZone.addEventListener('paste', e=>{
+    const item = [...(e.clipboardData.items||[])].find(i=>i.type.startsWith('image/'));
+    if(!item) return;
+    const file = item.getAsFile();
+    if(file){
+      handleImageFile(file);
+    }
   });
-}
 
-function applyAndRender(){
-  const filtered = filterRows();
-  // basic sort: open first, then by created_at desc
-  const order = { 'Open':1, 'In Progress':2, 'Completed':3, 'Cancelled':4 };
-  filtered.sort((a,b)=>{
-    const sa = order[a.status] || 99;
-    const sb2= order[b.status] || 99;
-    if(sa !== sb2) return sa - sb2;
-    const ca = a.created_at || '';
-    const cb = b.created_at || '';
-    return (cb || '').localeCompare(ca || '');
+  screenshotInput.addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if(file) handleImageFile(file);
   });
-  render(filtered);
-}
 
-/* ---------- Modal ---------- */
-function closeView(){ $('#viewMask').style.display='none'; }
-window.closeView = closeView;
+  scanBtn.addEventListener('click', runOCR);
 
-function viewContract(id){
-  const r = ROWS.find(x=>String(x.id)===String(id));
-  if(!r) return;
+  // ---------- Cargo handling ----------
+  function addCargoCard(data={ type:'', loading:[], offloading:[] }){
+    const idx = activeModel.cargo.length;
+    activeModel.cargo.push({ type:data.type||'', loading:data.loading||[], offloading:data.offloading||[] });
 
-  $('#viewTitle').textContent = `Contract — ${r.title || '(untitled)'}`;
-  $('#vTitle').textContent    = r.title || '(untitled)';
-  $('#vSubline').textContent  = r.route_label || ''; // optional custom label if you ever add it
+    const card = document.createElement('div');
+    card.className = 'cargo-card';
+    card.innerHTML = `
+      <h4>Cargo Type</h4>
+      <input data-idx="${idx}" data-field="type" type="text" placeholder="e.g. Waste / Laranite" value="${data.type||''}" style="width:100%;margin-bottom:6px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Loading</div>
+      <div data-idx="${idx}" data-section="loading"></div>
+      <button class="btn-secondary" type="button" data-idx="${idx}" data-add-load style="margin-top:3px;margin-bottom:6px;">+ Add Loading</button>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Offloading</div>
+      <div data-idx="${idx}" data-section="offloading"></div>
+      <button class="btn-secondary" type="button" data-idx="${idx}" data-add-off style="margin-top:3px;">+ Add Offloading</button>
+    `;
+    cargoList.appendChild(card);
 
-  $('#vCategory').textContent = r.category || '—';
-  $('#vType').textContent     = r.type || '—';
-  $('#vStatus').innerHTML     = statusPill(r.status || '').replace('pill','pill'); // reuse styles
-  $('#vPriority').textContent = r.priority || '—';
+    // Render existing loading/offloading rows if any
+    data.loading?.forEach(entry => addLoadOff(idx,'loading',entry));
+    data.offloading?.forEach(entry => addLoadOff(idx,'offloading',entry));
+  }
 
-  $('#vOrigin').textContent      = r.origin || '—';
-  $('#vDestination').textContent = r.destination || '—';
-  $('#vCommodity').textContent   = r.commodity || '—';
-  $('#vQuantity').textContent    = r.quantity ? fmtNum(r.quantity) : '—';
-  $('#vPayout').textContent      = fmtAuec(r.payout_auec);
-  $('#vTags').textContent        = r.tags || '—';
+  function addLoadOff(idx, section, existing={ location:'', scu:'' }){
+    const container = cargoList.querySelector(`[data-idx="${idx}"][data-section="${section}"]`);
+    if(!container) return;
 
-  $('#vCreated').textContent  = fmtDate(r.created_at);
-  $('#vExpires').textContent  = fmtDate(r.expires_at);
+    const entry = { location: existing.location||'', scu: existing.scu||'' };
+    activeModel.cargo[idx][section].push(entry);
 
-  $('#vPostedBy').textContent = r.posted_by || '—';
-  $('#vId').textContent       = r.id || '—';
+    const rowIdx = activeModel.cargo[idx][section].length - 1;
 
-  $('#vNotes').textContent    = r.notes || '—';
+    const row = document.createElement('div');
+    row.className = 'cargo-row';
+    row.innerHTML = `
+      <input type="text" placeholder="Location" data-idx="${idx}" data-sec="${section}"
+             data-row="${rowIdx}" data-field="location" value="${entry.location||''}">
+      <input type="number" placeholder="SCU" data-idx="${idx}" data-sec="${section}"
+             data-row="${rowIdx}" data-field="scu" value="${entry.scu||''}">
+    `;
+    container.appendChild(row);
+  }
 
-  $('#viewMask').style.display = 'flex';
-}
-window.viewContract = viewContract;
+  cargoList.addEventListener('click', e=>{
+    const t = e.target;
+    if(t.dataset.addLoad !== undefined){
+      addLoadOff(Number(t.dataset.idx),'loading');
+    }
+    if(t.dataset.addOff !== undefined){
+      addLoadOff(Number(t.dataset.idx),'offloading');
+    }
+  });
 
-/* ---------- Data load ---------- */
-/*
-  Adjust the select() list if your table has different columns.
-  Expected columns (recommended):
-  id (uuid or text),
-  title, category, type, status,
-  commodity, quantity, origin, destination,
-  payout_auec, priority, tags, notes,
-  posted_by, created_at, expires_at, route_label (optional).
-*/
-async function loadContracts(){
-  try{
+  cargoList.addEventListener('input', e=>{
+    const t = e.target;
+    const idx = t.dataset.idx;
+    const field = t.dataset.field;
+    const sec = t.dataset.sec;
+    const row = t.dataset.row;
+    if(idx === undefined) return;
+
+    if(field && sec === undefined){
+      activeModel.cargo[idx][field] = t.value;
+    }else if(sec && row !== undefined && field){
+      activeModel.cargo[idx][sec][row][field] = t.value;
+    }
+  });
+
+  addCargoBtn.addEventListener('click', ()=>addCargoCard());
+
+  // ---------- Supabase / Sessions ----------
+  async function ensureSession(){
+    if(currentSession) return currentSession;
     const { data, error } = await sb
-      .from('contracts')
-      .select(`
-        id,
-        title,
-        category,
-        type,
-        status,
-        commodity,
-        quantity,
-        origin,
-        destination,
-        payout_auec,
-        priority,
-        tags,
-        notes,
-        posted_by,
-        created_at,
-        expires_at,
-        route_label
-      `)
-      .order('created_at',{ascending:false});
-
+      .from('sessions')
+      .insert({ submitted_by: currentUser.user.id })
+      .select()
+      .single();
     if(error){
-      console.warn(error);
-      tbody.innerHTML = `<tr><td colspan="9" style="padding:12px;color:var(--bad)">Failed to load: ${esc(error.message)}</td></tr>`;
-      countEl.textContent = '0 contracts';
+      console.error(error);
+      alert('Failed to create session: ' + error.message);
+      return null;
+    }
+    currentSession = data;
+    return data;
+  }
+
+  async function saveContract(){
+    const sess = await ensureSession();
+    if(!sess) return;
+
+    const name = contractNameEl.value.trim();
+    if(!name){
+      alert('Contract name is required.');
       return;
     }
 
-    ROWS = data || [];
-    applyAndRender();
-  }catch(e){
-    tbody.innerHTML = `<tr><td colspan="9" style="padding:12px;color:var(--bad)">Unexpected error loading contracts.</td></tr>`;
-    countEl.textContent = '0 contracts';
-    console.warn('loadContracts error:', e);
+    const reward = Number(rewardEl.value || 0);
+
+    const { data:contract, error } = await sb
+      .from('contracts')
+      .insert({
+        session_id:  sess.id,
+        submitted_by: currentUser.user.id,
+        contract_name: name,
+        reward: reward,
+        contract_type: contractTypeEl.value
+      })
+      .select()
+      .single();
+
+    if(error){
+      console.error(error);
+      alert('Failed to save contract: ' + error.message);
+      return;
+    }
+
+    // Save cargo rows
+    for(const c of activeModel.cargo){
+      const { data:ct, error:errCT } = await sb
+        .from('contract_cargo_types')
+        .insert({
+          contract_id: contract.id,
+          cargo_type: c.type || ''
+        })
+        .select()
+        .single();
+      if(errCT){
+        console.warn(errCT);
+        continue;
+      }
+
+      for(const ld of c.loading){
+        await sb.from('contract_loading').insert({
+          cargo_type_id: ct.id,
+          location: ld.location,
+          scu: Number(ld.scu || 0)
+        });
+      }
+      for(const ofd of c.offloading){
+        await sb.from('contract_offloading').insert({
+          cargo_type_id: ct.id,
+          location: ofd.location,
+          scu: Number(ofd.scu || 0)
+        });
+      }
+    }
+
+    alert('Contract saved into session.');
+    resetForm(false);       // keep currentSession so more contracts can be added
+    await loadSessions();   // refresh audit cards
   }
-}
 
-/* ---------- Events ---------- */
-q.addEventListener('input', applyAndRender);
+  saveContractBtn.addEventListener('click', saveContract);
 
-/* ---------- Bootstrap with auth ---------- */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth(); // from js/auth.js
-  if(!session) return;
-  sb = getSupabase();                 // from js/auth.js
-  loadContracts();
-});
-</script>
+  // Load sessions + cards
+  async function loadSessions(){
+    if(!sb || !currentUser) return;
+
+    const { data:sessions, error } = await sb
+      .from('sessions')
+      .select('*')
+      .eq('submitted_by', currentUser.user.id)
+      .order('created_at',{ ascending:false });
+
+    if(error){
+      console.error(error);
+      sessionsGrid.innerHTML = '<div class="card-line" style="color:var(--bad)">Failed to load sessions.</div>';
+      return;
+    }
+
+    SESSIONS = sessions || [];
+
+    if(!SESSIONS.length){
+      sessionsGrid.innerHTML = '<div class="card-line">No sessions yet — start with “New Contract / Scan”.</div>';
+      return;
+    }
+
+    sessionsGrid.innerHTML = '';
+
+    for(const s of SESSIONS){
+      const { data:contracts } = await sb
+        .from('contracts')
+        .select('*')
+        .eq('session_id', s.id);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const created = s.created_at ? new Date(s.created_at) : null;
+      const createdStr = created
+        ? created.toLocaleString('en-SG',{ hour12:false })
+        : 'Unknown';
+
+      const contractsHtml = (contracts && contracts.length)
+        ? contracts.map(c => `
+            <div class="card-line">
+              <b>${c.contract_name}</b> – ${c.reward?.toLocaleString?.('en-SG') || c.reward || 0} aUEC
+            </div>
+          `).join('')
+        : `<div class="card-line">No contracts recorded yet.</div>`;
+
+      card.innerHTML = `
+        <div class="card-header-row">
+          <div class="card-header">Session ${s.id.slice(0,8)}</div>
+          <div class="card-actions">
+            <button class="chip-btn" data-session-action="edit" data-session-id="${s.id}">Edit</button>
+            <button class="chip-btn danger" data-session-action="delete" data-session-id="${s.id}">Delete</button>
+          </div>
+        </div>
+        ${contractsHtml}
+        <div class="card-footer-line">
+          Created: ${createdStr}
+        </div>
+      `;
+      sessionsGrid.appendChild(card);
+    }
+  }
+
+  // Edit / Delete actions (session level)
+  sessionsGrid.addEventListener('click', async e=>{
+    const btn = e.target.closest('[data-session-action]');
+    if(!btn) return;
+    const action = btn.dataset.sessionAction;
+    const id     = btn.dataset.sessionId;
+    if(!id) return;
+
+    const sess = SESSIONS.find(s => s.id === id);
+    if(!sess) return;
+
+    if(action === 'delete'){
+      if(!confirm('Delete this session and its contracts?')){
+        return;
+      }
+      try{
+        const { error } = await sb
+          .from('sessions')
+          .delete()
+          .eq('id', id);
+        if(error){
+          alert('Failed to delete session: ' + error.message);
+        }else{
+          if(currentSession && currentSession.id === id){
+            currentSession = null;
+          }
+          await loadSessions();
+        }
+      }catch(err){
+        console.error(err);
+        alert('Failed to delete session: ' + err.message);
+      }
+    }
+
+    if(action === 'edit'){
+      // "Edit" = reopen intake bound to this session so you can add more contracts
+      currentSession = sess;
+      resetForm(false); // keep session, clear fields
+      statusLine.textContent = `Editing existing session ${sess.id.slice(0,8)} — scan and save more contracts.`;
+      openModal();
+    }
+  });
+
+  // ---------- Open/close modal buttons ----------
+  openIntakeBtn.addEventListener('click', ()=>{
+    resetForm(true);
+    openModal();
+  });
+  closeIntakeBtn.addEventListener('click', closeModal);
+
+  // ---------- Bootstrapping ----------
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    const session = await requireAuth();
+    if(!session) return;
+    currentUser = session;
+    sb = getSupabase();
+    await loadSessions();
+  });
+  </script>
 </body>
 </html>
