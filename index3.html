@@ -27,7 +27,6 @@ body{
   color:var(--text);
   font-family:'Play',system-ui,sans-serif;
   margin:0;
-  padding:0;
   font-size:var(--fs-base);
 }
 
@@ -538,7 +537,8 @@ input::placeholder{color:#75653a;}
     const res = await fetch('header.html',{ cache:'no-cache' });
     if(res.ok){
       const html = await res.text();
-      document.getElementById('header-container').innerHTML = html;
+      // Replace fallback header with real header.html
+      document.getElementById('header-container').outerHTML = html;
       requestAnimationFrame(() => {
         const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
         document.querySelectorAll('.nav-btn').forEach(a => {
@@ -777,7 +777,7 @@ function renderCargoList(){
 
     const title = document.createElement('h4');
     title.className = 'cargo-title';
-    title.textContent = cargo.name || \`Cargo \${idx+1}\`;
+    title.textContent = cargo.name || `Cargo ${idx+1}`;
     header.appendChild(title);
 
     const right = document.createElement('div');
@@ -815,7 +815,7 @@ function renderCargoList(){
     nameInput.placeholder = 'Waste / Scrap / Boxes';
     nameInput.addEventListener('input', e => {
       cargo.name = e.target.value;
-      title.textContent = cargo.name || \`Cargo \${idx+1}\`;
+      title.textContent = cargo.name || `Cargo ${idx+1}`;
     });
     nameField.appendChild(nameLabel);
     nameField.appendChild(nameInput);
@@ -950,7 +950,7 @@ function renderCargoList(){
     addOffBtn.type = 'button';
     addOffBtn.className = 'btn-secondary';
     addOffBtn.textContent = '+ Add Offloading Row';
-    addOffBtn.style.fontSize = '10px';
+    addOffBtn.style.FontSize = '10px';
     addOffBtn.addEventListener('click', () => {
       cargo.offloadings.push({ location:'', scu:0 });
       renderCargoList();
@@ -1041,7 +1041,7 @@ async function runOCROnBlob(blob){
       logger:m=>{
         if(m.status === 'recognizing text'){
           const pct = Math.round((m.progress||0)*100);
-          setStatus(\`Recognising text… \${pct}%\`,'ok');
+          setStatus(`Recognising text… ${pct}%`,'ok');
         }
       }
     });
@@ -1100,7 +1100,7 @@ function openConfirmModal(header, legs, cargoTypes){
     if(legs.length){
       const totalSCU   = legs.reduce((s,l)=>s+(l.required||0),0);
       const cargoNames = cargoTypes.map(c=>c.name).join(', ');
-      modalLegs.textContent = \`\${legs.length} leg(s) • \${totalSCU} SCU • Cargo: \${cargoNames || '—'}\`;
+      modalLegs.textContent = `${legs.length} leg(s) • ${totalSCU} SCU • Cargo: ${cargoNames || '—'}`;
     }else{
       modalLegs.textContent = 'None detected';
     }
@@ -1137,7 +1137,7 @@ async function loadSessions(){
   for(const s of sessions){
     const { data:contracts, error:cErr } = await sb
       .from('contracts')
-      .select(\`
+      .select(`
         id,
         contract_name,
         contract_type,
@@ -1148,7 +1148,7 @@ async function loadSessions(){
           contract_loading ( location, scu ),
           contract_offloading ( location, scu )
         )
-      \`)
+      `)
       .eq('session_id', s.id)
       .order('id',{ascending:true});
 
@@ -1367,239 +1367,258 @@ function resetEditorForNew(){
 
 /* ---------- Init wiring ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth();
-  if(!session) return;
-  sb = getSupabase();
-  currentUser = session.user;
-  setMainStatus('Logged in as ' + (currentUser.email || currentUser.id), 'ok');
-  if($('#kpiSubmittedBy')) $('#kpiSubmittedBy').textContent = currentUser.email || currentUser.id;
-
-  // UI refs
-  const openIntakeBtn   = $('#openIntakeBtn');
-  const intakeCloseBtn  = $('#intakeCloseBtn');
-  const scanBtn         = $('#scanBtn');
-  const clearBtn        = $('#clearBtn');
-  const screenshotInput = $('#screenshotInput');
-  const pasteZone       = $('#pasteZone');
-  const previewImg      = $('#previewImg');
-  const addCargoBtn     = $('#addCargoBtn');
-  const saveContractBtn = $('#saveContractBtn');
-
-  const modalCloseBtn   = $('#modalCloseBtn');
-  const modalCancelBtn  = $('#modalCancelBtn');
-  const modalConfirmBtn = $('#modalConfirmBtn');
-
-  // Events – modal open/close
-  if(openIntakeBtn){
-    openIntakeBtn.addEventListener('click', () => {
-      resetEditorForNew();
-      openIntake();
-    });
-  }
-  if(intakeCloseBtn) intakeCloseBtn.addEventListener('click', closeIntake);
-
-  // Clear
-  if(clearBtn){
-    clearBtn.addEventListener('click', () => {
-      if(screenshotInput) screenshotInput.value = '';
-      if(previewImg){
-        previewImg.src = '';
-        previewImg.style.display = 'none';
-      }
-      const ocrOutput = $('#ocrOutput');
-      if(ocrOutput) ocrOutput.textContent = '';
-      activeContractModel.legs = [];
-      activeContractModel.cargoTypes = [];
-      renderCargoList();
-      setStatus('Cleared image and OCR output.','ok');
-    });
-  }
-
-  // Scan button
-  if(scanBtn){
-    scanBtn.addEventListener('click', () => {
-      if(!screenshotInput || !screenshotInput.files || !screenshotInput.files[0]){
-        setStatus('No file selected. Or paste an image with Ctrl+V.','err');
-        return;
-      }
-      const file = screenshotInput.files[0];
-      const reader = new FileReader();
-      reader.onload = e => {
-        if(previewImg){
-          previewImg.src = e.target.result;
-          previewImg.style.display = 'block';
-        }
-      };
-      reader.readAsDataURL(file);
-      runOCROnBlob(file);
-    });
-  }
-
-  // Paste-from-clipboard
-  if(pasteZone){
-    pasteZone.addEventListener('click', () => pasteZone.focus());
-  }
-  window.addEventListener('paste', e => {
-    const items = e.clipboardData && e.clipboardData.items;
-    if(!items) return;
-    for(let i=0; i<items.length; i++){
-      const item = items[i];
-      if(item.type && item.type.startsWith('image/')){
-        const blob = item.getAsFile();
-        if(blob){
-          e.preventDefault();
-          const reader = new FileReader();
-          reader.onload = ev => {
-            if(previewImg){
-              previewImg.src = ev.target.result;
-              previewImg.style.display = 'block';
-            }
-          };
-          reader.readAsDataURL(blob);
-          setStatus('Pasted image detected – scanning…','ok');
-          runOCROnBlob(blob);
-        }
-        break;
-      }
+  try{
+    if(typeof requireAuth !== 'function'){
+      setMainStatus('Auth script not loaded (requireAuth missing).', 'err');
+      return;
     }
-  });
 
-  // Add cargo manually
-  if(addCargoBtn){
-    addCargoBtn.addEventListener('click', () => {
-      activeContractModel.cargoTypes.push({
-        name:'',
-        loadings:[],
-        offloadings:[]
+    const session = await requireAuth();
+    if(!session){
+      setMainStatus('Not logged in.', 'err');
+      return;
+    }
+
+    if(typeof getSupabase !== 'function'){
+      setMainStatus('Supabase client helper missing.', 'err');
+      return;
+    }
+
+    sb = getSupabase();
+    currentUser = session.user;
+    setMainStatus('Logged in as ' + (currentUser.email || currentUser.id), 'ok');
+    if($('#kpiSubmittedBy')) $('#kpiSubmittedBy').textContent = currentUser.email || currentUser.id;
+
+    // UI refs
+    const openIntakeBtn   = $('#openIntakeBtn');
+    const intakeCloseBtn  = $('#intakeCloseBtn');
+    const scanBtn         = $('#scanBtn');
+    const clearBtn        = $('#clearBtn');
+    const screenshotInput = $('#screenshotInput');
+    const pasteZone       = $('#pasteZone');
+    const previewImg      = $('#previewImg');
+    const addCargoBtn     = $('#addCargoBtn');
+    const saveContractBtn = $('#saveContractBtn');
+
+    const modalCloseBtn   = $('#modalCloseBtn');
+    const modalCancelBtn  = $('#modalCancelBtn');
+    const modalConfirmBtn = $('#modalConfirmBtn');
+
+    // Events – modal open/close
+    if(openIntakeBtn){
+      openIntakeBtn.addEventListener('click', () => {
+        resetEditorForNew();
+        openIntake();
       });
-      renderCargoList();
-    });
-  }
+    }
+    if(intakeCloseBtn) intakeCloseBtn.addEventListener('click', closeIntake);
 
-  // Save contract (create or update)
-  if(saveContractBtn){
-    saveContractBtn.addEventListener('click', async () => {
-      const sess = await ensureSession();
-      if(!sess) return;
-
-      const nameEl   = $('#contractName');
-      const typeEl   = $('#contractType');
-      const rewardEl = $('#reward');
-
-      const name   = nameEl?.value || 'Unnamed Contract';
-      const ctype  = typeEl?.value || 'hauling';
-      const reward = rewardEl?.value ? Number(rewardEl.value) : null;
-
-      if(!activeContractModel.cargoTypes.length){
-        setStatus('Add at least one cargo type before saving.','err');
-        return;
-      }
-
-      saveContractBtn.disabled = true;
-      setStatus('Saving contract…','ok');
-
-      try{
-        let contractId = editingContractId;
-
-        if(!contractId){
-          // NEW
-          const { data:contract, error:cErr } = await sb
-            .from('contracts')
-            .insert({
-              session_id:  sess.id,
-              submitted_by: currentUser.id,
-              contract_name: name,
-              contract_type: ctype,
-              reward: reward
-            })
-            .select()
-            .single();
-          if(cErr) throw cErr;
-          contractId = contract.id;
-          editingContractId = contractId;
-        }else{
-          // UPDATE contract row
-          const { error:uErr } = await sb
-            .from('contracts')
-            .update({
-              contract_name: name,
-              contract_type: ctype,
-              reward: reward
-            })
-            .eq('id', contractId);
-          if(uErr) throw uErr;
-
-          // wipe old cargo rows
-          const { data:cargoIds, error:selErr } = await sb
-            .from('contract_cargo_types')
-            .select('id')
-            .eq('contract_id', contractId);
-          if(selErr) throw selErr;
-
-          const ids = (cargoIds || []).map(r => r.id);
-          if(ids.length){
-            await sb.from('contract_loading').delete().in('cargo_type_id', ids);
-            await sb.from('contract_offloading').delete().in('cargo_type_id', ids);
-            await sb.from('contract_cargo_types').delete().in('id', ids);
-          }
+    // Clear
+    if(clearBtn){
+      clearBtn.addEventListener('click', () => {
+        if(screenshotInput) screenshotInput.value = '';
+        if(previewImg){
+          previewImg.src = '';
+          previewImg.style.display = 'none';
         }
+        const ocrOutput = $('#ocrOutput');
+        if(ocrOutput) ocrOutput.textContent = '';
+        activeContractModel.legs = [];
+        activeContractModel.cargoTypes = [];
+        renderCargoList();
+        setStatus('Cleared image and OCR output.','ok');
+      });
+    }
 
-        // reinsert cargo types + legs
-        for(const cargo of activeContractModel.cargoTypes){
-          const { data:cargoRow, error:ctErr } = await sb
-            .from('contract_cargo_types')
-            .insert({
-              contract_id: contractId,
-              cargo_type:  cargo.name || 'Unknown'
-            })
-            .select()
-            .single();
-          if(ctErr) throw ctErr;
-
-          const cargoTypeId = cargoRow.id;
-
-          for(const l of (cargo.loadings || [])){
-            if(!l.location) continue;
-            await sb.from('contract_loading').insert({
-              cargo_type_id: cargoTypeId,
-              location:      l.location,
-              scu:           l.scu || 0
-            });
-          }
-          for(const o of (cargo.offloadings || [])){
-            if(!o.location) continue;
-            await sb.from('contract_offloading').insert({
-              cargo_type_id: cargoTypeId,
-              location:      o.location,
-              scu:           o.scu || 0
-            });
-          }
+    // Scan button
+    if(scanBtn){
+      scanBtn.addEventListener('click', () => {
+        if(!screenshotInput || !screenshotInput.files || !screenshotInput.files[0]){
+          setStatus('No file selected. Or paste an image with Ctrl+V.','err');
+          return;
         }
+        const file = screenshotInput.files[0];
+        const reader = new FileReader();
+        reader.onload = e => {
+          if(previewImg){
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+          }
+        };
+        reader.readAsDataURL(file);
+        runOCROnBlob(file);
+      });
+    }
 
-        setStatus('Contract saved.','ok');
-        await loadSessions();
-      }catch(err){
-        console.error(err);
-        setStatus('Error saving contract.','err');
-      }finally{
-        saveContractBtn.disabled = false;
+    // Paste-from-clipboard
+    if(pasteZone){
+      pasteZone.addEventListener('click', () => pasteZone.focus());
+    }
+    window.addEventListener('paste', e => {
+      const items = e.clipboardData && e.clipboardData.items;
+      if(!items) return;
+      for(let i=0; i<items.length; i++){
+        const item = items[i];
+        if(item.type && item.type.startsWith('image/')){
+          const blob = item.getAsFile();
+          if(blob){
+            e.preventDefault();
+            const reader = new FileReader();
+            reader.onload = ev => {
+              if(previewImg){
+                previewImg.src = ev.target.result;
+                previewImg.style.display = 'block';
+              }
+            };
+            reader.readAsDataURL(blob);
+            setStatus('Pasted image detected – scanning…','ok');
+            runOCROnBlob(blob);
+          }
+          break;
+        }
       }
     });
+
+    // Add cargo manually
+    if(addCargoBtn){
+      addCargoBtn.addEventListener('click', () => {
+        activeContractModel.cargoTypes.push({
+          name:'',
+          loadings:[],
+          offloadings:[]
+        });
+        renderCargoList();
+      });
+    }
+
+    // Save contract (create or update)
+    if(saveContractBtn){
+      saveContractBtn.addEventListener('click', async () => {
+        const sess = await ensureSession();
+        if(!sess) return;
+
+        const nameEl   = $('#contractName');
+        const typeEl   = $('#contractType');
+        const rewardEl = $('#reward');
+
+        const name   = nameEl?.value || 'Unnamed Contract';
+        const ctype  = typeEl?.value || 'hauling';
+        const reward = rewardEl?.value ? Number(rewardEl.value) : null;
+
+        if(!activeContractModel.cargoTypes.length){
+          setStatus('Add at least one cargo type before saving.','err');
+          return;
+        }
+
+        saveContractBtn.disabled = true;
+        setStatus('Saving contract…','ok');
+
+        try{
+          let contractId = editingContractId;
+
+          if(!contractId){
+            // NEW
+            const { data:contract, error:cErr } = await sb
+              .from('contracts')
+              .insert({
+                session_id:  sess.id,
+                submitted_by: currentUser.id,
+                contract_name: name,
+                contract_type: ctype,
+                reward: reward
+              })
+              .select()
+              .single();
+            if(cErr) throw cErr;
+            contractId = contract.id;
+            editingContractId = contractId;
+          }else{
+            // UPDATE contract row
+            const { error:uErr } = await sb
+              .from('contracts')
+              .update({
+                contract_name: name,
+                contract_type: ctype,
+                reward: reward
+              })
+              .eq('id', contractId);
+            if(uErr) throw uErr;
+
+            // wipe old cargo rows
+            const { data:cargoIds, error:selErr } = await sb
+              .from('contract_cargo_types')
+              .select('id')
+              .eq('contract_id', contractId);
+            if(selErr) throw selErr;
+
+            const ids = (cargoIds || []).map(r => r.id);
+            if(ids.length){
+              await sb.from('contract_loading').delete().in('cargo_type_id', ids);
+              await sb.from('contract_offloading').delete().in('cargo_type_id', ids);
+              await sb.from('contract_cargo_types').delete().in('id', ids);
+            }
+          }
+
+          // reinsert cargo types + legs
+          for(const cargo of activeContractModel.cargoTypes){
+            const { data:cargoRow, error:ctErr } = await sb
+              .from('contract_cargo_types')
+              .insert({
+                contract_id: contractId,
+                cargo_type:  cargo.name || 'Unknown'
+              })
+              .select()
+              .single();
+            if(ctErr) throw ctErr;
+
+            const cargoTypeId = cargoRow.id;
+
+            for(const l of (cargo.loadings || [])){
+              if(!l.location) continue;
+              await sb.from('contract_loading').insert({
+                cargo_type_id: cargoTypeId,
+                location:      l.location,
+                scu:           l.scu || 0
+              });
+            }
+            for(const o of (cargo.offloadings || [])){
+              if(!o.location) continue;
+              await sb.from('contract_offloading').insert({
+                cargo_type_id: cargoTypeId,
+                location:      o.location,
+                scu:           o.scu || 0
+              });
+            }
+          }
+
+          setStatus('Contract saved.','ok');
+          await loadSessions();
+        }catch(err){
+          console.error(err);
+          setStatus('Error saving contract.','err');
+        }finally{
+          saveContractBtn.disabled = false;
+        }
+      });
+    }
+
+    // Confirm modal buttons
+    if(modalCloseBtn)  modalCloseBtn.addEventListener('click', closeConfirmModal);
+    if(modalCancelBtn) modalCancelBtn.addEventListener('click', () => {
+      closeConfirmModal();
+      setStatus('Detection cancelled. You can edit or rescan.','ok');
+    });
+    if(modalConfirmBtn) modalConfirmBtn.addEventListener('click', () => {
+      closeConfirmModal();
+      setStatus('Contract parsed. Review & adjust before saving.','ok');
+    });
+
+    // Initial load of sessions list
+    await loadSessions();
+  }catch(err){
+    console.error(err);
+    setMainStatus('Init error: ' + (err.message || err), 'err');
   }
-
-  // Confirm modal buttons
-  if(modalCloseBtn)  modalCloseBtn.addEventListener('click', closeConfirmModal);
-  if(modalCancelBtn) modalCancelBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Detection cancelled. You can edit or rescan.','ok');
-  });
-  if(modalConfirmBtn) modalConfirmBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Contract parsed. Review & adjust before saving.','ok');
-  });
-
-  // Initial load of sessions list
-  await loadSessions();
 });
 </script>
 </body>
