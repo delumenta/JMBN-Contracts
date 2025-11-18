@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Mission Log — Contract Manager</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JMBN Contracts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
@@ -12,478 +11,621 @@
 
 <style>
 :root{
-  --bg:#000; --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a; --bad:#ff6b6b;
-  --stroke:#2a2313; --bezel:#0a0a07;
-  --fs-base:14px; --fs-small:11px; --fs-table:13px;
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
-html,body{height:100%}
 body{
-  margin:0;color:var(--text);font-family:'Play',sans-serif;background:
+  background:
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;font-size:var(--fs-base);
+    #000;
+  color:var(--text);
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
 }
-#header-container{margin:12px 12px 0}
 
-/* Panel */
-.panel{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 10px rgba(214,180,76,.15);margin:12px}
-.panel-inner{padding:12px}
+/* Header + Nav (from header.html) */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn.active{
+  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
+}
+.nav-btn.active::after{
+  content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
+  border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
+}
+@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
 
-/* Tabs */
-.tabs{display:flex;gap:8px;margin:4px 0 10px}
-.tab{
-  padding:8px 12px;border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#131008,#0b0905);
-  color:var(--accent);cursor:pointer;transition:.15s
+/* Layout */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.session-header{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;justify-content:space-between;margin-bottom:10px
 }
-.tab:hover{background:#181307}
-.tab.active{outline:1px solid var(--border); box-shadow:0 0 0 1px rgba(214,180,76,.25) inset}
+.session-meta{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.session-id{font-family:monospace;color:var(--accent);font-size:12px}
+.session-controls{display:flex;flex-wrap:wrap;gap:8px}
 
-/* Controls & KPI */
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-input,select{
-  background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:9px;color:var(--text);font-size:var(--fs-table)
+/* Controls */
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+input,select,textarea{
+  background:#0a0a0a;border:1px solid var(--border);border-radius:8px;
+  padding:8px 9px;color:var(--text);font-size:13px;font-family:'Play',sans-serif;
 }
-button,.small-btn{
-  padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);border:1px solid var(--border);cursor:pointer;transition:.2s
+textarea{resize:vertical;min-height:60px}
+button{
+  padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';font-size:13px;transition:.2s
 }
-button:hover,.small-btn:hover{background:var(--accent);color:#000}
+button:hover{background:var(--accent);color:#000}
+.btn-primary{background:var(--accent);color:#000}
+.btn-danger{border-color:var(--bad);color:var(--bad)}
+.btn-danger:hover{background:var(--bad);color:#000}
+.btn-ghost{background:transparent}
 
-.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0}
-@media(max-width:880px){.kpis{grid-template-columns:1fr}}
-.kpi{
-  background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;
-  box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08)
-}
-.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:22px;font-weight:700;color:var(--accent)}
-.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
+/* Session base fields */
+.session-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px}
+@media(max-width:720px){.session-grid{grid-template-columns:1fr}}
 
-/* Grid */
-.mgrid{display:grid;grid-template-columns:360px 1fr;gap:12px}
-@media(max-width:1100px){.mgrid{grid-template-columns:1fr}}
-.mlist{
-  min-height:420px;max-height:72vh;overflow:auto;border:1px solid var(--stroke);border-radius:10px;background:var(--bezel);
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.06)
+/* Contracts */
+#contractsContainer{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.contract-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:10px;box-shadow:0 0 12px rgba(214,180,76,.18)
 }
-.mitem{
-  padding:10px 12px;border-bottom:1px solid rgba(214,180,76,.08);cursor:pointer;
-  background:linear-gradient(180deg,#131008,#0b0905);transition:.12s
+.contract-head{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:6px
 }
-.mitem:hover{background:#191307}
-.mitem.active{outline:1px solid var(--border)}
-.mtitle{color:var(--accent);font-weight:700;margin-bottom:3px}
-.mmeta{font-size:12px;color:var(--muted)}
-.mchips{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
-.mchip{border:1px solid var(--stroke);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.contract-title{font-weight:700;color:var(--accent);font-size:14px}
+.contract-body{display:flex;flex-direction:column;gap:8px}
 
-/* Right column cards */
-.rightcol{display:grid;gap:12px}
-.inspector{
-  border:1px solid var(--stroke);border-radius:10px;background:linear-gradient(180deg,#0b0b0b,#090909);
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.06);padding:12px
+/* Cargo groups */
+.cargo-card{
+  margin-top:8px;padding:8px;border-radius:10px;
+  background:#0b0b0b;border:1px dashed rgba(214,180,76,.45)
 }
-.inspector h2{color:var(--accent);margin:0 0 6px;font-size:16px}
-.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,76,.45),transparent);margin:10px 0}
-.small{font-size:var(--fs-small);color:var(--muted)}
-.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
-.pill.res{color:#f2d675;border-color:#f2d675}
-.pill.op{color:#7bd88f;border-color:#7bd88f}
-.mono{font-variant-numeric:tabular-nums}
-
-/* Button */
-.btn-accept{
-  padding:10px 14px;border-radius:10px;border:1px solid var(--border);
-  background:linear-gradient(180deg,#1a1405,#0c0a04);
-  color:var(--accent);font-weight:700;letter-spacing:.35px;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.18);transition:.15s ease;
+.cargo-head{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:4px
 }
-.btn-accept:hover{background:var(--accent);color:#000;box-shadow:0 0 14px rgba(214,180,76,.35)}
+.cargo-title{font-size:13px;color:var(--muted)}
+.cargo-body{display:flex;flex-direction:column;gap:8px}
 
-.ongoing-item{padding:8px 0;border-top:1px dashed rgba(214,180,76,.12);font-size:12px;color:var(--muted)}
-.ongoing-item:first-child{border-top:none}
-.ongoing-title{color:var(--accent);font-weight:700}
+/* Legs (loading/offloading) */
+.legs-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
+}
+@media(max-width:780px){.legs-grid{grid-template-columns:1fr}}
+.legs-column{display:flex;flex-direction:column;gap:6px}
+.legs-label{font-size:12px;color:var(--muted);font-weight:700}
+.leg-row{
+  display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:6px;align-items:end
+}
+@media(max-width:640px){.leg-row{grid-template-columns:1fr}}
+.leg-row button{padding:6px 8px;font-size:11px}
+
+/* Footer controls */
+.footer-actions{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px
+}
+.small-note{font-size:11px;color:var(--muted);margin-top:6px}
 </style>
 </head>
 <body>
 
-<!-- Header -->
+<!-- Shared header injected here -->
 <div id="header-container"></div>
 <script>
-(async()=>{
-  try{
-    const res=await fetch('header.html',{cache:'no-cache'});
-    const html=await res.text();
-    document.getElementById('header-container').outerHTML=html;
-    requestAnimationFrame(()=>{
-      const here=(location.pathname.split('/').pop()||'mission-log.html').toLowerCase();
+  fetch('header.html')
+    .then(r=>r.text())
+    .then(html=>{
+      document.getElementById('header-container').innerHTML = html;
+      const here = location.pathname.split('/').pop() || 'contracts.html';
       document.querySelectorAll('.nav-btn').forEach(a=>{
-        const href=(a.getAttribute('href')||'').toLowerCase();
-        if(href===here)a.classList.add('active');
+        if(a.getAttribute('href')===here){
+          a.classList.add('active');
+          a.setAttribute('aria-current','page');
+        }
       });
     });
-  }catch(e){console.warn('Header load failed:',e);}
-})();
 </script>
 
-<!-- Board -->
-<section class="panel">
-  <div class="panel-inner">
-    <div class="tabs" id="tabs">
-      <div class="tab active" data-scope="">GENERAL</div>
-      <div class="tab" data-scope="history">HISTORY</div>
+<div class="panel">
+  <!-- Session header -->
+  <div class="session-header">
+    <div class="session-meta">
+      <div>Contract Session</div>
+      <div class="session-id" id="sessionId">—</div>
+      <div id="sessionCreated" style="font-size:11px"></div>
     </div>
-
-    <div class="controls">
-      <input id="search" placeholder="Search contracts (title, type, status, tags, route)">
-      <select id="catFilter">
-        <option value="">All Categories</option>
-        <option value="Resource">Resource</option>
-        <option value="Operations">Operations</option>
-      </select>
-      <select id="statusFilter">
-        <option value="">All Status</option>
-        <option>planned</option><option>active</option><option>success</option><option>fail</option><option>abort</option>
-      </select>
-      <button class="small-btn" id="btnExport">Export CSV</button>
-    </div>
-
-    <div class="kpis">
-      <div class="kpi"><div class="kpi-title">Total Missions</div><div class="kpi-value" id="kpiCount">0</div><div class="kpi-sub">after filters</div></div>
-      <div class="kpi"><div class="kpi-title">Resource : Ops</div><div class="kpi-value" id="kpiMix">0 : 0</div><div class="kpi-sub">derived from type</div></div>
-      <div class="kpi"><div class="kpi-title">Avg Payout (shown)</div><div class="kpi-value mono" id="kpiAvg">-</div><div class="kpi-sub">aUEC</div></div>
-    </div>
-
-    <div class="mgrid">
-      <!-- Left: list -->
-      <div class="mlist" id="mList"></div>
-
-      <!-- Right: details + ongoing -->
-      <div class="rightcol">
-        <div class="inspector" id="inspector">
-          <h2>Mission Details</h2>
-          <div class="small">Select a contract on the left to view its briefing.</div>
-        </div>
-
-        <div class="inspector" id="ongoingCard">
-          <h2>Ongoing Missions</h2>
-          <div id="ongoingSpace" class="small">None</div>
-        </div>
-      </div>
+    <div class="session-controls">
+      <button id="newSessionBtn" class="btn-ghost">New Session</button>
+      <button id="exportSessionBtn">Export Session JSON</button>
+      <button id="clearAllSessionsBtn" class="btn-danger">Clear All Sessions</button>
     </div>
   </div>
-</section>
 
-<!-- Attendance Modal -->
-<div id="attModalMask" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50">
-  <div class="inspector" style="max-width:760px;width:92vw">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-      <h2 id="attTitle" style="margin-right:auto;color:var(--accent)">Attendance</h2>
-      <button class="small-btn" onclick="closeAttendance()">Close</button>
-    </div>
-    <div class="hr"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-      <button id="attIamGoing" class="btn-accept">I’m going</button>
-      <button id="attNotGoing" class="btn-accept">Not going</button>
-      <button id="attWithdraw" class="btn-accept">Withdraw</button>
-      <select id="attSelfRole" style="min-width:180px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"></select>
-      <span class="small">Pick <b>your role</b> (optional).</span>
-    </div>
-    <div id="attElevatedTools" style="display:none;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-      <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:240px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-      <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"><option value="">Role (optional)</option></select>
-      <button id="attAddBtn" class="btn-accept">Add</button>
-      <span class="small">Admin/Owner can add/remove attendees.</span>
-    </div>
-    <div class="hr"></div>
-    <div>
-      <strong class="small">Attendees:</strong>
-      <div id="attList" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px" class="small">Loading…</div>
-    </div>
+  <!-- Session-level fields -->
+  <div class="session-grid">
+    <label>Your current location *
+      <select id="currentLocation"></select>
+    </label>
+    <label>Ship *
+      <select id="shipSelect"></select>
+    </label>
+  </div>
+
+  <!-- Contracts container -->
+  <div id="contractsContainer"></div>
+
+  <div class="footer-actions">
+    <button id="addContractBtn">Add Another Contract</button>
+    <button id="submitAllBtn" class="btn-primary">Submit All</button>
+  </div>
+  <div class="small-note">
+    Each session ID can contain multiple contracts. Each contract can contain multiple cargo types, each with multiple loading and offloading legs.
   </div>
 </div>
 
+<!-- Auth + app logic -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 
 <script>
-/* ===== Utilities ===== */
-const $=s=>document.querySelector(s);
-const $$=s=>Array.from(document.querySelectorAll(s));
-const esc=s=>{const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;};
-const fmtDate=iso=>{if(!iso)return'';const d=new Date(iso);return d.toLocaleString('en-SG',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?([ap])m/i,'$1m');};
-const fmtNum=n=>(n||n===0)?Number(n).toLocaleString():'';
+/* ===== Helpers ===== */
+const STORE_KEY = 'jmbn-contract-sessions-v1';
+const HANGAR_SEL_KEY = 'jmbn-hangar-selected';
+const $ = s => document.querySelector(s);
+const esc = (s='') => {
+  const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;
+};
+const uid = (prefix) => prefix + '-' + Math.random().toString(36).slice(2,10);
 
-const RESOURCE_TYPES=new Set(['hauling','cargo','salvage','mining','delivery']);
-const catOf=t=>RESOURCE_TYPES.has((t||'').toLowerCase())?'Resource':'Operations';
+/* Locations + cargo choices (same as your previous file) */
+const originList = `Ambitious Dream Station (CRU-L1), Anderson (HDMS-Anderson), ARC-L1 Wide Forest Station, ARC-L2 Lively Pathway Station, ARC-L3 Modern Express Station, ARC-L4 Faint Glen Station, ARC-L5 Yellow Core Station, ArcCorp Mining Area 045, ArcCorp Mining Area 048, ArcCorp Mining Area 056, ArcCorp Mining Area 061, ArcCorp Mining Area 141, ArcCorp Mining Area 157, Area18 (Riker Memorial Spaceport), Arid Reach, Ashland, Astor’s Clearing, Baijini Point, Beautiful Glen Station (CRU-L5), Benson Mining Outpost, Blackrock Exchange, Bloodshot Ridge, Bountiful Harvest Hydroponics, Brio’s Breaker Yard, Bud’s Growery, Bueno Ravine, Canard View, Casillo (HDPC-Casillo), Chawla’s Beach, Checkmate, Covalex Distribution Centre S1DC06, Covalex Distribution Centre S4DC05, CRU-L1 Ambitious Dream Station, CRU-L4 Shallow Fields Station, CRU-L5 Beautiful Glen Station, Cry-Astro Processing Plant 19-02, Cry-Astro Processing Plant 34-12, Cutter’s Rig, Deakins Research Outpost, Devlin Scrap & Salvage, Dudley & Daughters, Dunboro, Dupree Industrial Manufacturing Facility, Endgame, Endless Odyssey Station (MIC-L3), Everus Harbor, Faithful Dream Station (HUR-L2), Faint Glen Station (ARC-L4), Fallow Field, Farnesway (HDPC-Farnesway), Finn’s Folley, Frostbite, Frigid Knot, Gallete Family Farms, Gaslight, Goner’s Deal, Golden Riviera (The Golden Riviera), Grim HEX, Greycat Stanton I Production Complex-B, Greycat Stanton IV Production Complex A, Hadley (HDMS-Hadley), Harper’s Point, Hickes Research Outpost, High Course Station (HUR-L5), Humboldt Mines, HUR-L1 Green Glade Station, HUR-L2 Faithful Dream Station, HUR-L3 Thundering Express Station, HUR-L4 Melodic Fields Station, HUR-L5 High Course Station, Jackson’s Swap, Jumptown, Kabir’s Outpost, Kudre Ore, Last Landings, Lathan (HDMS-Lathan), Lively Pathway Station (ARC-L2), Lorville (Teasa Spaceport), Long Forest Station (MIC-L2), Loveridge Mineral Reserve, Ludlow, Magnus Gateway, Maker’s Point, Megumi Refueling, Melodic Fields Station (HUR-L4), MIC-L1 Shallow Frontier Station, MIC-L2 Long Forest Station, MIC-L3 Endless Odyssey Station, MIC-L4 Red Crossroads Station, MIC-L5 Modern Icarus Station, Modern Express Station (ARC-L3), Modern Icarus Station (MIC-L5), Moreland Hills, Necropolis (The Necropolis), New Babbage Interstellar Spaceport, Norgaard (HDMS-Norgaard), NT-999-XX, Nuen Waste Management, Oparei (HDMS-Oparei), Orbituary, Orinth (Reclamation & Disposal Orinth), Orison (August Dunlow Spaceport), Orphanage (The Orphanage), Outpost 54, Paradise Cove, Patch City, Pickers Field, Pinewood (HDMS-Pinewood), Private Property (PRIVATE PROPERTY), Pyro Gateway, Rappel, Raven’s Roost, Razor’s Edge, Rayari Anvik Research Outpost, Rayari Cantwell Research Outpost, Rayari Deltana Research Outpost, Rayari Kaltag Research Outpost, Rayari McGrath Research Outpost, Rat’s Nest, Riker Memorial Spaceport (Area18), Rod’s Fuel ’N Supplies, Rough Landing, Ruin Station, Rustville, Ryder (HDMS-Ryder), Sacren’s Plot, Sakura Sun Goldenrod Workcenter, Sakura Sun Magnolia Workcenter, Samson & Son’s Salvage Center, SCD-1 (Shubin Mining Facility SCD-1), Seer’s Canyon, Seraphim Station, Shady Glen Farms, Shallow Fields Station (CRU-L4), Shallow Frontier Station (MIC-L1), Shepherd’s Rest, Shubin Mining Facility SAL-2, Shubin Mining Facility SAL-5, Shubin Mining Facility SCD-1, Shubin Mining Facility SM0-10, Shubin Mining Facility SM0-13, Shubin Mining Facility SM0-18, Shubin Mining Facility SM0-22, Shubin Mining Facility SMCa-6, Shubin Mining Facility SMCa-8, S4DC05 (Covalex Distribution Centre S4DC05), S4LD01 (Microtech Logistics Depot S4LD01), S4LD13 (Microtech Logistics Depot S4LD13), Stanhope (HDMS-Stanhope), Starlight Service Station, Sunset Mesa, Teasa Spaceport (Lorville), Terra Gateway, Terra Mills HydroFarm, Thedus (HDMS-Thedus), Thundering Express Station (HUR-L3), Tram & Myers Mining, Port Tressler, Weeping Cove, Wide Forest Station (ARC-L1), Woodruff (HDMS-Woodruff), XenoThreat Security Station, Yellow Core Station (ARC-L5), Zephyr`.split(',');
+const commodities = `AcryliPlex Composite, Agricium, Agricium (Ore), Agricultural Supplies, Altruciatoxin, Aluminum, Aluminum (Ore), Aluminium, Aluminium (Ore), Amioshi Plague, Ammonia, Aphorite, Apoxygenite, Argon, Astatine, Atlasium, Beryl, Beryl (Raw), Bexalite, Bexalite (Raw), Bioplastic, Blue Bilva, Borase, Borase (Ore), CK13-GID Seed Blend, Carbon, Carbon Silk, Chlorine, Cobalt, CompBoard, Construction Materials, Copper, Copper (Ore), Corundum, Corundum (Raw), DCSR2, Decari Pod, Degnous Root, Diamond, Diamond (Raw), Diamond Laminate, Diluthermex, Distilled Spirits, Dolivine, Dopple, Dymantium, DynaFlex, E-Tam, Elespo, Fireworks, Fluorine, Fotia Seedpod, Freeze, Fresh Food, Gasping Weevil Eggs, Glow, Gold, Gold (Ore), Golden Medmon, HLX99 Hyperprocessors, Hadanite, Heart of the woods, Helium, Hephaestanite, Hephaestanite (Ore), HexaPolyMesh Coating, Human Food Bars, Hydrogen, Hydrogen Fuel, Inert Materials, Iodine, Iron, Iron (Ore), Janalite, Jumping Limes, Kopion Horn, Laranite, Laranite (Ore), Lastaprene, Luminalia Gift, Lunes, Lycara, Mala, Marok Gem, Maze, MedPens, Medical Supplies, Mercury, Methane, Neograph, Neon, Nitrogen, Omnapoxy, Osoian Hides, Oxypen, Oza, Partillium, Pingala Seeds, Pitambu, Potassium, Pressurized Ice, Processed Food, Prota, Quantainium, Quantainium (Raw), Quantum Fuel, Quartz, Quartz (Raw), RS1 Odyssey Spacesuits, Ranta Dung, Raw Ice, Recycled Material Composite, Redfin Energy Modulators, Revenant Pod, Revenant Tree Pollen, Riccite, SLAM, Sarilus, Scrap, Ship Ammunition, Silicon, Silnex, Souvenirs, Steel, Stileron, Stims, Stone Bug Shell, Sunset Berries, Taranite, Taranite (Raw), Thermal Foam, Thrust, Tin, Titanium, Titanium (Ore), Tritium, Tungsten, Tungsten (Ore), Uncut SLAM, Waste, WiDoW, XaPyen, ZetaProlanide`.split(',');
 
-/* ===== State ===== */
-let sb=null, session=null, allMissions=[], filtered=[], selectedId=null, currentScope="";
-let ROLES=[], ATT_MISSION_ID=null;
-const DEFAULT_ROLES=['operations lead','pilot','copilot','escort','tactician','fps','gunner','hauler','miner','salvager','engineer','medic','recon','runner','logistics','security'];
+/* Build <option> list helper */
+function buildOptions(list, current='', firstLabel='-- select --'){
+  const out=[];
+  out.push(`<option value="">${esc(firstLabel)}</option>`);
+  list.forEach(v=>{
+    const t=(v||'').trim(); if(!t) return;
+    const sel = t===current ? ' selected' : '';
+    out.push(`<option value="${esc(t)}"${sel}>${esc(t)}</option>`);
+  });
+  return out.join('');
+}
 
-/* ===== Boot ===== */
-document.getElementById('tabs').addEventListener('click',e=>{
-  const t=e.target.closest('.tab'); if(!t) return;
-  $$('#tabs .tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
-  currentScope=t.dataset.scope||""; renderFiltered();
-});
-$('#search').addEventListener('input',renderFiltered);
-$('#catFilter').addEventListener('input',renderFiltered);
-$('#statusFilter').addEventListener('input',renderFiltered);
-$('#btnExport').onclick=exportCSV;
+/* ===== Data model =====
+Session: { id, createdAt, currentLocation, ship, contracts: [Contract] }
+Contract: { id, name, reward, cargoGroups:[CargoGroup] }
+CargoGroup: { id, cargoType, loadings:[Leg], offloadings:[Leg] }
+Leg: { id, scu, location }
+========================= */
+let sessions = {};
+let currentSessionId = null;
 
-document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth(); if(!session) return;
-  sb = getSupabase();
-  await loadRoles();
-  await loadMissions();
-});
-
-/* ===== Data ===== */
-async function loadRoles(){
+/* Load/save sessions */
+function loadSessions(){
   try{
-    const { data, error } = await sb.from('mission_roles').select('label').order('sort_order',{ascending:true}).order('label',{ascending:true});
-    ROLES = error || !data?.length ? DEFAULT_ROLES.map(label=>({label})) : data;
-  }catch{ ROLES = DEFAULT_ROLES.map(label=>({label})); }
-}
-
-async function loadMissions(){
-  const { data, error } = await sb
-    .from('missions')
-    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at,submitted_by')
-    .order('created_at',{ascending:false});
-  if(error){ $('#mList').innerHTML='<div class="small">Failed to load missions.</div>'; return; }
-  allMissions = data||[];
-  renderFiltered();
-}
-
-/* ===== Filter + KPIs ===== */
-function getFiltered(){
-  const q=($('#search').value||'').toLowerCase();
-  const cat=$('#catFilter').value||'';
-  const st=($('#statusFilter').value||'').toLowerCase();
-  let arr=allMissions.slice();
-
-  if(cat) arr = arr.filter(m=>catOf(m.type)===cat);
-  if(st)  arr = arr.filter(m=>(m.status||'').toLowerCase()===st);
-  if(q)   arr = arr.filter(m => (`${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.destination||''}`.toLowerCase().includes(q)));
-
-  if(currentScope==='history') arr = arr.filter(m=>['success','fail','abort'].includes((m.status||'').toLowerCase()));
-  return arr;
-}
-
-function renderFiltered(){
-  filtered = getFiltered();
-  $('#kpiCount').textContent = filtered.length.toLocaleString();
-  const r = filtered.filter(x=>catOf(x.type)==='Resource').length;
-  $('#kpiMix').textContent = `${r} : ${filtered.length-r}`;
-  const payouts = filtered.map(m=>+m.payout_auec||0).filter(n=>n>0);
-  const avg = payouts.length ? Math.round(payouts.reduce((a,b)=>a+b,0)/payouts.length) : 0;
-  $('#kpiAvg').textContent = avg ? avg.toLocaleString() : '-';
-
-  renderList(filtered);
-  if(selectedId){
-    const m = filtered.find(x=>x.id===selectedId) || allMissions.find(x=>x.id===selectedId);
-    renderInspector(m||null);
+    const raw = localStorage.getItem(STORE_KEY);
+    sessions = raw ? JSON.parse(raw) : {};
+    if (typeof sessions !== 'object' || sessions===null) sessions={};
+  }catch(e){
+    console.warn('Failed to load sessions', e);
+    sessions = {};
   }
-  loadOngoing();
+}
+function saveSessions(){
+  localStorage.setItem(STORE_KEY, JSON.stringify(sessions));
 }
 
-/* ===== List ===== */
-function listItemHtml(m){
-  const cat=catOf(m.type);
-  const route=(m.origin||m.destination)?`${esc(m.origin||'')} → ${esc(m.destination||'')}`:'—';
-  return `<div class="mitem" data-id="${m.id}" onclick="inspect('${m.id}')">
-    <div class="mtitle">${esc(m.title||'(untitled)')}</div>
-    <div class="mmeta">${route} • ${m.start_time?fmtDate(m.start_time):'TBA'}</div>
-    <div class="mchips">
-      ${cat?`<span class="mchip">${cat}</span>`:''}
-      ${m.type?`<span class="mchip">${esc(m.type)}</span>`:''}
-      ${m.status?`<span class="mchip">${esc(m.status)}</span>`:''}
-      ${m.payout_auec?`<span class="mchip mono">${fmtNum(m.payout_auec)} aUEC</span>`:''}
-    </div>
-  </div>`;
-}
-function renderList(rows){ $('#mList').innerHTML = rows.length ? rows.map(listItemHtml).join('') : '<div class="small">No missions found.</div>'; }
+/* Session helpers */
+function getSession(){ return sessions[currentSessionId] || null; }
 
-/* ===== Inspector ===== */
-function renderInspector(m){
-  const box=$('#inspector');
-  if(!m){ box.innerHTML=`<h2>Mission Details</h2><div class="small">Select a contract on the left.</div>`; return; }
-  selectedId=m.id;
-  const cat=catOf(m.type);
-  box.innerHTML=`
-    <h2>${esc(m.title||'(untitled)')}</h2>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 2px">
-      ${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}
-      ${m.type?`<span class="pill">${esc(m.type)}</span>`:''}
-      ${m.status?`<span class="pill">${esc(m.status)}</span>`:''}
-    </div>
-    <div class="hr"></div>
-    <div class="small">
-      <div><b>Route:</b> ${m.origin||m.destination?`${esc(m.origin||'')} → ${esc(m.destination||'')}`:'—'}</div>
-      <div><b>Start:</b> ${m.start_time?fmtDate(m.start_time):'TBA'}</div>
-      <div><b>Hours:</b> ${m.hours?esc(m.hours):'—'}</div>
-      <div><b>Payout:</b> <span class="mono">${fmtNum(m.payout_auec)}</span> aUEC</div>
-      <div style="margin-top:6px"><b>Tags:</b> ${esc(m.tags||'—')}</div>
-    </div>
-    <div class="hr"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-accept" onclick="openAttendance('${m.id}','${esc(m.title||'')}')">ATTENDANCE</button>
+function createSession(){
+  const id = uid('CS');
+  const now = new Date().toISOString();
+  sessions[id] = {
+    id,
+    createdAt: now,
+    currentLocation: '',
+    ship: '',
+    contracts: []
+  };
+  currentSessionId = id;
+  saveSessions();
+  updateSessionUrl();
+  return sessions[id];
+}
+
+function updateSessionUrl(){
+  try{
+    const url = new URL(location.href);
+    url.searchParams.set('session', currentSessionId);
+    history.replaceState(null,'',url.toString());
+  }catch(e){}
+}
+
+function ensureSession(){
+  loadSessions();
+  const params = new URLSearchParams(location.search);
+  const fromUrl = params.get('session');
+  if(fromUrl && sessions[fromUrl]){
+    currentSessionId = fromUrl;
+    return sessions[fromUrl];
+  }
+  return createSession();
+}
+
+/* ===== Rendering ===== */
+const contractsContainer = document.getElementById('contractsContainer');
+
+function renderSessionHeader(){
+  const s = getSession(); if(!s) return;
+  document.getElementById('sessionId').textContent = s.id;
+  const created = new Date(s.createdAt);
+  document.getElementById('sessionCreated').textContent =
+    'Created: '+created.toLocaleString();
+}
+
+function renderSessionFields(){
+  const s = getSession(); if(!s) return;
+  // Current location
+  const locSel = document.getElementById('currentLocation');
+  locSel.innerHTML = buildOptions(originList, s.currentLocation || '', 'Select starting location');
+  // Ship list from Hangar selection
+  const shipSel = document.getElementById('shipSelect');
+  let ships=[];
+  try{
+    const raw = localStorage.getItem(HANGAR_SEL_KEY);
+    ships = raw ? JSON.parse(raw) : [];
+    if(!Array.isArray(ships)) ships=[];
+  }catch(e){ ships=[]; }
+  const shipOptions=[];
+  shipOptions.push(`<option value="">Select ship</option>`);
+  if(ships.length){
+    ships.forEach(name=>{
+      const t=(name||'').trim(); if(!t) return;
+      const sel = t===s.ship ? ' selected' : '';
+      shipOptions.push(`<option value="${esc(t)}"${sel}>${esc(t)}</option>`);
+    });
+  }else{
+    const label = s.ship ? `Using manual: ${s.ship}` : 'No selected ships (use Hangar)';
+    shipOptions.push(`<option disabled>${esc(label)}</option>`);
+  }
+  shipSel.innerHTML = shipOptions.join('');
+}
+
+function legRowHtml(contractId, cargoId, leg, kind){
+  return `
+    <div class="leg-row" data-contract-id="${contractId}" data-cargo-id="${cargoId}" data-leg-id="${leg.id}" data-kind="${kind}">
+      <label>SCU
+        <input type="number" min="0" class="leg-scu" value="${leg.scu ?? ''}">
+      </label>
+      <label>Location
+        <select class="leg-location">
+          ${buildOptions(originList, leg.location || '', 'Select location')}
+        </select>
+      </label>
+      <button type="button" class="btn-danger remove-leg">✕</button>
     </div>`;
-  $$('.mitem').forEach(x=>x.classList.toggle('active',x.dataset.id===m.id));
 }
-function inspect(id){
-  const m=(filtered.find(x=>x.id===id)||allMissions.find(x=>x.id===id));
-  renderInspector(m||null);
-  if(window.matchMedia('(max-width:1100px)').matches){ document.getElementById('inspector').scrollIntoView({behavior:'smooth',block:'start'}); }
-}
-window.inspect=inspect;
 
-/* ===== Ongoing Card ===== */
-async function loadOngoing(){
-  if(!sb||!session) return;
-  const space=$('#ongoingSpace'); space.textContent='Loading…';
-
-  const { data: att, error: e1 } = await sb
-    .from('mission_attendees')
-    .select('mission_id')
-    .eq('user_id', session.user.id)
-    .eq('attendance','going');
-
-  if(e1 || !att?.length){ space.textContent='None'; return; }
-
-  const { data: rows, error: e2 } = await sb
-    .from('missions')
-    .select('id,title,status,start_time,origin,destination')
-    .in('id', att.map(a=>a.mission_id))
-    .in('status',['planned','active'])
-    .order('start_time',{ascending:true});
-
-  if(e2 || !rows?.length){ space.textContent='None'; return; }
-
-  space.innerHTML = rows.map(r=>`
-    <div class="ongoing-item">
-      <div class="ongoing-title">${esc(r.title||'(untitled)')}</div>
-      <div>${esc(r.status||'')} • ${r.start_time?fmtDate(r.start_time):'TBA'}
-      ${r.origin||r.destination?` • ${esc(r.origin||'')} → ${esc(r.destination||'')}`:''}</div>
-      <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn-accept" onclick="inspect('${r.id}')">OPEN</button>
-        <button class="btn-accept" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">ATTENDANCE</button>
+function cargoGroupHtml(contract, group){
+  return `
+    <div class="cargo-card" data-contract-id="${contract.id}" data-cargo-id="${group.id}">
+      <div class="cargo-head">
+        <div class="cargo-title">Cargo Type</div>
+        <button type="button" class="btn-ghost btn-danger remove-cargo">Remove Cargo</button>
       </div>
-    </div>
-  `).join('');
+      <div class="cargo-body">
+        <label>Cargo Type *
+          <select class="cargo-type">
+            ${buildOptions(commodities, group.cargoType || '', 'Select cargo type')}
+          </select>
+        </label>
+        <div class="legs-grid">
+          <div class="legs-column">
+            <div class="legs-label">Loading</div>
+            ${group.loadings.map(leg => legRowHtml(contract.id, group.id, leg, 'load')).join('')}
+            <button type="button" class="btn-ghost add-leg" data-kind="load">Add Loading</button>
+          </div>
+          <div class="legs-column">
+            <div class="legs-label">Offloading</div>
+            ${group.offloadings.map(leg => legRowHtml(contract.id, group.id, leg, 'off')).join('')}
+            <button type="button" class="btn-ghost add-leg" data-kind="off">Add Offloading</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
 }
-window.refreshOngoing=loadOngoing;
 
-/* ===== CSV ===== */
-function exportCSV(){
-  const rows=getFiltered();
-  const cols=['title','category','type','status','origin','destination','start_time','hours','payout_auec','tags','notes'];
-  const csv=[cols.join(','), ...rows.map(r=>{
-    const rec={ title:r.title||'', category:catOf(r.type), type:r.type||'', status:r.status||'', origin:r.origin||'', destination:r.destination||'', start_time:r.start_time||'', hours:r.hours||'', payout_auec:r.payout_auec||'', tags:r.tags||'', notes:r.notes||'' };
-    return cols.map(k=>`"${String(rec[k]).replace(/"/g,'""')}"`).join(',');
-  })].join('\n');
-  const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+function contractCardHtml(contract, idx){
+  return `
+    <div class="contract-card" data-contract-id="${contract.id}">
+      <div class="contract-head">
+        <div class="contract-title">Contract #${idx+1}</div>
+        <button type="button" class="btn-ghost btn-danger remove-contract">Remove Contract</button>
+      </div>
+      <div class="contract-body">
+        <label>Contract Name (optional)
+          <input type="text" class="contract-name" value="${esc(contract.name||'')}">
+        </label>
+        <label>Reward (aUEC)
+          <input type="number" min="0" class="contract-reward" value="${contract.reward ?? ''}">
+        </label>
+        ${contract.cargoGroups.map(g => cargoGroupHtml(contract,g)).join('')}
+        <button type="button" class="btn-ghost add-cargo">Add Cargo Type</button>
+      </div>
+    </div>`;
 }
 
-/* ===== Attendance ===== */
-function roleOptionsHtml(ph){ return `<option value="">${ph}</option>`+(ROLES.map(r=>`<option value="${r.label}">${r.label}</option>`).join('')); }
-
-async function openAttendance(missionId,title=''){
-  ATT_MISSION_ID=missionId;
-  $('#attTitle').textContent=`Attendance — ${title||missionId.slice(0,8)}`;
-  $('#attModalMask').style.display='flex';
-
-  $('#attSelfRole').innerHTML=roleOptionsHtml('My role (optional)');
-  $('#attAddRole').innerHTML=roleOptionsHtml('Role (optional)');
-
-  const [{ data: elev }, { data: mission }] = await Promise.all([
-    sb.rpc('is_elevated',{u:session.user.id}),
-    sb.from('missions').select('submitted_by').eq('id', missionId).single()
-  ]);
-  const isOwner = mission?.submitted_by===session.user.id;
-  $('#attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
-
-  try{
-    const { data: mine } = await sb.from('mission_attendees').select('role_in_mission').match({ mission_id: ATT_MISSION_ID, user_id: session.user.id }).limit(1);
-    if(mine?.[0]) $('#attSelfRole').value = mine[0].role_in_mission||'';
-  }catch{}
-
-  $('#attIamGoing').onclick=async()=>{
-    const role=($('#attSelfRole').value||'').trim()||null;
-    await sb.from('mission_attendees').upsert({mission_id:ATT_MISSION_ID,user_id:session.user.id,attendance:'going',role_in_mission:role},{onConflict:'mission_id,user_id'});
-    await loadAttendees(); await refreshOngoing();
-  };
-  $('#attNotGoing').onclick=async()=>{
-    await sb.from('mission_attendees').upsert({mission_id:ATT_MISSION_ID,user_id:session.user.id,attendance:'not_going'},{onConflict:'mission_id,user_id'});
-    await loadAttendees(); await refreshOngoing();
-  };
-  $('#attWithdraw').onclick=async()=>{
-    await sb.from('mission_attendees').delete().match({mission_id:ATT_MISSION_ID,user_id:session.user.id});
-    await loadAttendees(); await refreshOngoing();
-  };
-  $('#attAddBtn').onclick=async()=>{
-    const email=$('#attAddEmail').value.trim(); const role=$('#attAddRole').value||null;
-    if(!email){ alert('Enter an email'); return; }
-    const { error } = await sb.rpc('add_attendee_by_email',{p_mission:ATT_MISSION_ID,p_email:email,p_role:role,p_attendance:'going'});
-    if(error){ alert('Add failed: '+error.message); return; }
-    $('#attAddEmail').value=''; $('#attAddRole').value='';
-    await loadAttendees(); await refreshOngoing();
-  };
-
-  await loadAttendees();
+function renderContracts(){
+  const s = getSession(); if(!s) return;
+  if(!s.contracts.length){
+    contractsContainer.innerHTML = `<div class="small-note">No contracts yet. Click <b>Add Another Contract</b> to start.</div>`;
+    return;
+  }
+  contractsContainer.innerHTML = s.contracts.map((c,i)=>contractCardHtml(c,i)).join('');
 }
-function closeAttendance(){ $('#attModalMask').style.display='none'; ATT_MISSION_ID=null; }
-window.openAttendance=openAttendance; window.closeAttendance=closeAttendance;
 
-async function loadAttendees(){
-  const list=$('#attList'); list.textContent='Loading…';
-  const { data, error } = await sb.from('v_mission_attendees_detailed').select('*').eq('mission_id',ATT_MISSION_ID).order('joined_at',{ascending:true});
-  if(error){ list.innerHTML=`<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
-  if(!data?.length){ list.textContent='No attendees yet.'; return; }
+/* ===== Mutators ===== */
+function addContract(){
+  const s = getSession(); if(!s) return;
+  const c = {
+    id: uid('CT'),
+    name: '',
+    reward: '',
+    cargoGroups: []
+  };
+  s.contracts.push(c);
+  saveSessions();
+  renderContracts();
+}
 
-  const [{ data: elev }, { data: mission }] = await Promise.all([
-    sb.rpc('is_elevated',{u:session.user.id}),
-    sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
-  ]);
-  const canManageAll=(elev || mission?.submitted_by===session.user.id);
+function removeContract(contractId){
+  const s = getSession(); if(!s) return;
+  s.contracts = s.contracts.filter(c=>c.id!==contractId);
+  saveSessions();
+  renderContracts();
+}
 
-  list.innerHTML='';
-  for(const a of data){
-    const chip=document.createElement('div');
-    chip.style.cssText='display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px';
-    chip.setAttribute('data-attendance',(a.attendance||'').toLowerCase());
-    const options=['<option value="">role</option>',...ROLES.map(r=>`<option value="${r.label}">${r.label}</option>`)].join('');
-    chip.innerHTML=`
-      <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
-      <select data-uid="${a.user_id}" ${ (canManageAll || a.user_id===session.user.id) ? '' : 'disabled' } style="background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text)">${options}</select>
-      <span class="small" style="color:var(--muted)">${esc(a.attendance||'')}</span>
-      ${ (canManageAll || a.user_id===session.user.id) ? `<button class="small-btn" data-uid="${a.user_id}" style="padding:2px 6px">x</button>` : '' }
-    `;
-    const sel=chip.querySelector('select'); sel.value=a.role_in_mission||'';
-    if(sel && (canManageAll || a.user_id===session.user.id)){
-      sel.onchange=async(e)=>{
-        const newRole=e.target.value||null;
-        const target=e.target.getAttribute('data-uid');
-        const { error: upErr } = await sb.from('mission_attendees').update({role_in_mission:newRole}).match({mission_id:ATT_MISSION_ID,user_id:target});
-        if(upErr){ alert('Update failed: '+upErr.message); e.target.value=a.role_in_mission||''; return; }
-        await loadAttendees();
-      };
+function addCargoGroup(contractId){
+  const s=getSession(); if(!s) return;
+  const c = s.contracts.find(x=>x.id===contractId); if(!c) return;
+  const g = {
+    id: uid('CG'),
+    cargoType: '',
+    loadings: [],
+    offloadings: []
+  };
+  c.cargoGroups.push(g);
+  saveSessions();
+  renderContracts();
+}
+
+function removeCargoGroup(contractId, cargoId){
+  const s=getSession(); if(!s) return;
+  const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
+  c.cargoGroups = c.cargoGroups.filter(g=>g.id!==cargoId);
+  saveSessions();
+  renderContracts();
+}
+
+function addLeg(contractId, cargoId, kind){
+  const s=getSession(); if(!s) return;
+  const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
+  const g=c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
+  const leg = { id: uid('LG'), scu:'', location:'' };
+  if(kind==='off') g.offloadings.push(leg);
+  else g.loadings.push(leg);
+  saveSessions();
+  renderContracts();
+}
+
+function removeLeg(contractId, cargoId, legId, kind){
+  const s=getSession(); if(!s) return;
+  const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
+  const g=c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
+  if(kind==='off') g.offloadings = g.offloadings.filter(l=>l.id!==legId);
+  else g.loadings = g.loadings.filter(l=>l.id!==legId);
+  saveSessions();
+  renderContracts();
+}
+
+/* ===== Event wiring ===== */
+function wireTopLevelHandlers(){
+  // session fields
+  document.getElementById('currentLocation').addEventListener('change', e=>{
+    const s=getSession(); if(!s) return;
+    s.currentLocation = e.target.value;
+    saveSessions();
+  });
+  document.getElementById('shipSelect').addEventListener('change', e=>{
+    const s=getSession(); if(!s) return;
+    s.ship = e.target.value;
+    saveSessions();
+  });
+
+  document.getElementById('addContractBtn').addEventListener('click', ()=>{
+    addContract();
+  });
+
+  document.getElementById('newSessionBtn').addEventListener('click', ()=>{
+    if(!confirm('Start a new session? Current one will remain saved.')) return;
+    createSession();
+    renderSessionHeader();
+    renderSessionFields();
+    renderContracts();
+  });
+
+  document.getElementById('clearAllSessionsBtn').addEventListener('click', ()=>{
+    if(!confirm('Delete ALL saved contract sessions from this browser?')) return;
+    sessions={}; currentSessionId=null;
+    saveSessions();
+    createSession();
+    renderSessionHeader();
+    renderSessionFields();
+    renderContracts();
+  });
+
+  document.getElementById('exportSessionBtn').addEventListener('click', ()=>{
+    const s=getSession(); if(!s){alert('No session loaded');return;}
+    const json = JSON.stringify(s,null,2);
+    const blob = new Blob([json],{type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download = `${s.id}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('submitAllBtn').addEventListener('click', ()=>{
+    const s=getSession(); if(!s){alert('No session loaded');return;}
+    if(!s.contracts.length){alert('No contracts in this session yet.');return;}
+    const json = JSON.stringify(s,null,2);
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(json).then(()=>{
+        alert('Session JSON copied to clipboard. You can paste it into mission notes / Discord.');
+      }).catch(()=>{
+        alert('Session JSON:\n\n'+json);
+      });
+    }else{
+      alert('Session JSON:\n\n'+json);
     }
-    const x=chip.querySelector('button.small-btn');
-    if(x) x.onclick=async()=>{
-      const target=x.getAttribute('data-uid');
-      const { error: delErr } = await sb.from('mission_attendees').delete().match({mission_id:ATT_MISSION_ID,user_id:target});
-      if(delErr){ alert('Remove failed: '+delErr.message); return; }
-      await loadAttendees(); await refreshOngoing();
-    };
-    list.appendChild(chip);
+  });
+
+  // Delegated handlers for contracts / cargo / legs
+  contractsContainer.addEventListener('click', (e)=>{
+    const contractCard = e.target.closest('.contract-card');
+    const contractId = contractCard?.dataset.contractId;
+
+    if(e.target.closest('.remove-contract') && contractId){
+      if(confirm('Remove this contract?')) removeContract(contractId);
+      return;
+    }
+
+    if(e.target.closest('.add-cargo') && contractId){
+      addCargoGroup(contractId);
+      return;
+    }
+
+    const cargoCard = e.target.closest('.cargo-card');
+    const cargoId = cargoCard?.dataset.cargoId;
+
+    if(e.target.closest('.remove-cargo') && contractId && cargoId){
+      if(confirm('Remove this cargo type from the contract?')) removeCargoGroup(contractId,cargoId);
+      return;
+    }
+
+    if(e.target.closest('.add-leg') && contractId && cargoId){
+      const kind = e.target.closest('.add-leg').dataset.kind === 'off' ? 'off' : 'load';
+      addLeg(contractId,cargoId,kind);
+      return;
+    }
+
+    const legRow = e.target.closest('.leg-row');
+    if(e.target.closest('.remove-leg') && legRow){
+      const kind = legRow.dataset.kind || 'load';
+      const legId = legRow.dataset.legId;
+      const cId = legRow.dataset.contractId;
+      const gId = legRow.dataset.cargoId;
+      removeLeg(cId,gId,legId,kind);
+      return;
+    }
+  });
+
+  // Input/change for updating values without re-rendering structure
+  contractsContainer.addEventListener('input', handleValueChange);
+  contractsContainer.addEventListener('change', handleValueChange);
+}
+
+function handleValueChange(e){
+  const s=getSession(); if(!s) return;
+  const contractCard = e.target.closest('.contract-card');
+  const contractId = contractCard?.dataset.contractId;
+  if(!contractId) return;
+  const c = s.contracts.find(x=>x.id===contractId); if(!c) return;
+
+  if(e.target.classList.contains('contract-name')){
+    c.name = e.target.value.trim();
+    saveSessions(); return;
+  }
+  if(e.target.classList.contains('contract-reward')){
+    c.reward = e.target.value;
+    saveSessions(); return;
+  }
+
+  const cargoCard = e.target.closest('.cargo-card');
+  if(cargoCard){
+    const cargoId = cargoCard.dataset.cargoId;
+    const g = c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
+
+    if(e.target.classList.contains('cargo-type')){
+      g.cargoType = e.target.value;
+      saveSessions(); return;
+    }
+
+    const legRow = e.target.closest('.leg-row');
+    if(legRow){
+      const kind = legRow.dataset.kind || 'load';
+      const legId = legRow.dataset.legId;
+      const list = (kind==='off') ? g.offloadings : g.loadings;
+      const leg = list.find(l=>l.id===legId); if(!leg) return;
+
+      if(e.target.classList.contains('leg-scu')){
+        leg.scu = e.target.value;
+        saveSessions(); return;
+      }
+      if(e.target.classList.contains('leg-location')){
+        leg.location = e.target.value;
+        saveSessions(); return;
+      }
+    }
   }
 }
+
+/* ===== Init (auth-gated) ===== */
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth();   // redirects to auth.html if not logged in
+  if (!session) return;
+
+  ensureSession();
+  renderSessionHeader();
+  renderSessionFields();
+  renderContracts();
+  wireTopLevelHandlers();
+
+  // If it’s a brand-new empty session, start with one empty contract + cargo + legs like in your mock
+  const s = getSession();
+  if(s && !s.contracts.length){
+    addContract();
+    const first = s.contracts[0];
+    addCargoGroup(first.id);
+    // one loading + one offloading row by default
+    const g = first.cargoGroups[0];
+    addLeg(first.id,g.id,'load');
+    addLeg(first.id,g.id,'off');
+  }
+});
 </script>
 </body>
 </html>
