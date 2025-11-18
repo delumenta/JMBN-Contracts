@@ -455,20 +455,20 @@ tbody tr:nth-child(even){background:#050505;}
           </div>
 
           <div class="form-field">
-            <label for="origin">Primary Origin</label>
+            <label for="origin">Primary Origin (Leg 1)</label>
             <input id="origin" type="text" placeholder="e.g. CRU-L1 Ambitious Dream Station">
           </div>
           <div class="form-field">
-            <label for="destination">Primary Destination</label>
+            <label for="destination">Primary Destination (Leg 1)</label>
             <input id="destination" type="text" placeholder="e.g. Seraphim Station">
           </div>
 
           <div class="form-field">
-            <label for="cargoType">Cargo Type</label>
+            <label for="cargoType">Primary Cargo Type (Leg 1)</label>
             <input id="cargoType" type="text" placeholder="Waste / Scrap / Boxes">
           </div>
           <div class="form-field">
-            <label for="requiredSCU">Required SCU (per leg)</label>
+            <label for="requiredSCU">Required SCU (Leg 1)</label>
             <input id="requiredSCU" type="number" min="0" step="1" placeholder="2">
           </div>
 
@@ -497,11 +497,11 @@ tbody tr:nth-child(even){background:#050505;}
         <table>
           <thead>
             <tr>
-              <th style="width:16%;">Cargo</th>
-              <th style="width:30%;">Origin</th>
-              <th style="width:12%;">Req. SCU</th>
-              <th style="width:30%;">Destination</th>
-              <th>Leg</th>
+              <th style="width:10%;">Leg</th>
+              <th style="width:18%;">Cargo</th>
+              <th style="width:32%;">Load From</th>
+              <th style="width:32%;">Offload To</th>
+              <th style="width:8%;">SCU</th>
             </tr>
           </thead>
           <tbody id="objectivesBody">
@@ -597,47 +597,69 @@ tbody tr:nth-child(even){background:#050505;}
   }
 
   // === Parsing helpers ===
+
+  // Header (Reward, Availability, Contracted By)
   function parseHeader(text){
     const header = { reward:null, availability:null, contractor:null };
 
-    // Reward 42,000
-    let m = text.match(/Reward\s+([\d,]+)/i);
+    // "Reward 42,000" or "Reward a 42,000"
+    let m = text.match(/Reward\s+(?:[a-z]\s*)?([\d,]+)/i);
     if(m && m[1]) header.reward = m[1].replace(/,/g,'');
 
-    // Contract Availability 2h 9m
+    // "Contract Availability 2h 9m"
     m = text.match(/Contract\s+Availability\s+([0-9hHmM\s]+)/i);
     if(m && m[1]) header.availability = m[1].trim();
 
-    // Contracted By Covalex Independent Contractors
+    // "Contracted By Covalex Independent Contractors"
     m = text.match(/Contracted\s+By\s+(.+)/i);
     if(m && m[1]) header.contractor = m[1].trim();
 
     return header;
   }
 
+  // Objectives: pair each "Collect X from ..." with the next "Deliver 0/2 SCU to ..."
   function parseObjectives(text){
     const cleaned = text.replace(/\r/g,'');
-    const regex = /Collect\s+(\w+)\s+from\s+(.+?)\.\s*[\n\s]*Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
-    const result = [];
-    let m;
-    let leg = 1;
-    while((m = regex.exec(cleaned)) !== null){
-      const cargoType   = m[1];
-      const origin      = m[2].trim();
-      const delivered   = parseInt(m[3],10);
-      const required    = parseInt(m[4],10);
-      const destination = m[5].trim();
 
-      result.push({
-        cargoType,
-        origin,
-        delivered,
-        required,
-        destination,
-        leg: leg++
+    // Allow cargo names with spaces until "from"
+    const collectRe = /Collect\s+(.+?)\s+from\s+(.+?)\./gi;
+    const deliverRe = /Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
+
+    const collects = [];
+    const delivers = [];
+
+    let m;
+    while((m = collectRe.exec(cleaned)) !== null){
+      collects.push({
+        cargoType: m[1].trim(),    // Waste / Scrap / Delivery Boxes etc
+        origin:    m[2].trim(),
+        start:     m.index
       });
     }
-    return result;
+    while((m = deliverRe.exec(cleaned)) !== null){
+      delivers.push({
+        delivered:   parseInt(m[1],10),
+        required:    parseInt(m[2],10),
+        destination: m[3].trim(),
+        start:       m.index
+      });
+    }
+
+    const legs = [];
+    const count = Math.min(collects.length, delivers.length);
+    for(let i=0;i<count;i++){
+      const c = collects[i];
+      const d = delivers[i];
+      legs.push({
+        leg:         i+1,
+        cargoType:   c.cargoType,
+        origin:      c.origin,
+        destination: d.destination,
+        delivered:   d.delivered,
+        required:    d.required
+      });
+    }
+    return legs;
   }
 
   function fillObjectivesTable(objectives){
@@ -645,39 +667,48 @@ tbody tr:nth-child(even){background:#050505;}
     objectives.forEach(obj=>{
       const tr  = document.createElement('tr');
 
-      const tdC = document.createElement('td');
-      tdC.textContent = obj.cargoType;
-      tr.appendChild(tdC);
-
-      const tdO = document.createElement('td');
-      tdO.textContent = obj.origin;
-      tr.appendChild(tdO);
-
-      const tdS = document.createElement('td');
-      tdS.textContent = obj.required;
-      tr.appendChild(tdS);
-
-      const tdD = document.createElement('td');
-      tdD.textContent = obj.destination;
-      tr.appendChild(tdD);
-
-      const tdL = document.createElement('td');
+      const tdLeg = document.createElement('td');
       const badge = document.createElement('span');
       badge.className = 'badge badge-contract';
       badge.textContent = 'LEG ' + obj.leg;
-      tdL.appendChild(badge);
-      tr.appendChild(tdL);
+      tdLeg.appendChild(badge);
+      tr.appendChild(tdLeg);
+
+      const tdCargo = document.createElement('td');
+      tdCargo.textContent = obj.cargoType;
+      tr.appendChild(tdCargo);
+
+      const tdFrom = document.createElement('td');
+      tdFrom.textContent = obj.origin;
+      tr.appendChild(tdFrom);
+
+      const tdTo = document.createElement('td');
+      tdTo.textContent = obj.destination;
+      tr.appendChild(tdTo);
+
+      const tdSCU = document.createElement('td');
+      tdSCU.textContent = `${obj.delivered}/${obj.required}`;
+      tr.appendChild(tdSCU);
 
       objectivesBody.appendChild(tr);
     });
   }
 
   function openConfirmModal(header, objectives){
-    // Fill modal summary
+    const legsCount = objectives.length;
+    const totalSCU  = objectives.reduce((sum,o)=>sum + (o.required || 0), 0);
+    const uniqueCargo = Array.from(new Set(objectives.map(o=>o.cargoType))).filter(Boolean);
+
     modalReward.textContent     = header.reward ? Number(header.reward).toLocaleString() + ' aUEC' : '—';
     modalAvail.textContent      = header.availability || '—';
     modalContractor.textContent = header.contractor || '—';
-    modalLegs.textContent       = objectives.length ? objectives.length + ' leg(s)' : 'None detected';
+
+    if(legsCount){
+      const cargoPart = uniqueCargo.length ? ` • Cargo: ${uniqueCargo.join(', ')}` : '';
+      modalLegs.textContent = `${legsCount} leg(s) • ${totalSCU} SCU total${cargoPart}`;
+    }else{
+      modalLegs.textContent = 'None detected';
+    }
 
     confirmModal.classList.add('open');
   }
@@ -712,11 +743,11 @@ tbody tr:nth-child(even){background:#050505;}
       kpiContractor.textContent = '—';
     }
 
-    // Objectives
+    // Objectives (multi-leg)
     fillObjectivesTable(objectives);
 
     if(objectives.length > 0){
-      const first = objectives[0];
+      const first = objectives[0]; // Leg 1 → primary fields
       cargoField.value  = first.cargoType;
       originField.value = first.origin;
       destField.value   = first.destination;
@@ -730,7 +761,7 @@ tbody tr:nth-child(even){background:#050505;}
       tsField.value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
     }
 
-    // Open confirmation modal so user knows "what's next"
+    // Open confirmation modal
     openConfirmModal(header, objectives);
   }
 
