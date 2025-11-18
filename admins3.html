@@ -2,935 +2,700 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JMBN Contracts</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JMBN – Contracts (Hauling / Objective Scan)</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
+  --bg:#000;--panel:#0b0b0b;--card:#141414;--row:#0a0a0a;
+  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;
 }
 *{box-sizing:border-box}
 body{
-  background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;
+  margin:0;
+  font-family:'Play',system-ui,sans-serif;
+  background:radial-gradient(circle at top,#202020 0,#000 55%);
   color:var(--text);
-  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
+}
+.page{
+  min-height:100vh;
+  padding:18px;
+  max-width:1200px;
+  margin:0 auto;
 }
 
-/* Header + Nav (from header.html) */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
-.nav-btn{
-  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+/* Brand */
+.brand{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  padding-bottom:8px;
+  margin-bottom:12px;
+  border-bottom:1px solid var(--border);
 }
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
-.nav-btn.active{
-  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
-  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
+.brand-main{
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
-.nav-btn.active::after{
-  content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
-  border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 5px rgba(242,214,117,.3));
 }
-@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
+.brand-title-wrap h1{
+  margin:0 0 2px;
+  font-size:clamp(18px,2.3vw,22px);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.brand-subtitle{
+  font-size:12px;
+  color:var(--muted);
+}
+.brand-tag{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--muted);
+  border:1px solid var(--border);
+  padding:4px 8px;
+  border-radius:999px;
+}
 
 /* Layout */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.session-header{
-  display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;justify-content:space-between;margin-bottom:10px
+.grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr);
+  gap:16px;
 }
-.session-meta{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
-.session-id{font-family:monospace;color:var(--accent);font-size:12px}
-.session-controls{display:flex;flex-wrap:wrap;gap:8px}
-
-/* Controls */
-label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
-input,select,textarea{
-  background:#0a0a0a;border:1px solid var(--border);border-radius:8px;
-  padding:8px 9px;color:var(--text);font-size:13px;font-family:'Play',sans-serif;
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr;}
 }
-textarea{resize:vertical;min-height:60px}
-button{
-  padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';font-size:13px;transition:.2s
+.panel{
+  background:linear-gradient(135deg,rgba(214,180,76,.05),transparent);
+  border:1px solid rgba(214,180,76,.4);
+  border-radius:16px;
+  padding:14px 14px 16px;
+  box-shadow:0 0 20px rgba(0,0,0,.7);
 }
-button:hover{background:var(--accent);color:#000}
-.btn-primary{background:var(--accent);color:#000}
-.btn-danger{border-color:var(--bad);color:var(--bad)}
-.btn-danger:hover{background:var(--bad);color:#000}
-.btn-ghost{background:transparent}
-
-/* Session base fields */
-.session-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px}
-@media(max-width:720px){.session-grid{grid-template-columns:1fr}}
-
-/* Contracts summary (main view) */
-.contracts-summary{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;margin:8px 0 6px;font-size:12px;color:var(--muted)
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
 }
-.contracts-summary span{color:var(--accent);font-weight:700}
-
-/* History cards */
-.history-panel{margin-top:14px}
-.history-title{font-size:13px;color:var(--accent);font-weight:700;margin-bottom:4px}
-.history-wrap{display:flex;flex-direction:column;gap:8px}
-.history-card{
-  background:#101010;border:1px solid var(--border);border-radius:10px;
-  padding:9px 10px;box-shadow:0 0 12px rgba(214,180,76,.18)
+.panel-title{
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--accent);
 }
-.history-head{
-  display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;
-  font-size:12px;color:var(--muted);margin-bottom:4px
-}
-.history-head .tag{
-  padding:2px 6px;border-radius:999px;border:1px solid var(--border);font-size:10px
-}
-.history-main{font-size:12px}
-.history-main b{color:var(--accent)}
-.history-meta{font-size:11px;color:var(--muted);margin-top:4px}
-
-/* Footer controls */
-.footer-actions{
-  display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:10px
-}
-.small-note{font-size:11px;color:var(--muted);margin-top:6px}
-
-/* Audit table */
-.audit-panel{margin-top:16px}
-.audit-head{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px}
-.audit-wrap{
-  border:1px solid var(--border);border-radius:10px;overflow:hidden;
-  max-height:220px;background:#050505
-}
-.audit-table{width:100%;border-collapse:collapse;font-size:11px}
-.audit-table th,.audit-table td{
-  padding:6px 7px;border-bottom:1px solid rgba(214,180,76,.25);text-align:left
-}
-.audit-table th{
-  background:#080808;color:var(--accent);position:sticky;top:0;z-index:1
-}
-.audit-table tr:nth-child(even){background:#101010}
-.audit-table tr:hover{background:rgba(214,180,76,.08)}
-.audit-before-after{font-family:monospace;font-size:10px;white-space:nowrap}
-
-/* ===== Modal: Contract editor ===== */
-.modal-bg{
-  position:fixed;inset:0;background:rgba(0,0,0,.82);
-  display:none;align-items:center;justify-content:center;z-index:20;
-}
-.modal{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  width:96%;max-width:960px;max-height:90vh;display:flex;flex-direction:column;
-  box-shadow:0 0 26px rgba(214,180,76,.4)
-}
-.modal-header{
-  padding:10px 12px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:8px
-}
-.modal-header h2{margin:0;font-size:15px;color:var(--accent)}
-.modal-body{
-  padding:10px 12px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px
-}
-.modal-footer{
-  padding:8px 12px;border-top:1px solid var(--border);
-  display:flex;justify-content:flex-end;gap:8px
+.panel-meta{
+  font-size:11px;
+  color:var(--muted);
 }
 
-/* Contracts editor (inside modal) */
-#contractsContainer{display:flex;flex-direction:column;gap:12px;margin-top:4px}
-.contract-card{
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:10px;box-shadow:0 0 12px rgba(214,180,76,.18)
+/* Upload / paste */
+.upload-box{
+  border:1px dashed rgba(214,180,76,.55);
+  border-radius:12px;
+  padding:10px;
+  background:rgba(5,5,5,.75);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
-.contract-head{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:6px
+.upload-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
 }
-.contract-title{font-weight:700;color:var(--accent);font-size:14px}
-.contract-body{display:flex;flex-direction:column;gap:8px}
+input[type="file"]{
+  font-size:var(--fs-small);
+  color:var(--muted);
+}
+.btn{
+  appearance:none;
+  border:none;
+  outline:none;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  padding:7px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:radial-gradient(circle at top,var(--accent),#614c14);
+  color:#000;
+  box-shadow:0 0 12px rgba(242,214,117,.35);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.btn-secondary{
+  background:transparent;
+  color:var(--accent);
+  box-shadow:none;
+}
+.btn:disabled{
+  opacity:.4;
+  cursor:default;
+  box-shadow:none;
+}
+.status{
+  font-size:11px;
+  color:var(--muted);
+}
+.status-ok{color:var(--accent);}
+.status-err{color:var(--bad);}
 
-/* Cargo groups */
-.cargo-card{
-  margin-top:8px;padding:8px;border-radius:10px;
-  background:#0b0b0b;border:1px dashed rgba(214,180,76,.45)
+/* Preview + OCR */
+.preview-wrap{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  margin-top:8px;
 }
-.cargo-head{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:4px
+.preview{
+  flex:0 0 190px;
+  max-height:190px;
+  border-radius:10px;
+  border:1px solid rgba(214,180,76,.45);
+  overflow:hidden;
+  background:#000;
 }
-.cargo-title{font-size:13px;color:var(--muted)}
-.cargo-body{display:flex;flex-direction:column;gap:8px}
+.preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.ocr-raw{
+  flex:1;
+  min-height:90px;
+  max-height:190px;
+  background:#050505;
+  border-radius:10px;
+  border:1px solid rgba(214,180,76,.25);
+  padding:8px;
+  font-size:11px;
+  color:var(--muted);
+  white-space:pre-wrap;
+  overflow:auto;
+}
 
-/* Legs (loading/offloading) */
-.legs-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
+/* Form & KPIs */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px 12px;
 }
-@media(max-width:780px){.legs-grid{grid-template-columns:1fr}}
-.legs-column{display:flex;flex-direction:column;gap:6px}
-.legs-label{font-size:12px;color:var(--muted);font-weight:700}
-.leg-row{
-  display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:6px;align-items:end
+@media (max-width:700px){
+  .form-grid{grid-template-columns:1fr;}
 }
-@media(max-width:640px){.leg-row{grid-template-columns:1fr}}
-.leg-row button{padding:6px 8px;font-size:11px}
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+}
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+select,
+textarea{
+  background:var(--card);
+  border-radius:8px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:7px 8px;
+  font-size:var(--fs-base);
+  color:var(--text);
+  font-family:inherit;
+}
+input::placeholder,textarea::placeholder{color:#75653a;}
+textarea{
+  min-height:70px;
+  resize:vertical;
+}
+.form-actions{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.kpi-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+.kpi{
+  flex:1 1 120px;
+  min-width:0;
+  border-radius:10px;
+  padding:6px 8px;
+  border:1px solid rgba(214,180,76,.5);
+  background:radial-gradient(circle at top,rgba(242,214,117,.2),rgba(10,10,10,.9));
+  font-size:11px;
+}
+.kpi-label{
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+.kpi-value{
+  font-size:13px;
+}
+
+/* Objectives table */
+.table-wrap{
+  margin-top:10px;
+  border-radius:12px;
+  border:1px solid rgba(214,180,76,.55);
+  overflow:hidden;
+  background:rgba(5,5,5,.9);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--fs-small);
+}
+thead{
+  background:linear-gradient(90deg,rgba(214,180,76,.2),rgba(10,10,10,1));
+}
+th,td{
+  padding:6px 8px;
+  text-align:left;
+}
+th{
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-weight:700;
+  color:var(--accent);
+  border-bottom:1px solid rgba(214,180,76,.45);
+}
+tbody tr:nth-child(odd){background:var(--row);}
+tbody tr:nth-child(even){background:#050505;}
+
+.badge{
+  display:inline-block;
+  padding:2px 6px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.7);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+}
+.badge-contract{color:var(--accent);}
 </style>
 </head>
 <body>
-
-<!-- Shared header injected here -->
-<div id="header-container"></div>
-<script>
-  fetch('header.html')
-    .then(r=>r.text())
-    .then(html=>{
-      document.getElementById('header-container').innerHTML = html;
-      const here = location.pathname.split('/').pop() || 'contracts.html';
-      document.querySelectorAll('.nav-btn').forEach(a=>{
-        if(a.getAttribute('href')===here){
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
-      });
-    });
-</script>
-
-<div class="panel">
-  <!-- Session header -->
-  <div class="session-header">
-    <div class="session-meta">
-      <div>Contract Session</div>
-      <div class="session-id" id="sessionId">—</div>
-      <div id="sessionCreated" style="font-size:11px"></div>
+<div class="page">
+  <!-- Brand -->
+  <header class="brand">
+    <div class="brand-main">
+      <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+      <div class="brand-title-wrap">
+        <h1>JMBN // CONTRACTS</h1>
+        <div class="brand-subtitle">Objective Scanner • Hauling / Waste / Scrap</div>
+      </div>
     </div>
-    <div class="session-controls">
-      <button id="newSessionBtn" class="btn-ghost">New Session</button>
-      <button id="exportSessionBtn">Export Session JSON</button>
-      <button id="clearAllSessionsBtn" class="btn-danger">Clear All Sessions</button>
-    </div>
-  </div>
+    <div class="brand-tag">OPS // CONTRACT INTAKE</div>
+  </header>
 
-  <!-- Session-level fields -->
-  <div class="session-grid">
-    <label>Your current location *
-      <select id="currentLocation"></select>
-    </label>
-    <label>Ship *
-      <select id="shipSelect"></select>
-    </label>
-  </div>
+  <div class="grid">
+    <!-- LEFT: screenshot intake -->
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Screenshot Intake</div>
+        <div class="panel-meta">Paste (Ctrl+V) or upload contract screenshot</div>
+      </div>
 
-  <!-- Contracts summary + open editor -->
-  <div class="contracts-summary">
-    <div>Contracts in this session: <span id="contractCount">0</span></div>
-    <button id="openEditorBtn">Open Contract Editor</button>
-  </div>
+      <div class="upload-box" id="pasteZone">
+        <div class="upload-row">
+          <input type="file" id="screenshotInput" accept="image/*">
+          <button class="btn" id="scanBtn">Scan Image</button>
+          <button class="btn btn-secondary" id="clearBtn" type="button">Clear</button>
+        </div>
+        <div class="status" id="statusLine">
+          Tip: Use <b>Win+Shift+S</b> in-game to snip the contract, then click this box and press <b>Ctrl+V</b>.
+        </div>
+      </div>
 
-  <!-- Bottom actions -->
-  <div class="footer-actions">
-    <button id="submitAllBtn" class="btn-primary">Submit All</button>
-  </div>
-  <div class="small-note">
-    Use the Contract Editor to define routes (cargo, loading and offloading legs). When you submit, a summary card for this run is added to the history.
-  </div>
+      <div class="preview-wrap">
+        <div class="preview">
+          <img id="previewImg" alt="Screenshot preview" style="display:none;">
+        </div>
+        <div class="ocr-raw" id="ocrOutput"></div>
+      </div>
+    </section>
 
-  <!-- History -->
-  <div class="history-panel">
-    <div class="history-title">History (this session)</div>
-    <div class="history-wrap" id="historyWrap"></div>
-  </div>
+    <!-- RIGHT: contract form -->
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Contract Edit</div>
+        <div class="panel-meta">Auto-filled from contract text • Manually adjustable</div>
+      </div>
 
-  <!-- Audit Trail -->
-  <div class="audit-panel">
-    <div class="audit-head">Audit Trail (this session)</div>
-    <div class="audit-wrap">
-      <table class="audit-table">
-        <thead>
-          <tr>
-            <th style="width:140px">Time</th>
-            <th style="width:120px">Action</th>
-            <th>Target</th>
-            <th>Before → After</th>
-          </tr>
-        </thead>
-        <tbody id="auditBody"></tbody>
-      </table>
-    </div>
-    <div class="small-note">
-      Audit entries are stored locally in your browser together with this session. Clearing all sessions will delete the audit trail.
-    </div>
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kpi-label">Contract Reward</div>
+          <div class="kpi-value" id="kpiReward">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Availability</div>
+          <div class="kpi-value" id="kpiAvail">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Contracted By</div>
+          <div class="kpi-value" id="kpiContractor">—</div>
+        </div>
+      </div>
+
+      <form id="contractForm">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="contractId">Contract ID / Ref</label>
+            <input id="contractId" type="text" placeholder="e.g. AUTO-SCAN-001">
+          </div>
+          <div class="form-field">
+            <label for="missionName">Mission Name</label>
+            <input id="missionName" type="text" placeholder="e.g. Waste Collection – CRU-L1 & CRU-L4">
+          </div>
+
+          <div class="form-field">
+            <label for="reward">Reward (aUEC)</label>
+            <input id="reward" type="number" min="0" step="1" placeholder="42000">
+          </div>
+          <div class="form-field">
+            <label for="contractor">Contracted By</label>
+            <input id="contractor" type="text" placeholder="e.g. Covalex Independent Contractors">
+          </div>
+
+          <div class="form-field">
+            <label for="origin">Primary Origin</label>
+            <input id="origin" type="text" placeholder="e.g. CRU-L1 Ambitious Dream Station">
+          </div>
+          <div class="form-field">
+            <label for="destination">Primary Destination</label>
+            <input id="destination" type="text" placeholder="e.g. Seraphim Station">
+          </div>
+
+          <div class="form-field">
+            <label for="cargoType">Cargo Type</label>
+            <input id="cargoType" type="text" placeholder="Waste / Scrap / Boxes">
+          </div>
+          <div class="form-field">
+            <label for="requiredSCU">Required SCU (per leg)</label>
+            <input id="requiredSCU" type="number" min="0" step="1" placeholder="2">
+          </div>
+
+          <div class="form-field">
+            <label for="availability">Contract Availability</label>
+            <input id="availability" type="text" placeholder="e.g. 2h 9m">
+          </div>
+          <div class="form-field">
+            <label for="timestamp">Timestamp (logged)</label>
+            <input id="timestamp" type="datetime-local">
+          </div>
+        </div>
+
+        <div class="form-field" style="margin-top:8px;">
+          <label for="notes">Notes</label>
+          <textarea id="notes" placeholder="Multi-leg contract, number of stations, sharing rules, etc."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn">Save (local only)</button>
+          <button type="button" class="btn btn-secondary" id="resetBtn">Reset Form</button>
+        </div>
+      </form>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:16%;">Cargo</th>
+              <th style="width:30%;">Origin</th>
+              <th style="width:12%;">Req. SCU</th>
+              <th style="width:30%;">Destination</th>
+              <th>Leg</th>
+            </tr>
+          </thead>
+          <tbody id="objectivesBody">
+            <!-- Auto-filled from parsed objectives -->
+          </tbody>
+        </table>
+      </div>
+    </section>
   </div>
 </div>
 
-<!-- Modal: Contract Editor -->
-<div class="modal-bg" id="contractsModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>Contract Editor</h2>
-      <button type="button" id="closeEditorBtn" class="btn-ghost">Close</button>
-    </div>
-    <div class="modal-body">
-      <div id="contractsContainer"></div>
-      <button id="addContractBtn" type="button" class="btn-ghost" style="margin-top:4px">Add Another Contract</button>
-    </div>
-    <div class="modal-footer">
-      <button type="button" id="editorDoneBtn" class="btn-primary">Done</button>
-    </div>
-  </div>
-</div>
-
-<!-- Auth + app logic -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-
+<!-- Tesseract.js -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-/* ===== Helpers ===== */
-const STORE_KEY = 'jmbn-contract-sessions-v1';
-const HANGAR_SEL_KEY = 'jmbn-hangar-selected';
-const $ = s => document.querySelector(s);
-const esc = (s='') => {
-  const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;
-};
-const uid = (prefix) => prefix + '-' + Math.random().toString(36).slice(2,10);
+(function(){
+  const screenshotInput = document.getElementById('screenshotInput');
+  const scanBtn         = document.getElementById('scanBtn');
+  const clearBtn        = document.getElementById('clearBtn');
+  const pasteZone       = document.getElementById('pasteZone');
+  const statusLine      = document.getElementById('statusLine');
+  const previewImg      = document.getElementById('previewImg');
+  const ocrOutput       = document.getElementById('ocrOutput');
 
-/* Locations + cargo choices */
-const originList = `Ambitious Dream Station (CRU-L1), Anderson (HDMS-Anderson), ARC-L1 Wide Forest Station, ARC-L2 Lively Pathway Station, ARC-L3 Modern Express Station, ARC-L4 Faint Glen Station, ARC-L5 Yellow Core Station, ArcCorp Mining Area 045, ArcCorp Mining Area 048, ArcCorp Mining Area 056, ArcCorp Mining Area 061, ArcCorp Mining Area 141, ArcCorp Mining Area 157, Area18 (Riker Memorial Spaceport), Arid Reach, Ashland, Astor’s Clearing, Baijini Point, Beautiful Glen Station (CRU-L5), Benson Mining Outpost, Blackrock Exchange, Bloodshot Ridge, Bountiful Harvest Hydroponics, Brio’s Breaker Yard, Bud’s Growery, Bueno Ravine, Canard View, Casillo (HDPC-Casillo), Chawla’s Beach, Checkmate, Covalex Distribution Centre S1DC06, Covalex Distribution Centre S4DC05, CRU-L1 Ambitious Dream Station, CRU-L4 Shallow Fields Station, CRU-L5 Beautiful Glen Station, Cry-Astro Processing Plant 19-02, Cry-Astro Processing Plant 34-12, Cutter’s Rig, Deakins Research Outpost, Devlin Scrap & Salvage, Dudley & Daughters, Dunboro, Dupree Industrial Manufacturing Facility, Endgame, Endless Odyssey Station (MIC-L3), Everus Harbor, Faithful Dream Station (HUR-L2), Faint Glen Station (ARC-L4), Fallow Field, Farnesway (HDPC-Farnesway), Finn’s Folley, Frostbite, Frigid Knot, Gallete Family Farms, Gaslight, Goner’s Deal, Golden Riviera (The Golden Riviera), Grim HEX, Greycat Stanton I Production Complex-B, Greycat Stanton IV Production Complex A, Hadley (HDMS-Hadley), Harper’s Point, Hickes Research Outpost, High Course Station (HUR-L5), Humboldt Mines, HUR-L1 Green Glade Station, HUR-L2 Faithful Dream Station, HUR-L3 Thundering Express Station, HUR-L4 Melodic Fields Station, HUR-L5 High Course Station, Jackson’s Swap, Jumptown, Kabir’s Outpost, Kudre Ore, Last Landings, Lathan (HDMS-Lathan), Lively Pathway Station (ARC-L2), Lorville (Teasa Spaceport), Long Forest Station (MIC-L2), Loveridge Mineral Reserve, Ludlow, Magnus Gateway, Maker’s Point, Megumi Refueling, Melodic Fields Station (HUR-L4), MIC-L1 Shallow Frontier Station, MIC-L2 Long Forest Station, MIC-L3 Endless Odyssey Station, MIC-L4 Red Crossroads Station, MIC-L5 Modern Icarus Station, Modern Express Station (ARC-L3), Modern Icarus Station (MIC-L5), Moreland Hills, Necropolis (The Necropolis), New Babbage Interstellar Spaceport, Norgaard (HDMS-Norgaard), NT-999-XX, Nuen Waste Management, Oparei (HDMS-Oparei), Orbituary, Orinth (Reclamation & Disposal Orinth), Orison (August Dunlow Spaceport), Orphanage (The Orphanage), Outpost 54, Paradise Cove, Patch City, Pickers Field, Pinewood (HDMS-Pinewood), Private Property (PRIVATE PROPERTY), Pyro Gateway, Rappel, Raven’s Roost, Razor’s Edge, Rayari Anvik Research Outpost, Rayari Cantwell Research Outpost, Rayari Deltana Research Outpost, Rayari Kaltag Research Outpost, Rayari McGrath Research Outpost, Rat’s Nest, Riker Memorial Spaceport (Area18), Rod’s Fuel ’N Supplies, Rough Landing, Ruin Station, Rustville, Ryder (HDMS-Ryder), Sacren’s Plot, Sakura Sun Goldenrod Workcenter, Sakura Sun Magnolia Workcenter, Samson & Son’s Salvage Center, SCD-1 (Shubin Mining Facility SCD-1), Seer’s Canyon, Seraphim Station, Shady Glen Farms, Shallow Fields Station (CRU-L4), Shallow Frontier Station (MIC-L1), Shepherd’s Rest, Shubin Mining Facility SAL-2, Shubin Mining Facility SAL-5, Shubin Mining Facility SCD-1, Shubin Mining Facility SM0-10, Shubin Mining Facility SM0-13, Shubin Mining Facility SM0-18, Shubin Mining Facility SM0-22, Shubin Mining Facility SMCa-6, Shubin Mining Facility SMCa-8, S4DC05 (Covalex Distribution Centre S4DC05), S4LD01 (Microtech Logistics Depot S4LD01), S4LD13 (Microtech Logistics Depot S4LD13), Stanhope (HDMS-Stanhope), Starlight Service Station, Sunset Mesa, Teasa Spaceport (Lorville), Terra Gateway, Terra Mills HydroFarm, Thedus (HDMS-Thedus), Thundering Express Station (HUR-L3), Tram & Myers Mining, Port Tressler, Weeping Cove, Wide Forest Station (ARC-L1), Woodruff (HDMS-Woodruff), XenoThreat Security Station, Yellow Core Station (ARC-L5), Zephyr`.split(',');
-const commodities = `AcryliPlex Composite, Agricium, Agricium (Ore), Agricultural Supplies, Altruciatoxin, Aluminum, Aluminum (Ore), Aluminium, Aluminium (Ore), Amioshi Plague, Ammonia, Aphorite, Apoxygenite, Argon, Astatine, Atlasium, Beryl, Beryl (Raw), Bexalite, Bexalite (Raw), Bioplastic, Blue Bilva, Borase, Borase (Ore), CK13-GID Seed Blend, Carbon, Carbon Silk, Chlorine, Cobalt, CompBoard, Construction Materials, Copper, Copper (Ore), Corundum, Corundum (Raw), DCSR2, Decari Pod, Degnous Root, Diamond, Diamond (Raw), Diamond Laminate, Diluthermex, Distilled Spirits, Dolivine, Dopple, Dymantium, DynaFlex, E-Tam, Elespo, Fireworks, Fluorine, Fotia Seedpod, Freeze, Fresh Food, Gasping Weevil Eggs, Glow, Gold, Gold (Ore), Golden Medmon, HLX99 Hyperprocessors, Hadanite, Heart of the woods, Helium, Hephaestanite, Hephaestanite (Ore), HexaPolyMesh Coating, Human Food Bars, Hydrogen, Hydrogen Fuel, Inert Materials, Iodine, Iron, Iron (Ore), Janalite, Jumping Limes, Kopion Horn, Laranite, Laranite (Ore), Lastaprene, Luminalia Gift, Lunes, Lycara, Mala, Marok Gem, Maze, MedPens, Medical Supplies, Mercury, Methane, Neograph, Neon, Nitrogen, Omnapoxy, Osoian Hides, Oxypen, Oza, Partillium, Pingala Seeds, Pitambu, Potassium, Pressurized Ice, Processed Food, Prota, Quantainium, Quantainium (Raw), Quantum Fuel, Quartz, Quartz (Raw), RS1 Odyssey Spacesuits, Ranta Dung, Raw Ice, Recycled Material Composite, Redfin Energy Modulators, Revenant Pod, Revenant Tree Pollen, Riccite, SLAM, Sarilus, Scrap, Ship Ammunition, Silicon, Silnex, Souvenirs, Steel, Stileron, Stims, Stone Bug Shell, Sunset Berries, Taranite, Taranite (Raw), Thermal Foam, Thrust, Tin, Titanium, Titanium (Ore), Tritium, Tungsten, Tungsten (Ore), Uncut SLAM, Waste, WiDoW, XaPyen, ZetaProlanide`.split(',');
+  const rewardField     = document.getElementById('reward');
+  const contractorField = document.getElementById('contractor');
+  const availabilityFld = document.getElementById('availability');
+  const originField     = document.getElementById('origin');
+  const destField       = document.getElementById('destination');
+  const cargoField      = document.getElementById('cargoType');
+  const reqSCUField     = document.getElementById('requiredSCU');
+  const tsField         = document.getElementById('timestamp');
 
-/* Build <option> list helper */
-function buildOptions(list, current='', firstLabel='-- select --'){
-  const out=[];
-  out.push(`<option value="">${esc(firstLabel)}</option>`);
-  list.forEach(v=>{
-    const t=(v||'').trim(); if(!t) return;
-    const sel = t===current ? ' selected' : '';
-    out.push(`<option value="${esc(t)}"${sel}>${esc(t)}</option>`);
-  });
-  return out.join('');
-}
+  const kpiReward       = document.getElementById('kpiReward');
+  const kpiAvail        = document.getElementById('kpiAvail');
+  const kpiContractor   = document.getElementById('kpiContractor');
+  const objectivesBody  = document.getElementById('objectivesBody');
+  const contractForm    = document.getElementById('contractForm');
+  const resetBtn        = document.getElementById('resetBtn');
 
-/* ===== Data model =====
-Session: { id, createdAt, currentLocation, ship, contracts:[Contract], audit:[Audit], history:[History] }
-Contract: { id, name, reward, cargoGroups:[CargoGroup] }
-CargoGroup: { id, cargoType, loadings:[Leg], offloadings:[Leg] }
-Leg: { id, scu, location }
-Audit: { id, ts, action, target, before, after }
-History: { id, ts, sessionId, start, ship, totalReward, totalSCU, contractCount, cargoCount }
-========================= */
-let sessions = {};
-let currentSessionId = null;
-
-/* Load/save sessions */
-function loadSessions(){
-  try{
-    const raw = localStorage.getItem(STORE_KEY);
-    sessions = raw ? JSON.parse(raw) : {};
-    if (typeof sessions !== 'object' || sessions===null) sessions={};
-  }catch(e){
-    console.warn('Failed to load sessions', e);
-    sessions = {};
+  function setStatus(text,type){
+    statusLine.textContent = text;
+    statusLine.classList.remove('status-ok','status-err');
+    if(type==='ok')  statusLine.classList.add('status-ok');
+    if(type==='err') statusLine.classList.add('status-err');
   }
-}
-function saveSessions(){
-  localStorage.setItem(STORE_KEY, JSON.stringify(sessions));
-}
 
-/* Session helpers */
-function getSession(){ return sessions[currentSessionId] || null; }
-
-/* Audit logging */
-function logAudit(action, target, before='', after=''){
-  const s = getSession(); if(!s) return;
-  if(!Array.isArray(s.audit)) s.audit=[];
-  s.audit.unshift({
-    id: uid('EV'),
-    ts: new Date().toISOString(),
-    action, target,
-    before: String(before ?? ''),
-    after: String(after ?? '')
-  });
-  if(s.audit.length>300) s.audit.length = 300;
-  saveSessions();
-  renderAudit();
-}
-
-/* Create / ensure session */
-function createSession(){
-  const id = uid('CS');
-  const now = new Date().toISOString();
-  sessions[id] = {
-    id,
-    createdAt: now,
-    currentLocation: '',
-    ship: '',
-    contracts: [],
-    audit: [],
-    history: []
-  };
-  currentSessionId = id;
-  saveSessions();
-  updateSessionUrl();
-  logAudit('Session', 'Created new session', '', id);
-  return sessions[id];
-}
-
-function updateSessionUrl(){
-  try{
-    const url = new URL(location.href);
-    url.searchParams.set('session', currentSessionId);
-    history.replaceState(null,'',url.toString());
-  }catch(e){}
-}
-
-function ensureSession(){
-  loadSessions();
-  const params = new URLSearchParams(location.search);
-  const fromUrl = params.get('session');
-  if(fromUrl && sessions[fromUrl]){
-    currentSessionId = fromUrl;
-    const s = sessions[fromUrl];
-    if(!Array.isArray(s.audit)) s.audit=[];
-    if(!Array.isArray(s.history)) s.history=[];
-    return s;
-  }
-  return createSession();
-}
-
-/* ===== Rendering ===== */
-const contractsContainer = document.getElementById('contractsContainer');
-
-function renderSessionHeader(){
-  const s = getSession(); if(!s) return;
-  document.getElementById('sessionId').textContent = s.id;
-  const created = new Date(s.createdAt);
-  document.getElementById('sessionCreated').textContent =
-    'Created: '+created.toLocaleString();
-}
-
-function renderSessionFields(){
-  const s = getSession(); if(!s) return;
-  // Current location
-  const locSel = document.getElementById('currentLocation');
-  locSel.innerHTML = buildOptions(originList, s.currentLocation || '', 'Select starting location');
-  // Ship list from Hangar selection
-  const shipSel = document.getElementById('shipSelect');
-  let ships=[];
-  try{
-    const raw = localStorage.getItem(HANGAR_SEL_KEY);
-    ships = raw ? JSON.parse(raw) : [];
-    if(!Array.isArray(ships)) ships=[];
-  }catch(e){ ships=[]; }
-  const shipOptions=[];
-  shipOptions.push(`<option value="">Select ship</option>`);
-  if(ships.length){
-    ships.forEach(name=>{
-      const t=(name||'').trim(); if(!t) return;
-      const sel = t===s.ship ? ' selected' : '';
-      shipOptions.push(`<option value="${esc(t)}"${sel}>${esc(t)}</option>`);
-    });
-  }else{
-    const label = s.ship ? `Using manual: ${s.ship}` : 'No selected ships (use Hangar)';
-    shipOptions.push(`<option disabled>${esc(label)}</option>`);
-  }
-  shipSel.innerHTML = shipOptions.join('');
-}
-
-function legRowHtml(contractId, cargoId, leg, kind){
-  return `
-    <div class="leg-row" data-contract-id="${contractId}" data-cargo-id="${cargoId}" data-leg-id="${leg.id}" data-kind="${kind}">
-      <label>SCU
-        <input type="number" min="0" class="leg-scu" value="${leg.scu ?? ''}">
-      </label>
-      <label>Location
-        <select class="leg-location">
-          ${buildOptions(originList, leg.location || '', 'Select location')}
-        </select>
-      </label>
-      <button type="button" class="btn-danger remove-leg">✕</button>
-    </div>`;
-}
-
-function cargoGroupHtml(contract, group){
-  return `
-    <div class="cargo-card" data-contract-id="${contract.id}" data-cargo-id="${group.id}">
-      <div class="cargo-head">
-        <div class="cargo-title">Cargo Type</div>
-        <button type="button" class="btn-ghost btn-danger remove-cargo">Remove Cargo</button>
-      </div>
-      <div class="cargo-body">
-        <label>Cargo Type *
-          <select class="cargo-type">
-            ${buildOptions(commodities, group.cargoType || '', 'Select cargo type')}
-          </select>
-        </label>
-        <div class="legs-grid">
-          <div class="legs-column">
-            <div class="legs-label">Loading</div>
-            ${group.loadings.map(leg => legRowHtml(contract.id, group.id, leg, 'load')).join('')}
-            <button type="button" class="btn-ghost add-leg" data-kind="load">Add Loading</button>
-          </div>
-          <div class="legs-column">
-            <div class="legs-label">Offloading</div>
-            ${group.offloadings.map(leg => legRowHtml(contract.id, group.id, leg, 'off')).join('')}
-            <button type="button" class="btn-ghost add-leg" data-kind="off">Add Offloading</button>
-          </div>
-        </div>
-      </div>
-    </div>`;
-}
-
-function contractCardHtml(contract, idx){
-  return `
-    <div class="contract-card" data-contract-id="${contract.id}">
-      <div class="contract-head">
-        <div class="contract-title">Contract #${idx+1}</div>
-        <button type="button" class="btn-ghost btn-danger remove-contract">Remove Contract</button>
-      </div>
-      <div class="contract-body">
-        <label>Contract Name (optional)
-          <input type="text" class="contract-name" value="${esc(contract.name||'')}">
-        </label>
-        <label>Reward (aUEC)
-          <input type="number" min="0" class="contract-reward" value="${contract.reward ?? ''}">
-        </label>
-        ${contract.cargoGroups.map(g => cargoGroupHtml(contract,g)).join('')}
-        <button type="button" class="btn-ghost add-cargo">Add Cargo Type</button>
-      </div>
-    </div>`;
-}
-
-function renderContracts(){
-  const s = getSession(); if(!s) return;
-  const count = s.contracts.length;
-  document.getElementById('contractCount').textContent = count;
-  if(!count){
-    contractsContainer.innerHTML = `<div class="small-note">No contracts yet. Click <b>Add Another Contract</b> to start.</div>`;
-    return;
-  }
-  contractsContainer.innerHTML = s.contracts.map((c,i)=>contractCardHtml(c,i)).join('');
-}
-
-/* Audit render */
-function renderAudit(){
-  const s = getSession(); if(!s) return;
-  const body = document.getElementById('auditBody');
-  const list = Array.isArray(s.audit)? s.audit : [];
-  if(!list.length){
-    body.innerHTML = `<tr><td colspan="4">No audit entries yet.</td></tr>`;
-    return;
-  }
-  body.innerHTML = list.map(ev=>{
-    const time = new Date(ev.ts).toLocaleTimeString();
-    return `<tr>
-      <td>${esc(time)}</td>
-      <td>${esc(ev.action)}</td>
-      <td>${esc(ev.target)}</td>
-      <td class="audit-before-after">
-        ${esc(ev.before)}${ev.before!=='' || ev.after!=='' ? ' → ' : ''}${esc(ev.after)}
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-/* History render */
-function renderHistory(){
-  const s = getSession(); if(!s) return;
-  const wrap = document.getElementById('historyWrap');
-  const list = Array.isArray(s.history) ? s.history : [];
-  if(!list.length){
-    wrap.innerHTML = `<div class="small-note">No submissions yet. Build a route and click <b>Submit All</b>.</div>`;
-    return;
-  }
-  wrap.innerHTML = list.map(h=>{
-    const time = new Date(h.ts);
-    return `
-      <div class="history-card">
-        <div class="history-head">
-          <div>${time.toLocaleString()}</div>
-          <div class="tag">Session ${esc(h.sessionId)}</div>
-        </div>
-        <div class="history-main">
-          <div><b>Ship:</b> ${esc(h.ship || '-')} &nbsp; | &nbsp; <b>Start:</b> ${esc(h.start || '-')}</div>
-          <div><b>Total Reward:</b> ${esc(h.totalReward)} aUEC &nbsp; | &nbsp;
-              <b>Total SCU:</b> ${esc(h.totalSCU)}</div>
-          <div><b>Contracts:</b> ${h.contractCount} &nbsp; | &nbsp;
-              <b>Cargo Types:</b> ${h.cargoCount}</div>
-        </div>
-        <div class="history-meta">
-          Snapshot saved on submit. Use Export to get full JSON payload for this run.
-        </div>
-      </div>`;
-  }).join('');
-}
-
-/* ===== Mutators ===== */
-function addContract(){
-  const s = getSession(); if(!s) return;
-  const c = {
-    id: uid('CT'),
-    name: '',
-    reward: '',
-    cargoGroups: []
-  };
-  s.contracts.push(c);
-  saveSessions();
-  renderContracts();
-  logAudit('Add', `Contract ${s.contracts.length}`, '', c.id);
-}
-
-function removeContract(contractId){
-  const s = getSession(); if(!s) return;
-  const idx = s.contracts.findIndex(c=>c.id===contractId);
-  if(idx===-1) return;
-  const removed = s.contracts[idx];
-  s.contracts.splice(idx,1);
-  saveSessions();
-  renderContracts();
-  logAudit('Remove','Contract', removed.id, '');
-}
-
-function addCargoGroup(contractId){
-  const s=getSession(); if(!s) return;
-  const c = s.contracts.find(x=>x.id===contractId); if(!c) return;
-  const g = {
-    id: uid('CG'),
-    cargoType: '',
-    loadings: [],
-    offloadings: []
-  };
-  c.cargoGroups.push(g);
-  saveSessions();
-  renderContracts();
-  logAudit('Add','Cargo Type', `Contract ${contractId}`, g.id);
-}
-
-function removeCargoGroup(contractId, cargoId){
-  const s=getSession(); if(!s) return;
-  const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
-  const beforeCount = c.cargoGroups.length;
-  c.cargoGroups = c.cargoGroups.filter(g=>g.id!==cargoId);
-  saveSessions();
-  renderContracts();
-  if(c.cargoGroups.length!==beforeCount){
-    logAudit('Remove','Cargo Type', cargoId, '');
-  }
-}
-
-function addLeg(contractId, cargoId, kind){
-  const s=getSession(); if(!s) return;
-  const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
-  const g=c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
-  const leg = { id: uid('LG'), scu:'', location:'' };
-  if(kind==='off') g.offloadings.push(leg);
-  else g.loadings.push(leg);
-  saveSessions();
-  renderContracts();
-  logAudit('Add', kind==='off'?'Offload leg':'Load leg', cargoId, leg.id);
-}
-
-function removeLeg(contractId, cargoId, legId, kind){
-  const s=getSession(); if(!s) return;
-  const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
-  const g=c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
-  const list = (kind==='off') ? g.offloadings : g.loadings;
-  const before = list.length;
-  const newList = list.filter(l=>l.id!==legId);
-  if(kind==='off') g.offloadings = newList;
-  else g.loadings = newList;
-  if(newList.length!==before){
-    saveSessions();
-    renderContracts();
-    logAudit('Remove', kind==='off'?'Offload leg':'Load leg', cargoId, legId);
-  }
-}
-
-/* ===== Event wiring ===== */
-function wireTopLevelHandlers(){
-  // session fields
-  document.getElementById('currentLocation').addEventListener('change', e=>{
-    const s=getSession(); if(!s) return;
-    const old = s.currentLocation || '';
-    const nv = e.target.value;
-    s.currentLocation = nv;
-    saveSessions();
-    if(old!==nv) logAudit('Update','Session location', old, nv);
-  });
-  document.getElementById('shipSelect').addEventListener('change', e=>{
-    const s=getSession(); if(!s) return;
-    const old = s.ship || '';
-    const nv = e.target.value;
-    s.ship = nv;
-    saveSessions();
-    if(old!==nv) logAudit('Update','Ship', old, nv);
-  });
-
-  // history / submit
-  document.getElementById('submitAllBtn').addEventListener('click', ()=>{
-    const s=getSession(); if(!s){alert('No session loaded');return;}
-    if(!s.contracts.length){alert('No contracts in this session yet.');return;}
-
-    // compute summary
-    let totalReward = 0;
-    let totalSCU = 0;
-    let cargoCount = 0;
-    s.contracts.forEach(c=>{
-      const r = Number(c.reward || 0);
-      if(Number.isFinite(r)) totalReward += r;
-      (c.cargoGroups||[]).forEach(g=>{
-        cargoCount++;
-        (g.loadings||[]).forEach(l=>{
-          const v = Number(l.scu || 0);
-          if(Number.isFinite(v)) totalSCU += v;
-        });
-      });
-    });
-
-    const snap = {
-      id: uid('HS'),
-      ts: new Date().toISOString(),
-      sessionId: s.id,
-      start: s.currentLocation || '',
-      ship: s.ship || '',
-      totalReward,
-      totalSCU,
-      contractCount: s.contracts.length,
-      cargoCount
+  function loadPreviewFromBlob(blob){
+    const reader = new FileReader();
+    reader.onload = e=>{
+      previewImg.src = e.target.result;
+      previewImg.style.display = 'block';
     };
-    if(!Array.isArray(s.history)) s.history=[];
-    s.history.unshift(snap);
-    saveSessions();
-    renderHistory();
-    logAudit('Submit','Session', '', snap.id);
+    reader.readAsDataURL(blob);
+  }
 
-    // JSON for copying / export
-    const json = JSON.stringify(s,null,2);
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(json).then(()=>{
-        alert('Session JSON copied to clipboard. History card added below.');
-      }).catch(()=>{
-        alert('Session JSON:\n\n'+json);
+  // === Parsing helpers for your contract screenshot ===
+  function parseHeader(text){
+    const header = { reward:null, availability:null, contractor:null };
+
+    // Reward 42,000
+    let m = text.match(/Reward\s+([\d,]+)/i);
+    if(m && m[1]) header.reward = m[1].replace(/,/g,'');
+
+    // Contract Availability 2h 9m
+    m = text.match(/Contract\s+Availability\s+([0-9hHmM\s]+)/i);
+    if(m && m[1]) header.availability = m[1].trim();
+
+    // Contracted By Covalex Independent Contractors
+    m = text.match(/Contracted\s+By\s+(.+)/i);
+    if(m && m[1]) header.contractor = m[1].trim();
+
+    return header;
+  }
+
+  function parseObjectives(text){
+    const cleaned = text.replace(/\r/g,''); // normalise line breaks
+    const regex = /Collect\s+(\w+)\s+from\s+(.+?)\.\s*[\n\s]*Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
+    const result = [];
+    let m;
+    let leg = 1;
+    while((m = regex.exec(cleaned)) !== null){
+      const cargoType   = m[1];                // Waste / Scrap
+      const origin      = m[2].trim();
+      const delivered   = parseInt(m[3],10);   // 0
+      const required    = parseInt(m[4],10);   // 2 / 3
+      const destination = m[5].trim();
+
+      result.push({
+        cargoType,
+        origin,
+        delivered,
+        required,
+        destination,
+        leg: leg++
       });
-    }else{
-      alert('Session JSON:\n\n'+json);
     }
-  });
-
-  // New session / clear / export raw
-  document.getElementById('newSessionBtn').addEventListener('click', ()=>{
-    if(!confirm('Start a new session? Current one will remain saved.')) return;
-    createSession();
-    renderSessionHeader();
-    renderSessionFields();
-    renderContracts();
-    renderAudit();
-    renderHistory();
-  });
-
-  document.getElementById('clearAllSessionsBtn').addEventListener('click', ()=>{
-    if(!confirm('Delete ALL saved contract sessions from this browser?')) return;
-    sessions={}; currentSessionId=null;
-    saveSessions();
-    createSession();
-    renderSessionHeader();
-    renderSessionFields();
-    renderContracts();
-    renderAudit();
-    renderHistory();
-  });
-
-  document.getElementById('exportSessionBtn').addEventListener('click', ()=>{
-    const s=getSession(); if(!s){alert('No session loaded');return;}
-    const json = JSON.stringify(s,null,2);
-    const blob = new Blob([json],{type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download = `${s.id}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    logAudit('Export','Session JSON', '', '');
-  });
-
-  /* Modal open/close */
-  const modal = document.getElementById('contractsModal');
-  document.getElementById('openEditorBtn').addEventListener('click', ()=>{
-    modal.style.display='flex';
-  });
-  document.getElementById('closeEditorBtn').addEventListener('click', ()=>{
-    modal.style.display='none';
-  });
-  document.getElementById('editorDoneBtn').addEventListener('click', ()=>{
-    modal.style.display='none';
-  });
-
-  // Add contract (inside modal)
-  document.getElementById('addContractBtn').addEventListener('click', ()=>{
-    addContract();
-  });
-
-  // Delegated handlers for contracts / cargo / legs (inside modal)
-  contractsContainer.addEventListener('click', (e)=>{
-    const contractCard = e.target.closest('.contract-card');
-    const contractId = contractCard?.dataset.contractId;
-
-    if(e.target.closest('.remove-contract') && contractId){
-      if(confirm('Remove this contract?')) removeContract(contractId);
-      return;
-    }
-
-    if(e.target.closest('.add-cargo') && contractId){
-      addCargoGroup(contractId);
-      return;
-    }
-
-    const cargoCard = e.target.closest('.cargo-card');
-    const cargoId = cargoCard?.dataset.cargoId;
-
-    if(e.target.closest('.remove-cargo') && contractId && cargoId){
-      if(confirm('Remove this cargo type from the contract?')) removeCargoGroup(contractId,cargoId);
-      return;
-    }
-
-    if(e.target.closest('.add-leg') && contractId && cargoId){
-      const kind = e.target.closest('.add-leg').dataset.kind === 'off' ? 'off' : 'load';
-      addLeg(contractId,cargoId,kind);
-      return;
-    }
-
-    const legRow = e.target.closest('.leg-row');
-    if(e.target.closest('.remove-leg') && legRow){
-      const kind = legRow.dataset.kind || 'load';
-      const legId = legRow.dataset.legId;
-      const cId = legRow.dataset.contractId;
-      const gId = legRow.dataset.cargoId;
-      removeLeg(cId,gId,legId,kind);
-      return;
-    }
-  });
-
-  // Input/change for updating values
-  contractsContainer.addEventListener('input', handleValueChange);
-  contractsContainer.addEventListener('change', handleValueChange);
-}
-
-function handleValueChange(e){
-  const s=getSession(); if(!s) return;
-  const contractCard = e.target.closest('.contract-card');
-  const contractId = contractCard?.dataset.contractId;
-  if(!contractId) return;
-  const c = s.contracts.find(x=>x.id===contractId); if(!c) return;
-
-  if(e.target.classList.contains('contract-name')){
-    const old = c.name || '';
-    const nv = e.target.value.trim();
-    if(old!==nv){
-      c.name = nv;
-      saveSessions();
-      logAudit('Update','Contract name', old, nv);
-    }
-    return;
-  }
-  if(e.target.classList.contains('contract-reward')){
-    const old = c.reward ?? '';
-    const nv = e.target.value;
-    if(old!==nv){
-      c.reward = nv;
-      saveSessions();
-      logAudit('Update','Contract reward', old, nv);
-    }
-    return;
+    return result;
   }
 
-  const cargoCard = e.target.closest('.cargo-card');
-  if(cargoCard){
-    const cargoId = cargoCard.dataset.cargoId;
-    const g = c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
+  function fillObjectivesTable(objectives){
+    objectivesBody.innerHTML = '';
+    objectives.forEach(obj=>{
+      const tr  = document.createElement('tr');
 
-    if(e.target.classList.contains('cargo-type')){
-      const old = g.cargoType || '';
-      const nv = e.target.value;
-      if(old!==nv){
-        g.cargoType = nv;
-        saveSessions();
-        logAudit('Update','Cargo type', old, nv);
-      }
-      return;
+      const tdC = document.createElement('td');
+      tdC.textContent = obj.cargoType;
+      tr.appendChild(tdC);
+
+      const tdO = document.createElement('td');
+      tdO.textContent = obj.origin;
+      tr.appendChild(tdO);
+
+      const tdS = document.createElement('td');
+      tdS.textContent = obj.required;
+      tr.appendChild(tdS);
+
+      const tdD = document.createElement('td');
+      tdD.textContent = obj.destination;
+      tr.appendChild(tdD);
+
+      const tdL = document.createElement('td');
+      const badge = document.createElement('span');
+      badge.className = 'badge badge-contract';
+      badge.textContent = 'LEG ' + obj.leg;
+      tdL.appendChild(badge);
+      tr.appendChild(tdL);
+
+      objectivesBody.appendChild(tr);
+    });
+  }
+
+  function applyDetections(text){
+    const header = parseHeader(text);
+    const objectives = parseObjectives(text);
+
+    // Header → form + KPIs
+    if(header.reward){
+      rewardField.value = header.reward;
+      kpiReward.textContent = Number(header.reward).toLocaleString();
+    } else {
+      kpiReward.textContent = '—';
     }
 
-    const legRow = e.target.closest('.leg-row');
-    if(legRow){
-      const kind = legRow.dataset.kind || 'load';
-      const legId = legRow.dataset.legId;
-      const list = (kind==='off') ? g.offloadings : g.loadings;
-      const leg = list.find(l=>l.id===legId); if(!leg) return;
+    if(header.availability){
+      availabilityFld.value = header.availability;
+      kpiAvail.textContent  = header.availability;
+    } else {
+      kpiAvail.textContent = '—';
+    }
 
-      if(e.target.classList.contains('leg-scu')){
-        const old = leg.scu ?? '';
-        const nv = e.target.value;
-        if(old!==nv){
-          leg.scu = nv;
-          saveSessions();
-          const label = kind==='off'?'Offload SCU':'Load SCU';
-          logAudit('Update',label, old, nv);
+    if(header.contractor){
+      contractorField.value = header.contractor;
+      kpiContractor.textContent = header.contractor;
+    } else {
+      kpiContractor.textContent = '—';
+    }
+
+    // Objectives
+    fillObjectivesTable(objectives);
+
+    if(objectives.length > 0){
+      const first = objectives[0];
+      cargoField.value  = first.cargoType;
+      originField.value = first.origin;
+      destField.value   = first.destination;
+      reqSCUField.value = first.required;
+    }
+
+    // Default timestamp if empty
+    if(!tsField.value){
+      const now = new Date();
+      const pad = n=>String(n).padStart(2,'0');
+      tsField.value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    }
+  }
+
+  async function runOCROnBlob(blob){
+    ocrOutput.textContent = '';
+    setStatus('Scanning image…', 'ok');
+    scanBtn.disabled = true;
+
+    try{
+      const { data:{ text } } = await Tesseract.recognize(blob,'eng',{
+        logger:m=>{
+          if(m.status === 'recognizing text'){
+            const pct = Math.round((m.progress || 0)*100);
+            setStatus(`Recognising text… ${pct}%`, 'ok');
+          }
         }
-        return;
-      }
-      if(e.target.classList.contains('leg-location')){
-        const old = leg.location || '';
-        const nv = e.target.value;
-        if(old!==nv){
-          leg.location = nv;
-          saveSessions();
-          const label = kind==='off'?'Offload location':'Load location';
-          logAudit('Update',label, old, nv);
-        }
-        return;
-      }
+      });
+      const trimmed = text.trim();
+      ocrOutput.textContent = trimmed;
+      setStatus('Scan complete. Parsed values applied – please double-check.', 'ok');
+      applyDetections(trimmed);
+    }catch(err){
+      console.error(err);
+      setStatus('Error during OCR. Try a clearer / higher-res screenshot.', 'err');
+    }finally{
+      scanBtn.disabled = false;
     }
   }
-}
 
-/* ===== Init (auth-gated) ===== */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth();   // redirects to auth.html if not logged in
-  if (!session) return;
+  // === Handlers ===
+  scanBtn.addEventListener('click',()=>{
+    const file = screenshotInput.files && screenshotInput.files[0];
+    if(!file){
+      setStatus('No file selected. Either choose an image or paste with Ctrl+V.', 'err');
+      return;
+    }
+    loadPreviewFromBlob(file);
+    runOCROnBlob(file);
+  });
 
-  ensureSession();
-  renderSessionHeader();
-  renderSessionFields();
-  renderContracts();
-  renderAudit();
-  renderHistory();
-  wireTopLevelHandlers();
+  clearBtn.addEventListener('click',()=>{
+    screenshotInput.value = '';
+    previewImg.src = '';
+    previewImg.style.display = 'none';
+    ocrOutput.textContent = '';
+    objectivesBody.innerHTML = '';
+    setStatus('Cleared image and OCR output.', 'ok');
+  });
 
-  // If it’s a brand-new empty session, start with one contract + cargo + basic legs
-  const s = getSession();
-  if(s && !s.contracts.length){
-    addContract();
-    const first = s.contracts[0];
-    addCargoGroup(first.id);
-    const g = first.cargoGroups[0];
-    addLeg(first.id,g.id,'load');
-    addLeg(first.id,g.id,'off');
-  }
-});
+  // Paste support: user can Ctrl+V an image directly
+  pasteZone.addEventListener('click',()=>pasteZone.focus());
+  window.addEventListener('paste',e=>{
+    const items = e.clipboardData && e.clipboardData.items;
+    if(!items) return;
+
+    for(let i=0;i<items.length;i++){
+      const item = items[i];
+      if(item.type && item.type.startsWith('image/')){
+        const blob = item.getAsFile();
+        if(blob){
+          e.preventDefault();
+          loadPreviewFromBlob(blob);
+          setStatus('Pasted image detected – scanning…', 'ok');
+          runOCROnBlob(blob);
+        }
+        break;
+      }
+    }
+  });
+
+  // Form reset
+  resetBtn.addEventListener('click',()=>{
+    contractForm.reset();
+    kpiReward.textContent     = '—';
+    kpiAvail.textContent      = '—';
+    kpiContractor.textContent = '—';
+    objectivesBody.innerHTML  = '';
+    setStatus('Form reset. Screenshot data remains until you clear it.', 'ok');
+  });
+
+  // Dummy submit (you can later wire to Supabase)
+  contractForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    setStatus('Saved (locally only for now). Hook this into Supabase when ready.', 'ok');
+  });
+})();
 </script>
 </body>
 </html>
