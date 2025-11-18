@@ -122,6 +122,24 @@ button:hover{background:var(--accent);color:#000}
   display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px
 }
 .small-note{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* Audit table */
+.audit-panel{margin-top:16px}
+.audit-head{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.audit-wrap{
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  max-height:220px;background:#050505
+}
+.audit-table{width:100%;border-collapse:collapse;font-size:11px}
+.audit-table th,.audit-table td{
+  padding:6px 7px;border-bottom:1px solid rgba(214,180,76,.25);text-align:left
+}
+.audit-table th{
+  background:#080808;color:var(--accent);position:sticky;top:0;z-index:1
+}
+.audit-table tr:nth-child(even){background:#101010}
+.audit-table tr:hover{background:rgba(214,180,76,.08)}
+.audit-before-after{font-family:monospace;font-size:10px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -171,12 +189,34 @@ button:hover{background:var(--accent);color:#000}
   <!-- Contracts container -->
   <div id="contractsContainer"></div>
 
+  <!-- Bottom actions -->
   <div class="footer-actions">
     <button id="addContractBtn">Add Another Contract</button>
     <button id="submitAllBtn" class="btn-primary">Submit All</button>
   </div>
   <div class="small-note">
     Each session ID can contain multiple contracts. Each contract can contain multiple cargo types, each with multiple loading and offloading legs.
+  </div>
+
+  <!-- Audit Trail -->
+  <div class="audit-panel">
+    <div class="audit-head">Audit Trail (this session)</div>
+    <div class="audit-wrap">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th style="width:140px">Time</th>
+            <th style="width:120px">Action</th>
+            <th>Target</th>
+            <th>Before → After</th>
+          </tr>
+        </thead>
+        <tbody id="auditBody"></tbody>
+      </table>
+    </div>
+    <div class="small-note">
+      Audit entries are stored locally in your browser together with this session. Clearing all sessions will delete the audit trail.
+    </div>
   </div>
 </div>
 
@@ -194,7 +234,7 @@ const esc = (s='') => {
 };
 const uid = (prefix) => prefix + '-' + Math.random().toString(36).slice(2,10);
 
-/* Locations + cargo choices (same as your previous file) */
+/* Locations + cargo choices */
 const originList = `Ambitious Dream Station (CRU-L1), Anderson (HDMS-Anderson), ARC-L1 Wide Forest Station, ARC-L2 Lively Pathway Station, ARC-L3 Modern Express Station, ARC-L4 Faint Glen Station, ARC-L5 Yellow Core Station, ArcCorp Mining Area 045, ArcCorp Mining Area 048, ArcCorp Mining Area 056, ArcCorp Mining Area 061, ArcCorp Mining Area 141, ArcCorp Mining Area 157, Area18 (Riker Memorial Spaceport), Arid Reach, Ashland, Astor’s Clearing, Baijini Point, Beautiful Glen Station (CRU-L5), Benson Mining Outpost, Blackrock Exchange, Bloodshot Ridge, Bountiful Harvest Hydroponics, Brio’s Breaker Yard, Bud’s Growery, Bueno Ravine, Canard View, Casillo (HDPC-Casillo), Chawla’s Beach, Checkmate, Covalex Distribution Centre S1DC06, Covalex Distribution Centre S4DC05, CRU-L1 Ambitious Dream Station, CRU-L4 Shallow Fields Station, CRU-L5 Beautiful Glen Station, Cry-Astro Processing Plant 19-02, Cry-Astro Processing Plant 34-12, Cutter’s Rig, Deakins Research Outpost, Devlin Scrap & Salvage, Dudley & Daughters, Dunboro, Dupree Industrial Manufacturing Facility, Endgame, Endless Odyssey Station (MIC-L3), Everus Harbor, Faithful Dream Station (HUR-L2), Faint Glen Station (ARC-L4), Fallow Field, Farnesway (HDPC-Farnesway), Finn’s Folley, Frostbite, Frigid Knot, Gallete Family Farms, Gaslight, Goner’s Deal, Golden Riviera (The Golden Riviera), Grim HEX, Greycat Stanton I Production Complex-B, Greycat Stanton IV Production Complex A, Hadley (HDMS-Hadley), Harper’s Point, Hickes Research Outpost, High Course Station (HUR-L5), Humboldt Mines, HUR-L1 Green Glade Station, HUR-L2 Faithful Dream Station, HUR-L3 Thundering Express Station, HUR-L4 Melodic Fields Station, HUR-L5 High Course Station, Jackson’s Swap, Jumptown, Kabir’s Outpost, Kudre Ore, Last Landings, Lathan (HDMS-Lathan), Lively Pathway Station (ARC-L2), Lorville (Teasa Spaceport), Long Forest Station (MIC-L2), Loveridge Mineral Reserve, Ludlow, Magnus Gateway, Maker’s Point, Megumi Refueling, Melodic Fields Station (HUR-L4), MIC-L1 Shallow Frontier Station, MIC-L2 Long Forest Station, MIC-L3 Endless Odyssey Station, MIC-L4 Red Crossroads Station, MIC-L5 Modern Icarus Station, Modern Express Station (ARC-L3), Modern Icarus Station (MIC-L5), Moreland Hills, Necropolis (The Necropolis), New Babbage Interstellar Spaceport, Norgaard (HDMS-Norgaard), NT-999-XX, Nuen Waste Management, Oparei (HDMS-Oparei), Orbituary, Orinth (Reclamation & Disposal Orinth), Orison (August Dunlow Spaceport), Orphanage (The Orphanage), Outpost 54, Paradise Cove, Patch City, Pickers Field, Pinewood (HDMS-Pinewood), Private Property (PRIVATE PROPERTY), Pyro Gateway, Rappel, Raven’s Roost, Razor’s Edge, Rayari Anvik Research Outpost, Rayari Cantwell Research Outpost, Rayari Deltana Research Outpost, Rayari Kaltag Research Outpost, Rayari McGrath Research Outpost, Rat’s Nest, Riker Memorial Spaceport (Area18), Rod’s Fuel ’N Supplies, Rough Landing, Ruin Station, Rustville, Ryder (HDMS-Ryder), Sacren’s Plot, Sakura Sun Goldenrod Workcenter, Sakura Sun Magnolia Workcenter, Samson & Son’s Salvage Center, SCD-1 (Shubin Mining Facility SCD-1), Seer’s Canyon, Seraphim Station, Shady Glen Farms, Shallow Fields Station (CRU-L4), Shallow Frontier Station (MIC-L1), Shepherd’s Rest, Shubin Mining Facility SAL-2, Shubin Mining Facility SAL-5, Shubin Mining Facility SCD-1, Shubin Mining Facility SM0-10, Shubin Mining Facility SM0-13, Shubin Mining Facility SM0-18, Shubin Mining Facility SM0-22, Shubin Mining Facility SMCa-6, Shubin Mining Facility SMCa-8, S4DC05 (Covalex Distribution Centre S4DC05), S4LD01 (Microtech Logistics Depot S4LD01), S4LD13 (Microtech Logistics Depot S4LD13), Stanhope (HDMS-Stanhope), Starlight Service Station, Sunset Mesa, Teasa Spaceport (Lorville), Terra Gateway, Terra Mills HydroFarm, Thedus (HDMS-Thedus), Thundering Express Station (HUR-L3), Tram & Myers Mining, Port Tressler, Weeping Cove, Wide Forest Station (ARC-L1), Woodruff (HDMS-Woodruff), XenoThreat Security Station, Yellow Core Station (ARC-L5), Zephyr`.split(',');
 const commodities = `AcryliPlex Composite, Agricium, Agricium (Ore), Agricultural Supplies, Altruciatoxin, Aluminum, Aluminum (Ore), Aluminium, Aluminium (Ore), Amioshi Plague, Ammonia, Aphorite, Apoxygenite, Argon, Astatine, Atlasium, Beryl, Beryl (Raw), Bexalite, Bexalite (Raw), Bioplastic, Blue Bilva, Borase, Borase (Ore), CK13-GID Seed Blend, Carbon, Carbon Silk, Chlorine, Cobalt, CompBoard, Construction Materials, Copper, Copper (Ore), Corundum, Corundum (Raw), DCSR2, Decari Pod, Degnous Root, Diamond, Diamond (Raw), Diamond Laminate, Diluthermex, Distilled Spirits, Dolivine, Dopple, Dymantium, DynaFlex, E-Tam, Elespo, Fireworks, Fluorine, Fotia Seedpod, Freeze, Fresh Food, Gasping Weevil Eggs, Glow, Gold, Gold (Ore), Golden Medmon, HLX99 Hyperprocessors, Hadanite, Heart of the woods, Helium, Hephaestanite, Hephaestanite (Ore), HexaPolyMesh Coating, Human Food Bars, Hydrogen, Hydrogen Fuel, Inert Materials, Iodine, Iron, Iron (Ore), Janalite, Jumping Limes, Kopion Horn, Laranite, Laranite (Ore), Lastaprene, Luminalia Gift, Lunes, Lycara, Mala, Marok Gem, Maze, MedPens, Medical Supplies, Mercury, Methane, Neograph, Neon, Nitrogen, Omnapoxy, Osoian Hides, Oxypen, Oza, Partillium, Pingala Seeds, Pitambu, Potassium, Pressurized Ice, Processed Food, Prota, Quantainium, Quantainium (Raw), Quantum Fuel, Quartz, Quartz (Raw), RS1 Odyssey Spacesuits, Ranta Dung, Raw Ice, Recycled Material Composite, Redfin Energy Modulators, Revenant Pod, Revenant Tree Pollen, Riccite, SLAM, Sarilus, Scrap, Ship Ammunition, Silicon, Silnex, Souvenirs, Steel, Stileron, Stims, Stone Bug Shell, Sunset Berries, Taranite, Taranite (Raw), Thermal Foam, Thrust, Tin, Titanium, Titanium (Ore), Tritium, Tungsten, Tungsten (Ore), Uncut SLAM, Waste, WiDoW, XaPyen, ZetaProlanide`.split(',');
 
@@ -211,10 +251,11 @@ function buildOptions(list, current='', firstLabel='-- select --'){
 }
 
 /* ===== Data model =====
-Session: { id, createdAt, currentLocation, ship, contracts: [Contract] }
+Session: { id, createdAt, currentLocation, ship, contracts: [Contract], audit:[Audit] }
 Contract: { id, name, reward, cargoGroups:[CargoGroup] }
 CargoGroup: { id, cargoType, loadings:[Leg], offloadings:[Leg] }
 Leg: { id, scu, location }
+Audit: { id, ts, action, target, before, after }
 ========================= */
 let sessions = {};
 let currentSessionId = null;
@@ -237,6 +278,24 @@ function saveSessions(){
 /* Session helpers */
 function getSession(){ return sessions[currentSessionId] || null; }
 
+/* Audit logging */
+function logAudit(action, target, before='', after=''){
+  const s = getSession(); if(!s) return;
+  if(!Array.isArray(s.audit)) s.audit=[];
+  s.audit.unshift({
+    id: uid('EV'),
+    ts: new Date().toISOString(),
+    action, target,
+    before: String(before ?? ''),
+    after: String(after ?? '')
+  });
+  // keep latest 300 entries
+  if(s.audit.length>300) s.audit.length = 300;
+  saveSessions();
+  renderAudit();
+}
+
+/* Create / ensure session */
 function createSession(){
   const id = uid('CS');
   const now = new Date().toISOString();
@@ -245,11 +304,13 @@ function createSession(){
     createdAt: now,
     currentLocation: '',
     ship: '',
-    contracts: []
+    contracts: [],
+    audit: []
   };
   currentSessionId = id;
   saveSessions();
   updateSessionUrl();
+  logAudit('Session', 'Created new session', '', id);
   return sessions[id];
 }
 
@@ -267,7 +328,9 @@ function ensureSession(){
   const fromUrl = params.get('session');
   if(fromUrl && sessions[fromUrl]){
     currentSessionId = fromUrl;
-    return sessions[fromUrl];
+    const s = sessions[fromUrl];
+    if(!Array.isArray(s.audit)) s.audit=[];
+    return s;
   }
   return createSession();
 }
@@ -384,6 +447,28 @@ function renderContracts(){
   contractsContainer.innerHTML = s.contracts.map((c,i)=>contractCardHtml(c,i)).join('');
 }
 
+/* Audit render */
+function renderAudit(){
+  const s = getSession(); if(!s) return;
+  const body = document.getElementById('auditBody');
+  const list = Array.isArray(s.audit)? s.audit : [];
+  if(!list.length){
+    body.innerHTML = `<tr><td colspan="4">No audit entries yet.</td></tr>`;
+    return;
+  }
+  body.innerHTML = list.map(ev=>{
+    const time = new Date(ev.ts).toLocaleTimeString();
+    return `<tr>
+      <td>${esc(time)}</td>
+      <td>${esc(ev.action)}</td>
+      <td>${esc(ev.target)}</td>
+      <td class="audit-before-after">
+        ${esc(ev.before)}${ev.before!=='' || ev.after!=='' ? ' → ' : ''}${esc(ev.after)}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
 /* ===== Mutators ===== */
 function addContract(){
   const s = getSession(); if(!s) return;
@@ -396,13 +481,18 @@ function addContract(){
   s.contracts.push(c);
   saveSessions();
   renderContracts();
+  logAudit('Add', `Contract ${s.contracts.length}`, '', c.id);
 }
 
 function removeContract(contractId){
   const s = getSession(); if(!s) return;
-  s.contracts = s.contracts.filter(c=>c.id!==contractId);
+  const idx = s.contracts.findIndex(c=>c.id===contractId);
+  if(idx===-1) return;
+  const removed = s.contracts[idx];
+  s.contracts.splice(idx,1);
   saveSessions();
   renderContracts();
+  logAudit('Remove','Contract', removed.id, '');
 }
 
 function addCargoGroup(contractId){
@@ -417,14 +507,19 @@ function addCargoGroup(contractId){
   c.cargoGroups.push(g);
   saveSessions();
   renderContracts();
+  logAudit('Add','Cargo Type', `Contract ${contractId}`, g.id);
 }
 
 function removeCargoGroup(contractId, cargoId){
   const s=getSession(); if(!s) return;
   const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
+  const beforeCount = c.cargoGroups.length;
   c.cargoGroups = c.cargoGroups.filter(g=>g.id!==cargoId);
   saveSessions();
   renderContracts();
+  if(c.cargoGroups.length!==beforeCount){
+    logAudit('Remove','Cargo Type', cargoId, '');
+  }
 }
 
 function addLeg(contractId, cargoId, kind){
@@ -436,16 +531,24 @@ function addLeg(contractId, cargoId, kind){
   else g.loadings.push(leg);
   saveSessions();
   renderContracts();
+  logAudit('Add', kind==='off'?'Offload leg':'Load leg', cargoId, leg.id);
 }
 
 function removeLeg(contractId, cargoId, legId, kind){
   const s=getSession(); if(!s) return;
   const c=s.contracts.find(x=>x.id===contractId); if(!c) return;
   const g=c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
-  if(kind==='off') g.offloadings = g.offloadings.filter(l=>l.id!==legId);
-  else g.loadings = g.loadings.filter(l=>l.id!==legId);
-  saveSessions();
-  renderContracts();
+  const list = (kind==='off') ? g.offloadings : g.loadings;
+  const before = list.length;
+  const label = kind==='off'?'Offload leg':'Load leg';
+  const newList = list.filter(l=>l.id!==legId);
+  if(kind==='off') g.offloadings = newList;
+  else g.loadings = newList;
+  if(newList.length!==before){
+    saveSessions();
+    renderContracts();
+    logAudit('Remove', label, cargoId, legId);
+  }
 }
 
 /* ===== Event wiring ===== */
@@ -453,13 +556,19 @@ function wireTopLevelHandlers(){
   // session fields
   document.getElementById('currentLocation').addEventListener('change', e=>{
     const s=getSession(); if(!s) return;
-    s.currentLocation = e.target.value;
+    const old = s.currentLocation || '';
+    const nv = e.target.value;
+    s.currentLocation = nv;
     saveSessions();
+    if(old!==nv) logAudit('Update','Session location', old, nv);
   });
   document.getElementById('shipSelect').addEventListener('change', e=>{
     const s=getSession(); if(!s) return;
-    s.ship = e.target.value;
+    const old = s.ship || '';
+    const nv = e.target.value;
+    s.ship = nv;
     saveSessions();
+    if(old!==nv) logAudit('Update','Ship', old, nv);
   });
 
   document.getElementById('addContractBtn').addEventListener('click', ()=>{
@@ -472,6 +581,7 @@ function wireTopLevelHandlers(){
     renderSessionHeader();
     renderSessionFields();
     renderContracts();
+    renderAudit();
   });
 
   document.getElementById('clearAllSessionsBtn').addEventListener('click', ()=>{
@@ -482,6 +592,7 @@ function wireTopLevelHandlers(){
     renderSessionHeader();
     renderSessionFields();
     renderContracts();
+    renderAudit();
   });
 
   document.getElementById('exportSessionBtn').addEventListener('click', ()=>{
@@ -511,6 +622,7 @@ function wireTopLevelHandlers(){
     }else{
       alert('Session JSON:\n\n'+json);
     }
+    logAudit('Export','Submit All', '', 'Copied JSON');
   });
 
   // Delegated handlers for contracts / cargo / legs
@@ -553,7 +665,7 @@ function wireTopLevelHandlers(){
     }
   });
 
-  // Input/change for updating values without re-rendering structure
+  // Input/change for updating values
   contractsContainer.addEventListener('input', handleValueChange);
   contractsContainer.addEventListener('change', handleValueChange);
 }
@@ -566,12 +678,24 @@ function handleValueChange(e){
   const c = s.contracts.find(x=>x.id===contractId); if(!c) return;
 
   if(e.target.classList.contains('contract-name')){
-    c.name = e.target.value.trim();
-    saveSessions(); return;
+    const old = c.name || '';
+    const nv = e.target.value.trim();
+    if(old!==nv){
+      c.name = nv;
+      saveSessions();
+      logAudit('Update','Contract name', old, nv);
+    }
+    return;
   }
   if(e.target.classList.contains('contract-reward')){
-    c.reward = e.target.value;
-    saveSessions(); return;
+    const old = c.reward ?? '';
+    const nv = e.target.value;
+    if(old!==nv){
+      c.reward = nv;
+      saveSessions();
+      logAudit('Update','Contract reward', old, nv);
+    }
+    return;
   }
 
   const cargoCard = e.target.closest('.cargo-card');
@@ -580,8 +704,14 @@ function handleValueChange(e){
     const g = c.cargoGroups.find(x=>x.id===cargoId); if(!g) return;
 
     if(e.target.classList.contains('cargo-type')){
-      g.cargoType = e.target.value;
-      saveSessions(); return;
+      const old = g.cargoType || '';
+      const nv = e.target.value;
+      if(old!==nv){
+        g.cargoType = nv;
+        saveSessions();
+        logAudit('Update','Cargo type', old, nv);
+      }
+      return;
     }
 
     const legRow = e.target.closest('.leg-row');
@@ -592,12 +722,26 @@ function handleValueChange(e){
       const leg = list.find(l=>l.id===legId); if(!leg) return;
 
       if(e.target.classList.contains('leg-scu')){
-        leg.scu = e.target.value;
-        saveSessions(); return;
+        const old = leg.scu ?? '';
+        const nv = e.target.value;
+        if(old!==nv){
+          leg.scu = nv;
+          saveSessions();
+          const label = kind==='off'?'Offload SCU':'Load SCU';
+          logAudit('Update',label, old, nv);
+        }
+        return;
       }
       if(e.target.classList.contains('leg-location')){
-        leg.location = e.target.value;
-        saveSessions(); return;
+        const old = leg.location || '';
+        const nv = e.target.value;
+        if(old!==nv){
+          leg.location = nv;
+          saveSessions();
+          const label = kind==='off'?'Offload location':'Load location';
+          logAudit('Update',label, old, nv);
+        }
+        return;
       }
     }
   }
@@ -612,15 +756,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderSessionHeader();
   renderSessionFields();
   renderContracts();
+  renderAudit();
   wireTopLevelHandlers();
 
-  // If it’s a brand-new empty session, start with one empty contract + cargo + legs like in your mock
+  // If it’s a brand-new empty session, start with one contract + cargo + basic legs
   const s = getSession();
   if(s && !s.contracts.length){
     addContract();
     const first = s.contracts[0];
     addCargoGroup(first.id);
-    // one loading + one offloading row by default
     const g = first.cargoGroups[0];
     addLeg(first.id,g.id,'load');
     addLeg(first.id,g.id,'off');
