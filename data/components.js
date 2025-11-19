@@ -24,7 +24,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Aufeis",
@@ -33,7 +33,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Avalanche",
@@ -42,7 +42,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Berian",
@@ -51,7 +51,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "BlastChill",
@@ -60,7 +60,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Blizzard",
@@ -69,7 +69,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Boreal",
@@ -78,7 +78,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Bracer",
@@ -87,7 +87,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Chill-Max",
@@ -96,7 +96,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ColdSnap",
@@ -105,7 +105,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ColdSurge",
@@ -114,7 +114,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "CoolCore",
@@ -123,7 +123,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Cryo-Star",
@@ -132,7 +132,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Cryo-Star EX",
@@ -141,7 +141,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Cryo-Star SL",
@@ -150,7 +150,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Cryo-Star XL",
@@ -159,7 +159,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Eco-Flow",
@@ -168,7 +168,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Endo",
@@ -177,7 +177,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FlashFreeze",
@@ -186,7 +186,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Fridan",
@@ -195,7 +195,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Frost-Star",
@@ -204,7 +204,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Frost-Star EX",
@@ -213,7 +213,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Frost-Star SL",
@@ -222,7 +222,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Frost-Star XL",
@@ -231,7 +231,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FrostBite",
@@ -240,7 +240,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FrostBurn",
@@ -249,7 +249,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FullFrost",
@@ -258,7 +258,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Galinstan",
@@ -267,7 +267,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Gelid",
@@ -276,7 +276,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Glacier",
@@ -285,7 +285,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Graupel",
@@ -294,7 +294,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "HeatSafe",
@@ -303,7 +303,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "HeatSink",
@@ -312,7 +312,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "HydroJet",
@@ -321,7 +321,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Hydrocel",
@@ -330,7 +330,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Hydropulse",
@@ -339,7 +339,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Ice-Flush",
@@ -348,7 +348,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "IceBox",
@@ -357,7 +357,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "IceDive",
@@ -366,7 +366,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "IcePlunge",
@@ -375,7 +375,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Kelvid",
@@ -384,7 +384,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Mercury",
@@ -393,7 +393,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "NightFall",
@@ -402,7 +402,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Permafrost",
@@ -411,7 +411,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Polar",
@@ -420,7 +420,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "QuikCool",
@@ -429,7 +429,7 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "RapidCool",
@@ -438,16 +438,16 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Serac",
     "Component": "Cooler",
     "Size": " S  4",
     "Grade": 1,
-    "Class": NaN,
+    "Class": "",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SnowBlind",
@@ -456,7 +456,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Snowfall",
@@ -465,7 +465,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Snowpack",
@@ -474,7 +474,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Taiga",
@@ -483,7 +483,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Tempest",
@@ -492,7 +492,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Tepilo",
@@ -501,7 +501,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Wen/Cassel Propulsion",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ThermalCore",
@@ -510,7 +510,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Thermax",
@@ -519,7 +519,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Tundra",
@@ -528,7 +528,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Ultra-Flow",
@@ -537,7 +537,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "VaporBlock",
@@ -546,7 +546,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "WhiteOut",
@@ -555,7 +555,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Winter-Star",
@@ -564,7 +564,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Winter-Star EX",
@@ -573,7 +573,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Winter-Star SL",
@@ -582,7 +582,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Winter-Star XL",
@@ -591,7 +591,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " J-Span",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ZeroRush",
@@ -600,7 +600,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "5CA 'Akura'",
@@ -609,7 +609,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "5MA 'Chimalli'",
@@ -618,7 +618,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "5SA 'Rhada'",
@@ -627,7 +627,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "6MA 'Kozane'",
@@ -636,7 +636,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "6SA 'Arbiter'",
@@ -645,7 +645,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "7CA 'Nargun'",
@@ -654,7 +654,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "7MA 'Lorica'",
@@ -663,7 +663,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "7SA 'Concord'",
@@ -672,7 +672,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Behring Applied Technology",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ARMOR",
@@ -681,7 +681,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "AllStop",
@@ -690,7 +690,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Armada",
@@ -699,7 +699,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Aspis",
@@ -708,7 +708,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "BLOC",
@@ -717,7 +717,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Bamoty",
@@ -726,7 +726,7 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": " Yorm",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Barbican",
@@ -735,7 +735,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Bulwark",
@@ -744,7 +744,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Castra",
@@ -753,7 +753,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Citadel",
@@ -762,7 +762,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Cloak",
@@ -771,7 +771,7 @@
     "Grade": 4,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "CoverAll",
@@ -780,7 +780,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FR-66",
@@ -789,7 +789,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FR-76",
@@ -798,7 +798,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FR-86",
@@ -807,7 +807,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Falco",
@@ -816,7 +816,7 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": " Yorm",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ForceWall",
@@ -825,7 +825,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FullBlock",
@@ -834,7 +834,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FullStop",
@@ -843,7 +843,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "GUARD",
@@ -852,7 +852,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Glacis",
@@ -861,7 +861,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Guardian",
@@ -870,7 +870,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "HAVEN",
@@ -879,7 +879,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "HEX",
@@ -888,7 +888,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Haltur",
@@ -897,7 +897,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": " Yorm",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "INK",
@@ -906,7 +906,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Jaghte",
@@ -915,7 +915,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Yorm",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Mirage",
@@ -924,7 +924,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Obscura",
@@ -933,7 +933,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Palisade",
@@ -942,7 +942,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Parapet",
@@ -951,7 +951,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "RPEL",
@@ -960,7 +960,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Rampart",
@@ -969,7 +969,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "STOP",
@@ -978,7 +978,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SecureHyde",
@@ -987,7 +987,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SecureScreen",
@@ -996,7 +996,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SecureShield",
@@ -1005,7 +1005,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Sheut",
@@ -1014,7 +1014,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Shimmer",
@@ -1023,7 +1023,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Shroud",
@@ -1032,7 +1032,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Steward",
@@ -1041,7 +1041,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Stronghold",
@@ -1050,7 +1050,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Sukoran",
@@ -1058,8 +1058,8 @@
     "Size": " S  2",
     "Grade": 3,
     "Class": "Military",
-    "Manufacturer": NaN,
-    "Link": NaN
+    "Manufacturer": "",
+    "Link": ""
   },
   {
     "Names": "Suldrath",
@@ -1068,7 +1068,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Souli",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SureStop",
@@ -1077,7 +1077,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Gorgon Defender Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Targa",
@@ -1086,7 +1086,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": " Yorm",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Trenta",
@@ -1095,7 +1095,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": " Yorm",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Umbra",
@@ -1104,7 +1104,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Veil",
@@ -1113,7 +1113,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": " Ascension Astro",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "WEB",
@@ -1122,7 +1122,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Seal Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Ward",
@@ -1131,7 +1131,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Basilisk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Agni",
@@ -1140,7 +1140,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Aither",
@@ -1149,16 +1149,16 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Allegro",
     "Component": "Quantum Drive",
     "Size": " S  4",
     "Grade": 1,
-    "Class": NaN,
+    "Class": "",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Atlas",
@@ -1167,7 +1167,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Balandin",
@@ -1176,7 +1176,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Beacon",
@@ -1185,7 +1185,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Bolon",
@@ -1194,7 +1194,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Bolt",
@@ -1203,7 +1203,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Burst",
@@ -1212,7 +1212,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Cascade",
@@ -1221,7 +1221,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Colossus",
@@ -1230,7 +1230,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Crossfield",
@@ -1239,7 +1239,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Drift",
@@ -1248,7 +1248,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Drifter",
@@ -1257,7 +1257,7 @@
     "Grade": "D",
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Echo",
@@ -1266,7 +1266,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Eos",
@@ -1275,7 +1275,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Erebos",
@@ -1284,7 +1284,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Expedition",
@@ -1293,7 +1293,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Fissure",
@@ -1302,7 +1302,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Flash",
@@ -1311,7 +1311,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Flood",
@@ -1320,7 +1320,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FoxFire",
@@ -1329,7 +1329,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": " Ace Astrogation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Goliath",
@@ -1338,7 +1338,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Hemera",
@@ -1347,7 +1347,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Huracan",
@@ -1356,7 +1356,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Hyperion",
@@ -1365,7 +1365,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Impulse",
@@ -1374,7 +1374,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Kama",
@@ -1383,7 +1383,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Khaos",
@@ -1392,7 +1392,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "LightFire",
@@ -1401,7 +1401,7 @@
     "Grade": "C",
     "Class": "Competition",
     "Manufacturer": " Ace Astrogation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Metis",
@@ -1410,7 +1410,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Nova (quantum drive)",
@@ -1419,7 +1419,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Odyssey (quantum drive)",
@@ -1428,7 +1428,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Pontes",
@@ -1437,7 +1437,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Quest",
@@ -1446,7 +1446,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Ranger",
@@ -1455,7 +1455,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Rush",
@@ -1464,7 +1464,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Siren",
@@ -1473,7 +1473,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Sojourn",
@@ -1482,7 +1482,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SparkFire",
@@ -1491,7 +1491,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": " Ace Astrogation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Spectre",
@@ -1500,7 +1500,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Spicule",
@@ -1509,7 +1509,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SunFire",
@@ -1517,8 +1517,8 @@
     "Size": " S  2",
     "Grade": 2,
     "Class": "Competition",
-    "Manufacturer": NaN,
-    "Link": NaN
+    "Manufacturer": "",
+    "Link": ""
   },
   {
     "Names": "TS-2",
@@ -1527,7 +1527,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Torrent",
@@ -1536,7 +1536,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " ArcCorp",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Tyche",
@@ -1545,7 +1545,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Roberts Space Industries",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "VK-00",
@@ -1554,7 +1554,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Vesta",
@@ -1563,7 +1563,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Voyage",
@@ -1572,7 +1572,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Vulcan (quantum drive)",
@@ -1581,7 +1581,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Wanderer",
@@ -1590,7 +1590,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Wayfare",
@@ -1599,7 +1599,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Tarsus Electronics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "XL-1",
@@ -1608,7 +1608,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Yaluk",
@@ -1617,7 +1617,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Yeager",
@@ -1626,7 +1626,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Wei-Tek",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Zephyr",
@@ -1635,7 +1635,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Excelsior",
@@ -1643,8 +1643,8 @@
     "Size": "C",
     "Grade": 2,
     "Class": "Civilian",
-    "Manufacturer": NaN,
-    "Link": NaN
+    "Manufacturer": "",
+    "Link": ""
   },
   {
     "Names": "Exodus",
@@ -1652,17 +1652,17 @@
     "Size": "A",
     "Grade": 3,
     "Class": "Civilian",
-    "Manufacturer": NaN,
-    "Link": NaN
+    "Manufacturer": "",
+    "Link": ""
   },
   {
     "Names": "Exfiltrate",
     "Component": "Jump Drive",
     "Size": "A",
     "Grade": 4,
-    "Class": NaN,
-    "Manufacturer": NaN,
-    "Link": NaN
+    "Class": "",
+    "Manufacturer": "",
+    "Link": ""
   },
   {
     "Names": "Explorer",
@@ -1670,8 +1670,8 @@
     "Size": "C",
     "Grade": 1,
     "Class": "Civilian",
-    "Manufacturer": NaN,
-    "Link": NaN
+    "Manufacturer": "",
+    "Link": ""
   },
   {
     "Names": "Bolide",
@@ -1680,7 +1680,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Breton",
@@ -1689,7 +1689,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Celestial",
@@ -1698,7 +1698,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Centurion",
@@ -1707,7 +1707,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Charger",
@@ -1716,7 +1716,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Cirrus",
@@ -1725,7 +1725,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "DayBreak",
@@ -1734,7 +1734,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Defiant",
@@ -1743,7 +1743,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "DeltaMax",
@@ -1752,7 +1752,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Diligence",
@@ -1761,7 +1761,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Drassik",
@@ -1770,7 +1770,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "DuraJet",
@@ -1779,7 +1779,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Durango",
@@ -1788,7 +1788,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "DynaFlux",
@@ -1797,7 +1797,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Eclipse (power plant)",
@@ -1806,7 +1806,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Endurance",
@@ -1815,7 +1815,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ExoGen",
@@ -1824,7 +1824,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Fierell Cascade",
@@ -1833,7 +1833,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Fortitude",
@@ -1842,7 +1842,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Fulgur",
@@ -1851,7 +1851,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FullForce",
@@ -1860,7 +1860,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "FullForce Pro",
@@ -1869,7 +1869,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "GammaMax",
@@ -1878,7 +1878,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Genoa",
@@ -1887,7 +1887,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Ginzel",
@@ -1896,7 +1896,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "HyperGen",
@@ -1905,7 +1905,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "IonBurst",
@@ -1914,7 +1914,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "IonSurge",
@@ -1923,7 +1923,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "IonSurge Pro",
@@ -1932,7 +1932,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "IonWave",
@@ -1941,7 +1941,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "JS-300",
@@ -1950,7 +1950,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "JS-400",
@@ -1959,7 +1959,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "JS-500",
@@ -1968,7 +1968,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Klaus and Werner",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Jennet",
@@ -1977,7 +1977,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "LightBlossom",
@@ -1986,7 +1986,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Lotus",
@@ -1995,7 +1995,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "LumaCore",
@@ -2004,7 +2004,7 @@
     "Grade": 1,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "LuxCore",
@@ -2013,7 +2013,7 @@
     "Grade": 1,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Maelstrom",
@@ -2022,7 +2022,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "MagnaBloom",
@@ -2031,7 +2031,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "MegaFlux",
@@ -2040,7 +2040,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "NewDawn",
@@ -2049,7 +2049,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "OverDrive",
@@ -2058,7 +2058,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "PowerBolt",
@@ -2067,7 +2067,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "QuadraCell",
@@ -2076,7 +2076,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "QuadraCell MT",
@@ -2085,7 +2085,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "QuadraCell MX",
@@ -2094,7 +2094,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Radiance",
@@ -2103,7 +2103,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Radix",
@@ -2112,7 +2112,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Regulus",
@@ -2121,7 +2121,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Reliance",
@@ -2130,7 +2130,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Roughneck",
@@ -2139,7 +2139,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Sedulity",
@@ -2148,7 +2148,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Slipstream",
@@ -2157,7 +2157,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SmartGen",
@@ -2166,7 +2166,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SolarFlare",
@@ -2175,7 +2175,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SonicLite",
@@ -2184,7 +2184,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": " Tyler Design and Tech",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SparkJet",
@@ -2193,7 +2193,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SparkJet Pro",
@@ -2202,7 +2202,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "StarBurn",
@@ -2211,7 +2211,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "StarHeart",
@@ -2220,7 +2220,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Steadfast",
@@ -2229,7 +2229,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Stellate",
@@ -2238,7 +2238,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SunFlare",
@@ -2247,7 +2247,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": " ACOM",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "SuperDrive",
@@ -2256,7 +2256,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "TigerLilly",
@@ -2265,7 +2265,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Trommel",
@@ -2274,7 +2274,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": " Juno Starwerk",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "TurboDrive",
@@ -2283,7 +2283,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "UltraFlux",
@@ -2292,7 +2292,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": " Amon & Reese Co.",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "Vortex",
@@ -2301,7 +2301,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": " Aegis Dynamics",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "WhiteRose",
@@ -2310,7 +2310,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": " Sakura Sun",
-    "Link": NaN
+    "Link": ""
   },
   {
     "Names": "ZapJet",
@@ -2319,6 +2319,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": " Lightning Power Ltd.",
-    "Link": NaN
+    "Link": ""
   }
 ]
