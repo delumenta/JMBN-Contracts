@@ -383,7 +383,7 @@ textarea{min-height:70px;resize:vertical}
       <div class="lo-head">
         <div>
           <div class="lo-title" id="loShipTitle">Ship</div>
-        <div style="font-size:12px;color:#c9b06a" id="loShipSub"></div>
+          <div style="font-size:12px;color:#c9b06a" id="loShipSub"></div>
           <div class="lo-tagbar" id="loTags"></div>
         </div>
         <div style="display:flex;gap:8px">
@@ -444,7 +444,7 @@ textarea{min-height:70px;resize:vertical}
           </div>
           <div class="lo-field">Search <input class="lo-input" id="loPSearch" placeholder="Name, mfr, tags…"></div>
           <div class="lo-field">Source <select class="lo-select" id="loPSource"></select></div>
-          <div style="font-size:11px;color:#c9b06a">Sources are localStorage keys saved by <b>components.html</b>.</div>
+          <div style="font-size:11px;color:#c9b06a">Source: <b>data/components.js</b></div>
         </div>
         <div class="lo-card">
           <div id="loPList" class="lo-pick-list"></div>
@@ -472,6 +472,8 @@ function initHangar(){
   const HANGAR_KEY='jmbn-hangar-v1';
   const HANGAR_SEL='jmbn-hangar-selected';
   const LOADOUT_KEY='jmbn-loadouts-v6';
+  const COMPONENTS_URL='data/components.js'; // 🔹 plain JSON file
+
   const $=s=>document.querySelector(s);
   const list=$('#list');
   function uid(){return 'H'+Math.random().toString(36).slice(2,8);}
@@ -809,61 +811,138 @@ function initHangar(){
   };
   document.getElementById('loClearComp').onclick=clearCompForm;
 
-  /* ===== Components picker (reads from components.html) ===== */
+  /* ===== Components picker (reads from data/components.js JSON) ===== */
   const pickBack=document.getElementById('loPickBack'),
         pType=document.getElementById('loPType'),
         pSearch=document.getElementById('loPSearch'),
         pSource=document.getElementById('loPSource'),
         pList=document.getElementById('loPList');
 
-  document.getElementById('loPick').onclick=()=>{ buildSources(); pType.value=document.getElementById('loCType').value; pSearch.value=''; renderPicker(); pickBack.style.display='flex'; };
-  document.getElementById('loPickClose').onclick=()=>{ pickBack.style.display='none'; };
+  // Single fixed source label
+  if (pSource) {
+    pSource.innerHTML = '<option>data/components.js</option>';
+    pSource.disabled = true;
+  }
+
+  let componentDB = [];
+
+  async function loadComponentsDB(){
+    try{
+      const res = await fetch(COMPONENTS_URL,{cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const data = await res.json();
+      componentDB = Array.isArray(data) ? data : [];
+    }catch(err){
+      console.warn('Failed to load components DB', err);
+      componentDB = [];
+    }
+  }
+
+  function mapComponentTypeToPicker(component){
+    if(!component) return '';
+    const c = component.toLowerCase();
+    if(c.includes('quantum')) return 'Quantum Drive';
+    if(c.includes('shield')) return 'Shield Generator';
+    if(c.includes('power')) return 'Power Plant';
+    if(c.includes('cooler')) return 'Cooler';
+    if(c.includes('computer')) return 'Computer';
+    if(c.includes('radar')) return 'Radar';
+    if(c.includes('missile')) return 'Missile Rack';
+    if(c.includes('weapon')) return 'Weapon Mount';
+    return ''; // fallback: leave as current selection
+  }
+
+  function renderPicker(){
+    if(!componentDB.length){
+      pList.innerHTML = '<div class="lo-empty">No components loaded. Check data/components.js.</div>';
+      return;
+    }
+
+    const t = (pType.value||'').toLowerCase();
+    const q = (pSearch.value||'').trim().toLowerCase();
+
+    const filtered = componentDB.filter(item=>{
+      // type filter: compare picker type vs item.Component
+      if(t){
+        const compType = String(item.Component||'').toLowerCase();
+        if(compType !== t) return false;
+      }
+      if(q){
+        const hay = [
+          item.Names,
+          item.Manufacturer,
+          item.Component,
+          item.WhereToBuy,
+          item.Class,
+          item.Size,
+          item.Grade
+        ].map(v=>String(v||'').toLowerCase()).join(' ');
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    if(!filtered.length){
+      pList.innerHTML = '<div class="lo-empty">No components match this filter.</div>';
+      return;
+    }
+
+    pList.innerHTML = filtered.map((it,i)=>{
+      const gradeStr = it.Grade === null || it.Grade === undefined ? '' : String(it.Grade);
+      return `
+        <div class="lo-pi">
+          <div>
+            <div class="lo-title" style="font-size:14px">${esc(it.Names || 'Unnamed')}</div>
+            <div class="lo-meta">
+              <b>${esc(it.Component || '—')}</b>
+              ${it.Size ? ' • '+esc(it.Size) : ''}
+              ${gradeStr ? ' • Grade '+esc(gradeStr) : ''}
+              ${it.Class ? ' • '+esc(it.Class) : ''}
+              ${it.Manufacturer ? ' • '+esc(it.Manufacturer) : ''}
+            </div>
+            ${it.WhereToBuy ? `<div style="font-size:12px;color:#c9b06a;margin-top:4px">Where to buy: ${esc(it.WhereToBuy)}</div>` : ''}
+          </div>
+          <div><button class="lo-btn primary" data-pick="${i}">Use</button></div>
+        </div>`;
+    }).join('');
+
+    pList.querySelectorAll('[data-pick]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const it = filtered[+btn.dataset.pick];
+        const typeSelect = document.getElementById('loCType');
+        const mapped = mapComponentTypeToPicker(it.Component || '');
+        if (mapped) typeSelect.value = mapped;
+
+        document.getElementById('loCName').value = it.Names || '';
+        document.getElementById('loCMfr').value  = it.Manufacturer || '';
+        document.getElementById('loCBuy').value  = it.WhereToBuy || '';
+        // Notes: include basic meta
+        document.getElementById('loCNotes').value =
+          `Type: ${it.Component || ''}\nSize: ${it.Size || ''}\nGrade: ${it.Grade ?? ''}\nClass: ${it.Class || ''}`;
+        pickBack.style.display='none';
+      };
+    });
+  }
+
+  async function openPicker(){
+    if(!componentDB.length){
+      await loadComponentsDB();
+    }
+    // default type to current component editor type
+    const currentType = document.getElementById('loCType').value;
+    pType.value = currentType;
+    pSearch.value = '';
+    renderPicker();
+    pickBack.style.display='flex';
+  }
+
+  document.getElementById('loPick').onclick = openPicker;
+  document.getElementById('loPickClose').onclick = ()=>{ pickBack.style.display='none'; };
   pickBack.addEventListener('click', e=>{ if(e.target===pickBack) pickBack.style.display='none'; });
+
   pType.addEventListener('change', renderPicker);
   pSearch.addEventListener('input', renderPicker);
-  pSource.addEventListener('change', ()=>{ loadFromSource(pSource.value); renderPicker(); });
 
-  function buildSources(){
-    const candidates=Object.keys(localStorage);
-    const likely=['jmbn-components','jmbn-components-v2','components-db','components','componentsList'];
-    const ordered=[...new Set([...likely,...candidates])];
-    const found=[];
-    for(const k of ordered){
-      try{ const v=JSON.parse(localStorage.getItem(k)); if(Array.isArray(v)&&v.some(isComponentLike)) found.push({key:k,count:v.length}); }catch{}
-    }
-    pSource.innerHTML=found.length?found.map((s,i)=>`<option value="${esc(s.key)}"${i===0?' selected':''}>${esc(s.key)} (${s.count})</option>`).join(''):`<option>No components DB found</option>`;
-    if(found.length){ loadFromSource(found[0].key); } else { pickerState.items=[]; }
-  }
-  function isComponentLike(x){ if(!x||typeof x!=='object') return false; const f=Object.keys(x).map(y=>y.toLowerCase()); return f.some(k=>['name','title'].includes(k))&&f.some(k=>['type','slot','category'].includes(k)); }
-  function norm(it){ return { type:it.type||it.slot||it.category||'', name:it.name||it.title||'', mfr:it.mfr||it.manufacturer||it.brand||'', buy:it.buy||it.where||it.location||it.shop||'', notes:it.notes||it.desc||it.description||'', size:it.size||it.class||it.grade||it.rating||'' }; }
-  let pickerState={items:[],filtered:[]};
-  function loadFromSource(k){ try{ pickerState.items=(JSON.parse(localStorage.getItem(k)||'[]')||[]).map(norm); }catch{ pickerState.items=[]; } }
-  function renderPicker(){
-    const t=(pType.value||'').toLowerCase(), q=(pSearch.value||'').toLowerCase().trim();
-    pickerState.filtered=pickerState.items.filter(it=>{
-      const matchType=!t||(it.type||'').toLowerCase()===t;
-      const bag=`${it.name} ${it.mfr} ${it.buy} ${it.notes} ${it.size}`.toLowerCase();
-      return matchType && (!q||bag.includes(q));
-    });
-    pList.innerHTML=pickerState.filtered.length?pickerState.filtered.map((it,i)=>`
-      <div class="lo-pi">
-        <div>
-          <div class="lo-title" style="font-size:14px">${esc(it.name||'Unnamed')}</div>
-          <div class="lo-meta"><b>${esc(it.type||'—')}</b> • ${esc(it.mfr||'—')}${it.size?` • ${esc(it.size)}`:''}${it.buy?` • ${esc(it.buy)}`:''}</div>
-          ${it.notes?`<div style="font-size:12px;color:#c9b06a;margin-top:4px">${esc(it.notes)}</div>`:''}
-        </div>
-        <div><button class="lo-btn primary" data-pick="${i}">Use</button></div>
-      </div>`).join(''):`<div class="lo-empty">No components found for this filter.</div>`;
-    pList.querySelectorAll('[data-pick]').forEach(btn=>btn.onclick=()=>{
-      const it=pickerState.filtered[+btn.dataset.pick];
-      document.getElementById('loCType').value=it.type||document.getElementById('loCType').value;
-      document.getElementById('loCName').value=it.name||'';
-      document.getElementById('loCMfr').value=it.mfr||'';
-      document.getElementById('loCBuy').value=it.buy||'';
-      document.getElementById('loCNotes').value=it.notes||'';
-      pickBack.style.display='none';
-    });
-  }
 } // end initHangar
 </script>
 
