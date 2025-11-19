@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Contracts</title>
+<title>JMBN Components (Live – SC Wiki)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,9 +14,10 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--card:#141414;--row:#0a0a0a;
-  --border:#d6b44c;--accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;
+  --fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
 }
 *{box-sizing:border-box}
 body{
@@ -24,1438 +25,629 @@ body{
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
-  margin:0;
-  padding:14px;
-  font-size:var(--fs-base);
+  color:var(--text);font-family:'Play',sans-serif;margin:0;padding:14px;
+  letter-spacing:.25px;font-size:var(--fs-base);
 }
 
-/* Header mount fallback (same idea as member.html) */
+/* Header */
 .brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:0 0 12px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;margin:0 0 8px;
+  border-bottom:1px solid var(--border);padding-bottom:6px
 }
 .brand-logo{
-  width:44px;
-  height:44px;
-  object-fit:contain;
-  filter:drop-shadow(0 0 6px rgba(242,214,117,.3));
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25))
 }
 .brand h1{
-  font-size:20px;
-  color:var(--accent);
-  margin:0;
-  letter-spacing:.25em;
-  text-transform:uppercase;
+  font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0
 }
 
-/* Page frame */
-.page{
-  max-width:1200px;
-  margin:0 auto;
+/* Shiny pill nav */
+.nav{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px
 }
-
-/* Top actions */
-.top-bar{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
+.nav-btn{
+  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);text-decoration:none;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
 }
-.status-main{
-  font-size:11px;
-  color:var(--muted);
-}
-.status-main.ok{color:var(--accent);}
-.status-main.err{color:var(--bad);}
-
-/* Buttons */
-.btn{
-  padding:8px 14px;
-  border-radius:999px;
-  cursor:pointer;
-  font-family:'Play';
-  font-size:12px;
-  border:1px solid var(--border);
-  background:radial-gradient(circle at top,var(--accent),#614c14);
-  color:#000;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  box-shadow:0 0 14px rgba(242,214,117,.25);
-}
-.btn-secondary{
-  background:#0b0b0b;
-  color:var(--accent);
-  border:1px solid var(--border);
-  box-shadow:none;
-}
-.btn:disabled{
-  opacity:.6;
-  cursor:default;
-}
-
-/* Saved sessions panel */
-.section-panel{
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  background:#0b0b0b;
-  box-shadow:0 0 22px rgba(214,180,76,.2);
-}
-.panel-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:8px;
-}
-.panel-title{
-  color:var(--accent);
-  font-size:14px;
-  text-transform:uppercase;
-  letter-spacing:.2em;
-}
-.panel-meta{
-  font-size:11px;
-  color:var(--muted);
-}
-
-/* Cards grid */
-.cards-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-}
-
-/* Expandable session card */
-.card{
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:#111;
-  color:var(--text);
-  box-shadow:0 0 16px rgba(0,0,0,.6);
-  overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.card:hover{
+.nav-btn:hover{
   transform:translateY(-1px);
-  box-shadow:0 0 22px rgba(242,214,117,.28);
-  border-color:var(--accent);
+  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
+  background:linear-gradient(180deg,#1a1a1a,#0a0a0a)
 }
-.card-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 12px;
-  cursor:pointer;
+.nav-btn.active{
+  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
 }
-.card-header-main{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
+.nav-btn.active::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
+  border-radius:inherit;transform:translateX(-120%);
+  animation:shine 2.8s ease-in-out infinite;pointer-events:none;
 }
-.card-session-id{
-  font-size:12px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--accent);
-}
-.card-sub{
-  font-size:11px;
-  color:var(--muted);
-}
-.card-kpis{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-.card-kpi{
-  font-size:10px;
-  padding:3px 8px;
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.5);
-  color:var(--accent);
-}
-.card-toggle{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-size:11px;
-  color:var(--muted);
-}
-.card-toggle-icon{
-  width:16px;
-  height:16px;
-  border-radius:50%;
-  border:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:10px;
-  transition:transform .18s ease;
-}
-.card.open .card-toggle-icon{
-  transform:rotate(90deg);
+@keyframes shine{
+  0%{transform:translateX(-120%)}
+  35%{transform:translateX(120%)}
+  100%{transform:translateX(120%)}
 }
 
-/* Collapsible body */
-.card-body{
-  max-height:0;
-  overflow:hidden;
-  transition:max-height .28s ease;
-  border-top:1px solid rgba(214,180,76,.35);
+/* Layout */
+.panel{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)
 }
-.card-body-inner{
-  padding:10px 12px 10px;
+.controls{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center
 }
-
-/* Contract blocks inside session */
-.contract-block{
-  border-radius:10px;
-  border:1px solid rgba(214,180,76,.4);
-  background:rgba(5,5,5,.95);
-  padding:8px 8px 9px;
-  font-size:12px;
-  margin-bottom:6px;
+button{
+  padding:7px 11px;border-radius:10px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);border:1px solid var(--border);
+  cursor:pointer;font-family:'Play';font-size:12px;
+  transition:.2s
 }
-.contract-name{
-  font-size:12px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  margin-bottom:3px;
+button:hover{background:var(--accent);color:#000}
+.btn-primary{background:var(--accent);color:#000}
+button.bad{border-color:var(--bad);color:var(--bad)}
+button.bad:hover{background:var(--bad);color:#000}
+input,select{
+  background:#0a0a0a;border:1px solid var(--border);border-radius:8px;
+  padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'
 }
-.contract-line{
-  font-size:11px;
-  color:var(--muted);
-}
-
-/* Modal base */
-.modal-mask{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.8);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-}
-.modal-mask.open{
-  display:flex;
-}
-.modal{
-  width:95%;
-  max-width:1000px;
-  max-height:90vh;
-  overflow:auto;
-  background:#0b0b0b;
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px 16px 16px;
-  box-shadow:0 0 28px rgba(214,180,76,.3);
-}
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-.modal-title{
-  color:var(--accent);
-  font-size:14px;
-  text-transform:uppercase;
-  letter-spacing:.2em;
-}
-
-/* Intake modal layout */
-.modal-body{
-  font-size:var(--fs-base);
-}
-.grid-intake{
-  display:grid;
-  grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr);
-  gap:12px;
-}
-@media (max-width:900px){
-  .grid-intake{grid-template-columns:1fr;}
-}
-.panel-inner{
-  background:linear-gradient(135deg,rgba(214,180,76,.05),transparent);
-  border:1px solid rgba(214,180,76,.4);
-  border-radius:14px;
-  padding:10px;
-}
+#search{min-width:220px}
 
 /* KPIs */
-.session-kpis{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:8px;
+.kpis{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0
 }
-.kpi{
-  flex:1 1 150px;
-  min-width:0;
-  border-radius:10px;
-  padding:6px 8px;
-  border:1px solid rgba(214,180,76,.5);
-  background:radial-gradient(circle at top,rgba(242,214,117,.22),rgba(10,10,10,.9));
-  font-size:11px;
+.kpi-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:10px;text-align:center
 }
-.kpi-label{
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  color:var(--muted);
-  margin-bottom:2px;
+.kpi-card h3{
+  margin:0;color:var(--muted);font-size:11px;text-transform:uppercase
 }
-.kpi-value{
-  font-size:13px;
+.kpi-card .val{
+  font-weight:700;font-size:18px;color:var(--accent);margin-top:4px
+}
+.kpi-card .small{
+  font-size:var(--fs-small);color:var(--muted);margin-top:4px
 }
 
-/* Upload / OCR area */
-.upload-box{
-  border:1px dashed var(--border);
-  padding:8px;
-  border-radius:12px;
-  background:#111;
-  margin-bottom:8px;
+/* Form */
+.form-section-title{
+  color:var(--accent);font-size:var(--fs-h2);margin:8px 0 4px
 }
-.upload-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center;
-  margin-bottom:6px;
+.form-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0
 }
-.preview-wrap{
-  display:flex;
-  gap:8px;
-  align-items:flex-start;
+@media(max-width:980px){.form-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+.form-grid label{
+  display:block;font-size:11px;color:var(--muted);margin-bottom:3px
 }
-.preview{
-  border:1px solid var(--border);
-  border-radius:8px;
-  overflow:hidden;
-  width:220px;
-  height:140px;
-  background:#000;
+.form-grid .field{
+  display:flex;flex-direction:column
 }
-.preview img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+
+/* Table */
+.tableWrap{
+  border:1px solid var(--border);border-radius:12px;
+  overflow:auto;max-height:70vh;margin-top:10px
 }
-.ocr-box{
-  flex:1;
-  height:140px;
-  background:#050505;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:8px;
-  color:var(--muted);
-  font-size:12px;
-  white-space:pre-wrap;
-  overflow:auto;
+table{
+  width:100%;border-collapse:collapse;font-size:var(--fs-table);min-width:900px
 }
+th,td{
+  border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left
+}
+th{
+  color:var(--accent);background:#080808;font-weight:500;font-size:12px;
+  position:sticky;top:0;z-index:1
+}
+tr:nth-child(even){background:#111}
+tr:hover{background:rgba(214,180,76,.08)}
+.small{font-size:var(--fs-small);color:var(--muted)}
+.tagsCell{max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Source pill */
+.pill{
+  display:inline-block;padding:2px 8px;border-radius:999px;
+  border:1px solid var(--border);font-size:10px;
+  background:#090909;color:var(--muted)
+}
+
+/* Action buttons inside table */
+.table-actions button{
+  padding:4px 7px;font-size:10px;margin-right:4px
+}
+.table-actions button:last-child{margin-right:0}
+
+/* Status text */
 .status{
-  font-size:11px;
-  color:var(--muted);
+  font-size:var(--fs-small);color:var(--muted);margin-left:auto
 }
-.status-ok{color:var(--accent);}
-.status-err{color:var(--bad);}
-
-/* Contract editor */
-.contract-editor{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;
-  background:#111;
-}
-.meta-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  margin-bottom:8px;
-}
-@media (max-width:700px){
-  .meta-grid{grid-template-columns:1fr 1fr;}
-}
-.form-field{
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-label{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  color:var(--muted);
-}
-input[type="text"],
-input[type="number"],
-select{
-  background:var(--card);
-  border-radius:8px;
-  border:1px solid rgba(214,180,76,.4);
-  padding:7px 8px;
-  font-size:var(--fs-base);
-  color:var(--text);
-  font-family:inherit;
-}
-input::placeholder{color:#75653a;}
-
-.cargo-list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-bottom:8px;
-}
-.cargo-card{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:8px 8px 10px;
-  background:#0f0f0f;
-}
-.cargo-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px;
-}
-.cargo-title{
-  margin:0;
-  color:var(--accent);
-  font-size:12px;
-  text-transform:uppercase;
-}
-.badge{
-  display:inline-block;
-  padding:2px 6px;
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.7);
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.14em;
-}
-
-.subtable{
-  margin-top:4px;
-}
-.subtable-title{
-  font-size:11px;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  margin-bottom:2px;
-}
-.subtable table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:var(--fs-small);
-}
-.subtable th,
-.subtable td{
-  padding:4px 6px;
-  text-align:left;
-}
-.subtable th{
-  color:var(--accent);
-  border-bottom:1px solid rgba(214,180,76,.4);
-}
-.subtable tbody tr:nth-child(odd){background:var(--row);}
-.subtable tbody tr:nth-child(even){background:#050505;}
-.small-input{
-  width:100%;
-  background:transparent;
-  border:none;
-  color:var(--text);
-  font-family:inherit;
-  font-size:11px;
-}
-.small-input:focus{outline:none;}
-
-.form-actions{
-  margin-top:8px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  justify-content:flex-end;
-}
-
-/* Small confirm modal reuse */
-#confirmModal .modal{
-  max-width:420px;
-}
-
-/* Utility */
-.muted{
-  color:var(--muted);
-  font-size:11px;
-}
+.status strong{color:var(--accent)}
 </style>
 </head>
 <body>
-<div class="page">
-
-  <!-- Header mount (same pattern as member.html) -->
-  <div id="header-container">
-    <div class="brand">
-      <img class="brand-logo"
-           src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png"
-           alt="JMBN">
-      <h1>JMBN // CONTRACTS</h1>
-    </div>
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1>JMBN Components (SC Wiki Live)</h1>
   </div>
 
-  <script>
-  (async () => {
-    try{
-      const res = await fetch('header.html',{ cache:'no-cache' });
-      if(res.ok){
-        const html = await res.text();
-        document.getElementById('header-container').outerHTML = html;
-        requestAnimationFrame(() => {
-          const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-          document.querySelectorAll('.nav-btn').forEach(a => {
-            const href = (a.getAttribute('href') || '').toLowerCase();
-            if(href === here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
-            if(/contract/.test(here) && /contract/.test(href)){
-              a.classList.add('active');
-              a.setAttribute('aria-current','page');
-            }
-          });
-        });
-      }
-    }catch(e){
-      console.warn('Header load failed:', e);
-    }
-  })();
-  </script>
+  <nav class="nav">
+    <a class="nav-btn" href="index.html">Manifest</a>
+    <a class="nav-btn" href="hangar.html">Hangar</a>
+    <a class="nav-btn active" href="components.html">Components</a>
+    <a class="nav-btn" href="contracts.html">Contracts</a>
+    <a class="nav-btn" href="mission-log.html">Mission Log</a>
+  </nav>
 
-  <!-- Top bar -->
-  <div class="top-bar">
-    <div class="status-main" id="mainStatus">Initialising…</div>
-    <button class="btn" id="openIntakeBtn">+ New Contract / Scan</button>
-  </div>
+  <div class="panel">
+    <!-- Controls -->
+    <div class="controls">
+      <input id="search" placeholder="Search (name, type, mfr, notes)…">
+      <select id="filterType"><option value="">All Types</option></select>
+      <select id="filterClass"><option value="">All Classes</option></select>
+      <select id="filterGrade"><option value="">All Grades</option></select>
+      <select id="filterSize"><option value="">All Sizes</option></select>
 
-  <!-- Saved sessions -->
-  <section class="section-panel">
-    <div class="panel-header">
-      <div class="panel-title">Saved Sessions</div>
-      <div class="panel-meta">Each card is a hauling session with its contracts & cargo</div>
+      <button id="refreshWiki" class="btn-primary">Refresh from SC Wiki</button>
+
+      <button id="exportJSON">Export JSON</button>
+      <button id="exportCSV">Export CSV</button>
+
+      <span class="status" id="statusText">Status: <strong>Loading…</strong></span>
     </div>
-    <div class="cards-grid" id="sessionsGrid">
-      <div class="muted">Loading sessions…</div>
-    </div>
-  </section>
-</div>
 
-<!-- Intake Modal -->
-<div class="modal-mask" id="intakeModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">New Contract – Session Intake</div>
-      <button type="button" class="btn-secondary" id="intakeCloseBtn">Close</button>
-    </div>
-    <div class="modal-body">
-      <div class="grid-intake">
-        <!-- LEFT: Session + screenshot -->
-        <section class="panel-inner">
-          <div class="panel-header" style="margin-bottom:6px;">
-            <div class="panel-title" style="font-size:12px;">Session & Screenshot Intake</div>
-            <div class="panel-meta">Session auto-creates on first save</div>
-          </div>
-
-          <div class="session-kpis">
-            <div class="kpi">
-              <div class="kpi-label">Session ID</div>
-              <div class="kpi-value" id="kpiSessionId">—</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-label">Submitted By</div>
-              <div class="kpi-value" id="kpiSubmittedBy">—</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-label">Active Contract</div>
-              <div class="kpi-value" id="kpiActiveContract">New Contract</div>
-            </div>
-          </div>
-
-          <div class="upload-box" id="pasteZone">
-            <div class="upload-row">
-              <input type="file" id="screenshotInput" accept="image/*">
-              <button class="btn" type="button" id="scanBtn">Scan Image</button>
-              <button class="btn btn-secondary" type="button" id="clearBtn">Clear</button>
-            </div>
-            <div class="status" id="statusLine">
-              Tip: Use <b>Win+Shift+S</b> in-game, copy the contract, click here and press <b>Ctrl+V</b>.
-            </div>
-          </div>
-
-          <div class="preview-wrap">
-            <div class="preview">
-              <img id="previewImg" alt="Screenshot preview" style="display:none;">
-            </div>
-            <div class="ocr-box" id="ocrOutput"></div>
-          </div>
-        </section>
-
-        <!-- RIGHT: Contract editor -->
-        <section class="panel-inner">
-          <div class="panel-header" style="margin-bottom:6px;">
-            <div class="panel-title" style="font-size:12px;">Contract Editor</div>
-            <div class="panel-meta">OCR will try to autofill reward & legs</div>
-          </div>
-
-          <div class="contract-editor">
-            <div class="meta-grid">
-              <div class="form-field">
-                <label for="contractName">Contract Name</label>
-                <input id="contractName" type="text" placeholder="e.g. Covalex Waste Run">
-              </div>
-              <div class="form-field">
-                <label for="contractType">Type</label>
-                <select id="contractType">
-                  <option value="hauling">Hauling</option>
-                  <option value="delivery">Delivery</option>
-                  <option value="salvage">Salvage</option>
-                </select>
-              </div>
-              <div class="form-field">
-                <label for="reward">Reward (aUEC)</label>
-                <input id="reward" type="number" min="0" step="1" placeholder="42000">
-              </div>
-            </div>
-
-            <div class="cargo-list" id="cargoList"></div>
-
-            <div class="form-actions">
-              <button class="btn-secondary" type="button" id="addCargoBtn">+ Add Cargo Type</button>
-              <button class="btn" type="button" id="saveContractBtn">Save Contract</button>
-            </div>
-
-            <div class="muted">
-              Once saved, this contract will appear under its session in the audit list.
-            </div>
-          </div>
-        </section>
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi-card">
+        <h3>Total Components</h3>
+        <div class="val" id="kpiCount">0</div>
+      </div>
+      <div class="kpi-card">
+        <h3>By Type (Top)</h3>
+        <div class="small" id="kpiType">—</div>
+      </div>
+      <div class="kpi-card">
+        <h3>Data Source</h3>
+        <div class="val">SC Wiki</div>
+        <div class="small">Live categories (no local storage)</div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Small confirm modal for OCR summary -->
-<div class="modal-mask" id="confirmModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Confirm Detected Contract</div>
-      <button type="button" class="btn-secondary" id="modalCloseBtn">✕</button>
+    <!-- Form -->
+    <h2 class="form-section-title">Add / Edit Component (Session Only)</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="compName">Name *</label>
+        <input id="compName" placeholder="e.g., XL-1, Palisade">
+      </div>
+      <div class="field">
+        <label for="compType">Type</label>
+        <select id="compType">
+          <option>Quantum Drive</option>
+          <option>Shield Generator</option>
+          <option>Power Plant</option>
+          <option>Cooler</option>
+          <option>Computer</option>
+          <option>Radar</option>
+          <option>Weapon Mount</option>
+          <option>Missile Rack</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="compSize">Size</label>
+        <select id="compSize">
+          <option></option>
+          <option>S0</option>
+          <option>S1</option>
+          <option>S2</option>
+          <option>S3</option>
+          <option>S4</option>
+          <option>S5</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="compGrade">Grade</label>
+        <select id="compGrade">
+          <option></option>
+          <option>Grade A</option>
+          <option>Grade B</option>
+          <option>Grade C</option>
+          <option>Grade D</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="compClass">Class</label>
+        <select id="compClass">
+          <option></option>
+          <option>Civilian</option>
+          <option>Industrial</option>
+          <option>Stealth</option>
+          <option>Competition</option>
+          <option>Military</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="compManufacturer">Manufacturer</label>
+        <input id="compManufacturer" placeholder="e.g., RSI, Behring">
+      </div>
+      <div class="field">
+        <label for="compBuy">Where to Buy</label>
+        <input id="compBuy" placeholder="e.g., HUR-L5 Platinum Bay">
+      </div>
+      <div class="field">
+        <label for="compNotes">Tags / Notes</label>
+        <input id="compNotes" placeholder="e.g., Long range, stealth fit">
+      </div>
     </div>
-    <div class="modal-body">
-      <p class="muted" style="margin-top:0;margin-bottom:6px;">
-        We parsed this contract from your screenshot. Confirm it looks okay before editing or saving.
-      </p>
-      <dl style="font-size:13px;">
-        <dt>Reward</dt>
-        <dd id="modalReward">–</dd>
-        <dt>Contractor</dt>
-        <dd id="modalContractor">–</dd>
-        <dt>Legs / Cargo</dt>
-        <dd id="modalLegs">–</dd>
-      </dl>
+
+    <div class="controls" style="justify-content:flex-end;margin-top:-4px;margin-bottom:4px">
+      <button class="btn-primary" id="saveComponent">Save Component</button>
+      <button id="clearForm">Clear Form</button>
     </div>
-    <div class="modal-header" style="justify-content:flex-end;margin-top:6px;">
-      <button type="button" class="btn-secondary" id="modalCancelBtn">Cancel</button>
-      <button type="button" class="btn" id="modalConfirmBtn">Confirm</button>
+
+    <!-- Table -->
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Grade</th>
+            <th>Class</th>
+            <th>Manufacturer</th>
+            <th>Where to Buy</th>
+            <th>Tags / Notes</th>
+            <th>Source</th>
+            <th>Wiki</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr><td colspan="11" class="small" style="padding:10px">Loading from Star Citizen Wiki…</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
-
-<!-- JS libs -->
-<script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
 
 <script>
-/* ===== JMBN CONTRACTS – INLINE JS (matching member.html style) ===== */
+/* ==== Active nav highlight ==== */
+(function(){
+  const here = location.pathname.split('/').pop() || 'components.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){
+      a.classList.add('active');
+      a.setAttribute('aria-current','page');
+    }
+  });
+})();
+
+/* ==== Helpers ==== */
+const SC_WIKI_API = 'https://starcitizen.tools/api.php';
+const SC_WIKI_BASE = 'https://starcitizen.tools/';
 const $  = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
-
-let sb = null;
-let currentUser = null;
-let currentSession = null;
-
-// Model for current contract being edited
-const activeContractModel = {
-  contractorName:null,
-  reward:null,
-  legs:[],
-  cargoTypes:[]
+const uid = () => 'CMP-'+Math.random().toString(36).slice(2,8);
+const esc = (s='') => {
+  const d=document.createElement('div');
+  d.textContent = s ?? '';
+  return d.innerHTML;
 };
 
-// Status helpers
-function setMainStatus(text,type){
-  const el = $('#mainStatus');
-  if(!el) return;
-  el.textContent = text;
-  el.classList.remove('ok','err');
-  if(type === 'ok')  el.classList.add('ok');
-  if(type === 'err') el.classList.add('err');
-}
-function setStatus(text,type){
-  const el = $('#statusLine');
-  if(!el) return;
-  el.textContent = text;
-  el.classList.remove('status-ok','status-err');
-  if(type === 'ok')  el.classList.add('status-ok');
-  if(type === 'err') el.classList.add('status-err');
-}
+let components = [];
+let editId = null;
 
-/* ---------- Session helpers ---------- */
-async function ensureSession(){
-  if(currentSession) return currentSession;
-  const { data, error } = await sb
-    .from('sessions')
-    .insert({ submitted_by: currentUser.id })
-    .select()
-    .single();
-  if(error){
-    console.error(error);
-    setMainStatus('Failed to create session in DB.', 'err');
-    return null;
-  }
-  currentSession = data;
-  if($('#kpiSessionId')) $('#kpiSessionId').textContent = data.id;
-  setStatus('Session created. Ready to scan & save contracts.', 'ok');
-  return data;
+/* Map our component types to wiki categories */
+const WIKI_COMPONENT_CATEGORIES = {
+  'Quantum Drive'   : 'Quantum_drives',
+  'Shield Generator': 'Shield_generators',
+  'Power Plant'     : 'Power_plants',
+  'Cooler'          : 'Coolers',
+  'Computer'        : 'Computers',
+  'Radar'           : 'Radars',
+  'Missile Rack'    : 'Missile_racks',
+  'Weapon Mount'    : 'Weapon_mounts'
+};
+
+/* ==== SC Wiki fetch helpers ==== */
+async function fetchCategoryMembers(catTitle){
+  const url = `${SC_WIKI_API}?action=query&list=categorymembers`
+            + `&cmtitle=${encodeURIComponent('Category:' + catTitle)}`
+            + `&cmtype=page&cmlimit=max&format=json&origin=*`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('HTTP '+res.status+' for '+catTitle);
+  const data = await res.json();
+  const arr = (data.query && data.query.categorymembers) ? data.query.categorymembers : [];
+  return arr.map(m => m.title);
 }
 
-/* ---------- Cargo editor rendering ---------- */
-function renderCargoList(){
-  const wrap = $('#cargoList');
-  if(!wrap) return;
-  wrap.innerHTML = '';
-
-  activeContractModel.cargoTypes.forEach((cargo, idx) => {
-    const card = document.createElement('div');
-    card.className = 'cargo-card';
-
-    const header = document.createElement('div');
-    header.className = 'cargo-header';
-
-    const title = document.createElement('h4');
-    title.className = 'cargo-title';
-    title.textContent = cargo.name || `Cargo ${idx+1}`;
-    header.appendChild(title);
-
-    const right = document.createElement('div');
-    right.style.display = 'flex';
-    right.style.alignItems = 'center';
-    right.style.gap = '6px';
-
-    const badge = document.createElement('span');
-    badge.className = 'badge';
-    badge.textContent = 'CARGO TYPE';
-    right.appendChild(badge);
-
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.className = 'btn-secondary';
-    delBtn.textContent = 'Remove';
-    delBtn.style.fontSize = '10px';
-    delBtn.addEventListener('click', () => {
-      activeContractModel.cargoTypes.splice(idx,1);
-      renderCargoList();
-    });
-    right.appendChild(delBtn);
-
-    header.appendChild(right);
-    card.appendChild(header);
-
-    // Name field
-    const nameField = document.createElement('div');
-    nameField.className = 'form-field';
-    const nameLabel = document.createElement('label');
-    nameLabel.textContent = 'Cargo Name';
-    const nameInput = document.createElement('input');
-    nameInput.type = 'text';
-    nameInput.value = cargo.name || '';
-    nameInput.placeholder = 'Waste / Scrap / Boxes';
-    nameInput.addEventListener('input', e => {
-      cargo.name = e.target.value;
-      title.textContent = cargo.name || `Cargo ${idx+1}`;
-    });
-    nameField.appendChild(nameLabel);
-    nameField.appendChild(nameInput);
-    card.appendChild(nameField);
-
-    // Loading table
-    const loadWrap = document.createElement('div');
-    loadWrap.className = 'subtable';
-    const loadTitle = document.createElement('div');
-    loadTitle.className = 'subtable-title';
-    loadTitle.textContent = 'Loading (from)';
-    loadWrap.appendChild(loadTitle);
-
-    const loadTable = document.createElement('table');
-    const loadHead = document.createElement('thead');
-    loadHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
-    loadTable.appendChild(loadHead);
-
-    const loadBody = document.createElement('tbody');
-    cargo.loadings.forEach((row, li) => {
-      const tr = document.createElement('tr');
-
-      const tdLoc = document.createElement('td');
-      const inLoc = document.createElement('input');
-      inLoc.className = 'small-input';
-      inLoc.value = row.location;
-      inLoc.placeholder = 'Pick-up';
-      inLoc.addEventListener('input', e => row.location = e.target.value);
-      tdLoc.appendChild(inLoc);
-      tr.appendChild(tdLoc);
-
-      const tdScu = document.createElement('td');
-      const inScu = document.createElement('input');
-      inScu.className = 'small-input';
-      inScu.type = 'number';
-      inScu.value = row.scu;
-      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
-      tdScu.appendChild(inScu);
-      tr.appendChild(tdScu);
-
-      const tdDel = document.createElement('td');
-      const rm = document.createElement('button');
-      rm.type = 'button';
-      rm.className = 'btn-secondary';
-      rm.textContent = '✕';
-      rm.style.fontSize = '10px';
-      rm.addEventListener('click', () => {
-        cargo.loadings.splice(li,1);
-        renderCargoList();
-      });
-      tdDel.appendChild(rm);
-      tr.appendChild(tdDel);
-
-      loadBody.appendChild(tr);
-    });
-
-    const addLoadTr = document.createElement('tr');
-    const addLoadTd = document.createElement('td');
-    addLoadTd.colSpan = 3;
-    const addLoadBtn = document.createElement('button');
-    addLoadBtn.type = 'button';
-    addLoadBtn.className = 'btn-secondary';
-    addLoadBtn.textContent = '+ Add Loading Row';
-    addLoadBtn.style.fontSize = '10px';
-    addLoadBtn.addEventListener('click', () => {
-      cargo.loadings.push({ location:'', scu:0 });
-      renderCargoList();
-    });
-    addLoadTd.appendChild(addLoadBtn);
-    addLoadTr.appendChild(addLoadTd);
-    loadBody.appendChild(addLoadTr);
-
-    loadTable.appendChild(loadBody);
-    loadWrap.appendChild(loadTable);
-    card.appendChild(loadWrap);
-
-    // Offloading table
-    const offWrap = document.createElement('div');
-    offWrap.className = 'subtable';
-    const offTitle = document.createElement('div');
-    offTitle.className = 'subtable-title';
-    offTitle.textContent = 'Offloading (to)';
-    offWrap.appendChild(offTitle);
-
-    const offTable = document.createElement('table');
-    const offHead = document.createElement('thead');
-    offHead.innerHTML = '<tr><th>Location</th><th style="width:60px;">SCU</th><th style="width:40px;"></th></tr>';
-    offTable.appendChild(offHead);
-
-    const offBody = document.createElement('tbody');
-    cargo.offloadings.forEach((row, oi) => {
-      const tr = document.createElement('tr');
-
-      const tdLoc = document.createElement('td');
-      const inLoc = document.createElement('input');
-      inLoc.className = 'small-input';
-      inLoc.value = row.location;
-      inLoc.placeholder = 'Drop-off';
-      inLoc.addEventListener('input', e => row.location = e.target.value);
-      tdLoc.appendChild(inLoc);
-      tr.appendChild(tdLoc);
-
-      const tdScu = document.createElement('td');
-      const inScu = document.createElement('input');
-      inScu.className = 'small-input';
-      inScu.type = 'number';
-      inScu.value = row.scu;
-      inScu.addEventListener('input', e => row.scu = Number(e.target.value || 0));
-      tdScu.appendChild(inScu);
-      tr.appendChild(tdScu);
-
-      const tdDel = document.createElement('td');
-      const rm = document.createElement('button');
-      rm.type = 'button';
-      rm.className = 'btn-secondary';
-      rm.textContent = '✕';
-      rm.style.fontSize = '10px';
-      rm.addEventListener('click', () => {
-        cargo.offloadings.splice(oi,1);
-        renderCargoList();
-      });
-      tdDel.appendChild(rm);
-      tr.appendChild(tdDel);
-
-      offBody.appendChild(tr);
-    });
-
-    const addOffTr = document.createElement('tr');
-    const addOffTd = document.createElement('td');
-    addOffTd.colSpan = 3;
-    const addOffBtn = document.createElement('button');
-    addOffBtn.type = 'button';
-    addOffBtn.className = 'btn-secondary';
-    addOffBtn.textContent = '+ Add Offloading Row';
-    addOffBtn.style.fontSize = '10px';
-    addOffBtn.addEventListener('click', () => {
-      cargo.offloadings.push({ location:'', scu:0 });
-      renderCargoList();
-    });
-    addOffTd.appendChild(addOffBtn);
-    addOffTr.appendChild(addOffTd);
-    offBody.appendChild(addOffTr);
-
-    offTable.appendChild(offBody);
-    offWrap.appendChild(offTable);
-    card.appendChild(offWrap);
-
-    wrap.appendChild(card);
-  });
+function wikiUrlForTitle(title){
+  // Titles are already like "XL-1" or "Hyperion (quantum drive)"
+  return SC_WIKI_BASE + encodeURIComponent(title.replace(/ /g,'_'));
 }
 
-/* ---------- OCR parsing ---------- */
-function parseHeader(text){
-  const header = { reward:null, contractor:null };
-  let m = text.match(/Reward\s+(?:[a-z]\s*)?([\d,]+)/i);
-  if(m && m[1]) header.reward = m[1].replace(/,/g,'');
-  m = text.match(/Contracted\s+By\s+(.+)/i);
-  if(m && m[1]) header.contractor = m[1].trim();
-  return header;
+function upsertComponentFromWiki(name, type){
+  name = (name || '').trim();
+  if(!name) return;
+  const existing = components.find(c =>
+    c.name.toLowerCase() === name.toLowerCase() &&
+    c.type === type
+  );
+  if(existing) return;
+
+  const c = {
+    id: uid(),
+    name,
+    type,
+    size: '',
+    grade: '',
+    class: '',
+    manufacturer: '',
+    buy: '',
+    notes: '',
+    source: 'SC Wiki',
+    wiki: wikiUrlForTitle(name)
+  };
+  components.push(c);
 }
 
-function parseLegs(text){
-  const cleaned = text.replace(/\r/g,'');
-  const collectRe = /Collect\s+(.+?)\s+from\s+(.+?)\./gi;
-  const deliverRe = /Deliver\s+(\d+)\/(\d+)\s*SCU\s+to\s+(.+?)\./gi;
-
-  const collects = [];
-  const delivers = [];
-  let m;
-
-  while((m = collectRe.exec(cleaned)) !== null){
-    collects.push({ cargoType:m[1].trim(), origin:m[2].trim() });
-  }
-  while((m = deliverRe.exec(cleaned)) !== null){
-    delivers.push({
-      delivered:parseInt(m[1],10),
-      required:parseInt(m[2],10),
-      destination:m[3].trim()
-    });
-  }
-
-  const legs = [];
-  const n = Math.min(collects.length, delivers.length);
-  for(let i=0;i<n;i++){
-    legs.push({
-      leg:i+1,
-      cargoType:collects[i].cargoType,
-      origin:collects[i].origin,
-      destination:delivers[i].destination,
-      delivered:delivers[i].delivered,
-      required:delivers[i].required
-    });
-  }
-  return legs;
-}
-
-function buildCargoModelFromLegs(legs){
-  const map = new Map();
-  for(const leg of legs){
-    const key = leg.cargoType || 'Unknown';
-    if(!map.has(key)){
-      map.set(key,{ name:key, loadings:[], offloadings:[] });
-    }
-    const entry = map.get(key);
-    entry.loadings.push({ location:leg.origin, scu:leg.required });
-    entry.offloadings.push({ location:leg.destination, scu:leg.required });
-  }
-  return Array.from(map.values());
-}
-
-/* ---------- OCR flow ---------- */
-async function runOCROnBlob(blob){
-  const ocrOutput = $('#ocrOutput');
-  const scanBtn   = $('#scanBtn');
-  if(!ocrOutput || !scanBtn) return;
-
-  ocrOutput.textContent = '';
-  setStatus('Scanning image…','ok');
-  scanBtn.disabled = true;
+/* ==== Load from SC Wiki ==== */
+async function loadFromWiki(){
+  components = [];
+  editId = null;
+  $('#rows').innerHTML =
+    `<tr><td colspan="11" class="small" style="padding:10px">Loading from Star Citizen Wiki…</td></tr>`;
+  setStatus('Loading from SC Wiki…');
 
   try{
-    const { data:{ text } } = await Tesseract.recognize(blob,'eng',{
-      logger:m=>{
-        if(m.status === 'recognizing text'){
-          const pct = Math.round((m.progress||0)*100);
-          setStatus(`Recognising text… ${pct}%`,'ok');
-        }
-      }
-    });
-
-    const trimmed = text.trim();
-    ocrOutput.textContent = trimmed;
-
-    const header = parseHeader(trimmed);
-    const legs   = parseLegs(trimmed);
-    const cargo  = buildCargoModelFromLegs(legs);
-
-    activeContractModel.legs       = legs;
-    activeContractModel.cargoTypes = cargo;
-    activeContractModel.contractorName = header.contractor || null;
-    activeContractModel.reward     = header.reward ? Number(header.reward) : null;
-
-    const rewardEl = $('#reward');
-    const nameEl   = $('#contractName');
-    if(header.reward && rewardEl) rewardEl.value = header.reward;
-    if(header.contractor && nameEl && !nameEl.value){
-      nameEl.value = header.contractor;
+    for(const [type, cat] of Object.entries(WIKI_COMPONENT_CATEGORIES)){
+      const titles = await fetchCategoryMembers(cat);
+      titles.forEach(t => upsertComponentFromWiki(t, type));
     }
-    if($('#kpiActiveContract')){
-      $('#kpiActiveContract').textContent = nameEl?.value || 'New Contract';
-    }
-
-    renderCargoList();
-    openConfirmModal(header, legs, cargo);
-    setStatus('Scan complete. Review parsed data before saving.','ok');
+    render();
+    populateFilters();
+    updateKPI();
+    setStatus('Loaded from SC Wiki', true);
   }catch(err){
     console.error(err);
-    setStatus('Error during OCR. Try a clearer screenshot.','err');
-  }finally{
-    scanBtn.disabled = false;
+    $('#rows').innerHTML =
+      `<tr><td colspan="11" class="small" style="padding:10px">Failed to load from SC Wiki: ${esc(err.message)}</td></tr>`;
+    setStatus('Error loading from SC Wiki', false);
   }
 }
 
-/* ---------- Confirm modal ---------- */
-function openConfirmModal(header, legs, cargoTypes){
-  const mask = $('#confirmModal');
-  if(!mask) return;
-  const modalReward     = $('#modalReward');
-  const modalContractor = $('#modalContractor');
-  const modalLegs       = $('#modalLegs');
-
-  if(modalReward){
-    modalReward.textContent = header.reward
-      ? Number(header.reward).toLocaleString() + ' aUEC'
-      : '—';
-  }
-  if(modalContractor){
-    modalContractor.textContent = header.contractor || '—';
-  }
-
-  if(modalLegs){
-    if(legs.length){
-      const totalSCU   = legs.reduce((s,l)=>s+(l.required||0),0);
-      const cargoNames = cargoTypes.map(c=>c.name).join(', ');
-      modalLegs.textContent = `${legs.length} leg(s) • ${totalSCU} SCU • Cargo: ${cargoNames || '—'}`;
-    }else{
-      modalLegs.textContent = 'None detected';
-    }
-  }
-  mask.classList.add('open');
-}
-function closeConfirmModal(){
-  const mask = $('#confirmModal');
-  if(mask) mask.classList.remove('open');
-}
-
-/* ---------- Saved sessions cards ---------- */
-async function loadSessions(){
-  const grid = $('#sessionsGrid');
-  if(!grid) return;
-
-  const { data:sessions, error } = await sb
-    .from('sessions')
-    .select('id, created_at')
-    .order('created_at',{ascending:false});
-
-  if(error){
-    console.error(error);
-    grid.innerHTML = '<div class="muted">Error loading sessions.</div>';
-    return;
-  }
-  if(!sessions || !sessions.length){
-    grid.innerHTML = '<div class="muted">No sessions yet. Use “New Contract / Scan” to start.</div>';
-    return;
-  }
-
-  grid.innerHTML = '';
-
-  for(const s of sessions){
-    const { data:contracts, error:cErr } = await sb
-      .from('contracts')
-      .select(`
-        id,
-        contract_name,
-        reward,
-        contract_cargo_types (
-          id,
-          cargo_type,
-          contract_loading ( location, scu ),
-          contract_offloading ( location, scu )
-        )
-      `)
-      .eq('session_id', s.id)
-      .order('id',{ascending:true});
-
-    if(cErr){
-      console.error(cErr);
-    }
-
-    // Build card
-    const card = document.createElement('div');
-    card.className = 'card';
-
-    const header = document.createElement('div');
-    header.className = 'card-header';
-
-    const main = document.createElement('div');
-    main.className = 'card-header-main';
-
-    const sid = document.createElement('div');
-    sid.className = 'card-session-id';
-    sid.textContent = 'SESSION ' + s.id.slice(0,8);
-    main.appendChild(sid);
-
-    const sub = document.createElement('div');
-    sub.className = 'card-sub';
-    const d = new Date(s.created_at);
-    sub.textContent = d.toLocaleString();
-    main.appendChild(sub);
-
-    header.appendChild(main);
-
-    const right = document.createElement('div');
-    right.className = 'card-toggle';
-
-    const kpis = document.createElement('div');
-    kpis.className = 'card-kpis';
-
-    const cCount = (contracts || []).length;
-    const k1 = document.createElement('span');
-    k1.className = 'card-kpi';
-    k1.textContent = cCount + ' contract' + (cCount === 1 ? '' : 's');
-    kpis.appendChild(k1);
-
-    right.appendChild(kpis);
-
-    const toggle = document.createElement('div');
-    toggle.className = 'card-toggle-icon';
-    toggle.textContent = '>';
-    right.appendChild(toggle);
-
-    header.appendChild(right);
-    card.appendChild(header);
-
-    // Body
-    const body = document.createElement('div');
-    body.className = 'card-body';
-    const bodyInner = document.createElement('div');
-    bodyInner.className = 'card-body-inner';
-
-    if(contracts && contracts.length){
-      contracts.forEach((c, idx) => {
-        const block = document.createElement('div');
-        block.className = 'contract-block';
-
-        const name = document.createElement('div');
-        name.className = 'contract-name';
-        name.textContent = (idx+1) + '. ' + (c.contract_name || 'Contract');
-        block.appendChild(name);
-
-        if(c.reward != null){
-          const rw = document.createElement('div');
-          rw.className = 'contract-line';
-          rw.textContent = 'Reward: ' + Number(c.reward).toLocaleString() + ' aUEC';
-          block.appendChild(rw);
-        }
-
-        (c.contract_cargo_types || []).forEach(ct => {
-          const load = (ct.contract_loading && ct.contract_loading[0]) || null;
-          const off  = (ct.contract_offloading && ct.contract_offloading[0]) || null;
-
-          const line1 = document.createElement('div');
-          line1.className = 'contract-line';
-          const startLoc = load ? load.location : 'Unknown';
-          const endLoc   = off  ? off.location  : 'Unknown';
-          line1.textContent = (startLoc || 'Unknown') + '  >  ' + (endLoc || 'Unknown');
-          block.appendChild(line1);
-
-          const line2 = document.createElement('div');
-          line2.className = 'contract-line';
-          const scu = load ? load.scu : (off ? off.scu : 0);
-          line2.textContent = (scu || 0) + ' SCU ' + (ct.cargo_type || '');
-          block.appendChild(line2);
-        });
-
-        bodyInner.appendChild(block);
-      });
-    }else{
-      const empty = document.createElement('div');
-      empty.className = 'muted';
-      empty.textContent = 'No contracts saved under this session yet.';
-      bodyInner.appendChild(empty);
-    }
-
-    body.appendChild(bodyInner);
-    card.appendChild(body);
-
-    // Toggle behaviour
-    header.addEventListener('click', () => {
-      const isOpen = card.classList.contains('open');
-      if(isOpen){
-        card.classList.remove('open');
-        body.style.maxHeight = '0';
-      }else{
-        card.classList.add('open');
-        body.style.maxHeight = body.scrollHeight + 'px';
-      }
-    });
-
-    grid.appendChild(card);
+/* ==== Status text ==== */
+function setStatus(msg, ok){
+  const el = $('#statusText');
+  if(!el) return;
+  el.innerHTML = `Status: <strong>${esc(msg)}</strong>`;
+  if(ok === false){
+    el.style.color = 'var(--bad)';
+  }else{
+    el.style.color = 'var(--muted)';
   }
 }
 
-/* ---------- Intake modal helpers ---------- */
-function openIntake(){
-  const m = $('#intakeModal');
-  if(!m) return;
-  m.classList.add('open');
+/* ==== Filters ==== */
+function distinct(arr,key){
+  return [...new Set(arr.map(x=>x[key]).filter(Boolean))].sort();
 }
-function closeIntake(){
-  const m = $('#intakeModal');
-  if(!m) return;
-  m.classList.remove('open');
+function fillSelect(sel, values){
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">All</option>' +
+    values.map(v=>`<option>${esc(v)}</option>`).join('');
+  if(values.includes(prev)) sel.value = prev;
 }
-
-/* ---------- Init wiring ---------- */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth();
-  if(!session) return;
-  sb = getSupabase();
-  currentUser = session.user;
-  setMainStatus('Logged in as ' + (currentUser.email || currentUser.id), 'ok');
-  if($('#kpiSubmittedBy')) $('#kpiSubmittedBy').textContent = currentUser.email || currentUser.id;
-
-  // UI refs
-  const openIntakeBtn   = $('#openIntakeBtn');
-  const intakeCloseBtn  = $('#intakeCloseBtn');
-  const scanBtn         = $('#scanBtn');
-  const clearBtn        = $('#clearBtn');
-  const screenshotInput = $('#screenshotInput');
-  const pasteZone       = $('#pasteZone');
-  const previewImg      = $('#previewImg');
-  const addCargoBtn     = $('#addCargoBtn');
-  const saveContractBtn = $('#saveContractBtn');
-
-  const modalCloseBtn   = $('#modalCloseBtn');
-  const modalCancelBtn  = $('#modalCancelBtn');
-  const modalConfirmBtn = $('#modalConfirmBtn');
-
-  // Events – modal open/close
-  if(openIntakeBtn)  openIntakeBtn.addEventListener('click', openIntake);
-  if(intakeCloseBtn) intakeCloseBtn.addEventListener('click', closeIntake);
-
-  // Clear
-  if(clearBtn){
-    clearBtn.addEventListener('click', () => {
-      if(screenshotInput) screenshotInput.value = '';
-      if(previewImg){
-        previewImg.src = '';
-        previewImg.style.display = 'none';
-      }
-      const ocrOutput = $('#ocrOutput');
-      if(ocrOutput) ocrOutput.textContent = '';
-      activeContractModel.legs = [];
-      activeContractModel.cargoTypes = [];
-      renderCargoList();
-      setStatus('Cleared image and OCR output.','ok');
-    });
-  }
-
-  // Scan button
-  if(scanBtn){
-    scanBtn.addEventListener('click', () => {
-      if(!screenshotInput || !screenshotInput.files || !screenshotInput.files[0]){
-        setStatus('No file selected. Or paste an image with Ctrl+V.','err');
-        return;
-      }
-      const file = screenshotInput.files[0];
-      const reader = new FileReader();
-      reader.onload = e => {
-        if(previewImg){
-          previewImg.src = e.target.result;
-          previewImg.style.display = 'block';
-        }
-      };
-      reader.readAsDataURL(file);
-      runOCROnBlob(file);
-    });
-  }
-
-  // Paste-from-clipboard
-  if(pasteZone){
-    pasteZone.addEventListener('click', () => pasteZone.focus());
-  }
-  window.addEventListener('paste', e => {
-    const items = e.clipboardData && e.clipboardData.items;
-    if(!items) return;
-    for(let i=0; i<items.length; i++){
-      const item = items[i];
-      if(item.type && item.type.startsWith('image/')){
-        const blob = item.getAsFile();
-        if(blob){
-          e.preventDefault();
-          const reader = new FileReader();
-          reader.onload = ev => {
-            if(previewImg){
-              previewImg.src = ev.target.result;
-              previewImg.style.display = 'block';
-            }
-          };
-          reader.readAsDataURL(blob);
-          setStatus('Pasted image detected – scanning…','ok');
-          runOCROnBlob(blob);
-        }
-        break;
-      }
-    }
-  });
-
-  // Add cargo manually
-  if(addCargoBtn){
-    addCargoBtn.addEventListener('click', () => {
-      activeContractModel.cargoTypes.push({
-        name:'',
-        loadings:[],
-        offloadings:[]
-      });
-      renderCargoList();
-    });
-  }
-
-  // Save contract
-  if(saveContractBtn){
-    saveContractBtn.addEventListener('click', async () => {
-      const sess = await ensureSession();
-      if(!sess) return;
-
-      const nameEl   = $('#contractName');
-      const typeEl   = $('#contractType');
-      const rewardEl = $('#reward');
-
-      const name   = nameEl?.value || 'Unnamed Contract';
-      const ctype  = typeEl?.value || 'hauling';
-      const reward = rewardEl?.value ? Number(rewardEl.value) : null;
-
-      if(!activeContractModel.cargoTypes.length){
-        setStatus('Add at least one cargo type before saving.','err');
-        return;
-      }
-
-      saveContractBtn.disabled = true;
-      setStatus('Saving contract…','ok');
-
-      try{
-        const { data:contract, error:cErr } = await sb
-          .from('contracts')
-          .insert({
-            session_id:  sess.id,
-            submitted_by: currentUser.id,
-            contract_name: name,
-            contract_type: ctype,
-            reward: reward
-          })
-          .select()
-          .single();
-        if(cErr) throw cErr;
-
-        const contractId = contract.id;
-
-        for(const cargo of activeContractModel.cargoTypes){
-          const { data:cargoRow, error:ctErr } = await sb
-            .from('contract_cargo_types')
-            .insert({
-              contract_id: contractId,
-              cargo_type:  cargo.name || 'Unknown'
-            })
-            .select()
-            .single();
-          if(ctErr) throw ctErr;
-
-          const cargoTypeId = cargoRow.id;
-
-          for(const l of (cargo.loadings || [])){
-            if(!l.location) continue;
-            await sb.from('contract_loading').insert({
-              cargo_type_id: cargoTypeId,
-              location:      l.location,
-              scu:           l.scu || 0
-            });
-          }
-          for(const o of (cargo.offloadings || [])){
-            if(!o.location) continue;
-            await sb.from('contract_offloading').insert({
-              cargo_type_id: cargoTypeId,
-              location:      o.location,
-              scu:           o.scu || 0
-            });
-          }
-        }
-
-        setStatus('Contract saved.', 'ok');
-        await loadSessions();
-      }catch(err){
-        console.error(err);
-        setStatus('Error saving contract.', 'err');
-      }finally{
-        saveContractBtn.disabled = false;
-      }
-    });
-  }
-
-  // Confirm modal buttons
-  if(modalCloseBtn)  modalCloseBtn.addEventListener('click', closeConfirmModal);
-  if(modalCancelBtn) modalCancelBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Detection cancelled. You can edit or rescan.','ok');
-  });
-  if(modalConfirmBtn) modalConfirmBtn.addEventListener('click', () => {
-    closeConfirmModal();
-    setStatus('Contract parsed. Review & adjust before saving.','ok');
-  });
-
-  // Initial load of sessions list
-  await loadSessions();
+function populateFilters(){
+  fillSelect($('#filterType'), distinct(components,'type'));
+  fillSelect($('#filterClass'), distinct(components,'class'));
+  fillSelect($('#filterGrade'), distinct(components,'grade'));
+  fillSelect($('#filterSize'), distinct(components,'size'));
+}
+['#search','#filterType','#filterClass','#filterGrade','#filterSize'].forEach(sel=>{
+  const el = $(sel);
+  if(el) el.addEventListener('input', render);
 });
+
+/* ==== Form ==== */
+function getForm(){
+  return {
+    id: editId || uid(),
+    name: $('#compName').value.trim(),
+    type: $('#compType').value || '',
+    size: $('#compSize').value || '',
+    grade: $('#compGrade').value || '',
+    class: $('#compClass').value || '',
+    manufacturer: $('#compManufacturer').value.trim(),
+    buy: $('#compBuy').value.trim(),
+    notes: $('#compNotes').value.trim(),
+    source: editId
+      ? (components.find(c=>c.id===editId)?.source || 'Manual')
+      : 'Manual',
+    wiki: editId
+      ? (components.find(c=>c.id===editId)?.wiki || '')
+      : ''
+  };
+}
+function clearForm(){
+  editId = null;
+  $('#compName').value = '';
+  $('#compManufacturer').value = '';
+  $('#compBuy').value = '';
+  $('#compNotes').value = '';
+  $('#compType').selectedIndex = 0;
+  $('#compSize').selectedIndex = 0;
+  $('#compGrade').selectedIndex = 0;
+  $('#compClass').selectedIndex = 0;
+  $('#saveComponent').textContent = 'Save Component';
+}
+function fillForm(c){
+  editId = c.id;
+  $('#compName').value = c.name || '';
+  $('#compType').value = c.type || 'Quantum Drive';
+  $('#compSize').value = c.size || '';
+  $('#compGrade').value = c.grade || '';
+  $('#compClass').value = c.class || '';
+  $('#compManufacturer').value = c.manufacturer || '';
+  $('#compBuy').value = c.buy || '';
+  $('#compNotes').value = c.notes || '';
+  $('#saveComponent').textContent = 'Update Component';
+}
+$('#saveComponent').onclick = () => {
+  const c = getForm();
+  if(!c.name){
+    alert('Name is required');
+    return;
+  }
+  const idx = components.findIndex(x => x.id === c.id);
+  if(idx >= 0) components[idx] = c;
+  else components.push(c);
+  render();
+  populateFilters();
+  updateKPI();
+  clearForm();
+};
+$('#clearForm').onclick = clearForm;
+
+/* ==== Render ==== */
+function render(){
+  const q  = ($('#search').value || '').toLowerCase().trim();
+  const ft = $('#filterType').value;
+  const fc = $('#filterClass').value;
+  const fg = $('#filterGrade').value;
+  const fs = $('#filterSize').value;
+
+  let arr = components.slice();
+  if(q){
+    arr = arr.filter(c =>
+      (`${c.name} ${c.type} ${c.manufacturer} ${c.buy} ${c.notes} ${c.class}`).toLowerCase().includes(q)
+    );
+  }
+  if(ft) arr = arr.filter(c => c.type === ft);
+  if(fc) arr = arr.filter(c => c.class === fc);
+  if(fg) arr = arr.filter(c => c.grade === fg);
+  if(fs) arr = arr.filter(c => c.size === fs);
+
+  const tbody = $('#rows');
+  if(!arr.length){
+    tbody.innerHTML = `<tr><td colspan="11" class="small" style="padding:10px">No components match your filters.</td></tr>`;
+    $('#kpiCount').textContent = '0';
+    $('#kpiType').textContent = '—';
+    return;
+  }
+
+  tbody.innerHTML = arr.map(c=>`
+    <tr>
+      <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
+      <td>${esc(c.type || '')}</td>
+      <td>${esc(c.size || '')}</td>
+      <td>${esc(c.grade || '')}</td>
+      <td>${esc(c.class || '')}</td>
+      <td>${esc(c.manufacturer || '')}</td>
+      <td>${esc(c.buy || '')}</td>
+      <td class="tagsCell">${esc(c.notes || '')}</td>
+      <td>${c.source ? `<span class="pill">${esc(c.source)}</span>` : ''}</td>
+      <td>${
+        c.wiki
+          ? `<a href="${esc(c.wiki)}" target="_blank" rel="noopener" class="small" style="color:var(--accent);text-decoration:underline">Open</a>`
+          : ''
+      }</td>
+      <td class="table-actions">
+        <button data-act="edit" data-id="${c.id}">Edit</button>
+        <button data-act="del" data-id="${c.id}" class="bad">Del</button>
+      </td>
+    </tr>
+  `).join('');
+
+  $$('#rows button[data-act]').forEach(btn => {
+    const id = btn.dataset.id;
+    if(btn.dataset.act === 'edit'){
+      btn.onclick = () => {
+        const c = components.find(x=>x.id === id);
+        if(c) fillForm(c);
+      };
+    }else if(btn.dataset.act === 'del'){
+      btn.onclick = () => {
+        if(!confirm('Delete this component from the current session?')) return;
+        components = components.filter(x=>x.id !== id);
+        render();
+        populateFilters();
+        updateKPI();
+      };
+    }
+  });
+
+  updateKPI();
+}
+
+/* ==== KPIs ==== */
+function updateKPI(){
+  $('#kpiCount').textContent = String(components.length);
+  const byType = {};
+  components.forEach(c => { byType[c.type] = (byType[c.type] || 0) + 1; });
+  const top = Object.entries(byType)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,3)
+    .map(([k,v])=>`${k}: ${v}`)
+    .join(' • ') || '—';
+  $('#kpiType').textContent = top;
+}
+
+/* ==== Export ==== */
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(components,null,2)],{type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'jmbn-components-sc-wiki.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function exportCSV(){
+  const headers = ['id','name','type','size','grade','class','manufacturer','buy','notes','source','wiki'];
+  const lines = [headers.join(',')];
+  components.forEach(c=>{
+    const row = headers.map(h=>{
+      let v = c[h] ?? '';
+      v = String(v).replace(/"/g,'""');
+      return `"${v}"`;
+    });
+    lines.push(row.join(','));
+  });
+  const blob = new Blob([lines.join('\n')],{type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'jmbn-components-sc-wiki.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+$('#exportJSON').onclick = exportJSON;
+$('#exportCSV').onclick  = exportCSV;
+
+/* ==== Refresh button ==== */
+$('#refreshWiki').onclick = () => {
+  if(!confirm('Reload from SC Wiki? This will discard manual edits in this session.')) return;
+  loadFromWiki();
+};
+
+/* ==== Init ==== */
+loadFromWiki();
 </script>
 </body>
 </html>
