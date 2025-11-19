@@ -4,16 +4,19 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JMBN Components</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png"
       href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+
 <style>
 :root{
   --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
   --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;
+  --fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
 }
 *{box-sizing:border-box}
 body{
@@ -21,16 +24,14 @@ body{
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text);font-family:'Play',sans-serif;margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base)
+  color:var(--text);
+  font-family:'Play',sans-serif;
+  margin:0;padding:14px;
+  letter-spacing:.25px;
+  font-size:var(--fs-base)
 }
 
-/* Header */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-
-/* Shiny pill nav */
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+/* Shiny pill nav (header.html styles) */
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
   position:relative;display:inline-flex;align-items:center;justify-content:center;
@@ -40,38 +41,129 @@ body{
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
   transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
 }
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
+.nav-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
+  background:linear-gradient(180deg,#1a1a1a,#0a0a0a)
+}
 .nav-btn.active{
-  color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
-  border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
+  color:#000;
+  background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--ring);
+  box-shadow:0 0 20px rgba(214,180,76,.45);
 }
 .nav-btn.active::after{
-  content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
-  border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
+  border-radius:inherit;
+  transform:translateX(-120%);
+  animation:shine 2.8s ease-in-out infinite;
+  pointer-events:none;
 }
-@keyframes shine{0%{transform:translateX(-120%)}35%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+@keyframes shine{
+  0%{transform:translateX(-120%)}
+  35%{transform:translateX(120%)}
+  100%{transform:translateX(120%)}
+}
 
-/* Layout + table */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
+/* Layout */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  margin-top:8px;
+  box-shadow:0 0 18px rgba(214,180,76,.22)
+}
+.controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:8px
+}
+button{
+  padding:7px 11px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  border:1px solid var(--border);
+  cursor:pointer;
+  font-family:'Play';
+  transition:.2s
+}
 button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
-input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+input,select{
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px;
+  color:var(--text);
+  font-size:var(--fs-table);
+  font-family:'Play'
+}
 
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.kpi-card h3{margin:0;color:var(--muted);font-size:11px;text-transform:uppercase}
-.kpi-card .val{font-weight:700;font-size:18px;color:var(--accent);margin-top:4px}
+/* KPIs */
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:10px 0
+}
+.kpi-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  text-align:center
+}
+.kpi-card h3{
+  margin:0;
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase
+}
+.kpi-card .val{
+  font-weight:700;
+  font-size:18px;
+  color:var(--accent);
+  margin-top:4px
+}
 
-.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+/* Form */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:10px 0
+}
 @media(max-width:980px){.form-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.form-grid{grid-template-columns:1fr}}
 
-.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
-table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
-th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
-th{color:var(--accent);background:#080808;font-weight:500;font-size:12px}
+/* Table */
+.tableWrap{
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:auto;
+  max-height:70vh;
+  margin-top:10px
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--fs-table)
+}
+th,td{
+  border-bottom:1px solid rgba(214,180,76,.3);
+  padding:8px;
+  text-align:left
+}
+th{
+  color:var(--accent);
+  background:#080808;
+  font-weight:500;
+  font-size:12px
+}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .small{font-size:var(--fs-small);color:var(--muted)}
@@ -88,7 +180,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     const html = await res.text();
     document.getElementById('header-container').outerHTML = html;
 
-    // Highlight current tab (triggers shiny sweep ✨)
+    // Highlight current tab
     requestAnimationFrame(() => {
       const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
       document.querySelectorAll('.nav-btn').forEach(a => {
@@ -112,8 +204,11 @@ tr:hover{background:rgba(214,180,76,.08)}
     <select id="filterClass"><option value="">All Classes</option></select>
     <select id="filterGrade"><option value="">All Grades</option></select>
     <select id="filterSize"><option value="">All Sizes</option></select>
+
     <button id="saveBtn">Save</button>
-    <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Reset (Factory)</button>
+    <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Reset (Reload JSON)</button>
+    <button id="fetchAllShops">Fetch Shops (Wiki)</button>
+
     <button id="exportJSON">Export JSON</button>
     <button id="exportCSV">Export CSV</button>
     <button class="btn-primary" id="importJSON">Import JSON</button>
@@ -122,7 +217,7 @@ tr:hover{background:rgba(214,180,76,.08)}
   <div class="kpis">
     <div class="kpi-card"><h3>Total Components</h3><div class="val" id="kpiCount">0</div></div>
     <div class="kpi-card"><h3>By Type</h3><div class="val small" id="kpiType">—</div></div>
-    <div class="kpi-card"><h3>Last Saved</h3><div class="val" id="lastSaved">—</div></div>
+    <div class="kpi-card"><h3>Status</h3><div class="val" id="lastSaved">—</div></div>
   </div>
 
   <h2 style="color:var(--accent);font-size:var(--fs-h2);margin:8px 0 4px">Add / Edit Component</h2>
@@ -130,12 +225,11 @@ tr:hover{background:rgba(214,180,76,.08)}
     <input id="compName" placeholder="Name *">
     <select id="compType">
       <option>Quantum Drive</option><option>Shield Generator</option><option>Power Plant</option><option>Cooler</option>
-      <option>Computer</option><option>Radar</option><option>Weapon Mount</option><option>Missile Rack</option>
+      <option>Jump Drive</option><option>Computer</option><option>Radar</option><option>Weapon Mount</option><option>Missile Rack</option>
     </select>
-    <select id="compSize">
-      <option>S1</option><option>S2</option><option>S3</option><option>S4</option><option>S5</option>
-    </select>
+    <input id="compSize" placeholder="Size (e.g. S1, S2, A, C)">
     <select id="compGrade">
+      <option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option>
       <option>Grade A</option><option>Grade B</option><option>Grade C</option><option>Grade D</option>
     </select>
     <select id="compClass">
@@ -144,6 +238,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     <input id="compManufacturer" placeholder="Manufacturer">
     <input id="compBuy" placeholder="Where to Buy">
     <input id="compNotes" placeholder="Notes">
+    <input id="compLink" placeholder="Wiki Link (optional)">
     <button class="btn-primary" id="saveComponent">Save Component</button>
   </div>
 
@@ -172,46 +267,58 @@ tr:hover{background:rgba(214,180,76,.08)}
 <script src="js/auth.js"></script>
 
 <script>
-/* === Basic helpers === */
-const JSON_URL = 'data/components.js';   // your JSON file (plain array)
+const JSON_URL = 'https://delumenta.github.io/JMBN/data/components.js';
 
 const $  = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const uid = () => 'CMP-' + Math.random().toString(36).slice(2,8);
 function esc(s=''){ const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
 
+// Replace nbsp etc
+function cleanSpaces(s){
+  return (s || '').replace(/\u00A0/g,' ').replace(/\s+/g,' ').trim();
+}
+function cleanSize(s){
+  // " S  2" -> "S2"
+  return cleanSpaces(s).replace(/\s+/g,'').toUpperCase();
+}
+function normalizeGrade(g){
+  if (g === null || g === undefined) return '';
+  if (typeof g === 'number') return 'Grade ' + g;
+  g = String(g).trim();
+  if (!g) return '';
+  if (/^grade/i.test(g)) return 'Grade ' + g.replace(/^grade/i,'').trim();
+  return 'Grade ' + g.toUpperCase();
+}
+
 let components = [];
 let editId = null;
 
-/* Map JSON entry -> internal shape */
-function mapJsonComponent(c){
-  // Clean size: "S  2" -> "S2"
-  let size = c.size || '';
-  if (size) size = size.replace(/\s+/g,'');
-
-  // Normalize grade: "A" -> "Grade A" (if not already "Grade ...")
-  let grade = c.grade || '';
-  if (grade && !/^grade/i.test(grade)) grade = 'Grade ' + grade;
-
+/* Map JSON entry -> internal shape we use everywhere */
+function mapJsonComponent(src){
   return {
-    id: c.id || uid(),
-    name: c.name || '',
-    type: c.type || '',
-    size,
-    grade,
-    class: c.class || '',
-    manufacturer: c.manufacturer || '',
-    buy: c.buy || '',
-    notes: c.notes || ''
+    id: uid(),
+    name: src.Names || '',
+    type: src.Component || '',
+    size: cleanSize(src.Size),
+    grade: normalizeGrade(src.Grade),
+    class: src.Class || '',
+    manufacturer: cleanSpaces(src.Manufacturer),
+    buy: '',                 // will be filled from wiki
+    notes: '',
+    link: src.Link || ''
   };
 }
 
-/* === Load from JSON file === */
+/* ---- Load from JSON file ---- */
 async function loadFromJSON(){
   try{
     const res = await fetch(JSON_URL, { cache:'no-cache' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
+
+    const text = await res.text();
+    console.log('[components] RAW first 200 chars:', text.slice(0,200) + '...');
+    const json = JSON.parse(text);
     if (!Array.isArray(json)) throw new Error('Expected array in ' + JSON_URL);
 
     components = json.map(mapJsonComponent);
@@ -221,36 +328,112 @@ async function loadFromJSON(){
     const ls = $('#lastSaved');
     if(ls) ls.textContent = 'Loaded from JSON';
   }catch(err){
-    console.error('Failed to load components JSON:', err);
+    console.error('loadFromJSON error:', err);
     components = [];
     render();
     populateFilters();
     updateKPI();
     const ls = $('#lastSaved');
     if(ls) ls.textContent = 'Error loading JSON';
-    alert('Failed to load components from data/components.js');
+    alert('Failed to load components from data.');
   }
 }
 
-/* === Form helpers === */
+/* ---- Wiki scraping helpers ---- */
+function extractShopsFromDoc(doc){
+  // Very generic: looks for cells labelled "Shops", "Buy from", "Acquisition", etc.
+  const labels = ['shops','buy from','buy','acquisition','availability','purchase'];
+  const cells = Array.from(doc.querySelectorAll('th,td'));
+  for (const cell of cells){
+    const label = cell.textContent.trim().toLowerCase();
+    if (!labels.some(l => label.includes(l))) continue;
+    const next = cell.nextElementSibling;
+    if (!next) continue;
+    let txt = next.textContent || '';
+    // Strip citation markers [1], [2], etc
+    txt = txt.replace(/\[\d+]/g,'').replace(/\s+/g,' ').trim();
+    if (txt) return txt;
+  }
+  return '';
+}
+
+async function fetchShopsForComponent(c, silent=false){
+  if (!c.link){
+    if (!silent) alert('No wiki link set for ' + c.name);
+    return '';
+  }
+  try{
+    const res = await fetch(c.link, { cache:'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const html = await res.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const shops = extractShopsFromDoc(doc);
+    if (shops){
+      c.buy = shops;
+      return shops;
+    }
+    if (!silent) alert('No shop info found on page for ' + c.name);
+    return '';
+  }catch(e){
+    console.error('fetchShopsForComponent error', c.name, e);
+    if (!silent) alert('Failed to fetch shops for ' + c.name + ': ' + e.message);
+    return '';
+  }
+}
+
+/* Fetch for all components (slow) */
+$('#fetchAllShops').onclick = async () => {
+  if (!components.length){
+    alert('No components loaded yet.');
+    return;
+  }
+  if (!confirm('Fetch shop info from Fandom for all components?\nThis may take a while and may be rate-limited.')){
+    return;
+  }
+  const ls = $('#lastSaved');
+  if (ls) ls.textContent = 'Fetching shops…';
+  for (let i=0; i<components.length; i++){
+    const c = components[i];
+    if (!c.buy && c.link){
+      await fetchShopsForComponent(c, true);
+      if (i % 5 === 0){ // occasional re-render
+        render();
+        updateKPI();
+      }
+      // small delay to be nice to the wiki
+      await new Promise(r => setTimeout(r, 700));
+    }
+  }
+  render();
+  updateKPI();
+  if (ls) ls.textContent = 'Shops fetched (where available)';
+  alert('Done fetching shop info (where available).');
+};
+
+/* ---- Form helpers ---- */
 function getForm(){
   return {
     id: editId || uid(),
     name: $('#compName').value.trim(),
     type: $('#compType').value,
-    size: $('#compSize').value,
+    size: cleanSize($('#compSize').value),
     grade: $('#compGrade').value,
     class: $('#compClass').value,
     manufacturer: $('#compManufacturer').value.trim(),
     buy: $('#compBuy').value.trim(),
-    notes: $('#compNotes').value.trim()
+    notes: $('#compNotes').value.trim(),
+    link: $('#compLink').value.trim()
   };
 }
 
 function clearForm(){
   editId = null;
-  ['compName','compManufacturer','compBuy','compNotes'].forEach(id => $('#'+id).value = '');
-  ['compType','compSize','compGrade','compClass'].forEach(id => $('#'+id).selectedIndex = 0);
+  ['compName','compManufacturer','compBuy','compNotes','compLink','compSize']
+    .forEach(id => $('#'+id).value = '');
+  $('#compType').selectedIndex = 0;
+  $('#compGrade').selectedIndex = 0;
+  $('#compClass').selectedIndex = 0;
   $('#saveComponent').textContent = 'Save Component';
 }
 
@@ -258,16 +441,17 @@ function fillForm(c){
   editId = c.id;
   $('#compName').value = c.name || '';
   $('#compType').value = c.type || 'Quantum Drive';
-  $('#compSize').value = c.size || 'S1';
-  $('#compGrade').value = c.grade || 'Grade A';
+  $('#compSize').value = c.size || '';
+  $('#compGrade').value = c.grade || 'Grade 1';
   $('#compClass').value = c.class || 'Civilian';
   $('#compManufacturer').value = c.manufacturer || '';
   $('#compBuy').value = c.buy || '';
   $('#compNotes').value = c.notes || '';
+  $('#compLink').value = c.link || '';
   $('#saveComponent').textContent = 'Update Component';
 }
 
-/* Save Component (in-memory only) */
+/* Save component (in-memory only) */
 $('#saveComponent').onclick = () => {
   const c = getForm();
   if (!c.name){
@@ -287,18 +471,18 @@ $('#saveComponent').onclick = () => {
   if(ls) ls.textContent = 'Modified (not persisted)';
 };
 
-/* Top "Save" button – informational */
+/* Save button – just info */
 $('#saveBtn').onclick = () => {
-  alert('There is no local storage save.\nUse Export JSON to download your current list.');
+  alert('Data is not saved to a server.\nUse Export JSON/CSV to download your current list.');
 };
 
-/* Reset -> reload from JSON file */
+/* Reset -> reload JSON */
 $('#resetBtn').onclick = async () => {
-  if (!confirm('Reset and reload from data/components.js? All unsaved edits will be lost.')) return;
+  if (!confirm('Reload from data/components.js?\nAll unsaved edits will be lost.')) return;
   await loadFromJSON();
 };
 
-/* === Filters === */
+/* ---- Filters ---- */
 function distinct(arr, key){
   return [...new Set(arr.map(x => x[key]).filter(Boolean))].sort();
 }
@@ -321,7 +505,7 @@ function populateFilters(){
   if (el) el.addEventListener('input', render);
 });
 
-/* === Render table === */
+/* ---- Render table ---- */
 function render(){
   const q  = ($('#search').value || '').toLowerCase().trim();
   const ft = $('#filterType').value;
@@ -343,7 +527,11 @@ function render(){
 
   $('#rows').innerHTML = arr.map(c => `
     <tr>
-      <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
+      <td>
+        ${c.link
+          ? `<a href="${esc(c.link)}" target="_blank" style="color:var(--accent);text-decoration:none;"><b>${esc(c.name)}</b></a>`
+          : `<b style="color:var(--accent)">${esc(c.name)}</b>`}
+      </td>
       <td>${esc(c.type || '')}</td>
       <td>${esc(c.size || '')}</td>
       <td>${esc(c.grade || '')}</td>
@@ -352,6 +540,7 @@ function render(){
       <td>${esc(c.buy || '')}</td>
       <td>${esc(c.notes || '')}</td>
       <td style="white-space:nowrap">
+        <button data-act="shops" data-id="${c.id}">Shops</button>
         <button data-act="edit" data-id="${c.id}">Edit</button>
         <button data-act="del"  data-id="${c.id}" style="border-color:var(--bad);color:var(--bad)">Del</button>
       </td>
@@ -364,13 +553,13 @@ function render(){
 
   $$('#rows button[data-act]').forEach(btn => {
     const id = btn.dataset.id;
-    if (btn.dataset.act === 'edit'){
+    const act = btn.dataset.act;
+    if (act === 'edit'){
       btn.onclick = () => {
         const c = components.find(x => x.id === id);
         if (c) fillForm(c);
       };
-    }
-    if (btn.dataset.act === 'del'){
+    } else if (act === 'del'){
       btn.onclick = () => {
         if (!confirm('Delete this component?')) return;
         components = components.filter(x => x.id !== id);
@@ -378,11 +567,22 @@ function render(){
         populateFilters();
         updateKPI();
       };
+    } else if (act === 'shops'){
+      btn.onclick = async () => {
+        const c = components.find(x => x.id === id);
+        if (!c) return;
+        const ls = $('#lastSaved');
+        if (ls) ls.textContent = 'Fetching shops for ' + c.name + '…';
+        await fetchShopsForComponent(c);
+        render();
+        updateKPI();
+        if (ls) ls.textContent = 'Updated shop info for ' + c.name;
+      };
     }
   });
 }
 
-/* === KPIs === */
+/* ---- KPIs ---- */
 function updateKPI(){
   $('#kpiCount').textContent = String(components.length);
   const byType = {};
@@ -395,18 +595,18 @@ function updateKPI(){
   $('#kpiType').textContent = top;
 }
 
-/* === Export / Import === */
+/* ---- Export / Import ---- */
 function exportJSON(){
   const blob = new Blob([JSON.stringify(components,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'jmbn-components.json';
+  a.download = 'jmbn-components-with-shops.json';
   a.click();
   URL.revokeObjectURL(url);
 }
 function exportCSV(){
-  const headers = ['name','type','size','grade','class','manufacturer','buy','notes'];
+  const headers = ['name','type','size','grade','class','manufacturer','buy','notes','link'];
   const rows = components.map(c => headers.map(h => String(c[h] ?? '')));
   const csv = [
     headers.join(','),
@@ -416,7 +616,7 @@ function exportCSV(){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'jmbn-components.csv';
+  a.download = 'jmbn-components-with-shops.csv';
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -459,7 +659,7 @@ function importJSON(){
 }
 $('#importJSON').onclick = importJSON;
 
-/* Init (protected) */
+/* ---- Init (auth-gated) ---- */
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await requireAuth();   // redirects to auth.html if not logged in
   if (!session) return;
