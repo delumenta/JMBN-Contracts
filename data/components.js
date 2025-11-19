@@ -6,7 +6,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/AbsoluteZero"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Arctic",
@@ -15,7 +15,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Arctic"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "ArcticStorm",
@@ -24,7 +24,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/ArcticStorm"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L4-Platinum Bay; Levski"
   },
   {
     "Names": "Aufeis",
@@ -33,7 +33,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Aufeis"
+    "WhereToBuy": "HUR-L2-Platinum Bay; HUR-L3-Platinum Bay"
   },
   {
     "Names": "Avalanche",
@@ -42,7 +42,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Avalanche"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Berian",
@@ -51,7 +51,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Berian"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "BlastChill",
@@ -60,7 +60,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/BlastChill"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay"
   },
   {
     "Names": "Blizzard",
@@ -69,7 +69,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Blizzard"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Boreal",
@@ -78,7 +78,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Boreal"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Bracer",
@@ -87,7 +87,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Bracer"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Chill-Max",
@@ -96,7 +96,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Chill-Max"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "ColdSnap",
@@ -105,7 +105,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/ColdSnap"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L4-Platinum Bay"
   },
   {
     "Names": "ColdSurge",
@@ -114,7 +114,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/ColdSurge"
+    "WhereToBuy": "HUR-L3-Platinum Bay"
   },
   {
     "Names": "CoolCore",
@@ -123,7 +123,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/CoolCore"
+    "WhereToBuy": "Area 18 - Dumpers Depot; CRU-L1- Platinum Bay"
   },
   {
     "Names": "Cryo-Star",
@@ -132,7 +132,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Cryo-Star"
+    "WhereToBuy": "Levski"
   },
   {
     "Names": "Cryo-Star EX",
@@ -141,7 +141,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Cryo-Star EX"
+    "WhereToBuy": "Hurston - Everus Harbour"
   },
   {
     "Names": "Cryo-Star SL",
@@ -150,7 +150,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Cryo-Star SL"
+    "WhereToBuy": "Levski; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "Cryo-Star XL",
@@ -159,7 +159,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Cryo-Star XL"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "Eco-Flow",
@@ -168,7 +168,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Eco-Flow"
+    "WhereToBuy": "CRU-L4-Platinum Bay; Hurston - Everus Harbour; New Babbage - Omega Bay"
   },
   {
     "Names": "Endo",
@@ -177,7 +177,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Endo"
+    "WhereToBuy": "HUR-L3-Platinum Bay"
   },
   {
     "Names": "FlashFreeze",
@@ -186,7 +186,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/FlashFreeze"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "Fridan",
@@ -195,7 +195,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Fridan"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L3-Platinum Bay"
   },
   {
     "Names": "Frost-Star",
@@ -204,7 +204,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Frost-Star"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Frost-Star EX",
@@ -213,7 +213,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Frost-Star EX"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "Frost-Star SL",
@@ -222,7 +222,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Frost-Star SL"
+    "WhereToBuy": "CRU-L4-Platinum Bay; Hurston - Everus Harbour"
   },
   {
     "Names": "Frost-Star XL",
@@ -231,7 +231,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Frost-Star XL"
+    "WhereToBuy": "CRU-L4-Platinum Bay; Microtech - Port Tressler"
   },
   {
     "Names": "FrostBite",
@@ -240,7 +240,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/FrostBite"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "FrostBurn",
@@ -249,7 +249,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/FrostBurn"
+    "WhereToBuy": "Area 18 - Dumpers Depot; CRU-L1- Platinum Bay; CRU-L4-Platinum Bay; HUR-L5-Platinum Bay"
   },
   {
     "Names": "FullFrost",
@@ -258,7 +258,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/FullFrost"
+    "WhereToBuy": "Area 18 - Baijini Point; Area 18 - Dumpers Depot; CRU-L4-Platinum Bay; HUR-L2-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Galinstan",
@@ -267,7 +267,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Galinstan"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Gelid",
@@ -276,7 +276,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Gelid"
+    "WhereToBuy": "Area 18 - Dumpers Depot; HUR-L2-Platinum Bay"
   },
   {
     "Names": "Glacier",
@@ -285,7 +285,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Glacier"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Graupel",
@@ -294,7 +294,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Graupel"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L2-Platinum Bay"
   },
   {
     "Names": "HeatSafe",
@@ -303,7 +303,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/HeatSafe"
+    "WhereToBuy": "Area 18 - Baijini Point; HUR-L2-Platinum Bay; HUR-L5-Platinum Bay; Levski"
   },
   {
     "Names": "HeatSink",
@@ -312,7 +312,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/HeatSink"
+    "WhereToBuy": "Levski; Microtech - Port Tressler"
   },
   {
     "Names": "HydroJet",
@@ -321,7 +321,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/HydroJet"
+    "WhereToBuy": "Area 18 - Baijini Point; CRU-L1- Platinum Bay"
   },
   {
     "Names": "Hydrocel",
@@ -330,7 +330,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Hydrocel"
+    "WhereToBuy": "CRU-L1- Platinum Bay"
   },
   {
     "Names": "Hydropulse",
@@ -339,7 +339,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Hydropulse"
+    "WhereToBuy": "Area 18 - Dumpers Depot; Hurston - Everus Harbour"
   },
   {
     "Names": "Ice-Flush",
@@ -348,7 +348,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Ice-Flush"
+    "WhereToBuy": "Hurston - Everus Harbour; New Babbage - Omega Bay"
   },
   {
     "Names": "IceBox",
@@ -357,7 +357,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/IceBox"
+    "WhereToBuy": "Area 18 - Baijini Point; Levski"
   },
   {
     "Names": "IceDive",
@@ -366,7 +366,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/IceDive"
+    "WhereToBuy": "Microtech - Port Tressler"
   },
   {
     "Names": "IcePlunge",
@@ -375,7 +375,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/IcePlunge"
+    "WhereToBuy": "HUR-L2-Platinum Bay; HUR-L3-Platinum Bay"
   },
   {
     "Names": "Kelvid",
@@ -384,7 +384,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Kelvid"
+    "WhereToBuy": "CRU-L4-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Mercury",
@@ -393,7 +393,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Mercury"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "NightFall",
@@ -402,7 +402,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/NightFall"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Permafrost",
@@ -411,7 +411,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Permafrost"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Polar",
@@ -420,7 +420,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Polar"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "QuikCool",
@@ -429,7 +429,7 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/QuikCool"
+    "WhereToBuy": "Area 18 - Dumpers Depot; CRU-L5-Platinum Bay; HUR-L2-Platinum Bay; HUR-L3-Platinum Bay"
   },
   {
     "Names": "RapidCool",
@@ -438,16 +438,16 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/RapidCool"
+    "WhereToBuy": "Microtech - Port Tressler"
   },
   {
     "Names": "Serac",
     "Component": "Cooler",
     "Size": "S4",
     "Grade": 1,
-    "Class": "",
+    "Class": null,
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Serac"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SnowBlind",
@@ -456,7 +456,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/SnowBlind"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Snowfall",
@@ -465,7 +465,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Snowfall"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Snowpack",
@@ -474,7 +474,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Snowpack"
+    "WhereToBuy": "Area 18 - Dumpers Depot; New Babbage - Omega Bay"
   },
   {
     "Names": "Taiga",
@@ -483,7 +483,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Taiga"
+    "WhereToBuy": "HUR-L3-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Tempest",
@@ -492,7 +492,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Tempest"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Tepilo",
@@ -501,7 +501,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "Link": "https://starcitizen.fandom.com/wiki/Tepilo"
+    "WhereToBuy": "HUR-L3-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "ThermalCore",
@@ -510,7 +510,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/ThermalCore"
+    "WhereToBuy": "Hurston - Everus Harbour"
   },
   {
     "Names": "Thermax",
@@ -519,7 +519,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Thermax"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L4-Platinum Bay"
   },
   {
     "Names": "Tundra",
@@ -528,7 +528,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Tundra"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Ultra-Flow",
@@ -537,7 +537,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Ultra-Flow"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "VaporBlock",
@@ -546,7 +546,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/VaporBlock"
+    "WhereToBuy": "Microtech - Port Tressler"
   },
   {
     "Names": "WhiteOut",
@@ -555,7 +555,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/WhiteOut"
+    "WhereToBuy": "HUR-L5-Platinum Bay"
   },
   {
     "Names": "Winter-Star",
@@ -564,7 +564,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Winter-Star"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Winter-Star EX",
@@ -573,7 +573,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Winter-Star EX"
+    "WhereToBuy": "Microtech - Port Tressler"
   },
   {
     "Names": "Winter-Star SL",
@@ -582,7 +582,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Winter-Star SL"
+    "WhereToBuy": "Microtech - Port Tressler"
   },
   {
     "Names": "Winter-Star XL",
@@ -591,7 +591,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "Link": "https://starcitizen.fandom.com/wiki/Winter-Star XL"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "ZeroRush",
@@ -600,7 +600,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/ZeroRush"
+    "WhereToBuy": "CRU-L5-Platinum Bay"
   },
   {
     "Names": "5CA 'Akura'",
@@ -609,7 +609,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/5CA 'Akura'"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "5MA 'Chimalli'",
@@ -618,7 +618,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/5MA 'Chimalli'"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L5-Platinum Bay"
   },
   {
     "Names": "5SA 'Rhada'",
@@ -627,7 +627,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/5SA 'Rhada'"
+    "WhereToBuy": "HUR-L3-Platinum Bay"
   },
   {
     "Names": "6MA 'Kozane'",
@@ -636,7 +636,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/6MA 'Kozane'"
+    "WhereToBuy": "Area 18 - Dumpers Depot; New Babbage - Omega Bay"
   },
   {
     "Names": "6SA 'Arbiter'",
@@ -645,7 +645,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/6SA 'Arbiter'"
+    "WhereToBuy": "Area 18 - Baijini Point; Area 18 - Dumpers Depot"
   },
   {
     "Names": "7CA 'Nargun'",
@@ -654,7 +654,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/7CA 'Nargun'"
+    "WhereToBuy": "Area 18 - Baijini Point; New Babbage - Omega Bay"
   },
   {
     "Names": "7MA 'Lorica'",
@@ -663,7 +663,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/7MA 'Lorica'"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "7SA 'Concord'",
@@ -672,7 +672,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "Link": "https://starcitizen.fandom.com/wiki/7SA 'Concord'"
+    "WhereToBuy": "Area 18 - Baijini Point; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "ARMOR",
@@ -681,7 +681,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/ARMOR"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L4-Platinum Bay; HUR-L2-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "AllStop",
@@ -690,7 +690,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/AllStop"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Armada",
@@ -699,7 +699,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Armada"
+    "WhereToBuy": "Area 18 - Baijini Point; CRU-L5-Platinum Bay; HUR-L3-Platinum Bay"
   },
   {
     "Names": "Aspis",
@@ -708,7 +708,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Aspis"
+    "WhereToBuy": "HUR-L3-Platinum Bay; Levski"
   },
   {
     "Names": "BLOC",
@@ -717,7 +717,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/BLOC"
+    "WhereToBuy": "CRU-L1- Platinum Bay; HUR-L3-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Bamoty",
@@ -726,7 +726,7 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "Link": "https://starcitizen.fandom.com/wiki/Bamoty"
+    "WhereToBuy": "CRU-L5-Platinum Bay; Microtech - Port Tressler"
   },
   {
     "Names": "Barbican",
@@ -735,7 +735,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Barbican"
+    "WhereToBuy": "CRU-L4-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Bulwark",
@@ -744,7 +744,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Bulwark"
+    "WhereToBuy": "Area 18 - Dumpers Depot; CRU-L1- Platinum Bay; CRU-L4-Platinum Bay"
   },
   {
     "Names": "Castra",
@@ -753,7 +753,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Castra"
+    "WhereToBuy": "CRU-L4-Platinum Bay; Levski"
   },
   {
     "Names": "Citadel",
@@ -762,7 +762,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Citadel"
+    "WhereToBuy": "CRU-L1- Platinum Bay; HUR-L5-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Cloak",
@@ -771,7 +771,7 @@
     "Grade": 4,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Cloak"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "CoverAll",
@@ -780,7 +780,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/CoverAll"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "FR-66",
@@ -789,7 +789,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/FR-66"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "FR-76",
@@ -798,7 +798,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/FR-76"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "FR-86",
@@ -807,7 +807,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/FR-86"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Falco",
@@ -816,7 +816,7 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "Link": "https://starcitizen.fandom.com/wiki/Falco"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "ForceWall",
@@ -825,7 +825,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/ForceWall"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "FullBlock",
@@ -834,7 +834,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/FullBlock"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "FullStop",
@@ -843,7 +843,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/FullStop"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "GUARD",
@@ -852,7 +852,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/GUARD"
+    "WhereToBuy": "Area 18 - Baijini Point; CRU-L1- Platinum Bay; HUR-L3-Platinum Bay"
   },
   {
     "Names": "Glacis",
@@ -861,7 +861,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Glacis"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Guardian",
@@ -870,7 +870,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Guardian"
+    "WhereToBuy": "Area 18 - Baijini Point; HUR-L3-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "HAVEN",
@@ -879,7 +879,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/HAVEN"
+    "WhereToBuy": "HUR-L2-Platinum Bay; HUR-L5-Platinum Bay; Hurston - Everus Harbour"
   },
   {
     "Names": "HEX",
@@ -888,7 +888,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/HEX"
+    "WhereToBuy": "CRU-L5-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "Haltur",
@@ -897,7 +897,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "Link": "https://starcitizen.fandom.com/wiki/Haltur"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "INK",
@@ -906,7 +906,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/INK"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "Jaghte",
@@ -915,7 +915,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Yorm",
-    "Link": "https://starcitizen.fandom.com/wiki/Jaghte"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Mirage",
@@ -924,7 +924,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Mirage"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Obscura",
@@ -933,7 +933,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Obscura"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Palisade",
@@ -942,7 +942,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Palisade"
+    "WhereToBuy": "CRU-L4-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Parapet",
@@ -951,7 +951,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Parapet"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "RPEL",
@@ -960,7 +960,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/RPEL"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L4-Platinum Bay; Hurston - Everus Harbour"
   },
   {
     "Names": "Rampart",
@@ -969,7 +969,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Rampart"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L2-Platinum Bay; HUR-L5-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "STOP",
@@ -978,7 +978,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/STOP"
+    "WhereToBuy": "HUR-L3-Platinum Bay"
   },
   {
     "Names": "SecureHyde",
@@ -987,7 +987,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/SecureHyde"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SecureScreen",
@@ -996,7 +996,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/SecureScreen"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SecureShield",
@@ -1005,7 +1005,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/SecureShield"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Sheut",
@@ -1014,7 +1014,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Sheut"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Shimmer",
@@ -1023,7 +1023,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Shimmer"
+    "WhereToBuy": "Levski"
   },
   {
     "Names": "Shroud",
@@ -1032,7 +1032,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Shroud"
+    "WhereToBuy": "CRU-L5-Platinum Bay; Levski"
   },
   {
     "Names": "Steward",
@@ -1041,7 +1041,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Steward"
+    "WhereToBuy": "HUR-L2-Platinum Bay; HUR-L3-Platinum Bay; Levski"
   },
   {
     "Names": "Stronghold",
@@ -1050,7 +1050,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Stronghold"
+    "WhereToBuy": "Area 18 - Dumpers Depot; HUR-L3-Platinum Bay; Hurston - Everus Harbour"
   },
   {
     "Names": "Sukoran",
@@ -1058,8 +1058,8 @@
     "Size": "S2",
     "Grade": 3,
     "Class": "Military",
-    "Manufacturer": "",
-    "Link": "https://starcitizen.fandom.com/wiki/Sukoran"
+    "Manufacturer": null,
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Suldrath",
@@ -1068,7 +1068,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Souli",
-    "Link": "https://starcitizen.fandom.com/wiki/Suldrath"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SureStop",
@@ -1077,7 +1077,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/SureStop"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Targa",
@@ -1086,7 +1086,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "Link": "https://starcitizen.fandom.com/wiki/Targa"
+    "WhereToBuy": "Hurston - Everus Harbour"
   },
   {
     "Names": "Trenta",
@@ -1095,7 +1095,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "Link": "https://starcitizen.fandom.com/wiki/Trenta"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Umbra",
@@ -1104,7 +1104,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Umbra"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Veil",
@@ -1113,7 +1113,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "Link": "https://starcitizen.fandom.com/wiki/Veil"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "WEB",
@@ -1122,7 +1122,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/WEB"
+    "WhereToBuy": "Area 18 - Dumpers Depot; Microtech - Port Tressler"
   },
   {
     "Names": "Ward",
@@ -1131,7 +1131,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "Link": "https://starcitizen.fandom.com/wiki/Ward"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L2-Platinum Bay; HUR-L5-Platinum Bay"
   },
   {
     "Names": "Agni",
@@ -1140,7 +1140,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Agni"
+    "WhereToBuy": "Hurston - Everus Harbour; New Babbage - Omega Bay"
   },
   {
     "Names": "Aither",
@@ -1149,16 +1149,16 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Aither"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Allegro",
     "Component": "Quantum Drive",
     "Size": "S4",
     "Grade": 1,
-    "Class": "",
+    "Class": null,
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Allegro"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Atlas",
@@ -1167,7 +1167,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Atlas"
+    "WhereToBuy": "HUR-L5-Platinum Bay"
   },
   {
     "Names": "Balandin",
@@ -1176,7 +1176,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/Balandin"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Beacon",
@@ -1185,7 +1185,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/Beacon"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Bolon",
@@ -1194,7 +1194,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Bolon"
+    "WhereToBuy": "Area 18 - Dumpers Depot; CRU-L1- Platinum Bay"
   },
   {
     "Names": "Bolt",
@@ -1203,7 +1203,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/Bolt"
+    "WhereToBuy": "HUR-L2-Platinum Bay"
   },
   {
     "Names": "Burst",
@@ -1212,7 +1212,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Burst"
+    "WhereToBuy": "Area 18 - Dumpers Depot; New Babbage - Omega Bay"
   },
   {
     "Names": "Cascade",
@@ -1221,7 +1221,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Cascade"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Colossus",
@@ -1230,7 +1230,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Colossus"
+    "WhereToBuy": "CRU-L1- Platinum Bay; Levski; New Babbage - Omega Bay"
   },
   {
     "Names": "Crossfield",
@@ -1239,7 +1239,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/Crossfield"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Drift",
@@ -1248,7 +1248,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/Drift"
+    "WhereToBuy": "HUR-L2-Platinum Bay; Levski"
   },
   {
     "Names": "Drifter",
@@ -1257,7 +1257,7 @@
     "Grade": "D",
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Drifter"
+    "WhereToBuy": "HUR-L5-Platinum Bay"
   },
   {
     "Names": "Echo",
@@ -1266,7 +1266,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Echo"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Eos",
@@ -1275,7 +1275,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Eos"
+    "WhereToBuy": "Area 18 - Dumpers Depot; CRU-L1- Platinum Bay; HUR-L5-Platinum Bay; Levski"
   },
   {
     "Names": "Erebos",
@@ -1284,7 +1284,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Erebos"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Expedition",
@@ -1293,7 +1293,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Expedition"
+    "WhereToBuy": "Area 18 - Dumpers Depot; CRU-L1- Platinum Bay"
   },
   {
     "Names": "Fissure",
@@ -1302,7 +1302,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Fissure"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "Flash",
@@ -1311,7 +1311,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Flash"
+    "WhereToBuy": "Area 18 - Dumpers Depot; New Babbage - Omega Bay"
   },
   {
     "Names": "Flood",
@@ -1320,7 +1320,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Flood"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "FoxFire",
@@ -1329,7 +1329,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "Ace Astrogation",
-    "Link": "https://starcitizen.fandom.com/wiki/FoxFire"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L3-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Goliath",
@@ -1338,7 +1338,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Goliath"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "Hemera",
@@ -1347,7 +1347,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Hemera"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L5-Platinum Bay"
   },
   {
     "Names": "Huracan",
@@ -1356,7 +1356,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Huracan"
+    "WhereToBuy": "Area 18 - Dumpers Depot; Levski; New Babbage - Omega Bay"
   },
   {
     "Names": "Hyperion",
@@ -1365,7 +1365,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Hyperion"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L2-Platinum Bay"
   },
   {
     "Names": "Impulse",
@@ -1374,7 +1374,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Impulse"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "Kama",
@@ -1383,7 +1383,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Kama"
+    "WhereToBuy": "Area 18 - Baijini Point"
   },
   {
     "Names": "Khaos",
@@ -1392,7 +1392,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Khaos"
+    "WhereToBuy": "Area 18 - Dumpers Depot; HUR-L5-Platinum Bay"
   },
   {
     "Names": "LightFire",
@@ -1401,7 +1401,7 @@
     "Grade": "C",
     "Class": "Competition",
     "Manufacturer": "Ace Astrogation",
-    "Link": "https://starcitizen.fandom.com/wiki/LightFire"
+    "WhereToBuy": "Area 18 - Baijini Point; HUR-L2-Platinum Bay"
   },
   {
     "Names": "Metis",
@@ -1410,7 +1410,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Metis"
+    "WhereToBuy": "HUR-L3-Platinum Bay; HUR-L5-Platinum Bay"
   },
   {
     "Names": "Nova (quantum drive)",
@@ -1419,7 +1419,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/Nova (quantum drive)"
+    "WhereToBuy": "Microtech - Port Tressler"
   },
   {
     "Names": "Odyssey (quantum drive)",
@@ -1428,7 +1428,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Odyssey (quantum drive)"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "Pontes",
@@ -1437,7 +1437,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/Pontes"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Quest",
@@ -1446,7 +1446,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Quest"
+    "WhereToBuy": "CRU-L1- Platinum Bay"
   },
   {
     "Names": "Ranger",
@@ -1455,7 +1455,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Ranger"
+    "WhereToBuy": "CRU-L4-Platinum Bay; HUR-L5-Platinum Bay"
   },
   {
     "Names": "Rush",
@@ -1464,7 +1464,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Rush"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "Siren",
@@ -1473,7 +1473,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Siren"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Sojourn",
@@ -1482,7 +1482,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Sojourn"
+    "WhereToBuy": "CRU-L5-Platinum Bay"
   },
   {
     "Names": "SparkFire",
@@ -1491,7 +1491,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "Ace Astrogation",
-    "Link": "https://starcitizen.fandom.com/wiki/SparkFire"
+    "WhereToBuy": "Area 18 - Baijini Point"
   },
   {
     "Names": "Spectre",
@@ -1500,7 +1500,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/Spectre"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Spicule",
@@ -1509,7 +1509,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/Spicule"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SunFire",
@@ -1517,8 +1517,8 @@
     "Size": "S2",
     "Grade": 2,
     "Class": "Competition",
-    "Manufacturer": "",
-    "Link": "https://starcitizen.fandom.com/wiki/SunFire"
+    "Manufacturer": null,
+    "WhereToBuy": "HUR-L3-Platinum Bay; Levski; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "TS-2",
@@ -1527,7 +1527,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/TS-2"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Torrent",
@@ -1536,7 +1536,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "Link": "https://starcitizen.fandom.com/wiki/Torrent"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Tyche",
@@ -1545,7 +1545,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "Link": "https://starcitizen.fandom.com/wiki/Tyche"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "VK-00",
@@ -1554,7 +1554,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/VK-00"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Vesta",
@@ -1563,7 +1563,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Vesta"
+    "WhereToBuy": "Area 18 - Dumpers Depot; Hurston - Everus Harbour"
   },
   {
     "Names": "Voyage",
@@ -1572,7 +1572,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Voyage"
+    "WhereToBuy": "Area 18 - Baijini Point; CRU-L4-Platinum Bay"
   },
   {
     "Names": "Vulcan (quantum drive)",
@@ -1581,7 +1581,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Vulcan (quantum drive)"
+    "WhereToBuy": "CRU-L4-Platinum Bay; Hurston - Everus Harbour"
   },
   {
     "Names": "Wanderer",
@@ -1590,7 +1590,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Wanderer"
+    "WhereToBuy": "CRU-L5-Platinum Bay; HUR-L5-Platinum Bay"
   },
   {
     "Names": "Wayfare",
@@ -1599,7 +1599,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "Link": "https://starcitizen.fandom.com/wiki/Wayfare"
+    "WhereToBuy": "Area 18 - Baijini Point"
   },
   {
     "Names": "XL-1",
@@ -1608,7 +1608,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/XL-1"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Yaluk",
@@ -1617,7 +1617,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Yaluk"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L4-Platinum Bay"
   },
   {
     "Names": "Yeager",
@@ -1626,7 +1626,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "Link": "https://starcitizen.fandom.com/wiki/Yeager"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Zephyr",
@@ -1635,7 +1635,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "Link": "https://starcitizen.fandom.com/wiki/Zephyr"
+    "WhereToBuy": "HUR-L2-Platinum Bay"
   },
   {
     "Names": "Excelsior",
@@ -1643,8 +1643,8 @@
     "Size": "C",
     "Grade": 2,
     "Class": "Civilian",
-    "Manufacturer": "",
-    "Link": "https://starcitizen.fandom.com/wiki/Excelsior"
+    "Manufacturer": null,
+    "WhereToBuy": "Area 18 - Baijini Point; Area 18 - Dumpers Depot; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "Exodus",
@@ -1652,17 +1652,17 @@
     "Size": "A",
     "Grade": 3,
     "Class": "Civilian",
-    "Manufacturer": "",
-    "Link": "https://starcitizen.fandom.com/wiki/Exodus"
+    "Manufacturer": null,
+    "WhereToBuy": "Area 18 - Baijini Point; Area 18 - Dumpers Depot; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "Exfiltrate",
     "Component": "Jump Drive",
     "Size": "A",
     "Grade": 4,
-    "Class": "",
-    "Manufacturer": "",
-    "Link": "https://starcitizen.fandom.com/wiki/Exfiltrate"
+    "Class": null,
+    "Manufacturer": null,
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Explorer",
@@ -1670,8 +1670,8 @@
     "Size": "C",
     "Grade": 1,
     "Class": "Civilian",
-    "Manufacturer": "",
-    "Link": "https://starcitizen.fandom.com/wiki/Explorer"
+    "Manufacturer": null,
+    "WhereToBuy": "Area 18 - Baijini Point; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "Bolide",
@@ -1680,7 +1680,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Bolide"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Breton",
@@ -1689,7 +1689,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Breton"
+    "WhereToBuy": "New Babbage - Omega Bay"
   },
   {
     "Names": "Celestial",
@@ -1698,7 +1698,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/Celestial"
+    "WhereToBuy": "HUR-L5-Platinum Bay"
   },
   {
     "Names": "Centurion",
@@ -1707,7 +1707,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Centurion"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Charger",
@@ -1716,7 +1716,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Charger"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Cirrus",
@@ -1725,7 +1725,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/Cirrus"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "DayBreak",
@@ -1734,7 +1734,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/DayBreak"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Defiant",
@@ -1743,7 +1743,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Defiant"
+    "WhereToBuy": "Levski; New Babbage - Omega Bay"
   },
   {
     "Names": "DeltaMax",
@@ -1752,7 +1752,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/DeltaMax"
+    "WhereToBuy": "Area 18 - Baijini Point; Area 18 - Dumpers Depot"
   },
   {
     "Names": "Diligence",
@@ -1761,7 +1761,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Diligence"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Drassik",
@@ -1770,7 +1770,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Drassik"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "DuraJet",
@@ -1779,7 +1779,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/DuraJet"
+    "WhereToBuy": "HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; Levski; New Babbage - Omega Bay"
   },
   {
     "Names": "Durango",
@@ -1788,7 +1788,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Durango"
+    "WhereToBuy": "Area 18 - Dumpers Depot; New Babbage - Omega Bay"
   },
   {
     "Names": "DynaFlux",
@@ -1797,7 +1797,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/DynaFlux"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Eclipse (power plant)",
@@ -1806,7 +1806,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/Eclipse (power plant)"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Endurance",
@@ -1815,7 +1815,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Endurance"
+    "WhereToBuy": "Area 18 - Dumpers Depot; New Babbage - Omega Bay"
   },
   {
     "Names": "ExoGen",
@@ -1824,7 +1824,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/ExoGen"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Fierell Cascade",
@@ -1833,7 +1833,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Fierell Cascade"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Fortitude",
@@ -1842,7 +1842,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Fortitude"
+    "WhereToBuy": "Area 18 - Baijini Point; Hurston - Everus Harbour"
   },
   {
     "Names": "Fulgur",
@@ -1851,7 +1851,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Fulgur"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "FullForce",
@@ -1860,7 +1860,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/FullForce"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "FullForce Pro",
@@ -1869,7 +1869,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/FullForce Pro"
+    "WhereToBuy": "HUR-L5-Platinum Bay"
   },
   {
     "Names": "GammaMax",
@@ -1878,7 +1878,7 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/GammaMax"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Genoa",
@@ -1887,7 +1887,7 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Genoa"
+    "WhereToBuy": "Hurston - Everus Harbour; New Babbage - Omega Bay"
   },
   {
     "Names": "Ginzel",
@@ -1896,7 +1896,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Ginzel"
+    "WhereToBuy": "CRU-L1- Platinum Bay; CRU-L4-Platinum Bay"
   },
   {
     "Names": "HyperGen",
@@ -1905,7 +1905,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/HyperGen"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "IonBurst",
@@ -1914,7 +1914,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/IonBurst"
+    "WhereToBuy": "HUR-L2-Platinum Bay; HUR-L5-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "IonSurge",
@@ -1923,7 +1923,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/IonSurge"
+    "WhereToBuy": "CRU-L1- Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay"
   },
   {
     "Names": "IonSurge Pro",
@@ -1932,7 +1932,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/IonSurge Pro"
+    "WhereToBuy": "HUR-L5-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "IonWave",
@@ -1941,7 +1941,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/IonWave"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "JS-300",
@@ -1950,7 +1950,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/JS-300"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "JS-400",
@@ -1959,7 +1959,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/JS-400"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "JS-500",
@@ -1968,7 +1968,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Klaus and Werner",
-    "Link": "https://starcitizen.fandom.com/wiki/JS-500"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Jennet",
@@ -1977,7 +1977,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Jennet"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "LightBlossom",
@@ -1986,7 +1986,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/LightBlossom"
+    "WhereToBuy": "Area 18 - Baijini Point; HUR-L2-Platinum Bay"
   },
   {
     "Names": "Lotus",
@@ -1995,7 +1995,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/Lotus"
+    "WhereToBuy": "CRU-L5-Platinum Bay; HUR-L2-Platinum Bay"
   },
   {
     "Names": "LumaCore",
@@ -2004,7 +2004,7 @@
     "Grade": 1,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/LumaCore"
+    "WhereToBuy": "Area 18 - Baijini Point; New Babbage - Omega Bay"
   },
   {
     "Names": "LuxCore",
@@ -2013,7 +2013,7 @@
     "Grade": 1,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/LuxCore"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Maelstrom",
@@ -2022,7 +2022,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Maelstrom"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "MagnaBloom",
@@ -2031,7 +2031,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/MagnaBloom"
+    "WhereToBuy": "Area 18 - Dumpers Depot; Microtech - Port Tressler"
   },
   {
     "Names": "MegaFlux",
@@ -2040,7 +2040,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/MegaFlux"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "NewDawn",
@@ -2049,7 +2049,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/NewDawn"
+    "WhereToBuy": "CRU-L4-Platinum Bay"
   },
   {
     "Names": "OverDrive",
@@ -2058,7 +2058,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/OverDrive"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "PowerBolt",
@@ -2067,7 +2067,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/PowerBolt"
+    "WhereToBuy": "Area 18 - Dumpers Depot; HUR-L5-Platinum Bay"
   },
   {
     "Names": "QuadraCell",
@@ -2076,7 +2076,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/QuadraCell"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "QuadraCell MT",
@@ -2085,7 +2085,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/QuadraCell MT"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "QuadraCell MX",
@@ -2094,7 +2094,7 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/QuadraCell MX"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Radiance",
@@ -2103,7 +2103,7 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/Radiance"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Radix",
@@ -2112,7 +2112,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/Radix"
+    "WhereToBuy": "HUR-L3-Platinum Bay"
   },
   {
     "Names": "Regulus",
@@ -2121,7 +2121,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Regulus"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Reliance",
@@ -2130,7 +2130,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Reliance"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Roughneck",
@@ -2139,7 +2139,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Roughneck"
+    "WhereToBuy": "CRU-L4-Platinum Bay; Hurston - Everus Harbour"
   },
   {
     "Names": "Sedulity",
@@ -2148,7 +2148,7 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Sedulity"
+    "WhereToBuy": "CRU-L1- Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Slipstream",
@@ -2157,7 +2157,7 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/Slipstream"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SmartGen",
@@ -2166,7 +2166,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/SmartGen"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SolarFlare",
@@ -2175,7 +2175,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/SolarFlare"
+    "WhereToBuy": "HUR-L2-Platinum Bay"
   },
   {
     "Names": "SonicLite",
@@ -2184,7 +2184,7 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "Link": "https://starcitizen.fandom.com/wiki/SonicLite"
+    "WhereToBuy": "Area 18 - Baijini Point; CRU-L4-Platinum Bay; HUR-L2-Platinum Bay"
   },
   {
     "Names": "SparkJet",
@@ -2193,7 +2193,7 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/SparkJet"
+    "WhereToBuy": "CRU-L1- Platinum Bay; HUR-L3-Platinum Bay"
   },
   {
     "Names": "SparkJet Pro",
@@ -2202,7 +2202,7 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/SparkJet Pro"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "StarBurn",
@@ -2211,7 +2211,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/StarBurn"
+    "WhereToBuy": "Area 18 - Dumpers Depot; HUR-L2-Platinum Bay; Levski; New Babbage - Omega Bay"
   },
   {
     "Names": "StarHeart",
@@ -2220,7 +2220,7 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/StarHeart"
+    "WhereToBuy": "Area 18 - Baijini Point; CRU-L1- Platinum Bay; HUR-L5-Platinum Bay; New Babbage - Omega Bay"
   },
   {
     "Names": "Steadfast",
@@ -2229,7 +2229,7 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Steadfast"
+    "WhereToBuy": "Area 18 - Dumpers Depot"
   },
   {
     "Names": "Stellate",
@@ -2238,7 +2238,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/Stellate"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "SunFlare",
@@ -2247,7 +2247,7 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "Link": "https://starcitizen.fandom.com/wiki/SunFlare"
+    "WhereToBuy": "HUR-L2-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler"
   },
   {
     "Names": "SuperDrive",
@@ -2256,7 +2256,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/SuperDrive"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "TigerLilly",
@@ -2265,7 +2265,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/TigerLilly"
+    "WhereToBuy": "CRU-L4-Platinum Bay; Microtech - Port Tressler"
   },
   {
     "Names": "Trommel",
@@ -2274,7 +2274,7 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "Link": "https://starcitizen.fandom.com/wiki/Trommel"
+    "WhereToBuy": "Hurston - Everus Harbour"
   },
   {
     "Names": "TurboDrive",
@@ -2283,7 +2283,7 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/TurboDrive"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "UltraFlux",
@@ -2292,7 +2292,7 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "Link": "https://starcitizen.fandom.com/wiki/UltraFlux"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "Vortex",
@@ -2301,7 +2301,7 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "Link": "https://starcitizen.fandom.com/wiki/Vortex"
+    "WhereToBuy": "Loot only / Not sold (no shop entry)"
   },
   {
     "Names": "WhiteRose",
@@ -2310,7 +2310,7 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "Link": "https://starcitizen.fandom.com/wiki/WhiteRose"
+    "WhereToBuy": "Microtech - Port Tressler"
   },
   {
     "Names": "ZapJet",
@@ -2319,6 +2319,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "Link": "https://starcitizen.fandom.com/wiki/ZapJet"
+    "WhereToBuy": "CRU-L1- Platinum Bay; HUR-L2-Platinum Bay"
   }
 ]
