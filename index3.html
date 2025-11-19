@@ -31,7 +31,7 @@ body{
   font-size:var(--fs-base)
 }
 
-/* Shiny pill nav (from header.html) */
+/* Shiny pill nav (header.html) */
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
   position:relative;display:inline-flex;align-items:center;justify-content:center;
@@ -161,7 +161,7 @@ tr:hover{background:rgba(214,180,76,.08)}
 </head>
 <body>
 
-<!-- 🔁 Shared header mount -->
+<!-- Header mount -->
 <div id="header-container"></div>
 <script>
 (async () => {
@@ -170,7 +170,6 @@ tr:hover{background:rgba(214,180,76,.08)}
     const html = await res.text();
     document.getElementById('header-container').outerHTML = html;
 
-    // Highlight current tab
     requestAnimationFrame(() => {
       const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
       document.querySelectorAll('.nav-btn').forEach(a => {
@@ -234,7 +233,6 @@ tr:hover{background:rgba(214,180,76,.08)}
   </div>
 </div>
 
-<!-- 🔐 Auth -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 
@@ -242,58 +240,36 @@ tr:hover{background:rgba(214,180,76,.08)}
 const JSON_URL = 'data/components.js';
 
 const $  = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
 function esc(s=''){ const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
 
 let components = [];
 
-/* Map your JSON → internal fields
-   JSON keys:
-   Names, Component, Size, Grade, Class, Manufacturer, Link
-*/
+/* Map your JSON (Names, Component, Size, Grade, Class, Manufacturer, Link) */
 function mapJsonComponent(c){
-  // Name
   const name = c.Names || c.Name || '';
-
-  // Type
   const type = c.Component || '';
-
-  // Manufacturer
   const manufacturer = (c.Manufacturer || '').trim();
 
-  // Size: "S  2" -> "S2"
   let size = c.Size || '';
-  if (typeof size === 'string') {
-    size = size.replace(/\s+/g,'');   // remove all internal spaces
-  }
+  if (typeof size === 'string') size = size.replace(/\s+/g,'');
 
-  // Grade: if number -> A..G, if string -> normalise to "Grade X"
   let grade = c.Grade;
   if (typeof grade === 'number') {
     const letters = 'ABCDEFG';
     const idx = Math.max(0, Math.min(letters.length - 1, grade - 1));
     grade = 'Grade ' + letters[idx];
   } else if (typeof grade === 'string' && grade.trim()) {
-    grade = /^grade/i.test(grade) ? grade : 'Grade ' + grade.trim();
+    grade = /^grade/i.test(grade) ? grade.trim() : ('Grade ' + grade.trim());
   } else {
     grade = '';
   }
 
-  // Class
-  const cls = c.Class || '';
+  const cls  = c.Class || '';
+  const link = c.Link || '';
 
-  return {
-    name,
-    manufacturer,
-    type,
-    size,
-    grade,
-    class: cls,
-    link: c.Link || ''
-  };
+  return { name, type, manufacturer, size, grade, class: cls, link };
 }
 
-/* Load from JSON file */
 async function loadFromJSON(){
   try{
     const res = await fetch(JSON_URL, { cache:'no-cache' });
@@ -303,10 +279,9 @@ async function loadFromJSON(){
     console.log('[components] RAW first 200 chars:', text.slice(0,200) + '...');
 
     const json = JSON.parse(text);
-    if (!Array.isArray(json)) throw new Error('Expected array in ' + JSON_URL);
+    if (!Array.isArray(json)) throw new Error('Expected an array in ' + JSON_URL);
 
     components = json.map(mapJsonComponent);
-
     populateFilters();
     updateKPI();
     render();
@@ -315,7 +290,7 @@ async function loadFromJSON(){
     components = [];
     updateKPI();
     render();
-    alert('Failed to load components from ' + JSON_URL);
+    alert('Failed to load components from ' + JSON_URL + '\\n' + err.message);
   }
 }
 
@@ -338,11 +313,11 @@ function populateFilters(){
 
 /* Render table */
 function render(){
-  const q  = ($('#search').value || '').toLowerCase().trim();
-  const ft = $('#filterType').value;
-  const fs = $('#filterSize').value;
-  const fg = $('#filterGrade').value;
-  const fc = $('#filterClass').value;
+  const q  = ($('#search')?.value || '').toLowerCase().trim();
+  const ft = $('#filterType')?.value || '';
+  const fs = $('#filterSize')?.value || '';
+  const fg = $('#filterGrade')?.value || '';
+  const fc = $('#filterClass')?.value || '';
 
   let arr = components.slice();
 
@@ -356,7 +331,7 @@ function render(){
   if (fg) arr = arr.filter(c => c.grade === fg);
   if (fc) arr = arr.filter(c => c.class === fc);
 
-  $('#rows').innerHTML = arr.map(c => {
+  const rows = arr.map(c => {
     const nameHtml = c.link
       ? `<a href="${esc(c.link)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">${esc(c.name)}</a>`
       : `<span style="color:var(--accent)">${esc(c.name)}</span>`;
@@ -370,7 +345,9 @@ function render(){
         <td>${esc(c.class || '')}</td>
       </tr>
     `;
-  }).join('') || `
+  }).join('');
+
+  $('#rows').innerHTML = rows || `
     <tr>
       <td colspan="6" class="small" style="padding:10px;">No components found.</td>
     </tr>
@@ -416,8 +393,8 @@ function exportCSV(){
   a.click();
   URL.revokeObjectURL(url);
 }
-$('#exportJSON').onclick = exportJSON;
-$('#exportCSV').onclick = exportCSV;
+document.getElementById('exportJSON').onclick = exportJSON;
+document.getElementById('exportCSV').onclick = exportCSV;
 
 /* Filter & search events */
 ['search','filterType','filterSize','filterGrade','filterClass'].forEach(id => {
@@ -425,7 +402,7 @@ $('#exportCSV').onclick = exportCSV;
   if (el) el.addEventListener('input', render);
 });
 
-/* Init (protected) */
+/* Init with auth */
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await requireAuth();   // redirects to auth.html if not logged in
   if (!session) return;
