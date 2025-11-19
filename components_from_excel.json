@@ -1,0 +1,2324 @@
+[
+  {
+    "Names": "AbsoluteZero",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": "https://starcitizen.fandom.com/wiki/AbsoluteZero"
+  },
+  {
+    "Names": "Arctic",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": "https://starcitizen.fandom.com/wiki/Arctic"
+  },
+  {
+    "Names": "ArcticStorm",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "Aufeis",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "Avalanche",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Berian",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "BlastChill",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "Blizzard",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Boreal",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Bracer",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Chill-Max",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "ColdSnap",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "ColdSurge",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "CoolCore",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Cryo-Star",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Cryo-Star EX",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Cryo-Star SL",
+    "Component": "Cooler",
+    "Size": " S  0",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Cryo-Star XL",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Eco-Flow",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Endo",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "FlashFreeze",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "Fridan",
+    "Component": "Cooler",
+    "Size": " S  0",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "Frost-Star",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Frost-Star EX",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Frost-Star SL",
+    "Component": "Cooler",
+    "Size": " S  0",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Frost-Star XL",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "FrostBite",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "FrostBurn",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "FullFrost",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "Galinstan",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Gelid",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "Glacier",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Graupel",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "HeatSafe",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "HeatSink",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "HydroJet",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Hydrocel",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Hydropulse",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Ice-Flush",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "IceBox",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "IceDive",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "IcePlunge",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "Kelvid",
+    "Component": "Cooler",
+    "Size": " S  0",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "Mercury",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "NightFall",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "Permafrost",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Polar",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "QuikCool",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "RapidCool",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "Serac",
+    "Component": "Cooler",
+    "Size": " S  4",
+    "Grade": 1,
+    "Class": NaN,
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "SnowBlind",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "Snowfall",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Snowpack",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Taiga",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "Tempest",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Tepilo",
+    "Component": "Cooler",
+    "Size": " S  0",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Wen/Cassel Propulsion",
+    "Link": NaN
+  },
+  {
+    "Names": "ThermalCore",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Thermax",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Tundra",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Ultra-Flow",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "VaporBlock",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "WhiteOut",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "Winter-Star",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Winter-Star EX",
+    "Component": "Cooler",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Winter-Star SL",
+    "Component": "Cooler",
+    "Size": " S  0",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "Winter-Star XL",
+    "Component": "Cooler",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " J-Span",
+    "Link": NaN
+  },
+  {
+    "Names": "ZeroRush",
+    "Component": "Cooler",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "5CA 'Akura'",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "5MA 'Chimalli'",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "5SA 'Rhada'",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "6MA 'Kozane'",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "6SA 'Arbiter'",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "7CA 'Nargun'",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "7MA 'Lorica'",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "7SA 'Concord'",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Behring Applied Technology",
+    "Link": NaN
+  },
+  {
+    "Names": "ARMOR",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "AllStop",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Armada",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Aspis",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "BLOC",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Bamoty",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Competition",
+    "Manufacturer": " Yorm",
+    "Link": NaN
+  },
+  {
+    "Names": "Barbican",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Bulwark",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Castra",
+    "Component": "Shield Generator",
+    "Size": " S  0",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Citadel",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Cloak",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "CoverAll",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "FR-66",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "FR-76",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "FR-86",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Falco",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Competition",
+    "Manufacturer": " Yorm",
+    "Link": NaN
+  },
+  {
+    "Names": "ForceWall",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "FullBlock",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "FullStop",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "GUARD",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Glacis",
+    "Component": "Shield Generator",
+    "Size": " S  4",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Guardian",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "HAVEN",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "HEX",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Haltur",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Competition",
+    "Manufacturer": " Yorm",
+    "Link": NaN
+  },
+  {
+    "Names": "INK",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Jaghte",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Yorm",
+    "Link": NaN
+  },
+  {
+    "Names": "Mirage",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "Obscura",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "Palisade",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Parapet",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "RPEL",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Rampart",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "STOP",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "SecureHyde",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "SecureScreen",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "SecureShield",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Sheut",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "Shimmer",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "Shroud",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "Steward",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Stronghold",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Sukoran",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": NaN,
+    "Link": NaN
+  },
+  {
+    "Names": "Suldrath",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Souli",
+    "Link": NaN
+  },
+  {
+    "Names": "SureStop",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Gorgon Defender Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Targa",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Competition",
+    "Manufacturer": " Yorm",
+    "Link": NaN
+  },
+  {
+    "Names": "Trenta",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Competition",
+    "Manufacturer": " Yorm",
+    "Link": NaN
+  },
+  {
+    "Names": "Umbra",
+    "Component": "Shield Generator",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "Veil",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": " Ascension Astro",
+    "Link": NaN
+  },
+  {
+    "Names": "WEB",
+    "Component": "Shield Generator",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Seal Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Ward",
+    "Component": "Shield Generator",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Basilisk",
+    "Link": NaN
+  },
+  {
+    "Names": "Agni",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Aither",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Allegro",
+    "Component": "Quantum Drive",
+    "Size": " S  4",
+    "Grade": 1,
+    "Class": NaN,
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Atlas",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Balandin",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Beacon",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Bolon",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Bolt",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Burst",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Cascade",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Colossus",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Crossfield",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Drift",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Drifter",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": "D",
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "Echo",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Eos",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Erebos",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Expedition",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "Fissure",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Flash",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Flood",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "FoxFire",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Competition",
+    "Manufacturer": " Ace Astrogation",
+    "Link": NaN
+  },
+  {
+    "Names": "Goliath",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Hemera",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Huracan",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Hyperion",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Impulse",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Kama",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Khaos",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "LightFire",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": "C",
+    "Class": "Competition",
+    "Manufacturer": " Ace Astrogation",
+    "Link": NaN
+  },
+  {
+    "Names": "Metis",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "Nova (quantum drive)",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Odyssey (quantum drive)",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "Pontes",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Quest",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "Ranger",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "Rush",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Siren",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Sojourn",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "SparkFire",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Competition",
+    "Manufacturer": " Ace Astrogation",
+    "Link": NaN
+  },
+  {
+    "Names": "Spectre",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Spicule",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "SunFire",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Competition",
+    "Manufacturer": NaN,
+    "Link": NaN
+  },
+  {
+    "Names": "TS-2",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Torrent",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " ArcCorp",
+    "Link": NaN
+  },
+  {
+    "Names": "Tyche",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Roberts Space Industries",
+    "Link": NaN
+  },
+  {
+    "Names": "VK-00",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Vesta",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Voyage",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "Vulcan (quantum drive)",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Wanderer",
+    "Component": "Quantum Drive",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "Wayfare",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Tarsus Electronics",
+    "Link": NaN
+  },
+  {
+    "Names": "XL-1",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Yaluk",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Yeager",
+    "Component": "Quantum Drive",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Wei-Tek",
+    "Link": NaN
+  },
+  {
+    "Names": "Zephyr",
+    "Component": "Quantum Drive",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": "File:Logo RAMP Corporation.png RAMP Corporation",
+    "Link": NaN
+  },
+  {
+    "Names": "Excelsior",
+    "Component": "Jump Drive",
+    "Size": "C",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": NaN,
+    "Link": NaN
+  },
+  {
+    "Names": "Exodus",
+    "Component": "Jump Drive",
+    "Size": "A",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": NaN,
+    "Link": NaN
+  },
+  {
+    "Names": "Exfiltrate",
+    "Component": "Jump Drive",
+    "Size": "A",
+    "Grade": 4,
+    "Class": NaN,
+    "Manufacturer": NaN,
+    "Link": NaN
+  },
+  {
+    "Names": "Explorer",
+    "Component": "Jump Drive",
+    "Size": "C",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": NaN,
+    "Link": NaN
+  },
+  {
+    "Names": "Bolide",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Breton",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Celestial",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "Centurion",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Charger",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Cirrus",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "DayBreak",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "Defiant",
+    "Component": "Power Plant",
+    "Size": " S  0",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "DeltaMax",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "Diligence",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Drassik",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "DuraJet",
+    "Component": "Power Plant",
+    "Size": " S  0",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "Durango",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "DynaFlux",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "Eclipse (power plant)",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "Endurance",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "ExoGen",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "Fierell Cascade",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Fortitude",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Fulgur",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "FullForce",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "FullForce Pro",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "GammaMax",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "Genoa",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Ginzel",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "HyperGen",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "IonBurst",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "IonSurge",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "IonSurge Pro",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "IonWave",
+    "Component": "Power Plant",
+    "Size": " S  0",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "JS-300",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "JS-400",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "JS-500",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Klaus and Werner",
+    "Link": NaN
+  },
+  {
+    "Names": "Jennet",
+    "Component": "Power Plant",
+    "Size": " S  0",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "LightBlossom",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "Lotus",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "LumaCore",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "LuxCore",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "Maelstrom",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "MagnaBloom",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "MegaFlux",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "NewDawn",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "OverDrive",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "PowerBolt",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "QuadraCell",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "QuadraCell MT",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "QuadraCell MX",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Radiance",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "Radix",
+    "Component": "Power Plant",
+    "Size": " S  0",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "Regulus",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "Reliance",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Roughneck",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Sedulity",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Slipstream",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "SmartGen",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "SolarFlare",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "SonicLite",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Stealth",
+    "Manufacturer": " Tyler Design and Tech",
+    "Link": NaN
+  },
+  {
+    "Names": "SparkJet",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "SparkJet Pro",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  },
+  {
+    "Names": "StarBurn",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "StarHeart",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 2,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "Steadfast",
+    "Component": "Power Plant",
+    "Size": " S  0",
+    "Grade": 3,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "Stellate",
+    "Component": "Power Plant",
+    "Size": " S  4",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "SunFlare",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 3,
+    "Class": "Competition",
+    "Manufacturer": " ACOM",
+    "Link": NaN
+  },
+  {
+    "Names": "SuperDrive",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "TigerLilly",
+    "Component": "Power Plant",
+    "Size": " S  3",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "Trommel",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Industrial",
+    "Manufacturer": " Juno Starwerk",
+    "Link": NaN
+  },
+  {
+    "Names": "TurboDrive",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 3,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "UltraFlux",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 2,
+    "Class": "Military",
+    "Manufacturer": " Amon & Reese Co.",
+    "Link": NaN
+  },
+  {
+    "Names": "Vortex",
+    "Component": "Power Plant",
+    "Size": " S  2",
+    "Grade": 4,
+    "Class": "Military",
+    "Manufacturer": " Aegis Dynamics",
+    "Link": NaN
+  },
+  {
+    "Names": "WhiteRose",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 1,
+    "Class": "Civilian",
+    "Manufacturer": " Sakura Sun",
+    "Link": NaN
+  },
+  {
+    "Names": "ZapJet",
+    "Component": "Power Plant",
+    "Size": " S  1",
+    "Grade": 4,
+    "Class": "Civilian",
+    "Manufacturer": " Lightning Power Ltd.",
+    "Link": NaN
+  }
+]
