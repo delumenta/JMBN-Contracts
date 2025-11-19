@@ -3,166 +3,308 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Components</title>
+<title>JMBN Hangar</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Font + Favicon -->
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
+/* ===========================
+    THEME VARIABLES
+=========================== */
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;
-  --fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
+  --bg:#000;
+  --panel:#0b0b0b;
+  --sub:#101010;
+  --row:#0a0a0a;
+  --border:#d6b44c;
+  --card:#141414;
+  --accent:#f2d675;
+  --text:#f7f1d0;
+  --muted:#c9b06a;
+  --bad:#ff6b6b;
+  --ok:#5cc16c;
+
+  --fs-base:14px;
+  --fs-small:11px;
+  --fs-table:13px;
+  --fs-h1:clamp(18px,2.2vw,22px);
+  --fs-h2:clamp(14px,1.6vw,16px);
 }
+
 *{box-sizing:border-box}
 body{
   background:
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text);
-  font-family:'Play',sans-serif;
-  margin:0;padding:14px;
-  letter-spacing:.25px;
-  font-size:var(--fs-base)
+  color:var(--text); font-family:'Play','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base)
 }
 
-/* Shiny pill nav (header.html) */
+/* ===========================
+    BRAND HEADER
+=========================== */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
+
+/* ===========================
+    SHINY BUTTON NAV
+=========================== */
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
-  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
   position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
+  padding:7px 14px;border:1px solid var(--border);border-radius:999px;
   background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  color:var(--accent);text-decoration:none;font-weight:700;letter-spacing:.2px;
   transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
 }
 .nav-btn:hover{
   transform:translateY(-1px);
-  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
-  background:linear-gradient(180deg,#1a1a1a,#0a0a0a)
+  box-shadow:0 0 12px rgba(214,180,76,.25);
+  background:linear-gradient(180deg,#1a1a1a,#0a0a0a);
 }
 .nav-btn.active{
   color:#000;
-  background:linear-gradient(180deg,var(--gold),var(--gold2));
-  border-color:var(--ring);
-  box-shadow:0 0 20px rgba(214,180,76,.45);
-}
-.nav-btn.active::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
-  border-radius:inherit;
-  transform:translateX(-120%);
-  animation:shine 2.8s ease-in-out infinite;
-  pointer-events:none;
-}
-@keyframes shine{
-  0%{transform:translateX(-120%)}
-  35%{transform:translateX(120%)}
-  100%{transform:translateX(120%)}
+  background:
+    radial-gradient(120% 120% at 80% -20%, rgba(255,255,255,.32), rgba(255,255,255,0) 40%),
+    linear-gradient(180deg,#f2d675,#e7c760);
+  border-color:var(--border);
+  box-shadow:0 0 20px rgba(214,180,76,.45),
+              inset 0 1px 0 rgba(255,255,255,.25),
+              inset 0 -1px 0 rgba(0,0,0,.12);
 }
 
-/* Layout */
+/* ===========================
+    LAYOUT GRID
+=========================== */
+.wrap{
+  display:grid;
+  grid-template-columns:minmax(650px,1fr) 400px;
+  gap:14px;
+}
+@media(max-width:1100px){
+  .wrap{grid-template-columns:1fr}
+}
 .panel{
   background:var(--panel);
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  margin-top:8px;
-  box-shadow:0 0 18px rgba(214,180,76,.22)
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 0 22px rgba(214,180,76,.22), inset 0 0 0 1px rgba(214,180,76,.12);
 }
+.rightSticky{position:sticky;top:12px}
+
+/* ===========================
+    CONTROLS
+=========================== */
 .controls{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:8px
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:10px;
+  margin-bottom:10px;
 }
-button{
-  padding:7px 11px;
+@media(max-width:820px){
+  .controls{grid-template-columns:repeat(2,1fr)}
+}
+.controls input, .controls select{
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  color:var(--text);
+  font-size:var(--fs-table);
+  font-family:'Play';
+}
+.controls button{
+  border:1px solid var(--border);
   border-radius:10px;
   background:linear-gradient(180deg,#0c0c0c,#060606);
   color:var(--accent);
-  border:1px solid var(--border);
+  font-size:13px;
   cursor:pointer;
-  font-family:'Play';
-  transition:.2s
+  transition:.2s;
 }
-button:hover{background:var(--accent);color:#000}
-.btn-primary{background:var(--accent);color:#000}
-input,select{
-  background:#0a0a0a;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:9px;
-  color:var(--text);
-  font-size:var(--fs-table);
-  font-family:'Play'
+.controls button:hover{
+  background:var(--accent);
+  color:#000;
 }
 
-/* KPIs */
-.kpis{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin:10px 0
-}
-.kpi-card{
+/* ===========================
+    SHIP LIST
+=========================== */
+.list{display:flex;flex-direction:column;gap:10px}
+.row{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:12px;
-  padding:10px;
-  text-align:center
+  padding:12px;
+  display:grid;
+  gap:10px;
+  grid-template-columns:1.4fr 1.2fr auto;
+  align-items:center;
 }
-.kpi-card h3{
-  margin:0;
-  color:var(--muted);
-  font-size:11px;
-  text-transform:uppercase
+@media(max-width:900px){
+  .row{grid-template-columns:1fr}
 }
-.kpi-card .val{
-  font-weight:700;
-  font-size:18px;
-  color:var(--accent);
-  margin-top:4px
-}
-.small{font-size:var(--fs-small);color:var(--muted)}
 
-/* Table */
-.tableWrap{
+.shipTitle{font-weight:800;color:var(--accent);font-size:16px}
+.shipSub{font-size:12px;color:var(--muted)}
+.badgebar{display:flex;gap:6px;flex-wrap:wrap}
+.badge{
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:3px 8px;
+  font-size:11px;
+  background:#0c0c0c;
+  color:var(--muted);
+}
+.actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.actions button{
+  padding:8px 12px;
+  font-size:12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#0c0c0c;
+  color:var(--accent);
+  cursor:pointer;
+}
+.actions button:hover{background:var(--accent);color:#000}
+.actions .delete{border-color:var(--bad);color:var(--bad)}
+.actions .delete:hover{background:var(--bad);color:#000}
+
+/* ===========================
+    EDITOR PANEL
+=========================== */
+.block{
+  background:var(--sub);
   border:1px solid var(--border);
   border-radius:12px;
-  overflow:auto;
-  max-height:70vh;
-  margin-top:10px
+  padding:12px;
+  margin-top:10px;
 }
-table{
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+input,select,textarea{
   width:100%;
-  border-collapse:collapse;
-  font-size:var(--fs-table)
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  color:var(--text);
+  font-family:'Play';
+  font-size:13px;
 }
-th,td{
-  border-bottom:1px solid rgba(214,180,76,.3);
-  padding:8px;
-  text-align:left
+textarea{resize:vertical;min-height:70px}
+
+/* ===========================
+    LOADOUT MODAL — MODERNIZED
+=========================== */
+.lo-backdrop{
+  position:fixed;left:0;top:0;right:0;bottom:0;
+  background:rgba(0,0,0,.6);
+  display:none;align-items:center;justify-content:center;
+  z-index:2000;backdrop-filter:blur(3px);
 }
-th{
-  color:var(--accent);
-  background:#080808;
-  font-weight:500;
-  font-size:12px
+.lo-modal{
+  width:min(1000px,94vw);
+  max-height:92vh;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 28px rgba(214,180,76,.2);
 }
-tr:nth-child(even){background:#111}
-tr:hover{background:rgba(214,180,76,.08)}
+.lo-head{
+  padding:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+  border-bottom:1px solid rgba(214,180,76,.25);
+}
+.lo-title{font-weight:800;color:var(--accent);font-size:18px}
+.lo-body{
+  padding:14px;
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:14px;
+  overflow:auto;
+}
+@media(max-width:900px){
+  .lo-body{grid-template-columns:1fr}
+}
+.lo-card{
+  background:#0c0c0c;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+}
+.lo-list{display:flex;flex-direction:column;gap:10px}
+.lo-row{
+  background:#0b0b0b;
+  border:1px solid rgba(214,180,76,.3);
+  border-radius:10px;
+  padding:10px;
+  display:grid;
+  gap:8px;
+  grid-template-columns:1fr 1fr 1fr auto;
+}
+@media(max-width:700px){
+  .lo-row{grid-template-columns:1fr}
+}
+.lo-k{font-size:11px;color:var(--muted)}
+.lo-v{font-weight:700;font-size:13px}
+
+/* ===========================
+    COMPONENT PICKER — MODERNIZED
+=========================== */
+.lo-pick{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  display:none;align-items:center;justify-content:center;
+  z-index:3000;backdrop-filter:blur(3px);
+}
+.lo-pick-card{
+  width:min(900px,95vw);
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 28px rgba(214,180,76,.2);
+}
+.lo-pick-grid{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:12px;
+}
+@media(max-width:850px){
+  .lo-pick-grid{grid-template-columns:1fr}
+}
+.lo-pick-list{max-height:60vh;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.lo-pi{
+  background:#0b0b0b;
+  border:1px solid rgba(214,180,76,.3);
+  border-radius:10px;
+  padding:10px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+}
+.lo-meta{font-size:12px;color:var(--muted)}
 </style>
 </head>
+
 <body>
 
-<!-- Header mount -->
+      <!-- 🔁 Shared Header Mount -->
 <div id="header-container"></div>
+
 <script>
 (async () => {
   try {
@@ -170,8 +312,9 @@ tr:hover{background:rgba(214,180,76,.08)}
     const html = await res.text();
     document.getElementById('header-container').outerHTML = html;
 
+    // Highlight active tab
     requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      const here = (location.pathname.split('/').pop() || 'hangar.html').toLowerCase();
       document.querySelectorAll('.nav-btn').forEach(a => {
         const href = (a.getAttribute('href')||'').toLowerCase();
         if (href === here) {
@@ -186,229 +329,1026 @@ tr:hover{background:rgba(214,180,76,.08)}
 })();
 </script>
 
-<div class="panel">
-  <div class="controls">
-    <input id="search" placeholder="Search (name, manufacturer)…">
-    <select id="filterType"><option value="">All Types</option></select>
-    <select id="filterSize"><option value="">All Sizes</option></select>
-    <select id="filterGrade"><option value="">All Grades</option></select>
-    <select id="filterClass"><option value="">All Classes</option></select>
-    <button id="exportJSON">Export JSON</button>
-    <button id="exportCSV">Export CSV</button>
+
+<!-- ===========================
+       MAIN LAYOUT
+=========================== -->
+<div class="wrap">
+
+  <!-- LEFT PANEL: SHIP LIST -->
+  <div class="panel">
+
+    <div class="controls">
+      <input id="q" placeholder="Search ship or manufacturer…">
+      <select id="fRole">
+        <option value="">All roles</option>
+        <option>Medical</option>
+        <option>Stealth</option>
+        <option>Combat</option>
+        <option>Cargo</option>
+        <option>Exploration</option>
+        <option>Capital</option>
+        <option>Support</option>
+        <option>Salvage</option>
+      </select>
+
+      <select id="fSize">
+        <option value="">All sizes</option>
+        <option>Solo</option>
+        <option>Small</option>
+        <option>Medium</option>
+        <option>Large</option>
+        <option>Capital</option>
+      </select>
+
+      <select id="fSel">
+        <option value="">Any selection</option>
+        <option value="1">Selected only</option>
+        <option value="0">Unselected only</option>
+      </select>
+
+      <button id="export" title="Export Hangar JSON">Export</button>
+      <button id="import" title="Import Hangar JSON">Import</button>
+      <input type="file" id="file" accept="application/json" style="display:none">
+    </div>
+
+    <div id="list" class="list"></div>
+
+    <p style="font-size:12px;color:#c9b06a;margin-top:8px;">
+      Selected ships saved as <code>jmbn-hangar-selected</code>.
+    </p>
+
   </div>
 
-  <div class="kpis">
-    <div class="kpi-card">
-      <h3>Total Components</h3>
-      <div class="val" id="kpiCount">0</div>
-    </div>
-    <div class="kpi-card">
-      <h3>By Type (Top 3)</h3>
-      <div class="val small" id="kpiType">—</div>
-    </div>
-    <div class="kpi-card">
-      <h3>Source</h3>
-      <div class="val small">data/components.js</div>
-    </div>
-  </div>
 
-  <h2 style="color:var(--accent);font-size:var(--fs-h2);margin:8px 0 4px">
-    Star Citizen Components
-  </h2>
+  <!-- RIGHT PANEL: ADD / EDIT FORM -->
+  <div class="panel rightSticky">
 
-  <div class="tableWrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Manufacturer</th>
-          <th>Type</th>
-          <th>Size</th>
-          <th>Grade</th>
-          <th>Class</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
+    <div class="block" style="margin-top:0">
+      <h2 style="color:var(--accent);margin:0 0 8px;font-size:var(--fs-h2)">Add / Edit Ship</h2>
+
+      <input type="hidden" id="key">
+
+      <!-- Ship data.html picker -->
+      <label>Pick from Ship Data
+        <select id="shipPick"></select>
+      </label>
+
+      <label>Ship Name
+        <input id="name" placeholder="e.g., Cutlass Black" required>
+      </label>
+
+      <label>Manufacturer
+        <select id="mfr">
+          <option value="">-- select --</option>
+          <option>Aegis Dynamics</option>
+          <option>Anvil Aerospace</option>
+          <option>Aopoa</option>
+          <option>Argo Astronautics</option>
+          <option>Banu Souli</option>
+          <option>Consolidated Outland</option>
+          <option>Crusader Industries</option>
+          <option>Drake Interplanetary</option>
+          <option>Esperia Inc.</option>
+          <option>Gatac Manufacture</option>
+          <option>Kruger Intergalactic</option>
+          <option>Musashi Industrial & Starflight Concern</option>
+          <option>Origin Jumpworks GmbH</option>
+          <option>Roberts Space Industries</option>
+        </select>
+      </label>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <label>Role
+          <select id="role">
+            <option value=""></option>
+            <option>Medical</option><option>Stealth</option><option>Combat</option>
+            <option>Cargo</option><option>Exploration</option><option>Capital</option>
+            <option>Support</option><option>Salvage</option>
+          </select>
+        </label>
+
+        <label>Size
+          <select id="size">
+            <option value=""></option><option>Solo</option><option>Small</option>
+            <option>Medium</option><option>Large</option><option>Capital</option>
+          </select>
+        </label>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <label>Pilot Weapons
+          <select id="pilot"><option value=""></option><option>Yes</option><option>No</option></select>
+        </label>
+
+        <label>Medical Bay
+          <select id="med"><option value=""></option><option>Yes</option><option>No</option></select>
+        </label>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <label>SCU <input id="scu" type="number" min="0"></label>
+        <label>Tractor Beam
+          <select id="tractor">
+            <option value=""></option><option>Yes</option><option>No</option><option>Planned</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Note
+        <textarea id="note" placeholder="Displayed on the ship card"></textarea>
+      </label>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+        <button id="save" class="btn-primary">Save Ship</button>
+        <button id="reset">Reset</button>
+        <button id="del" style="border-color:var(--bad);color:var(--bad)">Delete</button>
+      </div>
+    </div>
+
+    <div class="block">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button id="seed">Seed Demo Ships</button>
+        <button id="clearAll" style="border-color:var(--bad);color:var(--bad)">Clear Hangar</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
+
+<!-- ===========================
+      EDIT SHIP MODAL
+=========================== -->
+<div class="lo-backdrop" id="editBackdrop">
+  <div class="lo-modal" style="max-width:520px">
+
+    <div class="lo-head">
+      <div class="lo-title" id="editTitle">Edit Ship</div>
+    </div>
+
+    <div class="lo-body" style="grid-template-columns:1fr">
+      <input type="hidden" id="editKey">
+
+      <label>SCU <input id="editSCU" type="number" min="0"></label>
+      <label>Tractor <select id="editTractor"><option value=""></option><option>Yes</option><option>No</option><option>Planned</option></select></label>
+      <label>Pilot Weapons <select id="editPilot"><option value=""></option><option>Yes</option><option>No</option></select></label>
+      <label>Medical Bay <select id="editMed"><option value=""></option><option>Yes</option><option>No</option></select></label>
+
+      <label>Note
+        <textarea id="editNote"></textarea>
+      </label>
+
+      <button id="editSave" class="lo-btn primary">Save</button>
+      <button id="editClose" class="lo-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===========================
+      LOADOUT MODAL
+=========================== -->
+<div class="lo-backdrop" id="loBackdrop">
+  <div class="lo-modal">
+
+    <div class="lo-head">
+      <div>
+        <div class="lo-title" id="loShipTitle">Ship</div>
+        <div style="font-size:12px;color:var(--muted)" id="loShipSub"></div>
+      </div>
+      <button id="loClose" class="lo-btn">✕</button>
+    </div>
+
+    <div class="lo-body">
+
+      <!-- LEFT: Ship Components -->
+      <div class="lo-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>Components</strong>
+          <button id="loAdd" class="lo-btn primary">Add Component</button>
+        </div>
+
+        <div id="loList" class="lo-list"></div>
+      </div>
+
+
+      <!-- RIGHT: Component Editor -->
+      <div class="lo-card">
+        <div style="margin-bottom:6px"><strong>Component Editor</strong></div>
+
+        <input type="hidden" id="loCompIdx">
+
+        <label>Type
+          <select id="loCType">
+            <option>Quantum Drive</option><option>Shield Generator</option>
+            <option>Power Plant</option><option>Cooler</option>
+            <option>Computer</option><option>Radar</option>
+            <option>Weapon Mount</option><option>Missile Rack</option>
+          </select>
+        </label>
+
+        <label>Component Name
+          <input id="loCName" placeholder="e.g., Atlas">
+        </label>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <label>Manufacturer <input id="loCMfr"></label>
+          <label>Where to Buy <input id="loCBuy"></label>
+        </div>
+
+        <label>Notes
+          <textarea id="loCNotes" placeholder="Why this component?"></textarea>
+        </label>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button id="loPick" class="lo-btn">Pick from Components</button>
+          <button id="loSaveComp" class="lo-btn primary">Save Component</button>
+          <button id="loClearComp" class="lo-btn">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===========================
+      COMPONENT PICKER MODAL
+=========================== -->
+<div class="lo-pick" id="loPickBack">
+  <div class="lo-pick-card">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="lo-title">Pick Component</div>
+      <button id="loPickClose" class="lo-btn">✕</button>
+    </div>
+
+    <div class="lo-pick-grid">
+
+      <!-- LEFT FILTERS -->
+      <div class="lo-card">
+        <label>Component Type
+          <select id="loPType">
+            <option value="">All</option>
+            <option>Quantum Drive</option><option>Shield Generator</option>
+            <option>Power Plant</option><option>Cooler</option>
+            <option>Computer</option><option>Radar</option>
+            <option>Weapon Mount</option><option>Missile Rack</option>
+          </select>
+        </label>
+
+        <label>Search
+          <input id="loPSearch" placeholder="Name, manufacturer…">
+        </label>
+
+        <label>Source
+          <select id="loPSource" disabled></select>
+        </label>
+
+        <p style="font-size:11px;color:var(--muted)">Pulled from <b>data/components.js</b></p>
+      </div>
+
+      <!-- RIGHT LIST -->
+      <div class="lo-card">
+        <div id="loPList" class="lo-pick-list"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+      <!-- ===========================
+       FULL JAVASCRIPT LOGIC
+=========================== -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
+<script src="data/components.js"></script>
 
 <script>
-const JSON_URL = 'data/components.js';
-
-const $  = s => document.querySelector(s);
-function esc(s=''){ const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
-
-let components = [];
-
-/* Map your JSON (Names, Component, Size, Grade, Class, Manufacturer, Link) */
-function mapJsonComponent(c){
-  const name = c.Names || c.Name || '';
-  const type = c.Component || '';
-  const manufacturer = (c.Manufacturer || '').trim();
-
-  let size = c.Size || '';
-  if (typeof size === 'string') size = size.replace(/\s+/g,'');
-
-  let grade = c.Grade;
-  if (typeof grade === 'number') {
-    const letters = 'ABCDEFG';
-    const idx = Math.max(0, Math.min(letters.length - 1, grade - 1));
-    grade = 'Grade ' + letters[idx];
-  } else if (typeof grade === 'string' && grade.trim()) {
-    grade = /^grade/i.test(grade) ? grade.trim() : ('Grade ' + grade.trim());
-  } else {
-    grade = '';
-  }
-
-  const cls  = c.Class || '';
-  const link = c.Link || '';
-
-  return { name, type, manufacturer, size, grade, class: cls, link };
-}
-
-async function loadFromJSON(){
-  try{
-    const res = await fetch(JSON_URL, { cache:'no-cache' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-
-    const text = await res.text();
-    console.log('[components] RAW first 200 chars:', text.slice(0,200) + '...');
-
-    const json = JSON.parse(text);
-    if (!Array.isArray(json)) throw new Error('Expected an array in ' + JSON_URL);
-
-    components = json.map(mapJsonComponent);
-    populateFilters();
-    updateKPI();
-    render();
-  }catch(err){
-    console.error('loadFromJSON error:', err);
-    components = [];
-    updateKPI();
-    render();
-    alert('Failed to load components from ' + JSON_URL + '\\n' + err.message);
-  }
-}
-
-/* Filters */
-function distinct(arr, key){
-  return [...new Set(arr.map(x => x[key]).filter(Boolean))].sort();
-}
-function fillSelect(sel, values, label){
-  const prev = sel.value;
-  sel.innerHTML = `<option value="">${label}</option>` +
-    values.map(v => `<option>${esc(v)}</option>`).join('');
-  if (values.includes(prev)) sel.value = prev;
-}
-function populateFilters(){
-  fillSelect($('#filterType'),  distinct(components,'type'),  'All Types');
-  fillSelect($('#filterSize'),  distinct(components,'size'),  'All Sizes');
-  fillSelect($('#filterGrade'), distinct(components,'grade'),'All Grades');
-  fillSelect($('#filterClass'), distinct(components,'class'),'All Classes');
-}
-
-/* Render table */
-function render(){
-  const q  = ($('#search')?.value || '').toLowerCase().trim();
-  const ft = $('#filterType')?.value || '';
-  const fs = $('#filterSize')?.value || '';
-  const fg = $('#filterGrade')?.value || '';
-  const fc = $('#filterClass')?.value || '';
-
-  let arr = components.slice();
-
-  if (q){
-    arr = arr.filter(c =>
-      `${c.name} ${c.manufacturer}`.toLowerCase().includes(q)
-    );
-  }
-  if (ft) arr = arr.filter(c => c.type  === ft);
-  if (fs) arr = arr.filter(c => c.size  === fs);
-  if (fg) arr = arr.filter(c => c.grade === fg);
-  if (fc) arr = arr.filter(c => c.class === fc);
-
-  const rows = arr.map(c => {
-    const nameHtml = c.link
-      ? `<a href="${esc(c.link)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">${esc(c.name)}</a>`
-      : `<span style="color:var(--accent)">${esc(c.name)}</span>`;
-    return `
-      <tr>
-        <td>${nameHtml}</td>
-        <td>${esc(c.manufacturer)}</td>
-        <td>${esc(c.type)}</td>
-        <td>${esc(c.size)}</td>
-        <td>${esc(c.grade)}</td>
-        <td>${esc(c.class || '')}</td>
-      </tr>
-    `;
-  }).join('');
-
-  $('#rows').innerHTML = rows || `
-    <tr>
-      <td colspan="6" class="small" style="padding:10px;">No components found.</td>
-    </tr>
-  `;
-}
-
-/* KPIs */
-function updateKPI(){
-  $('#kpiCount').textContent = String(components.length);
-  const byType = {};
-  components.forEach(c => { byType[c.type] = (byType[c.type] || 0) + 1; });
-  const top = Object.entries(byType)
-    .sort((a,b)=>b[1]-a[1])
-    .slice(0,3)
-    .map(([k,v]) => `${k}: ${v}`)
-    .join(' • ') || '—';
-  $('#kpiType').textContent = top;
-}
-
-/* Export */
-function exportJSON(){
-  const blob = new Blob([JSON.stringify(components,null,2)], {type:'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'jmbn-components-view.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-function exportCSV(){
-  const headers = ['name','manufacturer','type','size','grade','class'];
-  const rows    = components.map(c => headers.map(h => String(c[h] ?? '')));
-  const csv = [
-    headers.join(','),
-    ...rows.map(r => '"' + r.map(s => s.replace(/"/g,'""')).join('","') + '"')
-  ].join('\n');
-
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'jmbn-components-view.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-document.getElementById('exportJSON').onclick = exportJSON;
-document.getElementById('exportCSV').onclick = exportCSV;
-
-/* Filter & search events */
-['search','filterType','filterSize','filterGrade','filterClass'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('input', render);
-});
-
-/* Init with auth */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth();   // redirects to auth.html if not logged in
+/* ============================================================
+      INIT AFTER SUPABASE AUTH
+============================================================ */
+(async () => {
+  const session = await requireAuth();   // redirect to auth.html if not logged in
   if (!session) return;
-  await loadFromJSON();
-});
+  initHangar();
+})();
+
+
+/* ============================================================
+      MAIN HANGAR SYSTEM
+============================================================ */
+function initHangar() {
+
+  /* ------------------------------------------------------------
+      GLOBAL CONSTANTS / HELPERS
+  ------------------------------------------------------------ */
+  const HANGAR_KEY = "jmbn-hangar-v1";
+  const HANGAR_SEL = "jmbn-hangar-selected";
+  const LOADOUT_KEY = "jmbn-loadouts-v7";   // upgraded version
+
+  const $ = (q) => document.querySelector(q);
+  const esc = (s="") => {
+    const d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  };
+  const uid = () => "H" + Math.random().toString(36).slice(2,8);
+
+  let hangar = JSON.parse(localStorage.getItem(HANGAR_KEY) || "[]");
+
+  persistHangar();
+  renderList();
+
+
+  /* ------------------------------------------------------------
+      FILTERS
+  ------------------------------------------------------------ */
+  ["q","fRole","fSize","fSel"].forEach(id=>{
+    const el = document.getElementById(id);
+    el?.addEventListener("input", renderList);
+    el?.addEventListener("change", renderList);
+  });
+
+
+  /* ------------------------------------------------------------
+      SHIP FORM ELEMENTS
+  ------------------------------------------------------------ */
+  const f = {
+    key: $("#key"),
+    name: $("#name"),
+    mfr: $("#mfr"),
+    role: $("#role"),
+    size: $("#size"),
+    pilot: $("#pilot"),
+    med: $("#med"),
+    scu: $("#scu"),
+    tractor: $("#tractor"),
+    note: $("#note"),
+
+    save: $("#save"),
+    reset: $("#reset"),
+    del: $("#del")
+  };
+
+
+  /* ------------------------------------------------------------
+      SAVE SHIP (ADD/UPDATE)
+  ------------------------------------------------------------ */
+  f.save.onclick = () => {
+    const key = f.key.value || uid();
+    const ship = {
+      key,
+      name: f.name.value.trim(),
+      mfr: f.mfr.value,
+      role: f.role.value,
+      size: f.size.value,
+      pilot: f.pilot.value,
+      med: f.med.value,
+      scu: f.scu.value ? Number(f.scu.value) : null,
+      tractor: f.tractor.value,
+      note: f.note.value.trim(),
+      selected: hangar.find(h => h.key === key)?.selected || false
+    };
+
+    if (!ship.name) return alert("Ship name required");
+
+    const i = hangar.findIndex(x => x.key === key);
+    if (i >= 0) hangar[i] = ship;
+    else hangar.push(ship);
+
+    persistHangar();
+    renderList();
+    fillForm(ship);
+  };
+
+
+  /* ------------------------------------------------------------
+      DELETE SHIP
+  ------------------------------------------------------------ */
+  f.del.onclick = () => {
+    const key = f.key.value;
+    if (!key) return;
+
+    if (!confirm("Delete this ship?")) return;
+
+    hangar = hangar.filter(h => h.key !== key);
+    persistHangar();
+    renderList();
+    clearForm();
+  };
+
+
+  /* ------------------------------------------------------------
+      RESET FORM
+  ------------------------------------------------------------ */
+  f.reset.onclick = clearForm;
+
+  function clearForm(){
+    f.key.value = "";
+    f.name.value = "";
+    f.mfr.value = "";
+    f.role.value = "";
+    f.size.value = "";
+    f.pilot.value = "";
+    f.med.value = "";
+    f.scu.value = "";
+    f.tractor.value = "";
+    f.note.value = "";
+  }
+
+  function fillForm(s){
+    f.key.value = s.key;
+    f.name.value = s.name;
+    f.mfr.value = s.mfr;
+    f.role.value = s.role;
+    f.size.value = s.size;
+    f.pilot.value = s.pilot;
+    f.med.value = s.med;
+    f.scu.value = s.scu ?? "";
+    f.tractor.value = s.tractor;
+    f.note.value = s.note;
+  }
+
+
+  /* ------------------------------------------------------------
+      EXPORT & IMPORT
+  ------------------------------------------------------------ */
+  $("#export").onclick = () => {
+    const blob = new Blob([JSON.stringify(hangar,null,2)],{type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "jmbn-hangar.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  $("#import").onclick = () => $("#file").click();
+
+  $("#file").addEventListener("change", e => {
+    const fl = e.target.files?.[0];
+    if (!fl) return;
+
+    const r = new FileReader();
+    r.onload = () => {
+      try{
+        const arr = JSON.parse(r.result);
+        if (!Array.isArray(arr)) throw new Error("JSON must be an array");
+
+        arr.forEach(s => { if (!s.key) s.key = uid(); });
+
+        if (confirm("Merge with existing hangar? Cancel = replace")) {
+          const map = new Map(hangar.map(s => [s.key,s]));
+          arr.forEach(s => map.set(s.key,s));
+          hangar = Array.from(map.values());
+        } else hangar = arr;
+
+        persistHangar();
+        renderList();
+      }catch(err){ alert("Import failed: " + err.message); }
+
+      e.target.value = "";
+    };
+    r.readAsText(fl);
+  });
+
+
+  /* ------------------------------------------------------------
+      "Seed Demo Ships"
+  ------------------------------------------------------------ */
+  $("#seed").onclick = () => {
+    if (!confirm("Add demo ships?")) return;
+
+    const demo = [
+      ["Cutlass Black","Drake Interplanetary","Cargo","Small","Yes","No",46,"Yes","Starter hauler"],
+      ["Carrack","Anvil Aerospace","Exploration","Large","No","Yes",456,"Planned","Expedition"],
+      ["Constellation Taurus","Roberts Space Industries","Cargo","Medium","Yes","No",174,"No","Bulky cargo"],
+      ["Freelancer MAX","Musashi Industrial & Starflight Concern","Cargo","Medium","Yes","No",122,"Yes","Solo hauler"],
+      ["C2 Hercules","Crusader Industries","Cargo","Large","No","No",696,"No","Mass hauler"],
+      ["Cutlass Red","Drake Interplanetary","Medical","Small","Yes","Yes",34,"Yes","Med + tractor"]
+    ];
+
+    demo.forEach(d => {
+      if (!hangar.some(h => h.name.toLowerCase() === d[0].toLowerCase())) {
+        hangar.push({
+          key: uid(),
+          name: d[0], mfr: d[1], role: d[2], size: d[3],
+          pilot: d[4], med: d[5], scu: d[6], tractor: d[7],
+          note: d[8], selected:false
+        });
+      }
+    });
+
+    persistHangar();
+    renderList();
+  };
+
+
+  $("#clearAll").onclick = () => {
+    if (!confirm("Delete ALL hangar items?")) return;
+    hangar = [];
+    persistHangar();
+    renderList();
+    clearForm();
+  };
+
+
+  /* ------------------------------------------------------------
+      RENDER SHIP LIST
+  ------------------------------------------------------------ */
+  function renderList(){
+    const q = $("#q").value.toLowerCase();
+    const fr = $("#fRole").value;
+    const fs = $("#fSize").value;
+    const fsel = $("#fSel").value;
+
+    let arr = hangar.slice();
+
+    if (q) arr = arr.filter(s => (s.name + " " + s.mfr).toLowerCase().includes(q));
+    if (fr) arr = arr.filter(s => s.role === fr);
+    if (fs) arr = arr.filter(s => s.size === fs);
+    if (fsel === "1") arr = arr.filter(s => s.selected);
+    if (fsel === "0") arr = arr.filter(s => !s.selected);
+
+    if (!arr.length){
+      $("#list").innerHTML = `<div style="font-size:13px;color:var(--muted)">No ships found.</div>`;
+      return;
+    }
+
+    $("#list").innerHTML = arr.map(shipRow).join("");
+
+    // Action buttons
+    $("#list").querySelectorAll("button[data-act]").forEach(btn=>{
+      btn.onclick = () => {
+        const key = btn.dataset.key;
+        const act = btn.dataset.act;
+        const it = hangar.find(h => h.key === key);
+        if (!it) return;
+
+        if      (act === "sel") toggleSelect(it);
+        else if (act === "edit") openEditModal(it);
+        else if (act === "del") deleteShip(it);
+        else if (act === "lo") openLoadoutModal(it.name, it.mfr);
+      };
+    });
+  }
+
+
+  function shipRow(it){
+    const t = [];
+    if (it.role) t.push(`<span class="badge">${esc(it.role)}</span>`);
+    if (it.size) t.push(`<span class="badge">${esc(it.size)}</span>`);
+    if (it.pilot) t.push(`<span class="badge">Pilot: ${esc(it.pilot)}</span>`);
+    if (it.med) t.push(`<span class="badge">MedBay: ${esc(it.med)}</span>`);
+    if (it.scu!=null) t.push(`<span class="badge">SCU: ${esc(it.scu)}</span>`);
+    if (it.tractor) t.push(`<span class="badge">Tractor: ${esc(it.tractor)}</span>`);
+    if (it.selected) t.push(`<span class="badge">Selected</span>`);
+
+    return `
+    <div class="row">
+      <div>
+        <div class="shipTitle">${esc(it.name)}</div>
+        <div class="shipSub">${esc(it.mfr || "—")}</div>
+      </div>
+
+      <div class="badgebar">${t.join("")}</div>
+
+      <div class="actions">
+        <button data-act="sel" data-key="${it.key}" class="${it.selected ? 'btn-primary':''}">
+          ${it.selected?'Unselect':'Select'}
+        </button>
+        <button data-act="lo" data-key="${it.key}">Loadouts</button>
+        <button data-act="edit" data-key="${it.key}">Edit</button>
+        <button data-act="del" data-key="${it.key}" class="delete">Delete</button>
+      </div>
+
+      ${
+        it.note
+        ? `<div style="grid-column:1/-1;font-size:12px;color:var(--muted);white-space:pre-wrap;margin-top:4px">
+            ${esc(it.note)}
+           </div>`
+        : ""
+      }
+    </div>`;
+  }
+
+
+  function toggleSelect(it){
+    it.selected = !it.selected;
+    persistHangar();
+    renderList();
+  }
+
+  function deleteShip(it){
+    if (!confirm("Delete this ship?")) return;
+    hangar = hangar.filter(h => h.key !== it.key);
+    persistHangar();
+    renderList();
+  }
+
+  function persistHangar(){
+    localStorage.setItem(HANGAR_KEY, JSON.stringify(hangar));
+    localStorage.setItem(HANGAR_SEL, JSON.stringify(hangar.filter(h=>h.selected).map(h=>h.name)));
+  }
+
+
+  /* ============================================================
+        EDIT MODAL
+  ============================================================= */
+  const editBackdrop = $("#editBackdrop");
+  const eKey = $("#editKey");
+  const eSCU = $("#editSCU");
+  const eTractor = $("#editTractor");
+  const ePilot = $("#editPilot");
+  const eMed = $("#editMed");
+  const eNote = $("#editNote");
+
+  function openEditModal(it){
+    eKey.value = it.key;
+    $("#editTitle").textContent = "Edit: " + it.name;
+
+    eSCU.value = it.scu ?? "";
+    eTractor.value = it.tractor || "";
+    ePilot.value = it.pilot || "";
+    eMed.value = it.med || "";
+    eNote.value = it.note || "";
+
+    editBackdrop.style.display = "flex";
+  }
+
+  $("#editClose").onclick = () => editBackdrop.style.display = "none";
+
+  $("#editSave").onclick = () => {
+    const k = eKey.value;
+    const i = hangar.findIndex(x=>x.key===k);
+    if (i < 0) return;
+
+    hangar[i].scu = eSCU.value ? Number(eSCU.value) : null;
+    hangar[i].tractor = eTractor.value;
+    hangar[i].pilot = ePilot.value;
+    hangar[i].med = eMed.value;
+    hangar[i].note = eNote.value.trim();
+
+    persistHangar();
+    renderList();
+    editBackdrop.style.display = "none";
+  };
+
+
+  /* ============================================================
+        LOADOUT MANAGER
+  ============================================================= */
+  let loData = JSON.parse(localStorage.getItem(LOADOUT_KEY) || "[]");
+
+  function persistLoadouts(){
+    localStorage.setItem(LOADOUT_KEY, JSON.stringify(loData));
+  }
+
+  function getShipLoadout(name){
+    const n = name.trim().toLowerCase();
+    let s = loData.find(x => x.name.toLowerCase() === n);
+    if (!s){
+      s = {
+        key: "L" + Math.random().toString(36).slice(2,8),
+        name,
+        components: []
+      };
+      loData.push(s);
+      persistLoadouts();
+    }
+    return s;
+  }
+
+  const loBackdrop = $("#loBackdrop");
+  let currentShip = null;
+
+  function openLoadoutModal(name, mfr){
+    currentShip = getShipLoadout(name);
+
+    $("#loShipTitle").textContent = currentShip.name;
+    $("#loShipSub").textContent = mfr || "";
+
+    renderLoadoutList();
+    clearComponentEditor();
+    loBackdrop.style.display = "flex";
+  }
+
+  $("#loClose").onclick = () => loBackdrop.style.display = "none";
+
+
+  function renderLoadoutList(){
+    const arr = currentShip.components || [];
+    if (!arr.length){
+      $("#loList").innerHTML =
+        `<div style="text-align:center;color:var(--muted);padding:20px;border:1px dashed var(--border);border-radius:10px">
+          No components yet — Add or Pick from Components.
+         </div>`;
+      return;
+    }
+
+    $("#loList").innerHTML = arr.map((c,i)=>`
+      <div class="lo-row">
+        <div><span class="lo-k">Type</span><span class="lo-v">${esc(c.type)}</span></div>
+        <div><span class="lo-k">Component</span><span class="lo-v">${esc(c.name)}</span></div>
+        <div><span class="lo-k">Buy</span><span class="lo-v">${esc(c.buy)}</span></div>
+
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="lo-btn" data-eidx="${i}">Edit</button>
+          <button class="lo-btn" style="border-color:var(--bad);color:var(--bad)" data-didx="${i}">
+            Del
+          </button>
+        </div>
+
+        <div style="grid-column:1/-1">
+          <span class="lo-k">Manufacturer</span>
+          <span class="lo-v">${esc(c.mfr || "—")}</span>
+        </div>
+
+        ${
+          c.notes
+          ? `<div style="grid-column:1/-1"><span class="lo-k">Notes</span><div>${esc(c.notes)}</div></div>`
+          : ""
+        }
+      </div>
+    `).join("");
+
+    // wire edit/delete
+    $("#loList").querySelectorAll("button[data-eidx]").forEach(btn=>{
+      btn.onclick = () => {
+        const idx = Number(btn.dataset.eidx);
+        loadComponentIntoEditor(idx);
+      };
+    });
+    $("#loList").querySelectorAll("button[data-didx]").forEach(btn=>{
+      btn.onclick = () => {
+        const idx = Number(btn.dataset.didx);
+        if (!confirm("Remove this component?")) return;
+        currentShip.components.splice(idx,1);
+        persistLoadouts();
+        renderLoadoutList();
+      };
+    });
+  }
+
+
+  /* ============================================================
+        COMPONENT EDITOR
+  ============================================================= */
+  const ce = {
+    idx: $("#loCompIdx"),
+    type: $("#loCType"),
+    name: $("#loCName"),
+    mfr: $("#loCMfr"),
+    buy: $("#loCBuy"),
+    notes: $("#loCNotes")
+  };
+
+  $("#loAdd").onclick = () => {
+    clearComponentEditor();
+    ce.name.focus();
+  };
+
+  function clearComponentEditor(){
+    ce.idx.value = "";
+    ce.type.value = "Quantum Drive";
+    ce.name.value = "";
+    ce.mfr.value = "";
+    ce.buy.value = "";
+    ce.notes.value = "";
+  }
+
+  function loadComponentIntoEditor(idx){
+    const c = currentShip.components[idx];
+    ce.idx.value = idx;
+    ce.type.value = c.type;
+    ce.name.value = c.name;
+    ce.mfr.value = c.mfr;
+    ce.buy.value = c.buy;
+    ce.notes.value = c.notes;
+  }
+
+  $("#loSaveComp").onclick = () => {
+    const entry = {
+      type: ce.type.value.trim(),
+      name: ce.name.value.trim(),
+      mfr: ce.mfr.value.trim(),
+      buy: ce.buy.value.trim(),
+      notes: ce.notes.value.trim()
+    };
+
+    if (!entry.name) return alert("Component name required");
+
+    if (ce.idx.value === ""){
+      currentShip.components.push(entry);
+    } else {
+      currentShip.components[Number(ce.idx.value)] = entry;
+    }
+
+    persistLoadouts();
+    renderLoadoutList();
+    clearComponentEditor();
+  };
+
+  $("#loClearComp").onclick = clearComponentEditor;
+
+
+  /* ============================================================
+        COMPONENT PICKER — USING data/components.js ONLY
+  ============================================================= */
+  const pickBack = $("#loPickBack");
+  const pType = $("#loPType");
+  const pSearch = $("#loPSearch");
+  const pSource = $("#loPSource");
+  const pList = $("#loPList");
+
+  let pickerState = { items: [], filtered: [] };
+
+  // normalize your JSON structure
+  function normComponent(it = {}){
+    return {
+      name : (it.Names || "").trim(),
+      type : (it.Component || "").trim(),
+      size : (it.Size || "").trim(),
+      grade: (it.Grade !== undefined ? String(it.Grade) : "").trim(),
+      class: (it.Class || "").trim(),
+      mfr  : (it.Manufacturer || "").trim(),
+      buy  : (it.WhereToBuy || "").trim(),
+      notes: (it.Notes || "").trim()
+    };
+  }
+
+  function loadComponentsFromJS(){
+    const raw = window.JMBN_COMPONENTS || [];
+    pickerState.items = raw.map(normComponent);
+  }
+
+  function renderPicker(){
+    const t = (pType.value || "").toLowerCase();
+    const q = (pSearch.value || "").toLowerCase().trim();
+
+    pickerState.filtered = pickerState.items.filter(it=>{
+      const matchType = !t || it.type.toLowerCase() === t;
+      const hay = (
+        it.name + " " +
+        it.type + " " +
+        it.mfr + " " +
+        it.buy + " " +
+        it.size + " " +
+        it.class + " " +
+        it.grade + " " +
+        it.notes
+      ).toLowerCase();
+      return matchType && (!q || hay.includes(q));
+    });
+
+    if (!pickerState.filtered.length){
+      pList.innerHTML =
+        `<div style="padding:20px;text-align:center;color:var(--muted)">
+          No components for this filter.
+         </div>`;
+      return;
+    }
+
+    pList.innerHTML = pickerState.filtered.map((it,i)=>`
+      <div class="lo-pi">
+        <div>
+          <div class="lo-title" style="font-size:14px">${esc(it.name)}</div>
+          <div class="lo-meta">
+            <b>${esc(it.type)}</b>
+            ${it.mfr?` • ${esc(it.mfr)}`:""}
+            ${it.size?` • ${esc(it.size)}`:""}
+            ${it.class?` • ${esc(it.class)}`:""}
+            ${it.grade?` • G${esc(it.grade)}`:""}
+            ${it.buy?` • ${esc(it.buy)}`:""}
+          </div>
+          ${
+            it.notes
+            ? `<div style="font-size:12px;color:var(--muted);margin-top:4px">${esc(it.notes)}</div>`
+            : ""
+          }
+        </div>
+
+        <div><button class="lo-btn primary" data-pick="${i}">Use</button></div>
+      </div>
+    `).join("");
+
+    pList.querySelectorAll("[data-pick]").forEach(btn=>{
+      btn.onclick = () => {
+        const it = pickerState.filtered[Number(btn.dataset.pick)];
+
+        ce.type.value = it.type || ce.type.value;
+        ce.name.value = it.name;
+        ce.mfr.value = it.mfr;
+        ce.buy.value = it.buy;
+        ce.notes.value = it.notes;
+
+        pickBack.style.display = "none";
+      };
+    });
+  }
+
+  $("#loPick").onclick = () => {
+    loadComponentsFromJS();
+    pType.value = ce.type.value;
+    pSearch.value = "";
+
+    pSource.innerHTML = `<option>components.js (${pickerState.items.length})</option>`;
+    renderPicker();
+
+    pickBack.style.display = "flex";
+  };
+
+  $("#loPickClose").onclick = () => pickBack.style.display = "none";
+  pickBack.addEventListener("click", e=>{
+    if (e.target === pickBack) pickBack.style.display = "none";
+  });
+
+  pType.onchange = renderPicker;
+  pSearch.oninput = renderPicker;
+
+
+  /* ============================================================
+        SHIP CATALOG (data.html)
+  ============================================================= */
+  let catalog = [];
+
+  async function loadCatalog(){
+    try{
+      const res = await fetch("data.html", {cache:"no-cache"});
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const raw = doc.querySelector("#shipsData")?.textContent || "[]";
+      catalog = JSON.parse(raw);
+    }catch(e){
+      console.warn("Ship catalog load failed", e);
+      catalog = [];
+    }
+    buildShipPicker();
+  }
+
+  function buildShipPicker(){
+    const pick = $("#shipPick");
+    if (!pick) return;
+
+    if (!catalog.length){
+      pick.innerHTML = `<option>No data found</option>`;
+      return;
+    }
+
+    pick.innerHTML = [
+      `<option value="">— Pick a ship —</option>`,
+      ...catalog.map(s => `<option value="${esc(s.name)}">${esc(s.name)} — ${esc(s.manufacturer)}</option>`)
+    ].join("");
+  }
+
+  $("#shipPick").onchange = e => {
+    const name = e.target.value;
+    const s = catalog.find(x=>x.name === name);
+    if (!s) return;
+
+    f.name.value = s.name;
+    f.mfr.value = guessManufacturer(s.manufacturer);
+    f.role.value = guessRole(s.role);
+    f.size.value = guessSize(s.size);
+    f.med.value = guessYesNo(s.med_bay);
+    f.tractor.value = s.tractor_beam || "";
+    f.scu.value = s.scu || "";
+  };
+
+  function guessManufacturer(m){
+    if (!m) return "";
+    m = m.toLowerCase();
+    const opts = Array.from(f.mfr.options).map(o=>o.value.toLowerCase());
+    const exact = opts.indexOf(m);
+    if (exact >= 0) return f.mfr.options[exact].value;
+
+    const loose = opts.findIndex(o=>o.includes(m) || m.includes(o));
+    return loose >= 0 ? f.mfr.options[loose].value : "";
+  }
+
+  function guessRole(r){
+    if (!r) return "";
+    r = r.toLowerCase();
+    const known = ["medical","stealth","combat","cargo","exploration","capital","support","salvage"];
+    const fnd = known.find(k => r.includes(k));
+    return fnd ? fnd.charAt(0).toUpperCase() + fnd.slice(1) : "";
+  }
+
+  function guessSize(s){
+    if (!s) return "";
+    const map = {snub:"Solo", small:"Small", medium:"Medium", large:"Large", capital:"Capital"};
+    return map[(s || "").toLowerCase()] || "";
+  }
+
+  function guessYesNo(v){
+    if (!v) return "";
+    return /yes/i.test(v) ? "Yes" : /no/i.test(v) ? "No" : "";
+  }
+
+  loadCatalog();
+}
 </script>
 
 </body>
 </html>
+
