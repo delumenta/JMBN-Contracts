@@ -3,21 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Components (Live – SC Wiki)</title>
-
+<title>JMBN Components</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
-
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
 <style>
 :root{
   --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
   --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;
-  --fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
 }
 *{box-sizing:border-box}
 body{
@@ -25,27 +21,16 @@ body{
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text);font-family:'Play',sans-serif;margin:0;padding:14px;
-  letter-spacing:.25px;font-size:var(--fs-base);
+  color:var(--text);font-family:'Play',sans-serif;margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base)
 }
 
 /* Header */
-.brand{
-  display:flex;align-items:center;gap:10px;margin:0 0 8px;
-  border-bottom:1px solid var(--border);padding-bottom:6px
-}
-.brand-logo{
-  width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25))
-}
-.brand h1{
-  font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0
-}
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
+.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
 
 /* Shiny pill nav */
-.nav{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px
-}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .nav-btn{
   --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
   position:relative;display:inline-flex;align-items:center;justify-content:center;
@@ -55,130 +40,59 @@ body{
   box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
   transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
 }
-.nav-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
-  background:linear-gradient(180deg,#1a1a1a,#0a0a0a)
-}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
 .nav-btn.active{
   color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));
   border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45);
 }
 .nav-btn.active::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
-  border-radius:inherit;transform:translateX(-120%);
-  animation:shine 2.8s ease-in-out infinite;pointer-events:none;
+  content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
+  border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none;
 }
-@keyframes shine{
-  0%{transform:translateX(-120%)}
-  35%{transform:translateX(120%)}
-  100%{transform:translateX(120%)}
-}
+@keyframes shine{0%{transform:translateX(-120%)}35%{transform:translateX(120%)}100%{transform:translateX(120%)}}
 
-/* Layout */
-.panel{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)
-}
-.controls{
-  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center
-}
-button{
-  padding:7px 11px;border-radius:10px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);border:1px solid var(--border);
-  cursor:pointer;font-family:'Play';font-size:12px;
-  transition:.2s
-}
+/* Layout + table */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 18px rgba(214,180,76,.22)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+button{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
 button:hover{background:var(--accent);color:#000}
 .btn-primary{background:var(--accent);color:#000}
-button.bad{border-color:var(--bad);color:var(--bad)}
-button.bad:hover{background:var(--bad);color:#000}
-input,select{
-  background:#0a0a0a;border:1px solid var(--border);border-radius:8px;
-  padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'
-}
-#search{min-width:220px}
+input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
+input[readonly]{opacity:.7}
 
-/* KPIs */
-.kpis{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0
-}
-.kpi-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:12px;padding:10px;text-align:center
-}
-.kpi-card h3{
-  margin:0;color:var(--muted);font-size:11px;text-transform:uppercase
-}
-.kpi-card .val{
-  font-weight:700;font-size:18px;color:var(--accent);margin-top:4px
-}
-.kpi-card .small{
-  font-size:var(--fs-small);color:var(--muted);margin-top:4px
-}
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.kpi-card h3{margin:0;color:var(--muted);font-size:11px;text-transform:uppercase}
+.kpi-card .val{font-weight:700;font-size:18px;color:var(--accent);margin-top:4px}
+.kpi-card .sub{font-size:11px;color:var(--muted);margin-top:4px}
 
 /* Form */
-.form-section-title{
-  color:var(--accent);font-size:var(--fs-h2);margin:8px 0 4px
-}
-.form-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0
-}
+h2{margin:8px 0 4px;color:var(--accent);font-size:var(--fs-h2)}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
 @media(max-width:980px){.form-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.form-grid{grid-template-columns:1fr}}
-.form-grid label{
-  display:block;font-size:11px;color:var(--muted);margin-bottom:3px
-}
-.form-grid .field{
-  display:flex;flex-direction:column
-}
+.form-grid label{display:flex;flex-direction:column;gap:4px;font-size:var(--fs-small);color:var(--muted)}
 
 /* Table */
-.tableWrap{
-  border:1px solid var(--border);border-radius:12px;
-  overflow:auto;max-height:70vh;margin-top:10px
-}
-table{
-  width:100%;border-collapse:collapse;font-size:var(--fs-table);min-width:900px
-}
-th,td{
-  border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left
-}
-th{
-  color:var(--accent);background:#080808;font-weight:500;font-size:12px;
-  position:sticky;top:0;z-index:1
-}
+.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
+th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left}
+th{color:var(--accent);background:#080808;font-weight:500;font-size:12px;position:sticky;top:0;z-index:1}
 tr:nth-child(even){background:#111}
 tr:hover{background:rgba(214,180,76,.08)}
 .small{font-size:var(--fs-small);color:var(--muted)}
-.tagsCell{max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* Source pill */
-.pill{
-  display:inline-block;padding:2px 8px;border-radius:999px;
-  border:1px solid var(--border);font-size:10px;
-  background:#090909;color:var(--muted)
-}
-
-/* Action buttons inside table */
-.table-actions button{
-  padding:4px 7px;font-size:10px;margin-right:4px
-}
-.table-actions button:last-child{margin-right:0}
-
-/* Status text */
-.status{
-  font-size:var(--fs-small);color:var(--muted);margin-left:auto
-}
-.status strong{color:var(--accent)}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted);background:#0c0c0c}
+.actions-cell button{font-size:11px;padding:4px 8px;margin-right:4px}
+.actions-cell button.delete{border-color:var(--bad);color:var(--bad)}
+.actions-cell button.delete:hover{background:var(--bad);color:#000}
+.muted{color:var(--muted);font-size:var(--fs-small);margin-top:4px}
 </style>
 </head>
 <body>
   <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-    <h1>JMBN Components (SC Wiki Live)</h1>
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN">
+    <h1>JMBN Components</h1>
   </div>
 
   <nav class="nav">
@@ -190,113 +104,82 @@ tr:hover{background:rgba(214,180,76,.08)}
   </nav>
 
   <div class="panel">
-    <!-- Controls -->
     <div class="controls">
-      <input id="search" placeholder="Search (name, type, mfr, notes)…">
+      <input id="search" placeholder="Search (name, manufacturer, type, notes)…">
       <select id="filterType"><option value="">All Types</option></select>
       <select id="filterClass"><option value="">All Classes</option></select>
       <select id="filterGrade"><option value="">All Grades</option></select>
       <select id="filterSize"><option value="">All Sizes</option></select>
-
-      <button id="refreshWiki" class="btn-primary">Refresh from SC Wiki</button>
-
+      <button id="saveBtn">Save</button>
+      <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Reset (Factory)</button>
       <button id="exportJSON">Export JSON</button>
       <button id="exportCSV">Export CSV</button>
-
-      <span class="status" id="statusText">Status: <strong>Loading…</strong></span>
+      <button class="btn-primary" id="importJSON">Import JSON</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none">
     </div>
 
-    <!-- KPIs -->
     <div class="kpis">
       <div class="kpi-card">
         <h3>Total Components</h3>
         <div class="val" id="kpiCount">0</div>
+        <div class="sub" id="kpiCountSub">after filters</div>
       </div>
       <div class="kpi-card">
-        <h3>By Type (Top)</h3>
-        <div class="small" id="kpiType">—</div>
+        <h3>By Type</h3>
+        <div class="val small" id="kpiType">—</div>
       </div>
       <div class="kpi-card">
-        <h3>Data Source</h3>
-        <div class="val">SC Wiki</div>
-        <div class="small">Cargo tables (no local storage)</div>
+        <h3>Last Saved</h3>
+        <div class="val" id="lastSaved">Never</div>
+        <div class="sub small">Local browser storage</div>
       </div>
     </div>
 
-    <!-- Form -->
-    <h2 class="form-section-title">Add / Edit Component (Session Only)</h2>
+    <h2>Add / Edit Component</h2>
     <div class="form-grid">
-      <div class="field">
-        <label for="compName">Name *</label>
-        <input id="compName" placeholder="e.g., XL-1, Palisade">
-      </div>
-      <div class="field">
-        <label for="compType">Type</label>
+      <label>Name *
+        <input id="compName" placeholder="e.g., XL-1">
+      </label>
+      <label>Type
         <select id="compType">
-          <option>Quantum Drive</option>
-          <option>Shield Generator</option>
-          <option>Power Plant</option>
-          <option>Cooler</option>
-          <option>Computer</option>
-          <option>Radar</option>
-          <option>Weapon Mount</option>
-          <option>Missile Rack</option>
+          <option>Quantum Drive</option><option>Shield Generator</option><option>Power Plant</option><option>Cooler</option>
+          <option>Computer</option><option>Radar</option><option>Weapon Mount</option><option>Missile Rack</option>
         </select>
-      </div>
-      <div class="field">
-        <label for="compSize">Size</label>
+      </label>
+      <label>Size
         <select id="compSize">
-          <option></option>
-          <option>S0</option>
-          <option>S1</option>
-          <option>S2</option>
-          <option>S3</option>
-          <option>S4</option>
-          <option>S5</option>
+          <option value="">—</option>
+          <option>S1</option><option>S2</option><option>S3</option><option>S4</option><option>S5</option><option>S6</option><option>S7</option><option>S8</option>
         </select>
-      </div>
-      <div class="field">
-        <label for="compGrade">Grade</label>
+      </label>
+      <label>Grade
         <select id="compGrade">
-          <option></option>
-          <option>Grade A</option>
-          <option>Grade B</option>
-          <option>Grade C</option>
-          <option>Grade D</option>
+          <option value="">—</option>
+          <option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option>
         </select>
-      </div>
-
-      <div class="field">
-        <label for="compClass">Class</label>
+      </label>
+      <label>Class
         <select id="compClass">
-          <option></option>
-          <option>Civilian</option>
-          <option>Industrial</option>
-          <option>Stealth</option>
-          <option>Competition</option>
-          <option>Military</option>
+          <option value="">—</option>
+          <option>Civilian</option><option>Industrial</option><option>Stealth</option><option>Competition</option><option>Military</option>
         </select>
-      </div>
-      <div class="field">
-        <label for="compManufacturer">Manufacturer</label>
-        <input id="compManufacturer" placeholder="e.g., RSI, Behring">
-      </div>
-      <div class="field">
-        <label for="compBuy">Where to Buy</label>
-        <input id="compBuy" placeholder="e.g., HUR-L5 Platinum Bay">
-      </div>
-      <div class="field">
-        <label for="compNotes">Tags / Notes</label>
-        <input id="compNotes" placeholder="e.g., Long range, stealth fit">
-      </div>
+      </label>
+      <label>Manufacturer
+        <input id="compManufacturer" placeholder="e.g., Wei-Tek">
+      </label>
+      <label>Where to Buy
+        <input id="compBuy" placeholder="e.g., HUR-L5 • Platinum Bay">
+      </label>
+      <label>Notes
+        <input id="compNotes" placeholder="e.g., Best long-range QD, high fuel cost">
+      </label>
+      <label style="grid-column:1/-1">Internal ID
+        <input id="compId" readonly placeholder="Auto-generated when saving">
+      </label>
+      <button class="btn-primary" id="saveComponent" style="grid-column:1/-1">Save Component</button>
     </div>
+    <div class="muted">ℹ️ Factory list is built from <span class="badge">ship-items.json</span> (scunpacked). Reset will re-pull from GitHub.</div>
 
-    <div class="controls" style="justify-content:flex-end;margin-top:-4px;margin-bottom:4px">
-      <button class="btn-primary" id="saveComponent">Save Component</button>
-      <button id="clearForm">Clear Form</button>
-    </div>
-
-    <!-- Table -->
     <div class="tableWrap">
       <table>
         <thead>
@@ -308,353 +191,463 @@ tr:hover{background:rgba(214,180,76,.08)}
             <th>Class</th>
             <th>Manufacturer</th>
             <th>Where to Buy</th>
-            <th>Tags / Notes</th>
-            <th>Source</th>
-            <th>Wiki</th>
+            <th>Notes</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="rows">
-          <tr><td colspan="11" class="small" style="padding:10px">Loading from Star Citizen Wiki…</td></tr>
-        </tbody>
+        <tbody id="rows"></tbody>
       </table>
     </div>
   </div>
 
 <script>
-/* ==== Active nav highlight ==== */
-(function(){
-  const here = location.pathname.split('/').pop() || 'components.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){
-      a.classList.add('active');
-      a.setAttribute('aria-current','page');
-    }
-  });
-})();
+/* ===== Config ===== */
+const STORE_KEY = 'jmbn-components-v2';   // bumped version since we changed structure
+const SRC_URL = 'https://raw.githubusercontent.com/delumenta/scunpacked-data/refs/heads/master/ship-items.json';
 
-/* ==== Helpers ==== */
-const SC_WIKI_API  = 'https://starcitizen.tools/api.php';
-const SC_WIKI_BASE = 'https://starcitizen.tools/';
-const $  = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const uid = () => 'CMP-'+Math.random().toString(36).slice(2,8);
+const CATEGORY_MATCH = {
+  "Quantum Drive": "QuantumDrive",
+  "Shield Generator": "Shield",
+  "Power Plant": "PowerPlant",
+  "Cooler": "Cooler",
+  "Computer": "Computer",
+  "Radar": "Radar",
+  "Weapon Mount": "WeaponMount",
+  "Missile Rack": "MissileRack"
+};
+
+/* ===== DOM helpers ===== */
+const $ = s => document.querySelector(s);
+const rowsEl = $('#rows');
+const searchEl = $('#search');
+const filterTypeEl = $('#filterType');
+const filterClassEl = $('#filterClass');
+const filterGradeEl = $('#filterGrade');
+const filterSizeEl = $('#filterSize');
+const kpiCountEl = $('#kpiCount');
+const kpiCountSubEl = $('#kpiCountSub');
+const kpiTypeEl = $('#kpiType');
+const lastSavedEl = $('#lastSaved');
+
+/* Form fields */
+const compNameEl = $('#compName');
+const compTypeEl = $('#compType');
+const compSizeEl = $('#compSize');
+const compGradeEl = $('#compGrade');
+const compClassEl = $('#compClass');
+const compManufacturerEl = $('#compManufacturer');
+const compBuyEl = $('#compBuy');
+const compNotesEl = $('#compNotes');
+const compIdEl = $('#compId');
+
+/* State */
+let factoryComponents = [];   // built from GitHub JSON
+let components = [];          // active list (maybe user-modified)
+
+/* Utility */
+const uid = () => 'CMP-' + Math.random().toString(36).slice(2,10);
 const esc = (s='') => {
   const d=document.createElement('div');
   d.textContent = s ?? '';
   return d.innerHTML;
 };
+const niceDateTime = ts => ts ? new Date(ts).toLocaleString() : 'Never';
 
-let components = [];
-let editId = null;
+/* ===== Data pipeline: build from ship-items.json ===== */
+function buildFromRaw(raw) {
+  const out = [];
+  for (const item of raw) {
+    const std = item.stdItem || {};
+    const typeStr = std.Type || '';
+    let matchedLabel = null;
 
-/* Cargo sources: table per component type */
-const CARGO_SOURCES = [
-  { type:'Quantum Drive',   table:'Ship_Component_Quantum_Drives' },
-  { type:'Shield Generator',table:'Ship_Component_Shield_Generators' },
-  { type:'Power Plant',     table:'Ship_Component_Power_Plants' },
-  { type:'Cooler',          table:'Ship_Component_Coolers' },
-  { type:'Computer',        table:'Ship_Component_Computers' },
-  { type:'Radar',           table:'Ship_Component_Radars' },
-  { type:'Missile Rack',    table:'Ship_Component_Missile_Racks' },
-  { type:'Weapon Mount',    table:'Ship_Component_Weapon_Mounts' }
-];
-
-/* ==== SC Wiki Cargo helpers ==== */
-async function fetchCargoRows(table){
-  const params =
-    `action=cargoquery&tables=${encodeURIComponent(table)}` +
-    `&fields=_pageName,manufacturer,size,class,grade` +
-    `&limit=500&format=json&origin=*`;
-  const url = `${SC_WIKI_API}?${params}`;
-  const res = await fetch(url);
-  if(!res.ok) throw new Error(`HTTP ${res.status} for ${table}`);
-  const data = await res.json();
-  return (data.cargoquery || []).map(e => e.title || {});
-}
-
-function wikiUrlForTitle(title){
-  return SC_WIKI_BASE + encodeURIComponent((title || '').replace(/ /g,'_'));
-}
-
-function normalizeGrade(raw){
-  if(!raw) return '';
-  let g = String(raw).trim().toUpperCase();
-  // Sometimes already "A", "B", "GRADE A", etc.
-  g = g.replace(/^GRADE\s+/,'');
-  return 'Grade ' + g;
-}
-
-function upsertFromCargo(row, type){
-  const name = (row._pageName || row.name || '').trim();
-  if(!name) return;
-
-  const existing = components.find(c =>
-    c.name.toLowerCase() === name.toLowerCase() &&
-    c.type === type
-  );
-  if(existing) return;
-
-  const size  = row.size || '';
-  const cls   = row.class || '';
-  const grade = normalizeGrade(row.grade || '');
-  const manu  = row.manufacturer || '';
-
-  const c = {
-    id: uid(),
-    name,
-    type,
-    size,
-    grade,
-    class: cls,
-    manufacturer: manu,
-    buy: '',
-    notes: '',
-    source: 'SC Wiki',
-    wiki: wikiUrlForTitle(name)
-  };
-  components.push(c);
-}
-
-/* ==== Load from SC Wiki (Cargo) ==== */
-async function loadFromWiki(){
-  components = [];
-  editId = null;
-  $('#rows').innerHTML =
-    `<tr><td colspan="11" class="small" style="padding:10px">Loading from Star Citizen Wiki…</td></tr>`;
-  setStatus('Loading from SC Wiki…');
-
-  try{
-    for(const src of CARGO_SOURCES){
-      const rows = await fetchCargoRows(src.table);
-      rows.forEach(row => upsertFromCargo(row, src.type));
+    for (const [label, token] of Object.entries(CATEGORY_MATCH)) {
+      if (typeStr.includes(token)) {
+        matchedLabel = label;
+        break;
+      }
     }
-    render();
-    populateFilters();
-    updateKPI();
-    setStatus('Loaded from SC Wiki', true);
-  }catch(err){
-    console.error(err);
-    $('#rows').innerHTML =
-      `<tr><td colspan="11" class="small" style="padding:10px">Failed to load from SC Wiki: ${esc(err.message)}</td></tr>`;
-    setStatus('Error loading from SC Wiki', false);
+    if (!matchedLabel) continue; // skip things we don't care about
+
+    let name = item.name && item.name !== '<= PLACEHOLDER =>'
+      ? item.name
+      : (item.itemName || '');
+
+    if (!name) continue;
+
+    const manufacturer = item.manufacturer || std.Manufacturer || '';
+    const sizeVal = item.size;
+    const size = (sizeVal !== undefined && sizeVal !== null && sizeVal !== '')
+      ? 'S' + sizeVal
+      : '';
+
+    const gradeVal = (item.grade !== undefined && item.grade !== null)
+      ? item.grade
+      : (std.Grade !== undefined && std.Grade !== null ? std.Grade : null);
+    const grade = gradeVal !== null && gradeVal !== undefined && gradeVal !== ''
+      ? 'Grade ' + gradeVal
+      : '';
+
+    // Class is not directly encoded; leave blank and let user set it
+    const cls = '';
+
+    out.push({
+      id: uid(),
+      name,
+      type: matchedLabel,
+      size,
+      grade,
+      class: cls,
+      manufacturer,
+      buy: '',
+      notes: ''
+    });
   }
+
+  // Sort nicely
+  out.sort((a,b) => {
+    if (a.type !== b.type) return a.type.localeCompare(b.type);
+    if (a.size !== b.size) return a.size.localeCompare(b.size);
+    return a.name.localeCompare(b.name);
+  });
+
+  return out;
 }
 
-/* ==== Status ==== */
-function setStatus(msg, ok){
-  const el = $('#statusText');
-  if(!el) return;
-  el.innerHTML = `Status: <strong>${esc(msg)}</strong>`;
-  el.style.color = ok === false ? 'var(--bad)' : 'var(--muted)';
+/* ===== Rendering ===== */
+function render() {
+  const q = (searchEl.value || '').toLowerCase();
+  const ft = filterTypeEl.value || '';
+  const fc = filterClassEl.value || '';
+  const fg = filterGradeEl.value || '';
+  const fs = filterSizeEl.value || '';
+
+  const filtered = components.filter(c => {
+    if (ft && c.type !== ft) return false;
+    if (fc && c.class !== fc) return false;
+    if (fg && c.grade !== fg) return false;
+    if (fs && c.size !== fs) return false;
+
+    if (!q) return true;
+    const hay = [
+      c.name, c.type, c.class, c.grade,
+      c.size, c.manufacturer, c.buy, c.notes
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+
+  rowsEl.innerHTML = filtered.map(c => `
+    <tr>
+      <td>${esc(c.name)}</td>
+      <td>${esc(c.type)}</td>
+      <td>${esc(c.size)}</td>
+      <td>${esc(c.grade)}</td>
+      <td>${esc(c.class)}</td>
+      <td>${esc(c.manufacturer)}</td>
+      <td>${esc(c.buy)}</td>
+      <td>${esc(c.notes)}</td>
+      <td class="actions-cell">
+        <button data-id="${esc(c.id)}" data-action="edit">Edit</button>
+        <button data-id="${esc(c.id)}" data-action="delete" class="delete">Delete</button>
+      </td>
+    </tr>
+  `).join('') || `<tr><td colspan="9" class="small" style="padding:10px;">No components match your filters.</td></tr>`;
+
+  // KPIs
+  kpiCountEl.textContent = filtered.length;
+  kpiCountSubEl.textContent = components.length
+    ? `${filtered.length} of ${components.length} visible`
+    : 'No data loaded';
+
+  const byType = {};
+  for (const c of filtered) {
+    byType[c.type] = (byType[c.type] || 0) + 1;
+  }
+  const typeStr = Object.entries(byType)
+    .sort((a,b)=>a[0].localeCompare(b[0]))
+    .map(([t,n])=>`${t}: ${n}`)
+    .join(' • ');
+  kpiTypeEl.textContent = typeStr || '—';
 }
 
-/* ==== Filters ==== */
-function distinct(arr,key){
-  return [...new Set(arr.map(x=>x[key]).filter(Boolean))].sort();
-}
-function fillSelect(sel, values){
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">All</option>' +
-    values.map(v=>`<option>${esc(v)}</option>`).join('');
-  if(values.includes(prev)) sel.value = prev;
-}
-function populateFilters(){
-  fillSelect($('#filterType'), distinct(components,'type'));
-  fillSelect($('#filterClass'), distinct(components,'class'));
-  fillSelect($('#filterGrade'), distinct(components,'grade'));
-  fillSelect($('#filterSize'), distinct(components,'size'));
-}
-['#search','#filterType','#filterClass','#filterGrade','#filterSize'].forEach(sel=>{
-  const el = $(sel);
-  if(el) el.addEventListener('input', render);
-});
+function refreshFilters() {
+  const types = new Set();
+  const classes = new Set();
+  const grades = new Set();
+  const sizes = new Set();
 
-/* ==== Form ==== */
-function getForm(){
-  return {
-    id: editId || uid(),
-    name: $('#compName').value.trim(),
-    type: $('#compType').value || '',
-    size: $('#compSize').value || '',
-    grade: $('#compGrade').value || '',
-    class: $('#compClass').value || '',
-    manufacturer: $('#compManufacturer').value.trim(),
-    buy: $('#compBuy').value.trim(),
-    notes: $('#compNotes').value.trim(),
-    source: editId
-      ? (components.find(c=>c.id===editId)?.source || 'Manual')
-      : 'Manual',
-    wiki: editId
-      ? (components.find(c=>c.id===editId)?.wiki || '')
-      : ''
-  };
+  for (const c of components) {
+    if (c.type) types.add(c.type);
+    if (c.class) classes.add(c.class);
+    if (c.grade) grades.add(c.grade);
+    if (c.size) sizes.add(c.size);
+  }
+
+  function refill(selectEl, values, labelAll) {
+    const current = selectEl.value;
+    selectEl.innerHTML = '';
+    const optAll = document.createElement('option');
+    optAll.value = '';
+    optAll.textContent = labelAll;
+    selectEl.appendChild(optAll);
+    Array.from(values).sort().forEach(v => {
+      const o = document.createElement('option');
+      o.value = v;
+      o.textContent = v;
+      selectEl.appendChild(o);
+    });
+    if (Array.from(values).includes(current)) {
+      selectEl.value = current;
+    }
+  }
+
+  refill(filterTypeEl, types, 'All Types');
+  refill(filterClassEl, classes, 'All Classes');
+  refill(filterGradeEl, grades, 'All Grades');
+  refill(filterSizeEl, sizes, 'All Sizes');
 }
-function clearForm(){
-  editId = null;
-  $('#compName').value = '';
-  $('#compManufacturer').value = '';
-  $('#compBuy').value = '';
-  $('#compNotes').value = '';
-  $('#compType').selectedIndex = 0;
-  $('#compSize').selectedIndex = 0;
-  $('#compGrade').selectedIndex = 0;
-  $('#compClass').selectedIndex = 0;
-  $('#saveComponent').textContent = 'Save Component';
+
+/* ===== Form helpers ===== */
+function clearForm() {
+  compNameEl.value = '';
+  compTypeEl.value = 'Quantum Drive';
+  compSizeEl.value = '';
+  compGradeEl.value = '';
+  compClassEl.value = '';
+  compManufacturerEl.value = '';
+  compBuyEl.value = '';
+  compNotesEl.value = '';
+  compIdEl.value = '';
 }
-function fillForm(c){
-  editId = c.id;
-  $('#compName').value = c.name || '';
-  $('#compType').value = c.type || 'Quantum Drive';
-  $('#compSize').value = c.size || '';
-  $('#compGrade').value = c.grade || '';
-  $('#compClass').value = c.class || '';
-  $('#compManufacturer').value = c.manufacturer || '';
-  $('#compBuy').value = c.buy || '';
-  $('#compNotes').value = c.notes || '';
-  $('#saveComponent').textContent = 'Update Component';
+
+function fillForm(c) {
+  compNameEl.value = c.name || '';
+  compTypeEl.value = c.type || 'Quantum Drive';
+  compSizeEl.value = c.size || '';
+  compGradeEl.value = c.grade || '';
+  compClassEl.value = c.class || '';
+  compManufacturerEl.value = c.manufacturer || '';
+  compBuyEl.value = c.buy || '';
+  compNotesEl.value = c.notes || '';
+  compIdEl.value = c.id || '';
 }
-$('#saveComponent').onclick = () => {
-  const c = getForm();
-  if(!c.name){
-    alert('Name is required');
+
+function upsertFromForm() {
+  const name = compNameEl.value.trim();
+  if (!name) {
+    alert('Name is required.');
     return;
   }
-  const idx = components.findIndex(x => x.id === c.id);
-  if(idx >= 0) components[idx] = c;
-  else components.push(c);
-  render();
-  populateFilters();
-  updateKPI();
-  clearForm();
-};
-$('#clearForm').onclick = clearForm;
+  const id = compIdEl.value || uid();
+  const existingIdx = components.findIndex(c => c.id === id);
 
-/* ==== Render ==== */
-function render(){
-  const q  = ($('#search').value || '').toLowerCase().trim();
-  const ft = $('#filterType').value;
-  const fc = $('#filterClass').value;
-  const fg = $('#filterGrade').value;
-  const fs = $('#filterSize').value;
+  const obj = {
+    id,
+    name,
+    type: compTypeEl.value || 'Quantum Drive',
+    size: compSizeEl.value || '',
+    grade: compGradeEl.value || '',
+    class: compClassEl.value || '',
+    manufacturer: compManufacturerEl.value.trim(),
+    buy: compBuyEl.value.trim(),
+    notes: compNotesEl.value.trim()
+  };
 
-  let arr = components.slice();
-  if(q){
-    arr = arr.filter(c =>
-      (`${c.name} ${c.type} ${c.manufacturer} ${c.buy} ${c.notes} ${c.class}`).toLowerCase().includes(q)
-    );
-  }
-  if(ft) arr = arr.filter(c => c.type === ft);
-  if(fc) arr = arr.filter(c => c.class === fc);
-  if(fg) arr = arr.filter(c => c.grade === fg);
-  if(fs) arr = arr.filter(c => c.size === fs);
-
-  const tbody = $('#rows');
-  if(!arr.length){
-    tbody.innerHTML = `<tr><td colspan="11" class="small" style="padding:10px">No components match your filters.</td></tr>`;
-  }else{
-    tbody.innerHTML = arr.map(c=>`
-      <tr>
-        <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
-        <td>${esc(c.type || '')}</td>
-        <td>${esc(c.size || '')}</td>
-        <td>${esc(c.grade || '')}</td>
-        <td>${esc(c.class || '')}</td>
-        <td>${esc(c.manufacturer || '')}</td>
-        <td>${esc(c.buy || '')}</td>
-        <td class="tagsCell">${esc(c.notes || '')}</td>
-        <td>${c.source ? `<span class="pill">${esc(c.source)}</span>` : ''}</td>
-        <td>${
-          c.wiki
-            ? `<a href="${esc(c.wiki)}" target="_blank" rel="noopener" class="small" style="color:var(--accent);text-decoration:underline">Open</a>`
-            : ''
-        }</td>
-        <td class="table-actions">
-          <button data-act="edit" data-id="${c.id}">Edit</button>
-          <button data-act="del" data-id="${c.id}" class="bad">Del</button>
-        </td>
-      </tr>
-    `).join('');
+  if (existingIdx >= 0) {
+    components[existingIdx] = obj;
+  } else {
+    components.push(obj);
   }
 
-  $$('#rows button[data-act]').forEach(btn => {
-    const id = btn.dataset.id;
-    if(btn.dataset.act === 'edit'){
-      btn.onclick = () => {
-        const c = components.find(x=>x.id === id);
-        if(c) fillForm(c);
-      };
-    }else if(btn.dataset.act === 'del'){
-      btn.onclick = () => {
-        if(!confirm('Delete this component from the current session?')) return;
-        components = components.filter(x=>x.id !== id);
-        render();
-        populateFilters();
-        updateKPI();
-      };
-    }
+  components.sort((a,b)=>{
+    if (a.type !== b.type) return a.type.localeCompare(b.type);
+    if (a.size !== b.size) return a.size.localeCompare(b.size);
+    return a.name.localeCompare(b.name);
   });
 
-  updateKPI();
+  refreshFilters();
+  render();
+  compIdEl.value = id;
 }
 
-/* ==== KPIs ==== */
-function updateKPI(){
-  $('#kpiCount').textContent = String(components.length);
-  const byType = {};
-  components.forEach(c => { byType[c.type] = (byType[c.type] || 0) + 1; });
-  const top = Object.entries(byType)
-    .sort((a,b)=>b[1]-a[1])
-    .slice(0,3)
-    .map(([k,v])=>`${k}: ${v}`)
-    .join(' • ') || '—';
-  $('#kpiType').textContent = top;
+/* ===== Storage ===== */
+function saveToLocal() {
+  const payload = {
+    savedAt: new Date().toISOString(),
+    components
+  };
+  localStorage.setItem(STORE_KEY, JSON.stringify(payload));
+  lastSavedEl.textContent = niceDateTime(payload.savedAt);
 }
 
-/* ==== Export ==== */
-function exportJSON(){
-  const blob = new Blob([JSON.stringify(components,null,2)],{type:'application/json'});
-  const url  = URL.createObjectURL(blob);
+function loadFromLocal() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (!obj || !Array.isArray(obj.components)) return null;
+    lastSavedEl.textContent = niceDateTime(obj.savedAt);
+    return obj.components;
+  } catch(e){
+    console.warn('Failed to parse stored components', e);
+    return null;
+  }
+}
+
+/* ===== Import / Export ===== */
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(components,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'jmbn-components-sc-wiki.json';
-  document.body.appendChild(a);
+  a.download = 'jmbn_components.json';
   a.click();
-  a.remove();
   URL.revokeObjectURL(url);
 }
-function exportCSV(){
-  const headers = ['id','name','type','size','grade','class','manufacturer','buy','notes','source','wiki'];
-  const lines = [headers.join(',')];
-  components.forEach(c=>{
-    const row = headers.map(h=>{
-      let v = c[h] ?? '';
-      v = String(v).replace(/"/g,'""');
-      return `"${v}"`;
+
+function exportCSV() {
+  if (!components.length) {
+    alert('No components to export.');
+    return;
+  }
+  const header = ['id','name','type','size','grade','class','manufacturer','buy','notes'];
+  const lines = [header.join(',')];
+  for (const c of components) {
+    const row = header.map(k => {
+      const val = (c[k] ?? '').toString().replace(/"/g,'""');
+      return `"${val}"`;
     });
     lines.push(row.join(','));
-  });
-  const blob = new Blob([lines.join('\n')],{type:'text/csv'});
-  const url  = URL.createObjectURL(blob);
+  }
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'jmbn-components-sc-wiki.csv';
-  document.body.appendChild(a);
+  a.download = 'jmbn_components.csv';
   a.click();
-  a.remove();
   URL.revokeObjectURL(url);
 }
-$('#exportJSON').onclick = exportJSON;
-$('#exportCSV').onclick  = exportCSV;
 
-/* ==== Refresh button ==== */
-$('#refreshWiki').onclick = () => {
-  if(!confirm('Reload from SC Wiki? This will discard manual edits in this session.')) return;
-  loadFromWiki();
-};
+function importFromFile(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const parsed = JSON.parse(e.target.result);
+      if (!Array.isArray(parsed)) throw new Error('Expected an array of components');
+      components = parsed;
+      refreshFilters();
+      render();
+    }catch(err){
+      alert('Failed to parse JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
 
-/* ==== Init ==== */
-loadFromWiki();
+/* ===== Initial load ===== */
+async function bootstrap() {
+  // Try local first
+  const stored = loadFromLocal();
+  if (stored && stored.length) {
+    components = stored;
+  } else {
+    // Fetch fresh from GitHub
+    try{
+      const res = await fetch(SRC_URL);
+      if (!res.ok) throw new Error('HTTP '+res.status);
+      const raw = await res.json();
+      factoryComponents = buildFromRaw(raw);
+      components = factoryComponents.slice();
+      lastSavedEl.textContent = 'Factory (not yet saved)';
+    }catch(err){
+      console.error('Failed to fetch ship-items.json', err);
+      alert('Failed to load Star Citizen components from GitHub. Check console for details.');
+      components = [];
+    }
+  }
+
+  refreshFilters();
+  render();
+}
+
+/* ===== Events ===== */
+searchEl.addEventListener('input', render);
+filterTypeEl.addEventListener('change', render);
+filterClassEl.addEventListener('change', render);
+filterGradeEl.addEventListener('change', render);
+filterSizeEl.addEventListener('change', render);
+
+$('#saveComponent').addEventListener('click', () => {
+  upsertFromForm();
+});
+
+$('#saveBtn').addEventListener('click', () => {
+  saveToLocal();
+});
+
+$('#resetBtn').addEventListener('click', async () => {
+  if (!confirm('Reset to factory list from ship-items.json? This will discard unsaved changes.')) return;
+  try{
+    const res = await fetch(SRC_URL);
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const raw = await res.json();
+    factoryComponents = buildFromRaw(raw);
+    components = factoryComponents.slice();
+    localStorage.removeItem(STORE_KEY);
+    lastSavedEl.textContent = 'Factory (not yet saved)';
+    refreshFilters();
+    render();
+    clearForm();
+  }catch(err){
+    console.error('Failed to reset from GitHub', err);
+    alert('Failed to reset from GitHub.');
+  }
+});
+
+$('#exportJSON').addEventListener('click', exportJSON);
+$('#exportCSV').addEventListener('click', exportCSV);
+
+$('#importJSON').addEventListener('click', () => {
+  $('#importFile').click();
+});
+$('#importFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) importFromFile(file);
+  e.target.value = '';
+});
+
+rowsEl.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const id = btn.getAttribute('data-id');
+  const action = btn.getAttribute('data-action');
+  if (!id || !action) return;
+
+  const idx = components.findIndex(c => c.id === id);
+  if (idx < 0) return;
+
+  if (action === 'edit') {
+    fillForm(components[idx]);
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else if (action === 'delete') {
+    if (!confirm('Delete this component?')) return;
+    components.splice(idx,1);
+    refreshFilters();
+    render();
+    if (compIdEl.value === id) clearForm();
+  }
+});
+
+/* Highlight nav active (defensive) */
+(function(){
+  const here=location.pathname.split('/').pop()||'components.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){a.classList.add('active');a.setAttribute('aria-current','page');}
+  });
+})();
+
+/* Start */
+bootstrap();
 </script>
 </body>
 </html>
