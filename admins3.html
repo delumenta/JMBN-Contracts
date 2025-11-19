@@ -1,671 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Components</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN Components</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png"
+        href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+        sizes="32x32">
 
-<style>
-:root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;
-  --fs-h1:clamp(18px,2.2vw,22px);--fs-h2:clamp(14px,1.6vw,16px)
-}
-*{box-sizing:border-box}
-body{
-  background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;
-  color:var(--text);
-  font-family:'Play',sans-serif;
-  margin:0;padding:14px;
-  letter-spacing:.25px;
-  font-size:var(--fs-base)
-}
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#0b0b0b;
+      --sub:#101010;
+      --row:#0a0a0a;
+      --border:#d6b44c;
+      --card:#141414;
+      --accent:#f2d675;
+      --text:#f7f1d0;
+      --muted:#c9b06a;
+      --bad:#ff6b6b;
 
-/* Shiny pill nav (header.html styles) */
-.nav-btn{
-  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
-}
-.nav-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
-  background:linear-gradient(180deg,#1a1a1a,#0a0a0a)
-}
-.nav-btn.active{
-  color:#000;
-  background:linear-gradient(180deg,var(--gold),var(--gold2));
-  border-color:var(--ring);
-  box-shadow:0 0 20px rgba(214,180,76,.45);
-}
-.nav-btn.active::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);
-  border-radius:inherit;
-  transform:translateX(-120%);
-  animation:shine 2.8s ease-in-out infinite;
-  pointer-events:none;
-}
-@keyframes shine{
-  0%{transform:translateX(-120%)}
-  35%{transform:translateX(120%)}
-  100%{transform:translateX(120%)}
-}
+      --fs-base:14px;
+      --fs-sm:12px;
+      --fs-lg:16px;
+    }
 
-/* Layout */
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  margin-top:8px;
-  box-shadow:0 0 18px rgba(214,180,76,.22)
-}
-.controls{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:8px
-}
-button{
-  padding:7px 11px;
-  border-radius:10px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);
-  border:1px solid var(--border);
-  cursor:pointer;
-  font-family:'Play';
-  transition:.2s
-}
-button:hover{background:var(--accent);color:#000}
-.btn-primary{background:var(--accent);color:#000}
-input,select{
-  background:#0a0a0a;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:9px;
-  color:var(--text);
-  font-size:var(--fs-table);
-  font-family:'Play'
-}
+    *{box-sizing:border-box;margin:0;padding:0}
 
-/* KPIs */
-.kpis{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin:10px 0
-}
-.kpi-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;
-  text-align:center
-}
-.kpi-card h3{
-  margin:0;
-  color:var(--muted);
-  font-size:11px;
-  text-transform:uppercase
-}
-.kpi-card .val{
-  font-weight:700;
-  font-size:18px;
-  color:var(--accent);
-  margin-top:4px
-}
+    html,body{
+      height:100%;
+      background:radial-gradient(circle at top,#1b160a 0,#000 55%);
+      color:var(--text);
+      font-family:'Play',sans-serif;
+    }
 
-/* Form */
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin:10px 0
-}
-@media(max-width:980px){.form-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+    body{
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+      padding:14px;
+    }
 
-/* Table */
-.tableWrap{
-  border:1px solid var(--border);
-  border-radius:12px;
-  overflow:auto;
-  max-height:70vh;
-  margin-top:10px
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:var(--fs-table)
-}
-th,td{
-  border-bottom:1px solid rgba(214,180,76,.3);
-  padding:8px;
-  text-align:left
-}
-th{
-  color:var(--accent);
-  background:#080808;
-  font-weight:500;
-  font-size:12px
-}
-tr:nth-child(even){background:#111}
-tr:hover{background:rgba(214,180,76,.08)}
-.small{font-size:var(--fs-small);color:var(--muted)}
-</style>
+    /* Header container where header.html will be injected */
+    #site-header{
+      margin-bottom:12px;
+    }
+
+    main{
+      flex:1;
+      max-width:1400px;
+      margin:0 auto;
+      width:100%;
+    }
+
+    .panel{
+      background:linear-gradient(145deg,#050505,#101010);
+      border:1px solid rgba(214,180,76,.7);
+      box-shadow:0 0 20px rgba(0,0,0,.7);
+      border-radius:14px;
+      padding:14px 14px 18px;
+    }
+
+    .panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      border-bottom:1px solid rgba(214,180,76,.4);
+      padding-bottom:8px;
+    }
+
+    .panel-title{
+      font-size:clamp(16px,2vw,20px);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .panel-subtitle{
+      font-size:var(--fs-sm);
+      color:var(--muted);
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    @media (max-width:900px){
+      .filters{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:600px){
+      .filters{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .filter-group{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      font-size:var(--fs-sm);
+    }
+
+    .filter-label{
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+    }
+
+    .filter-input,
+    .filter-select{
+      background:var(--sub);
+      border:1px solid rgba(214,180,76,.5);
+      border-radius:999px;
+      padding:6px 10px;
+      color:var(--text);
+      font-size:var(--fs-base);
+      outline:none;
+      transition:border-color .15s,box-shadow .15s,background .15s;
+    }
+
+    .filter-input::placeholder{
+      color:rgba(247,241,208,.5);
+    }
+
+    .filter-input:focus,
+    .filter-select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(242,214,117,.5);
+      background:#151515;
+    }
+
+    .table-wrap{
+      margin-top:6px;
+      border-radius:10px;
+      border:1px solid rgba(214,180,76,.6);
+      overflow:hidden;
+      background:radial-gradient(circle at top,#18120a 0,#050505 60%);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:var(--fs-base);
+    }
+
+    thead{
+      background:rgba(6,6,6,.98);
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+
+    th,td{
+      padding:6px 10px;
+      text-align:left;
+      white-space:nowrap;
+    }
+
+    th{
+      font-weight:700;
+      font-size:var(--fs-sm);
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      border-bottom:1px solid rgba(214,180,76,.4);
+      color:var(--muted);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    th.sortable:hover{
+      color:var(--accent);
+      background:rgba(214,180,76,.08);
+    }
+
+    th .sort-indicator{
+      font-size:10px;
+      margin-left:4px;
+      opacity:.7;
+    }
+
+    tbody tr:nth-child(even){
+      background:rgba(12,12,12,.85);
+    }
+
+    tbody tr:nth-child(odd){
+      background:rgba(5,5,5,.9);
+    }
+
+    tbody tr:hover{
+      background:rgba(40,32,18,.9);
+    }
+
+    td{
+      border-bottom:1px solid rgba(255,255,255,.02);
+      max-width:280px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .col-name{font-weight:700;color:var(--accent);}
+    .col-where{font-size:var(--fs-sm);color:var(--muted);white-space:normal;}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.7);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .pill-component{border-color:rgba(242,214,117,.8);}
+    .pill-size{border-color:rgba(155,214,255,.8);}
+    .pill-grade{border-color:rgba(255,188,120,.8);}
+    .pill-class{border-color:rgba(186,255,186,.8);}
+
+    .status-bar{
+      margin-top:6px;
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .status-bar strong{
+      color:var(--accent);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.5);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .loading,
+    .error,
+    .empty{
+      padding:16px;
+      text-align:center;
+      font-size:var(--fs-base);
+    }
+
+    .loading{color:var(--muted);}
+    .error{color:var(--bad);}
+  </style>
 </head>
 <body>
+  <!-- Shared header will be injected here -->
+  <header id="site-header"></header>
 
-<!-- 🔁 Shared header mount -->
-<div id="header-container"></div>
-<script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    const html = await res.text();
-    document.getElementById('header-container').outerHTML = html;
+  <main>
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Components Registry</div>
+          <div class="panel-subtitle">
+            Browse ship components by type, size, class and supplier.
+          </div>
+        </div>
+      </div>
 
-    // Highlight current tab
-    requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a => {
-        const href = (a.getAttribute('href')||'').toLowerCase();
-        if (href === here) {
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
+      <div class="filters">
+        <div class="filter-group">
+          <label class="filter-label" for="searchInput">Search</label>
+          <input id="searchInput" class="filter-input" type="text"
+                 placeholder="Name or manufacturer…">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterComponent">Component</label>
+          <select id="filterComponent" class="filter-select">
+            <option value="">All Components</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterClass">Class</label>
+          <select id="filterClass" class="filter-select">
+            <option value="">All Classes</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterSize">Size</label>
+          <select id="filterSize" class="filter-select">
+            <option value="">All Sizes</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="tableRegion" class="table-wrap">
+        <div class="loading">Loading components…</div>
+      </div>
+
+      <div id="statusBar" class="status-bar" style="display:none;">
+        <div><strong id="countText"></strong></div>
+        <div class="badge">
+          Active filters:
+          <span id="activeFiltersLabel">None</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Inject shared header.html
+    fetch('header.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('site-header').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Failed to load header.html', err);
       });
-    });
-  } catch (e) {
-    console.warn('Header load failed:', e);
-  }
-})();
-</script>
+  </script>
 
-<div class="panel">
-  <div class="controls">
-    <input id="search" placeholder="Search (name, mfr, notes)…">
-    <select id="filterType"><option value="">All Types</option></select>
-    <select id="filterClass"><option value="">All Classes</option></select>
-    <select id="filterGrade"><option value="">All Grades</option></select>
-    <select id="filterSize"><option value="">All Sizes</option></select>
+  <script>
+    const DATA_URL = 'data/components.js'; // your JSON path
 
-    <button id="saveBtn">Save</button>
-    <button id="resetBtn" style="border-color:var(--bad);color:var(--bad)">Reset (Reload JSON)</button>
-    <button id="fetchAllShops">Fetch Shops (Wiki)</button>
+    let allComponents = [];
+    let currentSort = { key:'Names', dir:'asc' };
 
-    <button id="exportJSON">Export JSON</button>
-    <button id="exportCSV">Export CSV</button>
-    <button class="btn-primary" id="importJSON">Import JSON</button>
-  </div>
+    const tableRegion = document.getElementById('tableRegion');
+    const statusBar   = document.getElementById('statusBar');
+    const countText   = document.getElementById('countText');
+    const activeFiltersLabel = document.getElementById('activeFiltersLabel');
 
-  <div class="kpis">
-    <div class="kpi-card"><h3>Total Components</h3><div class="val" id="kpiCount">0</div></div>
-    <div class="kpi-card"><h3>By Type</h3><div class="val small" id="kpiType">—</div></div>
-    <div class="kpi-card"><h3>Status</h3><div class="val" id="lastSaved">—</div></div>
-  </div>
+    const searchInput     = document.getElementById('searchInput');
+    const filterComponent = document.getElementById('filterComponent');
+    const filterClass     = document.getElementById('filterClass');
+    const filterSize      = document.getElementById('filterSize');
 
-  <h2 style="color:var(--accent);font-size:var(--fs-h2);margin:8px 0 4px">Add / Edit Component</h2>
-  <div class="form-grid">
-    <input id="compName" placeholder="Name *">
-    <select id="compType">
-      <option>Quantum Drive</option><option>Shield Generator</option><option>Power Plant</option><option>Cooler</option>
-      <option>Jump Drive</option><option>Computer</option><option>Radar</option><option>Weapon Mount</option><option>Missile Rack</option>
-    </select>
-    <input id="compSize" placeholder="Size (e.g. S1, S2, A, C)">
-    <select id="compGrade">
-      <option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option>
-      <option>Grade A</option><option>Grade B</option><option>Grade C</option><option>Grade D</option>
-    </select>
-    <select id="compClass">
-      <option>Civilian</option><option>Industrial</option><option>Stealth</option><option>Competition</option><option>Military</option>
-    </select>
-    <input id="compManufacturer" placeholder="Manufacturer">
-    <input id="compBuy" placeholder="Where to Buy">
-    <input id="compNotes" placeholder="Notes">
-    <input id="compLink" placeholder="Wiki Link (optional)">
-    <button class="btn-primary" id="saveComponent">Save Component</button>
-  </div>
-
-  <div class="tableWrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Size</th>
-          <th>Grade</th>
-          <th>Class</th>
-          <th>Manufacturer</th>
-          <th>Where to Buy</th>
-          <th>Notes</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- 🔐 Auth -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
-
-<script>
-const JSON_URL = 'https://delumenta.github.io/JMBN/data/components.js';
-
-const $  = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const uid = () => 'CMP-' + Math.random().toString(36).slice(2,8);
-function esc(s=''){ const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
-
-// Replace nbsp etc
-function cleanSpaces(s){
-  return (s || '').replace(/\u00A0/g,' ').replace(/\s+/g,' ').trim();
-}
-function cleanSize(s){
-  // " S  2" -> "S2"
-  return cleanSpaces(s).replace(/\s+/g,'').toUpperCase();
-}
-function normalizeGrade(g){
-  if (g === null || g === undefined) return '';
-  if (typeof g === 'number') return 'Grade ' + g;
-  g = String(g).trim();
-  if (!g) return '';
-  if (/^grade/i.test(g)) return 'Grade ' + g.replace(/^grade/i,'').trim();
-  return 'Grade ' + g.toUpperCase();
-}
-
-let components = [];
-let editId = null;
-
-/* Map JSON entry -> internal shape we use everywhere */
-function mapJsonComponent(src){
-  return {
-    id: uid(),
-    name: src.Names || '',
-    type: src.Component || '',
-    size: cleanSize(src.Size),
-    grade: normalizeGrade(src.Grade),
-    class: src.Class || '',
-    manufacturer: cleanSpaces(src.Manufacturer),
-    buy: '',                 // will be filled from wiki
-    notes: '',
-    link: src.Link || ''
-  };
-}
-
-/* ---- Load from JSON file ---- */
-async function loadFromJSON(){
-  try{
-    const res = await fetch(JSON_URL, { cache:'no-cache' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-
-    const text = await res.text();
-    console.log('[components] RAW first 200 chars:', text.slice(0,200) + '...');
-    const json = JSON.parse(text);
-    if (!Array.isArray(json)) throw new Error('Expected array in ' + JSON_URL);
-
-    components = json.map(mapJsonComponent);
-    render();
-    populateFilters();
-    updateKPI();
-    const ls = $('#lastSaved');
-    if(ls) ls.textContent = 'Loaded from JSON';
-  }catch(err){
-    console.error('loadFromJSON error:', err);
-    components = [];
-    render();
-    populateFilters();
-    updateKPI();
-    const ls = $('#lastSaved');
-    if(ls) ls.textContent = 'Error loading JSON';
-    alert('Failed to load components from data.');
-  }
-}
-
-/* ---- Wiki scraping helpers ---- */
-function extractShopsFromDoc(doc){
-  // Very generic: looks for cells labelled "Shops", "Buy from", "Acquisition", etc.
-  const labels = ['shops','buy from','buy','acquisition','availability','purchase'];
-  const cells = Array.from(doc.querySelectorAll('th,td'));
-  for (const cell of cells){
-    const label = cell.textContent.trim().toLowerCase();
-    if (!labels.some(l => label.includes(l))) continue;
-    const next = cell.nextElementSibling;
-    if (!next) continue;
-    let txt = next.textContent || '';
-    // Strip citation markers [1], [2], etc
-    txt = txt.replace(/\[\d+]/g,'').replace(/\s+/g,' ').trim();
-    if (txt) return txt;
-  }
-  return '';
-}
-
-async function fetchShopsForComponent(c, silent=false){
-  if (!c.link){
-    if (!silent) alert('No wiki link set for ' + c.name);
-    return '';
-  }
-  try{
-    const res = await fetch(c.link, { cache:'no-cache' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const html = await res.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const shops = extractShopsFromDoc(doc);
-    if (shops){
-      c.buy = shops;
-      return shops;
-    }
-    if (!silent) alert('No shop info found on page for ' + c.name);
-    return '';
-  }catch(e){
-    console.error('fetchShopsForComponent error', c.name, e);
-    if (!silent) alert('Failed to fetch shops for ' + c.name + ': ' + e.message);
-    return '';
-  }
-}
-
-/* Fetch for all components (slow) */
-$('#fetchAllShops').onclick = async () => {
-  if (!components.length){
-    alert('No components loaded yet.');
-    return;
-  }
-  if (!confirm('Fetch shop info from Fandom for all components?\nThis may take a while and may be rate-limited.')){
-    return;
-  }
-  const ls = $('#lastSaved');
-  if (ls) ls.textContent = 'Fetching shops…';
-  for (let i=0; i<components.length; i++){
-    const c = components[i];
-    if (!c.buy && c.link){
-      await fetchShopsForComponent(c, true);
-      if (i % 5 === 0){ // occasional re-render
-        render();
-        updateKPI();
-      }
-      // small delay to be nice to the wiki
-      await new Promise(r => setTimeout(r, 700));
-    }
-  }
-  render();
-  updateKPI();
-  if (ls) ls.textContent = 'Shops fetched (where available)';
-  alert('Done fetching shop info (where available).');
-};
-
-/* ---- Form helpers ---- */
-function getForm(){
-  return {
-    id: editId || uid(),
-    name: $('#compName').value.trim(),
-    type: $('#compType').value,
-    size: cleanSize($('#compSize').value),
-    grade: $('#compGrade').value,
-    class: $('#compClass').value,
-    manufacturer: $('#compManufacturer').value.trim(),
-    buy: $('#compBuy').value.trim(),
-    notes: $('#compNotes').value.trim(),
-    link: $('#compLink').value.trim()
-  };
-}
-
-function clearForm(){
-  editId = null;
-  ['compName','compManufacturer','compBuy','compNotes','compLink','compSize']
-    .forEach(id => $('#'+id).value = '');
-  $('#compType').selectedIndex = 0;
-  $('#compGrade').selectedIndex = 0;
-  $('#compClass').selectedIndex = 0;
-  $('#saveComponent').textContent = 'Save Component';
-}
-
-function fillForm(c){
-  editId = c.id;
-  $('#compName').value = c.name || '';
-  $('#compType').value = c.type || 'Quantum Drive';
-  $('#compSize').value = c.size || '';
-  $('#compGrade').value = c.grade || 'Grade 1';
-  $('#compClass').value = c.class || 'Civilian';
-  $('#compManufacturer').value = c.manufacturer || '';
-  $('#compBuy').value = c.buy || '';
-  $('#compNotes').value = c.notes || '';
-  $('#compLink').value = c.link || '';
-  $('#saveComponent').textContent = 'Update Component';
-}
-
-/* Save component (in-memory only) */
-$('#saveComponent').onclick = () => {
-  const c = getForm();
-  if (!c.name){
-    alert('Name is required');
-    return;
-  }
-  const idx = components.findIndex(x => x.id === c.id);
-  if (idx >= 0) components[idx] = c;
-  else components.push(c);
-
-  render();
-  populateFilters();
-  updateKPI();
-  clearForm();
-
-  const ls = $('#lastSaved');
-  if(ls) ls.textContent = 'Modified (not persisted)';
-};
-
-/* Save button – just info */
-$('#saveBtn').onclick = () => {
-  alert('Data is not saved to a server.\nUse Export JSON/CSV to download your current list.');
-};
-
-/* Reset -> reload JSON */
-$('#resetBtn').onclick = async () => {
-  if (!confirm('Reload from data/components.js?\nAll unsaved edits will be lost.')) return;
-  await loadFromJSON();
-};
-
-/* ---- Filters ---- */
-function distinct(arr, key){
-  return [...new Set(arr.map(x => x[key]).filter(Boolean))].sort();
-}
-function fillSelect(sel, values){
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">All</option>' +
-    values.map(v => `<option>${esc(v)}</option>`).join('');
-  if (values.includes(prev)) sel.value = prev;
-}
-
-function populateFilters(){
-  fillSelect($('#filterType'),  distinct(components,'type'));
-  fillSelect($('#filterClass'), distinct(components,'class'));
-  fillSelect($('#filterGrade'), distinct(components,'grade'));
-  fillSelect($('#filterSize'),  distinct(components,'size'));
-}
-
-['search','filterType','filterClass','filterGrade','filterSize'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('input', render);
-});
-
-/* ---- Render table ---- */
-function render(){
-  const q  = ($('#search').value || '').toLowerCase().trim();
-  const ft = $('#filterType').value;
-  const fc = $('#filterClass').value;
-  const fg = $('#filterGrade').value;
-  const fs = $('#filterSize').value;
-
-  let arr = components.slice();
-
-  if (q){
-    arr = arr.filter(c =>
-      `${c.name} ${c.manufacturer} ${c.buy} ${c.notes}`.toLowerCase().includes(q)
-    );
-  }
-  if (ft) arr = arr.filter(c => c.type  === ft);
-  if (fc) arr = arr.filter(c => c.class === fc);
-  if (fg) arr = arr.filter(c => c.grade === fg);
-  if (fs) arr = arr.filter(c => c.size  === fs);
-
-  $('#rows').innerHTML = arr.map(c => `
-    <tr>
-      <td>
-        ${c.link
-          ? `<a href="${esc(c.link)}" target="_blank" style="color:var(--accent);text-decoration:none;"><b>${esc(c.name)}</b></a>`
-          : `<b style="color:var(--accent)">${esc(c.name)}</b>`}
-      </td>
-      <td>${esc(c.type || '')}</td>
-      <td>${esc(c.size || '')}</td>
-      <td>${esc(c.grade || '')}</td>
-      <td>${esc(c.class || '')}</td>
-      <td>${esc(c.manufacturer || '')}</td>
-      <td>${esc(c.buy || '')}</td>
-      <td>${esc(c.notes || '')}</td>
-      <td style="white-space:nowrap">
-        <button data-act="shops" data-id="${c.id}">Shops</button>
-        <button data-act="edit" data-id="${c.id}">Edit</button>
-        <button data-act="del"  data-id="${c.id}" style="border-color:var(--bad);color:var(--bad)">Del</button>
-      </td>
-    </tr>
-  `).join('') || `
-    <tr>
-      <td colspan="9" class="small" style="padding:10px;">No components loaded.</td>
-    </tr>
-  `;
-
-  $$('#rows button[data-act]').forEach(btn => {
-    const id = btn.dataset.id;
-    const act = btn.dataset.act;
-    if (act === 'edit'){
-      btn.onclick = () => {
-        const c = components.find(x => x.id === id);
-        if (c) fillForm(c);
-      };
-    } else if (act === 'del'){
-      btn.onclick = () => {
-        if (!confirm('Delete this component?')) return;
-        components = components.filter(x => x.id !== id);
-        render();
-        populateFilters();
-        updateKPI();
-      };
-    } else if (act === 'shops'){
-      btn.onclick = async () => {
-        const c = components.find(x => x.id === id);
-        if (!c) return;
-        const ls = $('#lastSaved');
-        if (ls) ls.textContent = 'Fetching shops for ' + c.name + '…';
-        await fetchShopsForComponent(c);
-        render();
-        updateKPI();
-        if (ls) ls.textContent = 'Updated shop info for ' + c.name;
-      };
-    }
-  });
-}
-
-/* ---- KPIs ---- */
-function updateKPI(){
-  $('#kpiCount').textContent = String(components.length);
-  const byType = {};
-  components.forEach(c => { byType[c.type] = (byType[c.type] || 0) + 1; });
-  const top = Object.entries(byType)
-    .sort((a,b)=>b[1]-a[1])
-    .slice(0,3)
-    .map(([k,v]) => `${k}: ${v}`)
-    .join(' • ') || '—';
-  $('#kpiType').textContent = top;
-}
-
-/* ---- Export / Import ---- */
-function exportJSON(){
-  const blob = new Blob([JSON.stringify(components,null,2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'jmbn-components-with-shops.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-function exportCSV(){
-  const headers = ['name','type','size','grade','class','manufacturer','buy','notes','link'];
-  const rows = components.map(c => headers.map(h => String(c[h] ?? '')));
-  const csv = [
-    headers.join(','),
-    ...rows.map(r => '"' + r.map(s => s.replace(/"/g,'""')).join('","') + '"')
-  ].join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'jmbn-components-with-shops.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-$('#exportJSON').onclick = exportJSON;
-$('#exportCSV').onclick = exportCSV;
-
-function importJSON(){
-  const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = 'application/json';
-  inp.onchange = () => {
-    const f = inp.files?.[0];
-    if (!f) return;
-    const r = new FileReader();
-    r.onload = () => {
+    async function loadComponents(){
       try{
-        const arr = JSON.parse(r.result);
-        if (!Array.isArray(arr)) throw new Error('Expected an array');
-        arr.forEach(x => { if (!x.id) x.id = uid(); });
-        if (confirm('Merge with existing? (Cancel = Replace)')){
-          const map = new Map(components.map(x => [x.id, x]));
-          for (const x of arr){ map.set(x.id, x); }
-          components = [...map.values()];
-        }else{
-          components = arr;
-        }
-        render();
-        populateFilters();
-        updateKPI();
-        const ls = $('#lastSaved');
-        if(ls) ls.textContent = 'Imported (not persisted)';
-        alert('Import complete.');
-      }catch(e){
-        alert('Import failed: ' + e.message);
+        const res = await fetch(DATA_URL,{cache:'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+
+        allComponents = Array.isArray(data) ? data : [];
+        buildFilterOptions(allComponents);
+        renderTable(allComponents);
+      }catch(err){
+        console.error(err);
+        tableRegion.innerHTML =
+          '<div class="error">Failed to load components data.</div>';
       }
-    };
-    r.readAsText(f);
-  };
-  inp.click();
-}
-$('#importJSON').onclick = importJSON;
+    }
 
-/* ---- Init (auth-gated) ---- */
-document.addEventListener('DOMContentLoaded', async () => {
-  const session = await requireAuth();   // redirects to auth.html if not logged in
-  if (!session) return;
-  await loadFromJSON();
-});
-</script>
+    function buildFilterOptions(list){
+      const components = new Set();
+      const classes    = new Set();
+      const sizes      = new Set();
 
+      list.forEach(item=>{
+        if(item.Component) components.add(item.Component.trim());
+        if(item.Class)     classes.add(String(item.Class).trim());
+        if(item.Size)      sizes.add(String(item.Size).trim());
+      });
+
+      const makeOptions = (set, selectEl)=>{
+        const values = Array.from(set).filter(Boolean).sort((a,b)=>a.localeCompare(b));
+        values.forEach(v=>{
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v;
+          selectEl.appendChild(opt);
+        });
+      };
+
+      makeOptions(components, filterComponent);
+      makeOptions(classes,    filterClass);
+      makeOptions(sizes,      filterSize);
+    }
+
+    function applyFiltersAndSort(){
+      const q       = searchInput.value.trim().toLowerCase();
+      const comp    = filterComponent.value;
+      const cls     = filterClass.value;
+      const size    = filterSize.value;
+
+      let filtered = allComponents.filter(item=>{
+        if(comp && item.Component.trim() !== comp) return false;
+        if(cls  && String(item.Class).trim() !== cls) return false;
+        if(size && String(item.Size).trim() !== size) return false;
+
+        if(q){
+          const hay = [
+            item.Names,
+            item.Manufacturer,
+            item.Component,
+            item.WhereToBuy
+          ].map(v=>String(v||'').toLowerCase()).join(' ');
+          if(!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      filtered.sort((a,b)=>{
+        const key = currentSort.key;
+        let av = (a[key] ?? '').toString().toLowerCase();
+        let bv = (b[key] ?? '').toString().toLowerCase();
+        if(av < bv) return currentSort.dir === 'asc' ? -1 : 1;
+        if(av > bv) return currentSort.dir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      renderTable(filtered);
+      updateStatus(filtered.length);
+    }
+
+    function updateStatus(count){
+      const total = allComponents.length;
+      statusBar.style.display = 'flex';
+      countText.textContent = `${count} of ${total} components shown`;
+
+      const filters = [];
+      if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
+      if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
+      if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
+      if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
+
+      activeFiltersLabel.textContent = filters.length ? filters.join(' • ') : 'None';
+    }
+
+    function renderTable(list){
+      if(!list.length){
+        tableRegion.innerHTML = '<div class="empty">No components match your filters.</div>';
+        return;
+      }
+
+      const sortIcon = (key)=>{
+        if(currentSort.key !== key) return '';
+        return currentSort.dir === 'asc' ? '▲' : '▼';
+      };
+
+      const headerHtml = `
+        <table>
+          <thead>
+            <tr>
+              <th class="sortable" data-key="Names">Name <span class="sort-indicator">${sortIcon('Names')}</span></th>
+              <th class="sortable" data-key="Component">Component <span class="sort-indicator">${sortIcon('Component')}</span></th>
+              <th class="sortable" data-key="Size">Size <span class="sort-indicator">${sortIcon('Size')}</span></th>
+              <th class="sortable" data-key="Grade">Grade <span class="sort-indicator">${sortIcon('Grade')}</span></th>
+              <th class="sortable" data-key="Class">Class <span class="sort-indicator">${sortIcon('Class')}</span></th>
+              <th class="sortable" data-key="Manufacturer">Manufacturer <span class="sort-indicator">${sortIcon('Manufacturer')}</span></th>
+              <th data-key="WhereToBuy">Where to Buy</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${list.map(item=>{
+              const gradeStr = item.Grade === null || item.Grade === undefined
+                ? ''
+                : String(item.Grade);
+              return `
+                <tr>
+                  <td class="col-name">${item.Names || ''}</td>
+                  <td><span class="pill pill-component">${item.Component || ''}</span></td>
+                  <td><span class="pill pill-size">${item.Size || ''}</span></td>
+                  <td><span class="pill pill-grade">${gradeStr}</span></td>
+                  <td><span class="pill pill-class">${item.Class || ''}</span></td>
+                  <td>${item.Manufacturer || ''}</td>
+                  <td class="col-where">${item.WhereToBuy || ''}</td>
+                </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      tableRegion.innerHTML = headerHtml;
+
+      // Attach sort handlers
+      tableRegion.querySelectorAll('th.sortable').forEach(th=>{
+        th.addEventListener('click',()=>{
+          const key = th.getAttribute('data-key');
+          if(currentSort.key === key){
+            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+          }else{
+            currentSort.key = key;
+            currentSort.dir = 'asc';
+          }
+          applyFiltersAndSort();
+        });
+      });
+    }
+
+    // Hook up filter events
+    [searchInput, filterComponent, filterClass, filterSize].forEach(el=>{
+      el.addEventListener('input', applyFiltersAndSort);
+      el.addEventListener('change', applyFiltersAndSort);
+    });
+
+    loadComponents();
+  </script>
 </body>
 </html>
