@@ -219,7 +219,7 @@ tr:hover{background:rgba(214,180,76,.08)}
       <div class="kpi-card">
         <h3>Data Source</h3>
         <div class="val">SC Wiki</div>
-        <div class="small">Live categories (no local storage)</div>
+        <div class="small">Cargo tables (no local storage)</div>
       </div>
     </div>
 
@@ -334,7 +334,7 @@ tr:hover{background:rgba(214,180,76,.08)}
 })();
 
 /* ==== Helpers ==== */
-const SC_WIKI_API = 'https://starcitizen.tools/api.php';
+const SC_WIKI_API  = 'https://starcitizen.tools/api.php';
 const SC_WIKI_BASE = 'https://starcitizen.tools/';
 const $  = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
@@ -348,52 +348,66 @@ const esc = (s='') => {
 let components = [];
 let editId = null;
 
-/* Map our component types to wiki categories */
-const WIKI_COMPONENT_CATEGORIES = {
-  'Quantum Drive'   : 'Quantum_drives',
-  'Shield Generator': 'Shield_generators',
-  'Power Plant'     : 'Power_plants',
-  'Cooler'          : 'Coolers',
-  'Computer'        : 'Computers',
-  'Radar'           : 'Radars',
-  'Missile Rack'    : 'Missile_racks',
-  'Weapon Mount'    : 'Weapon_mounts'
-};
+/* Cargo sources: table per component type */
+const CARGO_SOURCES = [
+  { type:'Quantum Drive',   table:'Ship_Component_Quantum_Drives' },
+  { type:'Shield Generator',table:'Ship_Component_Shield_Generators' },
+  { type:'Power Plant',     table:'Ship_Component_Power_Plants' },
+  { type:'Cooler',          table:'Ship_Component_Coolers' },
+  { type:'Computer',        table:'Ship_Component_Computers' },
+  { type:'Radar',           table:'Ship_Component_Radars' },
+  { type:'Missile Rack',    table:'Ship_Component_Missile_Racks' },
+  { type:'Weapon Mount',    table:'Ship_Component_Weapon_Mounts' }
+];
 
-/* ==== SC Wiki fetch helpers ==== */
-async function fetchCategoryMembers(catTitle){
-  const url = `${SC_WIKI_API}?action=query&list=categorymembers`
-            + `&cmtitle=${encodeURIComponent('Category:' + catTitle)}`
-            + `&cmtype=page&cmlimit=max&format=json&origin=*`;
+/* ==== SC Wiki Cargo helpers ==== */
+async function fetchCargoRows(table){
+  const params =
+    `action=cargoquery&tables=${encodeURIComponent(table)}` +
+    `&fields=_pageName,manufacturer,size,class,grade` +
+    `&limit=500&format=json&origin=*`;
+  const url = `${SC_WIKI_API}?${params}`;
   const res = await fetch(url);
-  if(!res.ok) throw new Error('HTTP '+res.status+' for '+catTitle);
+  if(!res.ok) throw new Error(`HTTP ${res.status} for ${table}`);
   const data = await res.json();
-  const arr = (data.query && data.query.categorymembers) ? data.query.categorymembers : [];
-  return arr.map(m => m.title);
+  return (data.cargoquery || []).map(e => e.title || {});
 }
 
 function wikiUrlForTitle(title){
-  // Titles are already like "XL-1" or "Hyperion (quantum drive)"
-  return SC_WIKI_BASE + encodeURIComponent(title.replace(/ /g,'_'));
+  return SC_WIKI_BASE + encodeURIComponent((title || '').replace(/ /g,'_'));
 }
 
-function upsertComponentFromWiki(name, type){
-  name = (name || '').trim();
+function normalizeGrade(raw){
+  if(!raw) return '';
+  let g = String(raw).trim().toUpperCase();
+  // Sometimes already "A", "B", "GRADE A", etc.
+  g = g.replace(/^GRADE\s+/,'');
+  return 'Grade ' + g;
+}
+
+function upsertFromCargo(row, type){
+  const name = (row._pageName || row.name || '').trim();
   if(!name) return;
+
   const existing = components.find(c =>
     c.name.toLowerCase() === name.toLowerCase() &&
     c.type === type
   );
   if(existing) return;
 
+  const size  = row.size || '';
+  const cls   = row.class || '';
+  const grade = normalizeGrade(row.grade || '');
+  const manu  = row.manufacturer || '';
+
   const c = {
     id: uid(),
     name,
     type,
-    size: '',
-    grade: '',
-    class: '',
-    manufacturer: '',
+    size,
+    grade,
+    class: cls,
+    manufacturer: manu,
     buy: '',
     notes: '',
     source: 'SC Wiki',
@@ -402,7 +416,7 @@ function upsertComponentFromWiki(name, type){
   components.push(c);
 }
 
-/* ==== Load from SC Wiki ==== */
+/* ==== Load from SC Wiki (Cargo) ==== */
 async function loadFromWiki(){
   components = [];
   editId = null;
@@ -411,9 +425,9 @@ async function loadFromWiki(){
   setStatus('Loading from SC Wiki…');
 
   try{
-    for(const [type, cat] of Object.entries(WIKI_COMPONENT_CATEGORIES)){
-      const titles = await fetchCategoryMembers(cat);
-      titles.forEach(t => upsertComponentFromWiki(t, type));
+    for(const src of CARGO_SOURCES){
+      const rows = await fetchCargoRows(src.table);
+      rows.forEach(row => upsertFromCargo(row, src.type));
     }
     render();
     populateFilters();
@@ -427,16 +441,12 @@ async function loadFromWiki(){
   }
 }
 
-/* ==== Status text ==== */
+/* ==== Status ==== */
 function setStatus(msg, ok){
   const el = $('#statusText');
   if(!el) return;
   el.innerHTML = `Status: <strong>${esc(msg)}</strong>`;
-  if(ok === false){
-    el.style.color = 'var(--bad)';
-  }else{
-    el.style.color = 'var(--muted)';
-  }
+  el.style.color = ok === false ? 'var(--bad)' : 'var(--muted)';
 }
 
 /* ==== Filters ==== */
@@ -542,33 +552,30 @@ function render(){
   const tbody = $('#rows');
   if(!arr.length){
     tbody.innerHTML = `<tr><td colspan="11" class="small" style="padding:10px">No components match your filters.</td></tr>`;
-    $('#kpiCount').textContent = '0';
-    $('#kpiType').textContent = '—';
-    return;
+  }else{
+    tbody.innerHTML = arr.map(c=>`
+      <tr>
+        <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
+        <td>${esc(c.type || '')}</td>
+        <td>${esc(c.size || '')}</td>
+        <td>${esc(c.grade || '')}</td>
+        <td>${esc(c.class || '')}</td>
+        <td>${esc(c.manufacturer || '')}</td>
+        <td>${esc(c.buy || '')}</td>
+        <td class="tagsCell">${esc(c.notes || '')}</td>
+        <td>${c.source ? `<span class="pill">${esc(c.source)}</span>` : ''}</td>
+        <td>${
+          c.wiki
+            ? `<a href="${esc(c.wiki)}" target="_blank" rel="noopener" class="small" style="color:var(--accent);text-decoration:underline">Open</a>`
+            : ''
+        }</td>
+        <td class="table-actions">
+          <button data-act="edit" data-id="${c.id}">Edit</button>
+          <button data-act="del" data-id="${c.id}" class="bad">Del</button>
+        </td>
+      </tr>
+    `).join('');
   }
-
-  tbody.innerHTML = arr.map(c=>`
-    <tr>
-      <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
-      <td>${esc(c.type || '')}</td>
-      <td>${esc(c.size || '')}</td>
-      <td>${esc(c.grade || '')}</td>
-      <td>${esc(c.class || '')}</td>
-      <td>${esc(c.manufacturer || '')}</td>
-      <td>${esc(c.buy || '')}</td>
-      <td class="tagsCell">${esc(c.notes || '')}</td>
-      <td>${c.source ? `<span class="pill">${esc(c.source)}</span>` : ''}</td>
-      <td>${
-        c.wiki
-          ? `<a href="${esc(c.wiki)}" target="_blank" rel="noopener" class="small" style="color:var(--accent);text-decoration:underline">Open</a>`
-          : ''
-      }</td>
-      <td class="table-actions">
-        <button data-act="edit" data-id="${c.id}">Edit</button>
-        <button data-act="del" data-id="${c.id}" class="bad">Del</button>
-      </td>
-    </tr>
-  `).join('');
 
   $$('#rows button[data-act]').forEach(btn => {
     const id = btn.dataset.id;
