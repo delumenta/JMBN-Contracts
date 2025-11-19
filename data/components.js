@@ -445,7 +445,7 @@
     "Component": "Cooler",
     "Size": "S4",
     "Grade": 1,
-    "Class": NaN,
+    "Class": "",
     "Manufacturer": "Wen/Cassel Propulsion",
     "Link": "https://starcitizen.fandom.com/wiki/Serac"
   },
@@ -1058,7 +1058,7 @@
     "Size": "S2",
     "Grade": 3,
     "Class": "Military",
-    "Manufacturer": NaN,
+    "Manufacturer": "",
     "Link": "https://starcitizen.fandom.com/wiki/Sukoran"
   },
   {
@@ -1156,7 +1156,7 @@
     "Component": "Quantum Drive",
     "Size": "S4",
     "Grade": 1,
-    "Class": NaN,
+    "Class": "",
     "Manufacturer": "ArcCorp",
     "Link": "https://starcitizen.fandom.com/wiki/Allegro"
   },
@@ -1517,7 +1517,7 @@
     "Size": "S2",
     "Grade": 2,
     "Class": "Competition",
-    "Manufacturer": NaN,
+    "Manufacturer": "",
     "Link": "https://starcitizen.fandom.com/wiki/SunFire"
   },
   {
@@ -1643,7 +1643,7 @@
     "Size": "C",
     "Grade": 2,
     "Class": "Civilian",
-    "Manufacturer": NaN,
+    "Manufacturer": "",
     "Link": "https://starcitizen.fandom.com/wiki/Excelsior"
   },
   {
@@ -1652,7 +1652,7 @@
     "Size": "A",
     "Grade": 3,
     "Class": "Civilian",
-    "Manufacturer": NaN,
+    "Manufacturer": "",
     "Link": "https://starcitizen.fandom.com/wiki/Exodus"
   },
   {
@@ -1660,8 +1660,8 @@
     "Component": "Jump Drive",
     "Size": "A",
     "Grade": 4,
-    "Class": NaN,
-    "Manufacturer": NaN,
+    "Class": "",
+    "Manufacturer": "",
     "Link": "https://starcitizen.fandom.com/wiki/Exfiltrate"
   },
   {
@@ -1670,7 +1670,7 @@
     "Size": "C",
     "Grade": 1,
     "Class": "Civilian",
-    "Manufacturer": NaN,
+    "Manufacturer": "",
     "Link": "https://starcitizen.fandom.com/wiki/Explorer"
   },
   {
