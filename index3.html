@@ -161,7 +161,7 @@ tr:hover{background:rgba(214,180,76,.08)}
 </head>
 <body>
 
-<!-- 🔁 Shared header mount (keep as-is) -->
+<!-- 🔁 Shared header mount -->
 <div id="header-container"></div>
 <script>
 (async () => {
@@ -209,7 +209,7 @@ tr:hover{background:rgba(214,180,76,.08)}
     </div>
     <div class="kpi-card">
       <h3>Source</h3>
-      <div class="val small" id="kpiSource">data/components.js</div>
+      <div class="val small">data/components.js</div>
     </div>
   </div>
 
@@ -239,7 +239,7 @@ tr:hover{background:rgba(214,180,76,.08)}
 <script src="js/auth.js"></script>
 
 <script>
-const JSON_URL = 'data/components.js';   // GitHub Pages: /JMBN/data/components.js
+const JSON_URL = 'data/components.js';
 
 const $  = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
@@ -247,35 +247,49 @@ function esc(s=''){ const d=document.createElement('div'); d.textContent = s ?? 
 
 let components = [];
 
-/* Map raw JSON (ship-items style) -> display shape */
+/* Map your JSON → internal fields
+   JSON keys:
+   Names, Component, Size, Grade, Class, Manufacturer, Link
+*/
 function mapJsonComponent(c){
-  // Size: numeric -> "S1", "S2", etc.
-  let size = c.size;
-  if (typeof size === 'number') size = 'S' + size;
-  else if (size == null) size = '';
+  // Name
+  const name = c.Names || c.Name || '';
 
-  // Grade: numeric 1..7 -> Grade A..G. If already a string, just use it.
-  let grade = c.grade;
+  // Type
+  const type = c.Component || '';
+
+  // Manufacturer
+  const manufacturer = (c.Manufacturer || '').trim();
+
+  // Size: "S  2" -> "S2"
+  let size = c.Size || '';
+  if (typeof size === 'string') {
+    size = size.replace(/\s+/g,'');   // remove all internal spaces
+  }
+
+  // Grade: if number -> A..G, if string -> normalise to "Grade X"
+  let grade = c.Grade;
   if (typeof grade === 'number') {
     const letters = 'ABCDEFG';
     const idx = Math.max(0, Math.min(letters.length - 1, grade - 1));
     grade = 'Grade ' + letters[idx];
-  } else if (typeof grade === 'string' && grade && !/^grade/i.test(grade)) {
-    grade = 'Grade ' + grade;
-  } else if (!grade) {
+  } else if (typeof grade === 'string' && grade.trim()) {
+    grade = /^grade/i.test(grade) ? grade : 'Grade ' + grade.trim();
+  } else {
     grade = '';
   }
 
-  // Class: your JSON doesn't really have Civilian/Stealth/etc., so we leave blank.
-  const cls = c.class || '';
+  // Class
+  const cls = c.Class || '';
 
   return {
-    name: c.name || '',
-    manufacturer: c.manufacturer || '',
-    type: c.type || '',
+    name,
+    manufacturer,
+    type,
     size,
     grade,
-    class: cls
+    class: cls,
+    link: c.Link || ''
   };
 }
 
@@ -291,8 +305,6 @@ async function loadFromJSON(){
     const json = JSON.parse(text);
     if (!Array.isArray(json)) throw new Error('Expected array in ' + JSON_URL);
 
-    // For now, keep everything (all types). If you later want only "component" types
-    // you can filter here.
     components = json.map(mapJsonComponent);
 
     populateFilters();
@@ -344,16 +356,21 @@ function render(){
   if (fg) arr = arr.filter(c => c.grade === fg);
   if (fc) arr = arr.filter(c => c.class === fc);
 
-  $('#rows').innerHTML = arr.map(c => `
-    <tr>
-      <td><b style="color:var(--accent)">${esc(c.name)}</b></td>
-      <td>${esc(c.manufacturer)}</td>
-      <td>${esc(c.type)}</td>
-      <td>${esc(c.size)}</td>
-      <td>${esc(c.grade)}</td>
-      <td>${esc(c.class || '')}</td>
-    </tr>
-  `).join('') || `
+  $('#rows').innerHTML = arr.map(c => {
+    const nameHtml = c.link
+      ? `<a href="${esc(c.link)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">${esc(c.name)}</a>`
+      : `<span style="color:var(--accent)">${esc(c.name)}</span>`;
+    return `
+      <tr>
+        <td>${nameHtml}</td>
+        <td>${esc(c.manufacturer)}</td>
+        <td>${esc(c.type)}</td>
+        <td>${esc(c.size)}</td>
+        <td>${esc(c.grade)}</td>
+        <td>${esc(c.class || '')}</td>
+      </tr>
+    `;
+  }).join('') || `
     <tr>
       <td colspan="6" class="small" style="padding:10px;">No components found.</td>
     </tr>
