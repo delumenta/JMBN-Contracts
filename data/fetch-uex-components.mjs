@@ -1,14 +1,14 @@
 // data/fetch-uex-components.mjs
 //
 // Snapshot Star Citizen ship components from UEX API → SComponents.js
-// This is meant to be run in GitHub Actions (Node 20).
+// Designed to run in GitHub Actions with Node 20+
 //
 // It will:
-// 1) Fetch categories from UEX
-// 2) Auto-detect "ship components" categories
-// 3) Fetch items for those categories
-// 4) Normalize to SComponents format
-// 5) Write data/SComponents.js
+//  1. Fetch categories from UEX
+//  2. Auto-detect "ship component" categories
+//  3. Fetch items for those categories
+//  4. Normalize into SComponents format
+//  5. Write data/SComponents.js
 
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -17,42 +17,55 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ---- CONFIG ---------------------------------------------------------
+// -------------------------------------------------------------------
+// CONFIG
+// -------------------------------------------------------------------
 
 const API_BASE = "https://api.uexcorp.uk/2.0";
 
-// If you later want to hardcode category IDs, set AUTO_DETECT_CATEGORIES=false
-// and put the IDs in CATEGORY_IDS.
+// If you want to hardcode category IDs later, set this to false
+// and put IDs into CATEGORY_IDS below.
 const AUTO_DETECT_CATEGORIES = true;
 
 const CATEGORY_IDS = [
   // e.g. 101, 102
 ];
 
-// Output file in /data
 const OUTPUT_FILE = path.join(__dirname, "SComponents.js");
 
-// ---- Helpers --------------------------------------------------------
+// -------------------------------------------------------------------
+// Helpers
+// -------------------------------------------------------------------
 
 function slugify(str = "") {
-  return String(str)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "") || "cmp-" + Math.random().toString(36).slice(2, 8);
+  return (
+    String(str)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") ||
+    "cmp-" + Math.random().toString(36).slice(2, 8)
+  );
 }
 
 async function fetchJson(url) {
-  const res = await fetch(url, { headers: { "Accept": "application/json" } });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  const res = await fetch(url, {
+    headers: { Accept: "application/json" }
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status} for ${url}`);
+  }
   return res.json();
 }
 
-// ---- Category fetching / detection ----------------------------------
+// -------------------------------------------------------------------
+// Category fetching / detection
+// -------------------------------------------------------------------
 
 function isComponentCategory(cat) {
   const section = (cat.section || "").toLowerCase();
   const name = (cat.name || "").toLowerCase();
 
+  // Most likely case
   if (section.includes("ship components")) return true;
 
   const keywords = [
@@ -70,7 +83,8 @@ function isComponentCategory(cat) {
     "mount",
     "rack"
   ];
-  return keywords.some(k => name.includes(k));
+
+  return keywords.some((k) => name.includes(k));
 }
 
 async function getComponentCategoryIds() {
@@ -81,28 +95,45 @@ async function getComponentCategoryIds() {
 
   const url = `${API_BASE}/categories?type=item`;
   console.log("Fetching categories:", url);
-  const categories = await fetchJson(url);
+
+  const categoriesResponse = await fetchJson(url);
+
+  // UEX wraps everything as { status, data }
+  const categories = Array.isArray(categoriesResponse)
+    ? categoriesResponse
+    : categoriesResponse.data || [];
+
   if (!Array.isArray(categories)) {
-    throw new Error("Expected categories array, got: " + typeof categories);
+    throw new Error(
+      "Expected categories array in response.data, got: " + typeof categories
+    );
   }
+
+  console.log("All categories count:", categories.length);
 
   const components = categories.filter(isComponentCategory);
-  console.log("All categories:", categories.length);
+
   console.log("Detected component categories:");
   for (const c of components) {
-    console.log(`  - id=${c.id} | section="${c.section}" | name="${c.name}"`);
+    console.log(
+      `  - id=${c.id} | section="${c.section}" | name="${c.name}"`
+    );
   }
 
-  const ids = components.map(c => c.id).filter(id => id != null);
+  const ids = components.map((c) => c.id).filter((id) => id != null);
+
   if (!ids.length) {
     throw new Error(
       "No component categories detected. Adjust isComponentCategory() or hardcode CATEGORY_IDS."
     );
   }
+
   return ids;
 }
 
-// ---- Mapping items -> SComponents -----------------------------------
+// -------------------------------------------------------------------
+// Mapping items → SComponents
+// -------------------------------------------------------------------
 
 function deriveType(item) {
   const section = (item.section || "").toLowerCase();
@@ -153,7 +184,9 @@ function mapItemToComponent(item) {
   const type = deriveType(item);
   const size = normaliseSize(item.size);
   const cls = deriveClass(item);
-  const manufacturer = item.company_name ? item.company_name.trim() : null;
+  const manufacturer = item.company_name
+    ? item.company_name.trim()
+    : null;
 
   let notes = "";
   if (item.notification) {
@@ -173,16 +206,18 @@ function mapItemToComponent(item) {
     name,
     type,
     size,
-    grade: null,           // UEX items endpoint doesn’t expose grade directly
+    grade: null,        // UEX items endpoint doesn’t expose grade directly
     class: cls,
     manufacturer,
-    whereToBuy: "",        // to be enriched later if you want
+    whereToBuy: "",     // can be enriched later
     notes,
     raw: item
   };
 }
 
-// ---- Main -----------------------------------------------------------
+// -------------------------------------------------------------------
+// Main
+// -------------------------------------------------------------------
 
 async function main() {
   console.log("=== UEX → SComponents snapshot ===");
@@ -191,22 +226,33 @@ async function main() {
   console.log("Fetching items for category IDs:", categoryIds.join(", "));
 
   const allItems = [];
+
   for (const idCategory of categoryIds) {
     const url = `${API_BASE}/items?id_category=${idCategory}`;
     console.log("GET", url);
-    const items = await fetchJson(url);
+
+    const itemsResponse = await fetchJson(url);
+    const items = Array.isArray(itemsResponse)
+      ? itemsResponse
+      : itemsResponse.data || [];
+
     if (!Array.isArray(items)) {
-      console.warn(`Expected items array for id_category=${idCategory}, got`, typeof items);
+      console.warn(
+        `  ! Expected items array in response.data for id_category=${idCategory}, got`,
+        typeof items
+      );
       continue;
     }
+
     console.log(`  → ${items.length} items`);
     allItems.push(...items);
   }
 
-  console.log(`Total raw items: ${allItems.length}`);
+  console.log(`Total raw items fetched: ${allItems.length}`);
 
   const mapped = allItems.map(mapItemToComponent).filter(Boolean);
 
+  // Deduplicate by type+name (UEX ids could change)
   const dedup = new Map();
   for (const c of mapped) {
     const key = `${c.type}::${c.name}`.toLowerCase();
@@ -221,7 +267,7 @@ async function main() {
 
   const header =
     "// Auto-generated from UEX items API\n" +
-    "// Do not edit manually. Run fetch-uex-components.mjs instead.\n\n";
+    "// Do not edit this file manually. Run fetch-uex-components.mjs instead.\n\n";
 
   const body =
     "export const SComponents = " +
@@ -232,7 +278,7 @@ async function main() {
   console.log("Written:", OUTPUT_FILE);
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error("ERROR in fetch-uex-components.mjs");
   console.error(err);
   process.exit(1);
