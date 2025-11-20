@@ -51,7 +51,7 @@
     #layout{
       flex:1 1 auto;
       display:grid;
-      grid-template-columns:260px minmax(0,1fr) 320px;
+      grid-template-columns:280px minmax(0,1fr) 320px;
       min-height:0;
       border-top:1px solid rgba(214,180,76,.4);
     }
@@ -363,6 +363,7 @@
     <aside id="sidebar">
       <div>
         <div class="panel-title">Filters</div>
+
         <div class="filter-group">
           <label class="filter-label" for="searchInput">Search</label>
           <input id="searchInput" class="filter-input" type="text" placeholder="Name or manufacturer…">
@@ -388,13 +389,18 @@
             <option value="">All Sizes</option>
           </select>
         </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="filterLocation">Location</label>
+          <select id="filterLocation" class="filter-select">
+            <option value="">All Locations</option>
+          </select>
+        </div>
       </div>
 
       <div>
         <div class="panel-title">Quick Picks</div>
-        <div class="chip-row" id="quickChips">
-          <!-- chips injected -->
-        </div>
+        <div class="chip-row" id="quickChips"></div>
         <div id="help-text">
           Tip: click a chip to apply a preset filter (e.g. S2 Military drives).
         </div>
@@ -444,6 +450,7 @@
     const filterComponent  = document.getElementById('filterComponent');
     const filterClass      = document.getElementById('filterClass');
     const filterSize       = document.getElementById('filterSize');
+    const filterLocation   = document.getElementById('filterLocation');
     const tableWrap        = document.getElementById('table-wrap');
     const loadingMsg       = document.getElementById('loadingMsg');
     const countText        = document.getElementById('countText');
@@ -457,32 +464,65 @@
     let currentSort = { key:'Names', dir:'asc' };
     let selectedItems = new Set();
 
-    // travel cost / location mapping (text only, no map)
+    // travel cost / location mapping (for route scoring)
     const travelCost = {
-      "Area18": 0,
-      "Bajini Point": 1,
-      "Everus Harbor": 1,
+      "Area 18": 0,
+      "Baijini Point": 1,
       "Lorville": 3,
-      "Seraphim": 2,
+      "Everus Harbor": 1,
       "Orison": 4,
-      "Port Tressler": 4,
+      "Seraphim Station": 2,
       "New Babbage": 5,
+      "Port Tressler": 4,
       "GrimHex": 3
     };
 
+    // Map shop strings to major location labels
     function routeLocationFromShopString(shopStr){
       if(!shopStr) return null;
       const s = shopStr.toLowerCase();
-      if(s.includes('area 18') || s.includes('area18')) return 'Area18';
-      if(s.includes('bajini') || s.includes('baijini')) return 'Bajini Point';
-      if(s.includes('everus')) return 'Everus Harbor';
+
+      // major LZs & orbitals
+      if(s.includes('area 18') || s.includes('area18')) return 'Area 18';
+      if(s.includes('baijini') || s.includes('bajini') || s.includes('arc-l1')) return 'Baijini Point';
       if(s.includes('lorville')) return 'Lorville';
+      if(s.includes('everus') || s.includes('hur-l1')) return 'Everus Harbor';
       if(s.includes('orison')) return 'Orison';
-      if(s.includes('seraph')) return 'Seraphim';
-      if(s.includes('tressler')) return 'Port Tressler';
+      if(s.includes('seraph')) return 'Seraphim Station';
       if(s.includes('new babbage') || s.includes('new_babbage')) return 'New Babbage';
-      if(s.includes('grimhex')) return 'GrimHex';
+      if(s.includes('tressler') || s.includes('mic-l1')) return 'Port Tressler';
+      if(s.includes('grimhex') || s.includes('grim hex')) return 'GrimHex';
+
+      // generic lagrange points (ARC/HUR/MIC/CRU-L1~L5)
+      const lag = s.match(/\b(arc|hur|mic|cru)-l[1-5]\b/);
+      if(lag){
+        return lag[0].toUpperCase(); // e.g. ARC-L2
+      }
+
+      // gateways (future)
+      const gate = s.match(/\b(pyro|terra)\s*gate\b/);
+      if(gate){
+        const sys = gate[1][0].toUpperCase()+gate[1].slice(1);
+        return `Stanton–${sys} Gate`;
+      }
+
       return null;
+    }
+
+    // enrich component with derived _locations set
+    function deriveLocationsForItem(item){
+      const locs = new Set();
+      let shops = [];
+      if(Array.isArray(item.Shops) && item.Shops.length){
+        shops = item.Shops;
+      }else if(item.WhereToBuy){
+        shops = item.WhereToBuy.split(';').map(s=>s.trim()).filter(Boolean);
+      }
+      shops.forEach(s=>{
+        const loc = routeLocationFromShopString(s);
+        if(loc) locs.add(loc);
+      });
+      item._locations = locs;
     }
 
     // load data
@@ -490,7 +530,9 @@
       .then(r => r.json())
       .then(data => {
         allComponents = Array.isArray(data) ? data : [];
+        allComponents.forEach(deriveLocationsForItem);
         buildFilterOptions(allComponents);
+        buildLocationOptions(allComponents);
         buildQuickChips(allComponents);
         applyFiltersAndRender();
       })
@@ -529,8 +571,26 @@
       filterSize.addEventListener('change', applyFiltersAndRender);
     }
 
+    function buildLocationOptions(list){
+      const locSet = new Set();
+
+      list.forEach(c=>{
+        if(c._locations){
+          c._locations.forEach(l=>locSet.add(l));
+        }
+      });
+
+      Array.from(locSet).sort().forEach(loc=>{
+        const opt = document.createElement('option');
+        opt.value = loc;
+        opt.textContent = loc;
+        filterLocation.appendChild(opt);
+      });
+
+      filterLocation.addEventListener('change', applyFiltersAndRender);
+    }
+
     function buildQuickChips(list){
-      // simple presets: S2 Military, S1 Civilian, Coolers only etc.
       const presets = [
         {label:'S2 Military', size:'2', class:'Military'},
         {label:'S1 Civilian', size:'1', class:'Civilian'},
@@ -553,6 +613,7 @@
           filterComponent.value = preset.component || '';
           filterClass.value     = preset.class || '';
           filterSize.value      = preset.size || '';
+          filterLocation.value  = '';
           applyFiltersAndRender();
         });
       });
@@ -563,11 +624,15 @@
       const fc  = filterComponent.value;
       const fcl = filterClass.value;
       const fs  = filterSize.value;
+      const fl  = filterLocation.value;
 
       let list = allComponents.filter(c=>{
         if(fc  && c.Component !== fc) return false;
         if(fcl && c.Class     !== fcl) return false;
         if(fs  && String(c.Size) !== fs) return false;
+        if(fl){
+          if(!c._locations || !c._locations.has(fl)) return false;
+        }
 
         if(q){
           const hay = [
@@ -602,6 +667,7 @@
       if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
       if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
       if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
+      if(filterLocation.value)  filters.push(`Location: ${filterLocation.value}`);
       if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
 
       activeFiltersLbl.textContent = filters.length ? filters.join(' • ') : 'Filters: none';
@@ -629,6 +695,10 @@
 
         const safeName = (c.Names || '').replace(/'/g,"\\'");
 
+        const locList = c._locations && c._locations.size
+          ? [...c._locations].join(', ')
+          : '';
+
         return `
           <tr>
             <td class="col-name">${c.Names || ''}</td>
@@ -637,7 +707,10 @@
             </td>
             <td class="col-meta">${meta}</td>
             <td>${c.Manufacturer || ''}</td>
-            <td class="col-shops">${shopStr || '<span style="color:#777;">—</span>'}</td>
+            <td class="col-shops">
+              ${shopStr || '<span style="color:#777;">—</span>'}
+              ${locList ? `<br><span style="color:var(--accent);font-size:10px;">[${locList}]</span>` : ''}
+            </td>
             <td>
               <button class="btn-add" onclick="addToCart('${safeName}')">Add</button>
             </td>
@@ -653,7 +726,7 @@
               <th class="sortable" data-key="Component">Type <span class="sort-indicator">${sortIcon('Component')}</span></th>
               <th>Meta</th>
               <th class="sortable" data-key="Manufacturer">Manufacturer <span class="sort-indicator">${sortIcon('Manufacturer')}</span></th>
-              <th>Shops</th>
+              <th>Shops / Locations</th>
               <th></th>
             </tr>
           </thead>
@@ -729,7 +802,7 @@
       }
 
       const locs = Object.keys(locMap);
-      if(!locs.length) return ['Area18']; // fallback if nothing maps
+      if(!locs.length) return ['Area 18']; // fallback
 
       const coversAll = (set)=>wanted.every(w=>set.has(w));
 
@@ -769,7 +842,7 @@
         chosen.push(bestLoc);
         for(const item of locMap[bestLoc]) remaining.delete(item);
       }
-      return chosen.length ? chosen : ['Area18'];
+      return chosen.length ? chosen : ['Area 18'];
     }
 
     function routeCost(route){
