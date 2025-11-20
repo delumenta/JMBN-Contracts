@@ -69,7 +69,7 @@
     .panel-header{
       display:flex;
       justify-content:space-between;
-      align-items:center;
+      align-items:flex-start;
       gap:10px;
       margin-bottom:10px;
       border-bottom:1px solid rgba(214,180,76,.4);
@@ -90,21 +90,9 @@
 
     .filters{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
       gap:8px;
       margin-bottom:10px;
-    }
-
-    @media (max-width:900px){
-      .filters{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media (max-width:600px){
-      .filters{
-        grid-template-columns:1fr;
-      }
     }
 
     .filter-group{
@@ -206,13 +194,21 @@
 
     td{
       border-bottom:1px solid rgba(255,255,255,.02);
-      max-width:280px;
+      max-width:320px;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
-    .col-name{font-weight:700;color:var(--accent);}
-    .col-where{font-size:var(--fs-sm);color:var(--muted);white-space:normal;}
+    .col-name{
+      font-weight:700;
+      color:var(--accent);
+    }
+
+    .col-shops{
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      white-space:normal;
+    }
 
     .pill{
       display:inline-flex;
@@ -279,33 +275,51 @@
         <div>
           <div class="panel-title">Components Registry</div>
           <div class="panel-subtitle">
-            Browse ship components by type, size, class and shops.
+            Shop for ship components by type, class, and where they’re sold across Stanton.
           </div>
         </div>
       </div>
 
+      <!-- Filters: feels like browsing a shop -->
       <div class="filters">
-        <div class="filter-group">
+        <div class="filter-group" style="grid-column:1/-1;">
           <label class="filter-label" for="searchInput">Search</label>
           <input id="searchInput" class="filter-input" type="text"
-                 placeholder="Name, manufacturer, shop…">
+                 placeholder="Name, manufacturer, shop or location…">
         </div>
+
         <div class="filter-group">
           <label class="filter-label" for="filterComponent">Component</label>
           <select id="filterComponent" class="filter-select">
             <option value="">All Components</option>
           </select>
         </div>
+
         <div class="filter-group">
           <label class="filter-label" for="filterClass">Class</label>
           <select id="filterClass" class="filter-select">
             <option value="">All Classes</option>
           </select>
         </div>
+
         <div class="filter-group">
           <label class="filter-label" for="filterSize">Size</label>
           <select id="filterSize" class="filter-select">
             <option value="">All Sizes</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="filterLocation">Location</label>
+          <select id="filterLocation" class="filter-select">
+            <option value="">All Locations</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="filterShop">Shop</label>
+          <select id="filterShop" class="filter-select">
+            <option value="">All Shops</option>
           </select>
         </div>
       </div>
@@ -337,9 +351,13 @@
   </script>
 
   <script>
-    const DATA_URL = 'data/components.js'; // JSON array with Shops, no WhereToBuy
+    const DATA_URL  = 'data/components.js';  // JSON array with Shops[]
+    const SHOPS_URL = 'data/shops.json';     // shops.json we generated
 
     let allComponents = [];
+    let shops = [];
+    let shopMap = new Map();
+
     let currentSort = { key:'Names', dir:'asc' };
 
     const tableRegion = document.getElementById('tableRegion');
@@ -351,6 +369,8 @@
     const filterComponent = document.getElementById('filterComponent');
     const filterClass     = document.getElementById('filterClass');
     const filterSize      = document.getElementById('filterSize');
+    const filterLocation  = document.getElementById('filterLocation');
+    const filterShop      = document.getElementById('filterShop');
 
     function esc(str){
       return String(str ?? '')
@@ -361,19 +381,35 @@
         .replace(/'/g,'&#039;');
     }
 
-    async function loadComponents(){
+    async function loadData(){
       try{
-        const res = await fetch(DATA_URL,{cache:'no-store'});
-        if(!res.ok) throw new Error('HTTP '+res.status);
-        const data = await res.json();
+        const [compRes, shopsRes] = await Promise.all([
+          fetch(DATA_URL,{cache:'no-store'}),
+          fetch(SHOPS_URL,{cache:'no-store'})
+        ]);
 
+        if(!compRes.ok) throw new Error('Components HTTP '+compRes.status);
+        const data = await compRes.json();
         allComponents = Array.isArray(data) ? data : [];
+
+        if(shopsRes.ok){
+          const shopsData = await shopsRes.json();
+          shops = Array.isArray(shopsData) ? shopsData : [];
+          shopMap = new Map(shops.map(s => [s.id, s]));
+        }else{
+          shops = [];
+          shopMap = new Map();
+        }
+
         buildFilterOptions(allComponents);
+        buildLocationFilter();
+        updateShopFilterOptions(); // initial shops list
+
         applyFiltersAndSort();
       }catch(err){
         console.error(err);
         tableRegion.innerHTML =
-          '<div class="error">Failed to load components data.</div>';
+          '<div class="error">Failed to load components or shops data.</div>';
       }
     }
 
@@ -403,34 +439,128 @@
       makeOptions(sizes,      filterSize);
     }
 
+    function buildLocationFilter(){
+      if(!shops.length) return;
+
+      const locSet = new Set();
+      shops.forEach(s=>{
+        const loc = (s.locationName || s.locationGuess || '').trim();
+        if(loc) locSet.add(loc);
+      });
+
+      const locations = Array.from(locSet).sort((a,b)=>a.localeCompare(b));
+      locations.forEach(loc=>{
+        const opt = document.createElement('option');
+        opt.value = loc;
+        opt.textContent = loc;
+        filterLocation.appendChild(opt);
+      });
+    }
+
+    function updateShopFilterOptions(){
+      // Reset options
+      filterShop.innerHTML = '<option value="">All Shops</option>';
+
+      if(!shops.length) return;
+
+      const selectedLoc = filterLocation.value;
+      let usableShops = shops;
+
+      if(selectedLoc){
+        usableShops = shops.filter(s=>{
+          const loc = (s.locationName || s.locationGuess || '').trim();
+          return loc === selectedLoc;
+        });
+      }
+
+      usableShops
+        .sort((a,b)=>{
+          const an = (a.shopName || a.raw || '').toLowerCase();
+          const bn = (b.shopName || b.raw || '').toLowerCase();
+          if(an < bn) return -1;
+          if(an > bn) return 1;
+          return 0;
+        })
+        .forEach(s=>{
+          const loc = (s.locationName || s.locationGuess || '').trim();
+          const label = s.shopName
+            ? `${s.shopName}${loc ? ' – ' + loc : ''}`
+            : s.raw;
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = label;
+          filterShop.appendChild(opt);
+        });
+    }
+
     function applyFiltersAndSort(){
-      const q       = searchInput.value.trim().toLowerCase();
-      const comp    = filterComponent.value;
-      const cls     = filterClass.value;
-      const size    = filterSize.value;
+      const q          = searchInput.value.trim().toLowerCase();
+      const comp       = filterComponent.value;
+      const cls        = filterClass.value;
+      const size       = filterSize.value;
+      const loc        = filterLocation.value;
+      const selectedShopId = filterShop.value;
+
+      let shopIdsForLocation = null;
+      if(loc && shops.length){
+        shopIdsForLocation = new Set(
+          shops
+            .filter(s=>{
+              const sloc = (s.locationName || s.locationGuess || '').trim();
+              return sloc === loc;
+            })
+            .map(s=>s.id)
+        );
+      }
 
       let filtered = allComponents.filter(item=>{
         if(comp && (item.Component || '').toString().trim() !== comp) return false;
         if(cls  && String(item.Class || '').trim() !== cls) return false;
-        if(size && String(item.Size || '').trim() !== size) return false;
+        if(size && String(item.Size  || '').trim() !== size) return false;
+
+        const itemShops = Array.isArray(item.Shops) ? item.Shops : [];
+
+        if(loc && shopIdsForLocation){
+          const hasLocShop = itemShops.some(id => shopIdsForLocation.has(id));
+          if(!hasLocShop) return false;
+        }
+
+        if(selectedShopId){
+          if(!itemShops.includes(selectedShopId)) return false;
+        }
 
         if(q){
-          const shopsText = Array.isArray(item.Shops)
-            ? item.Shops.join(' ').toLowerCase()
-            : '';
-
-          const hay = [
+          // Build a search haystack: component info + shop names + locations
+          const baseFields = [
             item.Names,
             item.Manufacturer,
             item.Component,
             item.Class,
             item.Size
-          ]
-          .map(v=>String(v||'').toLowerCase())
-          .join(' ') + ' ' + shopsText;
+          ].map(v=>String(v||'').toLowerCase()).join(' ');
 
+          let shopWords = '';
+          if(itemShops.length && shops.length && shopMap.size){
+            const parts = [];
+            itemShops.forEach(id=>{
+              const s = shopMap.get(id);
+              if(!s) return;
+              if(s.raw) parts.push(s.raw);
+              if(s.shopName) parts.push(s.shopName);
+              if(s.locationName || s.locationGuess){
+                parts.push(s.locationName || s.locationGuess);
+              }
+            });
+            shopWords = parts.join(' ').toLowerCase();
+          }else{
+            // fallback: raw shop ids
+            shopWords = itemShops.join(' ').toLowerCase();
+          }
+
+          const hay = baseFields + ' ' + shopWords;
           if(!hay.includes(q)) return false;
         }
+
         return true;
       });
 
@@ -456,6 +586,8 @@
       if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
       if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
       if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
+      if(filterLocation.value)  filters.push(`Location: ${filterLocation.value}`);
+      if(filterShop.value)      filters.push(`Shop: ${filterShop.options[filterShop.selectedIndex].textContent}`);
       if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
 
       activeFiltersLabel.textContent = filters.length ? filters.join(' • ') : 'None';
@@ -491,9 +623,32 @@
                 ? ''
                 : String(item.Grade);
 
-              const shopsText = Array.isArray(item.Shops) && item.Shops.length
-                ? item.Shops.join('; ')
-                : '';
+              const itemShops = Array.isArray(item.Shops) ? item.Shops : [];
+              let shopsText = '';
+
+              if(itemShops.length && shops.length && shopMap.size){
+                const labels = [];
+                itemShops.forEach(id=>{
+                  const s = shopMap.get(id);
+                  if(!s){
+                    labels.push(id);
+                    return;
+                  }
+                  const loc = (s.locationName || s.locationGuess || '').trim();
+                  if(s.shopName){
+                    labels.push(loc ? `${s.shopName} – ${loc}` : s.shopName);
+                  }else{
+                    labels.push(s.raw || id);
+                  }
+                });
+                shopsText = labels.join('; ');
+              }else{
+                shopsText = itemShops.join('; ');
+              }
+
+              if(!shopsText){
+                shopsText = 'No known shops (loot-only / unavailable)';
+              }
 
               return `
                 <tr>
@@ -503,7 +658,7 @@
                   <td><span class="pill pill-grade">${esc(gradeStr)}</span></td>
                   <td><span class="pill pill-class">${esc(item.Class || '')}</span></td>
                   <td>${esc(item.Manufacturer || '')}</td>
-                  <td class="col-where">${esc(shopsText)}</td>
+                  <td class="col-shops">${esc(shopsText)}</td>
                 </tr>`;
             }).join('')}
           </tbody>
@@ -528,12 +683,25 @@
     }
 
     // Hook up filter events
-    [searchInput, filterComponent, filterClass, filterSize].forEach(el=>{
+    [
+      searchInput,
+      filterComponent,
+      filterClass,
+      filterSize,
+      filterLocation,
+      filterShop
+    ].forEach(el=>{
       el.addEventListener('input', applyFiltersAndSort);
       el.addEventListener('change', applyFiltersAndSort);
     });
 
-    loadComponents();
+    // When location changes, update shop list then re-filter
+    filterLocation.addEventListener('change',()=>{
+      updateShopFilterOptions();
+      applyFiltersAndSort();
+    });
+
+    loadData();
   </script>
 </body>
 </html>
