@@ -1,12 +1,12 @@
 name: Update Components (UEX)
 
 on:
-  # Allows you to trigger manually from GitHub Actions tab
   workflow_dispatch:
-
-  # Optional: run automatically every Sunday at 00:00 UTC
   schedule:
     - cron: "0 0 * * 0"
+
+permissions:
+  contents: write
 
 jobs:
   update-components:
@@ -27,5 +27,5 @@ jobs:
       - name: Commit updated SComponents.js
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "chore: update SComponents from UEX"
+          commit_message: "update: SComponents from UEX API"
           file_pattern: data/SComponents.js
