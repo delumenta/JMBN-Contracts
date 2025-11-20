@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>JMBN Shopping Route Planner</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN Components</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,367 +24,516 @@
       --text:#f7f1d0;
       --muted:#c9b06a;
       --bad:#ff6b6b;
-      --good:#8be38b;
+
       --fs-base:14px;
       --fs-sm:12px;
       --fs-lg:16px;
     }
+
     *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      background:#000;
+
+    html,body{
+      height:100%;
+      background:radial-gradient(circle at top,#1b160a 0,#000 55%);
       color:var(--text);
       font-family:'Play',sans-serif;
-      padding:14px;
-    }
-    #header-container{
-      margin-bottom:10px;
-    }
-    main{
-      max-width:1200px;
-      margin:0 auto;
     }
 
-    .layout{
-      display:grid;
-      grid-template-columns:350px 1fr;
-      gap:12px;
+    body{
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+      padding:14px;
     }
-    @media(max-width:900px){
-      .layout{grid-template-columns:1fr}
+
+    /* Header container where header.html will be injected */
+    #site-header{
+      margin-bottom:12px;
+    }
+
+    main{
+      flex:1;
+      max-width:1400px;
+      margin:0 auto;
+      width:100%;
     }
 
     .panel{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:12px;
-      box-shadow:0 0 18px rgba(214,180,76,.22), inset 0 0 0 1px rgba(214,180,76,.12);
+      background:linear-gradient(145deg,#050505,#101010);
+      border:1px solid rgba(214,180,76,.7);
+      box-shadow:0 0 20px rgba(0,0,0,.7);
+      border-radius:14px;
+      padding:14px 14px 18px;
     }
 
-    /* form */
-    .field{margin-bottom:10px}
-    .label{font-size:var(--fs-sm);color:var(--muted);margin-bottom:4px}
-    .input, .select{
-      width:100%;
-      background:#0a0a0a;
-      border:1px solid var(--border);
-      border-radius:8px;
-      padding:8px;
-      color:var(--text);
-      font-family:inherit;
-      outline:none;
-    }
-    .btn{
-      padding:8px 10px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      background:#0c0c0c;
-      color:var(--accent);
-      cursor:pointer;
-      transition:.15s;
-      font-family:'Play',sans-serif;
-      width:100%;
-    }
-    .btn:hover{
-      background:var(--accent);
-      color:#000;
-      transform:translateY(-1px);
-    }
-
-    .list{
-      max-height:300px;
-      overflow:auto;
-      border:1px solid rgba(214,180,76,.4);
-      border-radius:8px;
-      background:#050505;
-      padding:8px;
+    .panel-header{
       display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-
-    .item-row{
-      padding:8px;
-      background:#0b0b0b;
-      border-radius:8px;
-      border:1px solid rgba(214,180,76,.3);
-      cursor:pointer;
-      transition:.15s;
-    }
-    .item-row:hover{background:#151515}
-
-    .item-row.selected{
-      background:#1e1a12;
-      border-color:var(--accent);
-    }
-
-    /* output */
-    .route-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      justify-content:space-between;
+      align-items:center;
       gap:10px;
+      margin-bottom:10px;
+      border-bottom:1px solid rgba(214,180,76,.4);
+      padding-bottom:8px;
     }
 
-    .route-card{
-      background:#0c0c0c;
-      border:1px solid rgba(214,180,76,.6);
-      border-radius:12px;
-      padding:10px;
-    }
-
-    .route-title{
-      font-size:var(--fs-base);
+    .panel-title{
+      font-size:clamp(16px,2vw,20px);
+      letter-spacing:.08em;
+      text-transform:uppercase;
       color:var(--accent);
-      font-weight:700;
-      border-bottom:1px solid rgba(214,180,76,.35);
-      padding-bottom:4px;
-      margin-bottom:4px;
     }
 
-    .comp-line{
+    .panel-subtitle{
       font-size:var(--fs-sm);
       color:var(--muted);
-      padding:3px 0;
-      border-bottom:1px dashed rgba(214,180,76,.2);
     }
 
-    .copy-box{
-      margin-top:12px;
+    .filters{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    @media (max-width:900px){
+      .filters{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:600px){
+      .filters{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .filter-group{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      font-size:var(--fs-sm);
+    }
+
+    .filter-label{
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+    }
+
+    .filter-input,
+    .filter-select{
+      background:var(--sub);
       border:1px solid rgba(214,180,76,.5);
-      border-radius:8px;
-      padding:8px;
-    }
-    .copy-box textarea{
-      width:100%;
-      background:#050505;
-      border:1px solid rgba(214,180,76,.4);
+      border-radius:999px;
+      padding:6px 10px;
       color:var(--text);
-      border-radius:8px;
-      padding:8px;
-      resize:vertical;
-      min-height:80px;
-      font-family:'Play',monospace;
-      font-size:11px;
+      font-size:var(--fs-base);
+      outline:none;
+      transition:border-color .15s,box-shadow .15s,background .15s;
     }
+
+    .filter-input::placeholder{
+      color:rgba(247,241,208,.5);
+    }
+
+    .filter-input:focus,
+    .filter-select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(242,214,117,.5);
+      background:#151515;
+    }
+
+    .table-wrap{
+      margin-top:6px;
+      border-radius:10px;
+      border:1px solid rgba(214,180,76,.6);
+      overflow:hidden;
+      background:radial-gradient(circle at top,#18120a 0,#050505 60%);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:var(--fs-base);
+    }
+
+    thead{
+      background:rgba(6,6,6,.98);
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+
+    th,td{
+      padding:6px 10px;
+      text-align:left;
+      white-space:nowrap;
+    }
+
+    th{
+      font-weight:700;
+      font-size:var(--fs-sm);
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      border-bottom:1px solid rgba(214,180,76,.4);
+      color:var(--muted);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    th.sortable:hover{
+      color:var(--accent);
+      background:rgba(214,180,76,.08);
+    }
+
+    th .sort-indicator{
+      font-size:10px;
+      margin-left:4px;
+      opacity:.7;
+    }
+
+    tbody tr:nth-child(even){
+      background:rgba(12,12,12,.85);
+    }
+
+    tbody tr:nth-child(odd){
+      background:rgba(5,5,5,.9);
+    }
+
+    tbody tr:hover{
+      background:rgba(40,32,18,.9);
+    }
+
+    td{
+      border-bottom:1px solid rgba(255,255,255,.02);
+      max-width:280px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .col-name{font-weight:700;color:var(--accent);}
+    .col-where{font-size:var(--fs-sm);color:var(--muted);white-space:normal;}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.7);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .pill-component{border-color:rgba(242,214,117,.8);}
+    .pill-size{border-color:rgba(155,214,255,.8);}
+    .pill-grade{border-color:rgba(255,188,120,.8);}
+    .pill-class{border-color:rgba(186,255,186,.8);}
+
+    .status-bar{
+      margin-top:6px;
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .status-bar strong{
+      color:var(--accent);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.5);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .loading,
+    .error,
+    .empty{
+      padding:16px;
+      text-align:center;
+      font-size:var(--fs-base);
+    }
+
+    .loading{color:var(--muted);}
+    .error{color:var(--bad);}
   </style>
 </head>
 <body>
+  <!-- Shared header will be injected here -->
+  <header id="site-header"></header>
 
-<div id="header-container"></div>
-<script>
-(async () => {
-  try{
-    const res = await fetch('header.html');
-    const html = await res.text();
-    document.getElementById('header-container').outerHTML = html;
+  <main>
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Components Registry</div>
+          <div class="panel-subtitle">
+            Browse ship components by type, size, class and shops.
+          </div>
+        </div>
+      </div>
 
-    // highlight nav
-    requestAnimationFrame(()=>{
-      const here=(location.pathname.split('/').pop()||'shopping.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a=>{
-        if(a.getAttribute('href')?.toLowerCase()===here){
-          a.classList.add('active');
+      <div class="filters">
+        <div class="filter-group">
+          <label class="filter-label" for="searchInput">Search</label>
+          <input id="searchInput" class="filter-input" type="text"
+                 placeholder="Name, manufacturer, shop…">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterComponent">Component</label>
+          <select id="filterComponent" class="filter-select">
+            <option value="">All Components</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterClass">Class</label>
+          <select id="filterClass" class="filter-select">
+            <option value="">All Classes</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterSize">Size</label>
+          <select id="filterSize" class="filter-select">
+            <option value="">All Sizes</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="tableRegion" class="table-wrap">
+        <div class="loading">Loading components…</div>
+      </div>
+
+      <div id="statusBar" class="status-bar" style="display:none;">
+        <div><strong id="countText"></strong></div>
+        <div class="badge">
+          Active filters:
+          <span id="activeFiltersLabel">None</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Inject shared header.html
+    fetch('header.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('site-header').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Failed to load header.html', err);
+      });
+  </script>
+
+  <script>
+    const DATA_URL = 'data/components.js'; // JSON array with Shops, no WhereToBuy
+
+    let allComponents = [];
+    let currentSort = { key:'Names', dir:'asc' };
+
+    const tableRegion = document.getElementById('tableRegion');
+    const statusBar   = document.getElementById('statusBar');
+    const countText   = document.getElementById('countText');
+    const activeFiltersLabel = document.getElementById('activeFiltersLabel');
+
+    const searchInput     = document.getElementById('searchInput');
+    const filterComponent = document.getElementById('filterComponent');
+    const filterClass     = document.getElementById('filterClass');
+    const filterSize      = document.getElementById('filterSize');
+
+    function esc(str){
+      return String(str ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
+
+    async function loadComponents(){
+      try{
+        const res = await fetch(DATA_URL,{cache:'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+
+        allComponents = Array.isArray(data) ? data : [];
+        buildFilterOptions(allComponents);
+        applyFiltersAndSort();
+      }catch(err){
+        console.error(err);
+        tableRegion.innerHTML =
+          '<div class="error">Failed to load components data.</div>';
+      }
+    }
+
+    function buildFilterOptions(list){
+      const components = new Set();
+      const classes    = new Set();
+      const sizes      = new Set();
+
+      list.forEach(item=>{
+        if(item.Component) components.add(item.Component.toString().trim());
+        if(item.Class)     classes.add(String(item.Class).trim());
+        if(item.Size)      sizes.add(String(item.Size).trim());
+      });
+
+      const makeOptions = (set, selectEl)=>{
+        const values = Array.from(set).filter(Boolean).sort((a,b)=>a.localeCompare(b));
+        values.forEach(v=>{
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v;
+          selectEl.appendChild(opt);
+        });
+      };
+
+      makeOptions(components, filterComponent);
+      makeOptions(classes,    filterClass);
+      makeOptions(sizes,      filterSize);
+    }
+
+    function applyFiltersAndSort(){
+      const q       = searchInput.value.trim().toLowerCase();
+      const comp    = filterComponent.value;
+      const cls     = filterClass.value;
+      const size    = filterSize.value;
+
+      let filtered = allComponents.filter(item=>{
+        if(comp && (item.Component || '').toString().trim() !== comp) return false;
+        if(cls  && String(item.Class || '').trim() !== cls) return false;
+        if(size && String(item.Size || '').trim() !== size) return false;
+
+        if(q){
+          const shopsText = Array.isArray(item.Shops)
+            ? item.Shops.join(' ').toLowerCase()
+            : '';
+
+          const hay = [
+            item.Names,
+            item.Manufacturer,
+            item.Component,
+            item.Class,
+            item.Size
+          ]
+          .map(v=>String(v||'').toLowerCase())
+          .join(' ') + ' ' + shopsText;
+
+          if(!hay.includes(q)) return false;
         }
+        return true;
       });
-    });
-  }catch(e){console.warn('Header load failed',e)}
-})();
-</script>
 
-<main>
-  <div class="layout">
-
-    <!-- LEFT: component picking -->
-    <section class="panel">
-      <h2 style="color:var(--accent);margin-bottom:8px;">Shopping Planner</h2>
-
-      <div class="field">
-        <div class="label">Search components</div>
-        <input id="searchInput" class="input" placeholder="XL-1, FR-76, DuraJet…">
-      </div>
-
-      <div id="compList" class="list"></div>
-
-      <div style="margin-top:10px;display:flex;gap:8px;">
-        <button id="generateBtn" class="btn">Generate Route</button>
-        <button id="clearBtn" class="btn" style="background:#050505;color:var(--muted);">Clear</button>
-      </div>
-    </section>
-
-    <!-- RIGHT: results -->
-    <section class="panel">
-      <h2 style="color:var(--accent);margin-bottom:8px;">Route Result</h2>
-      <div id="output">
-        <div style="color:var(--muted);font-size:var(--fs-sm);">
-          Select components on the left and click <b>Generate Route</b>.
-        </div>
-      </div>
-
-      <div id="copyBox" class="copy-box" style="display:none;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <span style="color:var(--muted);font-size:var(--fs-sm);">Shareable Summary</span>
-          <button id="copyBtn" class="btn" style="padding:4px 8px;width:auto;">Copy</button>
-        </div>
-        <textarea id="copyText" readonly></textarea>
-      </div>
-
-    </section>
-  </div>
-</main>
-
-<script>
-  const DATA_URL='data/components.js';
-
-  let master = [];
-  let selected = new Set();
-
-  const searchInput=document.getElementById('searchInput');
-  const compList=document.getElementById('compList');
-  const output=document.getElementById('output');
-  const generateBtn=document.getElementById('generateBtn');
-  const clearBtn=document.getElementById('clearBtn');
-  const copyBox=document.getElementById('copyBox');
-  const copyBtn=document.getElementById('copyBtn');
-  const copyText=document.getElementById('copyText');
-
-  function esc(t){
-    const d=document.createElement('div');
-    d.textContent=t??'';
-    return d.innerHTML;
-  }
-
-  async function init(){
-    try{
-      const res=await fetch(DATA_URL,{cache:'no-store'});
-      master = await res.json();
-    }catch(e){ master=[]; }
-
-    renderList();
-  }
-
-  function renderList(){
-    const q = searchInput.value.trim().toLowerCase();
-    let arr = master;
-
-    if(q){
-      arr = arr.filter(c =>
-        (c.Names||'').toLowerCase().includes(q) ||
-        (c.Component||'').toLowerCase().includes(q) ||
-        (c.Manufacturer||'').toLowerCase().includes(q)
-      );
-    }
-
-    compList.innerHTML = arr.map((c,i)=>{
-      const id = c.Names;
-      const sel = selected.has(id);
-      return `
-        <div class="item-row ${sel?'selected':''}" data-id="${esc(id)}">
-          <div><b>${esc(c.Names)}</b> <span style="color:${sel?'#f2d675':'#c9b06a'};">(${esc(c.Component)})</span></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(c.Manufacturer||'')}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  compList.addEventListener('click', e=>{
-    const row = e.target.closest('.item-row');
-    if(!row) return;
-    const id = row.dataset.id;
-    if(selected.has(id)) selected.delete(id);
-    else selected.add(id);
-    renderList();
-  });
-
-  clearBtn.onclick=()=>{
-    selected.clear();
-    renderList();
-    output.innerHTML=`<div style="color:var(--muted);font-size:var(--fs-sm);">Selection cleared.</div>`;
-    copyBox.style.display='none';
-  };
-
-  generateBtn.onclick = ()=>{
-    if(selected.size===0){
-      output.innerHTML=`<div style="color:var(--bad);font-size:var(--fs-sm);">Pick at least one component.</div>`;
-      copyBox.style.display='none';
-      return;
-    }
-    generateRoute();
-  };
-
-  /* ===== Route planner ===== */
-  function generateRoute(){
-    const items = [...selected].map(id=> master.find(c=>c.Names===id));
-
-    // Group components by WhereToBuy
-    const map = new Map();
-    for(const c of items){
-      const w = (c.WhereToBuy || 'Unknown / Loot').trim();
-      if(!map.has(w)) map.set(w, []);
-      map.get(w).push(c);
-    }
-
-    // Sort shops by how many items they cover (best first)
-    const shops = [...map.entries()].sort((a,b)=> b[1].length - a[1].length);
-
-    let html = `
-      <div style="margin-bottom:8px;">
-        <span style="color:var(--accent);font-size:var(--fs-base);font-weight:700;">
-          ${items.length} components, ${shops.length} stops
-        </span>
-      </div>
-      <div class="route-grid">
-    `;
-
-    for(const [shop,list] of shops){
-      html += `
-        <div class="route-card">
-          <div class="route-title">${esc(shop)}</div>
-          ${list.map(c=>`
-            <div class="comp-line">
-              <b>${esc(c.Names)}</b> — ${esc(c.Component)}
-              <br><span style="font-size:11px;color:var(--muted);">${esc(c.Manufacturer||'')}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-
-    html += `</div>`; // end route-grid
-
-    output.innerHTML = html;
-
-    // Copy summary
-    buildCopy(shops);
-  }
-
-  function buildCopy(shops){
-    const lines=[];
-    lines.push("JMBN Shopping Route");
-    lines.push("----------------------");
-    lines.push("");
-
-    shops.forEach(([shop,list])=>{
-      lines.push(`${shop} — ${list.length} item(s)`);
-      list.forEach(c=>{
-        lines.push(`  - ${c.Names} (${c.Component})`);
+      filtered.sort((a,b)=>{
+        const key = currentSort.key;
+        let av = (a[key] ?? '').toString().toLowerCase();
+        let bv = (b[key] ?? '').toString().toLowerCase();
+        if(av < bv) return currentSort.dir === 'asc' ? -1 : 1;
+        if(av > bv) return currentSort.dir === 'asc' ? 1 : -1;
+        return 0;
       });
-      lines.push("");
+
+      renderTable(filtered);
+      updateStatus(filtered.length);
+    }
+
+    function updateStatus(count){
+      const total = allComponents.length;
+      statusBar.style.display = 'flex';
+      countText.textContent = `${count} of ${total} components shown`;
+
+      const filters = [];
+      if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
+      if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
+      if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
+      if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
+
+      activeFiltersLabel.textContent = filters.length ? filters.join(' • ') : 'None';
+    }
+
+    function renderTable(list){
+      if(!list.length){
+        tableRegion.innerHTML = '<div class="empty">No components match your filters.</div>';
+        return;
+      }
+
+      const sortIcon = (key)=>{
+        if(currentSort.key !== key) return '';
+        return currentSort.dir === 'asc' ? '▲' : '▼';
+      };
+
+      const headerHtml = `
+        <table>
+          <thead>
+            <tr>
+              <th class="sortable" data-key="Names">Name <span class="sort-indicator">${sortIcon('Names')}</span></th>
+              <th class="sortable" data-key="Component">Component <span class="sort-indicator">${sortIcon('Component')}</span></th>
+              <th class="sortable" data-key="Size">Size <span class="sort-indicator">${sortIcon('Size')}</span></th>
+              <th class="sortable" data-key="Grade">Grade <span class="sort-indicator">${sortIcon('Grade')}</span></th>
+              <th class="sortable" data-key="Class">Class <span class="sort-indicator">${sortIcon('Class')}</span></th>
+              <th class="sortable" data-key="Manufacturer">Manufacturer <span class="sort-indicator">${sortIcon('Manufacturer')}</span></th>
+              <th>Shops</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${list.map(item=>{
+              const gradeStr = item.Grade === null || item.Grade === undefined
+                ? ''
+                : String(item.Grade);
+
+              const shopsText = Array.isArray(item.Shops) && item.Shops.length
+                ? item.Shops.join('; ')
+                : '';
+
+              return `
+                <tr>
+                  <td class="col-name">${esc(item.Names || '')}</td>
+                  <td><span class="pill pill-component">${esc(item.Component || '')}</span></td>
+                  <td><span class="pill pill-size">${esc(item.Size || '')}</span></td>
+                  <td><span class="pill pill-grade">${esc(gradeStr)}</span></td>
+                  <td><span class="pill pill-class">${esc(item.Class || '')}</span></td>
+                  <td>${esc(item.Manufacturer || '')}</td>
+                  <td class="col-where">${esc(shopsText)}</td>
+                </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      tableRegion.innerHTML = headerHtml;
+
+      // Attach sort handlers
+      tableRegion.querySelectorAll('th.sortable').forEach(th=>{
+        th.addEventListener('click',()=>{
+          const key = th.getAttribute('data-key');
+          if(currentSort.key === key){
+            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+          }else{
+            currentSort.key = key;
+            currentSort.dir = 'asc';
+          }
+          applyFiltersAndSort();
+        });
+      });
+    }
+
+    // Hook up filter events
+    [searchInput, filterComponent, filterClass, filterSize].forEach(el=>{
+      el.addEventListener('input', applyFiltersAndSort);
+      el.addEventListener('change', applyFiltersAndSort);
     });
 
-    copyText.value = lines.join("\n");
-    copyBox.style.display='block';
-  }
-
-  copyBtn.onclick=async ()=>{
-    try{
-      await navigator.clipboard.writeText(copyText.value);
-      copyBtn.textContent='Copied!';
-      setTimeout(()=>copyBtn.textContent='Copy',1200);
-    }catch{alert('Copy failed.')}
-  };
-
-  init();
-</script>
-
+    loadComponents();
+  </script>
 </body>
 </html>
