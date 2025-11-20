@@ -1,0 +1,31 @@
+name: Update Components (UEX)
+
+on:
+  # Allows you to trigger manually from GitHub Actions tab
+  workflow_dispatch:
+
+  # Optional: run automatically every Sunday at 00:00 UTC
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  update-components:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run UEX fetch script
+        run: node data/fetch-uex-components.mjs
+
+      - name: Commit updated SComponents.js
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: update SComponents from UEX"
+          file_pattern: data/SComponents.js
