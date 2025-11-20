@@ -1,14 +1,7 @@
 // data/fetch-uex-components.mjs
 //
 // Snapshot Star Citizen ship components from UEX API → SComponents.js
-// Designed to run in GitHub Actions with Node 20+
-//
-// It will:
-//  1. Fetch categories from UEX
-//  2. Auto-detect "ship component" categories
-//  3. Fetch items for those categories
-//  4. Normalize into SComponents format
-//  5. Write data/SComponents.js
+// Designed for GitHub Actions (Node 20+)
 
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -17,25 +10,12 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// -------------------------------------------------------------------
-// CONFIG
-// -------------------------------------------------------------------
-
 const API_BASE = "https://api.uexcorp.uk/2.0";
-
-// If you want to hardcode category IDs later, set this to false
-// and put IDs into CATEGORY_IDS below.
-const AUTO_DETECT_CATEGORIES = true;
-
-const CATEGORY_IDS = [
-  // e.g. 101, 102
-];
-
 const OUTPUT_FILE = path.join(__dirname, "SComponents.js");
 
-// -------------------------------------------------------------------
-// Helpers
-// -------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// HELPERS
+// -----------------------------------------------------------------------------
 
 function slugify(str = "") {
   return (
@@ -48,226 +28,178 @@ function slugify(str = "") {
 }
 
 async function fetchJson(url) {
-  const res = await fetch(url, {
-    headers: { Accept: "application/json" }
-  });
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status} for ${url}`);
-  }
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
   return res.json();
 }
 
-// -------------------------------------------------------------------
-// Category fetching / detection
-// -------------------------------------------------------------------
+function unwrap(res) {
+  return Array.isArray(res) ? res : res.data || [];
+}
 
-function isComponentCategory(cat) {
-  const section = (cat.section || "").toLowerCase();
+// -----------------------------------------------------------------------------
+// CATEGORY DETECTION
+// -----------------------------------------------------------------------------
+
+function looksLikeComponentCategory(cat) {
   const name = (cat.name || "").toLowerCase();
+  const sec = (cat.section || "").toLowerCase();
 
-  // Most likely case
-  if (section.includes("ship components")) return true;
+  if (sec.includes("ship components")) return true;
 
   const keywords = [
     "quantum",
     "shield",
     "power plant",
     "cooler",
+    "jump",
     "computer",
     "radar",
-    "jump",
-    "scanner",
-    "turret",
     "weapon",
-    "missile",
     "mount",
-    "rack"
+    "rack",
+    "scanner",
+    "missile",
+    "turret"
   ];
 
   return keywords.some((k) => name.includes(k));
 }
 
 async function getComponentCategoryIds() {
-  if (!AUTO_DETECT_CATEGORIES && CATEGORY_IDS.length) {
-    console.log("Using hardcoded category IDs:", CATEGORY_IDS);
-    return CATEGORY_IDS;
-  }
-
   const url = `${API_BASE}/categories?type=item`;
-  console.log("Fetching categories:", url);
+  const raw = await fetchJson(url);
+  const categories = unwrap(raw);
 
-  const categoriesResponse = await fetchJson(url);
-
-  // UEX wraps everything as { status, data }
-  const categories = Array.isArray(categoriesResponse)
-    ? categoriesResponse
-    : categoriesResponse.data || [];
-
-  if (!Array.isArray(categories)) {
-    throw new Error(
-      "Expected categories array in response.data, got: " + typeof categories
-    );
-  }
-
-  console.log("All categories count:", categories.length);
-
-  const components = categories.filter(isComponentCategory);
-
-  console.log("Detected component categories:");
-  for (const c of components) {
-    console.log(
-      `  - id=${c.id} | section="${c.section}" | name="${c.name}"`
-    );
-  }
-
-  const ids = components.map((c) => c.id).filter((id) => id != null);
-
-  if (!ids.length) {
-    throw new Error(
-      "No component categories detected. Adjust isComponentCategory() or hardcode CATEGORY_IDS."
-    );
-  }
-
-  return ids;
+  const comps = categories.filter(looksLikeComponentCategory);
+  return comps.map((c) => c.id);
 }
 
-// -------------------------------------------------------------------
-// Mapping items → SComponents
-// -------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// TYPE / CLASS / SIZE MAPPERS
+// -----------------------------------------------------------------------------
 
-function deriveType(item) {
-  const section = (item.section || "").toLowerCase();
-  const category = (item.category || "").toLowerCase();
-  const name = (item.name || "").toLowerCase();
-  const combo = `${section} ${category} ${name}`;
+function normaliseType(item) {
+  const full = `${item.section || ""} ${item.category || ""} ${item.name || ""}`.toLowerCase();
 
-  if (combo.includes("quantum")) return "Quantum Drive";
-  if (combo.includes("shield")) return "Shield Generator";
-  if (combo.includes("power plant")) return "Power Plant";
-  if (combo.includes("cooler")) return "Cooler";
-  if (combo.includes("computer")) return "Computer";
-  if (combo.includes("radar")) return "Radar";
-  if (combo.includes("jump")) return "Jump Module";
-  if (combo.includes("scanner")) return "Scanner";
-  if (combo.includes("turret")) return "Turret";
-  if (combo.includes("missile") && combo.includes("rack")) return "Missile Rack";
-  if (combo.includes("weapon") && combo.includes("mount")) return "Weapon Mount";
+  if (full.includes("quantum")) return "Quantum Drive";
+  if (full.includes("shield")) return "Shield Generator";
+  if (full.includes("power plant")) return "Power Plant";
+  if (full.includes("cooler")) return "Cooler";
+  if (full.includes("jump")) return "Jump Module";
+  if (full.includes("computer")) return "Computer";
+  if (full.includes("radar")) return "Radar";
+  if (full.includes("scanner")) return "Scanner";
+  if (full.includes("turret")) return "Turret";
+  if (full.includes("weapon") && full.includes("mount")) return "Weapon Mount";
+  if (full.includes("missile") && full.includes("rack")) return "Missile Rack";
 
-  if (item.category) return item.category;
-  if (item.section) return item.section;
-  return "Component";
+  return item.category || item.section || "Component";
 }
 
-function deriveClass(item) {
-  const src = `${item.category || ""} ${item.section || ""}`.toLowerCase();
-  if (src.includes("military")) return "Military";
-  if (src.includes("civilian")) return "Civilian";
-  if (src.includes("industrial")) return "Industrial";
-  if (src.includes("stealth")) return "Stealth";
-  if (src.includes("competition")) return "Competition";
+function normaliseClass(item) {
+  const test = `${item.category || ""} ${item.section || ""}`.toLowerCase();
+  if (test.includes("military")) return "Military";
+  if (test.includes("civilian")) return "Civilian";
+  if (test.includes("industrial")) return "Industrial";
+  if (test.includes("stealth")) return "Stealth";
+  if (test.includes("competition")) return "Competition";
   return null;
 }
 
 function normaliseSize(size) {
   if (!size) return null;
-  const str = String(size).trim().toUpperCase();
-  if (/^S\d+/.test(str)) return str;
-  const num = str.replace(/[^\d]/g, "");
-  return num ? `S${num}` : null;
+  const s = String(size).toUpperCase().trim();
+  if (/^S\d+/.test(s)) return s;
+  const n = s.replace(/[^\d]/g, "");
+  return n ? `S${n}` : null;
 }
 
-function mapItemToComponent(item) {
-  const uexId = item.id;
-  const name = (item.name || "").trim();
-  if (!name) return null;
+// -----------------------------------------------------------------------------
+// SHOPS (WHERE TO BUY)
+// -----------------------------------------------------------------------------
 
-  const type = deriveType(item);
-  const size = normaliseSize(item.size);
-  const cls = deriveClass(item);
-  const manufacturer = item.company_name
-    ? item.company_name.trim()
-    : null;
+async function fetchShopsForItem(itemId) {
+  const url = `${API_BASE}/items_prices?id_item=${itemId}`;
+  const raw = await fetchJson(url);
+  const records = unwrap(raw);
 
-  let notes = "";
-  if (item.notification) {
-    try {
-      notes =
-        typeof item.notification === "string"
-          ? item.notification
-          : JSON.stringify(item.notification);
-    } catch {
-      notes = "";
-    }
+  const shops = [];
+
+  for (const rec of records) {
+    if (!rec.store || !rec.store.location) continue;
+    const store = rec.store.location;
+
+    shops.push(
+      `${store.planet || ""} ${store.city || ""} ${store.base || ""}`
+        .replace(/\s+/g, " ")
+        .trim()
+    );
   }
 
-  return {
-    id: "cmp-" + slugify(name),
-    uexId,
-    name,
-    type,
-    size,
-    grade: null,        // UEX items endpoint doesn’t expose grade directly
-    class: cls,
-    manufacturer,
-    whereToBuy: "",     // can be enriched later
-    notes,
-    raw: item
-  };
+  return Array.from(new Set(shops)).filter(Boolean);
 }
 
-// -------------------------------------------------------------------
-// Main
-// -------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// MAIN
+// -----------------------------------------------------------------------------
 
 async function main() {
-  console.log("=== UEX → SComponents snapshot ===");
+  console.log("=== Fetching UEX Components ===");
 
+  // Step 1: Find all relevant categories
   const categoryIds = await getComponentCategoryIds();
-  console.log("Fetching items for category IDs:", categoryIds.join(", "));
 
   const allItems = [];
 
-  for (const idCategory of categoryIds) {
-    const url = `${API_BASE}/items?id_category=${idCategory}`;
-    console.log("GET", url);
-
-    const itemsResponse = await fetchJson(url);
-    const items = Array.isArray(itemsResponse)
-      ? itemsResponse
-      : itemsResponse.data || [];
-
-    if (!Array.isArray(items)) {
-      console.warn(
-        `  ! Expected items array in response.data for id_category=${idCategory}, got`,
-        typeof items
-      );
-      continue;
-    }
-
-    console.log(`  → ${items.length} items`);
+  // Step 2: Fetch all items in each category
+  for (const id of categoryIds) {
+    const url = `${API_BASE}/items?id_category=${id}`;
+    const raw = await fetchJson(url);
+    const items = unwrap(raw);
     allItems.push(...items);
   }
 
-  console.log(`Total raw items fetched: ${allItems.length}`);
+  // Step 3: Map items → SComponents format
+  const mapped = [];
 
-  const mapped = allItems.map(mapItemToComponent).filter(Boolean);
+  for (const item of allItems) {
+    const comp = {
+      id: "cmp-" + slugify(item.name),
+      uexId: item.id,
+      name: item.name,
+      type: normaliseType(item),
+      size: normaliseSize(item.size),
+      grade: null,
+      class: normaliseClass(item),
+      manufacturer: item.company_name || null,
+      whereToBuy: [],
+      notes: "",
+      raw: item
+    };
 
-  // Deduplicate by type+name (UEX ids could change)
-  const dedup = new Map();
-  for (const c of mapped) {
-    const key = `${c.type}::${c.name}`.toLowerCase();
-    if (!dedup.has(key)) dedup.set(key, c);
+    // Step 4: Fetch shop data / where to buy
+    const shops = await fetchShopsForItem(item.id);
+    comp.whereToBuy = shops;
+
+    mapped.push(comp);
   }
 
-  const finalList = Array.from(dedup.values()).sort(
+  // Step 5: Dedupe + sort
+  const unique = new Map();
+  for (const c of mapped) {
+    const key = `${c.type}::${c.name}`.toLowerCase();
+    if (!unique.has(key)) unique.set(key, c);
+  }
+
+  const finalList = Array.from(unique.values()).sort(
     (a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name)
   );
 
-  console.log(`Final normalized components: ${finalList.length}`);
-
+  // Step 6: Write file
   const header =
-    "// Auto-generated from UEX items API\n" +
-    "// Do not edit this file manually. Run fetch-uex-components.mjs instead.\n\n";
+    "// Auto-generated from UEX API\n" +
+    "// Do not edit manually. Run fetch-uex-components.mjs instead.\n\n";
 
   const body =
     "export const SComponents = " +
@@ -275,11 +207,11 @@ async function main() {
     ";\n";
 
   await fs.writeFile(OUTPUT_FILE, header + body, "utf8");
-  console.log("Written:", OUTPUT_FILE);
+
+  console.log("✓ Wrote:", OUTPUT_FILE);
 }
 
 main().catch((err) => {
-  console.error("ERROR in fetch-uex-components.mjs");
-  console.error(err);
+  console.error("ERROR:", err);
   process.exit(1);
 });
