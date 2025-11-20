@@ -1,517 +1,623 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JMBN Components</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN – Components HoloTable</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png"
-        href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-        sizes="32x32">
+<!-- Play Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#000;
-      --panel:#0b0b0b;
-      --sub:#101010;
-      --row:#0a0a0a;
-      --border:#d6b44c;
-      --card:#141414;
-      --accent:#f2d675;
-      --text:#f7f1d0;
-      --muted:#c9b06a;
-      --bad:#ff6b6b;
+<style>
+/* ============================================================
+   JMBN GOLD HYBRID HOLO UI — GLOBAL STYLES
+   ============================================================ */
+:root {
+  --gold: #d6b44c;
+  --gold-soft: rgba(214,180,76,0.65);
+  --gold-faint: rgba(214,180,76,0.25);
 
-      --fs-base:14px;
-      --fs-sm:12px;
-      --fs-lg:16px;
-    }
+  --blue-holo: #5dd0ff;
+  --blue-holo-soft: rgba(93,208,255,0.4);
+  --blue-holo-faint: rgba(93,208,255,0.2);
 
-    *{box-sizing:border-box;margin:0;padding:0}
+  --bg-main: #000;
+  --bg-panel: rgba(5,5,10,0.65);
+  --bg-panel-deep: rgba(10,10,18,0.85);
 
-    html,body{
-      height:100%;
-      background:radial-gradient(circle at top,#1b160a 0,#000 55%);
-      color:var(--text);
-      font-family:'Play',sans-serif;
-    }
+  --text: #f7f1d0;
+  --text-soft: rgba(247,241,208,0.75);
 
-    body{
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
-      padding:14px;
-    }
+  --radius: 14px;
+  --blur: 14px;
+  --transition: 0.25s ease;
+}
 
-    /* Header container where header.html will be injected */
-    #site-header{
-      margin-bottom:12px;
-    }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: radial-gradient(circle at 20% 20%, #1a1408 0%, #000 60%);
+  font-family: "Play", sans-serif;
+  color: var(--text);
+  overflow: hidden;
+}
 
-    main{
-      flex:1;
-      max-width:1400px;
-      margin:0 auto;
-      width:100%;
-    }
+/* ============================================================
+   PAGE LAYOUT — THREE PANELS
+   ============================================================ */
+#layout {
+  display: grid;
+  grid-template-columns: 28% 42% 30%;
+  grid-template-rows: 100%;
+  height: 100vh;
+  width: 100vw;
+}
 
-    .panel{
-      background:linear-gradient(145deg,#050505,#101010);
-      border:1px solid rgba(214,180,76,.7);
-      box-shadow:0 0 20px rgba(0,0,0,.7);
-      border-radius:14px;
-      padding:14px 14px 18px;
-    }
+/* ============================================================
+   LEFT PANEL — HOLOGRAPHIC MAP
+   ============================================================ */
+#holo-map-container {
+  padding: 12px;
+  background: linear-gradient(160deg, rgba(5,8,12,0.6), rgba(2,3,6,0.9));
+  border-right: 1px solid var(--gold-soft);
+  box-shadow: inset 0 0 24px rgba(214,180,76,0.15);
+  position: relative;
+  overflow: hidden;
+}
 
-    .panel-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:10px;
-      border-bottom:1px solid rgba(214,180,76,.4);
-      padding-bottom:8px;
-    }
+#holo-map-title {
+  text-align: center;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  font-size: 1.2rem;
+  padding-bottom: 8px;
+}
 
-    .panel-title{
-      font-size:clamp(16px,2vw,20px);
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
+/* holographic map */
+#holo-map {
+  width: 100%;
+  height: 88%;
+  filter: drop-shadow(0 0 14px var(--blue-holo-soft));
+  position: relative;
+}
 
-    .panel-subtitle{
-      font-size:var(--fs-sm);
-      color:var(--muted);
-    }
+.holo-node {
+  fill: var(--blue-holo);
+  stroke: var(--gold);
+  stroke-width: 1px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.holo-node:hover {
+  fill: var(--gold);
+  r: 8;
+}
 
-    .filters{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:8px;
-      margin-bottom:10px;
-    }
+/* glow path */
+.holo-path {
+  stroke: var(--gold);
+  stroke-width: 2px;
+  fill: none;
+  opacity: 0.7;
+  filter: drop-shadow(0 0 6px var(--gold-soft));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: pathGlow 3s infinite alternate ease-in-out;
+}
 
-    @media (max-width:900px){
-      .filters{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
+@keyframes pathGlow {
+  0% { stroke-opacity: 0.4; }
+  100% { stroke-opacity: 1; }
+}
 
-    @media (max-width:600px){
-      .filters{
-        grid-template-columns:1fr;
-      }
-    }
+/* ============================================================
+   CENTER PANEL — COMPONENT HOLO CARDS
+   ============================================================ */
+#components-panel {
+  padding: 12px;
+  background: rgba(8,8,12,0.6);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+}
 
-    .filter-group{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      font-size:var(--fs-sm);
-    }
+#filters {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
 
-    .filter-label{
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--muted);
-    }
+.filter-input,
+.filter-select {
+  background: rgba(20,20,25,0.75);
+  border: 1px solid var(--gold-faint);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: var(--text);
+  outline: none;
+  transition: 0.2s;
+}
+.filter-input:focus,
+.filter-select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 8px var(--gold-soft);
+  background: rgba(25,25,30,0.9);
+}
 
-    .filter-input,
-    .filter-select{
-      background:var(--sub);
-      border:1px solid rgba(214,180,76,.5);
-      border-radius:999px;
-      padding:6px 10px;
-      color:var(--text);
-      font-size:var(--fs-base);
-      outline:none;
-      transition:border-color .15s,box-shadow .15s,background .15s;
-    }
+/* holo cards */
+.holo-card {
+  background: linear-gradient(145deg, rgba(10,10,14,0.8), rgba(5,5,8,0.7));
+  border: 1px solid var(--gold-faint);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 10px;
+  backdrop-filter: blur(4px);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.holo-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(214,180,76,0.3);
+  transform: translateY(-2px);
+}
 
-    .filter-input::placeholder{
-      color:rgba(247,241,208,.5);
-    }
+/* glitch hologram overlay */
+.holo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(93,208,255,0.08) 40%,
+    transparent 80%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.0;
+  animation: holoGlitch 6s infinite ease-in-out;
+}
+@keyframes holoGlitch {
+  0% { opacity: 0.0; }
+  50% { opacity: 0.15; }
+  100% { opacity: 0.0; }
+}
 
-    .filter-input:focus,
-    .filter-select:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px rgba(242,214,117,.5);
-      background:#151515;
-    }
+/* add to route */
+.add-route-btn {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(214,180,76,0.15);
+  color: var(--gold);
+  border: 1px solid var(--gold-soft);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.add-route-btn:hover {
+  background: rgba(214,180,76,0.3);
+}
 
-    .table-wrap{
-      margin-top:6px;
-      border-radius:10px;
-      border:1px solid rgba(214,180,76,.6);
-      overflow:hidden;
-      background:radial-gradient(circle at top,#18120a 0,#050505 60%);
-    }
+/* ============================================================
+   RIGHT PANEL — SHOPPING ROUTE PLANNER
+   ============================================================ */
+#route-panel {
+  background: rgba(5,5,10,0.75);
+  padding: 14px;
+  border-left: 1px solid var(--gold-soft);
+  backdrop-filter: blur(8px);
+  overflow-y: auto;
+}
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:var(--fs-base);
-    }
+#route-title {
+  text-align: center;
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+}
 
-    thead{
-      background:rgba(6,6,6,.98);
-      position:sticky;
-      top:0;
-      z-index:2;
-    }
+#selected-items {
+  padding: 8px;
+  background: rgba(20,20,25,0.7);
+  border-radius: var(--radius);
+  border: 1px solid var(--gold-faint);
+  margin-bottom: 12px;
+  min-height: 50px;
+}
 
-    th,td{
-      padding:6px 10px;
-      text-align:left;
-      white-space:nowrap;
-    }
+#generate-route-btn {
+  width: 100%;
+  padding: 10px;
+  background: rgba(214,180,76,0.2);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+#generate-route-btn:hover {
+  background: rgba(214,180,76,0.35);
+  box-shadow: 0 0 18px var(--gold-soft);
+}
 
-    th{
-      font-weight:700;
-      font-size:var(--fs-sm);
-      text-transform:uppercase;
-      letter-spacing:.09em;
-      border-bottom:1px solid rgba(214,180,76,.4);
-      color:var(--muted);
-      cursor:pointer;
-      user-select:none;
-    }
+#route-output {
+  margin-top: 16px;
+  padding: 10px;
+  border-radius: var(--radius);
+  background: rgba(15,15,20,0.7);
+  border: 1px solid var(--gold-faint);
+}
 
-    th.sortable:hover{
-      color:var(--accent);
-      background:rgba(214,180,76,.08);
-    }
+/* Stop card */
+.route-stop {
+  padding: 10px;
+  margin-top: 10px;
+  background: rgba(25,25,30,0.75);
+  border: 1px solid var(--gold-soft);
+  border-radius: var(--radius);
+}
 
-    th .sort-indicator{
-      font-size:10px;
-      margin-left:4px;
-      opacity:.7;
-    }
-
-    tbody tr:nth-child(even){
-      background:rgba(12,12,12,.85);
-    }
-
-    tbody tr:nth-child(odd){
-      background:rgba(5,5,5,.9);
-    }
-
-    tbody tr:hover{
-      background:rgba(40,32,18,.9);
-    }
-
-    td{
-      border-bottom:1px solid rgba(255,255,255,.02);
-      max-width:280px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .col-name{font-weight:700;color:var(--accent);}
-    .col-where{font-size:var(--fs-sm);color:var(--muted);white-space:normal;}
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(214,180,76,.7);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .pill-component{border-color:rgba(242,214,117,.8);}
-    .pill-size{border-color:rgba(155,214,255,.8);}
-    .pill-grade{border-color:rgba(255,188,120,.8);}
-    .pill-class{border-color:rgba(186,255,186,.8);}
-
-    .status-bar{
-      margin-top:6px;
-      font-size:var(--fs-sm);
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .status-bar strong{
-      color:var(--accent);
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:4px;
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(214,180,76,.5);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .loading,
-    .error,
-    .empty{
-      padding:16px;
-      text-align:center;
-      font-size:var(--fs-base);
-    }
-
-    .loading{color:var(--muted);}
-    .error{color:var(--bad);}
-  </style>
+</style>
 </head>
+
 <body>
-  <!-- Shared header will be injected here -->
-  <header id="site-header"></header>
+<div id="layout">
 
-  <main>
-    <section class="panel">
-      <div class="panel-header">
-        <div>
-          <div class="panel-title">Components Registry</div>
-          <div class="panel-subtitle">
-            Browse ship components by type, size, class and supplier.
-          </div>
+<!-- ============================================================
+     LEFT PANEL — HOLOGRAPHIC MAP
+     ============================================================ -->
+<div id="holo-map-container">
+  <div id="holo-map-title">STANTON HOLOGRAPHIC MAP</div>
+  <svg id="holo-map" viewBox="-200 -200 400 400">
+    <!-- Outer rings -->
+    <circle cx="0" cy="0" r="40" stroke="var(--blue-holo-faint)" stroke-width="1" fill="none"></circle>
+    <circle cx="0" cy="0" r="80" stroke="var(--blue-holo-faint)" stroke-width="1" fill="none"></circle>
+    <circle cx="0" cy="0" r="130" stroke="var(--blue-holo-faint)" stroke-width="1" fill="none"></circle>
+
+    <!-- Nodes populated dynamically -->
+    <g id="map-nodes"></g>
+    <g id="map-paths"></g>
+  </svg>
+</div>
+
+<!-- ============================================================
+     CENTER PANEL — HOLO CARDS
+     ============================================================ -->
+<div id="components-panel">
+
+  <div id="filters">
+    <input id="searchInput" class="filter-input" type="text" placeholder="Search name or manufacturer…">
+    <select id="filterComponent" class="filter-select"><option value="">All Components</option></select>
+    <select id="filterClass" class="filter-select"><option value="">All Classes</option></select>
+    <select id="filterSize" class="filter-select"><option value="">All Sizes</option></select>
+  </div>
+
+  <div id="cards-render"></div>
+</div>
+
+<!-- ============================================================
+     RIGHT PANEL — ROUTE PLANNER
+     ============================================================ -->
+<div id="route-panel">
+  <div id="route-title">ROUTE PLANNER</div>
+
+  <div id="selected-items"></div>
+
+  <button id="generate-route-btn">Generate Best Route</button>
+
+  <div id="route-output"></div>
+</div>
+
+</div><!-- layout end -->
+
+<script>
+/* ============================================================
+   DATA FETCHING
+   ============================================================ */
+const componentsURL = "data/components.js";
+const shopsURL = "data/shops.json";
+const shopInvURL = "data/shop_inventory.json";
+
+let components = [];
+let shops = [];
+let shopInventory = [];
+let selectedItems = new Set();
+
+/* Travel cost & penalty model */
+const travelCost = {
+  "Area18": 0,
+  "Bajini Point": 1,
+  "Everus Harbor": 1,
+  "Seraphin": 1,
+
+  "Port Tressler": 2,
+  "CRU-L1": 2,
+  "CRU-L2": 2,
+  "MIC-L1": 2,
+  "MIC-L2": 2,
+  "HUR-L1": 2,
+  "HUR-L2": 2,
+
+  "Lorville": 3,
+  "GrimHex": 3,
+
+  "Orison": 8,
+  "New Babbage": 6
+};
+
+/* Fetch all data */
+Promise.all([
+  fetch(componentsURL).then(r=>r.json()),
+  fetch(shopsURL).then(r=>r.json()),
+  fetch(shopInvURL).then(r=>r.json())
+])
+.then(([comp, shopList, shopInv])=>{
+  components = comp;
+  shops = shopList;
+  shopInventory = shopInv;
+
+  buildFilters();
+  renderCards(components);
+  renderMapNodes();
+})
+.catch(err=>{
+  console.error("Data load error:", err);
+});
+
+/* ============================================================
+   FILTERS
+   ============================================================ */
+function buildFilters(){
+  const compSet = new Set();
+  const classSet = new Set();
+  const sizeSet = new Set();
+
+  components.forEach(c=>{
+    if(c.Component) compSet.add(c.Component);
+    if(c.Class) classSet.add(c.Class);
+    if(c.Size) sizeSet.add(c.Size);
+  });
+
+  for(const v of compSet){
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    filterComponent.appendChild(o);
+  }
+  for(const v of classSet){
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    filterClass.appendChild(o);
+  }
+  for(const v of sizeSet){
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    filterSize.appendChild(o);
+  }
+
+  searchInput.oninput =
+  filterComponent.onchange =
+  filterClass.onchange =
+  filterSize.onchange = ()=>applyFilters();
+}
+
+function applyFilters(){
+  const q = searchInput.value.toLowerCase();
+  const fc = filterComponent.value;
+  const fcl = filterClass.value;
+  const fs = filterSize.value;
+
+  const list = components.filter(c=>{
+    if(fc && c.Component !== fc) return false;
+    if(fcl && c.Class !== fcl) return false;
+    if(fs && c.Size !== fs) return false;
+
+    const hay = (c.Names+" "+c.Manufacturer).toLowerCase();
+    return hay.includes(q);
+  });
+
+  renderCards(list);
+}
+
+/* ============================================================
+   RENDER HOLO CARDS
+   ============================================================ */
+function renderCards(list){
+  const out = [];
+  for(const c of list){
+    out.push(`
+      <div class="holo-card">
+        <div style="font-size:1.1rem;color:var(--gold);">${c.Names}</div>
+        <div style="margin:6px 0;color:var(--text-soft);">
+          ${c.Component} • ${c.Size} • Grade ${c.Grade} • ${c.Class}
         </div>
+        <div style="font-size:0.9rem;color:var(--blue-holo);">
+          Shops: ${(c.Shops||[]).join(", ")}
+        </div>
+        <button class="add-route-btn" onclick="addToRoute('${c.Names}')">
+          Add to Route
+        </button>
       </div>
+    `);
+  }
+  document.getElementById("cards-render").innerHTML = out.join("");
+}
 
-      <div class="filters">
-        <div class="filter-group">
-          <label class="filter-label" for="searchInput">Search</label>
-          <input id="searchInput" class="filter-input" type="text"
-                 placeholder="Name or manufacturer…">
-        </div>
-        <div class="filter-group">
-          <label class="filter-label" for="filterComponent">Component</label>
-          <select id="filterComponent" class="filter-select">
-            <option value="">All Components</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label class="filter-label" for="filterClass">Class</label>
-          <select id="filterClass" class="filter-select">
-            <option value="">All Classes</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label class="filter-label" for="filterSize">Size</label>
-          <select id="filterSize" class="filter-select">
-            <option value="">All Sizes</option>
-          </select>
-        </div>
-      </div>
+/* ============================================================
+   ROUTE PLANNER LOGIC
+   ============================================================ */
+function addToRoute(name){
+  selectedItems.add(name);
+  renderSelected();
+}
 
-      <div id="tableRegion" class="table-wrap">
-        <div class="loading">Loading components…</div>
-      </div>
+function renderSelected(){
+  document.getElementById("selected-items").innerHTML =
+    [...selectedItems].map(i=>`<div>${i}</div>`).join("");
+}
 
-      <div id="statusBar" class="status-bar" style="display:none;">
-        <div><strong id="countText"></strong></div>
-        <div class="badge">
-          Active filters:
-          <span id="activeFiltersLabel">None</span>
-        </div>
-      </div>
-    </section>
-  </main>
+document.getElementById("generate-route-btn").onclick = ()=>{
+  if(selectedItems.size === 0){
+    alert("Select components first.");
+    return;
+  }
+  const route = computeBestRoute([...selectedItems]);
+  renderRoute(route);
+  drawRouteOnMap(route);
+};
 
-  <script>
-    // Inject shared header.html
-    fetch('header.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('site-header').innerHTML = html;
-      })
-      .catch(err => {
-        console.error('Failed to load header.html', err);
-      });
-  </script>
+/* Compute best route */
+function computeBestRoute(want){
 
-  <script>
-    const DATA_URL = 'data/components.js'; // your JSON path
-
-    let allComponents = [];
-    let currentSort = { key:'Names', dir:'asc' };
-
-    const tableRegion = document.getElementById('tableRegion');
-    const statusBar   = document.getElementById('statusBar');
-    const countText   = document.getElementById('countText');
-    const activeFiltersLabel = document.getElementById('activeFiltersLabel');
-
-    const searchInput     = document.getElementById('searchInput');
-    const filterComponent = document.getElementById('filterComponent');
-    const filterClass     = document.getElementById('filterClass');
-    const filterSize      = document.getElementById('filterSize');
-
-    async function loadComponents(){
-      try{
-        const res = await fetch(DATA_URL,{cache:'no-store'});
-        if(!res.ok) throw new Error('HTTP '+res.status);
-        const data = await res.json();
-
-        allComponents = Array.isArray(data) ? data : [];
-        buildFilterOptions(allComponents);
-        renderTable(allComponents);
-      }catch(err){
-        console.error(err);
-        tableRegion.innerHTML =
-          '<div class="error">Failed to load components data.</div>';
-      }
+  /* Build location => items mapping */
+  const locMap = {};
+  for(const c of components){
+    if(!want.includes(c.Names)) continue;
+    if(!c.Shops) continue;
+    for(const s of c.Shops){
+      if(!locMap[s]) locMap[s] = new Set();
+      locMap[s].add(c.Names);
     }
+  }
 
-    function buildFilterOptions(list){
-      const components = new Set();
-      const classes    = new Set();
-      const sizes      = new Set();
+  const locs = Object.keys(locMap);
 
-      list.forEach(item=>{
-        if(item.Component) components.add(item.Component.trim());
-        if(item.Class)     classes.add(String(item.Class).trim());
-        if(item.Size)      sizes.add(String(item.Size).trim());
-      });
+  /* Try 1 stop */
+  for(const a of locs){
+    if(coversAll(locMap[a], want)) return [a];
+  }
 
-      const makeOptions = (set, selectEl)=>{
-        const values = Array.from(set).filter(Boolean).sort((a,b)=>a.localeCompare(b));
-        values.forEach(v=>{
-          const opt = document.createElement('option');
-          opt.value = v;
-          opt.textContent = v;
-          selectEl.appendChild(opt);
-        });
-      };
-
-      makeOptions(components, filterComponent);
-      makeOptions(classes,    filterClass);
-      makeOptions(sizes,      filterSize);
-    }
-
-    function applyFiltersAndSort(){
-      const q       = searchInput.value.trim().toLowerCase();
-      const comp    = filterComponent.value;
-      const cls     = filterClass.value;
-      const size    = filterSize.value;
-
-      let filtered = allComponents.filter(item=>{
-        if(comp && item.Component.trim() !== comp) return false;
-        if(cls  && String(item.Class).trim() !== cls) return false;
-        if(size && String(item.Size).trim() !== size) return false;
-
-        if(q){
-          const hay = [
-            item.Names,
-            item.Manufacturer,
-            item.Component,
-            item.WhereToBuy
-          ].map(v=>String(v||'').toLowerCase()).join(' ');
-          if(!hay.includes(q)) return false;
+  /* Try 2 stops */
+  let best2 = null;
+  for(let i=0;i<locs.length;i++){
+    for(let j=i+1;j<locs.length;j++){
+      const cov = union(locMap[locs[i]], locMap[locs[j]]);
+      if(coversAll(cov, want)){
+        const cost = routeCost([locs[i], locs[j]]);
+        if(!best2 || cost < best2.cost){
+          best2 = {route:[locs[i], locs[j]], cost};
         }
-        return true;
-      });
-
-      filtered.sort((a,b)=>{
-        const key = currentSort.key;
-        let av = (a[key] ?? '').toString().toLowerCase();
-        let bv = (b[key] ?? '').toString().toLowerCase();
-        if(av < bv) return currentSort.dir === 'asc' ? -1 : 1;
-        if(av > bv) return currentSort.dir === 'asc' ? 1 : -1;
-        return 0;
-      });
-
-      renderTable(filtered);
-      updateStatus(filtered.length);
-    }
-
-    function updateStatus(count){
-      const total = allComponents.length;
-      statusBar.style.display = 'flex';
-      countText.textContent = `${count} of ${total} components shown`;
-
-      const filters = [];
-      if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
-      if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
-      if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
-      if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
-
-      activeFiltersLabel.textContent = filters.length ? filters.join(' • ') : 'None';
-    }
-
-    function renderTable(list){
-      if(!list.length){
-        tableRegion.innerHTML = '<div class="empty">No components match your filters.</div>';
-        return;
       }
-
-      const sortIcon = (key)=>{
-        if(currentSort.key !== key) return '';
-        return currentSort.dir === 'asc' ? '▲' : '▼';
-      };
-
-      const headerHtml = `
-        <table>
-          <thead>
-            <tr>
-              <th class="sortable" data-key="Names">Name <span class="sort-indicator">${sortIcon('Names')}</span></th>
-              <th class="sortable" data-key="Component">Component <span class="sort-indicator">${sortIcon('Component')}</span></th>
-              <th class="sortable" data-key="Size">Size <span class="sort-indicator">${sortIcon('Size')}</span></th>
-              <th class="sortable" data-key="Grade">Grade <span class="sort-indicator">${sortIcon('Grade')}</span></th>
-              <th class="sortable" data-key="Class">Class <span class="sort-indicator">${sortIcon('Class')}</span></th>
-              <th class="sortable" data-key="Manufacturer">Manufacturer <span class="sort-indicator">${sortIcon('Manufacturer')}</span></th>
-              <th data-key="WhereToBuy">Where to Buy</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${list.map(item=>{
-              const gradeStr = item.Grade === null || item.Grade === undefined
-                ? ''
-                : String(item.Grade);
-              return `
-                <tr>
-                  <td class="col-name">${item.Names || ''}</td>
-                  <td><span class="pill pill-component">${item.Component || ''}</span></td>
-                  <td><span class="pill pill-size">${item.Size || ''}</span></td>
-                  <td><span class="pill pill-grade">${gradeStr}</span></td>
-                  <td><span class="pill pill-class">${item.Class || ''}</span></td>
-                  <td>${item.Manufacturer || ''}</td>
-                  <td class="col-where">${item.WhereToBuy || ''}</td>
-                </tr>`;
-            }).join('')}
-          </tbody>
-        </table>
-      `;
-
-      tableRegion.innerHTML = headerHtml;
-
-      // Attach sort handlers
-      tableRegion.querySelectorAll('th.sortable').forEach(th=>{
-        th.addEventListener('click',()=>{
-          const key = th.getAttribute('data-key');
-          if(currentSort.key === key){
-            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
-          }else{
-            currentSort.key = key;
-            currentSort.dir = 'asc';
-          }
-          applyFiltersAndSort();
-        });
-      });
     }
+  }
+  if(best2) return best2.route;
 
-    // Hook up filter events
-    [searchInput, filterComponent, filterClass, filterSize].forEach(el=>{
-      el.addEventListener('input', applyFiltersAndSort);
-      el.addEventListener('change', applyFiltersAndSort);
-    });
+  /* Try 3 stops */
+  let best3 = null;
+  for(let i=0;i<locs.length;i++){
+    for(let j=i+1;j<locs.length;j++){
+      for(let k=j+1;k<locs.length;k++){
+        const cov = union3(locMap[locs[i]], locMap[locs[j]], locMap[locs[k]]);
+        if(coversAll(cov, want)){
+          const r = [locs[i], locs[j], locs[k]];
+          const cost = routeCost(r);
+          if(!best3 || cost < best3.cost){
+            best3 = {route:r, cost};
+          }
+        }
+      }
+    }
+  }
+  if(best3) return best3.route;
 
-    loadComponents();
-  </script>
+  /* fallback */
+  return ["Area18"];
+}
+
+function coversAll(set, want){
+  for(const w of want){
+    if(!set.has(w)) return false;
+  }
+  return true;
+}
+
+function union(a,b){
+  const s = new Set(a);
+  for(const x of b) s.add(x);
+  return s;
+}
+
+function union3(a,b,c){
+  const s = new Set(a);
+  for(const x of b) s.add(x);
+  for(const x of c) s.add(x);
+  return s;
+}
+
+/* Route cost calculation */
+function routeCost(route){
+  let sum = 0;
+  for(const r of route){
+    sum += travelCost[r] ?? 5;
+  }
+  return sum;
+}
+
+/* ============================================================
+   ROUTE OUTPUT
+   ============================================================ */
+function renderRoute(route){
+  let html = `<div style="font-size:1.1rem;color:var(--gold);">Optimal Route (${route.length} Stops)</div>`;
+
+  route.forEach((loc, i)=>{
+    const items = components.filter(c=>c.Shops && c.Shops.includes(loc) && selectedItems.has(c.Names))
+      .map(c=>c.Names);
+    html += `
+      <div class="route-stop">
+        <div style="font-size:1.05rem;color:var(--gold);">${i+1}. ${loc}</div>
+        <div style="margin-top:6px;color:var(--text-soft);">${items.join(", ")}</div>
+      </div>
+    `;
+  });
+
+  document.getElementById("route-output").innerHTML = html;
+}
+
+/* ============================================================
+   HOLO MAP — NODES + ROUTE DRAWING
+   ============================================================ */
+const mapCoords = {
+  "Area18": {x:40, y:0},
+  "Bajini Point": {x:80, y:10},
+  "Seraphin": {x:65, y:-25},
+  "Everus Harbor": {x:55, y:40},
+  "Port Tressler": {x:-30, y:-110},
+  "Lorville": {x:-20, y:60},
+  "GrimHex": {x:-80, y:-30},
+  "New Babbage": {x:-50, y:-130},
+  "Orison": {x:50, y:120}
+};
+
+function renderMapNodes(){
+  const g = document.getElementById("map-nodes");
+  const out = [];
+  for(const loc in mapCoords){
+    const p = mapCoords[loc];
+    out.push(`
+      <circle class="holo-node" cx="${p.x}" cy="${p.y}" r="6">
+        <title>${loc}</title>
+      </circle>
+    `);
+  }
+  g.innerHTML = out.join("");
+}
+
+function drawRouteOnMap(route){
+  const g = document.getElementById("map-paths");
+  g.innerHTML = "";
+  for(let i=0;i<route.length-1;i++){
+    const a = mapCoords[route[i]];
+    const b = mapCoords[route[i+1]];
+    if(!a || !b) continue;
+    g.innerHTML += `
+      <line class="holo-path" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"></line>
+    `;
+  }
+}
+
+</script>
 </body>
 </html>
