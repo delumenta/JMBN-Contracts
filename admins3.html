@@ -1,623 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN – Components HoloTable</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN – Hangar Components Storage</title>
 
-<!-- Play Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-/* ============================================================
-   JMBN GOLD HYBRID HOLO UI — GLOBAL STYLES
-   ============================================================ */
-:root {
-  --gold: #d6b44c;
-  --gold-soft: rgba(214,180,76,0.65);
-  --gold-faint: rgba(214,180,76,0.25);
+  <style>
+    :root {
+      --bg: #000;
+      --panel: #0d0d0d;
+      --shelf: #131313;
+      --shelf-edge: #1f1a09;
+      --gold: #d6b44c;
+      --gold-soft: rgba(214,180,76,0.6);
+      --gold-faint: rgba(214,180,76,0.22);
+      --text: #f7f1d0;
+      --muted: #c9b06a;
+      --fs-sm: 12px;
+      --fs-base: 14px;
+      --fs-lg: 18px;
+      --radius: 12px;
+    }
 
-  --blue-holo: #5dd0ff;
-  --blue-holo-soft: rgba(93,208,255,0.4);
-  --blue-holo-faint: rgba(93,208,255,0.2);
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  --bg-main: #000;
-  --bg-panel: rgba(5,5,10,0.65);
-  --bg-panel-deep: rgba(10,10,18,0.85);
+    html, body {
+      height: 100%;
+      background: radial-gradient(circle at top, #1b160a 0, #000 65%);
+      color: var(--text);
+      font-family: "Play", sans-serif;
+      overflow: hidden;
+    }
 
-  --text: #f7f1d0;
-  --text-soft: rgba(247,241,208,0.75);
+    /* Layout */
+    #layout {
+      display: grid;
+      grid-template-columns: 72% 28%;
+      height: calc(100vh - 10px);
+      padding: 10px;
+    }
 
-  --radius: 14px;
-  --blur: 14px;
-  --transition: 0.25s ease;
-}
+    /* LEFT SIDE – Shelves */
+    #shelves {
+      overflow-y: auto;
+      padding-right: 10px;
+    }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: radial-gradient(circle at 20% 20%, #1a1408 0%, #000 60%);
-  font-family: "Play", sans-serif;
-  color: var(--text);
-  overflow: hidden;
-}
+    .shelf {
+      background: var(--shelf);
+      border: 1px solid var(--gold-faint);
+      border-left: 5px solid var(--gold);
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+    }
 
-/* ============================================================
-   PAGE LAYOUT — THREE PANELS
-   ============================================================ */
-#layout {
-  display: grid;
-  grid-template-columns: 28% 42% 30%;
-  grid-template-rows: 100%;
-  height: 100vh;
-  width: 100vw;
-}
+    .shelf-title {
+      font-size: var(--fs-lg);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+      color: var(--gold);
+    }
 
-/* ============================================================
-   LEFT PANEL — HOLOGRAPHIC MAP
-   ============================================================ */
-#holo-map-container {
-  padding: 12px;
-  background: linear-gradient(160deg, rgba(5,8,12,0.6), rgba(2,3,6,0.9));
-  border-right: 1px solid var(--gold-soft);
-  box-shadow: inset 0 0 24px rgba(214,180,76,0.15);
-  position: relative;
-  overflow: hidden;
-}
+    .shelf-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
 
-#holo-map-title {
-  text-align: center;
-  letter-spacing: 0.1em;
-  color: var(--gold);
-  font-size: 1.2rem;
-  padding-bottom: 8px;
-}
+    /* Component Box */
+    .component-box {
+      background: linear-gradient(160deg,#0f0f0f,#1a1409);
+      border: 1px solid var(--gold-faint);
+      padding: 10px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+      position: relative;
+    }
+    .component-box:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold-soft);
+      box-shadow: 0 0 12px rgba(214,180,76,0.5);
+    }
 
-/* holographic map */
-#holo-map {
-  width: 100%;
-  height: 88%;
-  filter: drop-shadow(0 0 14px var(--blue-holo-soft));
-  position: relative;
-}
+    .component-name {
+      color: var(--gold);
+      font-size: var(--fs-base);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
 
-.holo-node {
-  fill: var(--blue-holo);
-  stroke: var(--gold);
-  stroke-width: 1px;
-  cursor: pointer;
-  transition: 0.15s;
-}
-.holo-node:hover {
-  fill: var(--gold);
-  r: 8;
-}
+    .component-meta {
+      font-size: var(--fs-sm);
+      color: var(--muted);
+    }
 
-/* glow path */
-.holo-path {
-  stroke: var(--gold);
-  stroke-width: 2px;
-  fill: none;
-  opacity: 0.7;
-  filter: drop-shadow(0 0 6px var(--gold-soft));
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  animation: pathGlow 3s infinite alternate ease-in-out;
-}
+    /* Drawer */
+    .drawer {
+      position: fixed;
+      right: -420px;
+      top: 0;
+      width: 400px;
+      height: 100%;
+      background: var(--panel);
+      border-left: 2px solid var(--gold);
+      box-shadow: -6px 0 20px rgba(0,0,0,0.6);
+      padding: 20px;
+      transition: right .3s ease;
+      overflow-y: auto;
+      z-index: 999;
+    }
+    .drawer.open {
+      right: 0;
+    }
 
-@keyframes pathGlow {
-  0% { stroke-opacity: 0.4; }
-  100% { stroke-opacity: 1; }
-}
+    .drawer-title {
+      font-size: var(--fs-lg);
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
 
-/* ============================================================
-   CENTER PANEL — COMPONENT HOLO CARDS
-   ============================================================ */
-#components-panel {
-  padding: 12px;
-  background: rgba(8,8,12,0.6);
-  backdrop-filter: blur(6px);
-  overflow-y: auto;
-}
+    .drawer-line {
+      font-size: var(--fs-base);
+      margin-bottom: 5px;
+    }
 
-#filters {
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-}
+    /* Shopping list */
+    #right-panel {
+      background: var(--panel);
+      border-left: 1px solid var(--gold-faint);
+      padding: 12px;
+      overflow-y: auto;
+    }
 
-.filter-input,
-.filter-select {
-  background: rgba(20,20,25,0.75);
-  border: 1px solid var(--gold-faint);
-  border-radius: 10px;
-  padding: 6px 10px;
-  color: var(--text);
-  outline: none;
-  transition: 0.2s;
-}
-.filter-input:focus,
-.filter-select:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 8px var(--gold-soft);
-  background: rgba(25,25,30,0.9);
-}
+    #shopping-title {
+      font-size: var(--fs-lg);
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
 
-/* holo cards */
-.holo-card {
-  background: linear-gradient(145deg, rgba(10,10,14,0.8), rgba(5,5,8,0.7));
-  border: 1px solid var(--gold-faint);
-  border-radius: var(--radius);
-  padding: 12px;
-  margin-bottom: 10px;
-  backdrop-filter: blur(4px);
-  transition: var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-.holo-card:hover {
-  border-color: var(--gold);
-  box-shadow: 0 0 16px rgba(214,180,76,0.3);
-  transform: translateY(-2px);
-}
+    #shopping-items {
+      min-height: 50px;
+      border: 1px solid var(--gold-faint);
+      padding: 8px;
+      border-radius: var(--radius);
+      background: rgba(20,20,20,0.9);
+      margin-bottom: 12px;
+      font-size: var(--fs-sm);
+    }
 
-/* glitch hologram overlay */
-.holo-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(93,208,255,0.08) 40%,
-    transparent 80%
-  );
-  mix-blend-mode: overlay;
-  opacity: 0.0;
-  animation: holoGlitch 6s infinite ease-in-out;
-}
-@keyframes holoGlitch {
-  0% { opacity: 0.0; }
-  50% { opacity: 0.15; }
-  100% { opacity: 0.0; }
-}
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(214,180,76,0.18);
+      border: 1px solid var(--gold-soft);
+      padding: 3px 7px;
+      border-radius: 999px;
+      margin: 2px;
+      font-size: 11px;
+      color: var(--gold);
+    }
 
-/* add to route */
-.add-route-btn {
-  margin-top: 8px;
-  padding: 6px 10px;
-  border-radius: 10px;
-  background: rgba(214,180,76,0.15);
-  color: var(--gold);
-  border: 1px solid var(--gold-soft);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.add-route-btn:hover {
-  background: rgba(214,180,76,0.3);
-}
+    .tag-remove {
+      margin-left: 4px;
+      cursor: pointer;
+      color: var(--muted);
+    }
 
-/* ============================================================
-   RIGHT PANEL — SHOPPING ROUTE PLANNER
-   ============================================================ */
-#route-panel {
-  background: rgba(5,5,10,0.75);
-  padding: 14px;
-  border-left: 1px solid var(--gold-soft);
-  backdrop-filter: blur(8px);
-  overflow-y: auto;
-}
+    #route-btn {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--gold);
+      background: rgba(214,180,76,0.18);
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      cursor: pointer;
+      transition: .2s;
+    }
+    #route-btn:hover {
+      background: rgba(214,180,76,0.35);
+      box-shadow: 0 0 12px rgba(214,180,76,0.5);
+    }
 
-#route-title {
-  text-align: center;
-  font-size: 1.3rem;
-  color: var(--gold);
-  margin-bottom: 10px;
-  letter-spacing: 0.1em;
-}
+    #route-output {
+      border: 1px solid var(--gold-faint);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: rgba(30,25,20,0.9);
+      font-size: var(--fs-sm);
+      margin-top: 10px;
+    }
 
-#selected-items {
-  padding: 8px;
-  background: rgba(20,20,25,0.7);
-  border-radius: var(--radius);
-  border: 1px solid var(--gold-faint);
-  margin-bottom: 12px;
-  min-height: 50px;
-}
-
-#generate-route-btn {
-  width: 100%;
-  padding: 10px;
-  background: rgba(214,180,76,0.2);
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
-}
-#generate-route-btn:hover {
-  background: rgba(214,180,76,0.35);
-  box-shadow: 0 0 18px var(--gold-soft);
-}
-
-#route-output {
-  margin-top: 16px;
-  padding: 10px;
-  border-radius: var(--radius);
-  background: rgba(15,15,20,0.7);
-  border: 1px solid var(--gold-faint);
-}
-
-/* Stop card */
-.route-stop {
-  padding: 10px;
-  margin-top: 10px;
-  background: rgba(25,25,30,0.75);
-  border: 1px solid var(--gold-soft);
-  border-radius: var(--radius);
-}
-
-</style>
+  </style>
 </head>
 
 <body>
+
 <div id="layout">
 
-<!-- ============================================================
-     LEFT PANEL — HOLOGRAPHIC MAP
-     ============================================================ -->
-<div id="holo-map-container">
-  <div id="holo-map-title">STANTON HOLOGRAPHIC MAP</div>
-  <svg id="holo-map" viewBox="-200 -200 400 400">
-    <!-- Outer rings -->
-    <circle cx="0" cy="0" r="40" stroke="var(--blue-holo-faint)" stroke-width="1" fill="none"></circle>
-    <circle cx="0" cy="0" r="80" stroke="var(--blue-holo-faint)" stroke-width="1" fill="none"></circle>
-    <circle cx="0" cy="0" r="130" stroke="var(--blue-holo-faint)" stroke-width="1" fill="none"></circle>
+  <!-- LEFT SHELVES -->
+  <div id="shelves"></div>
 
-    <!-- Nodes populated dynamically -->
-    <g id="map-nodes"></g>
-    <g id="map-paths"></g>
-  </svg>
-</div>
+  <!-- RIGHT SHOPPING PANEL -->
+  <div id="right-panel">
+    <div id="shopping-title">Shopping List</div>
 
-<!-- ============================================================
-     CENTER PANEL — HOLO CARDS
-     ============================================================ -->
-<div id="components-panel">
+    <div id="shopping-items">No components selected.</div>
 
-  <div id="filters">
-    <input id="searchInput" class="filter-input" type="text" placeholder="Search name or manufacturer…">
-    <select id="filterComponent" class="filter-select"><option value="">All Components</option></select>
-    <select id="filterClass" class="filter-select"><option value="">All Classes</option></select>
-    <select id="filterSize" class="filter-select"><option value="">All Sizes</option></select>
+    <button id="route-btn">Generate Route</button>
+
+    <div id="route-output"></div>
   </div>
 
-  <div id="cards-render"></div>
 </div>
 
-<!-- ============================================================
-     RIGHT PANEL — ROUTE PLANNER
-     ============================================================ -->
-<div id="route-panel">
-  <div id="route-title">ROUTE PLANNER</div>
-
-  <div id="selected-items"></div>
-
-  <button id="generate-route-btn">Generate Best Route</button>
-
-  <div id="route-output"></div>
-</div>
-
-</div><!-- layout end -->
+<!-- Drawer -->
+<div id="drawer" class="drawer"></div>
 
 <script>
-/* ============================================================
-   DATA FETCHING
-   ============================================================ */
-const componentsURL = "data/components.js";
-const shopsURL = "data/shops.json";
-const shopInvURL = "data/shop_inventory.json";
+const DATA_COMPONENTS = "data/components.js";
 
-let components = [];
-let shops = [];
-let shopInventory = [];
+let allComponents = [];
 let selectedItems = new Set();
 
-/* Travel cost & penalty model */
-const travelCost = {
-  "Area18": 0,
-  "Bajini Point": 1,
-  "Everus Harbor": 1,
-  "Seraphin": 1,
-
-  "Port Tressler": 2,
-  "CRU-L1": 2,
-  "CRU-L2": 2,
-  "MIC-L1": 2,
-  "MIC-L2": 2,
-  "HUR-L1": 2,
-  "HUR-L2": 2,
-
-  "Lorville": 3,
-  "GrimHex": 3,
-
-  "Orison": 8,
-  "New Babbage": 6
-};
-
-/* Fetch all data */
-Promise.all([
-  fetch(componentsURL).then(r=>r.json()),
-  fetch(shopsURL).then(r=>r.json()),
-  fetch(shopInvURL).then(r=>r.json())
-])
-.then(([comp, shopList, shopInv])=>{
-  components = comp;
-  shops = shopList;
-  shopInventory = shopInv;
-
-  buildFilters();
-  renderCards(components);
-  renderMapNodes();
-})
-.catch(err=>{
-  console.error("Data load error:", err);
-});
-
-/* ============================================================
-   FILTERS
-   ============================================================ */
-function buildFilters(){
-  const compSet = new Set();
-  const classSet = new Set();
-  const sizeSet = new Set();
-
-  components.forEach(c=>{
-    if(c.Component) compSet.add(c.Component);
-    if(c.Class) classSet.add(c.Class);
-    if(c.Size) sizeSet.add(c.Size);
+/* Load Data */
+fetch(DATA_COMPONENTS)
+  .then(r => r.json())
+  .then(data => {
+    allComponents = data;
+    buildShelves(data);
   });
 
-  for(const v of compSet){
-    const o = document.createElement("option");
-    o.value = v; o.textContent = v;
-    filterComponent.appendChild(o);
-  }
-  for(const v of classSet){
-    const o = document.createElement("option");
-    o.value = v; o.textContent = v;
-    filterClass.appendChild(o);
-  }
-  for(const v of sizeSet){
-    const o = document.createElement("option");
-    o.value = v; o.textContent = v;
-    filterSize.appendChild(o);
-  }
+/* Group by Component Type */
+function buildShelves(list) {
+  const shelves = {};
 
-  searchInput.oninput =
-  filterComponent.onchange =
-  filterClass.onchange =
-  filterSize.onchange = ()=>applyFilters();
-}
-
-function applyFilters(){
-  const q = searchInput.value.toLowerCase();
-  const fc = filterComponent.value;
-  const fcl = filterClass.value;
-  const fs = filterSize.value;
-
-  const list = components.filter(c=>{
-    if(fc && c.Component !== fc) return false;
-    if(fcl && c.Class !== fcl) return false;
-    if(fs && c.Size !== fs) return false;
-
-    const hay = (c.Names+" "+c.Manufacturer).toLowerCase();
-    return hay.includes(q);
+  list.forEach(c => {
+    if (!shelves[c.Component]) shelves[c.Component] = [];
+    shelves[c.Component].push(c);
   });
 
-  renderCards(list);
-}
+  const shelvesDiv = document.getElementById("shelves");
+  shelvesDiv.innerHTML = "";
 
-/* ============================================================
-   RENDER HOLO CARDS
-   ============================================================ */
-function renderCards(list){
-  const out = [];
-  for(const c of list){
-    out.push(`
-      <div class="holo-card">
-        <div style="font-size:1.1rem;color:var(--gold);">${c.Names}</div>
-        <div style="margin:6px 0;color:var(--text-soft);">
-          ${c.Component} • ${c.Size} • Grade ${c.Grade} • ${c.Class}
-        </div>
-        <div style="font-size:0.9rem;color:var(--blue-holo);">
-          Shops: ${(c.Shops||[]).join(", ")}
-        </div>
-        <button class="add-route-btn" onclick="addToRoute('${c.Names}')">
-          Add to Route
-        </button>
-      </div>
-    `);
+  for (const [type, items] of Object.entries(shelves)) {
+    const shelf = document.createElement("div");
+    shelf.className = "shelf";
+
+    shelf.innerHTML = `
+      <div class="shelf-title">${type}</div>
+      <div class="shelf-items"></div>
+    `;
+
+    const shelfItems = shelf.querySelector(".shelf-items");
+
+    items.forEach(c => {
+      const box = document.createElement("div");
+      box.className = "component-box";
+      box.innerHTML = `
+        <div class="component-name">${c.Names}</div>
+        <div class="component-meta">S${c.Size} • Grade ${c.Grade} • ${c.Class}</div>
+      `;
+
+      box.onclick = () => openDrawer(c);
+
+      shelfItems.appendChild(box);
+    });
+
+    shelvesDiv.appendChild(shelf);
   }
-  document.getElementById("cards-render").innerHTML = out.join("");
 }
 
-/* ============================================================
-   ROUTE PLANNER LOGIC
-   ============================================================ */
-function addToRoute(name){
+/* Drawer */
+function openDrawer(c) {
+  const drawer = document.getElementById("drawer");
+  drawer.classList.add("open");
+
+  const shopStr = Array.isArray(c.Shops) ? c.Shops.join(", ") :
+                  c.WhereToBuy || "—";
+
+  drawer.innerHTML = `
+    <div class="drawer-title">${c.Names}</div>
+    <div class="drawer-line"><strong>Component:</strong> ${c.Component}</div>
+    <div class="drawer-line"><strong>Size:</strong> ${c.Size}</div>
+    <div class="drawer-line"><strong>Grade:</strong> ${c.Grade}</div>
+    <div class="drawer-line"><strong>Class:</strong> ${c.Class}</div>
+    <div class="drawer-line"><strong>Manufacturer:</strong> ${c.Manufacturer}</div>
+    <div class="drawer-line"><strong>Shops:</strong> ${shopStr}</div>
+
+    <button class="add-route-btn" onclick="addToCart('${c.Names.replace(/'/g,"\\'")}')">
+      Add to Shopping List
+    </button>
+
+    <button class="add-route-btn"
+      style="margin-top:10px;background:rgba(180,20,20,0.4)"
+      onclick="closeDrawer()">
+      Close
+    </button>
+  `;
+}
+
+function closeDrawer() {
+  document.getElementById("drawer").classList.remove("open");
+}
+
+/* Shopping List */
+function addToCart(name) {
   selectedItems.add(name);
-  renderSelected();
+  renderShoppingList();
 }
 
-function renderSelected(){
-  document.getElementById("selected-items").innerHTML =
-    [...selectedItems].map(i=>`<div>${i}</div>`).join("");
+function removeFromCart(name) {
+  selectedItems.delete(name);
+  renderShoppingList();
 }
 
-document.getElementById("generate-route-btn").onclick = ()=>{
-  if(selectedItems.size === 0){
-    alert("Select components first.");
+function renderShoppingList() {
+  const div = document.getElementById("shopping-items");
+
+  if (selectedItems.size === 0) {
+    div.innerHTML = "No components selected.";
     return;
   }
-  const route = computeBestRoute([...selectedItems]);
-  renderRoute(route);
-  drawRouteOnMap(route);
+
+  div.innerHTML = [...selectedItems].map(n =>
+    `<span class="tag">${n}
+      <span class="tag-remove" onclick="removeFromCart('${n.replace(/'/g,"\\'")}')">✕</span>
+    </span>`
+  ).join("");
+}
+
+/* Route Planner (Simple Version) */
+document.getElementById("route-btn").onclick = () => {
+  const out = document.getElementById("route-output");
+
+  if (selectedItems.size === 0) {
+    out.innerHTML = "No components selected.";
+    return;
+  }
+
+  out.innerHTML = `
+    <strong>Recommended Stops:</strong><br><br>
+    1. Area18 / Baijini Point (Most Components)<br>
+    2. Lorville (Second Priority)<br>
+    3. Port Tressler / New Babbage (if needed)<br>
+    4. Avoid Orison unless required<br><br>
+
+    <em>(Advanced route planner available in next build.)</em>
+  `;
 };
-
-/* Compute best route */
-function computeBestRoute(want){
-
-  /* Build location => items mapping */
-  const locMap = {};
-  for(const c of components){
-    if(!want.includes(c.Names)) continue;
-    if(!c.Shops) continue;
-    for(const s of c.Shops){
-      if(!locMap[s]) locMap[s] = new Set();
-      locMap[s].add(c.Names);
-    }
-  }
-
-  const locs = Object.keys(locMap);
-
-  /* Try 1 stop */
-  for(const a of locs){
-    if(coversAll(locMap[a], want)) return [a];
-  }
-
-  /* Try 2 stops */
-  let best2 = null;
-  for(let i=0;i<locs.length;i++){
-    for(let j=i+1;j<locs.length;j++){
-      const cov = union(locMap[locs[i]], locMap[locs[j]]);
-      if(coversAll(cov, want)){
-        const cost = routeCost([locs[i], locs[j]]);
-        if(!best2 || cost < best2.cost){
-          best2 = {route:[locs[i], locs[j]], cost};
-        }
-      }
-    }
-  }
-  if(best2) return best2.route;
-
-  /* Try 3 stops */
-  let best3 = null;
-  for(let i=0;i<locs.length;i++){
-    for(let j=i+1;j<locs.length;j++){
-      for(let k=j+1;k<locs.length;k++){
-        const cov = union3(locMap[locs[i]], locMap[locs[j]], locMap[locs[k]]);
-        if(coversAll(cov, want)){
-          const r = [locs[i], locs[j], locs[k]];
-          const cost = routeCost(r);
-          if(!best3 || cost < best3.cost){
-            best3 = {route:r, cost};
-          }
-        }
-      }
-    }
-  }
-  if(best3) return best3.route;
-
-  /* fallback */
-  return ["Area18"];
-}
-
-function coversAll(set, want){
-  for(const w of want){
-    if(!set.has(w)) return false;
-  }
-  return true;
-}
-
-function union(a,b){
-  const s = new Set(a);
-  for(const x of b) s.add(x);
-  return s;
-}
-
-function union3(a,b,c){
-  const s = new Set(a);
-  for(const x of b) s.add(x);
-  for(const x of c) s.add(x);
-  return s;
-}
-
-/* Route cost calculation */
-function routeCost(route){
-  let sum = 0;
-  for(const r of route){
-    sum += travelCost[r] ?? 5;
-  }
-  return sum;
-}
-
-/* ============================================================
-   ROUTE OUTPUT
-   ============================================================ */
-function renderRoute(route){
-  let html = `<div style="font-size:1.1rem;color:var(--gold);">Optimal Route (${route.length} Stops)</div>`;
-
-  route.forEach((loc, i)=>{
-    const items = components.filter(c=>c.Shops && c.Shops.includes(loc) && selectedItems.has(c.Names))
-      .map(c=>c.Names);
-    html += `
-      <div class="route-stop">
-        <div style="font-size:1.05rem;color:var(--gold);">${i+1}. ${loc}</div>
-        <div style="margin-top:6px;color:var(--text-soft);">${items.join(", ")}</div>
-      </div>
-    `;
-  });
-
-  document.getElementById("route-output").innerHTML = html;
-}
-
-/* ============================================================
-   HOLO MAP — NODES + ROUTE DRAWING
-   ============================================================ */
-const mapCoords = {
-  "Area18": {x:40, y:0},
-  "Bajini Point": {x:80, y:10},
-  "Seraphin": {x:65, y:-25},
-  "Everus Harbor": {x:55, y:40},
-  "Port Tressler": {x:-30, y:-110},
-  "Lorville": {x:-20, y:60},
-  "GrimHex": {x:-80, y:-30},
-  "New Babbage": {x:-50, y:-130},
-  "Orison": {x:50, y:120}
-};
-
-function renderMapNodes(){
-  const g = document.getElementById("map-nodes");
-  const out = [];
-  for(const loc in mapCoords){
-    const p = mapCoords[loc];
-    out.push(`
-      <circle class="holo-node" cx="${p.x}" cy="${p.y}" r="6">
-        <title>${loc}</title>
-      </circle>
-    `);
-  }
-  g.innerHTML = out.join("");
-}
-
-function drawRouteOnMap(route){
-  const g = document.getElementById("map-paths");
-  g.innerHTML = "";
-  for(let i=0;i<route.length-1;i++){
-    const a = mapCoords[route[i]];
-    const b = mapCoords[route[i+1]];
-    if(!a || !b) continue;
-    g.innerHTML += `
-      <line class="holo-path" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"></line>
-    `;
-  }
-}
-
 </script>
+
 </body>
 </html>
