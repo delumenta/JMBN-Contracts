@@ -1,0 +1,1394 @@
+[
+  {
+    "id": "Armor - Nyx-Pyro Gateway",
+    "raw": "Armor - Nyx-Pyro Gateway",
+    "shopName": "Armor",
+    "locationGuess": "Nyx-Pyro Gateway"
+  },
+  {
+    "id": "Armor - Nyx-Stanton Gateway",
+    "raw": "Armor - Nyx-Stanton Gateway",
+    "shopName": "Armor",
+    "locationGuess": "Nyx-Stanton Gateway"
+  },
+  {
+    "id": "CZ Checkmate",
+    "raw": "CZ Checkmate",
+    "shopName": "CZ",
+    "locationGuess": "Checkmate"
+  },
+  {
+    "id": "Cargo - Pyro-Nyx Gateway",
+    "raw": "Cargo - Pyro-Nyx Gateway",
+    "shopName": "Cargo",
+    "locationGuess": "Pyro-Nyx Gateway"
+  },
+  {
+    "id": "Cargo Baijini",
+    "raw": "Cargo Baijini",
+    "shopName": "Cargo",
+    "locationGuess": "Baijini"
+  },
+  {
+    "id": "Cargo Checkmate",
+    "raw": "Cargo Checkmate",
+    "shopName": "Cargo",
+    "locationGuess": "Checkmate"
+  },
+  {
+    "id": "Cargo Dunboro",
+    "raw": "Cargo Dunboro",
+    "shopName": "Cargo",
+    "locationGuess": "Dunboro"
+  },
+  {
+    "id": "Cargo Everus",
+    "raw": "Cargo Everus",
+    "shopName": "Cargo",
+    "locationGuess": "Everus"
+  },
+  {
+    "id": "Cargo Gaslight",
+    "raw": "Cargo Gaslight",
+    "shopName": "Cargo",
+    "locationGuess": "Gaslight"
+  },
+  {
+    "id": "Cargo Magnus Gateway",
+    "raw": "Cargo Magnus Gateway",
+    "shopName": "Cargo",
+    "locationGuess": "Magnus Gateway"
+  },
+  {
+    "id": "Cargo Megumi",
+    "raw": "Cargo Megumi",
+    "shopName": "Cargo",
+    "locationGuess": "Megumi"
+  },
+  {
+    "id": "Cargo Orbituary",
+    "raw": "Cargo Orbituary",
+    "shopName": "Cargo",
+    "locationGuess": "Orbituary"
+  },
+  {
+    "id": "Cargo Pyro Gateway",
+    "raw": "Cargo Pyro Gateway",
+    "shopName": "Cargo",
+    "locationGuess": "Pyro Gateway"
+  },
+  {
+    "id": "Cargo Ruin",
+    "raw": "Cargo Ruin",
+    "shopName": "Cargo",
+    "locationGuess": "Ruin"
+  },
+  {
+    "id": "Cargo Seraphim",
+    "raw": "Cargo Seraphim",
+    "shopName": "Cargo",
+    "locationGuess": "Seraphim"
+  },
+  {
+    "id": "Cargo Services - Nyx-Pyro Gateway",
+    "raw": "Cargo Services - Nyx-Pyro Gateway",
+    "shopName": "Cargo Services",
+    "locationGuess": "Nyx-Pyro Gateway"
+  },
+  {
+    "id": "Cargo Services - Nyx-Stanton Gateway",
+    "raw": "Cargo Services - Nyx-Stanton Gateway",
+    "shopName": "Cargo Services",
+    "locationGuess": "Nyx-Stanton Gateway"
+  },
+  {
+    "id": "Cargo Stanton Gateway",
+    "raw": "Cargo Stanton Gateway",
+    "shopName": "Cargo",
+    "locationGuess": "Stanton Gateway"
+  },
+  {
+    "id": "Cargo Terra Gateway",
+    "raw": "Cargo Terra Gateway",
+    "shopName": "Cargo",
+    "locationGuess": "Terra Gateway"
+  },
+  {
+    "id": "Cargo Tressler",
+    "raw": "Cargo Tressler",
+    "shopName": "Cargo",
+    "locationGuess": "Tressler"
+  },
+  {
+    "id": "CenterMass Area 18",
+    "raw": "CenterMass Area 18",
+    "shopName": "CenterMass",
+    "locationGuess": "Area 18"
+  },
+  {
+    "id": "CenterMass New Babbage",
+    "raw": "CenterMass New Babbage",
+    "shopName": "CenterMass",
+    "locationGuess": "New Babbage"
+  },
+  {
+    "id": "Clinic Ruin Station",
+    "raw": "Clinic Ruin Station",
+    "shopName": "Clinic",
+    "locationGuess": "Ruin Station"
+  },
+  {
+    "id": "Conscientious Objects - Levski",
+    "raw": "Conscientious Objects - Levski",
+    "shopName": "Conscientious Objects",
+    "locationGuess": "Levski"
+  },
+  {
+    "id": "Cordry&apos",
+    "raw": "Cordry&apos",
+    "shopName": "Cordry&apos",
+    "locationGuess": ""
+  },
+  {
+    "id": "Cousin Crow's Orison",
+    "raw": "Cousin Crow's Orison",
+    "shopName": "Cousin",
+    "locationGuess": "Crow's Orison"
+  },
+  {
+    "id": "Covalex Orison",
+    "raw": "Covalex Orison",
+    "shopName": "Covalex",
+    "locationGuess": "Orison"
+  },
+  {
+    "id": "Cubby Area 18",
+    "raw": "Cubby Area 18",
+    "shopName": "Cubby",
+    "locationGuess": "Area 18"
+  },
+  {
+    "id": "Dumper's Area 18",
+    "raw": "Dumper's Area 18",
+    "shopName": "Dumper's",
+    "locationGuess": "Area 18"
+  },
+  {
+    "id": "Dumper's GrimHEX",
+    "raw": "Dumper's GrimHEX",
+    "shopName": "Dumper's",
+    "locationGuess": "GrimHEX"
+  },
+  {
+    "id": "FPS Armor ARCL1",
+    "raw": "FPS Armor ARCL1",
+    "shopName": "FPS",
+    "locationGuess": "Armor ARCL1"
+  },
+  {
+    "id": "FPS Armor ARCL4",
+    "raw": "FPS Armor ARCL4",
+    "shopName": "FPS",
+    "locationGuess": "Armor ARCL4"
+  },
+  {
+    "id": "FPS Armor CRU-L4",
+    "raw": "FPS Armor CRU-L4",
+    "shopName": "FPS",
+    "locationGuess": "Armor CRU-L4"
+  },
+  {
+    "id": "FPS Armor CRUL1",
+    "raw": "FPS Armor CRUL1",
+    "shopName": "FPS",
+    "locationGuess": "Armor CRUL1"
+  },
+  {
+    "id": "FPS Armor Everus",
+    "raw": "FPS Armor Everus",
+    "shopName": "FPS",
+    "locationGuess": "Armor Everus"
+  },
+  {
+    "id": "FPS Armor HURL1",
+    "raw": "FPS Armor HURL1",
+    "shopName": "FPS",
+    "locationGuess": "Armor HURL1"
+  },
+  {
+    "id": "FPS Armor MICL1",
+    "raw": "FPS Armor MICL1",
+    "shopName": "FPS",
+    "locationGuess": "Armor MICL1"
+  },
+  {
+    "id": "FPS Armor MICL4",
+    "raw": "FPS Armor MICL4",
+    "shopName": "FPS",
+    "locationGuess": "Armor MICL4"
+  },
+  {
+    "id": "FPS Armor Magnus Gateway",
+    "raw": "FPS Armor Magnus Gateway",
+    "shopName": "FPS",
+    "locationGuess": "Armor Magnus Gateway"
+  },
+  {
+    "id": "FPS Armor Pyro Gateway",
+    "raw": "FPS Armor Pyro Gateway",
+    "shopName": "FPS",
+    "locationGuess": "Armor Pyro Gateway"
+  },
+  {
+    "id": "FPS Armor Seraphim",
+    "raw": "FPS Armor Seraphim",
+    "shopName": "FPS",
+    "locationGuess": "Armor Seraphim"
+  },
+  {
+    "id": "FPS Armor Stanton Gateway",
+    "raw": "FPS Armor Stanton Gateway",
+    "shopName": "FPS",
+    "locationGuess": "Armor Stanton Gateway"
+  },
+  {
+    "id": "FPS Armor Terra Gateway",
+    "raw": "FPS Armor Terra Gateway",
+    "shopName": "FPS",
+    "locationGuess": "Armor Terra Gateway"
+  },
+  {
+    "id": "FPS Armor Tressler",
+    "raw": "FPS Armor Tressler",
+    "shopName": "FPS",
+    "locationGuess": "Armor Tressler"
+  },
+  {
+    "id": "Frostbite",
+    "raw": "Frostbite",
+    "shopName": "Frostbite",
+    "locationGuess": ""
+  },
+  {
+    "id": "Guns Checkmate",
+    "raw": "Guns Checkmate",
+    "shopName": "Guns",
+    "locationGuess": "Checkmate"
+  },
+  {
+    "id": "Guns Dudley",
+    "raw": "Guns Dudley",
+    "shopName": "Guns",
+    "locationGuess": "Dudley"
+  },
+  {
+    "id": "Guns Endgame",
+    "raw": "Guns Endgame",
+    "shopName": "Guns",
+    "locationGuess": "Endgame"
+  },
+  {
+    "id": "Guns Gaslight",
+    "raw": "Guns Gaslight",
+    "shopName": "Guns",
+    "locationGuess": "Gaslight"
+  },
+  {
+    "id": "Guns Megumi",
+    "raw": "Guns Megumi",
+    "shopName": "Guns",
+    "locationGuess": "Megumi"
+  },
+  {
+    "id": "Guns Orbituary",
+    "raw": "Guns Orbituary",
+    "shopName": "Guns",
+    "locationGuess": "Orbituary"
+  },
+  {
+    "id": "Guns Patch City",
+    "raw": "Guns Patch City",
+    "shopName": "Guns",
+    "locationGuess": "Patch City"
+  },
+  {
+    "id": "Guns Rat's Nest",
+    "raw": "Guns Rat's Nest",
+    "shopName": "Guns",
+    "locationGuess": "Rat's Nest"
+  },
+  {
+    "id": "Guns Rod's Fuel",
+    "raw": "Guns Rod's Fuel",
+    "shopName": "Guns",
+    "locationGuess": "Rod's Fuel"
+  },
+  {
+    "id": "Guns Ruin",
+    "raw": "Guns Ruin",
+    "shopName": "Guns",
+    "locationGuess": "Ruin"
+  },
+  {
+    "id": "Guns Starlight",
+    "raw": "Guns Starlight",
+    "shopName": "Guns",
+    "locationGuess": "Starlight"
+  },
+  {
+    "id": "Kel-To New Babbage",
+    "raw": "Kel-To New Babbage",
+    "shopName": "Kel-To",
+    "locationGuess": "New Babbage"
+  },
+  {
+    "id": "Kel-To Orison",
+    "raw": "Kel-To Orison",
+    "shopName": "Kel-To",
+    "locationGuess": "Orison"
+  },
+  {
+    "id": "LF Weapons - Nyx-Pyro Gateway",
+    "raw": "LF Weapons - Nyx-Pyro Gateway",
+    "shopName": "LF Weapons",
+    "locationGuess": "Nyx-Pyro Gateway"
+  },
+  {
+    "id": "LF Weapons - Nyx-Stanton Gateway",
+    "raw": "LF Weapons - Nyx-Stanton Gateway",
+    "shopName": "LF Weapons",
+    "locationGuess": "Nyx-Stanton Gateway"
+  },
+  {
+    "id": "Live Fire ARCL1",
+    "raw": "Live Fire ARCL1",
+    "shopName": "Live",
+    "locationGuess": "Fire ARCL1"
+  },
+  {
+    "id": "Live Fire CRUL1",
+    "raw": "Live Fire CRUL1",
+    "shopName": "Live",
+    "locationGuess": "Fire CRUL1"
+  },
+  {
+    "id": "Live Fire CRUL5",
+    "raw": "Live Fire CRUL5",
+    "shopName": "Live",
+    "locationGuess": "Fire CRUL5"
+  },
+  {
+    "id": "Live Fire HURL1",
+    "raw": "Live Fire HURL1",
+    "shopName": "Live",
+    "locationGuess": "Fire HURL1"
+  },
+  {
+    "id": "Live Fire HURL2",
+    "raw": "Live Fire HURL2",
+    "shopName": "Live",
+    "locationGuess": "Fire HURL2"
+  },
+  {
+    "id": "Live Fire HURL4",
+    "raw": "Live Fire HURL4",
+    "shopName": "Live",
+    "locationGuess": "Fire HURL4"
+  },
+  {
+    "id": "Live Fire HURL5",
+    "raw": "Live Fire HURL5",
+    "shopName": "Live",
+    "locationGuess": "Fire HURL5"
+  },
+  {
+    "id": "Live Fire MICL1",
+    "raw": "Live Fire MICL1",
+    "shopName": "Live",
+    "locationGuess": "Fire MICL1"
+  },
+  {
+    "id": "Live Fire MICL2",
+    "raw": "Live Fire MICL2",
+    "shopName": "Live",
+    "locationGuess": "Fire MICL2"
+  },
+  {
+    "id": "Live Fire MICL3",
+    "raw": "Live Fire MICL3",
+    "shopName": "Live",
+    "locationGuess": "Fire MICL3"
+  },
+  {
+    "id": "Live Fire Magnus Gateway",
+    "raw": "Live Fire Magnus Gateway",
+    "shopName": "Live",
+    "locationGuess": "Fire Magnus Gateway"
+  },
+  {
+    "id": "Live Fire Pyro Gateway",
+    "raw": "Live Fire Pyro Gateway",
+    "shopName": "Live",
+    "locationGuess": "Fire Pyro Gateway"
+  },
+  {
+    "id": "Live Fire Seraphim",
+    "raw": "Live Fire Seraphim",
+    "shopName": "Live",
+    "locationGuess": "Fire Seraphim"
+  },
+  {
+    "id": "Live Fire Stanton Gateway",
+    "raw": "Live Fire Stanton Gateway",
+    "shopName": "Live",
+    "locationGuess": "Fire Stanton Gateway"
+  },
+  {
+    "id": "Live Fire Terra Gateway",
+    "raw": "Live Fire Terra Gateway",
+    "shopName": "Live",
+    "locationGuess": "Fire Terra Gateway"
+  },
+  {
+    "id": "Maria Pure of Heart",
+    "raw": "Maria Pure of Heart",
+    "shopName": "Maria",
+    "locationGuess": "Pure of Heart"
+  },
+  {
+    "id": "Medical Checkmate",
+    "raw": "Medical Checkmate",
+    "shopName": "Medical",
+    "locationGuess": "Checkmate"
+  },
+  {
+    "id": "Medical Dudley",
+    "raw": "Medical Dudley",
+    "shopName": "Medical",
+    "locationGuess": "Dudley"
+  },
+  {
+    "id": "Medical Endgame",
+    "raw": "Medical Endgame",
+    "shopName": "Medical",
+    "locationGuess": "Endgame"
+  },
+  {
+    "id": "Medical Gaslight",
+    "raw": "Medical Gaslight",
+    "shopName": "Medical",
+    "locationGuess": "Gaslight"
+  },
+  {
+    "id": "Medical Megumi",
+    "raw": "Medical Megumi",
+    "shopName": "Medical",
+    "locationGuess": "Megumi"
+  },
+  {
+    "id": "Medical Orbituary",
+    "raw": "Medical Orbituary",
+    "shopName": "Medical",
+    "locationGuess": "Orbituary"
+  },
+  {
+    "id": "Medical Patch City",
+    "raw": "Medical Patch City",
+    "shopName": "Medical",
+    "locationGuess": "Patch City"
+  },
+  {
+    "id": "Medical Rat's Nest",
+    "raw": "Medical Rat's Nest",
+    "shopName": "Medical",
+    "locationGuess": "Rat's Nest"
+  },
+  {
+    "id": "Medical Rod's Fuel",
+    "raw": "Medical Rod's Fuel",
+    "shopName": "Medical",
+    "locationGuess": "Rod's Fuel"
+  },
+  {
+    "id": "Medical Starlight",
+    "raw": "Medical Starlight",
+    "shopName": "Medical",
+    "locationGuess": "Starlight"
+  },
+  {
+    "id": "Mining ARCL1",
+    "raw": "Mining ARCL1",
+    "shopName": "Mining",
+    "locationGuess": "ARCL1"
+  },
+  {
+    "id": "Mining ARCL2",
+    "raw": "Mining ARCL2",
+    "shopName": "Mining",
+    "locationGuess": "ARCL2"
+  },
+  {
+    "id": "Mining ARCL4",
+    "raw": "Mining ARCL4",
+    "shopName": "Mining",
+    "locationGuess": "ARCL4"
+  },
+  {
+    "id": "Mining CRUL1",
+    "raw": "Mining CRUL1",
+    "shopName": "Mining",
+    "locationGuess": "CRUL1"
+  },
+  {
+    "id": "Mining Checkmate",
+    "raw": "Mining Checkmate",
+    "shopName": "Mining",
+    "locationGuess": "Checkmate"
+  },
+  {
+    "id": "Mining HURL1",
+    "raw": "Mining HURL1",
+    "shopName": "Mining",
+    "locationGuess": "HURL1"
+  },
+  {
+    "id": "Mining HURL2",
+    "raw": "Mining HURL2",
+    "shopName": "Mining",
+    "locationGuess": "HURL2"
+  },
+  {
+    "id": "Mining MICL1",
+    "raw": "Mining MICL1",
+    "shopName": "Mining",
+    "locationGuess": "MICL1"
+  },
+  {
+    "id": "Mining MICL2",
+    "raw": "Mining MICL2",
+    "shopName": "Mining",
+    "locationGuess": "MICL2"
+  },
+  {
+    "id": "Mining MICL5",
+    "raw": "Mining MICL5",
+    "shopName": "Mining",
+    "locationGuess": "MICL5"
+  },
+  {
+    "id": "Mining Magnus",
+    "raw": "Mining Magnus",
+    "shopName": "Mining",
+    "locationGuess": "Magnus"
+  },
+  {
+    "id": "Mining Orbituary",
+    "raw": "Mining Orbituary",
+    "shopName": "Mining",
+    "locationGuess": "Orbituary"
+  },
+  {
+    "id": "Mining Pyro Gateway",
+    "raw": "Mining Pyro Gateway",
+    "shopName": "Mining",
+    "locationGuess": "Pyro Gateway"
+  },
+  {
+    "id": "Mining Ruin",
+    "raw": "Mining Ruin",
+    "shopName": "Mining",
+    "locationGuess": "Ruin"
+  },
+  {
+    "id": "Mining Stanton Gateway",
+    "raw": "Mining Stanton Gateway",
+    "shopName": "Mining",
+    "locationGuess": "Stanton Gateway"
+  },
+  {
+    "id": "Mining Terra Gateway",
+    "raw": "Mining Terra Gateway",
+    "shopName": "Mining",
+    "locationGuess": "Terra Gateway"
+  },
+  {
+    "id": "Nyx Nax - Levski",
+    "raw": "Nyx Nax - Levski",
+    "shopName": "Nyx Nax",
+    "locationGuess": "Levski"
+  },
+  {
+    "id": "Omega New Babbage",
+    "raw": "Omega New Babbage",
+    "shopName": "Omega",
+    "locationGuess": "New Babbage"
+  },
+  {
+    "id": "Orison General",
+    "raw": "Orison General",
+    "shopName": "Orison",
+    "locationGuess": "General"
+  },
+  {
+    "id": "PB - Nyx-Pyro Gateway",
+    "raw": "PB - Nyx-Pyro Gateway",
+    "shopName": "PB",
+    "locationGuess": "Nyx-Pyro Gateway"
+  },
+  {
+    "id": "PB - Nyx-Stanton Gateway",
+    "raw": "PB - Nyx-Stanton Gateway",
+    "shopName": "PB",
+    "locationGuess": "Nyx-Stanton Gateway"
+  },
+  {
+    "id": "PB - Pyro-Nyx Gateway",
+    "raw": "PB - Pyro-Nyx Gateway",
+    "shopName": "PB",
+    "locationGuess": "Pyro-Nyx Gateway"
+  },
+  {
+    "id": "Pharmacy - Levski",
+    "raw": "Pharmacy - Levski",
+    "shopName": "Pharmacy",
+    "locationGuess": "Levski"
+  },
+  {
+    "id": "Pharmacy - Nyx-Pyro Gateway",
+    "raw": "Pharmacy - Nyx-Pyro Gateway",
+    "shopName": "Pharmacy",
+    "locationGuess": "Nyx-Pyro Gateway"
+  },
+  {
+    "id": "Pharmacy - Nyx-Stanton Gateway",
+    "raw": "Pharmacy - Nyx-Stanton Gateway",
+    "shopName": "Pharmacy",
+    "locationGuess": "Nyx-Stanton Gateway"
+  },
+  {
+    "id": "Pharmacy ARCL1",
+    "raw": "Pharmacy ARCL1",
+    "shopName": "Pharmacy",
+    "locationGuess": "ARCL1"
+  },
+  {
+    "id": "Pharmacy ARCL2",
+    "raw": "Pharmacy ARCL2",
+    "shopName": "Pharmacy",
+    "locationGuess": "ARCL2"
+  },
+  {
+    "id": "Pharmacy ARCL4",
+    "raw": "Pharmacy ARCL4",
+    "shopName": "Pharmacy",
+    "locationGuess": "ARCL4"
+  },
+  {
+    "id": "Pharmacy ARCL5",
+    "raw": "Pharmacy ARCL5",
+    "shopName": "Pharmacy",
+    "locationGuess": "ARCL5"
+  },
+  {
+    "id": "Pharmacy Area 18",
+    "raw": "Pharmacy Area 18",
+    "shopName": "Pharmacy",
+    "locationGuess": "Area 18"
+  },
+  {
+    "id": "Pharmacy Baijini",
+    "raw": "Pharmacy Baijini",
+    "shopName": "Pharmacy",
+    "locationGuess": "Baijini"
+  },
+  {
+    "id": "Pharmacy CRUL1",
+    "raw": "Pharmacy CRUL1",
+    "shopName": "Pharmacy",
+    "locationGuess": "CRUL1"
+  },
+  {
+    "id": "Pharmacy CRUL4",
+    "raw": "Pharmacy CRUL4",
+    "shopName": "Pharmacy",
+    "locationGuess": "CRUL4"
+  },
+  {
+    "id": "Pharmacy CRUL5",
+    "raw": "Pharmacy CRUL5",
+    "shopName": "Pharmacy",
+    "locationGuess": "CRUL5"
+  },
+  {
+    "id": "Pharmacy Everus",
+    "raw": "Pharmacy Everus",
+    "shopName": "Pharmacy",
+    "locationGuess": "Everus"
+  },
+  {
+    "id": "Pharmacy GrimHEX",
+    "raw": "Pharmacy GrimHEX",
+    "shopName": "Pharmacy",
+    "locationGuess": "GrimHEX"
+  },
+  {
+    "id": "Pharmacy HURL1",
+    "raw": "Pharmacy HURL1",
+    "shopName": "Pharmacy",
+    "locationGuess": "HURL1"
+  },
+  {
+    "id": "Pharmacy HURL2",
+    "raw": "Pharmacy HURL2",
+    "shopName": "Pharmacy",
+    "locationGuess": "HURL2"
+  },
+  {
+    "id": "Pharmacy HURL3",
+    "raw": "Pharmacy HURL3",
+    "shopName": "Pharmacy",
+    "locationGuess": "HURL3"
+  },
+  {
+    "id": "Pharmacy HURL4",
+    "raw": "Pharmacy HURL4",
+    "shopName": "Pharmacy",
+    "locationGuess": "HURL4"
+  },
+  {
+    "id": "Pharmacy HURL5",
+    "raw": "Pharmacy HURL5",
+    "shopName": "Pharmacy",
+    "locationGuess": "HURL5"
+  },
+  {
+    "id": "Pharmacy MICL1",
+    "raw": "Pharmacy MICL1",
+    "shopName": "Pharmacy",
+    "locationGuess": "MICL1"
+  },
+  {
+    "id": "Pharmacy MICL2",
+    "raw": "Pharmacy MICL2",
+    "shopName": "Pharmacy",
+    "locationGuess": "MICL2"
+  },
+  {
+    "id": "Pharmacy MICL3",
+    "raw": "Pharmacy MICL3",
+    "shopName": "Pharmacy",
+    "locationGuess": "MICL3"
+  },
+  {
+    "id": "Pharmacy MICL4",
+    "raw": "Pharmacy MICL4",
+    "shopName": "Pharmacy",
+    "locationGuess": "MICL4"
+  },
+  {
+    "id": "Pharmacy MICL5",
+    "raw": "Pharmacy MICL5",
+    "shopName": "Pharmacy",
+    "locationGuess": "MICL5"
+  },
+  {
+    "id": "Pharmacy Magnus Gateway",
+    "raw": "Pharmacy Magnus Gateway",
+    "shopName": "Pharmacy",
+    "locationGuess": "Magnus Gateway"
+  },
+  {
+    "id": "Pharmacy New Babbage",
+    "raw": "Pharmacy New Babbage",
+    "shopName": "Pharmacy",
+    "locationGuess": "New Babbage"
+  },
+  {
+    "id": "Pharmacy Pyro Gateway",
+    "raw": "Pharmacy Pyro Gateway",
+    "shopName": "Pharmacy",
+    "locationGuess": "Pyro Gateway"
+  },
+  {
+    "id": "Pharmacy Seraphim",
+    "raw": "Pharmacy Seraphim",
+    "shopName": "Pharmacy",
+    "locationGuess": "Seraphim"
+  },
+  {
+    "id": "Pharmacy Stanton Gateway",
+    "raw": "Pharmacy Stanton Gateway",
+    "shopName": "Pharmacy",
+    "locationGuess": "Stanton Gateway"
+  },
+  {
+    "id": "Pharmacy Terra Gateway",
+    "raw": "Pharmacy Terra Gateway",
+    "shopName": "Pharmacy",
+    "locationGuess": "Terra Gateway"
+  },
+  {
+    "id": "Pharmacy Tressler",
+    "raw": "Pharmacy Tressler",
+    "shopName": "Pharmacy",
+    "locationGuess": "Tressler"
+  },
+  {
+    "id": "Platinum ARCL1",
+    "raw": "Platinum ARCL1",
+    "shopName": "Platinum",
+    "locationGuess": "ARCL1"
+  },
+  {
+    "id": "Platinum Baijini",
+    "raw": "Platinum Baijini",
+    "shopName": "Platinum",
+    "locationGuess": "Baijini"
+  },
+  {
+    "id": "Platinum Bay Terra",
+    "raw": "Platinum Bay Terra",
+    "shopName": "Platinum",
+    "locationGuess": "Bay Terra"
+  },
+  {
+    "id": "Platinum CRUL1",
+    "raw": "Platinum CRUL1",
+    "shopName": "Platinum",
+    "locationGuess": "CRUL1"
+  },
+  {
+    "id": "Platinum CRUL4",
+    "raw": "Platinum CRUL4",
+    "shopName": "Platinum",
+    "locationGuess": "CRUL4"
+  },
+  {
+    "id": "Platinum CRUL5",
+    "raw": "Platinum CRUL5",
+    "shopName": "Platinum",
+    "locationGuess": "CRUL5"
+  },
+  {
+    "id": "Platinum Everus",
+    "raw": "Platinum Everus",
+    "shopName": "Platinum",
+    "locationGuess": "Everus"
+  },
+  {
+    "id": "Platinum HURL2",
+    "raw": "Platinum HURL2",
+    "shopName": "Platinum",
+    "locationGuess": "HURL2"
+  },
+  {
+    "id": "Platinum HURL3",
+    "raw": "Platinum HURL3",
+    "shopName": "Platinum",
+    "locationGuess": "HURL3"
+  },
+  {
+    "id": "Platinum HURL5",
+    "raw": "Platinum HURL5",
+    "shopName": "Platinum",
+    "locationGuess": "HURL5"
+  },
+  {
+    "id": "Platinum Magnus",
+    "raw": "Platinum Magnus",
+    "shopName": "Platinum",
+    "locationGuess": "Magnus"
+  },
+  {
+    "id": "Platinum Pyro Gateway",
+    "raw": "Platinum Pyro Gateway",
+    "shopName": "Platinum",
+    "locationGuess": "Pyro Gateway"
+  },
+  {
+    "id": "Platinum Stanton Gateway",
+    "raw": "Platinum Stanton Gateway",
+    "shopName": "Platinum",
+    "locationGuess": "Stanton Gateway"
+  },
+  {
+    "id": "Platinum Tressler",
+    "raw": "Platinum Tressler",
+    "shopName": "Platinum",
+    "locationGuess": "Tressler"
+  },
+  {
+    "id": "Providence Surplus",
+    "raw": "Providence Surplus",
+    "shopName": "Providence",
+    "locationGuess": "Surplus"
+  },
+  {
+    "id": "Refinery Shop - Nyx-Pyro Gateway",
+    "raw": "Refinery Shop - Nyx-Pyro Gateway",
+    "shopName": "Refinery Shop",
+    "locationGuess": "Nyx-Pyro Gateway"
+  },
+  {
+    "id": "Refinery Shop - Nyx-Stanton Gateway",
+    "raw": "Refinery Shop - Nyx-Stanton Gateway",
+    "shopName": "Refinery Shop",
+    "locationGuess": "Nyx-Stanton Gateway"
+  },
+  {
+    "id": "Refinery Supplies - Levski",
+    "raw": "Refinery Supplies - Levski",
+    "shopName": "Refinery Supplies",
+    "locationGuess": "Levski"
+  },
+  {
+    "id": "Shepherd&apos",
+    "raw": "Shepherd&apos",
+    "shopName": "Shepherd&apos",
+    "locationGuess": ""
+  },
+  {
+    "id": "Ship Parts Checkmate",
+    "raw": "Ship Parts Checkmate",
+    "shopName": "Ship",
+    "locationGuess": "Parts Checkmate"
+  },
+  {
+    "id": "Ship Parts Dudley",
+    "raw": "Ship Parts Dudley",
+    "shopName": "Ship",
+    "locationGuess": "Parts Dudley"
+  },
+  {
+    "id": "Ship Parts Endgame",
+    "raw": "Ship Parts Endgame",
+    "shopName": "Ship",
+    "locationGuess": "Parts Endgame"
+  },
+  {
+    "id": "Ship Parts Gaslight",
+    "raw": "Ship Parts Gaslight",
+    "shopName": "Ship",
+    "locationGuess": "Parts Gaslight"
+  },
+  {
+    "id": "Ship Parts Megumi",
+    "raw": "Ship Parts Megumi",
+    "shopName": "Ship",
+    "locationGuess": "Parts Megumi"
+  },
+  {
+    "id": "Ship Parts Orbituary",
+    "raw": "Ship Parts Orbituary",
+    "shopName": "Ship",
+    "locationGuess": "Parts Orbituary"
+  },
+  {
+    "id": "Ship Parts Patch City",
+    "raw": "Ship Parts Patch City",
+    "shopName": "Ship",
+    "locationGuess": "Parts Patch City"
+  },
+  {
+    "id": "Ship Parts Rat's Nest",
+    "raw": "Ship Parts Rat's Nest",
+    "shopName": "Ship",
+    "locationGuess": "Parts Rat's Nest"
+  },
+  {
+    "id": "Ship Parts Rod's Fuel",
+    "raw": "Ship Parts Rod's Fuel",
+    "shopName": "Ship",
+    "locationGuess": "Parts Rod's Fuel"
+  },
+  {
+    "id": "Ship Parts Ruin",
+    "raw": "Ship Parts Ruin",
+    "shopName": "Ship",
+    "locationGuess": "Parts Ruin"
+  },
+  {
+    "id": "Ship Parts Starlight",
+    "raw": "Ship Parts Starlight",
+    "shopName": "Ship",
+    "locationGuess": "Parts Starlight"
+  },
+  {
+    "id": "Ship Weapons - Nyx-Pyro Gateway",
+    "raw": "Ship Weapons - Nyx-Pyro Gateway",
+    "shopName": "Ship Weapons",
+    "locationGuess": "Nyx-Pyro Gateway"
+  },
+  {
+    "id": "Ship Weapons - Nyx-Stanton Gateway",
+    "raw": "Ship Weapons - Nyx-Stanton Gateway",
+    "shopName": "Ship Weapons",
+    "locationGuess": "Nyx-Stanton Gateway"
+  },
+  {
+    "id": "Ship Weapons ARCL2",
+    "raw": "Ship Weapons ARCL2",
+    "shopName": "Ship",
+    "locationGuess": "Weapons ARCL2"
+  },
+  {
+    "id": "Ship Weapons ARCL3",
+    "raw": "Ship Weapons ARCL3",
+    "shopName": "Ship",
+    "locationGuess": "Weapons ARCL3"
+  },
+  {
+    "id": "Ship Weapons ARCL5",
+    "raw": "Ship Weapons ARCL5",
+    "shopName": "Ship",
+    "locationGuess": "Weapons ARCL5"
+  },
+  {
+    "id": "Ship Weapons Baijini",
+    "raw": "Ship Weapons Baijini",
+    "shopName": "Ship",
+    "locationGuess": "Weapons Baijini"
+  },
+  {
+    "id": "Ship Weapons CRUL5",
+    "raw": "Ship Weapons CRUL5",
+    "shopName": "Ship",
+    "locationGuess": "Weapons CRUL5"
+  },
+  {
+    "id": "Ship Weapons HURL2",
+    "raw": "Ship Weapons HURL2",
+    "shopName": "Ship",
+    "locationGuess": "Weapons HURL2"
+  },
+  {
+    "id": "Ship Weapons HURL3",
+    "raw": "Ship Weapons HURL3",
+    "shopName": "Ship",
+    "locationGuess": "Weapons HURL3"
+  },
+  {
+    "id": "Ship Weapons HURL4",
+    "raw": "Ship Weapons HURL4",
+    "shopName": "Ship",
+    "locationGuess": "Weapons HURL4"
+  },
+  {
+    "id": "Ship Weapons HURL5",
+    "raw": "Ship Weapons HURL5",
+    "shopName": "Ship",
+    "locationGuess": "Weapons HURL5"
+  },
+  {
+    "id": "Ship Weapons MICL2",
+    "raw": "Ship Weapons MICL2",
+    "shopName": "Ship",
+    "locationGuess": "Weapons MICL2"
+  },
+  {
+    "id": "Ship Weapons MICL3",
+    "raw": "Ship Weapons MICL3",
+    "shopName": "Ship",
+    "locationGuess": "Weapons MICL3"
+  },
+  {
+    "id": "Ship Weapons Magnus Gateway",
+    "raw": "Ship Weapons Magnus Gateway",
+    "shopName": "Ship",
+    "locationGuess": "Weapons Magnus Gateway"
+  },
+  {
+    "id": "Ship Weapons Pyro Gateway",
+    "raw": "Ship Weapons Pyro Gateway",
+    "shopName": "Ship",
+    "locationGuess": "Weapons Pyro Gateway"
+  },
+  {
+    "id": "Ship Weapons SGW",
+    "raw": "Ship Weapons SGW",
+    "shopName": "Ship",
+    "locationGuess": "Weapons SGW"
+  },
+  {
+    "id": "Ship Weapons Seraphim",
+    "raw": "Ship Weapons Seraphim",
+    "shopName": "Ship",
+    "locationGuess": "Weapons Seraphim"
+  },
+  {
+    "id": "Ship Weapons Showroom Orison",
+    "raw": "Ship Weapons Showroom Orison",
+    "shopName": "Ship",
+    "locationGuess": "Weapons Showroom Orison"
+  },
+  {
+    "id": "Ship Weapons Terra Gateway",
+    "raw": "Ship Weapons Terra Gateway",
+    "shopName": "Ship",
+    "locationGuess": "Weapons Terra Gateway"
+  },
+  {
+    "id": "Ship Weapons- Pyro-Nyx Gateway",
+    "raw": "Ship Weapons- Pyro-Nyx Gateway",
+    "shopName": "Ship",
+    "locationGuess": "Weapons- Pyro-Nyx Gateway"
+  },
+  {
+    "id": "Shooters Checkmate",
+    "raw": "Shooters Checkmate",
+    "shopName": "Shooters",
+    "locationGuess": "Checkmate"
+  },
+  {
+    "id": "Shooters Orbituary",
+    "raw": "Shooters Orbituary",
+    "shopName": "Shooters",
+    "locationGuess": "Orbituary"
+  },
+  {
+    "id": "Shooters Ruin",
+    "raw": "Shooters Ruin",
+    "shopName": "Shooters",
+    "locationGuess": "Ruin"
+  },
+  {
+    "id": "Shop Arid Reach",
+    "raw": "Shop Arid Reach",
+    "shopName": "Shop",
+    "locationGuess": "Arid Reach"
+  },
+  {
+    "id": "Shop Ashland",
+    "raw": "Shop Ashland",
+    "shopName": "Shop",
+    "locationGuess": "Ashland"
+  },
+  {
+    "id": "Shop Astors",
+    "raw": "Shop Astors",
+    "shopName": "Shop",
+    "locationGuess": "Astors"
+  },
+  {
+    "id": "Shop Blackrock",
+    "raw": "Shop Blackrock",
+    "shopName": "Shop",
+    "locationGuess": "Blackrock"
+  },
+  {
+    "id": "Shop Bueno Ravine",
+    "raw": "Shop Bueno Ravine",
+    "shopName": "Shop",
+    "locationGuess": "Bueno Ravine"
+  },
+  {
+    "id": "Shop Canard View",
+    "raw": "Shop Canard View",
+    "shopName": "Shop",
+    "locationGuess": "Canard View"
+  },
+  {
+    "id": "Shop Carver's Ridge",
+    "raw": "Shop Carver's Ridge",
+    "shopName": "Shop",
+    "locationGuess": "Carver's Ridge"
+  },
+  {
+    "id": "Shop Chawla's Beach",
+    "raw": "Shop Chawla's Beach",
+    "shopName": "Shop",
+    "locationGuess": "Chawla's Beach"
+  },
+  {
+    "id": "Shop Dunboro",
+    "raw": "Shop Dunboro",
+    "shopName": "Shop",
+    "locationGuess": "Dunboro"
+  },
+  {
+    "id": "Shop Fallow",
+    "raw": "Shop Fallow",
+    "shopName": "Shop",
+    "locationGuess": "Fallow"
+  },
+  {
+    "id": "Shop Frigid",
+    "raw": "Shop Frigid",
+    "shopName": "Shop",
+    "locationGuess": "Frigid"
+  },
+  {
+    "id": "Shop Goner's Deal",
+    "raw": "Shop Goner's Deal",
+    "shopName": "Shop",
+    "locationGuess": "Goner's Deal"
+  },
+  {
+    "id": "Shop Jackson's Swap",
+    "raw": "Shop Jackson's Swap",
+    "shopName": "Shop",
+    "locationGuess": "Jackson's Swap"
+  },
+  {
+    "id": "Shop Kabir's",
+    "raw": "Shop Kabir's",
+    "shopName": "Shop",
+    "locationGuess": "Kabir's"
+  },
+  {
+    "id": "Shop Last Landings",
+    "raw": "Shop Last Landings",
+    "shopName": "Shop",
+    "locationGuess": "Last Landings"
+  },
+  {
+    "id": "Shop Makers Point",
+    "raw": "Shop Makers Point",
+    "shopName": "Shop",
+    "locationGuess": "Makers Point"
+  },
+  {
+    "id": "Shop Narena's Rest",
+    "raw": "Shop Narena's Rest",
+    "shopName": "Shop",
+    "locationGuess": "Narena's Rest"
+  },
+  {
+    "id": "Shop Ostler's Claim",
+    "raw": "Shop Ostler's Claim",
+    "shopName": "Shop",
+    "locationGuess": "Ostler's Claim"
+  },
+  {
+    "id": "Shop Pickers",
+    "raw": "Shop Pickers",
+    "shopName": "Shop",
+    "locationGuess": "Pickers"
+  },
+  {
+    "id": "Shop Prophet's Peak",
+    "raw": "Shop Prophet's Peak",
+    "shopName": "Shop",
+    "locationGuess": "Prophet's Peak"
+  },
+  {
+    "id": "Shop Rappel",
+    "raw": "Shop Rappel",
+    "shopName": "Shop",
+    "locationGuess": "Rappel"
+  },
+  {
+    "id": "Shop Rough Landing",
+    "raw": "Shop Rough Landing",
+    "shopName": "Shop",
+    "locationGuess": "Rough Landing"
+  },
+  {
+    "id": "Shop Rustville",
+    "raw": "Shop Rustville",
+    "shopName": "Shop",
+    "locationGuess": "Rustville"
+  },
+  {
+    "id": "Shop Sacren's Plot",
+    "raw": "Shop Sacren's Plot",
+    "shopName": "Shop",
+    "locationGuess": "Sacren's Plot"
+  },
+  {
+    "id": "Shop Seer's Canyon",
+    "raw": "Shop Seer's Canyon",
+    "shopName": "Shop",
+    "locationGuess": "Seer's Canyon"
+  },
+  {
+    "id": "Shop Stag's Rut",
+    "raw": "Shop Stag's Rut",
+    "shopName": "Shop",
+    "locationGuess": "Stag's Rut"
+  },
+  {
+    "id": "Shop Sunset Mesa",
+    "raw": "Shop Sunset Mesa",
+    "shopName": "Shop",
+    "locationGuess": "Sunset Mesa"
+  },
+  {
+    "id": "Shop The Yard",
+    "raw": "Shop The Yard",
+    "shopName": "Shop",
+    "locationGuess": "The Yard"
+  },
+  {
+    "id": "Shop Windfall",
+    "raw": "Shop Windfall",
+    "shopName": "Shop",
+    "locationGuess": "Windfall"
+  },
+  {
+    "id": "Shop Yang's Place",
+    "raw": "Shop Yang's Place",
+    "shopName": "Shop",
+    "locationGuess": "Yang's Place"
+  },
+  {
+    "id": "Shop Zephyr",
+    "raw": "Shop Zephyr",
+    "shopName": "Shop",
+    "locationGuess": "Zephyr"
+  },
+  {
+    "id": "Shubin New Babbage",
+    "raw": "Shubin New Babbage",
+    "shopName": "Shubin",
+    "locationGuess": "New Babbage"
+  },
+  {
+    "id": "Skutters Grim",
+    "raw": "Skutters Grim",
+    "shopName": "Skutters",
+    "locationGuess": "Grim"
+  },
+  {
+    "id": "Supplies - Levski",
+    "raw": "Supplies - Levski",
+    "shopName": "Supplies",
+    "locationGuess": "Levski"
+  },
+  {
+    "id": "Tammany and Sons",
+    "raw": "Tammany and Sons",
+    "shopName": "Tammany",
+    "locationGuess": "and Sons"
+  },
+  {
+    "id": "Teach&apos",
+    "raw": "Teach&apos",
+    "shopName": "Teach&apos",
+    "locationGuess": ""
+  },
+  {
+    "id": "Tools &",
+    "raw": "Tools &",
+    "shopName": "Tools",
+    "locationGuess": "&"
+  },
+  {
+    "id": "s - Levski",
+    "raw": "s - Levski",
+    "shopName": "s",
+    "locationGuess": "Levski"
+  },
+  {
+    "id": "s Item Shop - Levski",
+    "raw": "s Item Shop - Levski",
+    "shopName": "s Item Shop",
+    "locationGuess": "Levski"
+  },
+  {
+    "id": "s Rest",
+    "raw": "s Rest",
+    "shopName": "s",
+    "locationGuess": "Rest"
+  }
+]
