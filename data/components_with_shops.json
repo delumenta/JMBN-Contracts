@@ -6,7 +6,6 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -18,7 +17,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -30,7 +28,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Platinum ARCL1; Platinum CRUL1; Platinum CRUL4; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Platinum ARCL1",
       "Platinum CRUL1",
@@ -57,7 +54,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Cousin Crow's Orison; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum HURL3; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Cousin Crow's Orison",
       "PB - Nyx-Pyro Gateway",
@@ -78,7 +74,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -90,7 +85,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Dumper's Area 18; Platinum HURL5",
     "Shops": [
       "Dumper's Area 18",
       "Platinum HURL5"
@@ -103,7 +97,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Platinum CRUL4; Platinum HURL3; Platinum HURL5",
     "Shops": [
       "Dumper's Area 18",
       "Platinum CRUL4",
@@ -118,7 +111,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -130,7 +122,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -142,7 +133,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -154,7 +144,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage"
@@ -167,7 +156,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Platinum CRUL1; Platinum CRUL4",
     "Shops": [
       "Dumper's Area 18",
       "Platinum CRUL1",
@@ -181,7 +169,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Platinum HURL3",
     "Shops": [
       "Platinum HURL3"
     ]
@@ -193,7 +180,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL1",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -207,7 +193,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Cousin Crow's Orison; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Cousin Crow's Orison",
       "Ship Parts Checkmate",
@@ -232,7 +217,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Cousin Crow's Orison; Platinum Everus",
     "Shops": [
       "Cousin Crow's Orison",
       "Platinum Everus"
@@ -245,7 +229,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum Tressler; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -272,7 +255,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Platinum CRUL4",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -286,7 +268,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum CRUL4; Platinum Everus",
     "Shops": [
       "Omega New Babbage",
       "Platinum CRUL4",
@@ -300,7 +281,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Platinum HURL3",
     "Shops": [
       "Platinum HURL3"
     ]
@@ -312,7 +292,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Omega New Babbage",
     "Shops": [
       "Omega New Babbage"
     ]
@@ -324,7 +303,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL4; Platinum HURL3",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -339,7 +317,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -352,7 +329,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -365,7 +341,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum CRUL4; Platinum Everus",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum CRUL4",
@@ -379,7 +354,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Platinum CRUL4; Platinum Tressler",
     "Shops": [
       "Platinum CRUL4",
       "Platinum Tressler"
@@ -392,7 +366,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's GrimHEX; Omega New Babbage",
     "Shops": [
       "Dumper's GrimHEX",
       "Omega New Babbage"
@@ -405,7 +378,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Platinum CRUL1; Platinum CRUL4; Platinum HURL5",
     "Shops": [
       "Dumper's Area 18",
       "Platinum CRUL1",
@@ -420,7 +392,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Baijini; Platinum Bay Terra; Platinum CRUL4; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage",
@@ -443,7 +414,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -455,7 +425,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Dumper's Area 18; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's Area 18",
       "PB - Nyx-Pyro Gateway",
@@ -475,7 +444,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -487,7 +455,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL4; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "PB - Nyx-Pyro Gateway",
       "PB - Nyx-Stanton Gateway",
@@ -507,7 +474,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Dumper's GrimHEX; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Baijini; Platinum Bay Terra; Platinum HURL2; Platinum HURL5; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Dumper's GrimHEX",
       "PB - Nyx-Pyro Gateway",
@@ -542,7 +508,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Platinum Tressler; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Platinum Tressler",
       "Ship Parts Checkmate",
@@ -567,7 +532,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum Baijini; Platinum CRUL1",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum Baijini",
@@ -581,7 +545,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL1",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -595,7 +558,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Platinum Everus",
     "Shops": [
       "Dumper's Area 18",
       "Platinum Everus"
@@ -608,7 +570,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum Everus",
     "Shops": [
       "Omega New Babbage",
       "Platinum Everus"
@@ -621,7 +582,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Cousin Crow's Orison; Platinum Baijini; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Cousin Crow's Orison",
       "Platinum Baijini",
@@ -647,7 +607,6 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Platinum Tressler",
     "Shops": [
       "Platinum Tressler"
     ]
@@ -659,7 +618,6 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum HURL3; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "PB - Nyx-Pyro Gateway",
       "PB - Nyx-Stanton Gateway",
@@ -679,7 +637,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum CRUL4",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -693,7 +650,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -705,7 +661,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -717,7 +672,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -729,7 +683,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -741,7 +694,6 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Dumper's Area 18; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL5; Platinum HURL2; Platinum HURL3; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Dumper's Area 18",
       "PB - Nyx-Pyro Gateway",
@@ -774,7 +726,6 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Platinum Tressler",
     "Shops": [
       "Platinum Tressler"
     ]
@@ -786,7 +737,6 @@
     "Grade": 1,
     "Class": null,
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -798,7 +748,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -810,7 +759,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -822,7 +770,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage"
@@ -835,7 +782,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum HURL3",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -849,7 +795,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -861,7 +806,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Wen/Cassel Propulsion",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum HURL3",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -875,7 +819,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum CRUL1; Platinum Everus",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum CRUL1",
@@ -889,7 +832,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum CRUL1; Platinum CRUL4",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum CRUL1",
@@ -903,7 +845,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -915,7 +856,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum CRUL4",
     "Shops": [
       "Omega New Babbage",
       "Platinum CRUL4"
@@ -928,7 +868,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's GrimHEX; Platinum Tressler",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's GrimHEX",
@@ -942,7 +881,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Platinum HURL5",
     "Shops": [
       "Platinum HURL5"
     ]
@@ -954,7 +892,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -967,7 +904,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Platinum Tressler",
     "Shops": [
       "Platinum Tressler"
     ]
@@ -979,7 +915,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Platinum Tressler; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Platinum Tressler",
       "Ship Parts Checkmate",
@@ -1004,7 +939,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "J-Span",
-    "WhereToBuy": "Platinum CRUL4",
     "Shops": [
       "Platinum CRUL4"
     ]
@@ -1016,7 +950,6 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum CRUL5",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -1030,7 +963,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum ARCL1",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -1044,7 +976,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Dumper's Area 18; Platinum CRUL1; Platinum CRUL5",
     "Shops": [
       "Dumper's Area 18",
       "Platinum CRUL1",
@@ -1058,7 +989,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum ARCL1; Platinum HURL3",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -1073,7 +1003,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Omega New Babbage; Platinum ARCL1",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -1088,7 +1017,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Platinum ARCL1; Platinum Baijini",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -1103,7 +1031,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum ARCL1; Platinum Baijini",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -1118,7 +1045,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -1136,7 +1062,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Behring Applied Technology",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum Baijini; Platinum HURL3; Platinum HURL5",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -1152,7 +1077,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Omega New Babbage; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL1; Platinum CRUL4; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway; Platinum Tressler",
     "Shops": [
       "Omega New Babbage",
       "PB - Nyx-Pyro Gateway",
@@ -1175,7 +1099,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Ship Parts Gaslight",
     "Shops": [
       "Ship Parts Gaslight"
     ]
@@ -1187,7 +1110,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum Baijini; Platinum CRUL5; Platinum HURL3",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum Baijini",
@@ -1202,7 +1124,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum HURL3; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum HURL3",
@@ -1228,7 +1149,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Omega New Babbage; Platinum ARCL1; Platinum CRUL1; Platinum HURL3",
     "Shops": [
       "Omega New Babbage",
       "Platinum ARCL1",
@@ -1243,7 +1163,6 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum CRUL5; Platinum Tressler",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum CRUL5",
@@ -1257,7 +1176,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's GrimHEX; Omega New Babbage; Platinum CRUL4",
     "Shops": [
       "Dumper's GrimHEX",
       "Omega New Babbage",
@@ -1271,7 +1189,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL1; Platinum CRUL4",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -1286,7 +1203,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL4; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -1313,7 +1229,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Omega New Babbage; Platinum CRUL1; Platinum HURL5",
     "Shops": [
       "Omega New Babbage",
       "Platinum CRUL1",
@@ -1327,7 +1242,6 @@
     "Grade": 4,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18"
@@ -1340,7 +1254,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1352,7 +1265,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1364,7 +1276,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1376,7 +1287,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1388,7 +1298,6 @@
     "Grade": 4,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum CRUL4",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum CRUL4"
@@ -1401,7 +1310,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1413,7 +1321,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1425,7 +1332,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1437,7 +1343,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Platinum CRUL1; Platinum HURL3",
     "Shops": [
       "Platinum CRUL1",
       "Platinum HURL3"
@@ -1450,7 +1355,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1462,7 +1366,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Omega New Babbage; Platinum Baijini; Platinum HURL3",
     "Shops": [
       "Omega New Babbage",
       "Platinum Baijini",
@@ -1476,7 +1379,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum Everus; Platinum HURL2; Platinum HURL5; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "PB - Nyx-Pyro Gateway",
       "PB - Nyx-Stanton Gateway",
@@ -1497,7 +1399,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Omega New Babbage; Platinum CRUL5; Platinum HURL5; Platinum Tressler; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Omega New Babbage",
       "Platinum CRUL5",
@@ -1523,7 +1424,6 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1535,7 +1435,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum ARCL1; Platinum CRUL4",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum ARCL1",
@@ -1549,7 +1448,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Yorm",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1561,7 +1459,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1573,7 +1470,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Cousin Crow's Orison",
     "Shops": [
       "Cousin Crow's Orison"
     ]
@@ -1585,7 +1481,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Omega New Babbage; Platinum CRUL4",
     "Shops": [
       "Omega New Babbage",
       "Platinum CRUL4"
@@ -1598,7 +1493,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's GrimHEX; Omega New Babbage",
     "Shops": [
       "Dumper's GrimHEX",
       "Omega New Babbage"
@@ -1611,7 +1505,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum CRUL1; Platinum CRUL4; Platinum Everus",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum CRUL1",
@@ -1626,7 +1519,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Omega New Babbage; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL4; Platinum HURL2; Platinum HURL5; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Omega New Babbage",
       "PB - Nyx-Pyro Gateway",
@@ -1648,7 +1540,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Dumper's Area 18; Platinum ARCL1; Platinum HURL3; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Dumper's Area 18",
       "Platinum ARCL1",
@@ -1673,7 +1564,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1685,7 +1575,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1697,7 +1586,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1709,7 +1597,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1721,7 +1608,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Ship Parts Checkmate",
       "Ship Parts Dudley",
@@ -1745,7 +1631,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Platinum CRUL5; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Platinum CRUL5",
       "Ship Parts Checkmate",
@@ -1770,7 +1655,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum HURL3; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "PB - Nyx-Pyro Gateway",
       "PB - Nyx-Stanton Gateway",
@@ -1803,7 +1687,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum Everus; Platinum HURL3",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -1818,7 +1701,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": null,
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1830,7 +1712,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Souli",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1842,7 +1723,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Gorgon Defender Industries",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1854,7 +1734,6 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum Everus",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum Everus"
@@ -1867,7 +1746,6 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "Yorm",
-    "WhereToBuy": "Dumper's GrimHEX",
     "Shops": [
       "Dumper's GrimHEX"
     ]
@@ -1879,7 +1757,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1891,7 +1768,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Ascension Astro",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1903,7 +1779,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Seal Corporation",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum Tressler",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -1917,7 +1792,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Basilisk",
-    "WhereToBuy": "Dumper's GrimHEX; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL4; Platinum HURL2; Platinum HURL5; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's GrimHEX",
       "PB - Nyx-Pyro Gateway",
@@ -1939,7 +1813,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum Everus",
     "Shops": [
       "Omega New Babbage",
       "Platinum Everus"
@@ -1952,7 +1825,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Dumper's GrimHEX",
     "Shops": [
       "Dumper's GrimHEX"
     ]
@@ -1964,7 +1836,6 @@
     "Grade": 1,
     "Class": null,
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -1976,7 +1847,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Platinum HURL5",
     "Shops": [
       "Platinum HURL5"
     ]
@@ -1988,7 +1858,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2000,7 +1869,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2012,7 +1880,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL1",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2026,7 +1893,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -2047,7 +1913,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Omega New Babbage; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2072,7 +1937,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2096,7 +1960,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum CRUL1; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Omega New Babbage",
       "Platinum CRUL1",
@@ -2122,7 +1985,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Ship Parts Gaslight",
     "Shops": [
       "Ship Parts Gaslight"
     ]
@@ -2134,7 +1996,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "WhereToBuy": "Dumper's GrimHEX; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Dumper's GrimHEX",
       "PB - Nyx-Pyro Gateway",
@@ -2167,7 +2028,6 @@
     "Grade": "D",
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Platinum HURL5",
     "Shops": [
       "Platinum HURL5"
     ]
@@ -2179,7 +2039,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18",
     "Shops": [
       "Dumper's Area 18"
     ]
@@ -2191,7 +2050,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL1; Platinum HURL5; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2219,7 +2077,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Platinum ARCL1",
     "Shops": [
       "Platinum ARCL1"
     ]
@@ -2231,7 +2088,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum CRUL1",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2245,7 +2101,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -2258,7 +2113,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage"
@@ -2271,7 +2125,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Dumper's Area 18",
       "Shop Ashland",
@@ -2294,7 +2147,6 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "Ace Astrogation",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum CRUL4; Platinum HURL3",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -2309,7 +2161,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum Baijini; Platinum CRUL4",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2324,7 +2175,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Cousin Crow's Orison; Platinum CRUL1; Platinum CRUL5",
     "Shops": [
       "Cousin Crow's Orison",
       "Platinum CRUL1",
@@ -2338,7 +2188,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage",
@@ -2364,7 +2213,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL4; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "PB - Nyx-Pyro Gateway",
       "PB - Nyx-Stanton Gateway",
@@ -2384,7 +2232,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Omega New Babbage",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2398,7 +2245,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Platinum Baijini",
     "Shops": [
       "Dumper's Area 18",
       "Platinum Baijini"
@@ -2411,7 +2257,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Dumper's Area 18; Platinum HURL5",
     "Shops": [
       "Dumper's Area 18",
       "Platinum HURL5"
@@ -2424,7 +2269,6 @@
     "Grade": "C",
     "Class": "Competition",
     "Manufacturer": "Ace Astrogation",
-    "WhereToBuy": "Dumper's GrimHEX; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Baijini; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's GrimHEX",
       "PB - Nyx-Pyro Gateway",
@@ -2445,7 +2289,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Platinum HURL3; Platinum HURL5",
     "Shops": [
       "Platinum HURL3",
       "Platinum HURL5"
@@ -2458,7 +2301,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "WhereToBuy": "Microtech - Port Tressler",
     "Shops": [
       "Microtech - Port Tressler"
     ]
@@ -2470,7 +2312,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Area 18 - Dumpers Depot",
     "Shops": [
       "Area 18 - Dumpers Depot"
     ]
@@ -2482,7 +2323,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2494,7 +2334,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Platinum CRUL1",
     "Shops": [
       "Platinum CRUL1"
     ]
@@ -2506,7 +2345,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Cousin Crow's Orison; Platinum CRUL4; Platinum HURL5",
     "Shops": [
       "Cousin Crow's Orison",
       "Platinum CRUL4",
@@ -2520,7 +2358,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2544,7 +2381,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2556,7 +2392,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Cousin Crow's Orison; Platinum CRUL5",
     "Shops": [
       "Cousin Crow's Orison",
       "Platinum CRUL5"
@@ -2569,7 +2404,6 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "Ace Astrogation",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum Baijini",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum Baijini"
@@ -2582,7 +2416,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2594,7 +2427,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2606,7 +2438,6 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": null,
-    "WhereToBuy": "Omega New Babbage; Platinum HURL3; Platinum Tressler; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Omega New Babbage",
       "Platinum HURL3",
@@ -2633,7 +2464,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2645,7 +2475,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "ArcCorp",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -2658,7 +2487,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Roberts Space Industries",
-    "WhereToBuy": "Platinum CRUL4",
     "Shops": [
       "Platinum CRUL4"
     ]
@@ -2670,7 +2498,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2682,7 +2509,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Platinum Everus",
     "Shops": [
       "Dumper's Area 18",
       "Platinum Everus"
@@ -2695,7 +2521,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Cousin Crow's Orison; Platinum Baijini; Platinum CRUL4",
     "Shops": [
       "Cousin Crow's Orison",
       "Platinum Baijini",
@@ -2709,7 +2534,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "CRU-L4-Platinum Bay; Hurston - Everus Harbour",
     "Shops": [
       "CRU-L4-Platinum Bay",
       "Hurston - Everus Harbour"
@@ -2722,7 +2546,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Platinum CRUL5; Platinum HURL5",
     "Shops": [
       "Platinum CRUL5",
       "Platinum HURL5"
@@ -2735,7 +2558,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Tarsus Electronics",
-    "WhereToBuy": "Platinum Baijini",
     "Shops": [
       "Platinum Baijini"
     ]
@@ -2747,7 +2569,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2759,7 +2580,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Platinum CRUL1; Platinum CRUL4",
     "Shops": [
       "Platinum CRUL1",
       "Platinum CRUL4"
@@ -2772,7 +2592,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Wei-Tek",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2784,7 +2603,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "File:Logo RAMP Corporation.pngRAMP Corporation",
-    "WhereToBuy": "Cousin Crow's Orison; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Cousin Crow's Orison",
       "PB - Nyx-Pyro Gateway",
@@ -2804,7 +2622,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": null,
-    "WhereToBuy": "Area 18 - Baijini Point; Area 18 - Dumpers Depot; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay",
     "Shops": [
       "Area 18 - Baijini Point",
       "Area 18 - Dumpers Depot",
@@ -2821,7 +2638,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": null,
-    "WhereToBuy": "Area 18 - Baijini Point; Area 18 - Dumpers Depot; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay",
     "Shops": [
       "Area 18 - Baijini Point",
       "Area 18 - Dumpers Depot",
@@ -2838,7 +2654,6 @@
     "Grade": 4,
     "Class": null,
     "Manufacturer": null,
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2850,7 +2665,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": null,
-    "WhereToBuy": "Area 18 - Baijini Point; HUR-L3-Platinum Bay; HUR-L5-Platinum Bay; Microtech - Port Tressler; New Babbage - Omega Bay",
     "Shops": [
       "Area 18 - Baijini Point",
       "HUR-L3-Platinum Bay",
@@ -2866,7 +2680,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2878,7 +2691,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage"
@@ -2891,7 +2703,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's GrimHEX; Platinum HURL5",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's GrimHEX",
@@ -2905,7 +2716,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2917,7 +2727,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -2929,7 +2738,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -2942,7 +2750,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum ARCL1",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -2956,7 +2763,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum Baijini; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Omega New Babbage",
       "Platinum Baijini",
@@ -2982,7 +2788,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Platinum Baijini",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -2996,7 +2801,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18",
     "Shops": [
       "Dumper's Area 18"
     ]
@@ -3008,7 +2812,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3020,7 +2823,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum HURL3; Platinum HURL5; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -3048,7 +2850,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage"
@@ -3061,7 +2862,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3073,7 +2873,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3085,7 +2884,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Omega New Babbage",
     "Shops": [
       "Dumper's Area 18",
       "Omega New Babbage"
@@ -3098,7 +2896,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3110,7 +2907,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3122,7 +2918,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Platinum Baijini; Platinum Everus",
     "Shops": [
       "Dumper's Area 18",
       "Platinum Baijini",
@@ -3136,7 +2931,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3148,7 +2942,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18",
     "Shops": [
       "Dumper's Area 18"
     ]
@@ -3160,7 +2953,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum HURL5",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum HURL5"
@@ -3173,7 +2965,6 @@
     "Grade": 2,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3185,7 +2976,6 @@
     "Grade": 1,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum Everus",
     "Shops": [
       "Omega New Babbage",
       "Platinum Everus"
@@ -3198,7 +2988,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Platinum CRUL1; Platinum CRUL4",
     "Shops": [
       "Dumper's Area 18",
       "Platinum CRUL1",
@@ -3212,7 +3001,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3224,7 +3012,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Omega New Babbage; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum HURL5; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -3247,7 +3034,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's GrimHEX; Omega New Babbage; Platinum ARCL1; Platinum CRUL1; Platinum Tressler",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's GrimHEX",
@@ -3264,7 +3050,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's GrimHEX; Omega New Babbage; Platinum HURL5",
     "Shops": [
       "Dumper's GrimHEX",
       "Omega New Babbage",
@@ -3278,7 +3063,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Platinum CRUL4",
     "Shops": [
       "Platinum CRUL4"
     ]
@@ -3290,7 +3074,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3302,7 +3085,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3314,7 +3096,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Klaus and Werner",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3326,7 +3107,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18",
     "Shops": [
       "Dumper's Area 18"
     ]
@@ -3338,7 +3118,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Dumper's GrimHEX; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Baijini; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's GrimHEX",
       "PB - Nyx-Pyro Gateway",
@@ -3359,7 +3138,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Cousin Crow's Orison; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL5; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Cousin Crow's Orison",
       "PB - Nyx-Pyro Gateway",
@@ -3380,7 +3158,6 @@
     "Grade": 1,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Omega New Babbage; Platinum Baijini; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -3406,7 +3183,6 @@
     "Grade": 1,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3418,7 +3194,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3430,7 +3205,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Platinum Tressler",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -3444,7 +3218,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3456,7 +3229,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Dumper's GrimHEX; Platinum CRUL4",
     "Shops": [
       "Dumper's GrimHEX",
       "Platinum CRUL4"
@@ -3469,7 +3241,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3481,7 +3252,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum HURL5",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -3495,7 +3265,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3507,7 +3276,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3519,7 +3287,6 @@
     "Grade": 1,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3531,7 +3298,6 @@
     "Grade": 2,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3543,7 +3309,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; Platinum HURL3",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
@@ -3557,7 +3322,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3569,7 +3333,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3581,7 +3344,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Platinum CRUL4; Platinum Everus",
     "Shops": [
       "Dumper's Area 18",
       "Platinum CRUL4",
@@ -3595,7 +3357,6 @@
     "Grade": 2,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Omega New Babbage; Platinum CRUL1",
     "Shops": [
       "Omega New Babbage",
       "Platinum CRUL1"
@@ -3608,7 +3369,6 @@
     "Grade": 1,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3620,7 +3380,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3632,7 +3391,6 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Cousin Crow's Orison; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Cousin Crow's Orison",
       "PB - Nyx-Pyro Gateway",
@@ -3652,7 +3410,6 @@
     "Grade": 3,
     "Class": "Stealth",
     "Manufacturer": "Tyler Design and Tech",
-    "WhereToBuy": "Dumper's Area 18; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Baijini; Platinum Bay Terra; Platinum CRUL4; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's Area 18",
       "PB - Nyx-Pyro Gateway",
@@ -3674,7 +3431,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Platinum CRUL1; Platinum HURL3",
     "Shops": [
       "Platinum CRUL1",
       "Platinum HURL3"
@@ -3687,7 +3443,6 @@
     "Grade": 3,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -3700,7 +3455,6 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Omega New Babbage; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway; Ship Parts Checkmate; Ship Parts Dudley; Ship Parts Endgame; Ship Parts Gaslight; Ship Parts Megumi; Ship Parts Orbituary; Ship Parts Patch City; Ship Parts Rat's Nest; Ship Parts Rod's Fuel; Ship Parts Ruin; Ship Parts Starlight; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa; Teach&apos;s Item Shop - Levski",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -3746,7 +3500,6 @@
     "Grade": 2,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "Cousin Crow's Orison; Omega New Babbage; Platinum Baijini; Platinum CRUL1; Platinum HURL5",
     "Shops": [
       "Cousin Crow's Orison",
       "Omega New Babbage",
@@ -3762,7 +3515,6 @@
     "Grade": 3,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX"
@@ -3775,7 +3527,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3787,7 +3538,6 @@
     "Grade": 3,
     "Class": "Competition",
     "Manufacturer": "ACOM",
-    "WhereToBuy": "PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum HURL2; Platinum HURL5; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway; Platinum Tressler; Shop Ashland; Shop Canard View; Shop Chawla's Beach; Shop Fallow; Shop Jackson's Swap; Shop Kabir's; Shop Last Landings; Shop Rustville; Shop Sacren's Plot; Shop Seer's Canyon; Shop Sunset Mesa",
     "Shops": [
       "PB - Nyx-Pyro Gateway",
       "PB - Nyx-Stanton Gateway",
@@ -3819,7 +3569,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3831,7 +3580,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Cousin Crow's Orison; Platinum CRUL4; Platinum Tressler",
     "Shops": [
       "Cousin Crow's Orison",
       "Platinum CRUL4",
@@ -3845,7 +3593,6 @@
     "Grade": 4,
     "Class": "Industrial",
     "Manufacturer": "Juno Starwerk",
-    "WhereToBuy": "Dumper's Area 18; Platinum Everus",
     "Shops": [
       "Dumper's Area 18",
       "Platinum Everus"
@@ -3858,7 +3605,6 @@
     "Grade": 3,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3870,7 +3616,6 @@
     "Grade": 2,
     "Class": "Military",
     "Manufacturer": "Amon & Reese Co.",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3882,7 +3627,6 @@
     "Grade": 4,
     "Class": "Military",
     "Manufacturer": "Aegis Dynamics",
-    "WhereToBuy": "Loot only / Not sold (no shop entry)",
     "Shops": [
       "Loot only / Not sold (no shop entry)"
     ]
@@ -3894,7 +3638,6 @@
     "Grade": 1,
     "Class": "Civilian",
     "Manufacturer": "Sakura Sun",
-    "WhereToBuy": "Cousin Crow's Orison; Dumper's Area 18; Platinum Tressler",
     "Shops": [
       "Cousin Crow's Orison",
       "Dumper's Area 18",
@@ -3908,7 +3651,6 @@
     "Grade": 4,
     "Class": "Civilian",
     "Manufacturer": "Lightning Power Ltd.",
-    "WhereToBuy": "Dumper's Area 18; Dumper's GrimHEX; PB - Nyx-Pyro Gateway; PB - Nyx-Stanton Gateway; PB - Pyro-Nyx Gateway; Platinum Bay Terra; Platinum CRUL1; Platinum HURL2; Platinum Magnus; Platinum Pyro Gateway; Platinum Stanton Gateway",
     "Shops": [
       "Dumper's Area 18",
       "Dumper's GrimHEX",
