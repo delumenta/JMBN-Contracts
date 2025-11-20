@@ -3,365 +3,802 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JMBN – Hangar Components Storage</title>
+  <title>JMBN – Components Store</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg: #000;
-      --panel: #0d0d0d;
-      --shelf: #131313;
-      --shelf-edge: #1f1a09;
-      --gold: #d6b44c;
-      --gold-soft: rgba(214,180,76,0.6);
-      --gold-faint: rgba(214,180,76,0.22);
-      --text: #f7f1d0;
-      --muted: #c9b06a;
-      --fs-sm: 12px;
-      --fs-base: 14px;
-      --fs-lg: 18px;
-      --radius: 12px;
+    :root{
+      --bg:#000;
+      --panel:#0b0b0b;
+      --sub:#141414;
+      --border:#d6b44c;
+      --accent:#f2d675;
+      --text:#f7f1d0;
+      --muted:#c9b06a;
+      --bad:#ff6b6b;
+
+      --fs-sm:12px;
+      --fs-base:14px;
+      --fs-lg:16px;
+      --radius:10px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *{box-sizing:border-box;margin:0;padding:0}
 
-    html, body {
-      height: 100%;
-      background: radial-gradient(circle at top, #1b160a 0, #000 65%);
-      color: var(--text);
-      font-family: "Play", sans-serif;
-      overflow: hidden;
-    }
-
-    /* Layout */
-    #layout {
-      display: grid;
-      grid-template-columns: 72% 28%;
-      height: calc(100vh - 10px);
-      padding: 10px;
+    html,body{
+      height:100%;
+      background:radial-gradient(circle at top,#1b160a 0,#000 60%);
+      color:var(--text);
+      font-family:'Play',sans-serif;
+      overflow:hidden;
     }
 
-    /* LEFT SIDE – Shelves */
-    #shelves {
-      overflow-y: auto;
-      padding-right: 10px;
+    body{
+      display:flex;
+      flex-direction:column;
     }
 
-    .shelf {
-      background: var(--shelf);
-      border: 1px solid var(--gold-faint);
-      border-left: 5px solid var(--gold);
-      padding: 10px 12px;
-      border-radius: var(--radius);
-      margin-bottom: 14px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+    /* Header from header.html */
+    #site-header{
+      flex:0 0 auto;
+      padding:10px 12px 0;
     }
 
-    .shelf-title {
-      font-size: var(--fs-lg);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 6px;
-      color: var(--gold);
+    /* Main layout */
+    #layout{
+      flex:1 1 auto;
+      display:grid;
+      grid-template-columns:260px minmax(0,1fr) 320px;
+      min-height:0;
+      border-top:1px solid rgba(214,180,76,.4);
     }
 
-    .shelf-items {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
+    /* ===== LEFT: FILTERS / CATEGORIES ===== */
+    #sidebar{
+      background:linear-gradient(160deg,#090909,#050505);
+      border-right:1px solid rgba(214,180,76,.45);
+      padding:10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
     }
 
-    /* Component Box */
-    .component-box {
-      background: linear-gradient(160deg,#0f0f0f,#1a1409);
-      border: 1px solid var(--gold-faint);
-      padding: 10px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: transform .15s, box-shadow .15s, border-color .15s;
-      position: relative;
-    }
-    .component-box:hover {
-      transform: translateY(-3px);
-      border-color: var(--gold-soft);
-      box-shadow: 0 0 12px rgba(214,180,76,0.5);
+    .panel-title{
+      font-size:var(--fs-lg);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:6px;
     }
 
-    .component-name {
-      color: var(--gold);
-      font-size: var(--fs-base);
-      font-weight: 700;
-      margin-bottom: 4px;
+    .filter-group{
+      margin-bottom:8px;
     }
 
-    .component-meta {
-      font-size: var(--fs-sm);
-      color: var(--muted);
+    .filter-label{
+      font-size:var(--fs-sm);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--muted);
+      margin-bottom:4px;
+      display:block;
     }
 
-    /* Drawer */
-    .drawer {
-      position: fixed;
-      right: -420px;
-      top: 0;
-      width: 400px;
-      height: 100%;
-      background: var(--panel);
-      border-left: 2px solid var(--gold);
-      box-shadow: -6px 0 20px rgba(0,0,0,0.6);
-      padding: 20px;
-      transition: right .3s ease;
-      overflow-y: auto;
-      z-index: 999;
-    }
-    .drawer.open {
-      right: 0;
+    .filter-input,
+    .filter-select{
+      width:100%;
+      background:var(--sub);
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.3);
+      padding:6px 10px;
+      color:var(--text);
+      font-size:var(--fs-base);
+      outline:none;
+      transition:border-color .15s,box-shadow .15s,background .15s;
     }
 
-    .drawer-title {
-      font-size: var(--fs-lg);
-      color: var(--gold);
-      margin-bottom: 8px;
+    .filter-input::placeholder{color:rgba(247,241,208,.5);}
+
+    .filter-input:focus,
+    .filter-select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 8px rgba(242,214,117,.5);
+      background:#161008;
     }
 
-    .drawer-line {
-      font-size: var(--fs-base);
-      margin-bottom: 5px;
+    .chip-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:4px;
     }
 
-    /* Shopping list */
-    #right-panel {
-      background: var(--panel);
-      border-left: 1px solid var(--gold-faint);
-      padding: 12px;
-      overflow-y: auto;
+    .chip{
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.4);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      cursor:pointer;
+      color:var(--muted);
+      background:rgba(10,10,10,.9);
+      transition:.15s;
+    }
+    .chip.active,
+    .chip:hover{
+      background:rgba(214,180,76,.25);
+      color:var(--accent);
+      border-color:var(--accent);
     }
 
-    #shopping-title {
-      font-size: var(--fs-lg);
-      color: var(--gold);
-      text-align: center;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: .1em;
+    /* ===== MIDDLE: ITEMS LIST ===== */
+    #main{
+      background:radial-gradient(circle at top,#211708 0,#050505 70%);
+      padding:10px 12px 10px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
 
-    #shopping-items {
-      min-height: 50px;
-      border: 1px solid var(--gold-faint);
-      padding: 8px;
-      border-radius: var(--radius);
-      background: rgba(20,20,20,0.9);
-      margin-bottom: 12px;
-      font-size: var(--fs-sm);
+    #status-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+      font-size:var(--fs-sm);
+      color:var(--muted);
     }
 
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(214,180,76,0.18);
-      border: 1px solid var(--gold-soft);
-      padding: 3px 7px;
-      border-radius: 999px;
-      margin: 2px;
-      font-size: 11px;
-      color: var(--gold);
+    #status-bar strong{color:var(--accent);}
+
+    #table-wrap{
+      flex:1 1 auto;
+      border-radius:8px;
+      border:1px solid rgba(214,180,76,.4);
+      overflow:auto;
+      background:rgba(5,5,5,.95);
+      box-shadow:0 0 20px rgba(0,0,0,.7);
     }
 
-    .tag-remove {
-      margin-left: 4px;
-      cursor: pointer;
-      color: var(--muted);
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:var(--fs-base);
     }
 
-    #route-btn {
-      width: 100%;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--gold);
-      background: rgba(214,180,76,0.18);
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      cursor: pointer;
-      transition: .2s;
-    }
-    #route-btn:hover {
-      background: rgba(214,180,76,0.35);
-      box-shadow: 0 0 12px rgba(214,180,76,0.5);
+    thead{
+      position:sticky;
+      top:0;
+      z-index:2;
+      background:#050505;
     }
 
-    #route-output {
-      border: 1px solid var(--gold-faint);
-      border-radius: var(--radius);
-      padding: 10px;
-      background: rgba(30,25,20,0.9);
-      font-size: var(--fs-sm);
-      margin-top: 10px;
+    th,td{
+      padding:6px 8px;
+      text-align:left;
+      white-space:nowrap;
     }
 
+    th{
+      font-size:var(--fs-sm);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      border-bottom:1px solid rgba(214,180,76,.4);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    th.sortable:hover{
+      color:var(--accent);
+      background:rgba(214,180,76,.08);
+    }
+
+    .sort-indicator{
+      font-size:10px;
+      margin-left:4px;
+      opacity:.8;
+    }
+
+    tbody tr:nth-child(even){background:rgba(12,12,12,.96);}
+    tbody tr:nth-child(odd){background:rgba(7,7,7,.96);}
+    tbody tr:hover{background:rgba(40,30,15,.96);}
+
+    td{
+      border-bottom:1px solid rgba(255,255,255,.03);
+    }
+
+    .col-name{color:var(--accent);font-weight:700;}
+    .col-meta{font-size:var(--fs-sm);color:var(--muted);}
+    .col-shops{font-size:var(--fs-sm);color:var(--muted);white-space:normal;}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:2px 6px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.6);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-right:4px;
+    }
+
+    .btn-add{
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(214,180,76,.15);
+      color:var(--accent);
+      font-size:var(--fs-sm);
+      cursor:pointer;
+      transition:.15s;
+    }
+    .btn-add:hover{
+      background:rgba(214,180,76,.3);
+      box-shadow:0 0 10px rgba(214,180,76,.4);
+    }
+
+    /* ===== RIGHT: CART / ROUTE ===== */
+    #cart-panel{
+      background:linear-gradient(180deg,#101010,#050505);
+      border-left:1px solid rgba(214,180,76,.45);
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    #cart-title{
+      font-size:var(--fs-lg);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+      text-align:center;
+      margin-bottom:2px;
+    }
+
+    #cart-items{
+      min-height:60px;
+      border-radius:var(--radius);
+      border:1px solid rgba(214,180,76,.4);
+      background:rgba(15,15,15,.96);
+      padding:8px;
+      font-size:var(--fs-sm);
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.6);
+      background:rgba(214,180,76,.15);
+      color:var(--accent);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin:2px 3px 3px 0;
+    }
+
+    .tag-remove{
+      cursor:pointer;
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    #route-btn{
+      width:100%;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(214,180,76,.2);
+      color:var(--accent);
+      font-size:var(--fs-base);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:.16s;
+    }
+    #route-btn:hover{
+      background:rgba(214,180,76,.35);
+      box-shadow:0 0 16px rgba(214,180,76,.6);
+    }
+
+    #route-output{
+      border-radius:var(--radius);
+      border:1px solid rgba(214,180,76,.4);
+      background:rgba(18,13,7,.96);
+      padding:8px;
+      font-size:var(--fs-sm);
+      min-height:60px;
+    }
+
+    #route-output strong{color:var(--accent);}
+
+    #help-text{
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    @media (max-width:1100px){
+      #layout{
+        grid-template-columns:1.1fr 1.4fr;
+        grid-template-rows:55% 45%;
+        grid-template-areas:
+          "sidebar main"
+          "cart cart";
+      }
+      #sidebar{grid-area:sidebar;}
+      #main{grid-area:main;}
+      #cart-panel{grid-area:cart;border-left:none;border-top:1px solid rgba(214,180,76,.45);}
+    }
+
+    @media (max-width:800px){
+      #layout{
+        grid-template-columns:1fr;
+        grid-template-rows:auto auto auto;
+        grid-template-areas:
+          "sidebar"
+          "main"
+          "cart";
+      }
+      #sidebar{border-right:none;border-bottom:1px solid rgba(214,180,76,.4);}
+    }
   </style>
 </head>
-
 <body>
+  <!-- shared header -->
+  <header id="site-header"></header>
 
-<div id="layout">
+  <div id="layout">
+    <!-- LEFT: Filters / Categories -->
+    <aside id="sidebar">
+      <div>
+        <div class="panel-title">Filters</div>
+        <div class="filter-group">
+          <label class="filter-label" for="searchInput">Search</label>
+          <input id="searchInput" class="filter-input" type="text" placeholder="Name or manufacturer…">
+        </div>
 
-  <!-- LEFT SHELVES -->
-  <div id="shelves"></div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterComponent">Component Type</label>
+          <select id="filterComponent" class="filter-select">
+            <option value="">All Components</option>
+          </select>
+        </div>
 
-  <!-- RIGHT SHOPPING PANEL -->
-  <div id="right-panel">
-    <div id="shopping-title">Shopping List</div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterClass">Class</label>
+          <select id="filterClass" class="filter-select">
+            <option value="">All Classes</option>
+          </select>
+        </div>
 
-    <div id="shopping-items">No components selected.</div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterSize">Size</label>
+          <select id="filterSize" class="filter-select">
+            <option value="">All Sizes</option>
+          </select>
+        </div>
+      </div>
 
-    <button id="route-btn">Generate Route</button>
+      <div>
+        <div class="panel-title">Quick Picks</div>
+        <div class="chip-row" id="quickChips">
+          <!-- chips injected -->
+        </div>
+        <div id="help-text">
+          Tip: click a chip to apply a preset filter (e.g. S2 Military drives).
+        </div>
+      </div>
+    </aside>
 
-    <div id="route-output"></div>
+    <!-- MIDDLE: Component list -->
+    <main id="main">
+      <div id="status-bar">
+        <div><strong id="countText">0</strong> components shown</div>
+        <div id="activeFiltersLabel">Filters: none</div>
+      </div>
+
+      <div id="table-wrap">
+        <div style="padding:14px;font-size:var(--fs-base);color:var(--muted);" id="loadingMsg">
+          Loading components…
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT: Cart + Route -->
+    <aside id="cart-panel">
+      <div id="cart-title">Shopping Cart</div>
+
+      <div id="cart-items">
+        No components selected. Use “Add” on any row.
+      </div>
+
+      <button id="route-btn">Generate Route</button>
+
+      <div id="route-output">
+        Route suggestions will appear here.
+      </div>
+    </aside>
   </div>
 
-</div>
+  <script>
+    // inject header.html
+    fetch('header.html')
+      .then(r => r.ok ? r.text() : '')
+      .then(html => { document.getElementById('site-header').innerHTML = html; })
+      .catch(() => {});
 
-<!-- Drawer -->
-<div id="drawer" class="drawer"></div>
+    const DATA_COMPONENTS = 'data/components.js';
 
-<script>
-const DATA_COMPONENTS = "data/components.js";
+    const searchInput      = document.getElementById('searchInput');
+    const filterComponent  = document.getElementById('filterComponent');
+    const filterClass      = document.getElementById('filterClass');
+    const filterSize       = document.getElementById('filterSize');
+    const tableWrap        = document.getElementById('table-wrap');
+    const loadingMsg       = document.getElementById('loadingMsg');
+    const countText        = document.getElementById('countText');
+    const activeFiltersLbl = document.getElementById('activeFiltersLabel');
+    const quickChipsRow    = document.getElementById('quickChips');
+    const cartItemsBox     = document.getElementById('cart-items');
+    const routeBtn         = document.getElementById('route-btn');
+    const routeOutput      = document.getElementById('route-output');
 
-let allComponents = [];
-let selectedItems = new Set();
+    let allComponents = [];
+    let currentSort = { key:'Names', dir:'asc' };
+    let selectedItems = new Set();
 
-/* Load Data */
-fetch(DATA_COMPONENTS)
-  .then(r => r.json())
-  .then(data => {
-    allComponents = data;
-    buildShelves(data);
-  });
+    // travel cost / location mapping (text only, no map)
+    const travelCost = {
+      "Area18": 0,
+      "Bajini Point": 1,
+      "Everus Harbor": 1,
+      "Lorville": 3,
+      "Seraphim": 2,
+      "Orison": 4,
+      "Port Tressler": 4,
+      "New Babbage": 5,
+      "GrimHex": 3
+    };
 
-/* Group by Component Type */
-function buildShelves(list) {
-  const shelves = {};
+    function routeLocationFromShopString(shopStr){
+      if(!shopStr) return null;
+      const s = shopStr.toLowerCase();
+      if(s.includes('area 18') || s.includes('area18')) return 'Area18';
+      if(s.includes('bajini') || s.includes('baijini')) return 'Bajini Point';
+      if(s.includes('everus')) return 'Everus Harbor';
+      if(s.includes('lorville')) return 'Lorville';
+      if(s.includes('orison')) return 'Orison';
+      if(s.includes('seraph')) return 'Seraphim';
+      if(s.includes('tressler')) return 'Port Tressler';
+      if(s.includes('new babbage') || s.includes('new_babbage')) return 'New Babbage';
+      if(s.includes('grimhex')) return 'GrimHex';
+      return null;
+    }
 
-  list.forEach(c => {
-    if (!shelves[c.Component]) shelves[c.Component] = [];
-    shelves[c.Component].push(c);
-  });
+    // load data
+    fetch(DATA_COMPONENTS)
+      .then(r => r.json())
+      .then(data => {
+        allComponents = Array.isArray(data) ? data : [];
+        buildFilterOptions(allComponents);
+        buildQuickChips(allComponents);
+        applyFiltersAndRender();
+      })
+      .catch(err => {
+        console.error(err);
+        tableWrap.innerHTML = '<div style="padding:16px;color:var(--bad);">Failed to load components data.</div>';
+      });
 
-  const shelvesDiv = document.getElementById("shelves");
-  shelvesDiv.innerHTML = "";
+    function buildFilterOptions(list){
+      const compSet  = new Set();
+      const classSet = new Set();
+      const sizeSet  = new Set();
 
-  for (const [type, items] of Object.entries(shelves)) {
-    const shelf = document.createElement("div");
-    shelf.className = "shelf";
+      list.forEach(c=>{
+        if(c.Component) compSet.add(c.Component);
+        if(c.Class)     classSet.add(c.Class);
+        if(c.Size)      sizeSet.add(String(c.Size));
+      });
 
-    shelf.innerHTML = `
-      <div class="shelf-title">${type}</div>
-      <div class="shelf-items"></div>
-    `;
+      const addOpts=(set,sel)=>{
+        Array.from(set).sort().forEach(v=>{
+          const opt=document.createElement('option');
+          opt.value=v;
+          opt.textContent=v;
+          sel.appendChild(opt);
+        });
+      };
 
-    const shelfItems = shelf.querySelector(".shelf-items");
+      addOpts(compSet,  filterComponent);
+      addOpts(classSet, filterClass);
+      addOpts(sizeSet,  filterSize);
 
-    items.forEach(c => {
-      const box = document.createElement("div");
-      box.className = "component-box";
-      box.innerHTML = `
-        <div class="component-name">${c.Names}</div>
-        <div class="component-meta">S${c.Size} • Grade ${c.Grade} • ${c.Class}</div>
+      searchInput.addEventListener('input', applyFiltersAndRender);
+      filterComponent.addEventListener('change', applyFiltersAndRender);
+      filterClass.addEventListener('change', applyFiltersAndRender);
+      filterSize.addEventListener('change', applyFiltersAndRender);
+    }
+
+    function buildQuickChips(list){
+      // simple presets: S2 Military, S1 Civilian, Coolers only etc.
+      const presets = [
+        {label:'S2 Military', size:'2', class:'Military'},
+        {label:'S1 Civilian', size:'1', class:'Civilian'},
+        {label:'Coolers', component:'Cooler'},
+        {label:'Quantum Drives', component:'Quantum Drive'}
+      ];
+
+      quickChipsRow.innerHTML = presets.map((p,i)=>
+        `<div class="chip" data-idx="${i}">${p.label}</div>`
+      ).join('');
+
+      quickChipsRow.querySelectorAll('.chip').forEach(chip=>{
+        chip.addEventListener('click',()=>{
+          const idx = Number(chip.dataset.idx);
+          quickChipsRow.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+          chip.classList.add('active');
+
+          const preset = presets[idx];
+          searchInput.value = '';
+          filterComponent.value = preset.component || '';
+          filterClass.value     = preset.class || '';
+          filterSize.value      = preset.size || '';
+          applyFiltersAndRender();
+        });
+      });
+    }
+
+    function applyFiltersAndRender(){
+      const q   = searchInput.value.trim().toLowerCase();
+      const fc  = filterComponent.value;
+      const fcl = filterClass.value;
+      const fs  = filterSize.value;
+
+      let list = allComponents.filter(c=>{
+        if(fc  && c.Component !== fc) return false;
+        if(fcl && c.Class     !== fcl) return false;
+        if(fs  && String(c.Size) !== fs) return false;
+
+        if(q){
+          const hay = [
+            c.Names,
+            c.Manufacturer,
+            c.Component,
+            c.Class
+          ].map(v=>String(v||'').toLowerCase()).join(' ');
+          if(!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      list.sort((a,b)=>{
+        const key = currentSort.key;
+        const av = (a[key] ?? '').toString().toLowerCase();
+        const bv = (b[key] ?? '').toString().toLowerCase();
+        if(av < bv) return currentSort.dir === 'asc' ? -1 : 1;
+        if(av > bv) return currentSort.dir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      renderTable(list);
+      updateStatus(list);
+    }
+
+    function updateStatus(list){
+      const total = allComponents.length;
+      countText.textContent = `${list.length} / ${total}`;
+
+      const filters = [];
+      if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
+      if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
+      if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
+      if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
+
+      activeFiltersLbl.textContent = filters.length ? filters.join(' • ') : 'Filters: none';
+    }
+
+    function renderTable(list){
+      if(!list.length){
+        tableWrap.innerHTML = '<div style="padding:12px;color:var(--muted);">No components match your filters.</div>';
+        return;
+      }
+
+      const sortIcon = (key)=>{
+        if(currentSort.key !== key) return '';
+        return currentSort.dir === 'asc' ? '▲' : '▼';
+      };
+
+      const rows = list.map(c=>{
+        const sizeStr  = c.Size ? `S${String(c.Size).replace(/^S/i,'')}` : '';
+        const gradeStr = (c.Grade!==undefined && c.Grade!==null) ? `G${c.Grade}` : '';
+        const meta = [sizeStr, gradeStr, c.Class||''].filter(Boolean).join(' • ');
+
+        const shopStr = Array.isArray(c.Shops) && c.Shops.length
+          ? c.Shops.join(', ')
+          : (c.WhereToBuy || '');
+
+        const safeName = (c.Names || '').replace(/'/g,"\\'");
+
+        return `
+          <tr>
+            <td class="col-name">${c.Names || ''}</td>
+            <td class="col-meta">
+              <span class="pill">${c.Component || ''}</span>
+            </td>
+            <td class="col-meta">${meta}</td>
+            <td>${c.Manufacturer || ''}</td>
+            <td class="col-shops">${shopStr || '<span style="color:#777;">—</span>'}</td>
+            <td>
+              <button class="btn-add" onclick="addToCart('${safeName}')">Add</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tableWrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th class="sortable" data-key="Names">Name <span class="sort-indicator">${sortIcon('Names')}</span></th>
+              <th class="sortable" data-key="Component">Type <span class="sort-indicator">${sortIcon('Component')}</span></th>
+              <th>Meta</th>
+              <th class="sortable" data-key="Manufacturer">Manufacturer <span class="sort-indicator">${sortIcon('Manufacturer')}</span></th>
+              <th>Shops</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
       `;
 
-      box.onclick = () => openDrawer(c);
+      tableWrap.querySelectorAll('th.sortable').forEach(th=>{
+        th.addEventListener('click',()=>{
+          const key = th.getAttribute('data-key');
+          if(currentSort.key === key){
+            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+          }else{
+            currentSort.key = key;
+            currentSort.dir = 'asc';
+          }
+          applyFiltersAndRender();
+        });
+      });
+    }
 
-      shelfItems.appendChild(box);
+    // ===== Cart logic =====
+    window.addToCart = function(name){
+      selectedItems.add(name);
+      renderCart();
+    };
+
+    window.removeFromCart = function(name){
+      selectedItems.delete(name);
+      renderCart();
+    };
+
+    function renderCart(){
+      if(!selectedItems.size){
+        cartItemsBox.innerHTML = 'No components selected. Use “Add” on any row.';
+        return;
+      }
+      cartItemsBox.innerHTML = [...selectedItems].map(n=>
+        `<span class="tag">${n}<span class="tag-remove" onclick="removeFromCart('${n.replace(/'/g,"\\'")}')">✕</span></span>`
+      ).join('');
+    }
+
+    // ===== Simple route planner (text only) =====
+    routeBtn.addEventListener('click',()=>{
+      if(!selectedItems.size){
+        routeOutput.innerHTML = '<span style="color:var(--muted);">No components selected.</span>';
+        return;
+      }
+      const wanted = [...selectedItems];
+      const route = computeBestRoute(wanted);
+      renderRouteOutput(route, wanted);
     });
 
-    shelvesDiv.appendChild(shelf);
-  }
-}
+    function computeBestRoute(wanted){
+      const locMap = {};
 
-/* Drawer */
-function openDrawer(c) {
-  const drawer = document.getElementById("drawer");
-  drawer.classList.add("open");
+      for(const c of allComponents){
+        if(!wanted.includes(c.Names)) continue;
 
-  const shopStr = Array.isArray(c.Shops) ? c.Shops.join(", ") :
-                  c.WhereToBuy || "—";
+        let shopList = [];
+        if(Array.isArray(c.Shops) && c.Shops.length){
+          shopList = c.Shops;
+        }else if(c.WhereToBuy){
+          shopList = c.WhereToBuy.split(';').map(s=>s.trim()).filter(Boolean);
+        }
 
-  drawer.innerHTML = `
-    <div class="drawer-title">${c.Names}</div>
-    <div class="drawer-line"><strong>Component:</strong> ${c.Component}</div>
-    <div class="drawer-line"><strong>Size:</strong> ${c.Size}</div>
-    <div class="drawer-line"><strong>Grade:</strong> ${c.Grade}</div>
-    <div class="drawer-line"><strong>Class:</strong> ${c.Class}</div>
-    <div class="drawer-line"><strong>Manufacturer:</strong> ${c.Manufacturer}</div>
-    <div class="drawer-line"><strong>Shops:</strong> ${shopStr}</div>
+        for(const shop of shopList){
+          const loc = routeLocationFromShopString(shop);
+          if(!loc) continue;
+          if(!locMap[loc]) locMap[loc] = new Set();
+          locMap[loc].add(c.Names);
+        }
+      }
 
-    <button class="add-route-btn" onclick="addToCart('${c.Names.replace(/'/g,"\\'")}')">
-      Add to Shopping List
-    </button>
+      const locs = Object.keys(locMap);
+      if(!locs.length) return ['Area18']; // fallback if nothing maps
 
-    <button class="add-route-btn"
-      style="margin-top:10px;background:rgba(180,20,20,0.4)"
-      onclick="closeDrawer()">
-      Close
-    </button>
-  `;
-}
+      const coversAll = (set)=>wanted.every(w=>set.has(w));
 
-function closeDrawer() {
-  document.getElementById("drawer").classList.remove("open");
-}
+      // 1-stop
+      for(const loc of locs){
+        if(coversAll(locMap[loc])) return [loc];
+      }
 
-/* Shopping List */
-function addToCart(name) {
-  selectedItems.add(name);
-  renderShoppingList();
-}
+      // 2-stop
+      let best2=null;
+      for(let i=0;i<locs.length;i++){
+        for(let j=i+1;j<locs.length;j++){
+          const u=new Set([...locMap[locs[i]], ...locMap[locs[j]]]);
+          if(coversAll(u)){
+            const route=[locs[i],locs[j]];
+            const cost=routeCost(route);
+            if(!best2 || cost<best2.cost) best2={route,cost};
+          }
+        }
+      }
+      if(best2) return best2.route;
 
-function removeFromCart(name) {
-  selectedItems.delete(name);
-  renderShoppingList();
-}
+      // greedy fallback
+      const remaining = new Set(wanted);
+      const chosen = [];
+      while(remaining.size){
+        let bestLoc=null, bestGain=0;
+        for(const loc of locs){
+          let gain=0;
+          for(const item of locMap[loc]) if(remaining.has(item)) gain++;
+          if(gain>bestGain){
+            bestGain=gain;
+            bestLoc=loc;
+          }
+        }
+        if(!bestLoc) break;
+        chosen.push(bestLoc);
+        for(const item of locMap[bestLoc]) remaining.delete(item);
+      }
+      return chosen.length ? chosen : ['Area18'];
+    }
 
-function renderShoppingList() {
-  const div = document.getElementById("shopping-items");
+    function routeCost(route){
+      return route.reduce((sum,loc)=>sum+(travelCost[loc] ?? 4),0);
+    }
 
-  if (selectedItems.size === 0) {
-    div.innerHTML = "No components selected.";
-    return;
-  }
+    function renderRouteOutput(route, wanted){
+      if(!route || !route.length){
+        routeOutput.innerHTML = '<span style="color:var(--bad);">Could not compute a route from current shop data.</span>';
+        return;
+      }
 
-  div.innerHTML = [...selectedItems].map(n =>
-    `<span class="tag">${n}
-      <span class="tag-remove" onclick="removeFromCart('${n.replace(/'/g,"\\'")}')">✕</span>
-    </span>`
-  ).join("");
-}
+      let html = `<div><strong>Recommended stops (${route.length}):</strong></div><br>`;
+      route.forEach((loc,i)=>{
+        const itemsHere = allComponents
+          .filter(c=>wanted.includes(c.Names))
+          .filter(c=>{
+            let shops=[];
+            if(Array.isArray(c.Shops)&&c.Shops.length) shops=c.Shops;
+            else if(c.WhereToBuy) shops=c.WhereToBuy.split(';').map(s=>s.trim());
+            return shops.some(s=>routeLocationFromShopString(s)===loc);
+          })
+          .map(c=>c.Names);
 
-/* Route Planner (Simple Version) */
-document.getElementById("route-btn").onclick = () => {
-  const out = document.getElementById("route-output");
+        html += `<div><strong>${i+1}. ${loc}</strong> – ${itemsHere.length ? itemsHere.join(', ') : 'no mapped items (data incomplete)'}</div>`;
+      });
 
-  if (selectedItems.size === 0) {
-    out.innerHTML = "No components selected.";
-    return;
-  }
-
-  out.innerHTML = `
-    <strong>Recommended Stops:</strong><br><br>
-    1. Area18 / Baijini Point (Most Components)<br>
-    2. Lorville (Second Priority)<br>
-    3. Port Tressler / New Babbage (if needed)<br>
-    4. Avoid Orison unless required<br><br>
-
-    <em>(Advanced route planner available in next build.)</em>
-  `;
-};
-</script>
-
+      routeOutput.innerHTML = html;
+    }
+  </script>
 </body>
 </html>
