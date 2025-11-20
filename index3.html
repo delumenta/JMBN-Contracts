@@ -1,426 +1,738 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN Shopping Planner</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN – Components HoloTable</title>
 
-<!-- Font + Favicon -->
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#000;
-  --panel:#0b0b0b;
-  --sub:#101010;
-  --border:#d6b44c;
-  --card:#141414;
-  --accent:#f2d675;
-  --text:#f7f1d0;
-  --muted:#c9b06a;
-  --bad:#ff6b6b;
-  --good:#8be38b;
-  --fs-base:14px;
-  --fs-sm:12px;
-}
+  <style>
+    :root{
+      --bg:#000;
+      --bg-panel:rgba(5,5,8,.9);
+      --bg-sub:rgba(10,10,14,.9);
 
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:#000;
-  color:var(--text);
-  font-family:'Play',sans-serif;
-  padding:14px;
-}
+      --gold:#d6b44c;
+      --gold-soft:rgba(214,180,76,.65);
+      --gold-faint:rgba(214,180,76,.25);
 
-#header-container{margin-bottom:12px;}
+      --accent:#f2d675;
+      --text:#f7f1d0;
+      --muted:rgba(201,176,106,.8);
 
-main{
-  max-width:1300px;
-  margin:0 auto;
-}
+      --holo-accent:#7dd9ff; /* light cyan, used sparingly */
 
-.layout{
-  display:grid;
-  grid-template-columns:360px 1fr;
-  gap:12px;
-}
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr}
-}
+      --radius:14px;
+      --fs-base:14px;
+      --fs-sm:12px;
+      --fs-lg:16px;
+    }
 
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 0 18px rgba(214,180,76,.22), inset 0 0 0 1px rgba(214,180,76,.12);
-}
+    *{box-sizing:border-box;margin:0;padding:0}
 
-.label{
-  font-size:var(--fs-sm);
-  color:var(--muted);
-  margin-bottom:4px;
-}
+    html,body{
+      height:100%;
+      background:radial-gradient(circle at top,#211707 0,#000 55%);
+      color:var(--text);
+      font-family:'Play',sans-serif;
+      overflow:hidden;
+    }
 
-.input{
-  width:100%;
-  padding:8px;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:#0a0a0a;
-  color:var(--text);
-  font-size:var(--fs-base);
-  outline:none;
-}
+    body{
+      display:flex;
+      flex-direction:column;
+    }
 
-.list{
-  max-height:380px;
-  overflow:auto;
-  border:1px solid rgba(214,180,76,.5);
-  border-radius:10px;
-  background:#050505;
-  padding:8px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
+    /* Header from header.html */
+    #site-header{
+      flex:0 0 auto;
+      padding:10px 12px 0;
+    }
 
-.item{
-  padding:8px;
-  border-radius:8px;
-  border:1px solid rgba(214,180,76,.3);
-  background:#0b0b0b;
-  cursor:pointer;
-  transition:.12s;
-}
-.item:hover{background:#161513;}
-.item.selected{
-  background:#1a160d;
-  border-color:var(--accent);
-}
+    /* Main 3-panel layout */
+    #layout{
+      flex:1 1 auto;
+      display:grid;
+      grid-template-columns:28% 42% 30%;
+      grid-template-rows:100%;
+      min-height:0;
+      border-top:1px solid var(--gold-faint);
+    }
 
-.btn{
-  padding:8px 10px;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:#0d0d0d;
-  color:var(--accent);
-  cursor:pointer;
-  transition:.12s;
-  font-size:var(--fs-base);
-  width:100%;
-}
-.btn:hover{
-  background:var(--accent);
-  color:#000;
-  transform:translateY(-1px);
-}
+    /* ===== LEFT: HOLO MAP ===== */
+    #holo-map-container{
+      background:linear-gradient(160deg,#050507,#08080c);
+      border-right:1px solid var(--gold-faint);
+      box-shadow:inset 0 0 22px rgba(0,0,0,.9);
+      padding:12px;
+      position:relative;
+      overflow:hidden;
+    }
 
-.route-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:10px;
-  margin-top:6px;
-}
+    #holo-map-title{
+      text-align:center;
+      letter-spacing:.14em;
+      font-size:var(--fs-sm);
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:6px;
+    }
 
-.card{
-  background:#0a0a0a;
-  border:1px solid rgba(214,180,76,.5);
-  padding:10px;
-  border-radius:12px;
-}
+    #holo-map{
+      width:100%;
+      height:100%;
+      filter:drop-shadow(0 0 12px rgba(214,180,76,.25));
+    }
 
-.card-title{
-  font-size:var(--fs-base);
-  color:var(--accent);
-  font-weight:700;
-  border-bottom:1px solid rgba(214,180,76,.35);
-  padding-bottom:4px;
-  margin-bottom:6px;
-}
+    .map-ring{
+      stroke:rgba(214,180,76,.22);
+      stroke-width:.8;
+      stroke-dasharray:3 2;
+      fill:none;
+    }
 
-.comp{
-  padding:3px 0;
-  font-size:var(--fs-sm);
-  border-bottom:1px dashed rgba(214,180,76,.2);
-  color:var(--muted);
-}
+    .map-node{
+      fill:var(--bg);
+      stroke:var(--gold);
+      stroke-width:1.5;
+      r:5;
+      cursor:pointer;
+      transition:.18s;
+    }
+    .map-node:hover{
+      fill:var(--gold);
+      stroke:var(--accent);
+      r:7;
+    }
 
-.copy-box{
-  margin-top:14px;
-  border:1px solid rgba(214,180,76,.4);
-  border-radius:10px;
-  padding:8px;
-  display:none;
-}
+    .map-node-label{
+      font-size:8px;
+      fill:var(--muted);
+    }
 
-.copy-box textarea{
-  width:100%;
-  padding:8px;
-  background:#000;
-  border:1px solid rgba(214,180,76,.4);
-  color:var(--text);
-  border-radius:8px;
-  resize:vertical;
-  min-height:90px;
-  font-family:'Play',monospace;
-  font-size:12px;
-}
+    .holo-path{
+      stroke:var(--accent);
+      stroke-width:2;
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      filter:drop-shadow(0 0 6px rgba(214,180,76,.5));
+      animation:pathGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes pathGlow{
+      0%{stroke-opacity:.35;}
+      100%{stroke-opacity:1;}
+    }
 
-</style>
+    /* ===== CENTRE: COMPONENT CARDS ===== */
+    #components-panel{
+      background:radial-gradient(circle at top,#1a1306 0,#050505 65%);
+      border-right:1px solid var(--gold-faint);
+      padding:12px;
+      overflow-y:auto;
+    }
+
+    #filters{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .filter-input,
+    .filter-select{
+      background:rgba(10,8,4,.9);
+      border-radius:999px;
+      border:1px solid var(--gold-faint);
+      padding:6px 10px;
+      color:var(--text);
+      font-size:var(--fs-base);
+      outline:none;
+      transition:border-color .15s,box-shadow .15s,background .15s;
+    }
+    .filter-input::placeholder{color:rgba(247,241,208,.5);}
+    .filter-input:focus,
+    .filter-select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 8px rgba(242,214,117,.45);
+      background:#161008;
+    }
+
+    #cards-render{
+      margin-top:4px;
+    }
+
+    .holo-card{
+      background:radial-gradient(circle at top,#20180a 0,#070707 65%);
+      border-radius:var(--radius);
+      border:1px solid var(--gold-faint);
+      padding:10px 11px 9px;
+      margin-bottom:8px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter:blur(4px);
+      transition:transform .16s, box-shadow .16s, border-color .16s;
+    }
+    .holo-card:hover{
+      transform:translateY(-2px);
+      border-color:var(--gold-soft);
+      box-shadow:0 0 18px rgba(214,180,76,.35);
+    }
+
+    .holo-card::after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:radial-gradient(circle at 0 0,rgba(214,180,76,.18) 0,transparent 60%);
+      opacity:0;
+      pointer-events:none;
+      animation:holoSweep 7s infinite linear;
+      mix-blend-mode:screen;
+    }
+    @keyframes holoSweep{
+      0%{transform:translate(-40%, -40%);opacity:0;}
+      20%{opacity:.6;}
+      40%{transform:translate(60%, 60%);opacity:0;}
+      100%{opacity:0;}
+    }
+
+    .card-name{
+      font-size:var(--fs-lg);
+      color:var(--accent);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:2px;
+    }
+    .card-meta{
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+    .card-line{
+      font-size:var(--fs-sm);
+      color:var(--text);
+    }
+
+    .add-route-btn{
+      margin-top:6px;
+      font-size:var(--fs-sm);
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid var(--gold-soft);
+      background:rgba(214,180,76,.16);
+      color:var(--accent);
+      cursor:pointer;
+      transition:background .15s, box-shadow .15s, transform .1s;
+    }
+    .add-route-btn:hover{
+      background:rgba(214,180,76,.3);
+      box-shadow:0 0 10px rgba(214,180,76,.5);
+      transform:translateY(-1px);
+    }
+
+    /* ===== RIGHT: ROUTE PLANNER ===== */
+    #route-panel{
+      background:radial-gradient(circle at top,#231a09 0,#050505 65%);
+      padding:12px;
+      overflow-y:auto;
+    }
+
+    #route-title{
+      text-align:center;
+      font-size:var(--fs-lg);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+
+    #selected-items{
+      min-height:52px;
+      border-radius:var(--radius);
+      border:1px solid var(--gold-faint);
+      padding:8px;
+      background:rgba(9,7,3,.9);
+      font-size:var(--fs-sm);
+      margin-bottom:10px;
+    }
+
+    #selected-items .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid var(--gold-soft);
+      margin:1px 4px 3px 0;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .tag-remove{
+      cursor:pointer;
+      color:var(--muted);
+    }
+
+    #generate-route-btn{
+      width:100%;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--gold-soft);
+      background:rgba(214,180,76,.2);
+      color:var(--accent);
+      font-size:var(--fs-base);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:background .16s, box-shadow .16s, transform .1s;
+    }
+    #generate-route-btn:hover{
+      background:rgba(214,180,76,.32);
+      box-shadow:0 0 16px rgba(214,180,76,.5);
+      transform:translateY(-1px);
+    }
+
+    #route-output{
+      margin-top:12px;
+      border-radius:var(--radius);
+      border:1px solid var(--gold-faint);
+      background:rgba(12,9,5,.92);
+      padding:10px;
+      font-size:var(--fs-sm);
+    }
+
+    .route-stop{
+      margin-top:8px;
+      padding:7px 8px;
+      border-radius:var(--radius);
+      border:1px solid var(--gold-soft);
+      background:rgba(18,13,7,.96);
+    }
+
+    .route-stop-title{
+      font-size:var(--fs-base);
+      color:var(--accent);
+    }
+    .route-stop-items{
+      margin-top:4px;
+      color:var(--text);
+    }
+
+    .route-meta{
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+
+    @media (max-width:1100px){
+      #layout{
+        grid-template-columns:1fr;
+        grid-template-rows:36% 64% auto;
+      }
+      #holo-map-container{border-right:none;border-bottom:1px solid var(--gold-faint);}
+      #components-panel{border-right:none;border-bottom:1px solid var(--gold-faint);}
+    }
+  </style>
 </head>
-
 <body>
+  <!-- shared JMBN header -->
+  <header id="site-header"></header>
 
-<!-- HEADER -->
-<div id="header-container"></div>
-<script>
-(async()=>{
-  try{
-    const res=await fetch('header.html',{cache:'no-cache'});
-    const html=await res.text();
-    document.getElementById('header-container').outerHTML=html;
+  <div id="layout">
+    <!-- LEFT: MAP -->
+    <aside id="holo-map-container">
+      <div id="holo-map-title">STANTON SYSTEM – TRADE ROUTE OVERLAY</div>
+      <svg id="holo-map" viewBox="-200 -200 400 400">
+        <!-- rings -->
+        <circle class="map-ring" cx="0" cy="0" r="40"></circle>
+        <circle class="map-ring" cx="0" cy="0" r="80"></circle>
+        <circle class="map-ring" cx="0" cy="0" r="130"></circle>
 
-    requestAnimationFrame(()=>{
-      const here=(location.pathname.split('/').pop()||'shopping.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a=>{
-        if(a.getAttribute('href')?.toLowerCase()===here){
-          a.classList.add('active');
-        }
-      });
+        <g id="map-paths"></g>
+        <g id="map-nodes"></g>
+      </svg>
+    </aside>
+
+    <!-- MIDDLE: COMPONENTS -->
+    <main id="components-panel">
+      <div id="filters">
+        <input id="searchInput" class="filter-input" type="text" placeholder="Name or manufacturer…">
+        <select id="filterComponent" class="filter-select">
+          <option value="">All Components</option>
+        </select>
+        <select id="filterClass" class="filter-select">
+          <option value="">All Classes</option>
+        </select>
+        <select id="filterSize" class="filter-select">
+          <option value="">All Sizes</option>
+        </select>
+        <div></div><!-- 4th cell used above; this balances layout on some widths -->
+      </div>
+
+      <div id="cards-render"></div>
+    </main>
+
+    <!-- RIGHT: ROUTE PLANNER -->
+    <section id="route-panel">
+      <div id="route-title">ROUTE PLANNER</div>
+      <div id="selected-items"></div>
+      <button id="generate-route-btn">Generate Best Route</button>
+      <div id="route-output"></div>
+    </section>
+  </div>
+
+  <script>
+    // === inject shared header ===
+    fetch('header.html')
+      .then(r => r.ok ? r.text() : '')
+      .then(html => { document.getElementById('site-header').innerHTML = html; })
+      .catch(() => {});
+
+    // === DOM references (avoid relying on global IDs) ===
+    const searchInput      = document.getElementById('searchInput');
+    const filterComponent  = document.getElementById('filterComponent');
+    const filterClass      = document.getElementById('filterClass');
+    const filterSize       = document.getElementById('filterSize');
+    const cardsRender      = document.getElementById('cards-render');
+    const selectedBox      = document.getElementById('selected-items');
+    const routeOutput      = document.getElementById('route-output');
+    const generateBtn      = document.getElementById('generate-route-btn');
+    const mapNodesGroup    = document.getElementById('map-nodes');
+    const mapPathsGroup    = document.getElementById('map-paths');
+
+    const DATA_COMPONENTS = 'data/components.js';
+    const DATA_SHOPS      = 'data/shops.json';           // not heavily used yet, but wired for future
+    const DATA_SHOP_INV   = 'data/shop_inventory.json';  // optional
+
+    let allComponents = [];
+    let selectedItems = new Set();
+
+    // Stanton-ish coordinates (stylised)
+    const mapCoords = {
+      'Area18':       {x:  40, y:   0},
+      'Bajini Point': {x:  80, y:  10},
+      'Seraphin':     {x:  65, y: -25},
+      'Everus Harbor':{x:  55, y:  40},
+      'Port Tressler':{x: -30, y:-110},
+      'Lorville':     {x: -20, y:  60},
+      'GrimHex':      {x: -85, y: -25},
+      'New Babbage':  {x: -50, y:-135},
+      'Orison':       {x:  60, y: 120}
+    };
+
+    const travelCost = {
+      'Area18': 0,
+      'Bajini Point': 1,
+      'Seraphin': 1,
+      'Everus Harbor': 1,
+      'Port Tressler': 2,
+      'Lorville': 3,
+      'GrimHex': 3,
+      'New Babbage': 6, // avoid-ish
+      'Orison': 8       // hard avoid
+    };
+
+    function routeLocationFromShopString(shopStr){
+      if(!shopStr) return null;
+      const s = shopStr.toLowerCase();
+      if(s.includes('area 18') || s.includes('area18')) return 'Area18';
+      if(s.includes('bajini')) return 'Bajini Point';
+      if(s.includes('baijini')) return 'Bajini Point';
+      if(s.includes('seraph')) return 'Seraphin';
+      if(s.includes('everus')) return 'Everus Harbor';
+      if(s.includes('tressler')) return 'Port Tressler';
+      if(s.includes('lorville')) return 'Lorville';
+      if(s.includes('grimhex')) return 'GrimHex';
+      if(s.includes('new babbage') || s.includes('new_babbage')) return 'New Babbage';
+      if(s.includes('orison')) return 'Orison';
+      // generic R&Rs – very rough pass
+      if(s.includes('arcl1')) return 'Bajini Point';
+      if(s.includes('crul1') || s.includes('cru-l1')) return 'Everus Harbor';
+      if(s.includes('hurl1') || s.includes('hur-l1') || s.includes('hur-l2')) return 'Lorville';
+      return null;
+    }
+
+    // ==== INITIAL LOAD ====
+    Promise.all([
+      fetch(DATA_COMPONENTS).then(r=>r.json()),
+      fetch(DATA_SHOPS).then(r=>r.ok?r.json():[]).catch(()=>[]),
+      fetch(DATA_SHOP_INV).then(r=>r.ok?r.json():[]).catch(()=>[])
+    ]).then(([components])=>{
+      allComponents = Array.isArray(components)?components:[];
+      buildFilters();
+      renderCards(allComponents);
+      renderMapNodes();
+    }).catch(err=>{
+      console.error('Failed to load data', err);
+      cardsRender.innerHTML = '<div style="padding:16px;color:#ff6b6b;">Failed to load components data.</div>';
     });
 
-  }catch(e){
-    console.warn('Header load failed',e);
-  }
-})();
-</script>
+    // ==== FILTERS ====
+    function buildFilters(){
+      const compSet = new Set();
+      const classSet = new Set();
+      const sizeSet = new Set();
 
-<main>
-  <div class="layout">
+      allComponents.forEach(c=>{
+        if(c.Component) compSet.add(c.Component);
+        if(c.Class)     classSet.add(c.Class);
+        if(c.Size)      sizeSet.add(String(c.Size));
+      });
 
-    <!-- LEFT PANEL -->
-    <section class="panel">
-      <h2 style="color:var(--accent);margin-bottom:6px;">Shopping Planner</h2>
+      const addOpts = (set, select)=>{
+        Array.from(set).sort().forEach(v=>{
+          const opt=document.createElement('option');
+          opt.value=v;
+          opt.textContent=v;
+          select.appendChild(opt);
+        });
+      };
+      addOpts(compSet,  filterComponent);
+      addOpts(classSet, filterClass);
+      addOpts(sizeSet,  filterSize);
 
-      <div class="label">Search components</div>
-      <input id="search" class="input" placeholder="FR-76, XL-1, Palisade…">
-
-      <div id="list" class="list" style="margin-top:8px;"></div>
-
-      <div style="margin-top:10px;display:flex;gap:8px;">
-        <button id="routeBtn" class="btn">Generate Route</button>
-        <button id="clearBtn" class="btn" style="background:#050505;color:var(--muted);">Clear</button>
-      </div>
-    </section>
-
-    <!-- RIGHT PANEL -->
-    <section class="panel">
-      <h2 style="color:var(--accent);margin-bottom:6px;">Route</h2>
-      <div id="output" style="font-size:var(--fs-sm);color:var(--muted);">
-        Pick components on the left and generate a route.
-      </div>
-
-      <div id="copyWrap" class="copy-box">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <span style="color:var(--muted);font-size:var(--fs-sm);">Shareable Summary</span>
-          <button id="copyBtn" class="btn" style="width:auto;padding:4px 8px;">Copy</button>
-        </div>
-        <textarea id="copyBox" readonly></textarea>
-      </div>
-
-    </section>
-
-  </div>
-</main>
-
-<script>
-const DATA_URL="data/components.js";
-
-let all=[];
-let selected=new Set();
-
-const $id=id=>document.getElementById(id);
-
-function esc(x){
-  const d=document.createElement('div');
-  d.textContent=x??"";
-  return d.innerHTML;
-}
-
-async function init(){
-  try{
-    const res=await fetch(DATA_URL,{cache:'no-store'});
-    all=await res.json();
-  }catch(e){all=[];}
-  renderList();
-}
-
-function parseLocations(str){
-  if(!str) return ["Loot"];
-  if(str.toLowerCase().includes("loot")) return ["Loot only / Not sold"];
-
-  return str
-    .split(";")
-    .map(s=>s.trim())
-    .filter(Boolean)
-    .map(s=>s.replace(/–/g,"-"));
-}
-
-function renderList(){
-  const q=$id("search").value.toLowerCase();
-  let arr=all;
-
-  if(q){
-    arr=arr.filter(c=>
-      (c.Names||"").toLowerCase().includes(q) ||
-      (c.Component||"").toLowerCase().includes(q) ||
-      (c.Manufacturer||"").toLowerCase().includes(q)
-    );
-  }
-
-  $id("list").innerHTML=arr.map(c=>{
-    const id=c.Names;
-    const sel=selected.has(id);
-    return `
-      <div class="item ${sel?"selected":""}" data-id="${esc(id)}">
-        <div><b>${esc(c.Names)}</b> <span style="color:${sel?'var(--accent)':'var(--muted)'};">(${esc(c.Component)})</span></div>
-        <div style="font-size:11px;color:var(--muted);">${esc(c.Manufacturer||"")}</div>
-      </div>
-    `;
-  }).join("");
-}
-
-$id("list").addEventListener("click",e=>{
-  const row=e.target.closest(".item");
-  if(!row) return;
-  const id=row.dataset.id;
-  if(selected.has(id)) selected.delete(id);
-  else selected.add(id);
-  renderList();
-});
-
-$id("clearBtn").onclick=()=>{
-  selected.clear();
-  renderList();
-  $id("output").innerHTML=`<span style="color:var(--muted);">Selection cleared.</span>`;
-  $id("copyWrap").style.display="none";
-};
-
-$id("routeBtn").onclick=()=>{
-  if(!selected.size){
-    $id("output").innerHTML=`<span style="color:var(--bad);">Select at least one component.</span>`;
-    return;
-  }
-  generateRoute();
-};
-
-function generateRoute(){
-  const items=[...selected].map(id=> all.find(c=>c.Names===id));
-
-  const shopMap=new Map();
-  for(const c of items){
-    const locs=parseLocations(c.WhereToBuy||"");
-    c._locs=locs;
-
-    for(const loc of locs){
-      if(!shopMap.has(loc)) shopMap.set(loc,new Set());
-      shopMap.get(loc).add(c);
+      searchInput.addEventListener('input', applyFilters);
+      filterComponent.addEventListener('change', applyFilters);
+      filterClass.addEventListener('change', applyFilters);
+      filterSize.addEventListener('change', applyFilters);
     }
-  }
 
-  let uncovered=new Set(items);
-  const route=[];
+    function applyFilters(){
+      const q   = searchInput.value.trim().toLowerCase();
+      const fc  = filterComponent.value;
+      const fcl = filterClass.value;
+      const fs  = filterSize.value;
 
-  while(uncovered.size){
-    let bestShop=null, bestCov=[];
+      const list = allComponents.filter(c=>{
+        if(fc && c.Component !== fc) return false;
+        if(fcl && c.Class !== fcl)   return false;
+        if(fs && String(c.Size) !== fs) return false;
 
-    for(const [shop,set] of shopMap.entries()){
-      const cover=[...set].filter(x=>uncovered.has(x));
-      if(cover.length > bestCov.length){
-        bestCov=cover;
-        bestShop=shop;
+        if(q){
+          const hay = [
+            c.Names,
+            c.Manufacturer,
+            c.Component,
+            c.Class
+          ].map(v=>String(v||'').toLowerCase()).join(' ');
+          if(!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      renderCards(list);
+    }
+
+    // ==== CARDS ====
+    function renderCards(list){
+      if(!list.length){
+        cardsRender.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:var(--fs-sm);">No components match your filters.</div>';
+        return;
       }
+      let html='';
+      for(const c of list){
+        const medal = `S${c.Size?.toString().replace(/^S/i,'') || ''} • Grade ${c.Grade ?? ''} • ${c.Class || ''}`;
+        const shopStr = Array.isArray(c.Shops) && c.Shops.length
+          ? c.Shops.join(', ')
+          : (c.WhereToBuy || '');
+        html += `
+          <article class="holo-card">
+            <div class="card-name">${c.Names || ''}</div>
+            <div class="card-meta">${c.Component || ''}</div>
+            <div class="card-line" style="color:var(--muted);">${medal}</div>
+            <div class="card-line" style="margin-top:3px;font-size:var(--fs-sm);">
+              <span style="color:var(--muted);">Manufacturer:</span> ${c.Manufacturer || ''}
+            </div>
+            <div class="card-line" style="margin-top:3px;font-size:var(--fs-sm);">
+              <span style="color:var(--muted);">Shops:</span> ${shopStr || '<span style="color:#777;">—</span>'}
+            </div>
+            <button class="add-route-btn" onclick="addToRoute('${(c.Names || '').replace(/'/g, "\\'")}')">
+              Add to route
+            </button>
+          </article>
+        `;
+      }
+      cardsRender.innerHTML = html;
     }
 
-    if(!bestShop){
-      break;
+    // ==== ROUTE PLANNER ====
+    window.addToRoute = function(name){
+      selectedItems.add(name);
+      renderSelectedItems();
+    };
+
+    function removeFromRoute(name){
+      selectedItems.delete(name);
+      renderSelectedItems();
     }
 
-    route.push({shop:bestShop, items:bestCov});
-    for(const x of bestCov) uncovered.delete(x);
-  }
+    function renderSelectedItems(){
+      if(!selectedItems.size){
+        selectedBox.innerHTML = '<span style="color:var(--muted);font-size:var(--fs-sm);">No components selected. Click “Add to route” on any card.</span>';
+        return;
+      }
+      selectedBox.innerHTML = [...selectedItems].map(n=>`
+        <span class="tag">
+          ${n}
+          <span class="tag-remove" onclick="removeFromRoute('${n.replace(/'/g,"\\'")}')">✕</span>
+        </span>
+      `).join('');
+    }
 
-  renderRoute(route);
-  buildCopy(route);
-}
+    generateBtn.addEventListener('click',()=>{
+      if(!selectedItems.size){
+        alert('Select at least one component.');
+        return;
+      }
+      const wanted = [...selectedItems];
+      const route  = computeBestRoute(wanted);
+      renderRoute(route, wanted);
+      drawRouteOnMap(route);
+    });
 
-function renderRoute(route){
-  if(!route.length){
-    $id("output").innerHTML=`<span style="color:var(--bad);">No route possible.</span>`;
-    return;
-  }
+    function computeBestRoute(wanted){
+      // Build location -> items mapping from Shops / WhereToBuy text
+      const locMap = {};
+      for(const c of allComponents){
+        if(!wanted.includes(c.Names)) continue;
+        let shopList = [];
+        if(Array.isArray(c.Shops) && c.Shops.length){
+          shopList = c.Shops;
+        }else if(c.WhereToBuy){
+          shopList = c.WhereToBuy.split(';').map(s=>s.trim()).filter(Boolean);
+        }
+        for(const s of shopList){
+          const loc = routeLocationFromShopString(s);
+          if(!loc) continue;
+          if(!locMap[loc]) locMap[loc] = new Set();
+          locMap[loc].add(c.Names);
+        }
+      }
 
-  let html=`
-    <div style="margin-bottom:6px;">
-      <span style="color:var(--accent);font-weight:700;">${route.length} Stop(s)</span>
-    </div>
-    <div class="route-grid">
-  `;
+      const locs = Object.keys(locMap);
+      if(!locs.length){
+        return ['Area18']; // fallback
+      }
 
-  for(const r of route){
-    html+=`
-      <div class="card">
-        <div class="card-title">${esc(r.shop)}</div>
-        ${r.items.map(i=>`
-          <div class="comp">
-            <b>${esc(i.Names)}</b> — ${esc(i.Component)}
-            <br><span style="font-size:10px;">${esc(i.Manufacturer||"")}</span>
+      const coversAll = (set)=>wanted.every(w=>set.has(w));
+
+      // try single-stop
+      for(const loc of locs){
+        if(coversAll(locMap[loc])) return [loc];
+      }
+
+      // try 2-stop
+      let best2=null;
+      for(let i=0;i<locs.length;i++){
+        for(let j=i+1;j<locs.length;j++){
+          const s = new Set([...locMap[locs[i]], ...locMap[locs[j]]]);
+          if(coversAll(s)){
+            const r=[locs[i],locs[j]];
+            const cost = routeCost(r);
+            if(!best2 || cost<best2.cost) best2={route:r,cost};
+          }
+        }
+      }
+      if(best2) return best2.route;
+
+      // try 3-stop
+      let best3=null;
+      for(let i=0;i<locs.length;i++){
+        for(let j=i+1;j<locs.length;j++){
+          for(let k=j+1;k<locs.length;k++){
+            const s = new Set([...locMap[locs[i]], ...locMap[locs[j]], ...locMap[locs[k]]]);
+            if(coversAll(s)){
+              const r=[locs[i],locs[j],locs[k]];
+              const cost = routeCost(r);
+              if(!best3 || cost<best3.cost) best3={route:r,cost};
+            }
+          }
+        }
+      }
+      if(best3) return best3.route;
+
+      // greedy fallback – not perfect but usable
+      const remaining = new Set(wanted);
+      const chosen=[];
+      while(remaining.size){
+        let bestLoc=null;
+        let bestGain=0;
+        for(const loc of locs){
+          let gain=0;
+          for(const item of locMap[loc]){
+            if(remaining.has(item)) gain++;
+          }
+          if(gain>bestGain){
+            bestGain=gain;
+            bestLoc=loc;
+          }
+        }
+        if(!bestLoc) break;
+        chosen.push(bestLoc);
+        for(const item of locMap[bestLoc]) remaining.delete(item);
+      }
+      return chosen.length ? chosen : ['Area18'];
+    }
+
+    function routeCost(route){
+      return route.reduce((sum,loc)=>sum+(travelCost[loc] ?? 4),0);
+    }
+
+    function renderRoute(route, wanted){
+      if(!route || !route.length){
+        routeOutput.innerHTML = '<div class="route-meta">No valid route could be computed from current data.</div>';
+        return;
+      }
+      let html = `<div class="route-meta">Optimal route with <strong>${route.length}</strong> stop(s).</div>`;
+      route.forEach((loc,idx)=>{
+        const itemsHere = allComponents
+          .filter(c=>wanted.includes(c.Names))
+          .filter(c=>{
+            let shopList=[];
+            if(Array.isArray(c.Shops)&&c.Shops.length) shopList=c.Shops;
+            else if(c.WhereToBuy) shopList=c.WhereToBuy.split(';').map(s=>s.trim());
+            return shopList.some(s=>routeLocationFromShopString(s)===loc);
+          })
+          .map(c=>c.Names);
+        html += `
+          <div class="route-stop">
+            <div class="route-stop-title">${idx+1}. ${loc}</div>
+            <div class="route-stop-items">${itemsHere.length?itemsHere.join(', '):'<span style="color:var(--muted);">No items mapped here (data may be incomplete).</span>'}</div>
           </div>
-        `).join("")}
-      </div>
-    `;
-  }
-
-  html+=`</div>`;
-  $id("output").innerHTML=html;
-}
-
-function buildCopy(route){
-  const lines=[];
-  lines.push("JMBN Shopping Route");
-  lines.push("----------------------");
-  lines.push("");
-
-  for(const r of route){
-    lines.push(`${r.shop} — ${r.items.length} item(s)`);
-    for(const i of r.items){
-      lines.push(`  - ${i.Names} (${i.Component})`);
+        `;
+      });
+      routeOutput.innerHTML = html;
     }
-    lines.push("");
-  }
 
-  $id("copyBox").value=lines.join("\n");
-  $id("copyWrap").style.display="block";
-}
+    // ==== MAP RENDERING ====
+    function renderMapNodes(){
+      let html='';
+      for(const [name,coord] of Object.entries(mapCoords)){
+        html += `
+          <g>
+            <circle class="map-node" cx="${coord.x}" cy="${coord.y}" r="5"></circle>
+            <text class="map-node-label" x="${coord.x+8}" y="${coord.y+3}">${name}</text>
+          </g>
+        `;
+      }
+      mapNodesGroup.innerHTML = html;
+    }
 
-$id("copyBtn").onclick=async()=>{
-  try{
-    await navigator.clipboard.writeText($id("copyBox").value);
-    $id("copyBtn").textContent="Copied!";
-    setTimeout(()=> $id("copyBtn").textContent="Copy",1000);
-  }catch(e){
-    alert("Copy failed.");
-  }
-};
-
-$id("search").addEventListener("input", renderList);
-
-init();
-</script>
-
+    function drawRouteOnMap(route){
+      mapPathsGroup.innerHTML='';
+      if(!route || route.length<2) return;
+      let html='';
+      for(let i=0;i<route.length-1;i++){
+        const a = mapCoords[route[i]];
+        const b = mapCoords[route[i+1]];
+        if(!a||!b) continue;
+        html += `<line class="holo-path" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"></line>`;
+      }
+      mapPathsGroup.innerHTML = html;
+    }
+  </script>
 </body>
 </html>
