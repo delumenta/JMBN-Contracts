@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  width: 1080px;
+  height: 1080px;
+  background: #0a0a0d;
+  font-family: 'Play', sans-serif;
+  color: #f2d675;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  width: 90%;
+  padding: 40px;
+  border: 3px solid #f2d675;
+  border-radius: 12px;
+  background: #111;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.line {
+  font-size: 28px;
+  margin: 10px 0;
+}
+
+.section-title {
+  margin-top: 30px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <div class="title" id="mission-title">MISSION NAME</div>
+
+  <div class="line" id="mission-id"></div>
+  <div class="line" id="mission-time"></div>
+  <div class="line" id="mission-status"></div>
+  <div class="line" id="mission-payout"></div>
+  <div class="line" id="mission-origin"></div>
+  <div class="line" id="mission-dest"></div>
+
+  <div class="section-title">Attendance</div>
+  <div class="line" id="mission-going"></div>
+  <div class="line" id="mission-not-going"></div>
+
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+
+document.getElementById("mission-title").textContent = params.get("title");
+document.getElementById("mission-id").textContent = "ID: " + params.get("id");
+document.getElementById("mission-time").textContent = "Time: " + params.get("time");
+document.getElementById("mission-status").textContent = "Status: " + params.get("status");
+document.getElementById("mission-payout").textContent = "Payout: " + params.get("payout");
+document.getElementById("mission-origin").textContent = "Origin: " + params.get("origin");
+document.getElementById("mission-dest").textContent = "Destination: " + params.get("dest");
+document.getElementById("mission-going").textContent = "Going: " + params.get("going");
+document.getElementById("mission-not-going").textContent = "Not Going: " + params.get("notgoing");
+</script>
+</body>
+</html>
