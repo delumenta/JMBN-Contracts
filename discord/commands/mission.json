@@ -1,0 +1,49 @@
+{
+  "name": "mission",
+  "description": "Mission management tools for JMBN",
+  "type": 1,
+  "options": [
+    {
+      "type": 1,
+      "name": "list",
+      "description": "List recent/upcoming missions"
+    },
+    {
+      "type": 1,
+      "name": "view",
+      "description": "View one mission details + attendance",
+      "options": [
+        {
+          "type": 3,
+          "name": "id",
+          "description": "Mission ID (uuid)",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "rsvp",
+      "description": "Set your RSVP for a mission",
+      "options": [
+        {
+          "type": 3,
+          "name": "id",
+          "description": "Mission ID (uuid)",
+          "required": true
+        },
+        {
+          "type": 3,
+          "name": "status",
+          "description": "going / not_going / withdraw",
+          "required": true,
+          "choices": [
+            { "name": "going", "value": "going" },
+            { "name": "not_going", "value": "not_going" },
+            { "name": "withdraw", "value": "withdraw" }
+          ]
+        }
+      ]
+    }
+  ]
+}
