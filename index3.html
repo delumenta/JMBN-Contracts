@@ -20,6 +20,7 @@
   --muted:#c9b06a;
   --good:#7CFC9A;
   --warn:#f7d27a;
+  --bad:#ff6b6b;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -29,13 +30,15 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
+
 /* HUD grid bg */
 .hud-grid{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:
     linear-gradient(rgba(255,230,150,.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,230,150,.03) 1px, transparent 1px);
-  background-size:80px 80px; animation:drift 80s linear infinite;
+  background-size:80px 80px; 
+  animation:drift 80s linear infinite;
 }
 @keyframes drift{from{background-position:0 0}to{background-position:-200px -200px}}
 body::after{
@@ -44,10 +47,21 @@ body::after{
     radial-gradient(1200px 800px at 50% 45%,rgba(0,0,0,0) 35%,rgba(0,0,0,.45) 70%,rgba(0,0,0,.75) 100%),
     linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.55));
 }
-.wrapper{position:relative;z-index:1;padding:24px;display:grid;place-items:center}
+
+.wrapper{
+  position:relative;
+  z-index:1;
+  padding:24px;
+  display:grid;
+  place-items:center;
+}
 .center{width:min(1100px,96vw)}
+
+/* =========================================
+   BRAND HEADER
+========================================= */
 .brand{
-  display:flex;align-items:center;gap:12px;margin:4px 0 18px
+  display:flex;align-items:center;gap:12px;margin:4px 0 12px;
 }
 .brand-logo{
   width:52px;height:52px;object-fit:contain;
@@ -59,6 +73,9 @@ body::after{
 }
 .brand .tagline{color:var(--muted);font-size:12px;margin-top:2px}
 
+/* =========================================
+   CARDS
+========================================= */
 .card{
   background:var(--panel);
   border:1px solid var(--border);
@@ -75,15 +92,22 @@ body::after{
 .card p{color:var(--text);font-size:14px;line-height:1.6}
 .card ul{margin:8px 0 0 18px;display:grid;gap:6px}
 .card li{font-size:14px;color:var(--text)}
+
 .badge{
   display:inline-block;border:1px solid var(--border);border-radius:999px;
   padding:2px 8px;font-size:11px;background:#0c0c0c;color:var(--muted);font-weight:800
 }
+.badge.good{background:var(--good);color:#000;border-color:var(--good)}
+.badge.warn{background:var(--warn);color:#000;border-color:var(--warn)}
+.badge.bad{background:var(--bad);color:#000;border-color:var(--bad)}
 
 .hr{
   height:1px;background:rgba(214,180,76,.35);margin:10px 0
 }
 
+/* =========================================
+   KPI OVERVIEW
+========================================= */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(max-width:900px){.kpis{grid-template-columns:1fr}}
 .kpi{
@@ -92,12 +116,15 @@ body::after{
 .kpi .title{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.3px}
 .kpi .value{margin-top:4px;font-size:16px;color:var(--accent);font-weight:800}
 
+/* =========================================
+   COMMAND BLOCKS & STEPS
+========================================= */
 .cmd{
   background:#050505;border:1px solid var(--border);border-radius:10px;
-  padding:10px;margin-top:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  padding:10px;margin-top:8px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   font-size:13px;line-height:1.6;color:#e8e3c8;white-space:pre-wrap
 }
-.cmd .hint{color:var(--muted)}
 .step{
   display:flex;gap:10px;align-items:flex-start;margin-top:8px
 }
@@ -111,6 +138,9 @@ body::after{
   border-radius:10px;padding:10px;margin-top:8px;font-size:13px;color:var(--text)
 }
 
+/* =========================================
+   TABLES
+========================================= */
 .table{
   width:100%;border-collapse:collapse;margin-top:8px;font-size:14px
 }
@@ -119,15 +149,14 @@ body::after{
   padding:8px 6px;text-align:left;vertical-align:top
 }
 .table th{color:var(--accent);font-weight:800;font-size:13px}
-.table td code{background:#111;border:1px solid rgba(214,180,76,.4);padding:1px 5px;border-radius:6px}
-
-.footer{
-  text-align:center;color:var(--muted);font-size:12px;margin-top:10px
+.table td code{
+  background:#111;border:1px solid rgba(214,180,76,.4);
+  padding:1px 5px;border-radius:6px
 }
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
 
-/* image wrapper */
+/* =========================================
+   IMAGE WRAPPER
+========================================= */
 .img-wrap{
   margin:14px 0;
   text-align:center;
@@ -143,6 +172,55 @@ a:hover{text-decoration:underline}
   color:var(--muted);
   margin-top:6px;
 }
+
+/* =========================================
+   TAB NAV
+========================================= */
+.tabs{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin:0 0 14px;
+  padding:8px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  position:sticky;top:8px;z-index:5;
+  backdrop-filter:blur(6px);
+}
+.tab-btn{
+  border:1px solid rgba(214,180,76,.55);
+  background:#0b0b0b;
+  color:var(--muted);
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.15s;
+}
+.tab-btn:hover{
+  color:var(--accent);
+  border-color:var(--accent);
+  box-shadow:0 0 10px rgba(242,214,117,.25);
+}
+.tab-btn.active{
+  color:#000;
+  background:var(--accent);
+  border-color:var(--accent);
+  box-shadow:0 0 12px rgba(242,214,117,.6);
+}
+
+/* =========================================
+   SECTIONS TOGGLE
+========================================= */
+.tab-section{display:none;}
+.tab-section.active{display:block;}
+
+.footer{
+  text-align:center;color:var(--muted);font-size:12px;margin-top:10px
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
 </style>
 </head>
 
@@ -152,173 +230,285 @@ a:hover{text-decoration:underline}
 <div class="wrapper">
   <main class="center">
 
-    <header class="brand card" style="display:flex;justify-content:space-between;align-items:center">
-      <div style="display:flex;align-items:center;gap:12px">
-        <img class="brand-logo"
-        src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+    <!-- BRAND / TITLE -->
+    <header class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div class="brand">
+        <img class="brand-logo" alt="JMBN Logo"
+          src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
         <div>
           <h1>JMBN Discord Bot Guide</h1>
-          <div class="tagline">How to link your account, view missions, and RSVP like a proper crew member.</div>
+          <div class="tagline">Link your account → use tabs below to learn each command.</div>
         </div>
       </div>
-      <div>
-        <span class="badge">Play Font • Gold HUD</span>
-      </div>
+      <span class="badge">Play Font • Gold HUD</span>
     </header>
 
+    <!-- QUICK OVERVIEW -->
     <section class="card">
       <h2>Quick Overview</h2>
       <div class="kpis">
         <div class="kpi">
           <div class="title">Step 1</div>
           <div class="value">Link Discord</div>
-          <p style="margin-top:6px;color:var(--muted);font-size:12px">Use /link with your JMBN code.</p>
+          <p style="margin-top:6px;color:var(--muted);font-size:12px">
+            Required before RSVP/Certs.
+          </p>
         </div>
         <div class="kpi">
           <div class="title">Step 2</div>
-          <div class="value">Mission List</div>
-          <p style="margin-top:6px;color:var(--muted);font-size:12px">See planned + unknown missions.</p>
+          <div class="value">Use Tabs</div>
+          <p style="margin-top:6px;color:var(--muted);font-size:12px">
+            Profile / Missions / Certs.
+          </p>
         </div>
         <div class="kpi">
           <div class="title">Step 3</div>
           <div class="value">RSVP</div>
-          <p style="margin-top:6px;color:var(--muted);font-size:12px">Tap buttons under mission view.</p>
+          <p style="margin-top:6px;color:var(--muted);font-size:12px">
+            Tap buttons on mission cards.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- LINK DISCORD SECTION -->
+    <!-- 1) LINK ACCOUNT (always visible first) -->
     <section class="card" id="linking">
       <h2>1) Link your Discord to JMBN</h2>
-      <p>Before you can RSVP, the bot needs to know which JMBN account you are.</p>
+      <p>Before you can RSVP or check certifications, the bot needs to know which JMBN account you are.</p>
 
-      <!-- Image 1: Click Link Discord -->
+      <!-- Screenshot: click Link Discord -->
       <div class="img-wrap">
-        <img src="/mnt/data/8025d407-90d9-43be-9314-6b846ccb834b.png" alt="JMBN Dashboard - Link Discord button">
+        <img src="/mnt/data/8025d407-90d9-43be-9314-6b846ccb834b.png" alt="Click Link Discord on dashboard">
         <div class="img-caption">Step 1 — On the JMBN Dashboard, click <strong>Link Discord</strong>.</div>
       </div>
 
-      <!-- Image 2: Code appears -->
+      <!-- Screenshot: code appears -->
       <div class="img-wrap">
-        <img src="/mnt/data/0d11512d-03ca-4f95-ba3d-7d3f7dae45b4.png" alt="Generated JMBN link code">
-        <div class="img-caption">Step 2 — A one-time code will appear. It expires in ~10 minutes.</div>
+        <img src="/mnt/data/0d11512d-03ca-4f95-ba3d-7d3f7dae45b4.png" alt="Generated code appears">
+        <div class="img-caption">Step 2 — A one-time code appears (expires ~10 minutes).</div>
       </div>
 
-      <!-- Image 3: Paste in Discord -->
+      <!-- Screenshot: paste into Discord -->
       <div class="img-wrap">
-        <img src="/mnt/data/54149b92-626c-41e7-ae1b-7f70c21baacd.png" alt="Paste JMBN code into Discord slash command">
-        <div class="img-caption">Step 3 — In Discord, type <code>/link code:&lt;YOUR_CODE&gt;</code> to complete the linking.</div>
+        <img src="/mnt/data/54149b92-626c-41e7-ae1b-7f70c21baacd.png" alt="Paste code into /link">
+        <div class="img-caption">Step 3 — In Discord, paste it into the bot command.</div>
       </div>
 
       <div class="step">
         <div class="step-num">1</div>
         <div>
-          <p>Click <strong>Link Discord</strong> on the dashboard.</p>
+          <p>On dashboard: click <strong>Link Discord</strong>.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-num">2</div>
         <div>
-          <p>Copy the generated code:</p>
-          <div class="cmd">JMBN-XXXXX</div>
+          <p>Copy the code shown (example):</p>
+          <div class="cmd">JMBN-29BHSH</div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-num">3</div>
         <div>
-          <p>Paste it into Discord:</p>
-          <div class="cmd">/link code:JMBN-XXXXX</div>
+          <p>In Discord, run:</p>
+          <div class="cmd">/link code:JMBN-29BHSH</div>
+          <p class="callout">If successful, you are now linked and can use all bot features.</p>
         </div>
       </div>
     </section>
 
-    <!-- MISSIONS -->
-    <section class="card" id="missions">
-      <h2>2) View Mission List</h2>
+    <!-- HEADER TABS (after linking) -->
+    <nav class="tabs" aria-label="Guide tabs">
+      <button class="tab-btn active" data-tab="profile">Profile</button>
+      <button class="tab-btn" data-tab="missions">Missions</button>
+      <button class="tab-btn" data-tab="certs">Certifications</button>
+      <button class="tab-btn" data-tab="faq">FAQ / Troubleshooting</button>
+      <button class="tab-btn" data-tab="summary">Command Summary</button>
+    </nav>
 
-      <p>Shows missions marked as <strong>Planned</strong> or <strong>Unknown</strong>.</p>
-      <div class="cmd">/mission list</div>
+    <!-- PROFILE TAB -->
+    <section class="tab-section active" id="tab-profile">
+      <section class="card">
+        <h2>Profile</h2>
+        <p>Shows your JMBN Rank Card once you’re linked.</p>
+        <div class="cmd">/profile</div>
 
-      <table class="table">
-        <thead>
-          <tr><th>What you see</th><th>Meaning</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>01 • Operation Name</code></td><td>Mission title</td></tr>
-          <tr><td><code>🕒 04 Nov 2025, 8:00pm</code></td><td>SG Time</td></tr>
-          <tr><td><code>Status: Planned</code></td><td>Only Planned/Unknown appear</td></tr>
-          <tr><td><code>ID: xxx-uuid</code></td><td>Mission ID for /mission view</td></tr>
-        </tbody>
-      </table>
+        <p class="callout">
+          You’ll see your handle, current rank name, and rank badge image.  
+          If you aren’t linked, the bot will tell you to link first.
+        </p>
+      </section>
     </section>
 
-    <!-- VIEW MISSION -->
-    <section class="card" id="view">
-      <h2>3) View a Mission</h2>
+    <!-- MISSIONS TAB -->
+    <section class="tab-section" id="tab-missions">
+      <section class="card">
+        <h2>Missions</h2>
+        <p><strong>Mission List</strong> shows only Planned/Unknown missions, newest first.</p>
+        <div class="cmd">/mission list</div>
 
-      <p>Open a mission card:</p>
-      <div class="cmd">/mission view id:&lt;UUID&gt;</div>
+        <table class="table">
+          <thead>
+            <tr><th>What you’ll see</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>01 • Operation Name</code></td><td>Mission title</td></tr>
+            <tr><td><code>🕒 08 Nov 2025, 12:30pm</code></td><td>Start time (SG time)</td></tr>
+            <tr><td><code>Status: Planned / Unknown</code></td><td>Only these show in list</td></tr>
+            <tr><td><code>ID: UUID</code></td><td>Use with /mission view</td></tr>
+          </tbody>
+        </table>
 
-      <p class="callout">
-        The card shows: title, time, status, operation details, and attendance lists.
-      </p>
+        <div class="hr"></div>
+
+        <p><strong>Mission View</strong> opens the mission card + RSVP buttons.</p>
+        <div class="cmd">/mission view id:&lt;MISSION_UUID&gt;</div>
+
+        <p class="callout">
+          Tap <strong>Going</strong>, <strong>Not Going</strong>, or <strong>Withdraw</strong>.
+          The card updates live.
+        </p>
+      </section>
     </section>
 
-    <!-- RSVP -->
-    <section class="card" id="rsvp">
-      <h2>4) RSVP to a Mission</h2>
+    <!-- CERTIFICATIONS TAB -->
+    <section class="tab-section" id="tab-certs">
+      <section class="card">
+        <h2>Certifications</h2>
+        <p>Shows every active certification and whether you’ve earned it.</p>
 
-      <ul>
-        <li><strong>Going</strong> — You’re participating.</li>
-        <li><strong>Not Going</strong> — You can’t join.</li>
-        <li><strong>Withdraw</strong> — Removes your RSVP completely.</li>
-      </ul>
+        <div class="cmd">/certifications</div>
 
-      <p class="callout">You must be linked first.</p>
+        <p><strong>Check another member:</strong></p>
+        <div class="cmd">/certifications user:@member</div>
+
+        <p class="callout">
+          Output format:
+          <br><strong>[CODE]</strong> Name — ✅ Earned / ⬛ Locked
+        </p>
+
+        <table class="table">
+          <thead>
+            <tr><th>Example Output</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>[BMT] Basic Military Training — ✅ Earned</code></td>
+              <td>You’ve completed BMT.</td>
+            </tr>
+            <tr>
+              <td><code>[VBSS-1] Boarding Cert — ⬛ Locked</code></td>
+              <td>You haven’t earned it yet.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="callout">
+          Admins grant certifications through the JMBN Admin Console.
+        </p>
+      </section>
     </section>
 
-    <!-- FAQ -->
-    <section class="card">
-      <h2>FAQ</h2>
+    <!-- FAQ TAB -->
+    <section class="tab-section" id="tab-faq">
+      <section class="card">
+        <h2>FAQ / Troubleshooting</h2>
 
-      <p><strong>❌ Invalid Code?</strong></p>
-      <ul>
-        <li>Must begin with <code>JMBN-</code></li>
-        <li>Expires after ~10 min</li>
-      </ul>
+        <p><strong>“Invalid code / Code not found”</strong></p>
+        <ul>
+          <li>Make sure the code is fresh (expires ~10 mins).</li>
+          <li>Copy exactly, includes the <code>JMBN-</code> prefix.</li>
+          <li>Generate a new code on the dashboard and try again.</li>
+        </ul>
 
-      <div class="hr"></div>
+        <div class="hr"></div>
 
-      <p><strong>❌ “You aren't linked yet”</strong></p>
-      <ul><li>Run <code>/link</code> first</li></ul>
+        <p><strong>“You aren’t linked yet” when pressing RSVP or /certifications</strong></p>
+        <ul>
+          <li>You must run <code>/link</code> first.</li>
+          <li>Then retry the command/button.</li>
+        </ul>
 
+        <div class="hr"></div>
+
+        <p><strong>Bot not responding?</strong></p>
+        <ul>
+          <li>Check spelling: <code>/mission</code>, <code>/profile</code>, <code>/certifications</code>.</li>
+          <li>If still dead, notify Admin (function logs may show rate-limit or outage).</li>
+        </ul>
+      </section>
     </section>
 
-    <!-- COMMAND SUMMARY -->
-    <section class="card">
-      <h2>Command Summary</h2>
-
-      <table class="table">
-        <thead>
-          <tr><th>Command</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>/link code:JMBN-XXXXX</code></td><td>Link Discord to JMBN account</td></tr>
-          <tr><td><code>/profile</code></td><td>Your rank card</td></tr>
-          <tr><td><code>/mission list</code></td><td>Missions (Planned/Unknown)</td></tr>
-          <tr><td><code>/mission view id:UUID</code></td><td>Full mission details</td></tr>
-        </tbody>
-      </table>
+    <!-- COMMAND SUMMARY TAB -->
+    <section class="tab-section" id="tab-summary">
+      <section class="card">
+        <h2>Command Summary</h2>
+        <table class="table">
+          <thead>
+            <tr><th>Command</th><th>What it does</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/link code:JMBN-XXXXXX</code></td>
+              <td>Links your Discord to your JMBN account.</td>
+            </tr>
+            <tr>
+              <td><code>/profile</code></td>
+              <td>Shows your Rank Card (handle + rank + image).</td>
+            </tr>
+            <tr>
+              <td><code>/mission list</code></td>
+              <td>Shows planned/unknown missions, newest first.</td>
+            </tr>
+            <tr>
+              <td><code>/mission view id:&lt;UUID&gt;</code></td>
+              <td>Shows mission details + RSVP buttons.</td>
+            </tr>
+            <tr>
+              <td><code>/certifications</code></td>
+              <td>Shows your earned/locked certifications.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </section>
 
     <div class="footer">
-      JMBN Manifest System • Built for immersion, teamwork, and mild chaos.
+      JMBN Manifest System • If anything feels scuffed, it’s probably Shrike’s wiring.
     </div>
 
   </main>
 </div>
+
+<script>
+  // Simple tab toggler
+  const btns = document.querySelectorAll(".tab-btn");
+  const sections = {
+    profile: document.getElementById("tab-profile"),
+    missions: document.getElementById("tab-missions"),
+    certs: document.getElementById("tab-certs"),
+    faq: document.getElementById("tab-faq"),
+    summary: document.getElementById("tab-summary"),
+  };
+
+  btns.forEach(b=>{
+    b.addEventListener("click", ()=>{
+      // button active state
+      btns.forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+
+      // section toggle
+      Object.values(sections).forEach(s=>s.classList.remove("active"));
+      const key = b.dataset.tab;
+      sections[key].classList.add("active");
+
+      // scroll to tabs top to feel snappy
+      document.querySelector(".tabs").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  });
+</script>
 
 </body>
 </html>
