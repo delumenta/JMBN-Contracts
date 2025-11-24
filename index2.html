@@ -1,279 +1,707 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>JMBN Handbook – Discord Bot Guide</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN Components</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png"
+        href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+        sizes="32x32">
 
-<style>
-    body {
-        background: #000;
-        color: #fff;
-        font-family: 'Play', sans-serif;
-        margin: 0;
-        padding: 0;
-        line-height: 1.6;
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#0b0b0b;
+      --sub:#101010;
+      --row:#0a0a0a;
+      --border:#d6b44c;
+      --card:#141414;
+      --accent:#f2d675;
+      --text:#f7f1d0;
+      --muted:#c9b06a;
+      --bad:#ff6b6b;
+
+      --fs-base:14px;
+      --fs-sm:12px;
+      --fs-lg:16px;
     }
-    h1, h2, h3 {
-        color: #F2D675;
-        text-align: center;
-        margin-top: 40px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    html,body{
+      height:100%;
+      background:radial-gradient(circle at top,#1b160a 0,#000 55%);
+      color:var(--text);
+      font-family:'Play',sans-serif;
     }
-    .section {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 25px 30px;
-        border: 1px solid #F2D675;
-        border-radius: 10px;
-        background: rgba(255, 230, 150, 0.05);
+
+    body{
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+      padding:14px;
     }
-    .section h2 {
-        margin-top: 0;
+
+    /* Header container where header.html will be injected */
+    #site-header{
+      margin-bottom:12px;
     }
-    code, pre {
-        background: #111;
-        padding: 6px 10px;
-        border-radius: 5px;
-        color: #F2D675;
-        display: inline-block;
-        margin-top: 5px;
+
+    main{
+      flex:1;
+      max-width:1400px;
+      margin:0 auto;
+      width:100%;
     }
-    .table-wrapper {
-        overflow-x: auto;
-        margin-top: 20px;
+
+    .panel{
+      background:linear-gradient(145deg,#050505,#101010);
+      border:1px solid rgba(214,180,76,.7);
+      box-shadow:0 0 20px rgba(0,0,0,.7);
+      border-radius:14px;
+      padding:14px 14px 18px;
     }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 15px;
+
+    .panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:10px;
+      border-bottom:1px solid rgba(214,180,76,.4);
+      padding-bottom:8px;
     }
-    th, td {
-        border: 1px solid #F2D675;
-        padding: 10px;
-        text-align: center;
+
+    .panel-title{
+      font-size:clamp(16px,2vw,20px);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--accent);
     }
-    th {
-        background: #F2D675;
-        color: #000;
-        font-weight: bold;
-        text-transform: uppercase;
+
+    .panel-subtitle{
+      font-size:var(--fs-sm);
+      color:var(--muted);
     }
-</style>
+
+    .filters{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .filter-group{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      font-size:var(--fs-sm);
+    }
+
+    .filter-label{
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+    }
+
+    .filter-input,
+    .filter-select{
+      background:var(--sub);
+      border:1px solid rgba(214,180,76,.5);
+      border-radius:999px;
+      padding:6px 10px;
+      color:var(--text);
+      font-size:var(--fs-base);
+      outline:none;
+      transition:border-color .15s,box-shadow .15s,background .15s;
+    }
+
+    .filter-input::placeholder{
+      color:rgba(247,241,208,.5);
+    }
+
+    .filter-input:focus,
+    .filter-select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(242,214,117,.5);
+      background:#151515;
+    }
+
+    .table-wrap{
+      margin-top:6px;
+      border-radius:10px;
+      border:1px solid rgba(214,180,76,.6);
+      overflow:hidden;
+      background:radial-gradient(circle at top,#18120a 0,#050505 60%);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:var(--fs-base);
+    }
+
+    thead{
+      background:rgba(6,6,6,.98);
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+
+    th,td{
+      padding:6px 10px;
+      text-align:left;
+      white-space:nowrap;
+    }
+
+    th{
+      font-weight:700;
+      font-size:var(--fs-sm);
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      border-bottom:1px solid rgba(214,180,76,.4);
+      color:var(--muted);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    th.sortable:hover{
+      color:var(--accent);
+      background:rgba(214,180,76,.08);
+    }
+
+    th .sort-indicator{
+      font-size:10px;
+      margin-left:4px;
+      opacity:.7;
+    }
+
+    tbody tr:nth-child(even){
+      background:rgba(12,12,12,.85);
+    }
+
+    tbody tr:nth-child(odd){
+      background:rgba(5,5,5,.9);
+    }
+
+    tbody tr:hover{
+      background:rgba(40,32,18,.9);
+    }
+
+    td{
+      border-bottom:1px solid rgba(255,255,255,.02);
+      max-width:320px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .col-name{
+      font-weight:700;
+      color:var(--accent);
+    }
+
+    .col-shops{
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      white-space:normal;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.7);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .pill-component{border-color:rgba(242,214,117,.8);}
+    .pill-size{border-color:rgba(155,214,255,.8);}
+    .pill-grade{border-color:rgba(255,188,120,.8);}
+    .pill-class{border-color:rgba(186,255,186,.8);}
+
+    .status-bar{
+      margin-top:6px;
+      font-size:var(--fs-sm);
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .status-bar strong{
+      color:var(--accent);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(214,180,76,.5);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .loading,
+    .error,
+    .empty{
+      padding:16px;
+      text-align:center;
+      font-size:var(--fs-base);
+    }
+
+    .loading{color:var(--muted);}
+    .error{color:var(--bad);}
+  </style>
 </head>
-
 <body>
+  <!-- Shared header will be injected here -->
+  <header id="site-header"></header>
 
-<h1>JMBN MANIFEST SYSTEM</h1>
-<h2>DISCORD OPERATIONS HANDBOOK</h2>
-<h3>Module: Mission Interaction Protocols (MIP-01)</h3>
+  <main>
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Components Registry</div>
+          <div class="panel-subtitle">
+            Shop for ship components by type, class, and where they’re sold across Stanton.
+          </div>
+        </div>
+      </div>
 
-<div class="section">
-    <h2>1.0 Purpose</h2>
-    <p>
-        This handbook defines the standard operational procedures for interacting with the 
-        <strong>JMBN Discord Automation Unit (DAU)</strong>.  
-        All personnel must observe these guidelines to maintain clarity and discipline when retrieving mission data, 
-        confirming attendance, and communicating through approved channels.
-    </p>
-</div>
+      <!-- Filters: feels like browsing a shop -->
+      <div class="filters">
+        <div class="filter-group" style="grid-column:1/-1;">
+          <label class="filter-label" for="searchInput">Search</label>
+          <input id="searchInput" class="filter-input" type="text"
+                 placeholder="Name, manufacturer, shop or location…">
+        </div>
 
-<div class="section">
-    <h2>2.0 System Overview</h2>
-    <p>The DAU acts as the frontline interface for mission intelligence, enabling:</p>
-    <ul>
-        <li>Mission Listing</li>
-        <li>Mission Detail Preview</li>
-        <li>RSVP Management</li>
-        <li>Account Linking</li>
-        <li>Profile Queries</li>
-        <li>Certification Display</li>
-        <li><strong>Admin-controlled Mission Publishing</strong></li>
-    </ul>
-</div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterComponent">Component</label>
+          <select id="filterComponent" class="filter-select">
+            <option value="">All Components</option>
+          </select>
+        </div>
 
-<div class="section">
-    <h2>3.0 Account Linking Protocol</h2>
-    <p>All personnel must link their Discord account before participating in missions.</p>
+        <div class="filter-group">
+          <label class="filter-label" for="filterClass">Class</label>
+          <select id="filterClass" class="filter-select">
+            <option value="">All Classes</option>
+          </select>
+        </div>
 
-    <h3>3.1 Steps</h3>
-    <ol>
-        <li>Open your JMBN Dashboard → <strong>Account → Link Discord</strong>.</li>
-        <li>Generate a <code>JMBN-XXXXXX</code> link code.</li>
-        <li>In Discord, run:</li>
-    </ol>
+        <div class="filter-group">
+          <label class="filter-label" for="filterSize">Size</label>
+          <select id="filterSize" class="filter-select">
+            <option value="">All Sizes</option>
+          </select>
+        </div>
 
-    <pre>/link code:JMBN-XXXXXX</pre>
+        <div class="filter-group">
+          <label class="filter-label" for="filterLocation">Location</label>
+          <select id="filterLocation" class="filter-select">
+            <option value="">All Locations</option>
+          </select>
+        </div>
 
-    <p>Upon successful linking, the DAU will confirm your identity with a gold HUD notification.</p>
-</div>
+        <div class="filter-group">
+          <label class="filter-label" for="filterShop">Shop</label>
+          <select id="filterShop" class="filter-select">
+            <option value="">All Shops</option>
+          </select>
+        </div>
+      </div>
 
-<div class="section">
-    <h2>4.0 Mission Intel Access</h2>
+      <div id="tableRegion" class="table-wrap">
+        <div class="loading">Loading components…</div>
+      </div>
 
-    <h3>4.1 /mission list</h3>
-    <p>
-        Retrieves all upcoming missions.  
-        <strong>Always EPHEMERAL</strong> — visible only to the caller.
-    </p>
-    <pre>/mission list</pre>
+      <div id="statusBar" class="status-bar" style="display:none;">
+        <div><strong id="countText"></strong></div>
+        <div class="badge">
+          Active filters:
+          <span id="activeFiltersLabel">None</span>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <h3>4.2 /mission view (Preview Mode)</h3>
-    <p>
-        Shows full mission details including time, route, type, payout, and current attendees.
-        <br><strong>Always EPHEMERAL for all personnel.</strong>
-    </p>
-    <pre>/mission view id:&lt;mission_id&gt;</pre>
-</div>
+  <script>
+    // Inject shared header.html
+    fetch('header.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('site-header').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Failed to load header.html', err);
+      });
+  </script>
 
-<div class="section">
-    <h2>5.0 Publishing Missions (Admin-Only)</h2>
-    <p>Only Administrators may publish missions publicly into a Discord channel.</p>
+  <script>
+    const DATA_URL  = 'data/components.js';  // JSON array with Shops[]
+    const SHOPS_URL = 'data/shops.json';     // shops.json we generated
 
-    <h3>Admin Preview Includes:</h3>
-    <pre>📣 Publish to Channel</pre>
+    let allComponents = [];
+    let shops = [];
+    let shopMap = new Map();
 
-    <p>
-        Publishing rules:
-    </p>
-    <ul>
-        <li>Posts the mission to the channel publicly</li>
-        <li>RSVP buttons become available for all</li>
-        <li>Cooldown protected (10 minutes)</li>
-        <li>Only Admins can trigger this action</li>
-    </ul>
-</div>
+    let currentSort = { key:'Names', dir:'asc' };
 
-<div class="section">
-    <h2>6.0 RSVP System</h2>
-    <p>Both preview and public cards include three attendance states:</p>
+    const tableRegion = document.getElementById('tableRegion');
+    const statusBar   = document.getElementById('statusBar');
+    const countText   = document.getElementById('countText');
+    const activeFiltersLabel = document.getElementById('activeFiltersLabel');
 
-    <ul>
-        <li><strong>Going</strong> – confirms attendance</li>
-        <li><strong>Not Going</strong> – declines the mission</li>
-        <li><strong>Withdraw</strong> – removes you from the roster</li>
-    </ul>
+    const searchInput     = document.getElementById('searchInput');
+    const filterComponent = document.getElementById('filterComponent');
+    const filterClass     = document.getElementById('filterClass');
+    const filterSize      = document.getElementById('filterSize');
+    const filterLocation  = document.getElementById('filterLocation');
+    const filterShop      = document.getElementById('filterShop');
 
-    <p>Discord linking is required to RSVP.</p>
-</div>
+    function esc(str){
+      return String(str ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
 
-<div class="section">
-    <h2>7.0 Profile Commands</h2>
-    <h3>/profile</h3>
-    <p>Displays your rank, handle, and JMBN profile card.</p>
+    async function loadData(){
+      try{
+        const [compRes, shopsRes] = await Promise.all([
+          fetch(DATA_URL,{cache:'no-store'}),
+          fetch(SHOPS_URL,{cache:'no-store'})
+        ]);
 
-    <h3>/profile user:@someone</h3>
-    <p>View another member’s details (if linked).</p>
-</div>
+        if(!compRes.ok) throw new Error('Components HTTP '+compRes.status);
+        const data = await compRes.json();
+        allComponents = Array.isArray(data) ? data : [];
 
-<div class="section">
-    <h2>8.0 Certification Commands</h2>
-    <h3>/certifications</h3>
-    <p>Shows all earned and locked certifications for the caller.</p>
+        if(shopsRes.ok){
+          const shopsData = await shopsRes.json();
+          shops = Array.isArray(shopsData) ? shopsData : [];
+          shopMap = new Map(shops.map(s => [s.id, s]));
+        }else{
+          shops = [];
+          shopMap = new Map();
+        }
 
-    <h3>/certifications user:@someone</h3>
-    <p>Displays certification board for another member.</p>
-</div>
+        buildFilterOptions(allComponents);
+        buildLocationFilter();
+        updateShopFilterOptions(); // initial shops list
 
-<div class="section">
-    <h2>9.0 Access Control & Security</h2>
+        applyFiltersAndSort();
+      }catch(err){
+        console.error(err);
+        tableRegion.innerHTML =
+          '<div class="error">Failed to load components or shops data.</div>';
+      }
+    }
 
-    <h3>Admins Can:</h3>
-    <ul>
-        <li>Publish missions</li>
-        <li>Manage clarity in operational channels</li>
-        <li>Access advanced mission tools</li>
-    </ul>
+    function buildFilterOptions(list){
+      const components = new Set();
+      const classes    = new Set();
+      const sizes      = new Set();
 
-    <h3>Members Can:</h3>
-    <ul>
-        <li>Preview missions</li>
-        <li>RSVP</li>
-        <li>Access personal profile and cert data</li>
-    </ul>
-</div>
+      list.forEach(item=>{
+        if(item.Component) components.add(item.Component.toString().trim());
+        if(item.Class)     classes.add(String(item.Class).trim());
+        if(item.Size)      sizes.add(String(item.Size).trim());
+      });
 
-<div class="section">
-    <h2>10.0 Error Notifications</h2>
-    <p>The DAU may issue warnings such as:</p>
+      const makeOptions = (set, selectEl)=>{
+        const values = Array.from(set).filter(Boolean).sort((a,b)=>a.localeCompare(b));
+        values.forEach(v=>{
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v;
+          selectEl.appendChild(opt);
+        });
+      };
 
-    <pre>❌ You aren’t linked yet.
-❌ Mission not found.
-❌ Only admins can publish missions.
-⚠️ Bot error. Check function logs.</pre>
-</div>
+      makeOptions(components, filterComponent);
+      makeOptions(classes,    filterClass);
+      makeOptions(sizes,      filterSize);
+    }
 
-<div class="section">
-    <h2>11.0 Operations Etiquette</h2>
-    <h3>Do Not:</h3>
-    <ul>
-        <li>Spam /mission view</li>
-        <li>Attempt unauthorized publishing</li>
-        <li>Try to RSVP for others</li>
-    </ul>
+    function buildLocationFilter(){
+      if(!shops.length) return;
 
-    <h3>Do:</h3>
-    <ul>
-        <li>Link your account early</li>
-        <li>Keep mission channels clean</li>
-        <li>RSVP as soon as possible</li>
-        <li>Follow Admin announcements</li>
-    </ul>
-</div>
+      const locSet = new Set();
+      shops.forEach(s=>{
+        const loc = (s.locationName || s.locationGuess || '').trim();
+        if(loc) locSet.add(loc);
+      });
 
-<div class="section">
-    <h2>12.0 Summary Table</h2>
+      const locations = Array.from(locSet).sort((a,b)=>a.localeCompare(b));
+      locations.forEach(loc=>{
+        const opt = document.createElement('option');
+        opt.value = loc;
+        opt.textContent = loc;
+        filterLocation.appendChild(opt);
+      });
+    }
 
-    <div class="table-wrapper">
+    function updateShopFilterOptions(){
+      // Reset options
+      filterShop.innerHTML = '<option value="">All Shops</option>';
+
+      if(!shops.length) return;
+
+      const selectedLoc = filterLocation.value;
+      let usableShops = shops;
+
+      if(selectedLoc){
+        usableShops = shops.filter(s=>{
+          const loc = (s.locationName || s.locationGuess || '').trim();
+          return loc === selectedLoc;
+        });
+      }
+
+      usableShops
+        .sort((a,b)=>{
+          const an = (a.shopName || a.raw || '').toLowerCase();
+          const bn = (b.shopName || b.raw || '').toLowerCase();
+          if(an < bn) return -1;
+          if(an > bn) return 1;
+          return 0;
+        })
+        .forEach(s=>{
+          const loc = (s.locationName || s.locationGuess || '').trim();
+          const label = s.shopName
+            ? `${s.shopName}${loc ? ' – ' + loc : ''}`
+            : s.raw;
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = label;
+          filterShop.appendChild(opt);
+        });
+    }
+
+    function applyFiltersAndSort(){
+      const q          = searchInput.value.trim().toLowerCase();
+      const comp       = filterComponent.value;
+      const cls        = filterClass.value;
+      const size       = filterSize.value;
+      const loc        = filterLocation.value;
+      const selectedShopId = filterShop.value;
+
+      let shopIdsForLocation = null;
+      if(loc && shops.length){
+        shopIdsForLocation = new Set(
+          shops
+            .filter(s=>{
+              const sloc = (s.locationName || s.locationGuess || '').trim();
+              return sloc === loc;
+            })
+            .map(s=>s.id)
+        );
+      }
+
+      let filtered = allComponents.filter(item=>{
+        if(comp && (item.Component || '').toString().trim() !== comp) return false;
+        if(cls  && String(item.Class || '').trim() !== cls) return false;
+        if(size && String(item.Size  || '').trim() !== size) return false;
+
+        const itemShops = Array.isArray(item.Shops) ? item.Shops : [];
+
+        if(loc && shopIdsForLocation){
+          const hasLocShop = itemShops.some(id => shopIdsForLocation.has(id));
+          if(!hasLocShop) return false;
+        }
+
+        if(selectedShopId){
+          if(!itemShops.includes(selectedShopId)) return false;
+        }
+
+        if(q){
+          // Build a search haystack: component info + shop names + locations
+          const baseFields = [
+            item.Names,
+            item.Manufacturer,
+            item.Component,
+            item.Class,
+            item.Size
+          ].map(v=>String(v||'').toLowerCase()).join(' ');
+
+          let shopWords = '';
+          if(itemShops.length && shops.length && shopMap.size){
+            const parts = [];
+            itemShops.forEach(id=>{
+              const s = shopMap.get(id);
+              if(!s) return;
+              if(s.raw) parts.push(s.raw);
+              if(s.shopName) parts.push(s.shopName);
+              if(s.locationName || s.locationGuess){
+                parts.push(s.locationName || s.locationGuess);
+              }
+            });
+            shopWords = parts.join(' ').toLowerCase();
+          }else{
+            // fallback: raw shop ids
+            shopWords = itemShops.join(' ').toLowerCase();
+          }
+
+          const hay = baseFields + ' ' + shopWords;
+          if(!hay.includes(q)) return false;
+        }
+
+        return true;
+      });
+
+      filtered.sort((a,b)=>{
+        const key = currentSort.key;
+        let av = (a[key] ?? '').toString().toLowerCase();
+        let bv = (b[key] ?? '').toString().toLowerCase();
+        if(av < bv) return currentSort.dir === 'asc' ? -1 : 1;
+        if(av > bv) return currentSort.dir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      renderTable(filtered);
+      updateStatus(filtered.length);
+    }
+
+    function updateStatus(count){
+      const total = allComponents.length;
+      statusBar.style.display = 'flex';
+      countText.textContent = `${count} of ${total} components shown`;
+
+      const filters = [];
+      if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
+      if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
+      if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
+      if(filterLocation.value)  filters.push(`Location: ${filterLocation.value}`);
+      if(filterShop.value)      filters.push(`Shop: ${filterShop.options[filterShop.selectedIndex].textContent}`);
+      if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
+
+      activeFiltersLabel.textContent = filters.length ? filters.join(' • ') : 'None';
+    }
+
+    function renderTable(list){
+      if(!list.length){
+        tableRegion.innerHTML = '<div class="empty">No components match your filters.</div>';
+        return;
+      }
+
+      const sortIcon = (key)=>{
+        if(currentSort.key !== key) return '';
+        return currentSort.dir === 'asc' ? '▲' : '▼';
+      };
+
+      const headerHtml = `
         <table>
+          <thead>
             <tr>
-                <th>Module</th>
-                <th>Member</th>
-                <th>Admin</th>
+              <th class="sortable" data-key="Names">Name <span class="sort-indicator">${sortIcon('Names')}</span></th>
+              <th class="sortable" data-key="Component">Component <span class="sort-indicator">${sortIcon('Component')}</span></th>
+              <th class="sortable" data-key="Size">Size <span class="sort-indicator">${sortIcon('Size')}</span></th>
+              <th class="sortable" data-key="Grade">Grade <span class="sort-indicator">${sortIcon('Grade')}</span></th>
+              <th class="sortable" data-key="Class">Class <span class="sort-indicator">${sortIcon('Class')}</span></th>
+              <th class="sortable" data-key="Manufacturer">Manufacturer <span class="sort-indicator">${sortIcon('Manufacturer')}</span></th>
+              <th>Shops</th>
             </tr>
-            <tr>
-                <td>/mission list</td>
-                <td>Yes (Private)</td>
-                <td>Yes (Private)</td>
-            </tr>
-            <tr>
-                <td>/mission view</td>
-                <td>Preview Only</td>
-                <td>Preview + Publish</td>
-            </tr>
-            <tr>
-                <td>Publish Mission</td>
-                <td>No</td>
-                <td>Yes</td>
-            </tr>
-            <tr>
-                <td>RSVP Buttons</td>
-                <td>Yes</td>
-                <td>Yes</td>
-            </tr>
-            <tr>
-                <td>Profile / Certs</td>
-                <td>Yes</td>
-                <td>Yes</td>
-            </tr>
+          </thead>
+          <tbody>
+            ${list.map(item=>{
+              const gradeStr = item.Grade === null || item.Grade === undefined
+                ? ''
+                : String(item.Grade);
+
+              const itemShops = Array.isArray(item.Shops) ? item.Shops : [];
+              let shopsText = '';
+
+              if(itemShops.length && shops.length && shopMap.size){
+                const labels = [];
+                itemShops.forEach(id=>{
+                  const s = shopMap.get(id);
+                  if(!s){
+                    labels.push(id);
+                    return;
+                  }
+                  const loc = (s.locationName || s.locationGuess || '').trim();
+                  if(s.shopName){
+                    labels.push(loc ? `${s.shopName} – ${loc}` : s.shopName);
+                  }else{
+                    labels.push(s.raw || id);
+                  }
+                });
+                shopsText = labels.join('; ');
+              }else{
+                shopsText = itemShops.join('; ');
+              }
+
+              if(!shopsText){
+                shopsText = 'No known shops (loot-only / unavailable)';
+              }
+
+              return `
+                <tr>
+                  <td class="col-name">${esc(item.Names || '')}</td>
+                  <td><span class="pill pill-component">${esc(item.Component || '')}</span></td>
+                  <td><span class="pill pill-size">${esc(item.Size || '')}</span></td>
+                  <td><span class="pill pill-grade">${esc(gradeStr)}</span></td>
+                  <td><span class="pill pill-class">${esc(item.Class || '')}</span></td>
+                  <td>${esc(item.Manufacturer || '')}</td>
+                  <td class="col-shops">${esc(shopsText)}</td>
+                </tr>`;
+            }).join('')}
+          </tbody>
         </table>
-    </div>
-</div>
+      `;
 
-<div class="section">
-    <h2>13.0 Closing Statement</h2>
-    <p style="text-align:center;">
-        “Operational discipline keeps the flow clean.<br>
-        Clean flow keeps the mission running.<br>
-        A mission that runs — <strong>wins</strong>.”
-    </p>
-</div>
+      tableRegion.innerHTML = headerHtml;
 
+      // Attach sort handlers
+      tableRegion.querySelectorAll('th.sortable').forEach(th=>{
+        th.addEventListener('click',()=>{
+          const key = th.getAttribute('data-key');
+          if(currentSort.key === key){
+            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+          }else{
+            currentSort.key = key;
+            currentSort.dir = 'asc';
+          }
+          applyFiltersAndSort();
+        });
+      });
+    }
+
+    // Hook up filter events
+    [
+      searchInput,
+      filterComponent,
+      filterClass,
+      filterSize,
+      filterLocation,
+      filterShop
+    ].forEach(el=>{
+      el.addEventListener('input', applyFiltersAndSort);
+      el.addEventListener('change', applyFiltersAndSort);
+    });
+
+    // When location changes, update shop list then re-filter
+    filterLocation.addEventListener('change',()=>{
+      updateShopFilterOptions();
+      applyFiltersAndSort();
+    });
+
+    loadData();
+  </script>
 </body>
 </html>
