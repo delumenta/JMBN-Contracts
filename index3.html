@@ -20,7 +20,6 @@
   --muted:#c9b06a;
   --good:#7CFC9A;
   --warn:#f7d27a;
-  --bad:#ff6b6b;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -80,9 +79,6 @@ body::after{
   display:inline-block;border:1px solid var(--border);border-radius:999px;
   padding:2px 8px;font-size:11px;background:#0c0c0c;color:var(--muted);font-weight:800
 }
-.badge.good{color:#000;background:var(--good);border-color:var(--good)}
-.badge.warn{color:#000;background:var(--warn);border-color:var(--warn)}
-.badge.bad{color:#000;background:var(--bad);border-color:var(--bad)}
 
 .hr{
   height:1px;background:rgba(214,180,76,.35);margin:10px 0
@@ -101,6 +97,7 @@ body::after{
   padding:10px;margin-top:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   font-size:13px;line-height:1.6;color:#e8e3c8;white-space:pre-wrap
 }
+.cmd .hint{color:var(--muted)}
 .step{
   display:flex;gap:10px;align-items:flex-start;margin-top:8px
 }
@@ -129,8 +126,26 @@ body::after{
 }
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
+
+/* image wrapper */
+.img-wrap{
+  margin:14px 0;
+  text-align:center;
+}
+.img-wrap img{
+  max-width:100%;
+  border:1px solid var(--border);
+  border-radius:10px;
+  box-shadow:0 0 12px rgba(214,180,76,.25);
+}
+.img-caption{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+}
 </style>
 </head>
+
 <body>
 <div class="hud-grid"></div>
 
@@ -139,11 +154,11 @@ a:hover{text-decoration:underline}
 
     <header class="brand card" style="display:flex;justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:12px">
-        <img class="brand-logo" alt="JMBN"
-             src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
+        <img class="brand-logo"
+        src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
         <div>
           <h1>JMBN Discord Bot Guide</h1>
-          <div class="tagline">How to link your account, view missions, and RSVP without clogging the channel.</div>
+          <div class="tagline">How to link your account, view missions, and RSVP like a proper crew member.</div>
         </div>
       </div>
       <div>
@@ -161,195 +176,149 @@ a:hover{text-decoration:underline}
         </div>
         <div class="kpi">
           <div class="title">Step 2</div>
-          <div class="value">Find Missions</div>
-          <p style="margin-top:6px;color:var(--muted);font-size:12px">/mission list is private.</p>
+          <div class="value">Mission List</div>
+          <p style="margin-top:6px;color:var(--muted);font-size:12px">See planned + unknown missions.</p>
         </div>
         <div class="kpi">
           <div class="title">Step 3</div>
           <div class="value">RSVP</div>
-          <p style="margin-top:6px;color:var(--muted);font-size:12px">Tap buttons under mission card.</p>
+          <p style="margin-top:6px;color:var(--muted);font-size:12px">Tap buttons under mission view.</p>
         </div>
       </div>
     </section>
 
+    <!-- LINK DISCORD SECTION -->
     <section class="card" id="linking">
       <h2>1) Link your Discord to JMBN</h2>
       <p>Before you can RSVP, the bot needs to know which JMBN account you are.</p>
 
+      <!-- Image 1: Click Link Discord -->
+      <div class="img-wrap">
+        <img src="/mnt/data/8025d407-90d9-43be-9314-6b846ccb834b.png" alt="JMBN Dashboard - Link Discord button">
+        <div class="img-caption">Step 1 — On the JMBN Dashboard, click <strong>Link Discord</strong>.</div>
+      </div>
+
+      <!-- Image 2: Code appears -->
+      <div class="img-wrap">
+        <img src="/mnt/data/0d11512d-03ca-4f95-ba3d-7d3f7dae45b4.png" alt="Generated JMBN link code">
+        <div class="img-caption">Step 2 — A one-time code will appear. It expires in ~10 minutes.</div>
+      </div>
+
+      <!-- Image 3: Paste in Discord -->
+      <div class="img-wrap">
+        <img src="/mnt/data/54149b92-626c-41e7-ae1b-7f70c21baacd.png" alt="Paste JMBN code into Discord slash command">
+        <div class="img-caption">Step 3 — In Discord, type <code>/link code:&lt;YOUR_CODE&gt;</code> to complete the linking.</div>
+      </div>
+
       <div class="step">
         <div class="step-num">1</div>
         <div>
-          <p>Go to the <strong>JMBN Manifest Dashboard</strong> and click <strong>“Link Discord”</strong>.</p>
-          <p class="callout">You will receive a one-time code like <strong>JMBN-3F7K2A</strong>. It expires in ~10 minutes.</p>
+          <p>Click <strong>Link Discord</strong> on the dashboard.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-num">2</div>
         <div>
-          <p>In Discord, type:</p>
-          <div class="cmd">/link code:JMBN-XXXXXX</div>
-          <p class="callout">If successful, the bot confirms your Discord is linked to your JMBN user.</p>
+          <p>Copy the generated code:</p>
+          <div class="cmd">JMBN-XXXXX</div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-num">3</div>
         <div>
-          <p>Test it:</p>
-          <div class="cmd">/profile</div>
-          <p>Your Rank Card should appear with your handle + current rank.</p>
+          <p>Paste it into Discord:</p>
+          <div class="cmd">/link code:JMBN-XXXXX</div>
         </div>
       </div>
     </section>
 
+    <!-- MISSIONS -->
     <section class="card" id="missions">
-      <h2>2) View Mission List (Private)</h2>
-      <p>
-        Mission List is <strong>always private</strong> to prevent spam.
-        It only shows missions that are <strong>Planned</strong> or <strong>Unknown/TBA</strong>, newest first.
-      </p>
+      <h2>2) View Mission List</h2>
 
+      <p>Shows missions marked as <strong>Planned</strong> or <strong>Unknown</strong>.</p>
       <div class="cmd">/mission list</div>
 
       <table class="table">
         <thead>
-          <tr>
-            <th>What you’ll see</th>
-            <th>Meaning</th>
-          </tr>
+          <tr><th>What you see</th><th>Meaning</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td><code>01 • Operation Name</code></td>
-            <td>Mission title (latest at top).</td>
-          </tr>
-          <tr>
-            <td><code>🕒 08 Nov 2025, 12:30pm</code></td>
-            <td>Start time (SG time).</td>
-          </tr>
-          <tr>
-            <td><code>Status: Planned / Unknown</code></td>
-            <td>Only these statuses show in list.</td>
-          </tr>
-          <tr>
-            <td><code>UUID</code></td>
-            <td>Mission ID. Use it with /mission view.</td>
-          </tr>
+          <tr><td><code>01 • Operation Name</code></td><td>Mission title</td></tr>
+          <tr><td><code>🕒 04 Nov 2025, 8:00pm</code></td><td>SG Time</td></tr>
+          <tr><td><code>Status: Planned</code></td><td>Only Planned/Unknown appear</td></tr>
+          <tr><td><code>ID: xxx-uuid</code></td><td>Mission ID for /mission view</td></tr>
         </tbody>
       </table>
     </section>
 
+    <!-- VIEW MISSION -->
     <section class="card" id="view">
-      <h2>3) View a Mission (Preview)</h2>
-      <p>Pick a mission ID from the list and open its full details:</p>
-      <div class="cmd">/mission view id:&lt;MISSION_UUID&gt;</div>
+      <h2>3) View a Mission</h2>
+
+      <p>Open a mission card:</p>
+      <div class="cmd">/mission view id:&lt;UUID&gt;</div>
 
       <p class="callout">
-        This is a <strong>preview card</strong> and is also private.  
-        It shows mission details + attendance + RSVP buttons.
+        The card shows: title, time, status, operation details, and attendance lists.
       </p>
     </section>
 
-    <section class="card" id="publish">
-      <h2>4) Publish Mission (Admins Only)</h2>
-      <p>
-        To keep channels clean, only Admins can publish missions publicly.
-        Members will never see the publish button.
-      </p>
-
-      <div class="callout">
-        <strong>Admins:</strong> When you run <code>/mission view</code> you’ll see a button:
-        <div class="cmd">📣 Publish to Channel</div>
-        Pressing it posts the mission publicly so everyone can RSVP there.
-      </div>
-
-      <ul>
-        <li><span class="badge good">Admin</span> can publish and re-publish (cooldown applies).</li>
-        <li><span class="badge">Member</span> can only preview missions privately.</li>
-        <li>Publishing has a cooldown to prevent channel spam.</li>
-      </ul>
-    </section>
-
+    <!-- RSVP -->
     <section class="card" id="rsvp">
-      <h2>5) RSVP to a Mission</h2>
-      <p>On any mission card, tap one of the buttons:</p>
+      <h2>4) RSVP to a Mission</h2>
 
       <ul>
-        <li><span class="badge good">Going</span> — you’re in.</li>
-        <li><span class="badge bad">Not going</span> — you’re out.</li>
-        <li><span class="badge warn">Withdraw</span> — removes your RSVP completely.</li>
+        <li><strong>Going</strong> — You’re participating.</li>
+        <li><strong>Not Going</strong> — You can’t join.</li>
+        <li><strong>Withdraw</strong> — Removes your RSVP completely.</li>
       </ul>
 
-      <p class="callout">RSVP updates instantly on the card. No need to re-run /mission view unless refreshing.</p>
+      <p class="callout">You must be linked first.</p>
     </section>
 
-    <section class="card" id="faq">
-      <h2>FAQ / Troubleshooting</h2>
+    <!-- FAQ -->
+    <section class="card">
+      <h2>FAQ</h2>
 
-      <p><strong>“Invalid code / Code not found”</strong></p>
+      <p><strong>❌ Invalid Code?</strong></p>
       <ul>
-        <li>Make sure the code is fresh (expires ~10 mins).</li>
-        <li>Copy exactly, includes the <code>JMBN-</code> prefix.</li>
-        <li>Generate a new code on the dashboard and try again.</li>
+        <li>Must begin with <code>JMBN-</code></li>
+        <li>Expires after ~10 min</li>
       </ul>
 
       <div class="hr"></div>
 
-      <p><strong>“You aren’t linked yet” when RSVP’ing</strong></p>
-      <ul>
-        <li>You must run <code>/link</code> first.</li>
-        <li>Then retry the mission buttons.</li>
-      </ul>
+      <p><strong>❌ “You aren't linked yet”</strong></p>
+      <ul><li>Run <code>/link</code> first</li></ul>
 
-      <div class="hr"></div>
-
-      <p><strong>Bot not responding?</strong></p>
-      <ul>
-        <li>Check correct commands: <code>/mission</code>, <code>/link</code>, <code>/profile</code>.</li>
-        <li>If still dead, notify Admin (function may be down).</li>
-      </ul>
     </section>
 
+    <!-- COMMAND SUMMARY -->
     <section class="card">
       <h2>Command Summary</h2>
+
       <table class="table">
         <thead>
-          <tr>
-            <th>Command</th>
-            <th>What it does</th>
-          </tr>
+          <tr><th>Command</th><th>Description</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td><code>/link code:JMBN-XXXXXX</code></td>
-            <td>Links your Discord to your JMBN account.</td>
-          </tr>
-          <tr>
-            <td><code>/profile</code></td>
-            <td>Shows your Rank Card (handle + rank + image).</td>
-          </tr>
-          <tr>
-            <td><code>/mission list</code></td>
-            <td>Private mission list (planned/unknown only).</td>
-          </tr>
-          <tr>
-            <td><code>/mission view id:&lt;UUID&gt;</code></td>
-            <td>Private preview of mission + RSVP buttons.</td>
-          </tr>
-          <tr>
-            <td><code>📣 Publish to Channel</code></td>
-            <td><strong>Admins only:</strong> posts mission publicly.</td>
-          </tr>
+          <tr><td><code>/link code:JMBN-XXXXX</code></td><td>Link Discord to JMBN account</td></tr>
+          <tr><td><code>/profile</code></td><td>Your rank card</td></tr>
+          <tr><td><code>/mission list</code></td><td>Missions (Planned/Unknown)</td></tr>
+          <tr><td><code>/mission view id:UUID</code></td><td>Full mission details</td></tr>
         </tbody>
       </table>
     </section>
 
     <div class="footer">
-      JMBN Manifest System • If anything feels scuffed, it’s probably Shrike’s wiring.
+      JMBN Manifest System • Built for immersion, teamwork, and mild chaos.
     </div>
 
   </main>
 </div>
+
 </body>
 </html>
