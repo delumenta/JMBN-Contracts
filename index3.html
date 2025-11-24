@@ -20,6 +20,7 @@
   --muted:#c9b06a;
   --good:#7CFC9A;
   --warn:#f7d27a;
+  --bad:#ff6b6b;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -79,6 +80,9 @@ body::after{
   display:inline-block;border:1px solid var(--border);border-radius:999px;
   padding:2px 8px;font-size:11px;background:#0c0c0c;color:var(--muted);font-weight:800
 }
+.badge.good{color:#000;background:var(--good);border-color:var(--good)}
+.badge.warn{color:#000;background:var(--warn);border-color:var(--warn)}
+.badge.bad{color:#000;background:var(--bad);border-color:var(--bad)}
 
 .hr{
   height:1px;background:rgba(214,180,76,.35);margin:10px 0
@@ -97,7 +101,6 @@ body::after{
   padding:10px;margin-top:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   font-size:13px;line-height:1.6;color:#e8e3c8;white-space:pre-wrap
 }
-.cmd .hint{color:var(--muted)}
 .step{
   display:flex;gap:10px;align-items:flex-start;margin-top:8px
 }
@@ -140,7 +143,7 @@ a:hover{text-decoration:underline}
              src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png">
         <div>
           <h1>JMBN Discord Bot Guide</h1>
-          <div class="tagline">How to link your account, view missions, and RSVP like a proper crew member.</div>
+          <div class="tagline">How to link your account, view missions, and RSVP without clogging the channel.</div>
         </div>
       </div>
       <div>
@@ -158,13 +161,13 @@ a:hover{text-decoration:underline}
         </div>
         <div class="kpi">
           <div class="title">Step 2</div>
-          <div class="value">Mission List</div>
-          <p style="margin-top:6px;color:var(--muted);font-size:12px">See planned + unknown missions.</p>
+          <div class="value">Find Missions</div>
+          <p style="margin-top:6px;color:var(--muted);font-size:12px">/mission list is private.</p>
         </div>
         <div class="kpi">
           <div class="title">Step 3</div>
           <div class="value">RSVP</div>
-          <p style="margin-top:6px;color:var(--muted);font-size:12px">Tap buttons under mission view.</p>
+          <p style="margin-top:6px;color:var(--muted);font-size:12px">Tap buttons under mission card.</p>
         </div>
       </div>
     </section>
@@ -177,7 +180,7 @@ a:hover{text-decoration:underline}
         <div class="step-num">1</div>
         <div>
           <p>Go to the <strong>JMBN Manifest Dashboard</strong> and click <strong>“Link Discord”</strong>.</p>
-          <p class="callout">You will receive a one‑time code like <strong>JMBN‑3F7K2A</strong>. It expires in ~10 minutes.</p>
+          <p class="callout">You will receive a one-time code like <strong>JMBN-3F7K2A</strong>. It expires in ~10 minutes.</p>
         </div>
       </div>
 
@@ -186,7 +189,7 @@ a:hover{text-decoration:underline}
         <div>
           <p>In Discord, type:</p>
           <div class="cmd">/link code:JMBN-XXXXXX</div>
-          <p class="callout">If successful, the bot will confirm that your Discord is linked to your JMBN user.</p>
+          <p class="callout">If successful, the bot confirms your Discord is linked to your JMBN user.</p>
         </div>
       </div>
 
@@ -201,8 +204,11 @@ a:hover{text-decoration:underline}
     </section>
 
     <section class="card" id="missions">
-      <h2>2) View Mission List</h2>
-      <p>Shows only missions that are <strong>Planned</strong> or <strong>Unknown/TBA</strong>, sorted newest first.</p>
+      <h2>2) View Mission List (Private)</h2>
+      <p>
+        Mission List is <strong>always private</strong> to prevent spam.
+        It only shows missions that are <strong>Planned</strong> or <strong>Unknown/TBA</strong>, newest first.
+      </p>
 
       <div class="cmd">/mission list</div>
 
@@ -228,42 +234,54 @@ a:hover{text-decoration:underline}
           </tr>
           <tr>
             <td><code>UUID</code></td>
-            <td>Long mission ID. Use it with /mission view.</td>
+            <td>Mission ID. Use it with /mission view.</td>
           </tr>
         </tbody>
       </table>
     </section>
 
     <section class="card" id="view">
-      <h2>3) View a Mission</h2>
-      <p>Pick a mission ID from the list and open its full card:</p>
+      <h2>3) View a Mission (Preview)</h2>
+      <p>Pick a mission ID from the list and open its full details:</p>
       <div class="cmd">/mission view id:&lt;MISSION_UUID&gt;</div>
 
       <p class="callout">
-        The mission card shows: title, status + time, operation details, and two attendance columns.
-        Buttons at the bottom let you RSVP instantly.
+        This is a <strong>preview card</strong> and is also private.  
+        It shows mission details + attendance + RSVP buttons.
       </p>
     </section>
 
+    <section class="card" id="publish">
+      <h2>4) Publish Mission (Admins Only)</h2>
+      <p>
+        To keep channels clean, only Admins can publish missions publicly.
+        Members will never see the publish button.
+      </p>
+
+      <div class="callout">
+        <strong>Admins:</strong> When you run <code>/mission view</code> you’ll see a button:
+        <div class="cmd">📣 Publish to Channel</div>
+        Pressing it posts the mission publicly so everyone can RSVP there.
+      </div>
+
+      <ul>
+        <li><span class="badge good">Admin</span> can publish and re-publish (cooldown applies).</li>
+        <li><span class="badge">Member</span> can only preview missions privately.</li>
+        <li>Publishing has a cooldown to prevent channel spam.</li>
+      </ul>
+    </section>
+
     <section class="card" id="rsvp">
-      <h2>4) RSVP to a Mission</h2>
-      <p>There are two ways to RSVP:</p>
+      <h2>5) RSVP to a Mission</h2>
+      <p>On any mission card, tap one of the buttons:</p>
 
       <ul>
-        <li><strong>Buttons (preferred):</strong> in the mission view, tap <em>Going</em>, <em>Not going</em>, or <em>Withdraw</em>.</li>
-        <li><strong>Slash command:</strong> <code>/mission rsvp</code> (if enabled later).</li>
+        <li><span class="badge good">Going</span> — you’re in.</li>
+        <li><span class="badge bad">Not going</span> — you’re out.</li>
+        <li><span class="badge warn">Withdraw</span> — removes your RSVP completely.</li>
       </ul>
 
-      <div class="hr"></div>
-
-      <p><strong>Button meanings</strong></p>
-      <ul>
-        <li><span class="badge">Going</span> — you’re in. Your name appears under “Going”.</li>
-        <li><span class="badge">Not going</span> — you’re out. Your name appears under “Not going”.</li>
-        <li><span class="badge">Withdraw</span> — removes your RSVP completely.</li>
-      </ul>
-
-      <p class="callout">Your RSVP updates in place. No need to re-run /mission view unless you want to refresh.</p>
+      <p class="callout">RSVP updates instantly on the card. No need to re-run /mission view unless refreshing.</p>
     </section>
 
     <section class="card" id="faq">
@@ -281,15 +299,15 @@ a:hover{text-decoration:underline}
       <p><strong>“You aren’t linked yet” when RSVP’ing</strong></p>
       <ul>
         <li>You must run <code>/link</code> first.</li>
-        <li>Then retry the mission view buttons.</li>
+        <li>Then retry the mission buttons.</li>
       </ul>
 
       <div class="hr"></div>
 
       <p><strong>Bot not responding?</strong></p>
       <ul>
-        <li>Check you’re using the right command spelling (<code>/mission</code>, <code>/link</code>, <code>/profile</code>).</li>
-        <li>Ping Derek if the function is down or Discord is rate limiting.</li>
+        <li>Check correct commands: <code>/mission</code>, <code>/link</code>, <code>/profile</code>.</li>
+        <li>If still dead, notify Admin (function may be down).</li>
       </ul>
     </section>
 
@@ -313,11 +331,15 @@ a:hover{text-decoration:underline}
           </tr>
           <tr>
             <td><code>/mission list</code></td>
-            <td>Shows planned/unknown missions, newest first.</td>
+            <td>Private mission list (planned/unknown only).</td>
           </tr>
           <tr>
             <td><code>/mission view id:&lt;UUID&gt;</code></td>
-            <td>Shows mission details + RSVP buttons.</td>
+            <td>Private preview of mission + RSVP buttons.</td>
+          </tr>
+          <tr>
+            <td><code>📣 Publish to Channel</code></td>
+            <td><strong>Admins only:</strong> posts mission publicly.</td>
           </tr>
         </tbody>
       </table>
