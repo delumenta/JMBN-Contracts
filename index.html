@@ -241,6 +241,55 @@ body::after{
 .ops-btn{padding:4px 8px;border-radius:6px;font-size:12px;border:1px solid var(--border);background:transparent;color:#f7f1d0;cursor:pointer;font-family:'Play'}
 .ops-btn:hover{background:var(--accent);color:#000}
 @media(max-width:520px){.ops-ticker{gap:6px;padding:6px 8px}.ops-msg{font-size:12px}.ops-btn{padding:3px 6px;font-size:11px}}
+
+/* ===== Discord Link Chip (Step 1C) ===== */
+.link-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px dashed var(--border);
+  background:#0b0b0b;
+  color:var(--accent);
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+  user-select:none;
+  width:fit-content;
+}
+.link-chip:hover{
+  background:var(--accent);
+  color:#000;
+}
+.link-chip.small{
+  font-size:10.5px;
+  padding:2px 7px;
+}
+.link-chip .muted{
+  color:var(--muted);
+  font-weight:700;
+}
+.link-code-box{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--text);
+  display:none;
+}
+.link-code{
+  display:inline-block;
+  margin-top:4px;
+  padding:6px 10px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:#060606;
+  font-weight:900;
+  color:var(--accent);
+  letter-spacing:.6px;
+  cursor:pointer;
+}
+.link-code:hover{
+  background:var(--accent);
+  color:#000;
+}
 </style>
 </head>
 <body>
@@ -309,6 +358,20 @@ window.addEventListener('error', () => {
           <span class="badge" id="mCategory">—</span>
         </div>
         <p class="rankline" style="margin:0;color:var(--muted)">Welcome to the JMBN Manifest System</p>
+
+        <!-- Discord link chip (Step 1C) -->
+        <div style="margin-top:8px">
+          <span class="link-chip small" id="genDiscordLinkCode">🔗 Link Discord</span>
+          <div class="link-code-box" id="discordLinkBox">
+            <div class="muted" style="font-size:11px;margin-top:4px;">
+              Paste this in Discord:
+              <span style="color:var(--accent);font-weight:800">/mission link code:&lt;CODE&gt;</span>
+            </div>
+            <div class="link-code" id="discordLinkCode" title="Click to copy"></div>
+            <div class="muted" id="discordLinkExpiry" style="font-size:10.5px;margin-top:3px;"></div>
+          </div>
+        </div>
+
       </div>
       <img id="mRankImg" class="rankimg"
            src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
@@ -696,6 +759,70 @@ skip.onclick=finishBoot; if(sessionStorage.getItem('seenBoot')!=='1'){runBoot()}
         alert('Post failed: ' + e.message);
       }
     };
+  }
+
+  /* ---- Discord Link Code (Step 1C) ---- */
+  const genBtn = document.getElementById('genDiscordLinkCode');
+  const box = document.getElementById('discordLinkBox');
+  const codeEl = document.getElementById('discordLinkCode');
+  const expEl = document.getElementById('discordLinkExpiry');
+
+  async function generateDiscordLinkCode(){
+    if (!session?.user?.id) {
+      alert("You must be logged in.");
+      return;
+    }
+
+    genBtn.textContent = "⏳ Generating…";
+    genBtn.style.pointerEvents = "none";
+
+    try {
+      const res = await fetch(
+        "https://fcegavhipeaeihxegsnw.functions.supabase.co/functions/v1/create-discord-link-code",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: session.user.id })
+        }
+      );
+
+      const json = await res.json();
+      if (!json.code) throw new Error(json.error || "No code returned");
+
+      codeEl.textContent = json.code;
+      box.style.display = "block";
+
+      if (json.expires_at) {
+        const exp = new Date(json.expires_at);
+        expEl.textContent = `Expires at ${exp.toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}`;
+      } else {
+        expEl.textContent = "Expires in 10 minutes.";
+      }
+
+    } catch (e) {
+      alert("Failed to generate code: " + e.message);
+    } finally {
+      genBtn.textContent = "🔗 Link Discord";
+      genBtn.style.pointerEvents = "";
+    }
+  }
+
+  if (genBtn){
+    genBtn.addEventListener("click", generateDiscordLinkCode);
+  }
+
+  if (codeEl){
+    codeEl.addEventListener("click", async () => {
+      const txt = codeEl.textContent.trim();
+      if (!txt) return;
+      try {
+        await navigator.clipboard.writeText(txt);
+        expEl.textContent = "Copied ✅ Paste in Discord now.";
+        setTimeout(()=> expEl.textContent = "Expires in 10 minutes.", 1500);
+      } catch(_) {
+        prompt("Copy this code:", txt);
+      }
+    });
   }
 })();
 </script>
