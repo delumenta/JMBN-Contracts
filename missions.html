@@ -282,17 +282,27 @@ input:focus,select:focus{
   margin-left:10px;
   margin-bottom:10px;
   border-radius:12px;
-  border:1px solid rgba(214,180,76,.35);
-  background:radial-gradient(circle at top left,rgba(242,214,117,.08),rgba(0,0,0,.98));
+  /* Strong gold outline like Operations */
+  border:1px solid var(--border);              /* #d6b44c */
+  background:radial-gradient(circle at top left,rgba(242,214,117,.06),rgba(0,0,0,.98));
   padding:8px 10px;
   cursor:pointer;
   transition:transform .12s ease-out,box-shadow .12s ease-out,border-color .12s;
+  /* subtle constant glow */
+  box-shadow:
+    0 0 0 1px rgba(214,180,76,.35),
+    0 0 14px rgba(214,180,76,.25);
 }
+
 .op-card:hover{
   transform:translateY(-1px);
-  box-shadow:0 0 18px rgba(242,214,117,.35);
-  border-color:var(--accent);
+  /* brighter glow on hover */
+  border-color:var(--accent);  /* #f2d675 */
+  box-shadow:
+    0 0 0 1px rgba(242,214,117,.7),
+    0 0 22px rgba(242,214,117,.45);
 }
+
 .op-main{
   display:flex;align-items:flex-start;justify-content:space-between;
   gap:10px;
