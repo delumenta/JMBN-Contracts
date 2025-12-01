@@ -22,10 +22,9 @@
   --muted:#c9b06a;
   --bad:#ff6b6b;
   --good:#37d996;
-  --shadow:0 0 0 1px rgba(214,180,76,.1),
-           0 18px 45px rgba(0,0,0,.85);
 }
 
+/* Reset */
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   background:
@@ -35,6 +34,54 @@ body{
   font-family:'Play',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   margin:0;
   padding:16px;
+}
+
+/* Brand + Nav */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 12px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:8px;
+}
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+}
+.brand h1{
+  margin:0;color:var(--accent);font-size:22px;
+}
+.brand-sub{
+  font-size:11px;color:var(--muted);margin-left:auto;text-align:right;
+}
+.nav{
+  display:flex;align-items:center;gap:8px;
+  flex-wrap:wrap;margin:8px 0 16px;
+}
+.nav-btn{
+  --ring:#d6b44c;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;
+  border:1px solid var(--ring);
+  border-radius:999px;
+  font-size:11px;
+  text-decoration:none;
+  color:var(--text);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.16),rgba(0,0,0,1));
+  box-shadow:0 0 0 1px rgba(0,0,0,.7);
+  position:relative;
+  overflow:hidden;
+}
+.nav-btn::after{
+  content:"";
+  position:absolute;inset:-40%;
+  background:conic-gradient(from 0deg,rgba(242,214,117,.0),rgba(242,214,117,.7),rgba(242,214,117,.0));
+  opacity:0;transition:opacity .25s;
+}
+.nav-btn:hover::after{opacity:.35;}
+.nav-btn span{position:relative;z-index:1}
+.nav-btn.active{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.75),rgba(0,0,0,1));
+  color:#000;
 }
 
 /* Layout */
@@ -49,22 +96,28 @@ body{
   .grid{grid-template-columns:1fr;}
 }
 
-/* Panels */
+/* === OPTION A: Operations-style panels === */
 .panel{
-  background:linear-gradient(145deg,#050505,#111111);
-  border-radius:20px;
-  border:1px solid rgba(214,180,76,.25);
-  box-shadow:var(--shadow);
-  padding:14px;
   position:relative;
+  border-radius:16px;
+  border:1px solid var(--border);
+  box-shadow:
+    inset 0 0 0 1px rgba(242,214,117,.18),
+    0 0 0 1px rgba(214,180,76,.35),
+    0 18px 45px rgba(0,0,0,.9);
+  background:
+    radial-gradient(circle at top left,rgba(242,214,117,.08),rgba(0,0,0,1) 55%),
+    radial-gradient(circle at bottom right,rgba(242,214,117,.05),rgba(0,0,0,1) 65%);
+  padding:16px;
   overflow:hidden;
 }
 .panel::before{
-  content:'';position:absolute;inset:-40%;
+  content:"";
+  position:absolute;inset:-30%;
   background:
-    radial-gradient(circle at top left,rgba(242,214,117,.16),transparent 55%),
-    radial-gradient(circle at bottom,rgba(0,0,0,.9),#000);
-  opacity:.7;pointer-events:none;
+    radial-gradient(circle at 30% 0%,rgba(242,214,117,.09),transparent 60%);
+  opacity:.45;
+  pointer-events:none;
 }
 .panel > *{position:relative;z-index:1}
 .panel-inner{display:flex;flex-direction:column;gap:12px}
@@ -215,7 +268,7 @@ input:focus,select:focus{
   background:radial-gradient(circle at top left,rgba(242,214,117,.45),rgba(0,0,0,1));
 }
 
-/* Main panel */
+/* Main panel header */
 .main-header{
   display:flex;align-items:center;justify-content:space-between;
   gap:8px;margin-bottom:8px;
@@ -277,32 +330,27 @@ input:focus,select:focus{
   text-transform:uppercase;letter-spacing:.16em;font-size:10px;
 }
 
-/* Cards */
+/* Mission cards */
 .op-card{
   margin-left:10px;
   margin-bottom:10px;
   border-radius:12px;
-  /* Strong gold outline like Operations */
-  border:1px solid var(--border);              /* #d6b44c */
+  border:1px solid var(--border);
   background:radial-gradient(circle at top left,rgba(242,214,117,.06),rgba(0,0,0,.98));
   padding:8px 10px;
   cursor:pointer;
   transition:transform .12s ease-out,box-shadow .12s ease-out,border-color .12s;
-  /* subtle constant glow */
   box-shadow:
     0 0 0 1px rgba(214,180,76,.35),
     0 0 14px rgba(214,180,76,.25);
 }
-
 .op-card:hover{
   transform:translateY(-1px);
-  /* brighter glow on hover */
-  border-color:var(--accent);  /* #f2d675 */
+  border-color:var(--accent);
   box-shadow:
     0 0 0 1px rgba(242,214,117,.7),
     0 0 22px rgba(242,214,117,.45);
 }
-
 .op-main{
   display:flex;align-items:flex-start;justify-content:space-between;
   gap:10px;
@@ -450,34 +498,25 @@ tbody tr:hover{background:rgba(242,214,117,.08)}
 </head>
 <body>
 
-<!-- Shared header mount -->
-<div id="header-container"></div>
-<script>
-(async () => {
-  try {
-    const res = await fetch('header.html', { cache: 'no-cache' });
-    const html = await res.text();
-    document.getElementById('header-container').outerHTML = html;
+<!-- Brand -->
+<div class="brand">
+  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+  <h1>JMBN Mission Log</h1>
+  <div class="brand-sub">Missions · Resource vs Ops · Attendance</div>
+</div>
 
-    // Highlight current tab after header injected
-    requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || 'mission-log.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a => {
-        const href = (a.getAttribute('href') || '').toLowerCase();
-        if (href === here) {
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
-      });
-    });
-  } catch (e) {
-    console.warn('Header load failed:', e);
-  }
-})();
-</script>
+<!-- Nav -->
+<nav class="nav">
+  <a class="nav-btn" href="index.html"><span>Manifest</span></a>
+  <a class="nav-btn" href="hangar.html"><span>Hangar</span></a>
+  <a class="nav-btn" href="components.html"><span>Components</span></a>
+  <a class="nav-btn" href="contracts.html"><span>Contracts</span></a>
+  <a class="nav-btn active" href="mission-log.html"><span>Mission Log</span></a>
+  <a class="nav-btn" href="operations.html"><span>Operations Log</span></a>
+</nav>
 
 <!-- Console + main panel -->
-<div class="grid" style="margin-top:12px">
+<div class="grid">
   <!-- Sidebar / Mission Console -->
   <aside class="panel">
     <div class="panel-inner">
@@ -582,7 +621,7 @@ tbody tr:hover{background:rgba(242,214,117,.08)}
       <div class="main-header">
         <div>
           <div class="main-title">Operations Timeline</div>
-          <div class="main-sub">Group by day · see payout & crew at a glance</div>
+          <div class="main-sub">Group by day · see payout &amp; crew at a glance</div>
         </div>
         <div class="subtle" id="missionsCountLabel"></div>
       </div>
@@ -602,7 +641,7 @@ tbody tr:hover{background:rgba(242,214,117,.08)}
       <!-- Table view -->
       <div id="tableView" class="hidden">
         <div class="subtle" style="margin-bottom:4px">
-          Table view for detailed review & exporting.
+          Table view for detailed review &amp; exporting.
         </div>
         <div class="tableWrap">
           <table>
@@ -711,6 +750,14 @@ function fmtTime(iso){
            .replace(/\s?([ap])m/i,'$1m');
 }
 function fmtNum(n){ return (n||n===0) ? Number(n).toLocaleString() : ''; }
+
+/* Nav active */
+(() => {
+  const here = location.pathname.split('/').pop() || 'mission-log.html';
+  document.querySelectorAll('.nav-btn').forEach(a=>{
+    if(a.getAttribute('href')===here){ a.classList.add('active'); }
+  });
+})();
 
 /* Supabase + state */
 let sb = null;
@@ -1107,35 +1154,28 @@ async function openAttendance(id,title){
     $('#attSelfRow').style.display='none';
   }
 
-  // 🔻 Self attendance: going/not_going upsert, withdraw = DELETE
   $('#attSelfSave').onclick = async () => {
     const val = $('#attSelfSelect').value || null;
-    if(!val){
-      alert('Select your attendance status');
-      return;
-    }
+    if(!val){ alert('Select your attendance status');return; }
 
-    let error = null;
-
-    if (val === 'withdraw') {
-      ({ error } = await sb
+    if(val === 'withdraw'){
+      // withdraw = delete the row instead of saving invalid status
+      const { error } = await sb
         .from('mission_attendees')
         .delete()
-        .eq('mission_id', ATT_MISSION_ID)
-        .eq('user_id', session.user.id));
+        .eq('mission_id',ATT_MISSION_ID)
+        .eq('user_id',session.user.id);
+      if(error){ alert('Save failed: '+error.message);return; }
+      $('#attSelfSelect').value = '';
     } else {
-      ({ error } = await sb
+      const { error } = await sb
         .from('mission_attendees')
         .upsert({
           mission_id: ATT_MISSION_ID,
           user_id: session.user.id,
           attendance: val
-        }, { onConflict:'mission_id,user_id' }));
-    }
-
-    if(error){
-      alert('Save failed: '+error.message);
-      return;
+        },{ onConflict:'mission_id,user_id' });
+      if(error){ alert('Save failed: '+error.message);return; }
     }
 
     await loadAttendees();
