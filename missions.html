@@ -108,13 +108,11 @@ body{
   overflow:hidden;
 }
 .panel::before{
-  content:'';
-  position:absolute;inset:-40%;
+  content:'';position:absolute;inset:-40%;
   background:
     radial-gradient(circle at top left,rgba(242,214,117,.16),transparent 55%),
     radial-gradient(circle at bottom,rgba(0,0,0,.9),#000);
-  opacity:.7;
-  pointer-events:none;
+  opacity:.7;pointer-events:none;
 }
 .panel > *{position:relative;z-index:1}
 .panel-inner{display:flex;flex-direction:column;gap:12px}
@@ -1146,17 +1144,39 @@ async function openAttendance(id,title){
     $('#attSelfRow').style.display='none';
   }
 
+  // 🔻 Self attendance: going/not_going upsert, withdraw = DELETE
   $('#attSelfSave').onclick = async () => {
     const val = $('#attSelfSelect').value || null;
-    if(!val){ alert('Select your attendance status');return; }
-    const { error } = await sb
-      .from('mission_attendees')
-      .upsert({
-        mission_id: ATT_MISSION_ID,
-        user_id: session.user.id,
-        attendance: val
-      },{ onConflict:'mission_id,user_id' });
-    if(error){ alert('Save failed: '+error.message);return; }
+    if(!val){
+      alert('Select your attendance status');
+      return;
+    }
+
+    let error = null;
+
+    if (val === 'withdraw') {
+      // Withdraw → delete my attendance row
+      ({ error } = await sb
+        .from('mission_attendees')
+        .delete()
+        .eq('mission_id', ATT_MISSION_ID)
+        .eq('user_id', session.user.id));
+    } else {
+      // going / not_going → upsert
+      ({ error } = await sb
+        .from('mission_attendees')
+        .upsert({
+          mission_id: ATT_MISSION_ID,
+          user_id: session.user.id,
+          attendance: val
+        }, { onConflict:'mission_id,user_id' }));
+    }
+
+    if(error){
+      alert('Save failed: '+error.message);
+      return;
+    }
+
     await loadAttendees();
     await loadOngoing();
     await loadMissions(); // refresh crew counts
