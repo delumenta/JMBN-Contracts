@@ -246,23 +246,10 @@ input:focus,select:focus{
 }
 
 /* Timeline */
-/* Gold outline around the entire timeline block (like Operations) */
-.timeline {
-  position: relative;
-  padding-left: 18px;
-  margin-left: 2px;
-
-  /* NEW ↓ outer gold frame */
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px 16px;
-  background: radial-gradient(circle at top left,
-              rgba(242,214,117,.06), rgba(0,0,0,.95));
-
-  /* subtle glow */
-  box-shadow:
-    0 0 0 1px rgba(214,180,76,.35),
-    0 0 22px rgba(214,180,76,.15);
+.timeline{
+  position:relative;
+  padding-left:18px;
+  margin-left:2px;
 }
 .timeline::before{
   content:"";
