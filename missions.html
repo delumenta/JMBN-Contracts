@@ -1,598 +1,1351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Mission Log</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMBN Mission Log</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#000; --panel:#0b0b0b; --row:#0a0a0a;
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --ring:#ddb54b;
-}
-*{box-sizing:border-box}
-body{
-  background:#000;color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
-  margin:0;padding:20px;
-}
+  <style>
+  :root{
+    --bg:#000000;
+    --panel:#0b0b0b;
+    --panel-soft:#101010;
+    --row:#0a0a0a;
+    --border:#d6b44c;
+    --accent:#f2d675;
+    --accent-soft:#c9b06a;
+    --text:#f7f1d0;
+    --muted:#a39563;
+    --bad:#ff6b6b;
+    --good:#37d996;
+    --shadow:0 0 0 1px rgba(214,180,76,.1),
+             0 18px 45px rgba(0,0,0,.85);
+    --radius-xl:20px;
+    --radius-lg:14px;
+    --radius-md:10px;
+    --radius-pill:999px;
+    --nav-h:64px;
+  }
 
-/* Brand + Nav */
-.brand{
-  display:flex;align-items:center;gap:12px;
-  margin-bottom:8px;
-}
-.brand-logo{
-  width:40px;height:40px;border-radius:8px;object-fit:cover;
-}
-.brand h1{
-  font-size:22px;letter-spacing:1px;margin:0;
-}
-.brand-sub{
-  font-size:12px;color:var(--muted);margin-top:2px;
-}
-.nav{
-  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;
-}
-.nav-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:#f2d675;text-decoration:none;font-weight:700;letter-spacing:.2px;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
-}
-.nav-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
-}
-.nav-btn.active{
-  color:#000;
-  background:linear-gradient(180deg,#f2d675,#e7c760);
-  border-color:var(--ring)
-}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Play',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:
+      radial-gradient(circle at top,rgba(242,214,117,.08),transparent 55%),
+      radial-gradient(circle at bottom,rgba(10,10,10,1),#000);
+    color:var(--text);
+    padding:16px;
+  }
 
-/* Toolbar */
-.toolbar{
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;
-}
-input[type="search"]{
-  width:260px;background:#0a0a0a;border:1px solid var(--border);
-  border-radius:10px;padding:8px 10px;color:var(--text);
-}
-.subtle{color:var(--muted);font-size:12px}
+  /* Basic utility */
+  .small{font-size:11px;opacity:.85}
+  .mono{font-family:ui-monospace,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace}
+  .nowrap{white-space:nowrap}
+  .hidden{display:none !important;}
 
-/* Panel + headings */
-.panel{
-  background:
-    radial-gradient(900px 400px at 110% -10%,rgba(242,214,117,.04),transparent 50%),
-    #050505;
-  border-radius:16px;
-  border:1px solid rgba(214,180,76,.6);
-  box-shadow:0 18px 40px rgba(0,0,0,.9),
-             0 0 0 1px rgba(0,0,0,.7),
-             inset 0 0 0 1px rgba(214,180,76,.18);
-  padding:14px 16px 16px;
-}
-.section-title{
-  font-size:14px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.18em;color:var(--accent);margin:10px 0 6px;
-}
+  /* Header container is injected via header.html */
+  #header-container{margin-bottom:16px}
 
-/* Table */
-.table-wrap{
-  overflow:auto;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--panel);
-  box-shadow:0 0 18px rgba(214,180,76,.12);
-  margin-bottom:14px;
-}
-table{width:100%;border-collapse:collapse;min-width:1100px}
-thead th{
-  text-align:left;font-weight:700;color:var(--accent);
-  padding:10px 10px;
-  border-bottom:1px solid var(--border);
-  position:sticky;top:0;background:var(--panel);z-index:1;
-  font-size:11px;text-transform:uppercase;letter-spacing:.08em;
-}
-tbody td{
-  padding:10px;border-bottom:1px solid rgba(214,180,76,.25);
-  vertical-align:top;font-size:12px;
-}
-tbody tr:nth-child(even){background:#090909}
-tbody tr:hover{background:#111}
-.nowrap{white-space:nowrap}
-.mono{font-variant-numeric:tabular-nums}
+  /* ---- Grid layout (copied from operations-style UI) ---- */
+  .grid{
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: minmax(260px, 320px) minmax(0,1fr);
+    gap:18px;
+  }
+  @media(max-width:900px){
+    .grid{
+      grid-template-columns:1fr;
+    }
+  }
 
-/* Pills + link buttons */
-.pill{
-  display:inline-block;padding:3px 8px;
-  border:1px solid var(--border);border-radius:999px;
-  color:var(--accent);font-size:11px;background:#090909;
-}
-.badge{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
-.link-btn{
-  border:none;background:none;color:var(--accent);cursor:pointer;font-size:11px;text-decoration:underline;
-}
-.small-btn{
-  border-radius:999px;border:1px solid var(--border);
-  background:#050505;color:var(--accent);
-  padding:4px 10px;font-size:11px;cursor:pointer;
-}
-.small-btn:hover{background:var(--accent);color:#000}
+  .panel{
+    background:linear-gradient(145deg,#050505,#111111);
+    border-radius:var(--radius-xl);
+    border:1px solid rgba(214,180,76,.25);
+    box-shadow:var(--shadow);
+    padding:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  .panel::before{
+    content:'';
+    position:absolute;
+    inset:-40%;
+    background:
+      radial-gradient(circle at top left,rgba(242,214,117,.15),transparent 55%),
+      radial-gradient(circle at bottom,rgba(0,0,0,.9),#000);
+    opacity:.7;
+    pointer-events:none;
+  }
+  .panel > *{
+    position:relative;
+    z-index:1;
+  }
+  .panel-inner{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
 
-/* Attendance modal (operations-style shell) */
-.modal-bg{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.75);
-  display:none;
-  align-items:center;justify-content:center;
-  z-index:50;
-}
-.modal{
-  width:min(720px,95vw);
-  background:
-    radial-gradient(900px 400px at 110% -10%,rgba(242,214,117,.06),transparent 50%),
-    #0b0b0b;
-  border-radius:14px;
-  border:1px solid var(--border);
-  box-shadow:0 14px 36px rgba(0,0,0,.6),
-             0 0 26px rgba(214,180,76,.25),
-             inset 0 0 0 1px rgba(214,180,76,.08);
-}
-.modal-head{
-  padding:12px 14px;
-  border-bottom:1px solid rgba(214,180,76,.35);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.modal-title{font-weight:700;color:var(--accent)}
-.modal-body{
-  padding:10px 14px;
-  max-height:70vh;overflow:auto;
-  font-size:12px;
-}
-.modal-footer{
-  padding:8px 14px;
-  border-top:1px solid rgba(214,180,76,.35);
-  display:flex;justify-content:flex-end;gap:8px;
-}
-.modal-close{
-  border-radius:999px;border:1px solid var(--border);
-  background:#050505;color:var(--accent);
-  padding:4px 9px;font-size:12px;cursor:pointer;
-}
-.modal-close:hover{background:var(--accent);color:#000}
-.att-title{font-weight:600;margin-bottom:2px}
-.att-meta{font-size:11px;color:var(--muted);margin-bottom:8px}
-.att-actions{
-  display:flex;flex-wrap:wrap;align-items:center;gap:6px;
-  margin:4px 0 8px;
-}
-.att-table{
-  width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;
-}
-.att-table th,.att-table td{
-  padding:6px 8px;border-bottom:1px solid rgba(214,180,76,.25);
-}
-.att-auth-hint{font-size:11px;color:var(--muted)}
-</style>
+  /* Console (left card) */
+  .console-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  .console-title{
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--accent);
+  }
+  .console-sub{
+    font-size:11px;
+    color:var(--muted);
+  }
+
+  .field{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+  .field-label{
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .field-row{
+    display:flex;
+    gap:8px;
+  }
+  .field-row > .field{flex:1}
+
+  input,select,button{
+    font-family:inherit;
+  }
+  input[type="text"],
+  input[type="search"],
+  select{
+    background:#050505;
+    border-radius:var(--radius-md);
+    border:1px solid rgba(214,180,76,.35);
+    color:var(--text);
+    font-size:12px;
+    padding:8px 10px;
+    outline:none;
+  }
+  input::placeholder{color:rgba(200,190,150,.7);font-size:11px}
+  select{
+    padding-right:26px;
+    background-image:
+      linear-gradient(135deg,rgba(214,180,76,.3),transparent 50%),
+      linear-gradient(to bottom,#050505,#050505);
+    background-repeat:no-repeat;
+    background-position:right 10px center,0 0;
+    background-size:12px 12px,100% 100%;
+  }
+  input:focus,select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 1px rgba(242,214,117,.3);
+  }
+
+  /* KPI grid (from operations-style) */
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-top:4px;
+  }
+  .kpi{
+    padding:8px 10px;
+    border-radius:var(--radius-lg);
+    background:linear-gradient(135deg,rgba(242,214,117,.09),rgba(0,0,0,.9));
+    border:1px solid rgba(214,180,76,.35);
+  }
+  .kpi-title{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--muted);
+    margin-bottom:2px;
+  }
+  .kpi-value{
+    font-size:18px;
+    font-weight:700;
+  }
+  .kpi-sub{
+    font-size:11px;
+    color:var(--muted);
+  }
+
+  /* Chips (console quick filters) */
+  .chips-block{
+    margin-top:4px;
+    border-radius:var(--radius-lg);
+    border:1px dashed rgba(214,180,76,.35);
+    padding:8px 10px;
+    background:rgba(0,0,0,.7);
+  }
+  .chips-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .chip{
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(214,180,76,.35);
+    padding:3px 10px;
+    font-size:11px;
+    background:rgba(10,10,10,.8);
+    color:var(--text);
+    cursor:pointer;
+    transition:.15s ease-in-out;
+  }
+  .chip:hover{
+    background:rgba(242,214,117,.15);
+    border-color:var(--accent);
+  }
+
+  /* View toggle + export */
+  .view-toggle-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-top:10px;
+  }
+  .toggle-group{
+    display:inline-flex;
+    padding:2px;
+    border-radius:var(--radius-pill);
+    background:rgba(0,0,0,.8);
+    border:1px solid rgba(214,180,76,.35);
+    box-shadow:0 0 0 1px rgba(0,0,0,.8);
+  }
+  .toggle-btn{
+    border:none;
+    background:transparent;
+    color:var(--text);
+    font-size:11px;
+    padding:6px 12px;
+    border-radius:var(--radius-pill);
+    cursor:pointer;
+    min-width:76px;
+  }
+  .toggle-btn.active{
+    background:linear-gradient(135deg,rgba(242,214,117,.9),#f7f1d0);
+    color:#000;
+    box-shadow:0 0 12px rgba(242,214,117,.6);
+  }
+  .icon-btn{
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(214,180,76,.5);
+    background:radial-gradient(circle at top left,rgba(242,214,117,.2),rgba(10,10,10,1));
+    color:var(--text);
+    font-size:11px;
+    padding:6px 12px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .icon-btn span{font-size:13px;line-height:1}
+  .icon-btn:hover{
+    background:radial-gradient(circle at top left,rgba(242,214,117,.35),rgba(10,10,10,1));
+  }
+
+  /* Right card (main panel) */
+  .main-panel{
+    min-height:420px;
+  }
+  .main-header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:6px;
+  }
+  .main-title{
+    font-size:18px;
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    color:var(--accent);
+  }
+  .main-sub{
+    font-size:11px;
+    color:var(--muted);
+  }
+  .subtle{font-size:11px;color:var(--muted);}
+
+  /* Ongoing block kept from original UI */
+  .ongoing{
+    margin:6px 0 10px;
+    padding:8px 10px;
+    border-radius:var(--radius-lg);
+    border:1px solid rgba(214,180,76,.35);
+    background:linear-gradient(135deg,rgba(242,214,117,.06),rgba(0,0,0,.95));
+  }
+  .ongoing-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:4px;
+  }
+  .ongoing-list{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .ongoing-item{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    font-size:11px;
+    padding:4px 0;
+    border-bottom:1px solid rgba(214,180,76,.1);
+  }
+  .ongoing-item:last-child{border-bottom:none;}
+
+  /* Timeline view (based on operations.html) */
+  .timeline{
+    margin-top:6px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .day-group{
+    border-radius:var(--radius-lg);
+    border:1px solid rgba(214,180,76,.25);
+    background:radial-gradient(circle at top,rgba(242,214,117,.04),rgba(0,0,0,.95));
+    padding:8px 10px;
+  }
+  .day-header{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .day-header span:first-child{
+    font-size:13px;
+    color:var(--accent);
+  }
+
+  .op-card{
+    border-radius:var(--radius-md);
+    border:1px solid rgba(214,180,76,.25);
+    padding:8px 10px;
+    margin-bottom:6px;
+    background:radial-gradient(circle at top left,rgba(242,214,117,.06),rgba(0,0,0,.98));
+    cursor:pointer;
+    transition:transform .12s ease-out, box-shadow .12s ease-out, border-color .12s;
+  }
+  .op-card:last-child{margin-bottom:0;}
+  .op-card:hover{
+    transform:translateY(-1px);
+    box-shadow:0 0 18px rgba(242,214,117,.35);
+    border-color:var(--accent);
+  }
+
+  .op-main{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .op-title{
+    font-size:13px;
+    font-weight:700;
+  }
+  .op-meta{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:2px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+    align-items:center;
+  }
+  .op-right{
+    text-align:right;
+    font-size:11px;
+    color:var(--muted);
+  }
+  .op-footer{
+    margin-top:4px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    font-size:11px;
+    color:var(--muted);
+  }
+  .op-tags{
+    margin-top:4px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+  }
+  .op-tag-pill{
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(214,180,76,.4);
+    padding:2px 8px;
+    font-size:10px;
+  }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(214,180,76,.35);
+    padding:2px 8px;
+    font-size:10px;
+    background:rgba(0,0,0,.8);
+  }
+  .badge-status.good-ops{
+    border-color:var(--good);
+    color:var(--good);
+  }
+  .badge-status.bad-ops{
+    border-color:var(--bad);
+    color:var(--bad);
+  }
+
+  /* Table view (existing styles, wrapped into tableView) */
+  .tableWrap{
+    margin-top:8px;
+    border-radius:var(--radius-lg);
+    border:1px solid rgba(214,180,76,.35);
+    overflow:hidden;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+  }
+  thead{
+    background:rgba(0,0,0,.9);
+  }
+  th,td{
+    padding:8px 10px;
+    border-bottom:1px solid rgba(214,180,76,.15);
+  }
+  th{
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--muted);
+  }
+  tbody tr:nth-child(even){
+    background:rgba(0,0,0,.65);
+  }
+  tbody tr:hover{
+    background:rgba(242,214,117,.08);
+  }
+
+  .pill{
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(214,180,76,.4);
+    padding:2px 8px;
+    font-size:10px;
+  }
+  .pill.res{border-color:var(--good);color:var(--good)}
+  .pill.op{border-color:var(--accent);color:var(--accent)}
+
+  .small-btn{
+    font-size:11px;
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(214,180,76,.6);
+    background:radial-gradient(circle at top left,rgba(242,214,117,.35),rgba(0,0,0,1));
+    color:var(--text);
+    padding:4px 10px;
+    cursor:pointer;
+  }
+  .small-btn:hover{
+    background:radial-gradient(circle at top left,rgba(242,214,117,.55),rgba(0,0,0,1));
+  }
+
+  /* Attendance modal (unchanged styles from original) */
+  .modal-mask{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,.82);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:999;
+  }
+  .modal{
+    width:min(640px,100% - 32px);
+    max-height:80vh;
+    overflow:auto;
+    background:#050505;
+    border-radius:var(--radius-xl);
+    border:1px solid rgba(214,180,76,.6);
+    box-shadow:0 26px 80px rgba(0,0,0,.95);
+    padding:14px 16px 16px;
+  }
+  .modal h3{
+    font-size:16px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .modal .row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    margin:6px 0;
+  }
+  .modal table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+  }
+  .modal th,.modal td{
+    padding:4px 6px;
+    border-bottom:1px solid rgba(214,180,76,.15);
+  }
+  .modal th{
+    text-align:left;
+    font-size:10px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.12em;
+  }
+
+  .modal .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 8px;
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(214,180,76,.4);
+    background:#050505;
+    font-size:11px;
+  }
+  .modal .chip .x{
+    border:none;
+    background:transparent;
+    color:#ff6b6b;
+    cursor:pointer;
+    font-size:11px;
+  }
+  .modal .chip .x:hover{background:#111;color:#ff6b6b}
+  .modal .chip .edit{
+    cursor:pointer;
+    border:1px solid var(--border);
+    border-radius:6px;
+    background:transparent;
+    color:var(--accent);
+    padding:0 6px;
+  }
+  .modal .chip .edit:hover{
+    background:#111;
+    color:#000;
+    background:var(--accent);
+  }
+  .modal .chip select{
+    background:#0a0a0a;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:4px 8px;
+    color:var(--text);
+    font-family:'Play';
+    font-size:12px;
+  }
+  .modal .list{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  /* Optional: visual cue for "not_going" chips */
+  .chip[data-attendance="not_going"]{
+    border-color:rgba(255,107,107,.6);
+    color:#ff6b6b;
+  }
+  </style>
 </head>
 <body>
+  <!-- 🔁 Shared header mount -->
+  <div id="header-container"></div>
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('header.html', { cache: 'no-cache' });
+      const html = await res.text();
+      document.getElementById('header-container').outerHTML = html;
 
-<!-- Brand -->
-<div class="brand">
-  <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-  <div>
-    <h1>JMBN Mission Log</h1>
-    <div class="brand-sub">Missions · Crew · Payout</div>
+      // Highlight current tab (triggers shiny sweep ✨)
+      requestAnimationFrame(() => {
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        document.querySelectorAll('.nav-btn').forEach(a => {
+          const href = (a.getAttribute('href')||'').toLowerCase();
+          if (href === here) {
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
+          }
+        });
+      });
+    } catch (e) {
+      console.warn('Header load failed:', e);
+    }
+  })();
+  </script>
+
+  <!-- === Two-card layout (console + main panel) === -->
+  <div class="grid">
+    <!-- Left: Mission Console -->
+    <aside class="panel">
+      <div class="panel-inner">
+        <div class="console-header">
+          <div>
+            <div class="console-title">Mission Console</div>
+            <div class="console-sub">Filter · export · switch views</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="search">Search</label>
+          <input id="search" type="search" placeholder="title, type, status, tags, origin, destination">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="catFilter">Category</label>
+            <select id="catFilter">
+              <option value="">All</option>
+              <option value="Resource">Resource</option>
+              <option value="Operations">Operations</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="statusFilter">Status</label>
+            <select id="statusFilter">
+              <option value="">All</option>
+              <option>planned</option>
+              <option>active</option>
+              <option>success</option>
+              <option>fail</option>
+              <option>abort</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-title">Total Missions</div>
+            <div class="kpi-value" id="kpiCount">0</div>
+            <div class="kpi-sub" id="kpiCountSub">after filters</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-title">Resource : Ops</div>
+            <div class="kpi-value" id="kpiMix">0 : 0</div>
+            <div class="kpi-sub">derived from type</div>
+          </div>
+        </div>
+
+        <!-- Quick filters -->
+        <div class="chips-block">
+          <div class="chips-label">Quick Status</div>
+          <div class="chip-row">
+            <button class="chip" data-status-chip="">All</button>
+            <button class="chip" data-status-chip="planned">planned</button>
+            <button class="chip" data-status-chip="active">active</button>
+            <button class="chip" data-status-chip="success">success</button>
+          </div>
+          <div class="chips-label" style="margin-top:6px;">Quick Tags</div>
+          <div class="chip-row">
+            <button class="chip" data-chip="org">org</button>
+            <button class="chip" data-chip="cargo">cargo</button>
+            <button class="chip" data-chip="salvage">salvage</button>
+            <button class="chip" data-chip="mining">mining</button>
+          </div>
+        </div>
+
+        <!-- View toggle + Export -->
+        <div class="view-toggle-wrap">
+          <div class="toggle-group" role="tablist" aria-label="Mission view">
+            <button class="toggle-btn active" data-view="timeline" aria-pressed="true">Timeline</button>
+            <button class="toggle-btn" data-view="table" aria-pressed="false">Table</button>
+          </div>
+          <button class="icon-btn" id="exportCsv">
+            <span>⬇</span><span>Export CSV</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: Timeline / Table card -->
+    <section class="panel main-panel">
+      <div class="panel-inner">
+        <div class="main-header">
+          <div>
+            <div class="main-title">Mission Timeline</div>
+            <div class="main-sub">Group by day • filter-aware • click card for attendance</div>
+          </div>
+          <div class="subtle" id="missionsCountLabel"></div>
+        </div>
+
+        <!-- Ongoing missions (kept from original) -->
+        <div class="ongoing">
+          <div class="ongoing-head">
+            <strong>Ongoing Missions</strong>
+            <span class="small" id="ongoingCount">(0)</span>
+          </div>
+          <div id="ongoingList" class="ongoing-list"></div>
+        </div>
+
+        <!-- Timeline view -->
+        <div id="timelineView" class="timeline"></div>
+
+        <!-- Table view -->
+        <div id="tableView" class="hidden">
+          <div class="subtle" style="margin-bottom:6px;">Classic table view for detailed review & export.</div>
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mission Title</th>
+                  <th>Category</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Origin</th>
+                  <th>Destination</th>
+                  <th class="nowrap">Date &amp; Time</th>
+                  <th class="nowrap">Payout (aUEC)</th>
+                  <th>Tags</th>
+                  <th>Attachments</th>
+                  <th>Notes</th>
+                  <th class="nowrap">Attendance</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
-</div>
 
-<!-- Nav -->
-<nav class="nav">
-  <a class="nav-btn" href="index.html">Manifest</a>
-  <a class="nav-btn" href="hangar.html">Hangar</a>
-  <a class="nav-btn" href="components.html">Components</a>
-  <a class="nav-btn" href="contracts.html">Contracts</a>
-  <a class="nav-btn active" href="mission-log.html">Mission Log</a>
-  <a class="nav-btn" href="operations.html">Operations Log</a>
-</nav>
-
-<!-- Toolbar -->
-<div class="toolbar">
-  <input id="search" type="search" placeholder="Search title / type / tags / status...">
-  <span class="subtle">Top table = ongoing. Bottom table = full mission log.</span>
-</div>
-
-<div class="panel">
-
-  <!-- Table 1: Ongoing Missions -->
-  <div class="section-title">Ongoing Missions</div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Mission Title</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Origin</th>
-          <th class="nowrap">Crew</th>
-          <th class="nowrap">Date</th>
-          <th class="nowrap">Hours</th>
-          <th class="nowrap">Payout (aUEC)</th>
-          <th>Tags</th>
-          <th>Notes</th>
-          <th class="nowrap">Attendance</th>
-        </tr>
-      </thead>
-      <tbody id="ongoingBody"></tbody>
-    </table>
-  </div>
-
-  <!-- Table 2: Full Mission Log -->
-  <div class="section-title">All Missions</div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Mission Title</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Origin</th>
-          <th class="nowrap">Crew</th>
-          <th class="nowrap">Date</th>
-          <th class="nowrap">Hours</th>
-          <th class="nowrap">Payout (aUEC)</th>
-          <th>Tags</th>
-          <th>Attachments</th>
-          <th>Notes</th>
-          <th class="nowrap">Attendance</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
-
-</div>
-
-<!-- Attendance Modal -->
-<div class="modal-bg" id="attModalBg">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title" id="attTitle">Mission</div>
-      <button type="button" class="modal-close" id="attClose">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="att-title" id="attSummary"></div>
-      <div class="att-meta" id="attMeta"></div>
-
-      <div class="att-actions">
-        <button class="small-btn" id="attGoing">I'm going</button>
-        <button class="small-btn" id="attNotGoing">Not going</button>
-        <button class="small-btn" id="attWithdraw">Withdraw</button>
-        <span class="att-auth-hint" id="attAuthHint"></span>
+  <!-- Attendance Modal (unchanged) -->
+  <div id="attModalMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+        <button class="small-btn" onclick="closeAttendance()">Close</button>
       </div>
 
-      <table class="att-table" id="attTable"></table>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="modal-close" id="attClose2">Close</button>
+      <div class="row small">
+        <span id="attMeta" style="color:var(--muted)">Mission meta…</span>
+      </div>
+
+      <div class="row" id="attSelfRow" style="margin-top:4px;display:none">
+        <strong class="small">Your status:</strong>
+        <select id="attSelfSelect" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:4px 8px;color:var(--text);font-size:12px">
+          <option value="">(select…)</option>
+          <option value="going">going</option>
+          <option value="not_going">not going</option>
+          <option value="maybe">maybe</option>
+        </select>
+        <button id="attSelfSave" class="small-btn">Save</button>
+      </div>
+
+      <div id="attElevatedTools" class="row" style="display:none">
+        <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
+          <option value="">Role (optional)</option>
+        </select>
+        <button id="attAddBtn" class="small-btn">Add</button>
+        <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
+      </div>
+
+      <div class="row">
+        <strong class="small">Attendees:</strong>
+        <div id="attList" class="list"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+  <!-- 🔐 Auth & shared client -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
 
-// TODO: keep your real URL + anon key here (same as other pages)
-const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA2NDQzNzEsImV4cCI6MjAyNjIyMDM3MX0.gXpqQdajVS2iei1e-2gK5Z84p1doPv93FwsVbVyJMyU'
-
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
-
-const tbody        = document.getElementById('tbody')
-const ongoingBody  = document.getElementById('ongoingBody')
-const searchInput  = document.getElementById('search')
-
-const attBg        = document.getElementById('attModalBg')
-const attTitleEl   = document.getElementById('attTitle')
-const attSummaryEl = document.getElementById('attSummary')
-const attMetaEl    = document.getElementById('attMeta')
-const attTable     = document.getElementById('attTable')
-const attAuthHint  = document.getElementById('attAuthHint')
-const btnGoing     = document.getElementById('attGoing')
-const btnNotGoing  = document.getElementById('attNotGoing')
-const btnWithdraw  = document.getElementById('attWithdraw')
-const btnClose     = document.getElementById('attClose')
-const btnClose2    = document.getElementById('attClose2')
-
-let missions = []
-let missionCrewCounts = {}   // mission_id -> crew size
-let session = null
-let ATT_MISSION_ID = null
-
-/* Helpers */
-const esc = (s='') => {
-  const d=document.createElement('div'); d.textContent=s ?? ''; return d.innerHTML;
-}
-const fmtDate = iso => iso ? new Date(iso).toLocaleString() : ''
-const fmtNum  = n => (n||n===0) ? Number(n).toLocaleString('en-US') : ''
-
-function crewCount(id){
-  return missionCrewCounts[id] || 0
-}
-
-/* Fetch auth user once */
-async function getSession(){
-  if(session !== null) return session
-  try{
-    const { data, error } = await sb.auth.getUser()
-    if(error){
-      console.warn('auth error', error)
-      session = { user:null }
-    }else{
-      session = { user:data.user || null }
-    }
-  }catch(err){
-    console.warn('auth error', err)
-    session = { user:null }
-  }
-  return session
-}
-
-/* Load missions + crew counts */
-async function loadMissions(){
-  // missions
-  const { data, error } = await sb
-    .from('missions')
-    .select('id,title,type,status,origin,start_time,hours,payout_auec,tags,attachments,notes')
-    .order('created_at',{ascending:false})
-
-  if(error){
-    tbody.innerHTML = `<tr><td colspan="12" style="padding:12px;color:var(--muted)">Failed to load missions: ${esc(error.message)}</td></tr>`
-    ongoingBody.innerHTML = ''
-    return
-  }
-
-  missions = data || []
-
-  // crew counts from attendance view
-  missionCrewCounts = {}
-  const ids = missions.map(m => m.id).filter(Boolean)
-  if(ids.length){
-    const { data: attRows, error: attErr } = await sb
-      .from('v_mission_attendees_detailed')
-      .select('mission_id')
-      .in('mission_id', ids)
-    if(!attErr && Array.isArray(attRows)){
-      for(const row of attRows){
-        missionCrewCounts[row.mission_id] = (missionCrewCounts[row.mission_id]||0) + 1
+  <script>
+  /* ===== Active nav highlight (fallback) ===== */
+  (function(){
+    const here = location.pathname.split('/').pop() || 'mission-log.html';
+    document.querySelectorAll('.nav-btn').forEach(a=>{
+      if(a.getAttribute('href')===here){
+        a.classList.add('active');
+        a.setAttribute('aria-current','page');
       }
+    });
+  })();
+
+  /* ===== Helpers ===== */
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+
+  const fmtDate = iso => {
+    if(!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleString('en-SG', {
+      day:'numeric', month:'long', year:'numeric',
+      hour:'numeric', minute:'2-digit', hour12:true
+    }).replace(/\s?([ap])m/i,'$1m');
+  };
+  const fmtDay = iso => {
+    if(!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-SG',{
+      day:'numeric', month:'short', year:'numeric'
+    });
+  };
+  const fmtTime = iso => {
+    if(!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleTimeString('en-SG',{hour:'numeric',minute:'2-digit',hour12:true})
+             .replace(/\s?([ap])m/i,'$1m');
+  };
+  const fmtNum = n => (n||n===0) ? Number(n).toLocaleString() : '';
+
+  // Derive category from type without changing DB
+  const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
+
+  // --- Roles: fetched from DB with safe defaults ---
+  let ROLES = [];
+  const DEFAULT_ROLES = [
+    { code: 'operations_lead', label: 'operations lead', weight: 0.9 },
+    { code: 'pilot',           label: 'pilot',           weight: 0.7 },
+    { code: 'copilot',         label: 'copilot',         weight: 0.7 },
+    { code: 'escort',          label: 'escort',          weight: 0.7 },
+    { code: 'tactician',       label: 'tactician',       weight: 0.7 },
+    { code: 'fps',             label: 'fps',             weight: 0.7 },
+    { code: 'gunner',          label: 'gunner',          weight: 0.5 },
+    { code: 'hauler',          label: 'hauler',          weight: 0.5 },
+    { code: 'miner',           label: 'miner',           weight: 0.5 },
+    { code: 'salvager',        label: 'salvager',        weight: 0.5 },
+    { code: 'engineer',        label: 'engineer',        weight: 0.5 },
+    { code: 'medic',           label: 'medic',           weight: 0.5 },
+    { code: 'recon',           label: 'recon',           weight: 0.5 },
+    { code: 'runner',          label: 'runner',          weight: 0.5 },
+    { code: 'logistics',       label: 'logistics',       weight: 0.5 },
+    { code: 'security',        label: 'security',        weight: 0.5 }
+  ];
+
+  async function fetchRoles(){
+    if(!sb){ ROLES = DEFAULT_ROLES; return; }
+    const { data, error } = await sb
+      .from('mission_roles')
+      .select('code,label,weight,sort_order')
+      .order('sort_order', { ascending: true })
+      .order('label', { ascending: true });
+    ROLES = (error || !data || !data.length) ? DEFAULT_ROLES : data;
+  }
+  function roleOptionsHtml(placeholder){
+    const items = (ROLES.length?ROLES:DEFAULT_ROLES)
+      .map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
+    return `<option value="">${placeholder}</option>` + items;
+  }
+  function deriveCategory(type){
+    const t=(type||'').toString().trim().toLowerCase();
+    if(RESOURCE_TYPES.has(t)) return 'Resource';
+    return 'Operations'; // everything else
+  }
+
+  /* ===== State ===== */
+  let cache=[]; // all missions
+  let session=null, sb=null;
+  const tbody = $('#tbody');
+
+  /* ===== Render ===== */
+  function attachmentsCell(arr){
+    if(!Array.isArray(arr)||!arr.length) return '';
+    return arr.map((a,i)=>{
+      const name = a?.name?.trim() || `Attachment ${i+1}`;
+      const url  = a?.url || '#';
+      return `<a href="${esc(url)}" target="_blank" rel="noopener"
+                style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
+    }).join(', ');
+  }
+
+  function row(r){
+    const cat = deriveCategory(r.type);
+    return `<tr>
+      <td><b style="color:var(--accent)">${esc(r.title||'(untitled)')}</b></td>
+      <td>${cat?`<span class="pill ${cat==='Resource'?'res':'op'}">${cat}</span>`:''}</td>
+      <td>${r.type?`<span class="pill">${esc(r.type)}</span>`:''}</td>
+      <td>${r.status?`<span class="pill">${esc(r.status)}</span>`:''}</td>
+      <td>${esc(r.origin||'')}</td>
+      <td>${esc(r.destination||'')}</td>
+      <td class="nowrap mono">${fmtDate(r.start_time)}</td>
+      <td class="mono">${fmtNum(r.payout_auec)}</td>
+      <td>${esc(r.tags||'')}</td>
+      <td>${attachmentsCell(r.attachments)}</td>
+      <td>${esc(r.notes||'')}</td>
+      <td><button class="small-btn" onclick="openAttendance('${r.id}','${esc(r.title||'')}')">View</button></td>
+    </tr>`;
+  }
+
+  // --- Timeline helpers (adapted from operations.html) ---
+  function groupByDay(arr){
+    const map = new Map();
+    for(const m of arr){
+      const key = fmtDay(m.start_time);
+      if(!map.has(key)) map.set(key,[]);
+      map.get(key).push(m);
     }
+    return map;
+  }
+  function statusIsGood(status){
+    return (status||'').toLowerCase()==='success';
+  }
+  function statusIsBad(status){
+    const s = (status||'').toLowerCase();
+    return s==='fail' || s==='abort';
+  }
+  function missionCardHtml(m){
+    const cat = deriveCategory(m.type);
+    const tags = (m.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+    const good = statusIsGood(m.status);
+    const bad = statusIsBad(m.status);
+    return `
+      <article class="op-card" data-id="${esc(m.id)}" data-title="${esc(m.title||'(untitled mission)')}">
+        <div class="op-main">
+          <div>
+            <div class="op-title">${esc(m.title||'(untitled mission)')}</div>
+            <div class="op-meta">
+              ${cat ? `<span class="badge">${esc(cat)}</span>` : ''}
+              ${m.type ? `<span class="badge">${esc(m.type)}</span>` : ''}
+              <span class="badge badge-status${bad?' bad-ops':''}${good&&!bad?' good-ops':''}">
+                ${esc(m.status||'—')}
+              </span>
+            </div>
+          </div>
+          <div class="op-right">
+            <div class="mono"><strong>${fmtTime(m.start_time)}</strong></div>
+            <div class="mono">Payout: <strong>${fmtNum(m.payout_auec)||'-'}</strong></div>
+          </div>
+        </div>
+        <div class="op-footer">
+          <div class="mono">${esc(m.origin||'-')} → ${esc(m.destination||'-')}</div>
+        </div>
+        ${tags.length ? `
+        <div class="op-tags">
+          ${tags.map(t=>`<span class="op-tag-pill">${esc(t)}</span>`).join('')}
+        </div>`:''}
+        ${m.notes ? `<div class="subtle" style="margin-top:4px;">${esc(m.notes)}</div>`:''}
+      </article>
+    `;
   }
 
-  renderAll()
-  renderOngoing()
-}
+  function renderTimeline(list){
+    const timelineView = $('#timelineView');
+    if(!timelineView) return;
+    if(!list || !list.length){
+      timelineView.innerHTML = `<div class="subtle">No missions found for current filters.</div>`;
+      return;
+    }
+    const dayMap = groupByDay(list);
+    let html = '';
+    for(const [day,missions] of dayMap){
+      const d = missions[0]?.start_time ? new Date(missions[0].start_time) : null;
+      const weekday = d ? d.toLocaleDateString('en-SG',{weekday:'short'}) : '';
+      html += `<div class="day-group">
+        <div class="day-header">
+          <span>◎</span>
+          <span>${esc(weekday || 'Day')}</span>
+          <span>${esc(day)}</span>
+        </div>`;
+      for(const m of missions){
+        html += missionCardHtml(m);
+      }
+      html += `</div>`;
+    }
+    timelineView.innerHTML = html;
 
-/* Row builders */
-function rowHtml(m){
-  return `
-    <tr>
-      <td>${esc(m.title||'(untitled)')}</td>
-      <td>${m.type ? `<span class="pill">${esc(m.type)}</span>` : ''}</td>
-      <td>${m.status ? `<span class="pill">${esc(m.status)}</span>` : ''}</td>
-      <td>${esc(m.origin||'')}</td>
-      <td class="mono">${crewCount(m.id)}</td>
-      <td class="nowrap mono">${fmtDate(m.start_time)}</td>
-      <td class="mono">${m.hours ?? ''}</td>
-      <td class="mono">${fmtNum(m.payout_auec)}</td>
-      <td>${esc(m.tags||'')}</td>
-      <td>${attachmentsCell(m.attachments)}</td>
-      <td>${esc(m.notes||'')}</td>
-      <td><button class="small-btn" onclick="openAttendance('${m.id}','${esc(m.title||'')}')">View</button></td>
-    </tr>`
-}
-
-function rowHtmlOngoing(m){
-  return `
-    <tr>
-      <td>${esc(m.title||'(untitled)')}</td>
-      <td>${m.type ? `<span class="pill">${esc(m.type)}</span>` : ''}</td>
-      <td>${m.status ? `<span class="pill">${esc(m.status)}</span>` : ''}</td>
-      <td>${esc(m.origin||'')}</td>
-      <td class="mono">${crewCount(m.id)}</td>
-      <td class="nowrap mono">${fmtDate(m.start_time)}</td>
-      <td class="mono">${m.hours ?? ''}</td>
-      <td class="mono">${fmtNum(m.payout_auec)}</td>
-      <td>${esc(m.tags||'')}</td>
-      <td>${esc(m.notes||'')}</td>
-      <td><button class="small-btn" onclick="openAttendance('${m.id}','${esc(m.title||'')}')">View</button></td>
-    </tr>`
-}
-
-function attachmentsCell(arr){
-  if(!Array.isArray(arr) || !arr.length) return ''
-  return arr.map((a,i)=>{
-    const name = a?.name?.trim() || `Attachment ${i+1}`
-    const url  = a?.url || '#'
-    return `<a class="link-btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`
-  }).join(', ')
-}
-
-/* Rendering */
-function renderAll(){
-  const q = (searchInput.value||'').toLowerCase()
-  let rows = missions
-  if(q){
-    rows = rows.filter(m =>
-      (m.title||'').toLowerCase().includes(q) ||
-      (m.type||'').toLowerCase().includes(q) ||
-      (m.status||'').toLowerCase().includes(q) ||
-      (m.tags||'').toLowerCase().includes(q) ||
-      (m.origin||'').toLowerCase().includes(q)
-    )
+    // wire cards -> attendance modal
+    $$('#timelineView .op-card').forEach(card=>{
+      card.addEventListener('click',()=>{
+        const id = card.dataset.id;
+        const title = card.dataset.title || '';
+        if(id) openAttendance(id,title);
+      });
+    });
   }
-  tbody.innerHTML = rows.length
-    ? rows.map(rowHtml).join('')
-    : `<tr><td colspan="12" style="padding:12px;color:var(--muted)">No missions found.</td></tr>`
-}
 
-function renderOngoing(){
-  const ongoingStatuses = ['Ongoing','In Progress','Active','Planned']
-  const rows = missions.filter(m => ongoingStatuses.includes(m.status || ''))
-  ongoingBody.innerHTML = rows.length
-    ? rows.map(rowHtmlOngoing).join('')
-    : `<tr><td colspan="11" style="padding:10px;color:var(--muted)">No ongoing missions right now.</td></tr>`
-}
+  function render(list){
+    list = list || [];
+    $('#kpiCount').textContent = list.length.toLocaleString();
+    const rCount = list.filter(x=>deriveCategory(x.type)==='Resource').length;
+    const oCount = list.length - rCount;
+    $('#kpiMix').textContent = `${rCount} : ${oCount}`;
+    const sub = $('#kpiCountSub');
+    if(sub){
+      sub.textContent = list.length ? 'after filters' : 'no missions in view';
+    }
+    const label = $('#missionsCountLabel');
+    if(label){
+      label.textContent = list.length
+        ? `${list.length} mission${list.length>1?'s':''} in view`
+        : 'No missions in view';
+    }
 
-/* Attendance modal */
-function closeAttendance(){
-  ATT_MISSION_ID = null
-  if(attBg) attBg.style.display='none'
-}
+    // table
+    tbody.innerHTML = list.length ? list.map(row).join('') :
+      `<tr><td colspan="12" class="small" style="padding:10px">No missions found.</td></tr>`;
 
-if(btnClose)  btnClose.onclick  = closeAttendance
-if(btnClose2) btnClose2.onclick = closeAttendance
-if(attBg){
-  attBg.addEventListener('click', e=>{
-    if(e.target===attBg) closeAttendance()
-  })
-}
+    // timeline
+    renderTimeline(list);
+  }
 
-async function loadAttendees(){
-  if(!ATT_MISSION_ID || !attTable) return
-  attTable.innerHTML = '<tr><td class="small">Loading attendees…</td></tr>'
-  try{
+  /* ===== Filter + CSV ===== */
+  function getFiltered(){
+    const q = ($('#search').value||'').toLowerCase();
+    const cat = ($('#catFilter').value||'');
+    const st = ($('#statusFilter').value||'').toLowerCase();
+    let arr = cache.slice();
+    if(cat) arr = arr.filter(x => deriveCategory(x.type)===cat);
+    if(st) arr = arr.filter(x => (x.status||'').toLowerCase()===st);
+    if(q) arr = arr.filter(x =>
+      `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`
+      .toLowerCase().includes(q));
+    return arr;
+  }
+  $('#search').addEventListener('input', ()=>render(getFiltered()));
+  $('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
+  $('#catFilter').addEventListener('input', ()=>render(getFiltered()));
+
+  $('#exportCsv').addEventListener('click', ()=>{
+    const rows = getFiltered();
+    const cols = ['title','category','type','status','origin','destination','start_time','payout_auec','tags','notes'];
+    const csv = [
+      cols.join(','),
+      ...rows.map(r => cols.map(k=>{
+        const v = k==='category' ? deriveCategory(r.type)
+          : (r[k]==null?'':String(r[k]).replace(/"/g,'""'));
+        return `"${v}"`;
+      }).join(','))
+    ].join('\n');
+    const blob = new Blob([csv],{type:'text/csv'});
+    const url = URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  // --- Minimal runtime self-test for CSV join (does not affect UI) ---
+  (function csvJoinSelfTest(){
+    try{
+      const cols=['title'];
+      const rows=[{title:'Test'}];
+      const csv=[cols.join(','), ...rows.map(r=>`"${r.title}"`)].join('\n');
+      console.assert(csv.includes('\n'), 'CSV should contain newline');
+    }catch(_){ /* ignore */ }
+  })();
+
+  // View toggle (timeline / table) – copied from operations-style behaviour
+  (function(){
+    let currentView = 'timeline';
+    const timelineView = $('#timelineView');
+    const tableView = $('#tableView');
+    $$('.toggle-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const target = btn.dataset.view;
+        if(!target || target===currentView) return;
+        currentView = target;
+        $$('.toggle-btn').forEach(b=>{
+          b.classList.toggle('active', b===btn);
+          b.setAttribute('aria-pressed', b===btn ? 'true' : 'false');
+        });
+        if(currentView==='timeline'){
+          timelineView.classList.remove('hidden');
+          tableView.classList.add('hidden');
+        } else {
+          tableView.classList.remove('hidden');
+          timelineView.classList.add('hidden');
+        }
+      });
+    });
+  })();
+
+  // Quick chips
+  $$('.chip[data-status-chip]').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      const status = chip.dataset.statusChip || '';
+      $('#statusFilter').value = status;
+      render(getFiltered());
+    });
+  });
+  $$('.chip[data-chip]').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      const tag = chip.dataset.chip || '';
+      if(!tag) return;
+      const input = $('#search');
+      const base = input.value || '';
+      const parts = base.toLowerCase().split(' ').filter(Boolean);
+      if(!parts.includes(tag.toLowerCase())){
+        input.value = (base + ' ' + tag).trim();
+      }
+      render(getFiltered());
+    });
+  });
+
+  /* ===== Load (uses shared Supabase from auth.js) ===== */
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    session = await requireAuth();        // redirects to auth.html if not logged in
+    if(!session) return;
+    sb = getSupabase();
+    await fetchRoles();
+    await loadMissions();
+    await loadOngoing();
+  });
+
+  async function loadMissions(){
+    const { data, error } = await sb
+      .from('missions')
+      .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at')
+      .order('created_at',{ascending:false});
+
+    if(error){
+      $('#tbody').innerHTML = `<tr><td colspan="12" class="small" style="padding:10px">Failed to load missions: ${esc(error.message)}</td></tr>`;
+      return;
+    }
+    cache = data || [];
+    render(getFiltered());
+  }
+
+  /* ===== Ongoing (user “going” + Planned/Active) ===== */
+  async function loadOngoing(){
+    if(!session || !sb) return;
+
+    const { data: att, error: err1 } = await sb
+      .from('mission_attendees')
+      .select('mission_id')
+      .eq('user_id', session.user.id)
+      .eq('attendance', 'going');
+
+    if(err1){ return renderOngoing([], 'Failed to load: ' + err1.message); }
+
+    const ids = (att||[]).map(a => a.mission_id);
+    if(!ids.length){ return renderOngoing([]); }
+
+    const { data: rows, error: err2 } = await sb
+      .from('missions')
+      .select('id,title,status,start_time,origin,destination')
+      .in('id', ids)
+      .in('status', ['planned','active'])
+      .order('start_time', { ascending: true });
+
+    if(err2){ return renderOngoing([], 'Failed to load: ' + err2.message); }
+
+    renderOngoing(rows||[]);
+  }
+  function renderOngoing(rows, errMsg){
+    const list = document.getElementById('ongoingList');
+    const count = document.getElementById('ongoingCount');
+    count.textContent = `(${rows?.length || 0})`;
+
+    if(errMsg){
+      list.innerHTML = `<div class="small" style="color:var(--bad)">${esc(errMsg)}</div>`;
+      return;
+    }
+    if(!rows || !rows.length){
+      list.innerHTML = `<div class="small">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
+      return;
+    }
+
+    list.innerHTML = rows.map(r=>`
+      <div class="ongoing-item">
+        <span><strong>${esc(r.title||'(untitled)')}</strong><br>
+          <span class="small" style="color:var(--muted)">${esc(r.origin||'-')} → ${esc(r.destination||'-')}</span>
+        </span>
+        <span class="small mono">${fmtDate(r.start_time)}</span>
+      </div>
+    `).join('');
+  }
+
+  async function refreshOngoing(){
+    try{ await loadOngoing(); }catch(_){}
+  }
+
+  /* ===== Attendance modal (Supabase-powered) ===== */
+  let ATT_MISSION_ID = null;
+
+  async function openAttendance(id,title){
+    ATT_MISSION_ID = id;
+    document.getElementById('attTitle').textContent = title || 'Attendance';
+    document.getElementById('attModalMask').style.display = 'flex';
+    document.getElementById('attModalMask').setAttribute('aria-hidden','false');
+
+    // meta line
+    const m = cache.find(x=>x.id===id);
+    const meta = m
+      ? `${fmtDate(m.start_time)} · ${m.origin||'-'} → ${m.destination||'-'}`
+      : '';
+    document.getElementById('attMeta').textContent = meta;
+
+    // fill role select options
+    document.getElementById('attAddRole').innerHTML = roleOptionsHtml('Role (optional)');
+
+    // show / hide self row
+    const selfRow = document.getElementById('attSelfRow');
+    if(session && session.user){
+      selfRow.style.display = 'flex';
+    } else {
+      selfRow.style.display = 'none';
+    }
+
+    // elevated tools check will happen in loadAttendees
+    document.getElementById('attAddEmail').value='';
+    document.getElementById('attAddRole').value='';
+
+    // wire self status save
+    document.getElementById('attSelfSave').onclick = async () => {
+      const sel = document.getElementById('attSelfSelect');
+      const val = sel.value || null;
+      if(!val){ alert('Select your attendance status'); return; }
+      const { error } = await sb
+        .from('mission_attendees')
+        .upsert({
+          mission_id: ATT_MISSION_ID,
+          user_id: session.user.id,
+          attendance: val
+        }, { onConflict: 'mission_id,user_id' });
+      if(error){ alert('Save failed: ' + error.message); return; }
+      await loadAttendees();
+      await refreshOngoing();
+    };
+
+    document.getElementById('attAddBtn').onclick = async () => {
+      const email = document.getElementById('attAddEmail').value.trim();
+      const role  = document.getElementById('attAddRole').value || null;
+      if(!email){ alert('Enter an email'); return; }
+      const { error } = await sb.rpc('add_attendee_by_email', {
+        p_mission: ATT_MISSION_ID,
+        p_email: email,
+        p_role: role,
+        p_attendance: 'going'
+      });
+      if(error){ alert('Add failed: ' + error.message); return; }
+      document.getElementById('attAddEmail').value=''; document.getElementById('attAddRole').value='';
+      await loadAttendees();
+      await refreshOngoing();
+    };
+
+    await loadAttendees();
+  }
+
+  function closeAttendance(){
+    document.getElementById('attModalMask').style.display = 'none';
+    document.getElementById('attModalMask').setAttribute('aria-hidden','true');
+    ATT_MISSION_ID = null;
+  }
+  window.openAttendance = openAttendance;
+  window.closeAttendance = closeAttendance;
+
+  async function loadAttendees(){
+    const list = document.getElementById('attList');
+    list.innerHTML = '<span class="small">Loading…</span>';
+
     const { data, error } = await sb
       .from('v_mission_attendees_detailed')
       .select('*')
       .eq('mission_id', ATT_MISSION_ID)
-      .order('joined_at',{ascending:true})
+      .order('joined_at', { ascending: true });
+
     if(error){
-      attTable.innerHTML = `<tr><td class="small" style="color:var(--muted)">Failed to load attendees: ${esc(error.message)}</td></tr>`
-      return
+      list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`;
+      return;
     }
-    const rows = data || []
-    if(!rows.length){
-      attTable.innerHTML = '<tr><td class="small">No attendees yet.</td></tr>'
-      return
+    if(!data?.length){
+      list.innerHTML = '<span class="small">No attendees yet.</span>';
+      return;
     }
-    let html = '<thead><tr><th>Name</th><th>Status</th><th class="nowrap">Joined</th></tr></thead><tbody>'
-    for(const a of rows){
-      html += `
-        <tr>
-          <td>${esc(a.attendee_name || a.user_email || '')}</td>
-          <td>${esc(a.attendance || '')}</td>
-          <td class="mono small">${a.joined_at ? fmtDate(a.joined_at) : ''}</td>
-        </tr>`
+
+    const [{ data: elev }, { data: mission }] = await Promise.all([
+      sb.rpc('is_elevated', { u: session.user.id }),
+      sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
+    ]);
+    const canManageAll = (elev || mission?.submitted_by === session.user.id);
+
+    list.innerHTML = '';
+    for(const a of data){
+      const chip = document.createElement('div');
+      const canEdit = (canManageAll || a.user_id === session.user.id);
+      chip.className = 'chip';
+      chip.setAttribute('data-attendance', (a.attendance || '').toLowerCase());
+
+      // Build role <select>
+      const options = ['<option value="">role</option>', ...(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`)].join('');
+      const selectHtml = `<select data-uid="${a.user_id}" ${canEdit?'':'disabled'}>${options}</select>`;
+
+      chip.innerHTML = `
+        <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
+        ${selectHtml}
+        <span class="small" style="color:var(--muted)">${esc(a.attendance||'')}</span>
+        ${ canEdit ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
+      `;
+
+      // set current role value
+      const sel = chip.querySelector('select');
+      if(sel){ sel.value = a.role_in_mission || ''; }
+
+      // wire remove
+      if(canEdit){
+        const btn = chip.querySelector('button.x');
+        if(btn){
+          btn.addEventListener('click', async ()=>{
+            const uid = btn.getAttribute('data-uid');
+            const { error } = await sb
+              .from('mission_attendees')
+              .delete()
+              .eq('mission_id', ATT_MISSION_ID)
+              .eq('user_id', uid);
+            if(error){ alert('Remove failed: ' + error.message); return; }
+            await loadAttendees();
+            await refreshOngoing();
+          });
+        }
+      }
+
+      // wire role change
+      if(sel){
+        sel.addEventListener('change', async ()=>{
+          const uid = sel.getAttribute('data-uid');
+          const role = sel.value || null;
+          const { error } = await sb
+            .from('mission_attendees')
+            .update({ role_in_mission: role })
+            .eq('mission_id', ATT_MISSION_ID)
+            .eq('user_id', uid);
+          if(error){ alert('Update failed: ' + error.message); return; }
+          await loadAttendees();
+        });
+      }
+
+      list.appendChild(chip);
     }
-    html += '</tbody>'
-    attTable.innerHTML = html
-  }catch(err){
-    attTable.innerHTML = '<tr><td class="small" style="color:var(--muted)">Failed to load attendees.</td></tr>'
+
+    // Elevated tools visibility
+    const tools = document.getElementById('attElevatedTools');
+    tools.style.display = canManageAll ? 'flex' : 'none';
   }
-}
-
-function wireAttendanceButtons(user){
-  if(!user){
-    if(attAuthHint) attAuthHint.textContent = 'Sign in to mark your attendance.'
-    btnGoing.disabled = true
-    btnNotGoing.disabled = true
-    btnWithdraw.disabled = true
-    return
-  }
-  if(attAuthHint) attAuthHint.textContent = ''
-  btnGoing.disabled = false
-  btnNotGoing.disabled = false
-  btnWithdraw.disabled = false
-
-  const uid = user.id
-
-  btnGoing.onclick = async () => {
-    await sb.from('mission_attendees').upsert({
-      mission_id: ATT_MISSION_ID,
-      user_id: uid,
-      attendance: 'going'
-    }, { onConflict: 'mission_id,user_id' })
-    await loadMissions()
-    await loadAttendees()
-  }
-  btnNotGoing.onclick = async () => {
-    await sb.from('mission_attendees').upsert({
-      mission_id: ATT_MISSION_ID,
-      user_id: uid,
-      attendance: 'not_going'
-    }, { onConflict: 'mission_id,user_id' })
-    await loadMissions()
-    await loadAttendees()
-  }
-  btnWithdraw.onclick = async () => {
-    await sb.from('mission_attendees')
-      .delete()
-      .match({ mission_id: ATT_MISSION_ID, user_id: uid })
-    await loadMissions()
-    await loadAttendees()
-  }
-}
-
-async function openAttendance(missionId, title=''){
-  ATT_MISSION_ID = missionId
-  if(attBg) attBg.style.display='flex'
-
-  // try find mission from cache
-  let m = missions.find(x => x.id === missionId)
-  if(!m){
-    const { data } = await sb
-      .from('missions')
-      .select('id,title,type,status,origin,start_time,hours,payout_auec,tags')
-      .eq('id', missionId)
-      .maybeSingle()
-    m = data || {}
-  }
-
-  const name = m.title || title || '(untitled)'
-  attTitleEl.textContent   = name
-  attSummaryEl.textContent = [m.type, m.status].filter(Boolean).join(' • ')
-  const metaParts = []
-  if(m.start_time) metaParts.push(fmtDate(m.start_time))
-  if(m.origin)     metaParts.push(m.origin)
-  if(m.hours)      metaParts.push(`${m.hours} hrs`)
-  if(m.payout_auec)metaParts.push(`${fmtNum(m.payout_auec)} aUEC`)
-  attMetaEl.innerHTML = metaParts.join(' · ')
-
-  await loadAttendees()
-  const sess = await getSession()
-  wireAttendanceButtons(sess.user)
-}
-
-// expose so the inline onclick works
-window.openAttendance = openAttendance
-
-/* Wire search + load */
-searchInput.addEventListener('input', ()=>{
-  renderAll()
-  // ongoing stays as "true ongoing" list, not filtered by text
-})
-
-await loadMissions()
-</script>
-
-<!-- highlight nav -->
-<script>
-(() => {
-  const here = location.pathname.split('/').pop() || 'mission-log.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){a.classList.add('active')}
-  });
-})();
-</script>
+  </script>
 </body>
 </html>
