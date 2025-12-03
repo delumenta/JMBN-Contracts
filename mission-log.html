@@ -3,10 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Mission Log</title>
+<title>JMBN Operations Log</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png"
       href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
@@ -14,160 +12,522 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#111;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
+  --bg:#000;
+  --panel:#0b0b0b;
+  --row:#0a0a0a;
+  --border:#d6b44c;
+  --accent:#f2d675;
+  --accent-soft:#c9b06a;
+  --text:#f7f1d0;
+  --muted:#c9b06a;
+  --bad:#ff6b6b;
+  --good:#37d996;
 }
-*{box-sizing:border-box}
+
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
 body{
   background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
-    #000;
+    radial-gradient(circle at top,rgba(242,214,117,.08),transparent 55%),
+    radial-gradient(circle at bottom,rgba(10,10,10,1),#000);
   color:var(--text);
-  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  margin:0;padding:14px;letter-spacing:.25px;font-size:var(--fs-base);
+  font-family:'Play',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  margin:0;
+  padding:16px;
 }
 
-/* Header (fallback styles; actual header injected) */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0}
-
-/* Shiny nav */
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+/* Brand + Nav (styles kept so header.html can reuse them) */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 12px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:8px;
+}
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+}
+.brand h1{
+  margin:0;color:var(--accent);font-size:22px;
+}
+.brand-sub{
+  font-size:11px;color:var(--muted);margin-left:auto;text-align:right;
+}
+.nav{
+  display:flex;align-items:center;gap:8px;
+  flex-wrap:wrap;margin:8px 0 16px;
+}
 .nav-btn{
-  --gold:#f2d675;--gold2:#e7c760;--ring:#d6b44c;
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  --ring:#d6b44c;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;
+  border:1px solid var(--ring);
+  border-radius:999px;
+  font-size:11px;
+  text-decoration:none;
+  color:var(--text);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.16),rgba(0,0,0,1));
+  box-shadow:0 0 0 1px rgba(0,0,0,.7);
+  position:relative;
   overflow:hidden;
 }
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);background:linear-gradient(180deg,#1a1a1a,#0a0a0a)}
-.nav-btn.active{color:#000;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--ring);box-shadow:0 0 20px rgba(214,180,76,.45)}
-.nav-btn.active::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 70%);border-radius:inherit;transform:translateX(-120%);animation:shine 2.8s ease-in-out infinite;pointer-events:none}
-@keyframes shine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
+.nav-btn::after{
+  content:"";
+  position:absolute;inset:-40%;
+  background:conic-gradient(from 0deg,rgba(242,214,117,.0),rgba(242,214,117,.7),rgba(242,214,117,.0));
+  opacity:0;transition:opacity .25s;
+}
+.nav-btn:hover::after{opacity:.35;}
+.nav-btn span{position:relative;z-index:1}
+.nav-btn.active{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.75),rgba(0,0,0,1));
+  color:#000;
+}
 
-/* Panels + controls */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;box-shadow:0 0 10px rgba(214,180,76,.15)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-button,.small-btn{padding:7px 11px;border-radius:10px;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent);border:1px solid var(--border);cursor:pointer;font-family:'Play';transition:.2s}
-button:hover,.small-btn:hover{background:var(--accent);color:#000}
-.btn-primary{background:var(--accent);color:#000}
-input,select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:var(--fs-table);font-family:'Play'}
-.small{font-size:var(--fs-small);color:var(--muted)}
+/* Layout */
+.grid{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(260px,320px) minmax(0,1fr);
+  gap:18px;
+}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;}
+}
 
-/* KPI */
-.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 6px}
-@media(max-width:880px){.kpis{grid-template-columns:1fr}}
-.kpi{background:linear-gradient(180deg,#0b0b0b,#080808);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08)}
-.kpi-title{font-size:12px;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
-.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
-
-/* Ongoing card */
-.ongoing{
-  margin-top:8px;
-  background:linear-gradient(180deg,#0b0b0b,#080808);
+/* === OPTION A: Operations-style panels === */
+.panel{
+  position:relative;
+  border-radius:16px;
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;
-  box-shadow:0 0 8px rgba(214,180,76,.12), inset 0 0 0 1px rgba(214,180,76,.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(242,214,117,.18),
+    0 0 0 1px rgba(214,180,76,.35),
+    0 18px 45px rgba(0,0,0,.9);
+  background:
+    radial-gradient(circle at top left,rgba(242,214,117,.08),rgba(0,0,0,1) 55%),
+    radial-gradient(circle at bottom right,rgba(242,214,117,.05),rgba(0,0,0,1) 65%);
+  padding:16px;
+  overflow:hidden;
 }
-.ongoing-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;color:var(--accent)}
-.ongoing-list{display:flex;flex-direction:column;gap:6px}
-.ongoing-item{
-  display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;
-  background:#0c0c0c;border:1px solid rgba(214,180,76,.35);border-radius:10px;padding:8px
+.panel::before{
+  content:"";
+  position:absolute;inset:-30%;
+  background:
+    radial-gradient(circle at 30% 0%,rgba(242,214,117,.09),transparent 60%);
+  opacity:.45;
+  pointer-events:none;
 }
-@media(max-width:680px){.ongoing-item{grid-template-columns:1fr}}
-.ongoing-title{font-weight:700;color:var(--accent)}
-.ongoing-meta{font-size:12px;color:var(--muted)}
-.ongoing-open{
-  padding:6px 10px;border-radius:8px;border:1px solid var(--border);
-  background:transparent;color:var(--accent);cursor:pointer
-}
-.ongoing-open:hover{background:var(--accent);color:#000}
+.panel > *{position:relative;z-index:1}
+.panel-inner{display:flex;flex-direction:column;gap:12px}
 
-/* Table */
-.tableWrap{border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:70vh;margin-top:10px}
-table{width:100%;border-collapse:collapse;font-size:var(--fs-table)}
-th,td{border-bottom:1px solid rgba(214,180,76,.3);padding:8px;text-align:left;vertical-align:top}
-th{color:var(--accent);background:#080808;font-weight:500}
-tr:nth-child(even){background:#111}
-tr:hover{background:rgba(214,180,76,.05)}
-.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--muted)}
-.pill.res{color:#f2d675;border-color:#f2d675}
-.pill.op{color:#7bd88f;border-color:#7bd88f}
-.nowrap{white-space:nowrap}
+/* Sidebar console */
+.console-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:4px;
+}
+.console-title{
+  font-size:13px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--accent);
+}
+.console-pill{
+  font-size:10px;color:var(--muted);
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.5);
+  padding:3px 10px;
+}
+.field-label{
+  display:block;
+  margin-top:6px;
+  margin-bottom:2px;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--muted);
+}
+input[type="search"],select{
+  width:100%;
+  border-radius:11px;
+  border:1px solid rgba(214,180,76,.35);
+  padding:7px 10px;
+  font-size:11px;
+  background:#050505;
+  color:var(--text);
+  outline:none;
+}
+input::placeholder{color:rgba(200,190,150,.7);font-size:10px}
+select{
+  padding-right:26px;
+  background-image:
+    linear-gradient(135deg,rgba(214,180,76,.3),transparent 50%),
+    linear-gradient(to bottom,#050505,#050505);
+  background-repeat:no-repeat;
+  background-position:right 10px center,0 0;
+  background-size:12px 12px,100% 100%;
+}
+input:focus,select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 1px rgba(242,214,117,.3);
+}
+
+/* Snapshot KPIs */
+.snapshot{
+  margin-top:10px;
+  border-radius:14px;
+  border:1px solid rgba(214,180,76,.35);
+  padding:8px 10px;
+  background:radial-gradient(circle at top left,rgba(242,214,117,.09),rgba(0,0,0,1));
+}
+.snapshot-title{
+  font-size:10px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--muted);margin-bottom:4px;
+}
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.kpi{
+  padding:6px 8px;
+  border-radius:10px;
+  border:1px solid rgba(214,180,76,.4);
+  background:radial-gradient(circle at top,rgba(242,214,117,.08),rgba(0,0,0,1));
+}
+.kpi-title{
+  font-size:9px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--muted);margin-bottom:1px;
+}
+.kpi-value{font-size:16px;font-weight:700}
+.kpi-sub{font-size:10px;color:var(--muted)}
+
+/* Quick filters */
+.quick-block{
+  margin-top:8px;
+  border-radius:12px;
+  border:1px dashed rgba(214,180,76,.4);
+  padding:8px 10px;
+  background:rgba(0,0,0,.7);
+}
+.quick-label{
+  font-size:9px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--muted);margin-bottom:4px;
+}
+.chip-row{
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.chip{
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:3px 9px;
+  font-size:10px;
+  background:rgba(10,10,10,.85);
+  color:var(--text);
+  cursor:pointer;
+}
+.chip:hover{
+  background:rgba(242,214,117,.16);
+  border-color:var(--accent);
+}
+
+/* View + export */
+.view-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;margin-top:10px;
+}
+.toggle-group{
+  display:inline-flex;
+  padding:2px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.5);
+  background:#020202;
+}
+.toggle-btn{
+  border:none;background:transparent;color:var(--text);
+  font-size:10px;padding:5px 10px;
+  border-radius:999px;
+  cursor:pointer;min-width:70px;
+}
+.toggle-btn.active{
+  background:linear-gradient(135deg,rgba(242,214,117,.9),#f7f1d0);
+  color:#000;
+  box-shadow:0 0 12px rgba(242,214,117,.6);
+}
+.icon-btn{
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.6);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.25),rgba(0,0,0,1));
+  color:var(--text);
+  font-size:10px;
+  padding:5px 10px;
+  display:inline-flex;align-items:center;gap:6px;
+  cursor:pointer;
+}
+.icon-btn span:first-child{font-size:12px}
+.icon-btn:hover{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.45),rgba(0,0,0,1));
+}
+
+/* Main panel header */
+.main-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;margin-bottom:8px;
+}
+.main-title{
+  font-size:12px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--muted);
+}
+.main-sub{font-size:10px;color:var(--muted);}
+.subtle{font-size:10px;color:var(--muted);}
+
+/* Ongoing missions strip */
+.ongoing{
+  margin:4px 0 8px;
+  border-radius:12px;
+  border:1px solid rgba(214,180,76,.35);
+  background:radial-gradient(circle at top,rgba(242,214,117,.06),rgba(0,0,0,.95));
+  padding:7px 9px;
+}
+.ongoing-head{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;margin-bottom:4px;
+}
+.ongoing-list{display:flex;flex-direction:column;gap:3px}
+.ongoing-item{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;font-size:10px;color:var(--muted);
+}
+
+/* Timeline */
+.timeline{
+  position:relative;
+  padding-left:18px;
+  margin-left:2px;
+}
+.timeline::before{
+  content:"";
+  position:absolute;top:0;bottom:0;left:3px;
+  width:2px;
+  background:linear-gradient(to bottom,
+    rgba(214,180,76,.7),
+    rgba(214,180,76,.1));
+  box-shadow:0 0 8px rgba(214,180,76,.7);
+}
+.day-group{margin-bottom:12px}
+.day-header{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.8);
+  background:#050505;
+  font-size:11px;color:var(--accent-soft);
+  margin-bottom:6px;
+}
+.day-header span:nth-child(1){
+  font-size:14px;
+}
+.day-header span:nth-child(2){
+  text-transform:uppercase;letter-spacing:.16em;font-size:10px;
+}
+
+/* Mission cards */
+.op-card{
+  margin-left:10px;
+  margin-bottom:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.06),rgba(0,0,0,.98));
+  padding:8px 10px;
+  cursor:pointer;
+  transition:transform .12s ease-out,box-shadow .12s ease-out,border-color .12s;
+  box-shadow:
+    0 0 0 1px rgba(214,180,76,.35),
+    0 0 14px rgba(214,180,76,.25);
+}
+.op-card:hover{
+  transform:translateY(-1px);
+  border-color:var(--accent);
+  box-shadow:
+    0 0 0 1px rgba(242,214,117,.7),
+    0 0 22px rgba(242,214,117,.45);
+}
+.op-main{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+}
+.op-title{font-size:13px;font-weight:700}
+.op-meta{
+  margin-top:2px;font-size:10px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:5px;
+}
+.op-right{text-align:right;font-size:10px;color:var(--muted)}
+.op-footer{
+  margin-top:6px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:6px;font-size:10px;color:var(--muted);
+}
+.op-tags{
+  margin-top:5px;font-size:11px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:5px;
+}
+.op-tag-pill{
+  border-radius:999px;border:1px dashed rgba(214,180,76,.5);
+  padding:2px 7px;
+}
+.badge{
+  display:inline-flex;align-items:center;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:2px 8px;
+  font-size:10px;
+  background:rgba(0,0,0,.9);
+}
+.badge-type{border-style:solid}
+.badge-status.good-ops{border-color:var(--good);color:var(--good)}
+.badge-status.bad-ops{border-color:var(--bad);color:var(--bad)}
+
 .mono{font-variant-numeric:tabular-nums}
 
-/* Attendance Modal */
-.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
-.modal{background:#0b0b0b;border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:14px;box-shadow:0 0 22px rgba(214,180,76,.25)}
-.modal h3{margin:0 0 10px;color:var(--accent);font-size:16px}
-.modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
-.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
-.modal .chip .x:hover{background:#111;color:#ff6b6b}
-.modal .chip .edit{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:0 6px}
-.modal .chip .edit:hover{background:#111;color:#000;background:var(--accent)}
-.modal .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
-.modal .chip .x{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);padding:0 6px}
-.modal .chip .x:hover{background:#111;color:#ff6b6b}
-.modal .chip .edit{cursor:pointer;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:0 6px}
-.modal .chip .edit:hover{background:#111;color:#000;background:var(--accent)}
-.modal .chip select{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--text);font-family:'Play';font-size:12px}
-.modal .list{display:flex;gap:8px;flex-wrap:wrap}
+/* Table view */
+.hidden{display:none !important}
+.tableWrap{
+  margin-top:6px;
+  border-radius:12px;
+  border:1px solid rgba(214,180,76,.35);
+  overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead{background:#050505}
+th,td{
+  padding:7px 8px;
+  border-bottom:1px solid rgba(214,180,76,.16);
+}
+th{
+  text-align:left;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+}
+tbody tr:nth-child(even){background:rgba(0,0,0,.65)}
+tbody tr:hover{background:rgba(242,214,117,.08)}
+.pill{
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:2px 7px;
+  font-size:9px;
+}
+.small-btn{
+  font-size:10px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.6);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.35),rgba(0,0,0,1));
+  color:var(--text);
+  padding:4px 9px;
+  cursor:pointer;
+}
+.small-btn:hover{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.55),rgba(0,0,0,1));
+}
 
-/* Optional: visual cue for "not_going" chips */
-.chip[data-attendance="not_going"]{
-  border-color: rgba(255,107,107,.6);
-  color: #ff6b6b;
+/* Attendance modal */
+.modal-mask{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.82);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.modal{
+  width:min(640px,100% - 32px);
+  max-height:80vh;
+  overflow:auto;
+  background:#050505;
+  border-radius:20px;
+  border:1px solid rgba(214,180,76,.6);
+  box-shadow:0 26px 80px rgba(0,0,0,.95);
+  padding:14px 16px 16px;
+}
+.modal h3{
+  font-size:14px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.modal .row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  margin:6px 0;
+}
+.modal .list{
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+.modal .chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.4);
+  background:#050505;
+  font-size:11px;
+}
+.modal .chip .x{
+  border:none;
+  background:transparent;
+  color:#ff6b6b;
+  cursor:pointer;
+  font-size:11px;
+}
+.modal .chip .x:hover{background:#111;color:#ff6b6b}
+.modal .chip select{
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:4px 8px;
+  color:var(--text);
+  font-family:'Play';
+  font-size:11px;
+}
+.modal .chip[data-attendance="not_going"]{
+  border-color:rgba(255,107,107,.6);
+  color:#ff6b6b;
 }
 </style>
 </head>
 <body>
-  <!-- 🔁 Shared header mount -->
-  <div id="header-container"></div>
-  <script>
-  (async () => {
-    try {
-      const res = await fetch('header.html', { cache: 'no-cache' });
-      const html = await res.text();
-      document.getElementById('header-container').outerHTML = html;
 
-      // Highlight current tab (triggers shiny sweep ✨)
-      requestAnimationFrame(() => {
-        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-        document.querySelectorAll('.nav-btn').forEach(a => {
-          const href = (a.getAttribute('href')||'').toLowerCase();
-          if (href === here) {
-            a.classList.add('active');
-            a.setAttribute('aria-current','page');
-          }
-        });
-      });
-    } catch (e) {
-      console.warn('Header load failed:', e);
-    }
-  })();
-  </script>
+<!-- Shared header -->
+<div id="header"></div>
 
-  <!-- Main Panel -->
-  <div class="panel">
-    <!-- Controls -->
-    <div class="controls">
-      <input id="search" placeholder="Search... (title, type, status, tags)">
-      <select id="catFilter">
-        <option value="">All Categories</option>
-        <option value="Resource">Resource</option>
-        <option value="Operations">Operations</option>
+<!-- Console + main panel -->
+<div class="grid">
+  <!-- Sidebar / Mission Console -->
+  <aside class="panel">
+    <div class="panel-inner">
+      <div class="console-header">
+        <div class="console-title">Search Console</div>
+        <div class="console-pill">RW Mix · Attendance</div>
+      </div>
+
+      <label class="field-label" for="search">Search</label>
+      <input id="search" type="search" placeholder="Title / type / status / tag…">
+
+      <label class="field-label" for="filterType">Type</label>
+      <select id="filterType">
+        <option value="">All Types</option>
+        <option>hauling</option>
+        <option>cargo</option>
+        <option>salvage</option>
+        <option>mining</option>
+        <option>delivery</option>
+        <option>combat</option>
+        <option>support</option>
       </select>
-      <select id="statusFilter">
+
+      <label class="field-label" for="filterStatus">Status</label>
+      <select id="filterStatus">
         <option value="">All Status</option>
         <option>planned</option>
         <option>active</option>
@@ -175,481 +535,772 @@ tr:hover{background:rgba(214,180,76,.05)}
         <option>fail</option>
         <option>abort</option>
       </select>
-      <button id="exportCsv">Export CSV</button>
+
+      <!-- Snapshot -->
+      <div class="snapshot">
+        <div class="snapshot-title">Operation Snapshot</div>
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-title">Total Operationss</div>
+            <div class="kpi-value" id="kTotalMissions">0</div>
+            <div class="kpi-sub">after filters</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-title">Total Hours</div>
+            <div class="kpi-value" id="kTotalHours">0</div>
+            <div class="kpi-sub">sum of hours</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-title">Payout (aUEC)</div>
+            <div class="kpi-value" id="kTotalPayout">0</div>
+            <div class="kpi-sub">visible missions</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-title">Resource : Ops</div>
+            <div class="kpi-value" id="kMix">0 : 0</div>
+            <div class="kpi-sub">derived from type</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick tags -->
+      <div class="quick-block">
+        <div class="quick-label">Quick Status</div>
+        <div class="chip-row">
+          <button class="chip" data-status-chip="">All</button>
+          <button class="chip" data-status-chip="planned">Planned</button>
+          <button class="chip" data-status-chip="active">Active</button>
+          <button class="chip" data-status-chip="success">Success</button>
+        </div>
+      </div>
+
+      <div class="quick-block">
+        <div class="quick-label">Quick Tags</div>
+        <div class="chip-row">
+          <button class="chip" data-chip="org">Org</button>
+          <button class="chip" data-chip="cargo">Cargo</button>
+          <button class="chip" data-chip="salvage">Salvage</button>
+          <button class="chip" data-chip="mining">Mining</button>
+        </div>
+      </div>
+
+      <!-- View + export -->
+      <div class="view-row">
+        <div class="toggle-group" role="tablist" aria-label="Mission View">
+          <button class="toggle-btn active" data-view="timeline" aria-pressed="true">Timeline</button>
+          <button class="toggle-btn" data-view="table" aria-pressed="false">Table</button>
+        </div>
+        <button id="exportCsv" class="icon-btn" type="button">
+          <span>⇩</span><span>CSV</span>
+        </button>
+      </div>
+
+      <div class="subtle" style="margin-top:4px">
+        Click any card to open attendance.
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <section class="panel">
+    <div class="panel-inner">
+      <div class="main-header">
+        <div>
+          <div class="main-title">Operations Timeline</div>
+          <div class="main-sub">Group by day · see payout &amp; crew at a glance</div>
+        </div>
+        <div class="subtle" id="missionsCountLabel"></div>
+      </div>
+
+      <!-- Ongoing missions -->
+      <div class="ongoing">
+        <div class="ongoing-head">
+          <span><strong>Ongoing Missions</strong></span>
+          <span id="ongoingCount">(0)</span>
+        </div>
+        <div id="ongoingList" class="ongoing-list"></div>
+      </div>
+
+      <!-- Timeline view -->
+      <div id="timelineView" class="timeline"></div>
+
+      <!-- Table view -->
+      <div id="tableView" class="hidden">
+        <div class="subtle" style="margin-bottom:4px">
+          Table view for detailed review &amp; exporting.
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Mission Title</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Origin (Form-up)</th>
+                <th class="nowrap">Date &amp; Time</th>
+                <th class="nowrap">Hours</th>
+                <th class="nowrap">Crew</th>
+                <th class="nowrap">Payout (aUEC)</th>
+                <th>Tags</th>
+                <th>Attachments</th>
+                <th>Notes</th>
+                <th class="nowrap">Attendance</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Attendance Modal -->
+<div id="attModalMask" class="modal-mask" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
+      <button class="small-btn" type="button" onclick="closeAttendance()">Close</button>
     </div>
 
-    <!-- KPI -->
-    <div class="kpis">
-      <div class="kpi">
-        <div class="kpi-title">Total Missions</div>
-        <div class="kpi-value" id="kpiCount">0</div>
-        <div class="kpi-sub">after filters</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-title">Resource : Ops</div>
-        <div class="kpi-value" id="kpiMix">0 : 0</div>
-        <div class="kpi-sub">derived from type</div>
-      </div>
+    <div class="row">
+      <span id="attMeta" class="subtle">Mission meta…</span>
     </div>
 
-    <!-- Ongoing Missions (user-specific) -->
-    <div class="ongoing">
-      <div class="ongoing-head">
-        <strong>Ongoing Missions</strong>
-        <span class="small" id="ongoingCount">(0)</span>
-      </div>
-      <div id="ongoingList" class="ongoing-list"></div>
+    <div class="row" id="attSelfRow" style="display:none">
+      <span class="subtle">Your status:</span>
+      <select id="attSelfSelect">
+        <option value="">(select…)</option>
+        <option value="going">going</option>
+        <option value="not_going">not going</option>
+        <option value="withdraw">withdraw</option>
+      </select>
+      <button id="attSelfSave" class="small-btn" type="button">Save</button>
     </div>
 
-    <!-- Table -->
-    <div class="tableWrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Mission Title</th>
-            <th>Category</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Origin</th>
-            <th>Destination</th>
-            <th class="nowrap">Date &amp; Time</th>
-            <th class="nowrap">Payout (aUEC)</th>
-            <th>Tags</th>
-            <th>Attachments</th>
-            <th>Notes</th>
-            <th class="nowrap">Attendance</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
+    <div class="row" id="attElevatedTools" style="display:none">
+      <input id="attAddEmail" placeholder="Add by email (crew@example.com)"
+             style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text);font-size:11px">
+      <select id="attAddRole"
+              style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text);font-size:11px">
+        <option value="">Role (optional)</option>
+      </select>
+      <button id="attAddBtn" class="small-btn" type="button">Add</button>
+    </div>
+
+    <div class="row">
+      <span class="subtle">Attendees:</span>
+      <div id="attList" class="list"></div>
     </div>
   </div>
+</div>
 
-  <!-- Attendance Modal -->
-  <div id="attModalMask" class="modal-mask" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <h3 id="attTitle" style="margin-right:auto">Attendance</h3>
-        <button class="small-btn" onclick="closeAttendance()">Close</button>
-      </div>
-
-      <div class="row">
-        <button id="attIamGoing" class="small-btn">I’m going</button>
-        <button id="attNotGoing" class="small-btn">Not going</button>
-        <button id="attWithdraw" class="small-btn">Withdraw</button>
-        <select id="attSelfRole" style="min-width:180px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)"></select>
-        <span class="small">Pick <b>your role</b> (optional). Admin/owner can edit anyone.</span>
-      </div>
-
-      <div id="attElevatedTools" class="row" style="display:none">
-        <input id="attAddEmail" placeholder="Add by email (crew@example.com)" style="flex:1;min-width:260px;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-        <select id="attAddRole" style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)">
-  <option value="">Role (optional)</option>
-</select>
-        <button id="attAddBtn" class="small-btn">Add</button>
-        <span class="small">Admin/Officer or mission owner can add/remove anyone.</span>
-      </div>
-
-      <div class="row">
-        <strong class="small">Attendees:</strong>
-        <div id="attList" class="list"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 🔐 Auth & shared client -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/auth.js"></script>
+<!-- Supabase + auth -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 
 <script>
-/* ===== Active nav highlight (fallback) ===== */
-(function(){
-  const here = location.pathname.split('/').pop() || 'mission-log.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){ a.classList.add('active'); a.setAttribute('aria-current','page'); }
-  });
-})();
-
-/* ===== Helpers ===== */
-const $=s=>document.querySelector(s);
-const $$=s=>Array.from(document.querySelectorAll(s));
-const esc=s=>{const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML;};
-const fmtDate = iso => {
-  if(!iso) return '';
-  const d = new Date(iso);
-  return d.toLocaleString('en-SG', {
-    day:'numeric', month:'long', year:'numeric',
-    hour:'numeric', minute:'2-digit', hour12:true
-  }).replace(/\s?([ap])m/i,'$1m');
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => {
+  const d=document.createElement('div');
+  d.textContent = s ?? '';
+  return d.innerHTML;
 };
-const fmtNum=n=> (n||n===0) ? Number(n).toLocaleString() : '';
 
-// Derive category from type without changing DB
 const RESOURCE_TYPES = new Set(['hauling','cargo','salvage','mining','delivery']);
-
-// --- Roles: fetched from DB with safe defaults ---
-let ROLES = [];
-const DEFAULT_ROLES = [
-  { code: 'operations_lead', label: 'operations lead', weight: 0.9 },
-  { code: 'pilot',           label: 'pilot',           weight: 0.7 },
-  { code: 'copilot',         label: 'copilot',         weight: 0.7 },
-  { code: 'escort',          label: 'escort',          weight: 0.7 },
-  { code: 'tactician',       label: 'tactician',       weight: 0.7 },
-  { code: 'fps',             label: 'fps',             weight: 0.7 },
-  { code: 'gunner',          label: 'gunner',          weight: 0.5 },
-  { code: 'hauler',          label: 'hauler',          weight: 0.5 },
-  { code: 'miner',           label: 'miner',           weight: 0.5 },
-  { code: 'salvager',        label: 'salvager',        weight: 0.5 },
-  { code: 'engineer',        label: 'engineer',        weight: 0.5 },
-  { code: 'medic',           label: 'medic',           weight: 0.5 },
-  { code: 'recon',           label: 'recon',           weight: 0.5 },
-  { code: 'runner',          label: 'runner',          weight: 0.5 },
-  { code: 'logistics',       label: 'logistics',       weight: 0.5 },
-  { code: 'security',        label: 'security',        weight: 0.5 }
-];
-async function fetchRoles(){
-  if(!sb){ ROLES = DEFAULT_ROLES; return; }
-  const { data, error } = await sb
-    .from('mission_roles')
-    .select('code,label,weight,sort_order')
-    .order('sort_order', { ascending: true })
-    .order('label', { ascending: true });
-  ROLES = (error || !data || !data.length) ? DEFAULT_ROLES : data;
-}
-function roleOptionsHtml(placeholder){
-  const items = (ROLES.length?ROLES:DEFAULT_ROLES)
-    .map(r=>`<option value="${r.label}">${r.label}</option>`).join('');
-  return `<option value="">${placeholder}</option>` + items;
-}
 function deriveCategory(type){
   const t=(type||'').toString().trim().toLowerCase();
   if(RESOURCE_TYPES.has(t)) return 'Resource';
-  return 'Operations'; // investigation, recon, cqb, vbss, medical, escort, etc.
+  return 'Operations';
 }
 
-/* ===== State ===== */
-let cache=[]; // all missions
-let session=null, sb=null;
-const tbody = $('#tbody');
+function fmtDateTime(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleString('en-SG',{
+    day:'numeric',month:'long',year:'numeric',
+    hour:'numeric',minute:'2-digit',hour12:true
+  }).replace(/\s?([ap])m/i,'$1m');
+}
+function fmtDay(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'});
+}
+function fmtTime(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-SG',{hour:'numeric',minute:'2-digit',hour12:true})
+           .replace(/\s?([ap])m/i,'$1m');
+}
+function fmtNum(n){ return (n||n===0) ? Number(n).toLocaleString() : ''; }
 
-/* ===== Render ===== */
-function attachmentsCell(arr){
-  if(!Array.isArray(arr)||!arr.length) return '';
-  return arr.map((a,i)=>{
-    const name = a?.name?.trim() || `Attachment ${i+1}`;
-    const url  = a?.url || '#';
-    return `<a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">${esc(name)}</a>`;
-  }).join(', ');
+/* Supabase + state */
+let sb = null;
+let session = null;
+let missions = [];
+let ROLES = [];
+
+const DEFAULT_ROLES = [
+  { label:'operations lead' },
+  { label:'pilot' },
+  { label:'copilot' },
+  { label:'escort' },
+  { label:'tactician' },
+  { label:'fps' },
+  { label:'gunner' },
+  { label:'hauler' },
+  { label:'miner' },
+  { label:'salvager' },
+  { label:'engineer' },
+  { label:'medic' },
+  { label:'recon' },
+  { label:'runner' },
+  { label:'logistics' },
+  { label:'security' }
+];
+
+async function fetchRoles(){
+  try{
+    const { data, error } = await sb
+      .from('mission_roles')
+      .select('label,sort_order')
+      .order('sort_order',{ascending:true})
+      .order('label',{ascending:true});
+    if(error || !data || !data.length) ROLES = DEFAULT_ROLES;
+    else ROLES = data;
+  }catch(e){
+    ROLES = DEFAULT_ROLES;
+  }
 }
-function row(r){
-  const cat = deriveCategory(r.type);
-  return `<tr>
-    <td><b style=\"color:var(--accent)\">${esc(r.title||'(untitled)')}</b></td>
-    <td>${cat?`<span class=\"pill ${cat==='Resource'?'res':'op'}\">${cat}</span>`:''}</td>
-    <td>${r.type?`<span class=\"pill\">${esc(r.type)}</span>`:''}</td>
-    <td>${r.status?`<span class=\"pill\">${esc(r.status)}</span>`:''}</td>
-    <td>${esc(r.origin||'')}</td>
-    <td>${esc(r.destination||'')}</td>
-    <td class=\"nowrap mono\">${fmtDate(r.start_time)}</td>
-    <td class=\"mono\">${fmtNum(r.payout_auec)}</td>
-    <td>${esc(r.tags||'')}</td>
-    <td>${attachmentsCell(r.attachments)}</td>
-    <td>${esc(r.notes||'')}</td>
-    <td><button class=\"small-btn\" onclick=\"openAttendance('${r.id}','${esc(r.title||'')}')\">View</button></td>
-  </tr>`;
-}
-function render(list){
-  $('#kpiCount').textContent = (list||[]).length.toLocaleString();
-  const rCount = (list||[]).filter(x=>deriveCategory(x.type)==='Resource').length;
-  const oCount = (list||[]).length - rCount;
-  $('#kpiMix').textContent = `${rCount} : ${oCount}`;
-  tbody.innerHTML = list.length ? list.map(row).join('') :
-    `<tr><td colspan=\"12\" class=\"small\" style=\"padding:10px\">No missions found.</td></tr>`;
+function roleOptionsHtml(placeholder){
+  const opts = (ROLES.length?ROLES:DEFAULT_ROLES)
+    .map(r=>`<option value="${esc(r.label)}">${esc(r.label)}</option>`).join('');
+  return `<option value="">${placeholder}</option>` + opts;
 }
 
-/* ===== Filter + CSV ===== */
+/* Load missions + crew counts */
+async function loadMissions(){
+  const { data, error } = await sb
+    .from('missions')
+    .select('id,title,type,status,origin,start_time,hours,payout_auec,tags,attachments,notes,created_at')
+    .order('start_time',{ascending:false});
+  if(error){
+    $('#tbody').innerHTML =
+      `<tr><td colspan="13" class="subtle">Failed to load missions: ${esc(error.message)}</td></tr>`;
+    missions = [];
+    render();
+    return;
+  }
+  let crewCounts = {};
+  try{
+    const { data:att, error:err2 } = await sb
+      .from('mission_attendees')
+      .select('mission_id,attendance');
+    if(!err2 && att){
+      att.filter(a=>a.attendance==='going').forEach(a=>{
+        crewCounts[a.mission_id] = (crewCounts[a.mission_id]||0)+1;
+      });
+    }
+  }catch(e){}
+
+  missions = (data||[]).map(m=>({
+    ...m,
+    crew_count: crewCounts[m.id] || 0
+  }));
+  render();
+}
+
+/* Filters */
 function getFiltered(){
   const q = ($('#search').value||'').toLowerCase();
-  const cat = ($('#catFilter').value||'');
-  const st = ($('#statusFilter').value||'').toLowerCase();
-  let arr = cache.slice();
-  if(cat) arr = arr.filter(x => deriveCategory(x.type)===cat);
+  const t = ($('#filterType').value||'').toLowerCase();
+  const st = ($('#filterStatus').value||'').toLowerCase();
+
+  let arr = missions.slice();
+  if(t)  arr = arr.filter(x => (x.type||'').toLowerCase()===t);
   if(st) arr = arr.filter(x => (x.status||'').toLowerCase()===st);
-  if(q) arr = arr.filter(x =>
-    `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''} ${x.destination||''}`
-    .toLowerCase().includes(q));
+  if(q){
+    arr = arr.filter(x =>
+      `${x.title||''} ${x.type||''} ${x.status||''} ${x.tags||''} ${x.origin||''}`
+        .toLowerCase().includes(q)
+    );
+  }
   return arr;
 }
-$('#search').addEventListener('input', ()=>render(getFiltered()));
-$('#statusFilter').addEventListener('input', ()=>render(getFiltered()));
-$('#catFilter').addEventListener('input', ()=>render(getFiltered()));
 
-$('#exportCsv').addEventListener('click', ()=>{
-  const rows = getFiltered();
-  const cols = ['title','category','type','status','origin','destination','start_time','payout_auec','tags','notes'];
-  const csv = [
-    cols.join(','),
-    ...rows.map(r => cols.map(k=>{
-      const v = k==='category' ? deriveCategory(r.type) : (r[k]==null?'':String(r[k]).replace(/\"/g,'""'));
-      return `"${v}"`;
-    }).join(','))
-  ].join('\n'); // ✅ fixed newline join to avoid SyntaxError
-  const blob = new Blob([csv],{type:'text/csv'});
-  const url = URL.createObjectURL(blob); const a=document.createElement('a');
-  a.href=url; a.download='missions.csv'; a.click(); URL.revokeObjectURL(url);
+/* Timeline helpers */
+function groupByDay(list){
+  const map = new Map();
+  list.forEach(m=>{
+    const key = fmtDay(m.start_time) || '(no date)';
+    if(!map.has(key)) map.set(key,[]);
+    map.get(key).push(m);
+  });
+  return map;
+}
+function statusIsGood(status){
+  return (status||'').toLowerCase()==='success';
+}
+function statusIsBad(status){
+  const s=(status||'').toLowerCase();
+  return s==='fail'||s==='abort';
+}
+
+function missionCardHtml(m){
+  const cat = deriveCategory(m.type);
+  const tags = (m.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+  const good = statusIsGood(m.status);
+  const bad = statusIsBad(m.status);
+  const crew = m.crew_count || 0;
+  return `
+    <article class="op-card" data-id="${esc(m.id)}" data-title="${esc(m.title||'(untitled mission)')}">
+      <div class="op-main">
+        <div>
+          <div class="op-title">${esc(m.title||'(untitled mission)')}</div>
+          <div class="op-meta">
+            ${cat ? `<span class="badge badge-type">${esc(cat)}</span>` : ''}
+            ${m.type ? `<span class="badge">${esc(m.type)}</span>` : ''}
+            <span class="badge badge-status${bad?' bad-ops':''}${good&&!bad?' good-ops':''}">
+              ${esc(m.status||'—')}
+            </span>
+          </div>
+        </div>
+        <div class="op-right">
+          <div class="mono"><strong>${fmtTime(m.start_time)||'-'}</strong></div>
+          <div class="mono">${m.hours!=null && m.hours!=='' ? `${m.hours} hrs` : ''}</div>
+          <div class="mono">Crew: ${crew || '-'}</div>
+        </div>
+      </div>
+      <div class="op-footer">
+        <div class="mono">Form-up: <strong>${esc(m.origin||'-')}</strong></div>
+        <div class="mono">Payout: <strong>${fmtNum(m.payout_auec)||'-'}</strong></div>
+      </div>
+      ${tags.length ? `
+        <div class="op-tags">
+          ${tags.map(t=>`<span class="op-tag-pill">${esc(t)}</span>`).join('')}
+        </div>` : ''}
+      ${m.notes ? `<div class="subtle" style="margin-top:4px">${esc(m.notes)}</div>` : ''}
+    </article>
+  `;
+}
+
+function renderTimeline(list){
+  const cont = $('#timelineView');
+  if(!list.length){
+    cont.innerHTML = `<div class="subtle">No missions found for current filters.</div>`;
+    return;
+  }
+  const groups = groupByDay(list);
+  let html = '';
+  for(const [day,items] of groups){
+    const d = items[0]?.start_time ? new Date(items[0].start_time) : null;
+    const dow = d ? d.toLocaleDateString('en-SG',{weekday:'short'}) : '';
+    html += `<div class="day-group">
+      <div class="day-header">
+        <span>◎</span>
+        <span>${esc(dow||'')}</span>
+        <span>${esc(day)}</span>
+      </div>`;
+    items.forEach(m => { html += missionCardHtml(m); });
+    html += `</div>`;
+  }
+  cont.innerHTML = html;
+
+  $$('#timelineView .op-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const id = card.dataset.id;
+      const title = card.dataset.title || '';
+      openAttendance(id,title);
+    });
+  });
+}
+
+/* Table render */
+function attachmentsCell(arr){
+  if(!Array.isArray(arr) || !arr.length) return '';
+  return arr.map((a,i)=>{
+    const name = (a && a.name) ? a.name : `Attachment ${i+1}`;
+    const url  = (a && a.url)  ? a.url  : '#';
+    return `<a class="link" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`;
+  }).join(', ');
+}
+
+function rowHtml(r){
+  const cat = deriveCategory(r.type);
+  return `
+    <tr>
+      <td>${esc(r.title||'(untitled)')}</td>
+      <td>${cat ? `<span class="pill">${esc(cat)}</span>` : ''}</td>
+      <td>${r.type ? `<span class="pill">${esc(r.type)}</span>` : ''}</td>
+      <td>${r.status ? `<span class="pill">${esc(r.status)}</span>` : ''}</td>
+      <td>${esc(r.origin||'')}</td>
+      <td class="nowrap mono">${fmtDateTime(r.start_time)}</td>
+      <td class="mono">${r.hours ?? ''}</td>
+      <td class="mono">${r.crew_count || ''}</td>
+      <td class="mono">${fmtNum(r.payout_auec)}</td>
+      <td>${esc(r.tags||'')}</td>
+      <td>${attachmentsCell(r.attachments)}</td>
+      <td>${esc(r.notes||'')}</td>
+      <td><button class="small-btn" type="button" data-att-id="${esc(r.id)}" data-att-title="${esc(r.title||'(untitled)')}">View</button></td>
+    </tr>
+  `;
+}
+
+function renderTable(list){
+  const tbody = $('#tbody');
+  if(!list.length){
+    tbody.innerHTML = `<tr><td colspan="13" class="subtle">No missions found.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(rowHtml).join('');
+  $$('#tbody button[data-att-id]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      openAttendance(btn.dataset.attId,btn.dataset.attTitle);
+    });
+  });
+}
+
+/* KPIs */
+function updateKPIs(list){
+  const total = list.length;
+  const totalHours = list.reduce((s,m)=>s + (Number(m.hours)||0),0);
+  const totalPayout = list.reduce((s,m)=>s + (Number(m.payout_auec)||0),0);
+  const resCount = list.filter(m=>deriveCategory(m.type)==='Resource').length;
+  const opsCount = total - resCount;
+
+  $('#kTotalMissions').textContent = total.toLocaleString();
+  $('#kTotalHours').textContent = totalHours.toLocaleString();
+  $('#kTotalPayout').textContent = fmtNum(totalPayout);
+  $('#kMix').textContent = `${resCount} : ${opsCount}`;
+
+  const label = $('#missionsCountLabel');
+  label.textContent = total ? `${total} mission${total>1?'s':''} in view` : 'No missions in view';
+}
+
+/* Combined render */
+function render(){
+  const list = getFiltered();
+  updateKPIs(list);
+  renderTimeline(list);
+  renderTable(list);
+}
+
+/* Quick controls */
+$('#search').addEventListener('input',render);
+$('#filterType').addEventListener('change',render);
+$('#filterStatus').addEventListener('change',render);
+
+$$('.chip[data-status-chip]').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    const val=chip.dataset.statusChip||'';
+    $('#filterStatus').value = val;
+    render();
+  });
+});
+$$('.chip[data-chip]').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    const tag=chip.dataset.chip||'';
+    if(!tag) return;
+    const input=$('#search');
+    const base=input.value||'';
+    const parts=base.toLowerCase().split(' ').filter(Boolean);
+    if(!parts.includes(tag.toLowerCase())){
+      input.value=(base+' '+tag).trim();
+    }
+    render();
+  });
 });
 
-// --- Minimal runtime self-test for CSV join (does not affect UI) ---
-(function csvJoinSelfTest(){
-  try{
-    const cols=['title'];
-    const rows=[{title:'Test'}];
-    const csv=[cols.join(','), ...rows.map(r=>`"${r.title}"`)].join('\n');
-    console.assert(csv.includes('\n'), 'CSV should contain newline');
-  }catch(_){ /* ignore */ }
+/* View toggle */
+(function(){
+  let current='timeline';
+  const timelineView = $('#timelineView');
+  const tableView = $('#tableView');
+  $$('.toggle-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const target = btn.dataset.view;
+      if(!target || target===current) return;
+      current = target;
+      $$('.toggle-btn').forEach(b=>{
+        const active = b===btn;
+        b.classList.toggle('active',active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      if(current==='timeline'){
+        timelineView.classList.remove('hidden');
+        tableView.classList.add('hidden');
+      }else{
+        tableView.classList.remove('hidden');
+        timelineView.classList.add('hidden');
+      }
+    });
+  });
 })();
 
-/* ===== Load (uses shared Supabase from auth.js) ===== */
+/* CSV export */
+$('#exportCsv').addEventListener('click',()=>{
+  const list = getFiltered();
+  const cols = ['title','category','type','status','origin','start_time','hours','crew_count','payout_auec','tags','notes'];
+  const lines = [
+    cols.join(','),
+    ...list.map(m=>cols.map(col=>{
+      const v = col==='category' ? deriveCategory(m.type) : (m[col]==null?'':String(m[col]));
+      return `"${v.replace(/"/g,'""')}"`;
+    }).join(','))
+  ];
+  const blob = new Blob([lines.join('\n')],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='missions.csv';a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* Ongoing missions (user going + planned/active) */
+async function loadOngoing(){
+  if(!session || !sb) return;
+  const { data:att, error:e1 } = await sb
+    .from('mission_attendees')
+    .select('mission_id,attendance,user_id')
+    .eq('user_id',session.user.id)
+    .eq('attendance','going');
+  if(e1){
+    $('#ongoingList').innerHTML =
+      `<div class="subtle" style="color:var(--bad)">Failed to load: ${esc(e1.message)}</div>`;
+    $('#ongoingCount').textContent='(0)';
+    return;
+  }
+  const ids = (att||[]).map(a=>a.mission_id);
+  if(!ids.length){
+    $('#ongoingList').innerHTML =
+      `<div class="subtle">No ongoing missions yet.</div>`;
+    $('#ongoingCount').textContent='(0)';
+    return;
+  }
+  const { data:rows, error:e2 } = await sb
+    .from('missions')
+    .select('id,title,status,start_time,origin')
+    .in('id',ids)
+    .in('status',['planned','active'])
+    .order('start_time',{ascending:true});
+  if(e2){
+    $('#ongoingList').innerHTML =
+      `<div class="subtle" style="color:var(--bad)">Failed to load: ${esc(e2.message)}</div>`;
+    $('#ongoingCount').textContent='(0)';
+    return;
+  }
+  const list = rows||[];
+  $('#ongoingCount').textContent = `(${list.length})`;
+  $('#ongoingList').innerHTML = list.map(r=>`
+    <div class="ongoing-item">
+      <span><strong>${esc(r.title||'(untitled)')}</strong></span>
+      <span class="mono">${fmtDateTime(r.start_time)}</span>
+    </div>
+  `).join('');
+}
+
+/* Attendance modal */
+let ATT_MISSION_ID = null;
+
+function closeAttendance(){
+  $('#attModalMask').style.display='none';
+  $('#attModalMask').setAttribute('aria-hidden','true');
+  ATT_MISSION_ID = null;
+}
+window.closeAttendance = closeAttendance;
+
+async function openAttendance(id,title){
+  ATT_MISSION_ID = id;
+  $('#attTitle').textContent = title || 'Attendance';
+  $('#attModalMask').style.display='flex';
+  $('#attModalMask').setAttribute('aria-hidden','false');
+
+  const m = missions.find(x=>x.id===id);
+  const meta = m
+    ? `${fmtDateTime(m.start_time)} · Form-up: ${m.origin||'-'}`  
+    : '';
+  $('#attMeta').textContent = meta;
+
+  $('#attAddRole').innerHTML = roleOptionsHtml('Role (optional)');
+
+  // self row
+  if(session && session.user){
+    $('#attSelfRow').style.display='flex';
+  }else{
+    $('#attSelfRow').style.display='none';
+  }
+
+  $('#attSelfSave').onclick = async () => {
+    const val = $('#attSelfSelect').value || null;
+    if(!val){ alert('Select your attendance status');return; }
+
+    if(val === 'withdraw'){
+      // withdraw = delete the row instead of saving invalid status
+      const { error } = await sb
+        .from('mission_attendees')
+        .delete()
+        .eq('mission_id',ATT_MISSION_ID)
+        .eq('user_id',session.user.id);
+      if(error){ alert('Save failed: '+error.message);return; }
+      $('#attSelfSelect').value = '';
+    } else {
+      const { error } = await sb
+        .from('mission_attendees')
+        .upsert({
+          mission_id: ATT_MISSION_ID,
+          user_id: session.user.id,
+          attendance: val
+        },{ onConflict:'mission_id,user_id' });
+      if(error){ alert('Save failed: '+error.message);return; }
+    }
+
+    await loadAttendees();
+    await loadOngoing();
+    await loadMissions(); // refresh crew counts
+  };
+
+  $('#attAddBtn').onclick = async () => {
+    const email = $('#attAddEmail').value.trim();
+    const role  = $('#attAddRole').value || null;
+    if(!email){ alert('Enter an email');return; }
+    const { error } = await sb.rpc('add_attendee_by_email',{
+
+      p_mission: ATT_MISSION_ID,
+      p_email: email,
+      p_role: role,
+      p_attendance: 'going'
+    });
+    if(error){ alert('Add failed: '+error.message);return; }
+    $('#attAddEmail').value='';$('#attAddRole').value='';
+    await loadAttendees();
+    await loadOngoing();
+    await loadMissions();
+  };
+
+  await loadAttendees();
+}
+window.openAttendance = openAttendance;
+
+async function loadAttendees(){
+  const listEl = $('#attList');
+  listEl.innerHTML = '<span class="subtle">Loading…</span>';
+
+  const { data, error } = await sb
+    .from('v_mission_attendees_detailed')
+    .select('*')
+    .eq('mission_id',ATT_MISSION_ID)
+    .order('joined_at',{ascending:true});
+  if(error){
+    listEl.innerHTML = `<span class="subtle" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`;
+    return;
+  }
+  const rows = data || [];
+  if(!rows.length){
+    listEl.innerHTML = '<span class="subtle">No attendees yet.</span>';
+    return;
+  }
+
+  // elevated / owner?
+  let canManageAll = false;
+  try{
+    const [{ data: elev }, { data: mission, error: mErr }] = await Promise.all([
+      sb.rpc('is_elevated',{u:session.user.id}),
+      sb.from('missions').select('submitted_by').eq('id',ATT_MISSION_ID).single()
+    ]);
+    if(!mErr){
+      canManageAll = !!(elev || (mission && mission.submitted_by===session.user.id));
+    }
+  }catch(e){}
+
+  listEl.innerHTML='';
+  rows.forEach(a=>{
+    const chip=document.createElement('div');
+    chip.className='chip';
+    chip.dataset.attendance = (a.attendance||'').toLowerCase();
+    const canEdit = canManageAll || a.user_id===session.user.id;
+
+    const selectHtml = `<select data-uid="${esc(a.user_id)}" ${canEdit?'':'disabled'}>
+      ${roleOptionsHtml('role')}
+    </select>`;
+
+    chip.innerHTML = `
+      <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
+      ${selectHtml}
+      <span class="subtle">${esc(a.attendance||'')}</span>
+      ${canEdit ? `<button class="x" type="button" data-uid="${esc(a.user_id)}">x</button>` : ''}
+    `;
+
+    const sel = chip.querySelector('select');
+    if(sel){ sel.value = a.role_in_mission || ''; }
+
+    if(canEdit){
+      const xBtn = chip.querySelector('button.x');
+      if(xBtn){
+        xBtn.addEventListener('click',async()=>{
+          const uid = xBtn.getAttribute('data-uid');
+          const { error } = await sb
+            .from('mission_attendees')
+            .delete()
+            .eq('mission_id',ATT_MISSION_ID)
+            .eq('user_id',uid);
+          if(error){ alert('Remove failed: '+error.message);return; }
+          await loadAttendees();
+          await loadOngoing();
+          await loadMissions();
+        });
+      }
+      if(sel){
+        sel.addEventListener('change',async()=>{
+          const uid = sel.getAttribute('data-uid');
+          const role = sel.value || null;
+          const { error } = await sb
+            .from('mission_attendees')
+            .update({ role_in_mission: role })
+            .eq('mission_id',ATT_MISSION_ID)
+            .eq('user_id',uid);
+          if(error){ alert('Update failed: '+error.message);return; }
+          await loadAttendees();
+        });
+      }
+    }
+
+    listEl.appendChild(chip);
+  });
+
+  $('#attElevatedTools').style.display = canManageAll ? 'flex' : 'none';
+}
+
+/* Init */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  session = await requireAuth();        // redirects to auth.html if not logged in
+  // 1) Inject shared header
+  try{
+    const host = document.getElementById('header');
+    if(host){
+      const res = await fetch('header.html');
+      host.innerHTML = await res.text();
+
+      // highlight current page in nav
+      const here = location.pathname.split('/').pop() || 'mission-log.html';
+      host.querySelectorAll('.nav-btn').forEach(a=>{
+        if(a.getAttribute('href')===here){
+          a.classList.add('active');
+        }
+      });
+    }
+  }catch(e){
+    console.error('Failed to load header.html', e);
+  }
+
+  // 2) Auth + data
+  session = await requireAuth();
   if(!session) return;
   sb = getSupabase();
   await fetchRoles();
   await loadMissions();
   await loadOngoing();
 });
-
-async function loadMissions(){
-  const { data, error } = await sb
-    .from('missions')
-    .select('id,title,type,status,origin,destination,start_time,hours,payout_auec,tags,attachments,notes,created_at')
-    .order('created_at',{ascending:false});
-
-  if(error){
-    $('#tbody').innerHTML = `<tr><td colspan=\"12\" class=\"small\" style=\"padding:10px\">Failed to load missions: ${esc(error.message)}</td></tr>`;
-    return;
-  }
-  cache = data || [];
-  render(getFiltered());
-}
-
-/* ===== Ongoing (user “going” + Planned/Active) ===== */
-async function loadOngoing(){
-  if(!session || !sb) return;
-
-  const { data: att, error: err1 } = await sb
-    .from('mission_attendees')
-    .select('mission_id')
-    .eq('user_id', session.user.id)
-    .eq('attendance', 'going');
-
-  if(err1){ return renderOngoing([], 'Failed to load: ' + err1.message); }
-
-  const ids = (att||[]).map(a => a.mission_id);
-  if(!ids.length){ return renderOngoing([]); }
-
-  const { data: rows, error: err2 } = await sb
-    .from('missions')
-    .select('id,title,status,start_time,origin,destination')
-    .in('id', ids)
-    .in('status', ['planned','active'])
-    .order('start_time', { ascending: true });
-
-  if(err2){ return renderOngoing([], 'Failed to load: ' + err2.message); }
-
-  renderOngoing(rows||[]);
-}
-function renderOngoing(rows, errMsg){
-  const list = document.getElementById('ongoingList');
-  const count = document.getElementById('ongoingCount');
-  count.textContent = `(${rows?.length || 0})`;
-
-  if(errMsg){
-    list.innerHTML = `<div class=\"small\" style=\"color:var(--bad)\">${esc(errMsg)}</div>`;
-    return;
-  }
-  if(!rows || !rows.length){
-    list.innerHTML = `<div class=\"small\">No ongoing missions yet. Join one via <b>Attendance</b> in the table.</div>`;
-    return;
-  }
-
-  list.innerHTML = rows.map(r => `
-    <div class=\"ongoing-item\">
-      <div>
-        <div class=\"ongoing-title\">${esc(r.title || '(untitled)')}</div>
-        <div class=\"ongoing-meta\">
-          ${esc(r.status || '')} • ${r.start_time ? fmtDate(r.start_time) : 'TBA'}
-          ${r.origin || r.destination ? ` • ${esc(r.origin||'')} → ${esc(r.destination||'')}` : ''}
-        </div>
-      </div>
-      <span class=\"pill\">${esc(r.status)}</span>
-      <button class=\"ongoing-open\" onclick=\"openAttendance('${r.id}','${esc(r.title||'')}')\">Attendance</button>
-    </div>
-  `).join('');
-}
-window.refreshOngoing = loadOngoing;
-
-/* ===== Attendance popup logic ===== */
-let ATT_MISSION_ID = null;
-
-async function openAttendance(missionId, title=''){
-  ATT_MISSION_ID = missionId;
-  document.getElementById('attTitle').textContent = `Attendance — ${title || missionId.slice(0,8)}`;
-  document.getElementById('attModalMask').style.display = 'flex';
-
-  // show elevated tools if admin/officer or mission owner
-  const [{ data: elev }, { data: mission }] = await Promise.all([
-    sb.rpc('is_elevated', { u: session.user.id }),
-    sb.from('missions').select('submitted_by').eq('id', missionId).single()
-  ]);
-  const isOwner = mission?.submitted_by === session.user.id;
-  document.getElementById('attElevatedTools').style.display = (elev || isOwner) ? 'flex' : 'none';
-
-  // Prepare self-role & admin add-role dropdowns (ensure roles loaded)
-  if(!ROLES.length) { await fetchRoles(); }
-  const roleSel = document.getElementById('attSelfRole');
-  const addRoleSel = document.getElementById('attAddRole');
-  if(roleSel){ roleSel.innerHTML = roleOptionsHtml('My role (optional)'); }
-  if(addRoleSel){ addRoleSel.innerHTML = roleOptionsHtml('Role (optional)'); }
-  try{
-    const { data: mine } = await sb
-      .from('mission_attendees')
-      .select('role_in_mission')
-      .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id })
-      .limit(1);
-    if(Array.isArray(mine) && mine[0] && roleSel){
-      roleSel.value = mine[0].role_in_mission || '';
-    }
-  }catch(_){ /* ignore */ }
-
-  document.getElementById('attIamGoing').onclick = async () => {
-    const role = (document.getElementById('attSelfRole').value || '').trim();
-    await sb.from('mission_attendees').upsert({
-      mission_id: ATT_MISSION_ID,
-      user_id: session.user.id,
-      attendance: 'going',
-      role_in_mission: role || null
-    }, { onConflict: 'mission_id,user_id' });
-    await loadAttendees();
-    await refreshOngoing();
-  };
-
-  document.getElementById('attNotGoing').onclick = async () => {
-    await sb.from('mission_attendees').upsert({
-      mission_id: ATT_MISSION_ID,
-      user_id: session.user.id,
-      attendance: 'not_going'
-    }, { onConflict: 'mission_id,user_id' });
-    await loadAttendees();
-    await refreshOngoing();
-  };
-
-  document.getElementById('attWithdraw').onclick = async () => {
-    await sb.from('mission_attendees')
-      .delete()
-      .match({ mission_id: ATT_MISSION_ID, user_id: session.user.id });
-    await loadAttendees();
-    await refreshOngoing();
-  };
-
-  document.getElementById('attAddBtn').onclick = async () => {
-    const email = document.getElementById('attAddEmail').value.trim();
-    const role  = document.getElementById('attAddRole').value || null;
-    if(!email){ alert('Enter an email'); return; }
-    const { error } = await sb.rpc('add_attendee_by_email', {
-      p_mission: ATT_MISSION_ID,
-      p_email: email,
-      p_role: role,
-      p_attendance: 'going'
-    });
-    if(error){ alert('Add failed: ' + error.message); return; }
-    document.getElementById('attAddEmail').value=''; document.getElementById('attAddRole').value='';
-    await loadAttendees();
-    await refreshOngoing();
-  };
-
-  await loadAttendees();
-}
-
-function closeAttendance(){
-  document.getElementById('attModalMask').style.display = 'none';
-  ATT_MISSION_ID = null;
-}
-window.openAttendance = openAttendance;
-window.closeAttendance = closeAttendance;
-
-async function loadAttendees(){
-  const list = document.getElementById('attList');
-  list.innerHTML = '<span class="small">Loading…</span>';
-
-  const { data, error } = await sb
-    .from('v_mission_attendees_detailed')
-    .select('*')
-    .eq('mission_id', ATT_MISSION_ID)
-    .order('joined_at', { ascending: true });
-
-  if(error){ list.innerHTML = `<span class="small" style="color:var(--bad)">Load failed: ${esc(error.message)}</span>`; return; }
-  if(!data?.length){ list.innerHTML = '<span class="small">No attendees yet.</span>'; return; }
-
-  const [{ data: elev }, { data: mission }] = await Promise.all([
-    sb.rpc('is_elevated', { u: session.user.id }),
-    sb.from('missions').select('submitted_by').eq('id', ATT_MISSION_ID).single()
-  ]);
-  const canManageAll = (elev || mission?.submitted_by === session.user.id);
-
-  list.innerHTML = '';
-  for(const a of data){
-    const chip = document.createElement('div');
-    const canEdit = (canManageAll || a.user_id === session.user.id);
-    chip.className = 'chip';
-    chip.setAttribute('data-attendance', (a.attendance || '').toLowerCase());
-
-    // Build role <select>
-    const options = ['<option value="">role</option>', ...(ROLES.length?ROLES:DEFAULT_ROLES).map(r=>`<option value="${r.label}">${r.label}</option>`)].join('');
-    const selectHtml = `<select data-uid="${a.user_id}" ${canEdit?'':'disabled'}>${options}</select>`;
-
-    chip.innerHTML = `
-      <span>${esc(a.attendee_name || a.user_id.slice(0,8))}</span>
-      ${selectHtml}
-      <span class="small" style="color:var(--muted)">${esc(a.attendance||'')}</span>
-      ${ canEdit ? `<button class="x" title="Remove" data-uid="${a.user_id}">x</button>` : '' }
-    `;
-
-    // set current role value
-    const sel = chip.querySelector('select');
-    if(sel){ sel.value = a.role_in_mission || ''; }
-
-    // handle role changes
-    if(sel && canEdit){
-      sel.onchange = async (e)=>{
-        const newRole = e.target.value || null;
-        const targetUser = e.target.getAttribute('data-uid');
-        const { error: upErr } = await sb
-          .from('mission_attendees')
-          .update({ role_in_mission: newRole })
-          .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
-        if(upErr){ alert('Update failed: ' + upErr.message); e.target.value = a.role_in_mission || ''; return; }
-        await loadAttendees();
-      };
-    }
-
-    // remove button
-    const x = chip.querySelector('.x');
-    if(x){
-      x.onclick = async () => {
-        const targetUser = x.getAttribute('data-uid');
-        const { error: delErr } = await sb
-          .from('mission_attendees')
-          .delete()
-          .match({ mission_id: ATT_MISSION_ID, user_id: targetUser });
-        if(delErr){ alert('Remove failed: ' + delErr.message); return; }
-        await loadAttendees();
-        await refreshOngoing();
-      };
-    }
-    list.appendChild(chip);
-  }
-}
 </script>
 </body>
 </html>
