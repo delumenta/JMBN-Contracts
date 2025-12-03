@@ -241,7 +241,6 @@ body{
 }
 @media(max-width:880px){.grid-2{grid-template-columns:1fr}}
 
-/* Cards */
 .card{
   border-radius:12px;
   background:var(--row);
@@ -357,29 +356,6 @@ tr:hover{background:#161616}
   background:transparent;
 }
 .bad{color:var(--danger)}
-
-/* Image blocks for Link Discord tab */
-.img-wrap{
-  margin:8px 0;
-  border-radius:10px;
-  overflow:hidden;
-  border:1px solid rgba(214,180,76,.6);
-  background:#000;
-}
-.img-wrap img{
-  display:block;
-  width:100%;
-  height:auto;
-}
-.img-caption{
-  padding:6px 8px;
-  font-size:11px;
-  color:var(--muted);
-  border-top:1px solid rgba(214,180,76,.4);
-  background:#050505;
-}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
 </style>
 </head>
 
@@ -488,31 +464,6 @@ a:hover{text-decoration:underline}
         <p class="section-sub">
           Linking your Discord unlocks your JMBN profile, mission attendance, CI tracking, and payouts.
         </p>
-
-        <!-- Visual Step-by-step with images -->
-        <div class="img-wrap">
-          <img src="https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/LinkAccount/Step1.png" alt="Click Link Discord on the JMBN dashboard">
-          <div class="img-caption">
-            <b>Step 1 —</b> On the
-            <a href="https://delumenta.github.io/JMBN/index.html" target="_blank">JMBN Dashboard</a>,
-            click <b>Link Discord</b>.
-          </div>
-        </div>
-
-        <div class="img-wrap">
-          <img src="https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/LinkAccount/Step2.png" alt="One-time JMBN code appears">
-          <div class="img-caption">
-            <b>Step 2 —</b> A one-time link code appears.  
-            Copy it exactly (it expires after a short time).
-          </div>
-        </div>
-
-        <div class="img-wrap">
-          <img src="https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/LinkAccount/Step%203.png" alt="Paste code into /link command in Discord">
-          <div class="img-caption">
-            <b>Step 3 —</b> In Discord, paste the code into the <code>/link</code> command, then confirm.
-          </div>
-        </div>
 
         <div class="grid-2">
           <div class="card">
