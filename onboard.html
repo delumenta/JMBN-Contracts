@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Discord Onboarding Portal</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
+
+<style>
+:root{
+  --bg:#000;
+  --panel:#0b0b0b;
+  --border:#d6b44c;
+  --accent:#f2d675;
+  --accent-soft:#c9b06a;
+  --danger:#ff6b6b;
+  --text:#f7f1d0;
+  --muted:#c9b06a;
+  --row:#101010;
+
+  --fs-base:14px;
+  --fs-small:11px;
+  --fs-h1:clamp(20px,2.4vw,26px);
+  --fs-h2:clamp(14px,1.8vw,18px);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:16px;
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size:var(--fs-base);
+  color:var(--text);
+  background:
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.10), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.08), transparent 60%),
+    #000;
+  letter-spacing:.25px;
+}
+
+/* === Brand Header === */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 10px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.brand-logo{
+  width:46px; height:46px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.35));
+}
+.brand-main{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.brand-main h1{
+  margin:0;
+  font-size:var(--fs-h1);
+  color:var(--accent);
+}
+.brand-main span{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* === Main Layout === */
+.layout{
+  display:grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap:14px;
+  margin-top:10px;
+}
+@media(max-width:960px){
+  .layout{grid-template-columns:1fr}
+}
+
+/* === Left column: Quick Start === */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  box-shadow:
+    0 0 18px rgba(214,180,76,.22),
+    inset 0 0 0 1px rgba(214,180,76,.10);
+}
+.panel-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.panel-header h2{
+  margin:0;
+  font-size:var(--fs-h2);
+  color:var(--accent);
+}
+.chip{
+  border-radius:999px;
+  border:1px solid var(--border);
+  padding:4px 10px;
+  font-size:11px;
+  color:var(--accent);
+  background:#060606;
+}
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.step{
+  border-radius:12px;
+  padding:10px;
+  background:
+    radial-gradient(400px 200px at 120% -50%, rgba(242,214,117,.10), transparent 60%),
+    #0c0c0c;
+  border:1px solid rgba(214,180,76,.55);
+}
+.step-head{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:4px;
+}
+.step-num{
+  width:20px;height:20px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  display:grid;place-items:center;
+  font-size:11px;
+  color:var(--accent);
+}
+.step-title{
+  font-size:13px;
+  font-weight:700;
+}
+.step-body{
+  font-size:12px;
+  color:var(--muted);
+}
+.step-body b{color:var(--accent)}
+
+/* Quick metrics / notes */
+.quick-notes{
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px dashed rgba(214,180,76,.35);
+  font-size:12px;
+  color:var(--muted);
+}
+.quick-notes b{color:var(--accent)}
+
+/* === Right column: Tabbed content === */
+.tabs-header{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:10px;
+}
+.tab-btn{
+  --ring:#d6b44c;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--ring);
+  background:linear-gradient(180deg,#0c0c0c,#050505);
+  color:var(--accent);
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+}
+.tab-btn span.ic{
+  width:16px;height:16px;
+  border-radius:50%;
+  border:1px solid rgba(214,180,76,.6);
+  display:grid;place-items:center;
+  font-size:11px;
+}
+.tab-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.18);
+}
+.tab-btn.active{
+  color:#000;
+  background:
+    radial-gradient(120% 120% at 80% -20%, rgba(255,255,255,.36), rgba(255,255,255,0) 40%),
+    linear-gradient(180deg,#f2d675,#e7c760);
+  box-shadow:0 0 20px rgba(214,180,76,.45), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.tab-btn.active span.ic{
+  background:rgba(0,0,0,.14);
+  color:#000;
+  border-color:rgba(0,0,0,.3);
+}
+
+/* Tab content */
+.tab-panel{
+  display:none;
+  background:#050505;
+  border-radius:14px;
+  padding:12px;
+  border:1px solid rgba(214,180,76,.5);
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.08);
+}
+.tab-panel.active{display:block}
+
+.section-title{
+  font-size:var(--fs-h2);
+  color:var(--accent);
+  margin:0 0 6px;
+}
+.section-sub{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+
+/* Content layouts */
+.grid-2{
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  gap:12px;
+}
+@media(max-width:880px){.grid-2{grid-template-columns:1fr}}
+
+.card{
+  border-radius:12px;
+  background:var(--row);
+  border:1px solid rgba(214,180,76,.45);
+  padding:10px;
+}
+.card h3{
+  margin:0 0 4px;
+  font-size:13px;
+  color:var(--accent);
+}
+.card p{
+  margin:0;
+  font-size:12px;
+  color:var(--muted);
+}
+.card ul{
+  margin:6px 0 0 16px;
+  padding:0;
+  font-size:12px;
+  color:var(--muted);
+}
+.card li{margin-bottom:3px}
+
+/* Inline highlight */
+kbd{
+  display:inline-block;
+  padding:2px 6px;
+  border-radius:4px;
+  border:1px solid rgba(214,180,76,.7);
+  background:#121212;
+  font-size:11px;
+}
+
+/* Table */
+.table-wrap{
+  margin-top:8px;
+  border-radius:10px;
+  overflow:auto;
+  border:1px solid rgba(214,180,76,.5);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+th,td{
+  padding:7px 8px;
+  border-bottom:1px solid rgba(214,180,76,.25);
+}
+th{
+  background:#0b0b0b;
+  color:var(--accent);
+  text-align:left;
+  font-weight:600;
+}
+tr:nth-child(even){background:#101010}
+tr:hover{background:#161616}
+
+/* FAQ list */
+.faq-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.faq-item{
+  padding:8px 9px;
+  border-radius:10px;
+  background:#0a0a0a;
+  border:1px solid rgba(214,180,76,.4);
+}
+.faq-q{
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent);
+  margin-bottom:3px;
+}
+.faq-a{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* Tips */
+.tip{
+  margin-top:8px;
+  font-size:11px;
+  color:var(--muted);
+}
+.tip b{color:var(--accent)}
+
+/* Buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:7px 11px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#050505);
+  color:var(--accent);
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  cursor:pointer;
+  transition:.2s;
+}
+.btn:hover{
+  background:var(--accent);
+  color:#000;
+}
+.btn-ghost{
+  background:transparent;
+}
+.bad{color:var(--danger)}
+</style>
+</head>
+
+<body>
+  <!-- Brand -->
+  <header class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png/v1/fill/w_66,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/0_New_JMBN_Logo_Gold.png" alt="JMBN Logo">
+    <div class="brand-main">
+      <h1>JMBN Discord Onboarding Portal</h1>
+      <span>Link your account • Join missions • Track attendance • Earn your share</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- LEFT: Quick start steps -->
+    <aside class="panel">
+      <div class="panel-header">
+        <h2>Quick Start</h2>
+        <span class="chip">New Crew Checklist</span>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-num">1</div>
+            <div class="step-title">Link your Discord account</div>
+          </div>
+          <div class="step-body">
+            Click <b>Link Discord</b> on the website, copy your unique key, then go to Discord and use the link command with that key.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-head">
+            <div class="step-num">2</div>
+            <div class="step-title">Set up your JMBN profile</div>
+          </div>
+          <div class="step-body">
+            Choose your callsign, roles you enjoy (Hauling, Escort, VBSS, Medical, etc.), and confirm your time zone.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-head">
+            <div class="step-num">3</div>
+            <div class="step-title">Join your first mission</div>
+          </div>
+          <div class="step-body">
+            Check the <b>Mission Log</b> or Discord mission channel, then click <b>I’m Going</b> on a mission to reserve your slot.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-head">
+            <div class="step-num">4</div>
+            <div class="step-title">Earn CI & payouts</div>
+          </div>
+          <div class="step-body">
+            Every mission adds to your <b>Contribution Index (CI)</b>. At payout time, your CI determines your share of the monthly pool.
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-notes">
+        <p><b>Reminder:</b> We focus on multi-crew gameplay, capital ship ops, VHRTs, patrols, cargo, escorts, and VBSS/FPS when needed.</p>
+        <p style="margin-top:4px">
+          <b>Progression:</b> Enlisted → Warrant → Officer.<br>
+          If you can perform, you’ll get the platform to perform — no gatekeeping.
+        </p>
+      </div>
+    </aside>
+
+    <!-- RIGHT: Tabbed content -->
+    <section class="panel">
+      <!-- Tabs -->
+      <nav class="tabs-header">
+        <button class="tab-btn active" data-tab="tab-link">
+          <span class="ic">1</span>
+          <span>Link Discord</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-profile">
+          <span class="ic">2</span>
+          <span>Profile & Ranks</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-missions">
+          <span class="ic">3</span>
+          <span>Missions & Attendance</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-certs">
+          <span class="ic">4</span>
+          <span>Certifications & CI</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-faq">
+          <span class="ic">?</span>
+          <span>FAQ / Troubleshooting</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-commands">
+          <span class="ic">/</span>
+          <span>Command Summary</span>
+        </button>
+      </nav>
+
+      <!-- TAB: Link Discord -->
+      <div class="tab-panel active" id="tab-link">
+        <h2 class="section-title">Step 1 — Link Your Discord Account</h2>
+        <p class="section-sub">
+          Linking your Discord unlocks your JMBN profile, mission attendance, CI tracking, and payouts.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>How the link works</h3>
+            <p>Follow these steps:</p>
+            <ul>
+              <li>1. On the JMBN website, click <b>“Link Discord”</b>.</li>
+              <li>2. You’ll receive a <b>unique link key</b> (a short code).</li>
+              <li>3. Go to the JMBN Discord server.</li>
+              <li>4. Use the link command with your key:
+                <br><kbd>/link &lt;your-key-here&gt;</kbd>
+              </li>
+              <li>5. If successful, the bot will confirm and your account will be linked.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>What gets linked?</h3>
+            <ul>
+              <li>Your Discord ID ↔ JMBN profile record.</li>
+              <li>Your in-game handle / callsign.</li>
+              <li>Your rank and certifications.</li>
+              <li>Mission attendance and CI history.</li>
+            </ul>
+            <p style="margin-top:6px">
+              Once linked, you’ll be able to use profile, mission, and certification commands directly from Discord.
+            </p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <b>Tip:</b> Keep your link key private. If you ever feel it was exposed, ask staff to invalidate and regenerate one.
+        </div>
+      </div>
+
+      <!-- TAB: Profile & Ranks -->
+      <div class="tab-panel" id="tab-profile">
+        <h2 class="section-title">Step 2 — Your Profile & Rank Progression</h2>
+        <p class="section-sub">
+          Your profile is your identity inside JMBN — it tracks who you are, what you fly, and where you stand.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Profile Overview</h3>
+            <p>You can view your profile in Discord anytime:</p>
+            <ul>
+              <li><kbd>/profile</kbd> — View your own profile.</li>
+              <li><kbd>/profile view @member</kbd> — View someone else’s profile (if allowed).</li>
+            </ul>
+            <p style="margin-top:6px">
+              A profile usually includes:
+            </p>
+            <ul>
+              <li>• Callsign / handle</li>
+              <li>• Primary roles (Hauling / Escort / VBSS / Medical / etc.)</li>
+              <li>• Current rank (Enlisted, Warrant, Officer)</li>
+              <li>• Contribution Index (CI)</li>
+              <li>• Certifications & key ships</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Ranks & Expectations</h3>
+            <p>JMBN rank is based on <b>trust, performance, and consistency</b> — not favoritism.</p>
+            <ul>
+              <li><b>Enlisted:</b> New crew, learning the SOPs, showing up to missions.</li>
+              <li><b>Warrant:</b> Proven operators who can take ownership of tasks.</li>
+              <li><b>Officer:</b> Mission leaders, planners, and organizers.</li>
+            </ul>
+            <p style="margin-top:6px">
+              If you perform and you’re reliable, your path upwards is open. We don’t gatekeep — we support.
+            </p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <b>Tip:</b> Keep your roles updated so planners know where to place you in multi-crew setups.
+        </div>
+      </div>
+
+      <!-- TAB: Missions & Attendance -->
+      <div class="tab-panel" id="tab-missions">
+        <h2 class="section-title">Step 3 — Missions, Attendance & Payouts</h2>
+        <p class="section-sub">
+          Missions are the heart of JMBN. The Discord bot ties missions, attendance, and CI together so we can pay everyone fairly.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Joining Missions</h3>
+            <p>Typical flow:</p>
+            <ul>
+              <li>1. A mission is created via <kbd>/mission create</kbd> (by staff or a trusted planner).</li>
+              <li>2. The bot posts an embed with mission details and buttons.</li>
+              <li>3. Click <b>I’m Going</b> to join the roster.</li>
+              <li>4. If plans change, click <b>Withdraw</b> or <b>Not Going</b>.</li>
+            </ul>
+            <p style="margin-top:6px">
+              Attendance is automatically logged and synced to the Mission Log & CI system.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Viewing Missions</h3>
+            <ul>
+              <li><kbd>/mission list</kbd> — View upcoming / active missions.</li>
+              <li><kbd>/mission view &lt;id&gt;</kbd> — View a single mission’s details.</li>
+            </ul>
+            <p style="margin-top:6px">
+              Missions typically include:
+            </p>
+            <ul>
+              <li>• Title & mission type (Hauling, Patrol, Escort, VBSS)</li>
+              <li>• Date/time & duration</li>
+              <li>• Planned payout and split</li>
+              <li>• Ship / role requirements</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:10px">
+          <h3>Payouts & Your Share</h3>
+          <p>
+            For missions that generate org income, the result is logged and assigned to participants. Over the month:
+          </p>
+          <ul>
+            <li>• Every attended mission contributes to your <b>CI</b>.</li>
+            <li>• The org sets aside a payout pool.</li>
+            <li>• Your CI determines the size of <b>your slice</b>.</li>
+          </ul>
+          <p style="margin-top:6px">
+            In short: <b>The more you show up and contribute, the more you earn.</b>
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB: Certifications & CI -->
+      <div class="tab-panel" id="tab-certs">
+        <h2 class="section-title">Step 4 — Certifications & Contribution Index (CI)</h2>
+        <p class="section-sub">
+          Certifications show what you’re trained for. CI shows how much you’ve been contributing over time.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Certifications</h3>
+            <p>Examples (these are customizable to your org):</p>
+            <ul>
+              <li>• VBSS Qualified</li>
+              <li>• Capital Ship Bridge Crew</li>
+              <li>• Escort Wing Pilot</li>
+              <li>• Logistics / Cargo Lead</li>
+              <li>• Medical Support</li>
+            </ul>
+            <p style="margin-top:6px">
+              You can view your certs via:
+            </p>
+            <ul>
+              <li><kbd>/certs</kbd> — View your certifications.</li>
+              <li><kbd>/certs view @member</kbd> — View another member (if allowed).</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Contribution Index (CI)</h3>
+            <p>CI is a value that increases as you contribute:</p>
+            <ul>
+              <li>• Attending missions</li>
+              <li>• Taking up roles in ops</li>
+              <li>• Supporting with prep, logistics, and org activities</li>
+            </ul>
+            <p style="margin-top:6px">
+              CI is used when the org distributes <b>monthly payouts</b>, so people who consistently help get rewarded fairly.
+            </p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <b>Tip:</b> If you’re not sure what to go for first, start with a basic <b>Ops / Hauling</b> role, then work towards VBSS or Capital Ship certs.
+        </div>
+      </div>
+
+      <!-- TAB: FAQ -->
+      <div class="tab-panel" id="tab-faq">
+        <h2 class="section-title">FAQ & Troubleshooting</h2>
+        <p class="section-sub">
+          Common issues and how to solve them quickly.
+        </p>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-q">The bot says my link key is invalid.</div>
+            <div class="faq-a">
+              Make sure you copied the entire key (no spaces cut off). Keys usually expire after a short time. If it still fails, request a new key from the website or ask staff to reset your link.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">I can’t see any slash commands.</div>
+            <div class="faq-a">
+              Ensure you’re in the correct Discord server and that the bot is visible. If you still can’t see commands, check if you’ve disabled “Use slash commands” in your client, or re-sync the app by closing and reopening Discord.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">I joined a mission but I don’t see it in my records.</div>
+            <div class="faq-a">
+              Make sure you clicked <b>I’m Going</b> on the mission message before the mission starts. If the mission was updated or remade, check the latest mission post. For anything missing, raise it with staff so they can manually verify and correct attendance.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">The bot isn’t responding at all.</div>
+            <div class="faq-a">
+              First, check if it responds to <kbd>/help</kbd> or another simple command in the correct channel. If there’s still no response, the bot may be restarting or offline. Ping an officer or support channel so they can check the status.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">I want to change my callsign / main role.</div>
+            <div class="faq-a">
+              Use the profile edit command if available, or contact staff to update it in the system. Keeping this accurate helps planners assign ships and roles correctly.
+            </div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <b>Still stuck?</b> Take a screenshot, note which command you used, and post it in the support / help channel so we can troubleshoot quickly.
+        </div>
+      </div>
+
+      <!-- TAB: Command Summary -->
+      <div class="tab-panel" id="tab-commands">
+        <h2 class="section-title">Discord Command Summary</h2>
+        <p class="section-sub">
+          A quick reference for commonly used JMBN bot commands. Actual commands may vary slightly based on your implementation.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Usage</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><kbd>/link &lt;key&gt;</kbd></td>
+                <td><span>Example: <code>/link ABC123-XYZ</code></span></td>
+                <td>Links your Discord account to your JMBN profile using the key from the website.</td>
+              </tr>
+              <tr>
+                <td><kbd>/profile</kbd></td>
+                <td>-</td>
+                <td>Shows your profile — rank, CI, roles, and basic info.</td>
+              </tr>
+              <tr>
+                <td><kbd>/profile view @user</kbd></td>
+                <td>@member</td>
+                <td>View another member’s profile (if permission allows).</td>
+              </tr>
+              <tr>
+                <td><kbd>/mission list</kbd></td>
+                <td>-</td>
+                <td>Lists active / upcoming missions you can join.</td>
+              </tr>
+              <tr>
+                <td><kbd>/mission view &lt;id&gt;</kbd></td>
+                <td>Mission ID</td>
+                <td>Shows full mission details, including time, type, payout, and attendees.</td>
+              </tr>
+              <tr>
+                <td><kbd>/mission create</kbd></td>
+                <td>Fields / options</td>
+                <td>Create a new mission (usually restricted to staff / planners).</td>
+              </tr>
+              <tr>
+                <td><kbd>/certs</kbd></td>
+                <td>-</td>
+                <td>View your certifications and qualified roles.</td>
+              </tr>
+              <tr>
+                <td><kbd>/certs view @user</kbd></td>
+                <td>@member</td>
+                <td>View another member’s certifications (if allowed).</td>
+              </tr>
+              <tr>
+                <td><kbd>/help</kbd></td>
+                <td>-</td>
+                <td>Shows a help summary with available commands and categories.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tip">
+          <b>Note:</b> You can customize these commands in your bot back-end. This page is meant to be a friendly onboarding reference, not strict documentation.
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+/* Simple tab switcher */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const target = btn.getAttribute('data-tab');
+    if(!target) return;
+
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+
+    btn.classList.add('active');
+    const panel=document.getElementById(target);
+    if(panel) panel.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
