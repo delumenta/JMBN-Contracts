@@ -38,7 +38,6 @@ textarea {
   font-family: 'Play', sans-serif;
 }
 
-  
 /* HUD grid bg */
 .hud-grid{
   position:fixed;inset:0;z-index:0;pointer-events:none;
@@ -146,6 +145,37 @@ body::after{
   border-radius:10px;padding:10px;margin-top:8px;font-size:13px;color:var(--text)
 }
 
+/* pill-style "Link Discord" */
+.link-discord-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:3px 10px 4px;
+  border-radius:999px;
+  border:1px dashed var(--border);
+  background:#050505;
+  color:var(--accent);
+  font-size:12px;
+  font-weight:700;
+  box-shadow:0 0 8px rgba(242,214,117,.4);
+}
+.link-discord-pill-icon{
+  font-size:13px;
+  line-height:1;
+}
+
+/* clickable "On Dashboard" link */
+.dash-link{
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:1px dotted rgba(242,214,117,.8);
+  padding-bottom:1px;
+}
+.dash-link:hover{
+  color:#fff;
+  border-bottom-color:#fff;
+}
+
 /* =========================================
    TABLES
 ========================================= */
@@ -163,7 +193,7 @@ body::after{
 }
 
 /* =========================================
-   IMAGE WRAPPER
+   IMAGE WRAPPER (kept in case used later)
 ========================================= */
 .img-wrap{
   margin:14px 0;
@@ -284,30 +314,19 @@ a:hover{text-decoration:underline}
       <h2>1) Link your Discord to JMBN</h2>
       <p>Before you can RSVP or check certifications, the bot needs to know which JMBN account you are.</p>
 
-      <!-- Screenshot: click Link Discord -->
-      <div class="img-wrap">
-        <img src="https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/LinkAccount/Step1.png" alt="Click Link Discord on dashboard">
-        <div class="img-caption">Step 1 — On the <a href="https://delumenta.github.io/JMBN/index.html" target="_blank">JMBN Dashboard</a>, click <strong>Link Discord</strong>.
-      </div>
-
-
-
-      <!-- Screenshot: code appears -->
-      <div class="img-wrap">
-        <img src="https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/LinkAccount/Step2.png" alt="Generated code appears">
-        <div class="img-caption">Step 2 — A one-time code appears (expires ~10 minutes).</div>
-      </div>
-
-      <!-- Screenshot: paste into Discord -->
-      <div class="img-wrap">
-        <img src="https://fcegavhipeaeihxegsnw.supabase.co/storage/v1/object/public/LinkAccount/Step%203.png" alt="Paste code into /link">
-        <div class="img-caption">Step 3 — In Discord, paste it into the bot command.</div>
-      </div>
+      <!-- images + captions removed -->
 
       <div class="step">
         <div class="step-num">1</div>
         <div>
-          <p>On dashboard: click <strong>Link Discord</strong>.</p>
+          <p>
+            <a href="https://delumenta.github.io/JMBN/index.html" target="_blank" class="dash-link">On Dashboard</a>,
+            click
+            <span class="link-discord-pill">
+              <span class="link-discord-pill-icon">🔗</span>
+              <span>Link Discord</span>
+            </span>.
+          </p>
         </div>
       </div>
 
