@@ -1,707 +1,813 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JMBN Components</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMBN Mission Editor</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png"
-        href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-        sizes="32x32">
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
-  <style>
-    :root{
-      --bg:#000;
-      --panel:#0b0b0b;
-      --sub:#101010;
-      --row:#0a0a0a;
-      --border:#d6b44c;
-      --card:#141414;
-      --accent:#f2d675;
-      --text:#f7f1d0;
-      --muted:#c9b06a;
-      --bad:#ff6b6b;
+<style>
+:root{
+  --bg:#000;
+  --panel:#0b0b0b;
+  --row:#0a0a0a;
+  --border:#d6b44c;
+  --accent:#f2d675;
+  --accent-soft:#c9b06a;
+  --text:#f7f1d0;
+  --muted:#c9b06a;
+  --bad:#ff6b6b;
+  --good:#37d996;
+}
 
-      --fs-base:14px;
-      --fs-sm:12px;
-      --fs-lg:16px;
-    }
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:
+    radial-gradient(circle at top,rgba(242,214,117,.08),transparent 55%),
+    radial-gradient(circle at bottom,rgba(10,10,10,1),#000);
+  color:var(--text);
+  font-family:'Play',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  margin:0;
+  padding:16px;
+}
 
-    *{box-sizing:border-box;margin:0;padding:0}
+/* Brand + Nav (shared header styles) */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 12px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:8px;
+}
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+}
+.brand h1{
+  margin:0;color:var(--accent);font-size:22px;
+}
+.brand-sub{
+  font-size:11px;color:var(--muted);margin-left:auto;text-align:right;
+}
+.nav{
+  display:flex;align-items:center;gap:8px;
+  flex-wrap:wrap;margin:8px 0 16px;
+}
+.nav-btn{
+  --ring:#d6b44c;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 14px;
+  border:1px solid var(--ring);
+  border-radius:999px;
+  font-size:11px;
+  text-decoration:none;
+  color:var(--text);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.16),rgba(0,0,0,1));
+  box-shadow:0 0 0 1px rgba(0,0,0,.7);
+  position:relative;
+  overflow:hidden;
+}
+.nav-btn::after{
+  content:"";
+  position:absolute;inset:-40%;
+  background:conic-gradient(from 0deg,rgba(242,214,117,.0),rgba(242,214,117,.7),rgba(242,214,117,.0));
+  opacity:0;transition:opacity .25s;
+}
+.nav-btn:hover::after{opacity:.35;}
+.nav-btn span{position:relative;z-index:1}
+.nav-btn.active{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.75),rgba(0,0,0,1));
+  color:#000;
+}
 
-    html,body{
-      height:100%;
-      background:radial-gradient(circle at top,#1b160a 0,#000 55%);
-      color:var(--text);
-      font-family:'Play',sans-serif;
-    }
+/* Layout */
+.grid{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(260px,340px) minmax(0,1fr);
+  gap:18px;
+}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;}
+}
 
-    body{
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
-      padding:14px;
-    }
+/* Panels (Option A style) */
+.panel{
+  position:relative;
+  border-radius:16px;
+  border:1px solid var(--border);
+  box-shadow:
+    inset 0 0 0 1px rgba(242,214,117,.18),
+    0 0 0 1px rgba(214,180,76,.35),
+    0 18px 45px rgba(0,0,0,.9);
+  background:
+    radial-gradient(circle at top left,rgba(242,214,117,.08),rgba(0,0,0,1) 55%),
+    radial-gradient(circle at bottom right,rgba(242,214,117,.05),rgba(0,0,0,1) 65%);
+  padding:16px;
+  overflow:hidden;
+}
+.panel::before{
+  content:"";
+  position:absolute;inset:-30%;
+  background:
+    radial-gradient(circle at 30% 0%,rgba(242,214,117,.09),transparent 60%);
+  opacity:.45;
+  pointer-events:none;
+}
+.panel > *{position:relative;z-index:1}
+.panel-inner{display:flex;flex-direction:column;gap:12px}
 
-    /* Header container where header.html will be injected */
-    #site-header{
-      margin-bottom:12px;
-    }
+/* Left: mission list */
+.console-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:6px;
+}
+.console-title{
+  font-size:13px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--accent);
+}
+.console-pill{
+  font-size:10px;color:var(--muted);
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.5);
+  padding:3px 10px;
+}
+.list-tools{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+}
+input[type="search"]{
+  flex:1 1 160px;
+  border-radius:11px;
+  border:1px solid rgba(214,180,76,.35);
+  padding:7px 10px;
+  font-size:11px;
+  background:#050505;
+  color:var(--text);
+  outline:none;
+}
+input::placeholder{color:rgba(200,190,150,.7);font-size:10px}
+.small-btn{
+  padding:6px 8px;
+  border:1px solid rgba(214,180,76,.6);
+  border-radius:999px;
+  background:radial-gradient(circle at top left,rgba(242,214,117,.35),rgba(0,0,0,1));
+  color:var(--text);
+  font-size:10px;
+  cursor:pointer;
+}
+.small-btn:hover{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.55),rgba(0,0,0,1));
+}
+.list{
+  display:flex;flex-direction:column;gap:8px;
+  max-height:68vh;
+  overflow:auto;
+  padding-right:4px;
+}
+.item{
+  border-radius:11px;
+  border:1px solid rgba(214,180,76,.45);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.05),rgba(0,0,0,.98));
+  padding:8px 10px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;
+  cursor:pointer;
+  transition:transform .12s,box-shadow .12s,border-color .12s,background .12s;
+}
+.item:hover{
+  transform:translateY(-1px);
+  border-color:var(--accent);
+  box-shadow:0 0 16px rgba(242,214,117,.45);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.12),rgba(0,0,0,.98));
+}
+.item-main{min-width:0;}
+.item-title{
+  font-size:13px;font-weight:700;
+  white-space:nowrap;text-overflow:ellipsis;overflow:hidden;
+}
+.item-meta{
+  font-size:10px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;
+}
+.badge{
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:2px 7px;
+  font-size:10px;
+  background:rgba(0,0,0,.9);
+}
+.badge-id{font-variant-numeric:tabular-nums}
 
-    main{
-      flex:1;
-      max-width:1400px;
-      margin:0 auto;
-      width:100%;
-    }
+.subtle{font-size:10px;color:var(--muted)}
+.mono{font-variant-numeric:tabular-nums}
 
-    .panel{
-      background:linear-gradient(145deg,#050505,#101010);
-      border:1px solid rgba(214,180,76,.7);
-      box-shadow:0 0 20px rgba(0,0,0,.7);
-      border-radius:14px;
-      padding:14px 14px 18px;
-    }
+/* Right: editor form */
+.main-header{
+  display:flex;align-items:center;gap:10px;justify-content:space-between;
+}
+.main-title{
+  font-size:12px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--muted);
+}
+.mode-pill{
+  font-size:10px;color:var(--accent);
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.6);
+  padding:3px 10px;
+  background:#050505;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+.form-grid.full{grid-template-columns:1fr;}
+@media(max-width:720px){
+  .form-grid{grid-template-columns:1fr;}
+}
+label{
+  display:block;
+  margin-bottom:3px;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--muted);
+}
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+select,
+textarea{
+  width:100%;
+  border-radius:11px;
+  border:1px solid rgba(214,180,76,.35);
+  padding:8px 10px;
+  font-size:11px;
+  background:#050505;
+  color:var(--text);
+  outline:none;
+}
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 1px rgba(242,214,117,.3);
+}
 
-    .panel-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      margin-bottom:10px;
-      border-bottom:1px solid rgba(214,180,76,.4);
-      padding-bottom:8px;
-    }
+/* Attachments */
+.attach-list{margin-top:4px;}
+.attach-item{
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(0,2fr) auto;
+  gap:6px;
+  margin-bottom:6px;
+}
+.attach-item button{padding:6px 9px}
 
-    .panel-title{
-      font-size:clamp(16px,2vw,20px);
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-
-    .panel-subtitle{
-      font-size:var(--fs-sm);
-      color:var(--muted);
-    }
-
-    .filters{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:8px;
-      margin-bottom:10px;
-    }
-
-    .filter-group{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      font-size:var(--fs-sm);
-    }
-
-    .filter-label{
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--muted);
-    }
-
-    .filter-input,
-    .filter-select{
-      background:var(--sub);
-      border:1px solid rgba(214,180,76,.5);
-      border-radius:999px;
-      padding:6px 10px;
-      color:var(--text);
-      font-size:var(--fs-base);
-      outline:none;
-      transition:border-color .15s,box-shadow .15s,background .15s;
-    }
-
-    .filter-input::placeholder{
-      color:rgba(247,241,208,.5);
-    }
-
-    .filter-input:focus,
-    .filter-select:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px rgba(242,214,117,.5);
-      background:#151515;
-    }
-
-    .table-wrap{
-      margin-top:6px;
-      border-radius:10px;
-      border:1px solid rgba(214,180,76,.6);
-      overflow:hidden;
-      background:radial-gradient(circle at top,#18120a 0,#050505 60%);
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:var(--fs-base);
-    }
-
-    thead{
-      background:rgba(6,6,6,.98);
-      position:sticky;
-      top:0;
-      z-index:2;
-    }
-
-    th,td{
-      padding:6px 10px;
-      text-align:left;
-      white-space:nowrap;
-    }
-
-    th{
-      font-weight:700;
-      font-size:var(--fs-sm);
-      text-transform:uppercase;
-      letter-spacing:.09em;
-      border-bottom:1px solid rgba(214,180,76,.4);
-      color:var(--muted);
-      cursor:pointer;
-      user-select:none;
-    }
-
-    th.sortable:hover{
-      color:var(--accent);
-      background:rgba(214,180,76,.08);
-    }
-
-    th .sort-indicator{
-      font-size:10px;
-      margin-left:4px;
-      opacity:.7;
-    }
-
-    tbody tr:nth-child(even){
-      background:rgba(12,12,12,.85);
-    }
-
-    tbody tr:nth-child(odd){
-      background:rgba(5,5,5,.9);
-    }
-
-    tbody tr:hover{
-      background:rgba(40,32,18,.9);
-    }
-
-    td{
-      border-bottom:1px solid rgba(255,255,255,.02);
-      max-width:320px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .col-name{
-      font-weight:700;
-      color:var(--accent);
-    }
-
-    .col-shops{
-      font-size:var(--fs-sm);
-      color:var(--muted);
-      white-space:normal;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(214,180,76,.7);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .pill-component{border-color:rgba(242,214,117,.8);}
-    .pill-size{border-color:rgba(155,214,255,.8);}
-    .pill-grade{border-color:rgba(255,188,120,.8);}
-    .pill-class{border-color:rgba(186,255,186,.8);}
-
-    .status-bar{
-      margin-top:6px;
-      font-size:var(--fs-sm);
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .status-bar strong{
-      color:var(--accent);
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:4px;
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(214,180,76,.5);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .loading,
-    .error,
-    .empty{
-      padding:16px;
-      text-align:center;
-      font-size:var(--fs-base);
-    }
-
-    .loading{color:var(--muted);}
-    .error{color:var(--bad);}
-  </style>
+/* Actions */
+.actions{
+  margin-top:12px;
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+.btn{
+  font-size:11px;
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.6);
+  background:radial-gradient(circle at top left,rgba(242,214,117,.35),rgba(0,0,0,1));
+  color:var(--text);
+  padding:7px 13px;
+  cursor:pointer;
+}
+.btn.primary{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.9),rgba(0,0,0,1));
+  color:#000;
+  box-shadow:0 0 16px rgba(242,214,117,.5);
+}
+.btn.danger{
+  border-color:var(--bad);
+  color:var(--bad);
+}
+.btn:hover{
+  background:radial-gradient(circle at top left,rgba(242,214,117,.6),rgba(0,0,0,1));
+  color:#000;
+}
+.btn.danger:hover{
+  background:rgba(255,107,107,.12);
+  color:#ff6b6b;
+}
+.nowrap{white-space:nowrap}
+</style>
 </head>
 <body>
-  <!-- Shared header will be injected here -->
-  <header id="site-header"></header>
 
-  <main>
-    <section class="panel">
-      <div class="panel-header">
+<!-- Shared header -->
+<div id="header"></div>
+
+<div class="grid">
+  <!-- LEFT: Mission list -->
+  <aside class="panel">
+    <div class="panel-inner">
+      <div class="console-header">
         <div>
-          <div class="panel-title">Components Registry</div>
-          <div class="panel-subtitle">
-            Shop for ship components by type, class, and where they’re sold across Stanton.
+          <div class="console-title">Mission Index</div>
+          <div class="subtle">Select a mission to edit · or create new</div>
+        </div>
+        <div class="console-pill" id="listCount">0 missions</div>
+      </div>
+
+      <div class="list-tools">
+        <input id="search" type="search" placeholder="Search title / tags / type / status…" />
+        <button id="reloadBtn" class="small-btn" type="button">↻</button>
+        <button id="newBtn" class="small-btn" type="button">＋ New</button>
+      </div>
+
+      <div id="missionList" class="list"></div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Editor -->
+  <section class="panel">
+    <div class="panel-inner">
+      <div class="main-header">
+        <div>
+          <div class="main-title">Mission Editor</div>
+          <div class="subtle">Form-up only · mission core data · attachments &amp; notes</div>
+        </div>
+        <div id="modeLabel" class="mode-pill">Create</div>
+      </div>
+
+      <!-- Title -->
+      <div class="form-grid full">
+        <div>
+          <label for="title">Mission Title *</label>
+          <input id="title" type="text" placeholder="e.g., RW S2 — 24-box Haul">
+        </div>
+      </div>
+
+      <!-- Type + Status -->
+      <div class="form-grid">
+        <div>
+          <label for="type">Type</label>
+          <select id="type">
+            <option value="">(select type)</option>
+            <option value="hauling">Hauling</option>
+            <option value="cargo">Cargo</option>
+            <option value="salvage">Salvage</option>
+            <option value="mining">Mining</option>
+            <option value="delivery">Delivery</option>
+            <option value="combat">Combat</option>
+            <option value="support">Support</option>
+            <option value="training">Training</option>
+            <option value="exploration">Exploration</option>
+          </select>
+        </div>
+        <div>
+          <label for="status">Status</label>
+          <select id="status">
+            <option value="">(select status)</option>
+            <option value="planned">Planned</option>
+            <option value="active">Active</option>
+            <option value="success">Success</option>
+            <option value="fail">Fail</option>
+            <option value="abort">Abort</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Origin + Start time -->
+      <div class="form-grid">
+        <div>
+          <label for="origin">Form-up (Origin)</label>
+          <input id="origin" type="text" placeholder="e.g., Area18 · Everus Harbor pad 07">
+        </div>
+        <div>
+          <label for="startTime">Start Date / Time</label>
+          <input id="startTime" type="datetime-local">
+        </div>
+      </div>
+
+      <!-- Hours + Payout -->
+      <div class="form-grid">
+        <div>
+          <label for="hours">No. of Hours</label>
+          <input id="hours" type="number" step="0.1" min="0">
+        </div>
+        <div>
+          <label for="payout">Payout (aUEC)</label>
+          <input id="payout" type="number" step="1" min="0">
+        </div>
+      </div>
+
+      <!-- Tags + Submitted by (display only) -->
+      <div class="form-grid">
+        <div>
+          <label for="tags">Tags (comma separated)</label>
+          <input id="tags" type="text" placeholder="e.g., org, cargo, night-run">
+        </div>
+        <div>
+          <label>Submitted By</label>
+          <input id="submittedByDisplay" type="text" readonly placeholder="—" title="Automatically set by your profile">
+          <input id="submittedBy" type="hidden">
+        </div>
+      </div>
+
+      <!-- Attachments -->
+      <div class="form-grid full">
+        <div>
+          <label>Attachments (optional)</label>
+          <div id="attachList" class="attach-list"></div>
+          <button id="addAttachBtn" class="small-btn" type="button" style="margin-top:4px">＋ Add Attachment</button>
+          <div class="subtle" style="margin-top:4px">
+            Each attachment = label + URL (screenshots, sheets, etc.). Saved into the mission’s <code>attachments</code> JSON.
           </div>
         </div>
       </div>
 
-      <!-- Filters: feels like browsing a shop -->
-      <div class="filters">
-        <div class="filter-group" style="grid-column:1/-1;">
-          <label class="filter-label" for="searchInput">Search</label>
-          <input id="searchInput" class="filter-input" type="text"
-                 placeholder="Name, manufacturer, shop or location…">
-        </div>
-
-        <div class="filter-group">
-          <label class="filter-label" for="filterComponent">Component</label>
-          <select id="filterComponent" class="filter-select">
-            <option value="">All Components</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label class="filter-label" for="filterClass">Class</label>
-          <select id="filterClass" class="filter-select">
-            <option value="">All Classes</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label class="filter-label" for="filterSize">Size</label>
-          <select id="filterSize" class="filter-select">
-            <option value="">All Sizes</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label class="filter-label" for="filterLocation">Location</label>
-          <select id="filterLocation" class="filter-select">
-            <option value="">All Locations</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label class="filter-label" for="filterShop">Shop</label>
-          <select id="filterShop" class="filter-select">
-            <option value="">All Shops</option>
-          </select>
+      <!-- Notes -->
+      <div class="form-grid full">
+        <div>
+          <label for="notes">Notes / AAR</label>
+          <textarea id="notes" placeholder="Summary, key events, lessons learned…"></textarea>
         </div>
       </div>
 
-      <div id="tableRegion" class="table-wrap">
-        <div class="loading">Loading components…</div>
+      <!-- Actions -->
+      <div class="actions">
+        <button id="clearBtn" class="btn" type="button">Clear Form</button>
+        <button id="saveNewBtn" class="btn primary" type="button">💾 Save as New</button>
+        <button id="updateBtn" class="btn" type="button">✎ Update Selected</button>
+        <button id="deleteBtn" class="btn danger" type="button">🗑 Delete Selected</button>
       </div>
 
-      <div id="statusBar" class="status-bar" style="display:none;">
-        <div><strong id="countText"></strong></div>
-        <div class="badge">
-          Active filters:
-          <span id="activeFiltersLabel">None</span>
+      <div class="subtle" style="margin-top:4px">
+        Note: Attendance is managed separately via the Operations / Mission Log attendance modal.
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Supabase + auth -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => {
+  const d=document.createElement('div');
+  d.textContent = s ?? '';
+  return d.innerHTML;
+};
+
+/* State */
+let sb = null;
+let session = null;
+let missions = [];
+let currentId = null;
+let me = { id:null, name:'' };
+
+/* Date helpers */
+function isoToLocalInput(iso){
+  if(!iso) return '';
+  const d=new Date(iso);
+  const pad=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function localInputToISO(v){
+  if(!v) return null;
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return null;
+  return d.toISOString();
+}
+function fmtShort(iso){
+  if(!iso) return '';
+  return new Date(iso).toLocaleString('en-SG',{
+    day:'numeric',month:'short',hour:'numeric',minute:'2-digit',hour12:true
+  }).replace(/\s?([ap])m/i,'$1m');
+}
+
+/* Attachments UI */
+function addAttachRow(name='', url=''){
+  const wrap = document.createElement('div');
+  wrap.className='attach-item';
+  wrap.innerHTML = `
+    <input type="text" placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
+    <input type="text" placeholder="URL (https://…)" value="${esc(url)}">
+    <button type="button" class="small-btn">✕</button>
+  `;
+  const btn = wrap.querySelector('button');
+  btn.addEventListener('click',()=>wrap.remove());
+  $('#attachList').appendChild(wrap);
+}
+function collectAttachments(){
+  const out = [];
+  $$('#attachList .attach-item').forEach(row=>{
+    const [nameInput,urlInput] = row.querySelectorAll('input');
+    const label = (nameInput.value||'').trim();
+    const url   = (urlInput.value||'').trim();
+    if(!url) return;
+    try{ new URL(url); }catch{ return; }
+    out.push({ name: label || (url.split('/').pop() || 'link'), url });
+  });
+  return out;
+}
+
+/* Form helpers */
+function setModeLabel(){
+  const el = $('#modeLabel');
+  if(!el) return;
+  el.textContent = currentId
+    ? `Editing ${currentId.slice(0,8)}…`
+    : 'Create';
+}
+function clearForm(){
+  currentId = null;
+  $('#title').value = '';
+  $('#type').value = '';
+  $('#status').value = '';
+  $('#origin').value = '';
+  $('#startTime').value = '';
+  $('#hours').value = '';
+  $('#payout').value = '';
+  $('#tags').value = '';
+  $('#notes').value = '';
+  $('#attachList').innerHTML = '';
+  addAttachRow();
+  // keep submittedBy locked to current user
+  $('#submittedBy').value = me.id || '';
+  $('#submittedByDisplay').value = me.name || '';
+  setModeLabel();
+}
+function fillForm(m){
+  currentId = m.id;
+  $('#title').value = m.title || '';
+  $('#type').value = (m.type || '').toLowerCase();
+  $('#status').value = (m.status || '').toLowerCase();
+  $('#origin').value = m.origin || '';
+  $('#startTime').value = isoToLocalInput(m.start_time);
+  $('#hours').value = m.hours ?? '';
+  $('#payout').value = m.payout_auec ?? '';
+  $('#tags').value = m.tags || '';
+  $('#notes').value = m.notes || '';
+
+  $('#submittedBy').value = m.submitted_by || '';
+  // Prefer view's submitted_by_name; fall back to own name if self
+  const submitName =
+    m.submitted_by_name ||
+    (m.submitted_by === me.id ? me.name : (m.submitted_by || ''));
+  $('#submittedByDisplay').value = submitName;
+
+  $('#attachList').innerHTML = '';
+  if(Array.isArray(m.attachments) && m.attachments.length){
+    m.attachments.forEach(a=>addAttachRow(a.name||'',a.url||''));
+  }else{
+    addAttachRow();
+  }
+  setModeLabel();
+}
+function payloadFromForm(){
+  return {
+    title: ($('#title').value||'').trim(),
+    type: ($('#type').value||'').toLowerCase() || null,
+    status: ($('#status').value||'').toLowerCase() || null,
+    origin: ($('#origin').value||'').trim() || null,
+    start_time: localInputToISO($('#startTime').value),
+    hours: $('#hours').value !== '' ? Number($('#hours').value) : null,
+    payout_auec: $('#payout').value !== '' ? Number($('#payout').value) : null,
+    tags: ($('#tags').value||'').trim() || null,
+    notes: ($('#notes').value||'').trim() || null,
+    attachments: collectAttachments()
+  };
+}
+
+/* List rendering */
+function renderList(rows){
+  const list = $('#missionList');
+  const countEl = $('#listCount');
+  list.innerHTML = '';
+  const total = rows.length;
+  if(countEl){
+    countEl.textContent = total ? `${total} mission${total>1?'s':''}` : '0 missions';
+  }
+  if(!rows.length){
+    list.innerHTML = `
+      <div class="item">
+        <div class="item-main">
+          <div class="item-title">No missions found</div>
+          <div class="item-meta">Adjust search or create a new mission.</div>
+        </div>
+      </div>`;
+    return;
+  }
+  rows.forEach(m=>{
+    const el = document.createElement('article');
+    el.className = 'item';
+    el.innerHTML = `
+      <div class="item-main">
+        <div class="item-title">${esc(m.title || '(untitled mission)')}</div>
+        <div class="item-meta">
+          ${m.type ? `<span class="badge">${esc(m.type)}</span>` : ''}
+          ${m.status ? `<span class="badge">${esc(m.status)}</span>` : ''}
+          <span>${fmtShort(m.start_time) || 'no start'}</span>
+          ${m.origin ? `<span>· ${esc(m.origin)}</span>` : ''}
+          <span>· by ${esc(m.submitted_by_name || '—')}</span>
         </div>
       </div>
-    </section>
-  </main>
+      <div class="nowrap">
+        <span class="badge badge-id">${esc(m.id.slice(0,8))}</span>
+      </div>
+    `;
+    el.addEventListener('click',()=>openMission(m.id));
+    list.appendChild(el);
+  });
+}
+function applySearch(){
+  const q = ($('#search').value||'').toLowerCase();
+  if(!q){ renderList(missions); return; }
+  const filtered = missions.filter(m=>{
+    const blob = `${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''} ${m.submitted_by_name||''}`.toLowerCase();
+    return blob.includes(q);
+  });
+  renderList(filtered);
+}
 
-  <script>
-    // Inject shared header.html
-    fetch('header.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('site-header').innerHTML = html;
-      })
-      .catch(err => {
-        console.error('Failed to load header.html', err);
-      });
-  </script>
+/* Supabase calls */
+async function loadMissions(){
+  const { data, error } = await sb
+    .from('v_missions_detailed')
+    .select('id,title,type,status,origin,start_time,hours,payout_auec,tags,attachments,notes,submitted_by,submitted_by_name,created_at')
+    .order('created_at',{ascending:false});
+  if(error){
+    alert('Failed to load missions: '+error.message);
+    missions = [];
+    renderList([]);
+    return;
+  }
+  missions = data || [];
+  renderList(missions);
+}
 
-  <script>
-    const DATA_URL  = 'data/components.js';  // JSON array with Shops[]
-    const SHOPS_URL = 'data/shops.json';     // shops.json we generated
+async function openMission(id){
+  const { data, error } = await sb
+    .from('v_missions_detailed')
+    .select('id,title,type,status,origin,start_time,hours,payout_auec,tags,attachments,notes,submitted_by,submitted_by_name,created_at')
+    .eq('id',id)
+    .single();
+  if(error){
+    alert('Failed to open mission: '+error.message);
+    return;
+  }
+  fillForm(data);
+  // keep ?id in URL for deep-linking
+  const u = new URL(location.href);
+  u.searchParams.set('id', id);
+  history.replaceState(null,'',u.toString());
+}
 
-    let allComponents = [];
-    let shops = [];
-    let shopMap = new Map();
+async function saveNew(){
+  const payload = payloadFromForm();
+  if(!payload.title){
+    alert('Mission title is required.');
+    return;
+  }
+  payload.submitted_by = me.id; // set owner
+  const { data, error } = await sb
+    .from('missions')
+    .insert(payload)
+    .select()
+    .single();
+  if(error){
+    alert('Save failed: '+error.message);
+    return;
+  }
+  await loadMissions();
+  fillForm(data);
+  alert('Mission saved.');
+}
 
-    let currentSort = { key:'Names', dir:'asc' };
+async function updateCurrent(){
+  if(!currentId){
+    alert('No mission selected. Use "Save as New" or select one from the list.');
+    return;
+  }
+  const payload = payloadFromForm();
+  // do not change submitted_by on update
+  const { error } = await sb
+    .from('missions')
+    .update(payload)
+    .eq('id',currentId);
+  if(error){
+    alert('Update failed: '+error.message);
+    return;
+  }
+  await loadMissions();
+  const updated = missions.find(m=>m.id===currentId);
+  if(updated) fillForm(updated);
+  alert('Mission updated.');
+}
 
-    const tableRegion = document.getElementById('tableRegion');
-    const statusBar   = document.getElementById('statusBar');
-    const countText   = document.getElementById('countText');
-    const activeFiltersLabel = document.getElementById('activeFiltersLabel');
+async function deleteCurrent(){
+  if(!currentId){
+    alert('No mission selected.');
+    return;
+  }
+  if(!confirm('Delete this mission? This cannot be undone.')) return;
+  const { error } = await sb
+    .from('missions')
+    .delete()
+    .eq('id',currentId);
+  if(error){
+    alert('Delete failed: '+error.message);
+    return;
+  }
+  currentId = null;
+  clearForm();
+  await loadMissions();
+  alert('Mission deleted.');
+  const u = new URL(location.href);
+  u.searchParams.delete('id');
+  history.replaceState(null,'',u.toString());
+}
 
-    const searchInput     = document.getElementById('searchInput');
-    const filterComponent = document.getElementById('filterComponent');
-    const filterClass     = document.getElementById('filterClass');
-    const filterSize      = document.getElementById('filterSize');
-    const filterLocation  = document.getElementById('filterLocation');
-    const filterShop      = document.getElementById('filterShop');
+/* Auth + profile */
+async function initAuth(){
+  // use shared auth helper
+  session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
 
-    function esc(str){
-      return String(str ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
+  me.id = session.user.id;
+  let name = session.user.email?.split('@')[0] || 'User';
+  try{
+    const { data: prof, error } = await sb
+      .from('profiles')
+      .select('display_name')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
+    if(!error && prof && prof.display_name){
+      name = prof.display_name;
     }
+  }catch(e){}
+  me.name = name;
 
-    async function loadData(){
-      try{
-        const [compRes, shopsRes] = await Promise.all([
-          fetch(DATA_URL,{cache:'no-store'}),
-          fetch(SHOPS_URL,{cache:'no-store'})
-        ]);
+  $('#submittedBy').value = me.id;
+  $('#submittedByDisplay').value = me.name;
+}
 
-        if(!compRes.ok) throw new Error('Components HTTP '+compRes.status);
-        const data = await compRes.json();
-        allComponents = Array.isArray(data) ? data : [];
+/* Init */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  // 1) Inject shared header
+  try{
+    const host = document.getElementById('header');
+    if(host){
+      const res = await fetch('header.html');
+      host.innerHTML = await res.text();
 
-        if(shopsRes.ok){
-          const shopsData = await shopsRes.json();
-          shops = Array.isArray(shopsData) ? shopsData : [];
-          shopMap = new Map(shops.map(s => [s.id, s]));
-        }else{
-          shops = [];
-          shopMap = new Map();
+      // highlight current page in nav
+      const here = location.pathname.split('/').pop() || 'mission-editor.html';
+      host.querySelectorAll('.nav-btn').forEach(a=>{
+        if(a.getAttribute('href')===here){
+          a.classList.add('active');
         }
-
-        buildFilterOptions(allComponents);
-        buildLocationFilter();
-        updateShopFilterOptions(); // initial shops list
-
-        applyFiltersAndSort();
-      }catch(err){
-        console.error(err);
-        tableRegion.innerHTML =
-          '<div class="error">Failed to load components or shops data.</div>';
-      }
-    }
-
-    function buildFilterOptions(list){
-      const components = new Set();
-      const classes    = new Set();
-      const sizes      = new Set();
-
-      list.forEach(item=>{
-        if(item.Component) components.add(item.Component.toString().trim());
-        if(item.Class)     classes.add(String(item.Class).trim());
-        if(item.Size)      sizes.add(String(item.Size).trim());
-      });
-
-      const makeOptions = (set, selectEl)=>{
-        const values = Array.from(set).filter(Boolean).sort((a,b)=>a.localeCompare(b));
-        values.forEach(v=>{
-          const opt = document.createElement('option');
-          opt.value = v;
-          opt.textContent = v;
-          selectEl.appendChild(opt);
-        });
-      };
-
-      makeOptions(components, filterComponent);
-      makeOptions(classes,    filterClass);
-      makeOptions(sizes,      filterSize);
-    }
-
-    function buildLocationFilter(){
-      if(!shops.length) return;
-
-      const locSet = new Set();
-      shops.forEach(s=>{
-        const loc = (s.locationName || s.locationGuess || '').trim();
-        if(loc) locSet.add(loc);
-      });
-
-      const locations = Array.from(locSet).sort((a,b)=>a.localeCompare(b));
-      locations.forEach(loc=>{
-        const opt = document.createElement('option');
-        opt.value = loc;
-        opt.textContent = loc;
-        filterLocation.appendChild(opt);
       });
     }
+  }catch(e){
+    console.error('Failed to load header.html', e);
+  }
 
-    function updateShopFilterOptions(){
-      // Reset options
-      filterShop.innerHTML = '<option value="">All Shops</option>';
+  // 2) Auth + Supabase
+  await initAuth();
+  if(!sb) return;
 
-      if(!shops.length) return;
+  // 3) Wire events
+  $('#search').addEventListener('input',applySearch);
+  $('#reloadBtn').addEventListener('click',loadMissions);
+  $('#newBtn').addEventListener('click',clearForm);
+  $('#clearBtn').addEventListener('click',()=>{ if(confirm('Clear the form?')) clearForm(); });
+  $('#addAttachBtn').addEventListener('click',()=>addAttachRow());
+  $('#saveNewBtn').addEventListener('click',saveNew);
+  $('#updateBtn').addEventListener('click',updateCurrent);
+  $('#deleteBtn').addEventListener('click',deleteCurrent);
 
-      const selectedLoc = filterLocation.value;
-      let usableShops = shops;
+  // 4) Start with one empty attachment row + load data
+  addAttachRow();
+  setModeLabel();
+  await loadMissions();
 
-      if(selectedLoc){
-        usableShops = shops.filter(s=>{
-          const loc = (s.locationName || s.locationGuess || '').trim();
-          return loc === selectedLoc;
-        });
-      }
-
-      usableShops
-        .sort((a,b)=>{
-          const an = (a.shopName || a.raw || '').toLowerCase();
-          const bn = (b.shopName || b.raw || '').toLowerCase();
-          if(an < bn) return -1;
-          if(an > bn) return 1;
-          return 0;
-        })
-        .forEach(s=>{
-          const loc = (s.locationName || s.locationGuess || '').trim();
-          const label = s.shopName
-            ? `${s.shopName}${loc ? ' – ' + loc : ''}`
-            : s.raw;
-          const opt = document.createElement('option');
-          opt.value = s.id;
-          opt.textContent = label;
-          filterShop.appendChild(opt);
-        });
-    }
-
-    function applyFiltersAndSort(){
-      const q          = searchInput.value.trim().toLowerCase();
-      const comp       = filterComponent.value;
-      const cls        = filterClass.value;
-      const size       = filterSize.value;
-      const loc        = filterLocation.value;
-      const selectedShopId = filterShop.value;
-
-      let shopIdsForLocation = null;
-      if(loc && shops.length){
-        shopIdsForLocation = new Set(
-          shops
-            .filter(s=>{
-              const sloc = (s.locationName || s.locationGuess || '').trim();
-              return sloc === loc;
-            })
-            .map(s=>s.id)
-        );
-      }
-
-      let filtered = allComponents.filter(item=>{
-        if(comp && (item.Component || '').toString().trim() !== comp) return false;
-        if(cls  && String(item.Class || '').trim() !== cls) return false;
-        if(size && String(item.Size  || '').trim() !== size) return false;
-
-        const itemShops = Array.isArray(item.Shops) ? item.Shops : [];
-
-        if(loc && shopIdsForLocation){
-          const hasLocShop = itemShops.some(id => shopIdsForLocation.has(id));
-          if(!hasLocShop) return false;
-        }
-
-        if(selectedShopId){
-          if(!itemShops.includes(selectedShopId)) return false;
-        }
-
-        if(q){
-          // Build a search haystack: component info + shop names + locations
-          const baseFields = [
-            item.Names,
-            item.Manufacturer,
-            item.Component,
-            item.Class,
-            item.Size
-          ].map(v=>String(v||'').toLowerCase()).join(' ');
-
-          let shopWords = '';
-          if(itemShops.length && shops.length && shopMap.size){
-            const parts = [];
-            itemShops.forEach(id=>{
-              const s = shopMap.get(id);
-              if(!s) return;
-              if(s.raw) parts.push(s.raw);
-              if(s.shopName) parts.push(s.shopName);
-              if(s.locationName || s.locationGuess){
-                parts.push(s.locationName || s.locationGuess);
-              }
-            });
-            shopWords = parts.join(' ').toLowerCase();
-          }else{
-            // fallback: raw shop ids
-            shopWords = itemShops.join(' ').toLowerCase();
-          }
-
-          const hay = baseFields + ' ' + shopWords;
-          if(!hay.includes(q)) return false;
-        }
-
-        return true;
-      });
-
-      filtered.sort((a,b)=>{
-        const key = currentSort.key;
-        let av = (a[key] ?? '').toString().toLowerCase();
-        let bv = (b[key] ?? '').toString().toLowerCase();
-        if(av < bv) return currentSort.dir === 'asc' ? -1 : 1;
-        if(av > bv) return currentSort.dir === 'asc' ? 1 : -1;
-        return 0;
-      });
-
-      renderTable(filtered);
-      updateStatus(filtered.length);
-    }
-
-    function updateStatus(count){
-      const total = allComponents.length;
-      statusBar.style.display = 'flex';
-      countText.textContent = `${count} of ${total} components shown`;
-
-      const filters = [];
-      if(filterComponent.value) filters.push(`Component: ${filterComponent.value}`);
-      if(filterClass.value)     filters.push(`Class: ${filterClass.value}`);
-      if(filterSize.value)      filters.push(`Size: ${filterSize.value}`);
-      if(filterLocation.value)  filters.push(`Location: ${filterLocation.value}`);
-      if(filterShop.value)      filters.push(`Shop: ${filterShop.options[filterShop.selectedIndex].textContent}`);
-      if(searchInput.value.trim()) filters.push(`Search: "${searchInput.value.trim()}"`);
-
-      activeFiltersLabel.textContent = filters.length ? filters.join(' • ') : 'None';
-    }
-
-    function renderTable(list){
-      if(!list.length){
-        tableRegion.innerHTML = '<div class="empty">No components match your filters.</div>';
-        return;
-      }
-
-      const sortIcon = (key)=>{
-        if(currentSort.key !== key) return '';
-        return currentSort.dir === 'asc' ? '▲' : '▼';
-      };
-
-      const headerHtml = `
-        <table>
-          <thead>
-            <tr>
-              <th class="sortable" data-key="Names">Name <span class="sort-indicator">${sortIcon('Names')}</span></th>
-              <th class="sortable" data-key="Component">Component <span class="sort-indicator">${sortIcon('Component')}</span></th>
-              <th class="sortable" data-key="Size">Size <span class="sort-indicator">${sortIcon('Size')}</span></th>
-              <th class="sortable" data-key="Grade">Grade <span class="sort-indicator">${sortIcon('Grade')}</span></th>
-              <th class="sortable" data-key="Class">Class <span class="sort-indicator">${sortIcon('Class')}</span></th>
-              <th class="sortable" data-key="Manufacturer">Manufacturer <span class="sort-indicator">${sortIcon('Manufacturer')}</span></th>
-              <th>Shops</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${list.map(item=>{
-              const gradeStr = item.Grade === null || item.Grade === undefined
-                ? ''
-                : String(item.Grade);
-
-              const itemShops = Array.isArray(item.Shops) ? item.Shops : [];
-              let shopsText = '';
-
-              if(itemShops.length && shops.length && shopMap.size){
-                const labels = [];
-                itemShops.forEach(id=>{
-                  const s = shopMap.get(id);
-                  if(!s){
-                    labels.push(id);
-                    return;
-                  }
-                  const loc = (s.locationName || s.locationGuess || '').trim();
-                  if(s.shopName){
-                    labels.push(loc ? `${s.shopName} – ${loc}` : s.shopName);
-                  }else{
-                    labels.push(s.raw || id);
-                  }
-                });
-                shopsText = labels.join('; ');
-              }else{
-                shopsText = itemShops.join('; ');
-              }
-
-              if(!shopsText){
-                shopsText = 'No known shops (loot-only / unavailable)';
-              }
-
-              return `
-                <tr>
-                  <td class="col-name">${esc(item.Names || '')}</td>
-                  <td><span class="pill pill-component">${esc(item.Component || '')}</span></td>
-                  <td><span class="pill pill-size">${esc(item.Size || '')}</span></td>
-                  <td><span class="pill pill-grade">${esc(gradeStr)}</span></td>
-                  <td><span class="pill pill-class">${esc(item.Class || '')}</span></td>
-                  <td>${esc(item.Manufacturer || '')}</td>
-                  <td class="col-shops">${esc(shopsText)}</td>
-                </tr>`;
-            }).join('')}
-          </tbody>
-        </table>
-      `;
-
-      tableRegion.innerHTML = headerHtml;
-
-      // Attach sort handlers
-      tableRegion.querySelectorAll('th.sortable').forEach(th=>{
-        th.addEventListener('click',()=>{
-          const key = th.getAttribute('data-key');
-          if(currentSort.key === key){
-            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
-          }else{
-            currentSort.key = key;
-            currentSort.dir = 'asc';
-          }
-          applyFiltersAndSort();
-        });
-      });
-    }
-
-    // Hook up filter events
-    [
-      searchInput,
-      filterComponent,
-      filterClass,
-      filterSize,
-      filterLocation,
-      filterShop
-    ].forEach(el=>{
-      el.addEventListener('input', applyFiltersAndSort);
-      el.addEventListener('change', applyFiltersAndSort);
-    });
-
-    // When location changes, update shop list then re-filter
-    filterLocation.addEventListener('change',()=>{
-      updateShopFilterOptions();
-      applyFiltersAndSort();
-    });
-
-    loadData();
-  </script>
+  // deep link ?id=...
+  const qs = new URLSearchParams(location.search);
+  if(qs.get('id')) openMission(qs.get('id'));
+});
+</script>
 </body>
 </html>
