@@ -8,48 +8,52 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
 :root{
   --bg:#000;
-  --panel:#050506;
-  --card:#0c0c10;
+  --panel:#0b0b0b;
+  --card:#101010;
   --border:#d6b44c;
   --accent:#f2d675;
   --accent-soft:#c9b06a;
   --text:#f7f1d0;
   --muted:#c9b06a;
   --bad:#ff6b6b;
-  --ok:#5cd47c;
+  --good:#5cd47c;
   --fs:14px;
 }
 
-*{box-sizing:border-box}
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
-  margin:0;
-  padding:14px;
   background:
-    radial-gradient(circle at top,rgba(242,214,117,.10),transparent 55%),
-    radial-gradient(900px 700px at 120% 120%,rgba(214,180,76,.08),transparent 60%),
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
   color:var(--text);
   font-family:'Play',system-ui,sans-serif;
   font-size:var(--fs);
   letter-spacing:.25px;
+  padding:14px;
 }
 
-/* Fallback brand (if header.html fails) */
+/* Fallback header (replaced by header.html if found) */
 .brand{
-  display:flex;align-items:center;gap:10px;
-  margin:0 0 10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
   padding-bottom:6px;
+  margin-bottom:8px;
   border-bottom:1px solid var(--border);
 }
 .brand-logo{
   width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
+  border:none;background:transparent;box-shadow:none;
 }
 .brand h1{
   margin:0;
@@ -58,500 +62,655 @@ body{
   color:var(--accent);
 }
 
-/* Shell */
+/* Page shell */
 .shell{
-  max-width:980px;
+  max-width:1200px;
   margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
-
-/* Cards */
-.card{
-  background:var(--card);
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
   border-radius:16px;
-  border:1px solid rgba(214,180,76,.45);
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,.9),
-    0 18px 38px rgba(0,0,0,.95);
-  padding:14px 14px 12px;
-  margin-top:14px;
-}
-.card-header{
-  display:flex;align-items:flex-end;justify-content:space-between;
-  gap:10px;margin-bottom:10px;
-}
-.card-title{
-  font-size:12px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--accent);
-}
-.card-sub{
-  font-size:11px;
-  color:var(--muted);
+  padding:14px 14px 16px;
+  box-shadow:0 0 24px rgba(214,180,76,.22);
 }
 
-/* Hero rank card */
+/* ---------- Cinematic Hero ---------- */
 .hero{
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(242,214,117,.20),transparent 55%),
+    radial-gradient(circle at 90% 100%,rgba(214,180,76,.12),transparent 55%);
+  opacity:.75;
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+.hero-inner{
+  position:relative;
+  z-index:1;
   display:grid;
-  grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);
-  gap:12px;
+  grid-template-columns:minmax(0,1.4fr) minmax(0,1.2fr);
+  gap:18px;
 }
-@media(max-width:720px){
-  .hero{grid-template-columns:1fr}
+@media(max-width:880px){
+  .hero-inner{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
 }
-
 .hero-left{
   display:flex;
-  gap:12px;
-  align-items:center;
+  flex-direction:column;
+  gap:6px;
 }
-.rankImg{
-  width:56px;height:56px;object-fit:contain;
-  border:none;background:transparent;box-shadow:none;
-  display:none;
-}
-.hero-rank-label{
-  font-size:11px;
+.hero-title{
+  font-size:16px;
   text-transform:uppercase;
   letter-spacing:.18em;
   color:var(--accent-soft);
 }
-.hero-rank-main{
-  font-size:16px;
+.hero-sub{
+  font-size:12px;
+  color:var(--muted);
 }
-.hero-pg{
-  margin-top:3px;
-  font-size:11px;
+@media(max-width:480px){
+  .hero-sub{display:none;}
 }
 
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  padding:4px 10px;
-  font-size:11px;
-  background:rgba(5,5,5,.95);
-  color:var(--accent);
-}
-.badge strong{font-weight:700}
+/* we no longer show the big standalone current rank block */
 
+/* Hero right: cinematic rail current → next */
 .hero-right{
   display:flex;
   flex-direction:column;
+  gap:8px;
   justify-content:center;
-  align-items:flex-end;
-  gap:6px;
 }
-.hero-next-label{
+@media(max-width:880px){
+  .hero-right{
+    padding-top:6px;
+    border-top:1px solid rgba(214,180,76,.3);
+  }
+}
+.rail{
+  position:relative;
+  padding:10px 12px 12px;
+  border-radius:14px;
+  background:
+    radial-gradient(circle at 0% 50%,rgba(242,214,117,.1),transparent 55%),
+    radial-gradient(circle at 100% 50%,rgba(242,214,117,.08),transparent 55%),
+    #050505;
+  border:1px solid rgba(214,180,76,.6);
+  box-shadow:0 0 24px rgba(0,0,0,.9);
+}
+.rail-line{
+  position:relative;
+  height:5px;
+  border-radius:999px;
+  background:rgba(20,20,20,.9);
+  border:1px solid rgba(214,180,76,.4);
+  overflow:hidden;
+}
+.rail-fill{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(242,214,117,.1),var(--accent),rgba(242,214,117,.1));
+  transform-origin:left center;
+  transform:scaleX(0);
+  transition:transform .5s ease-out;
+}
+.rail-glow{
+  position:absolute;
+  inset:-40%;
+  background:radial-gradient(circle at 50% 50%,rgba(242,214,117,.35),transparent 60%);
+  mix-blend-mode:screen;
+  opacity:0;
+  pointer-events:none;
+}
+.rail-points{
+  position:relative;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-top:10px;
+}
+.rail-point{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  text-align:center;
   font-size:11px;
+  color:var(--muted);
+  max-width:44%;
+}
+.rail-point img{
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  border:none;
+  background:transparent;
+  box-shadow:none;
+  display:none;
+}
+.rail-point .label{
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  font-size:10px;
+}
+.rank-name{
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent);
+}
+.rank-code{
+  font-size:10px;
+  color:var(--muted);
+}
+.rail-arrow{
+  font-size:16px;
+  color:var(--accent);
+  margin-top:18px;
+}
+
+.hero-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+.btn{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  cursor:pointer;
+  font-family:'Play',system-ui,sans-serif;
+  font-size:12px;
+}
+.btn:hover:not(:disabled){
+  background:var(--accent);
+  color:#000;
+}
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+/* ---------- Requirements ---------- */
+.section-title{
+  font-size:14px;
   text-transform:uppercase;
   letter-spacing:.18em;
   color:var(--accent-soft);
+  margin-bottom:10px;
 }
-.hero-next-name{
-  font-size:14px;
-  font-weight:700;
-}
-
-/* Buttons */
-button{
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:radial-gradient(circle at top left,#151515,#050505);
-  color:var(--accent);
-  cursor:pointer;
-  font-family:'Play';
-  font-size:13px;
-}
-button:hover{background:var(--accent);color:#000}
-button[disabled]{
-  opacity:.55;
-  cursor:not-allowed;
-  background:#050505;
-}
-
-/* Requirements card */
-.pb{
+.req-grid{
   display:grid;
-  grid-template-columns:120px 1fr auto;
-  align-items:center;
-  gap:10px;
-  margin:6px 0;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:12px;
 }
-.pb-label{
+@media(max-width:820px){
+  .req-grid{grid-template-columns:1fr}
+}
+.req-card{
+  background:var(--card);
+  border-radius:12px;
+  border:1px solid rgba(214,180,76,.6);
+  padding:10px 10px 12px;
+  box-shadow:0 0 16px rgba(0,0,0,.7);
+}
+.req-label{
   font-size:11px;
-  letter-spacing:.16em;
   text-transform:uppercase;
-  color:var(--accent-soft);
+  letter-spacing:.16em;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+.req-main{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 .bar{
+  flex:1;
   height:12px;
-  background:#050505;
   border-radius:999px;
-  border:1px solid rgba(214,180,76,.55);
+  background:#050505;
+  border:1px solid rgba(214,180,76,.6);
   overflow:hidden;
-  box-shadow:inset 0 0 10px rgba(0,0,0,.95);
 }
 .fill{
   height:100%;
-  background:linear-gradient(90deg,var(--accent),#f7f1d0);
-  box-shadow:0 0 18px rgba(242,214,117,.9);
+  background:linear-gradient(180deg,var(--accent),#d6b44c);
+  transform-origin:left center;
+  transform:scaleX(0);
+  transition:transform .5s ease-out;
 }
-.pb-val{
-  font-size:11px;
+.req-val{
+  font-size:12px;
   font-variant-numeric:tabular-nums;
   color:var(--muted);
 }
 
-.small{font-size:11px;color:var(--muted)}
-
-/* Certifications grid */
-.certGrid{
+/* ---------- Certifications ---------- */
+.cert-grid{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(6, minmax(0,1fr));
   gap:10px;
   margin-top:6px;
-  justify-items:center;
 }
-@media(max-width:920px){.certGrid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:640px){.certGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1100px){.cert-grid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:900px){.cert-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.cert-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.cert-grid{grid-template-columns:repeat(2,1fr)}}
 
 .cert{
   text-align:center;
   padding:6px 4px 10px;
   border-radius:10px;
-  transition:transform .12s ease,opacity .12s ease,filter .12s ease;
+  background:transparent;
+  transition:transform .15s ease, opacity .15s ease, filter .15s ease;
 }
-.cert:hover{transform:translateY(-1px) scale(1.03)}
-.cert.dim{opacity:.4;filter:grayscale(.7)}
+.cert:hover{transform:translateY(-1px) scale(1.03);}
+.cert.dim{opacity:.45;filter:grayscale(.5);}
 .cert-thumb{
-  width:64px;height:64px;
+  width:64px;
+  height:64px;
+  display:grid;
+  place-items:center;
   margin:0 auto 4px;
-  display:grid;place-items:center;
 }
 .cert-thumb img{
-  max-width:56px;max-height:100%;object-fit:contain;
-  border:none;background:transparent;box-shadow:none;
+  max-width:56px;
+  max-height:56px;
+  object-fit:contain;
 }
-.cert-title{font-size:12px;font-weight:700}
-.cert-code{font-size:10px;color:var(--muted);margin-top:1px}
+.cert-title{
+  font-size:11px;
+  font-weight:700;
+}
+.cert-code{
+  font-size:10px;
+  color:var(--muted);
+}
 
-/* Timeline */
+/* ---------- Timeline ---------- */
+.timeline-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  margin-bottom:8px;
+}
+.timeline-select{
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px 10px;
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  font-size:12px;
+}
+.timeline-hint{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
 .timeline{
   position:relative;
-  padding-left:18px;
-  margin-top:6px;
+  padding-left:26px;
+  margin-top:4px;
 }
 .timeline::before{
   content:"";
   position:absolute;
-  left:4px;top:0;bottom:0;
+  left:10px;
+  top:0;
+  bottom:0;
   width:2px;
-  background:linear-gradient(var(--border),transparent);
+  background:linear-gradient(to bottom,var(--border),transparent);
+  opacity:.7;
 }
 .titem{
   position:relative;
-  padding:8px 2px;
+  padding:10px 6px 10px 4px;
   border-bottom:1px solid rgba(255,255,255,.06);
   display:grid;
-  grid-template-columns:1.5fr auto;
-  gap:8px;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,0.8fr);
+  gap:10px;
+  font-size:13px;
 }
-.titem:last-child{border-bottom:none}
-.tlabel{font-size:13px;font-weight:700}
-.tdesc{font-size:11px;color:var(--muted);margin-top:2px}
+@media(max-width:620px){
+  .titem{grid-template-columns:1fr;gap:4px;}
+}
+.tlabel{
+  font-weight:700;
+}
 .tstatus{
-  font-size:11px;text-align:right;
+  font-size:12px;
   color:var(--muted);
 }
-.tstatus.done{color:var(--ok)}
-
-/* Select */
-select{
-  background:#050505;
-  border-radius:10px;
-  border:1px solid rgba(214,180,76,.6);
-  padding:8px 10px;
-  color:var(--text);
-  font-family:'Play';
+.titem::before{
+  content:"";
+  position:absolute;
+  left:-18px;
+  top:16px;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  border:2px solid var(--border);
+  background:#000;
+}
+.titem.done::before{
+  background:var(--accent);
+}
+.titem.done .tstatus{
+  color:var(--good);
+}
+.small{
   font-size:12px;
+  color:var(--muted);
 }
 </style>
 </head>
 <body>
 
-<!-- Header mount (replaced by header.html if available) -->
+<!-- Header mount point (replaced by header.html if available) -->
 <div id="header-container">
   <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <img class="brand-logo"
+         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+         alt="JMBN">
     <h1>JMBN – Progression</h1>
   </div>
 </div>
+
 <script>
-/* Shared header.html + active nav */
+/* Inject shared header.html and highlight current page */
 (async () => {
   try{
-    const r = await fetch('header.html',{cache:'no-cache'});
+    const r = await fetch('header.html',{ cache:'no-cache' });
     if(!r.ok) return;
     const html = await r.text();
     const mount = document.getElementById('header-container');
     if(mount) mount.outerHTML = html;
-    requestAnimationFrame(()=>{
+
+    requestAnimationFrame(() => {
       const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a=>{
-        const href = (a.getAttribute('href')||'').toLowerCase();
-        if(href===here || (here==='' && href==='index.html')){
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
+      document.querySelectorAll('.nav-btn').forEach(a => {
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        if(href === here) a.classList.add('active');
       });
     });
-  }catch(e){console.warn('Header mount failed',e);}
+  }catch(e){
+    console.warn('Header mount failed:', e);
+  }
 })();
 </script>
 
-<div class="shell">
-  <!-- HERO: Current + Next Rank -->
-  <section class="card">
-    <div class="card-header">
-      <div class="card-title">Rank Overview</div>
-    </div>
-    <div class="hero">
+<main class="shell">
+  <!-- HERO: cinematic rank progression -->
+  <section class="panel hero">
+    <div class="hero-inner">
+      <!-- Left: title + copy -->
       <div class="hero-left">
-        <img id="curImg" class="rankImg" alt="Current Rank">
-        <div>
-          <div class="hero-rank-label">Current Rank</div>
-          <div class="hero-rank-main" id="curRank">—</div>
-          <div class="hero-pg">
-            <span class="badge" id="curPg"><strong>PG:</strong> —</span>
-          </div>
+        <div class="hero-title">Rank Progression</div>
+        <div class="hero-sub">
+          Track your journey from current paygrade to the next step in the JMBN ladder.
         </div>
       </div>
+
+      <!-- Right: rail with logos + names -->
       <div class="hero-right">
-        <div class="hero-next-label">Next Rank</div>
-        <div class="hero-next-name" id="nextName">—</div>
-        <div class="badge" id="nextPg">PG: —</div>
-        <button id="btnPromote" disabled>Request Promotion</button>
+        <div class="rail">
+          <div class="rail-line">
+            <div id="railFill" class="rail-fill"></div>
+          </div>
+          <div id="railGlow" class="rail-glow"></div>
+
+          <div class="rail-points">
+            <div class="rail-point">
+              <div class="label">Current</div>
+              <img id="railCurImg" alt="Current Rank">
+              <div class="rank-name" id="curRank">(unranked)</div>
+              <div class="rank-code" id="curPg">PG: —</div>
+            </div>
+            <div class="rail-arrow">➤</div>
+            <div class="rail-point">
+              <div class="label">Next</div>
+              <img id="railNextImg" alt="Next Rank">
+              <div class="rank-name" id="nextName">—</div>
+              <div class="rank-code" id="nextPg">PG: —</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button id="btnPromote" class="btn" disabled>Request Promotion</button>
+          <span class="small" id="note">
+            Promotion is available when all targets are met.
+          </span>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- REQUIREMENTS -->
-  <section class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Requirements</div>
-        <div class="card-sub">Live counters from missions, hours, and certifications.</div>
+  <section class="panel">
+    <div class="section-title">Requirements to Next Rank</div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-label">Missions</div>
+        <div class="req-main">
+          <div class="bar"><div id="pbMissions" class="fill"></div></div>
+          <div class="req-val" id="valMissions">0 / 0</div>
+        </div>
       </div>
-    </div>
-
-    <div class="pb">
-      <div class="pb-label">Missions</div>
-      <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
-      <div class="pb-val" id="valMissions">0 / 0</div>
-    </div>
-
-    <div class="pb">
-      <div class="pb-label">Hours</div>
-      <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
-      <div class="pb-val" id="valHours">0 / 0</div>
-    </div>
-
-    <div class="pb">
-      <div class="pb-label">Certifications</div>
-      <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
-      <div class="pb-val" id="valCerts">0 / 0</div>
-    </div>
-
-    <div id="note" class="small" style="margin-top:8px">
-      Promotion is available when all targets are met.
+      <div class="req-card">
+        <div class="req-label">Hours</div>
+        <div class="req-main">
+          <div class="bar"><div id="pbHours" class="fill"></div></div>
+          <div class="req-val" id="valHours">0 / 0</div>
+        </div>
+      </div>
+      <div class="req-card">
+        <div class="req-label">Certifications</div>
+        <div class="req-main">
+          <div class="bar"><div id="pbCerts" class="fill"></div></div>
+          <div class="req-val" id="valCerts">0 / 0</div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- CERTIFICATIONS -->
-  <section class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Certifications</div>
-        <div class="card-sub">Gold badges are owned; dimmed badges are not yet earned.</div>
-      </div>
+  <section class="panel">
+    <div class="section-title">Certifications</div>
+    <div id="certGrid" class="cert-grid">
+      <div class="small">Loading certifications…</div>
     </div>
-    <div id="certGrid" class="certGrid">—</div>
+    <div class="small" style="margin-top:6px">
+      Dim badges are not yet earned.
+    </div>
   </section>
 
   <!-- TIMELINE -->
-  <section class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Certification Timeline</div>
-        <div class="card-sub">Pick a certification to view its required trainings.</div>
-      </div>
-    </div>
-
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
-      <select id="certSelect">
+  <section class="panel">
+    <div class="section-title">Certification Timeline</div>
+    <div class="timeline-controls">
+      <select id="certSelect" class="timeline-select">
         <option value="">— Select a Certification —</option>
       </select>
-      <button id="btnReloadTL">Load</button>
+      <button id="btnReloadTL" class="btn" type="button">Load</button>
     </div>
-
-    <div id="tlHint" class="small" style="margin-bottom:6px">
-      Pick a certification to view its required trainings.
+    <div id="tlHint" class="timeline-hint">
+      Pick a certification to view its required training events.
     </div>
-
     <div id="timeline" class="timeline"></div>
   </section>
-</div>
+</main>
 
 <!-- Supabase + auth -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
 <script>
 const $ = s => document.querySelector(s);
-let sb, me;
+let sb = null;
+let me = null;
 
-/* Clamp & set bar fill */
-function setFill(sel,pct){
-  const el=$(sel);
-  const x=Math.max(0,Math.min(1,Number(pct)||0));
-  if(el) el.style.width=(x*100)+'%';
+function setFill(el, pct){
+  const x = Math.max(0, Math.min(1, Number(pct) || 0));
+  el.style.transform = 'scaleX(' + x + ')';
 }
 
-/* Rank image loader */
-function setRankImg(id, code){
-  const img = $('#'+id);
-  if(!img) return;
+/* Load rank image from Ranks bucket and show/hide img */
+function setRankImg(imgEl, code){
+  if(!imgEl) return;
   if(!code){
-    img.style.display='none';
-    img.removeAttribute('src');
+    imgEl.style.display = 'none';
+    imgEl.removeAttribute('src');
     return;
   }
   try{
-    const { data } = sb.storage.from('Ranks').getPublicUrl(`${code}.png`);
+    const { data } = sb.storage.from('Ranks').getPublicUrl(code + '.png');
     const url = data?.publicUrl || '';
     if(!url){
-      img.style.display='none';
-      img.removeAttribute('src');
+      imgEl.style.display = 'none';
+      imgEl.removeAttribute('src');
       return;
     }
-    img.onload  = ()=>{ img.style.display='block'; };
-    img.onerror = ()=>{ img.style.display='none'; };
-    img.src = url;
+    imgEl.onload  = () => { imgEl.style.display = 'block'; };
+    imgEl.onerror = () => { imgEl.style.display = 'none'; };
+    imgEl.src = url;
   }catch(e){
-    console.warn('rank img error', e);
-    img.style.display='none';
-    img.removeAttribute('src');
+    imgEl.style.display = 'none';
+    imgEl.removeAttribute('src');
   }
 }
 
-document.addEventListener('DOMContentLoaded', async ()=>{
+/* Apply hero rail progress + glow */
+function applyRailProgress(ratio){
+  const fill = $('#railFill');
+  const glow = $('#railGlow');
+  const x = Math.max(0, Math.min(1, Number(ratio) || 0));
+  fill.style.transform = 'scaleX(' + x + ')';
+  glow.style.opacity   = x > 0.95 ? 0.85 : (x > 0.5 ? 0.5 : 0.2);
+}
+
+/* MAIN INIT */
+document.addEventListener('DOMContentLoaded', async () => {
   const session = await requireAuth();
   if(!session) return;
-  sb = getSupabase();
-  me = session.user.id;
+  sb  = getSupabase();
+  me  = session.user.id;
 
   async function loadProgress(){
-    const { data: prog, error: progErr } = await sb
+    const { data: prog } = await sb
       .from('v_user_rank_progress')
       .select('*')
       .eq('user_id', me)
       .maybeSingle();
-    if(progErr) console.warn('rank progress error', progErr.message);
 
-    $('#curRank').textContent   = prog?.current_name || '(unranked)';
-    $('#curPg').textContent     = `PG: ${prog?.current_paygrade || '—'}`;
-    $('#nextName').textContent  = prog?.next_name || '—';
-    $('#nextPg').textContent    = `PG: ${prog?.next_paygrade || '—'}`;
+    // Text under the logos
+    $('#curRank').textContent = prog?.current_name || '(unranked)';
+    $('#curPg').textContent   = 'PG: ' + (prog?.current_paygrade || '—');
+    $('#nextName').textContent = prog?.next_name || '—';
+    $('#nextPg').textContent   = 'PG: ' + (prog?.next_paygrade || '—');
 
-    setRankImg('curImg',  prog?.current_code || null);
-    setRankImg('nextImg', prog?.next_code    || null);
+    // Images in the rail
+    setRankImg($('#railCurImg'), prog?.current_code || null);
+    setRankImg($('#railNextImg'),prog?.next_code    || null);
 
-    const { data: up, error: upErr } = await sb
+    // Progress stats from v_user_progress
+    const { data: up } = await sb
       .from('v_user_progress')
-      .select('missions_attended,hours_total')
+      .select('*')
       .eq('user_id', me)
       .maybeSingle();
-    if(upErr) console.warn('user progress error', upErr.message);
 
-    const m  = Number(up?.missions_attended || 0);
-    const h  = Number(up?.hours_total       || 0);
+    const m  = Number(up?.missions_attended    || 0);
+    const h  = Number(up?.hours_total          || 0);
+    const c  = Number(up?.certifications_total || 0);
+    const mt = Number(prog?.missions_target       || 0);
+    const ht = Number(prog?.hours_target          || 0);
+    const ct = Number(prog?.certification_target  || 0);
 
-    // count owned certifications
-    let ownedCerts = 0;
-    try{
-      const { data: certRows, error: cErr } = await sb
-        .from('v_user_certifications')
-        .select('certification_code,owned')
-        .eq('user_id', me);
-      if(cErr) console.warn('cert count error', cErr.message);
-      ownedCerts = (certRows || []).filter(c => c.owned).length;
-    }catch(e){
-      console.warn('cert count exception', e);
-    }
+    $('#valMissions').textContent = m + ' / ' + mt;
+    $('#valHours').textContent    = h + ' / ' + ht;
+    $('#valCerts').textContent    = c + ' / ' + ct;
 
-    const mt = Number(prog?.missions_target      || 0);
-    const ht = Number(prog?.hours_target         || 0);
-    const ct = Number(prog?.certification_target || 0);
+    setFill($('#pbMissions'), mt ? m/mt : 1);
+    setFill($('#pbHours'),    ht ? h/ht : 1);
+    setFill($('#pbCerts'),    ct ? c/ct : 1);
 
-    $('#valMissions').textContent = `${m} / ${mt}`;
-    $('#valHours').textContent    = `${h} / ${ht}`;
-    $('#valCerts').textContent    = `${ownedCerts} / ${ct}`;
+    // Cinematic rail ratio (simple average of met requirements)
+    let parts = [];
+    if(mt) parts.push(Math.min(1, m/mt));
+    if(ht) parts.push(Math.min(1, h/ht));
+    if(ct) parts.push(Math.min(1, c/ct));
+    const ratio = parts.length ? (parts.reduce((s,x)=>s+x,0) / parts.length) : 0;
+    applyRailProgress(ratio);
 
-    setFill('#pbMissions', mt ? m/mt : 1);
-    setFill('#pbHours',    ht ? h/ht : 1);
-    setFill('#pbCerts',    ct ? ownedCerts/ct : 1);
-
-    const allMet =
-      (!!prog?.next_code) &&
+    // Promotion availability
+    const allMet = (!!prog?.next_code) &&
       (mt ? m >= mt : true) &&
       (ht ? h >= ht : true) &&
-      (ct ? ownedCerts >= ct : true);
+      (ct ? c >= ct : true);
 
-    $('#btnPromote').disabled = !allMet;
-
+    const btn  = $('#btnPromote');
     const note = $('#note');
+
+    btn.disabled = !allMet;
+
     if(!prog?.next_code){
-      note.textContent = 'You are at the highest rank or the next rank is not configured.';
-    }else if(allMet){
+      note.textContent = 'You are at the highest configured rank, or next rank is not set.';
+    } else if(allMet){
       note.textContent = 'All requirements met. You can request promotion.';
-    }else{
+    } else {
       note.textContent = 'Promotion is available when all targets are met.';
     }
+
+    btn.onclick = () => {
+      if(btn.disabled) return;
+      alert('Promotion request flow not wired yet – later you can hook this to a RPC or Discord ticket.');
+    };
   }
 
   async function loadCerts(){
-    const [{ data: cat, error: catErr }, { data: mine, error: mineErr }] =
-      await Promise.all([
-        sb.from('certifications')
-          .select('certification_code,name,image_url,sort_order')
-          .order('sort_order',{ascending:true}),
-        sb.from('v_user_certifications')
-          .select('certification_code,owned,image_url')
-          .eq('user_id', me)
-      ]);
+    const [{ data: cat }, { data: mine }] = await Promise.all([
+      sb.from('certifications')
+        .select('certification_code,name,image_url,sort_order')
+        .order('sort_order'),
+      sb.from('user_certifications')
+        .select('certification_code')
+        .eq('user_id', me)
+    ]);
 
-    if(catErr)  console.warn('cert catalog error', catErr.message);
-    if(mineErr) console.warn('user certs error', mineErr.message);
+    const owned = new Set((mine || []).map(x => x.certification_code));
+    const grid  = $('#certGrid');
 
-    const ownedSet   = new Set((mine || []).filter(c=>c.owned).map(c=>c.certification_code));
-    const ownedImage = new Map((mine || []).map(c=>[c.certification_code,c.image_url]));
-
-    const grid = $('#certGrid');
     if(!cat || !cat.length){
       grid.innerHTML = '<div class="small">No certifications configured yet.</div>';
-    }else{
-      grid.innerHTML = cat.map(c=>{
-        const has = ownedSet.has(c.certification_code);
-        const img = ownedImage.get(c.certification_code) || c.image_url;
-        const dim = has ? '' : ' dim';
+    } else {
+      grid.innerHTML = cat.map(c => {
+        const dim = owned.has(c.certification_code) ? '' : ' dim';
+        const img = c.image_url
+          ? '<img src="'+c.image_url+'" alt="">'
+          : '<span>🏅</span>';
         return `
           <div class="cert${dim}">
-            <div class="cert-thumb">
-              ${img ? `<img src="${img}" alt="">` : '🏅'}
-            </div>
+            <div class="cert-thumb">${img}</div>
             <div class="cert-title">${c.name}</div>
             <div class="cert-code">${c.certification_code}</div>
           </div>`;
@@ -566,59 +725,61 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
 
   async function loadTimeline(code){
-    const tl   = $('#timeline');
-    const hint = $('#tlHint');
-    tl.innerHTML = '';
-
+    const tl = $('#timeline');
     if(!code){
-      hint.textContent = 'Pick a certification to view its required trainings.';
+      tl.innerHTML = '';
+      $('#tlHint').textContent = 'Pick a certification to view its required training events.';
       return;
     }
-    hint.textContent = '';
 
-    const [{ data: reqs, error: reqErr }, { data: done, error: doneErr }] =
-      await Promise.all([
-        sb.from('certification_requirements')
-          .select('event_code,sort_order,training_events(title,description)')
-          .eq('certification_code', code)
-          .order('sort_order',{ascending:true}),
-        sb.from('user_training_events')
-          .select('event_code,completed_at,approved_by')
-          .eq('user_id', me)
-      ]);
+    $('#tlHint').textContent = 'Training events required for ' + code + ':';
 
-    if(reqErr)  console.warn('timeline req error', reqErr.message);
-    if(doneErr) console.warn('timeline done error', doneErr.message);
+    const [{ data: reqs }, { data: done }] = await Promise.all([
+      sb.from('certification_requirements')
+        .select('event_code,sort_order,training_events(title,description)')
+        .eq('certification_code', code)
+        .order('sort_order'),
+      sb.from('user_training_events')
+        .select('event_code,completed_at,approved_by')
+        .eq('user_id', me)
+    ]);
 
-    const map = new Map((done || []).map(r=>[r.event_code,r]));
+    const map = new Map((done || []).map(r => [r.event_code, r]));
+
     if(!reqs || !reqs.length){
-      tl.innerHTML = '<div class="small">No training events configured for this certification yet.</div>';
+      tl.innerHTML = '<div class="small">No training events configured yet for this certification.</div>';
       return;
     }
 
-    tl.innerHTML = reqs.map(r=>{
-      const ev  = r.training_events || {};
+    tl.innerHTML = reqs.map(r => {
       const rec = map.get(r.event_code);
-      const ok  = !!rec;
-      const status = ok
-        ? `Completed${rec.completed_at ? ' — ' + new Date(rec.completed_at).toLocaleString('en-SG') : ''}`
+      const doneFlag = !!rec;
+      const title = r.training_events?.title || r.event_code;
+      const status = doneFlag
+        ? 'Completed' + (rec.completed_at ? ' (' + new Date(rec.completed_at).toLocaleDateString('en-SG') + ')' : '')
         : 'Pending';
       return `
-        <div class="titem">
-          <div>
-            <div class="tlabel">${ev.title || r.event_code}</div>
-            <div class="tdesc">${ev.description || ''}</div>
-          </div>
-          <div class="tstatus${ok?' done':''}">${status}</div>
+        <div class="titem${doneFlag ? ' done' : ''}">
+          <div class="tlabel">${title}</div>
+          <div class="tstatus">${status}</div>
         </div>`;
     }).join('');
   }
 
-  $('#btnReloadTL').onclick = () => loadTimeline($('#certSelect').value);
-  $('#certSelect').onchange = () => loadTimeline($('#certSelect').value);
+  // Wire events
+  $('#certSelect').addEventListener('change', () => {
+    const code = $('#certSelect').value;
+    loadTimeline(code);
+  });
+  $('#btnReloadTL').addEventListener('click', () => {
+    const code = $('#certSelect').value;
+    loadTimeline(code);
+  });
 
+  // Initial loads
   await loadProgress();
   await loadCerts();
+  await loadTimeline('');
 });
 </script>
 </body>
