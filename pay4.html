@@ -14,9 +14,9 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--sub:#101010;
-  --border:#d6b44c;--row:#080808;
-  --accent:#f2d675;--accent-soft:#e0c66d;
+  --bg:#000;--panel:#0b0b0b;--card:#101010;--row:#090909;
+  --border:#d6b44c;
+  --accent:#f2d675;--accent-soft:#c9b06a;
   --text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--good:#37d996;
   --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
@@ -28,122 +28,147 @@ body{
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
   color:var(--text);
-  font-family:'Play',system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:var(--fs-base);letter-spacing:.25px;
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size:var(--fs-base);
+  letter-spacing:.25px;
 }
 
-/* Header2 mount */
-#header2-mount{margin-bottom:6px}
+/* Fallback header (overwritten by header.html) */
+#header-container .brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 8px;padding-bottom:6px;
+  border-bottom:1px solid var(--border)
+}
+#header-container .brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25))
+}
+#header-container .brand h1{
+  font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0
+}
 
 /* Panels */
 .panel{
   background:var(--panel);
-  border-radius:14px;
   border:1px solid var(--border);
-  padding:12px;
-  box-shadow:0 0 22px rgba(214,180,76,.32), inset 0 0 0 1px rgba(214,180,76,.18);
-  margin-bottom:10px;
+  border-radius:14px;
+  padding:10px 10px 12px;
+  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.14);
+  margin-top:10px;
 }
-.section-title{
+.panel-header{
+  padding:4px 4px 8px;
+  border-bottom:1px solid rgba(214,180,76,.4);
+  margin-bottom:6px;
+}
+.panel-title{
   font-size:13px;
   color:var(--accent);
   text-transform:uppercase;
   letter-spacing:.16em;
-  margin:0 0 4px;
+  font-weight:700;
 }
-.subtle{font-size:var(--fs-small);color:var(--muted)}
+.panel-sub{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
 
-/* Overview cards */
+/* Overview grid */
 .overview-grid{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:8px;
-  margin-top:6px;
 }
-@media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.overview-grid{grid-template-columns:1fr}}
-.stat{
-  background:linear-gradient(180deg,#0c0c0c,#050505);
+
+.card{
+  background:linear-gradient(180deg,#111,#090909);
   border-radius:12px;
   border:1px solid var(--border);
   padding:8px 10px;
-  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.12);
+  box-shadow:0 0 12px rgba(214,180,76,.2),inset 0 0 0 1px rgba(214,180,76,.18);
 }
-.stat-label{
+.card-label{
   font-size:11px;
   color:var(--muted);
   text-transform:uppercase;
   letter-spacing:.12em;
   margin-bottom:3px;
 }
-.stat-value{
-  font-size:20px;
+.card-value{
+  font-size:18px;
   font-weight:700;
   color:var(--accent);
 }
-.stat-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.card-sub{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
 .mono{font-variant-numeric:tabular-nums}
 
-/* Pills for meta line */
-.pills-row{
+/* Overview footer badges */
+.overview-footer{
   display:flex;
   flex-wrap:wrap;
   gap:6px;
-  margin-top:6px;
+  margin-top:8px;
 }
-.pill{
+.badge-line{
   display:inline-flex;
   align-items:center;
   gap:6px;
+  padding:3px 8px;
   border-radius:999px;
   border:1px solid var(--border);
-  padding:3px 9px;
+  background:#090909;
   font-size:11px;
-  background:#050505;
   color:var(--muted);
 }
-.pill-dot{
+.badge-dot{
   width:7px;height:7px;border-radius:50%;background:var(--accent);
 }
 
-/* Mission table */
+/* Mission earnings section */
 .controls{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
-  margin:6px 0 8px;
   align-items:center;
+  margin-bottom:6px;
 }
-input[type="search"]{
+.controls input[type="search"]{
+  min-width:220px;
   background:#050505;
   border:1px solid var(--border);
   border-radius:999px;
-  padding:8px 12px;
+  padding:7px 11px;
+  font-size:12px;
   color:var(--text);
-  font-size:var(--fs-table);
-  min-width:220px;
 }
-.filter-toggle{
-  padding:7px 10px;
+.controls select{
+  background:#050505;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:11px;
+  color:var(--text);
+}
+.filter-pill{
   border-radius:999px;
   border:1px solid var(--border);
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--muted);
+  padding:4px 10px;
   font-size:11px;
+  color:var(--muted);
+  background:#050505;
   cursor:pointer;
 }
-.filter-toggle.active{
+.filter-pill.active{
+  background:linear-gradient(180deg,#f2d675,#e7c760);
   color:#000;
-  background:linear-gradient(180deg,var(--accent),var(--accent-soft));
   box-shadow:0 0 14px rgba(214,180,76,.45);
-}
-select{
-  background:#050505;
-  border-radius:999px;
-  border:1px solid var(--border);
-  padding:7px 10px;
-  color:var(--text);
-  font-size:11px;
 }
 
 /* Table */
@@ -151,125 +176,172 @@ select{
   border-radius:12px;
   border:1px solid var(--border);
   overflow:auto;
-  max-height:62vh;
+  max-height:55vh;
 }
 table{
   width:100%;
   border-collapse:collapse;
   font-size:var(--fs-table);
-  min-width:720px;
+  min-width:760px;
 }
 th,td{
-  padding:8px 9px;
-  border-bottom:1px solid rgba(214,180,76,.28);
-  text-align:left;
+  padding:7px 8px;
+  border-bottom:1px solid rgba(214,180,76,.35);
 }
 th{
   font-size:11px;
   color:var(--accent);
-  background:#080808;
+  background:#060606;
   text-transform:uppercase;
-  letter-spacing:.14em;
-  position:sticky;
-  top:0;
-  z-index:1;
+  letter-spacing:.12em;
+  font-weight:500;
+  position:sticky;top:0;z-index:1;
 }
-tbody tr:nth-child(even){background:#111}
-tbody tr:hover{background:rgba(214,180,76,.10)}
-.mission-title{
-  font-weight:700;
-}
-.mission-id{
-  font-size:11px;
-  color:var(--muted);
-}
+tbody tr:nth-child(even){background:#101010}
+tbody tr:hover{background:rgba(214,180,76,.08)}
+.text-right{text-align:right}
+.mission-title{font-weight:700}
+.mission-id{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* Status pill */
 .badge-status{
   display:inline-flex;
   align-items:center;
   gap:6px;
-  padding:3px 9px;
+  padding:2px 8px;
   border-radius:999px;
   border:1px solid var(--border);
-  background:#050505;
   font-size:11px;
+  background:#050505;
+  color:var(--muted);
 }
-.badge-dot{
+.badge-status .dot{
   width:7px;height:7px;border-radius:50%;background:var(--muted);
 }
-.badge-dot.good{background:var(--good)}
-.badge-dot.bad{background:var(--bad)}
-.text-right{text-align:right}
-.text-center{text-align:center}
+.badge-status.planned .dot{background:#c9b06a}
+.badge-status.success .dot{background:var(--good)}
+.badge-status.abort .dot{background:#ffb347}
+.badge-status.failed .dot{background:var(--bad)}
+
+/* Note line */
+.note-line{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:6px;
+}
 
 /* Toast */
 .toast{
-  position:fixed;right:16px;bottom:16px;
-  background:#111;border:1px solid var(--border);border-radius:10px;
-  padding:8px 12px;font-size:12px;color:var(--text);
+  position:fixed;
+  right:16px;bottom:16px;
+  background:#111;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:7px 11px;
+  font-size:12px;
+  color:var(--text);
   box-shadow:0 0 18px rgba(214,180,76,.32);
-  max-width:320px;z-index:40;
+  max-width:320px;
+  z-index:40;
 }
 .toast.bad{border-color:var(--bad);color:#ffd0d0}
 </style>
 </head>
 <body>
 
-<div id="header2-mount"></div>
+<!-- Shared header mount -->
+<div id="header-container">
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1>JMBN – Earnings</h1>
+  </div>
+</div>
 
+<!-- Load shared header.html -->
+<script>
+(async () => {
+  try{
+    const res = await fetch('header.html',{cache:'no-cache'});
+    if(!res.ok) return;
+    const html = await res.text();
+    const mount = document.getElementById('header-container');
+    if(mount) mount.outerHTML = html;
+
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'earnings.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(href === here) a.classList.add('active');
+      });
+    });
+  }catch(e){
+    console.warn('Header load failed',e);
+  }
+})();
+</script>
+
+<!-- PERSONAL OVERVIEW -->
 <section class="panel">
-  <div class="section-title">Personal Earnings Overview</div>
-  <div class="subtle" id="overviewUser">Reference-only ledger.</div>
+  <div class="panel-header">
+    <div class="panel-title">Personal Earnings Overview</div>
+    <div class="panel-sub" id="overviewHandle">Reference-only ledger.</div>
+  </div>
 
   <div class="overview-grid">
-    <div class="stat">
-      <div class="stat-label">Total Missions Paid</div>
-      <div class="stat-value mono" id="statMissions">–</div>
-      <div class="stat-sub">Any mission with a recorded payout row for you</div>
+    <div class="card">
+      <div class="card-label">Total Missions Paid</div>
+      <div class="card-value mono" id="kTotalMissions">–</div>
+      <div class="card-sub">Any mission with a payout row for you.</div>
     </div>
-    <div class="stat">
-      <div class="stat-label">Total aUEC Earned</div>
-      <div class="stat-value mono" id="statTotal">–</div>
-      <div class="stat-sub">Sum of all final shares recorded</div>
+    <div class="card">
+      <div class="card-label">Total aUEC Earned</div>
+      <div class="card-value mono" id="kTotalAuec">–</div>
+      <div class="card-sub">Sum of all final shares recorded.</div>
     </div>
-    <div class="stat">
-      <div class="stat-label">Average Per Mission</div>
-      <div class="stat-value mono" id="statAvg">–</div>
-      <div class="stat-sub">Total / missions paid</div>
+    <div class="card">
+      <div class="card-label">Average Per Mission</div>
+      <div class="card-value mono" id="kAvgPerMission">–</div>
+      <div class="card-sub">Total ÷ paid missions.</div>
     </div>
-    <div class="stat">
-      <div class="stat-label">Best Mission</div>
-      <div class="stat-value mono" id="statBest">–</div>
-      <div class="stat-sub" id="statBestTitle">–</div>
+    <div class="card">
+      <div class="card-label">Best Mission</div>
+      <div class="card-value mono" id="kBestAmount">–</div>
+      <div class="card-sub" id="kBestTitle">–</div>
     </div>
   </div>
 
-  <div class="pills-row">
-    <div class="pill">
-      <span class="pill-dot"></span>
-      <span id="pillLastPaid">Last paid mission: —</span>
+  <div class="overview-footer">
+    <div class="badge-line" id="kLastPaid">
+      <span class="badge-dot"></span>
+      <span>Last paid mission: –</span>
     </div>
-    <div class="pill">
-      <span class="pill-dot"></span>
-      <span id="pillBest">Best mission earned: —</span>
+    <div class="badge-line" id="kBestBadge">
+      <span class="badge-dot"></span>
+      <span>Best mission earned: –</span>
     </div>
   </div>
 </section>
 
+<!-- MISSION EARNINGS -->
 <section class="panel">
-  <div class="section-title">Mission Earnings</div>
-  <div class="subtle">Click a row to see a detailed breakdown for that mission (in admin ledger).</div>
+  <div class="panel-header">
+    <div class="panel-title">Mission Earnings</div>
+    <div class="panel-sub">Click a row in Discord or Supabase for detail breakdown — this page is for reference only.</div>
+  </div>
 
   <div class="controls">
     <input id="search" type="search" placeholder="Search by mission title / ID">
-    <button class="filter-toggle active" data-range="all">All time</button>
-    <button class="filter-toggle" data-range="30">Last 30 days</button>
-    <button class="filter-toggle" data-range="90">Last 90 days</button>
-    <select id="statusFilter" aria-label="Status filter">
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="filter-pill active" data-range="all">All time</button>
+      <button class="filter-pill" data-range="30">Last 30 days</button>
+      <button class="filter-pill" data-range="90">Last 90 days</button>
+    </div>
+    <select id="statusFilter">
       <option value="">All statuses</option>
-      <option value="Planned">Planned</option>
-      <option value="Success">Success</option>
-      <option value="Abort">Abort</option>
-      <option value="Fail">Fail</option>
+      <option value="planned">Planned</option>
+      <option value="success">Success</option>
+      <option value="abort">Abort</option>
+      <option value="failed">Failed</option>
     </select>
   </div>
 
@@ -277,21 +349,21 @@ tbody tr:hover{background:rgba(214,180,76,.10)}
     <table>
       <thead>
         <tr>
-          <th style="width:15%">Date</th>
-          <th style="width:32%">Mission</th>
+          <th style="width:14%">Date</th>
+          <th style="width:34%">Mission</th>
           <th style="width:14%">Status</th>
           <th style="width:10%">Role / PG</th>
           <th style="width:14%" class="text-right">Mission Payout</th>
-          <th style="width:15%" class="text-right">Your Share</th>
+          <th style="width:14%" class="text-right">Your Share</th>
         </tr>
       </thead>
       <tbody id="tbody">
-        <tr><td colspan="6" class="subtle" style="padding:10px">Loading…</td></tr>
+        <tr><td colspan="6" style="padding:10px;color:var(--muted)">Loading…</td></tr>
       </tbody>
     </table>
   </div>
 
-  <div class="subtle" style="margin-top:6px">
+  <div class="note-line">
     Note: this page is for reference only. Actual payouts are based on in-game transfers and admin records.
   </div>
 </section>
@@ -300,136 +372,61 @@ tbody tr:hover{background:rgba(214,180,76,.10)}
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
-
 <script>
-/* ---------- Header2 mount ---------- */
-(async function mountHeader2(){
-  const mount = document.getElementById('header2-mount');
-  if(!mount) return;
-  try{
-    const res = await fetch('header2.html',{cache:'no-cache'});
-    if(!res.ok) return;
-    const html = await res.text();
-    mount.innerHTML = html;
-
-    // highlight nav
-    requestAnimationFrame(()=>{
-      const here = (location.pathname.split('/').pop() || 'earnings.html').toLowerCase();
-      mount.querySelectorAll('.nav-btn').forEach(a=>{
-        const href = (a.getAttribute('href')||'').toLowerCase();
-        if(href === here) a.classList.add('active');
-      });
-    });
-  }catch(e){
-    console.warn('header2 failed',e);
-  }
-})();
-
-/* ---------- Helpers ---------- */
 const $ = s => document.querySelector(s);
-const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
 const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
+const fmtDateTime = iso => {
+  if(!iso) return '–';
+  const d = new Date(iso);
+  return d.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+};
+
+let sb, me, ALL_ROWS = [];
+let activeRange = 'all';
 
 function showToast(msg,bad=false){
   const el = $('#toast');
   el.textContent = msg;
-  el.className = 'toast' + (bad?' bad':'');
+  el.className = 'toast' + (bad ? ' bad':'');
   el.style.display = 'block';
-  setTimeout(()=>{ el.style.display='none'; }, 3200);
+  setTimeout(()=>{ el.style.display='none'; }, 3500);
 }
 
-/* ---------- State ---------- */
-let sb, me;
-let RAW_ROWS = [];
-let FILTER_RANGE = 'all';
-let FILTER_STATUS = '';
+/* ---------- Rendering ---------- */
+function statusClass(status){
+  const s = (status||'').toLowerCase();
+  if(s==='success') return 'success';
+  if(s==='abort' || s==='aborted') return 'abort';
+  if(s==='failed' || s==='fail') return 'failed';
+  if(s==='planned') return 'planned';
+  return '';
+}
 
-/* ---------- Summary loader ---------- */
-async function loadSummary(){
-  try{
-    const { data, error } = await sb
-      .from('v_user_earnings_summary')
-      .select('*')
-      .eq('user_id', me)
-      .maybeSingle();
-    if(error){
-      console.error(error);
-      showToast('Failed to load summary',true);
-      return;
+function applyFilters(){
+  const q = ($('#search').value||'').toLowerCase().trim();
+  const st = $('#statusFilter').value;
+  const now = new Date();
+  let minDate = null;
+  if(activeRange !== 'all'){
+    const days = Number(activeRange)||0;
+    minDate = new Date(now.getTime() - days*86400000);
+  }
+
+  const rows = ALL_ROWS.filter(r=>{
+    if(st && (r.status || '').toLowerCase() !== st) return false;
+    if(minDate && r.start_time){
+      const d = new Date(r.start_time);
+      if(d < minDate) return false;
     }
-    const s = data || {};
-    $('#overviewUser').textContent =
-      `Reference-only ledger for ${s.handle || s.display_name || me.slice(0,8)}.`;
-
-    $('#statMissions').textContent = s.missions_paid ? fmt(s.missions_paid) : '0';
-    $('#statTotal').textContent    = s.total_earned ? fmt(s.total_earned) : '0';
-    $('#statAvg').textContent      = s.missions_paid ? fmt(Math.round((s.total_earned||0)/(s.missions_paid||1))) : '0';
-    $('#statBest').textContent     = s.best_mission_payout ? fmt(s.best_mission_payout) : '0';
-    $('#statBestTitle').textContent= s.best_mission_title || '—';
-
-    $('#pillLastPaid').textContent = s.last_paid_at
-      ? `Last paid mission: ${new Date(s.last_paid_at).toLocaleString()}`
-      : 'Last paid mission: —';
-
-    $('#pillBest').textContent = s.best_mission_payout
-      ? `Best mission earned ${fmt(s.best_mission_payout)} aUEC`
-      : 'Best mission earned: —';
-  }catch(e){
-    console.error(e);
-    showToast('Failed to load summary',true);
-  }
-}
-
-/* ---------- Missions loader ---------- */
-async function loadMissions(){
-  try{
-    const { data, error } = await sb
-      .from('v_user_earnings_missions')
-      .select('*')
-      .eq('user_id', me)
-      .order('start_time',{ascending:false});
-    if(error){
-      console.error(error);
-      showToast('Failed to load missions',true);
-      RAW_ROWS = [];
-    }else{
-      RAW_ROWS = data || [];
-    }
-    applyFiltersAndRender();
-  }catch(e){
-    console.error(e);
-    showToast('Failed to load missions',true);
-  }
-}
-
-/* ---------- Filters ---------- */
-function applyFiltersAndRender(){
-  const term = ($('#search').value || '').toLowerCase().trim();
-  const now = Date.now();
-  let rows = RAW_ROWS.slice();
-
-  // time range
-  if(FILTER_RANGE !== 'all'){
-    const days = Number(FILTER_RANGE) || 0;
-    const cutoff = now - days*24*60*60*1000;
-    rows = rows.filter(r=>{
-      const t = r.start_time ? new Date(r.start_time).getTime() : 0;
-      return t >= cutoff;
-    });
-  }
-
-  // status
-  if(FILTER_STATUS){
-    rows = rows.filter(r => (r.status || '').toLowerCase() === FILTER_STATUS.toLowerCase());
-  }
-
-  // text search
-  if(term){
-    rows = rows.filter(r=>{
-      const hay = `${r.mission_title||''} ${r.mission_id||''}`.toLowerCase();
-      return hay.includes(term);
-    });
-  }
+    if(!q) return true;
+    const hay = `${r.mission_title||''} ${r.mission_id||''}`.toLowerCase();
+    return hay.includes(q);
+  }).sort((a,b)=>{
+    const da = a.start_time ? new Date(a.start_time).getTime() : 0;
+    const db = b.start_time ? new Date(b.start_time).getTime() : 0;
+    return db - da;
+  });
 
   renderTable(rows);
 }
@@ -437,22 +434,17 @@ function applyFiltersAndRender(){
 function renderTable(rows){
   const tbody = $('#tbody');
   if(!rows.length){
-    tbody.innerHTML = `<tr><td colspan="6" class="subtle" style="padding:10px">No missions found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="padding:10px;color:var(--muted)">No missions found for this filter.</td></tr>`;
     return;
   }
-  tbody.innerHTML = rows.map(r=>{
-    const dt = r.start_time
-      ? new Date(r.start_time).toLocaleString()
-      : '—';
-    const status = r.status || 'Unknown';
-    const statusLower = status.toLowerCase();
-    let badgeClass=''; // colour dot
-    if(statusLower === 'success') badgeClass='good';
-    else if(statusLower === 'fail' || statusLower === 'failed' || statusLower === 'abort') badgeClass='bad';
 
-    const pg = r.paygrade || r.role_code || '—';
-    const payout = r.mission_payout || 0;
-    const share  = r.user_share || r.final_share || 0;
+  tbody.innerHTML = rows.map(r=>{
+    const dt = fmtDateTime(r.start_time);
+    const status = r.status || 'Unknown';
+    const paygrade = r.paygrade || '–';
+    const payout = r.payout_auec || 0;
+    const share  = r.final_share || 0;
+    const cls = statusClass(status);
 
     return `
       <tr>
@@ -462,17 +454,136 @@ function renderTable(rows){
           <div class="mission-id">ID: ${esc(r.mission_id || r.id || '')}</div>
         </td>
         <td>
-          <span class="badge-status">
-            <span class="badge-dot ${badgeClass}"></span>
+          <span class="badge-status ${cls}">
+            <span class="dot"></span>
             <span>${esc(status)}</span>
           </span>
         </td>
-        <td>${esc(pg)}</td>
+        <td>${esc(paygrade)}</td>
         <td class="text-right mono">${payout ? fmt(payout) : '—'}</td>
         <td class="text-right mono">${share ? fmt(share) : '—'}</td>
       </tr>
     `;
   }).join('');
+}
+
+/* ---------- Overview KPIs ---------- */
+function updateOverview(){
+  if(!ALL_ROWS.length){
+    $('#kTotalMissions').textContent = '0';
+    $('#kTotalAuec').textContent = '0';
+    $('#kAvgPerMission').textContent = '0';
+    $('#kBestAmount').textContent = '0';
+    $('#kBestTitle').textContent = '—';
+    $('#kLastPaid').innerHTML = '<span class="badge-dot"></span><span>Last paid mission: –</span>';
+    $('#kBestBadge').innerHTML = '<span class="badge-dot"></span><span>Best mission earned: –</span>';
+    return;
+  }
+
+  const byMission = new Map();
+  for(const r of ALL_ROWS){
+    const key = r.mission_id;
+    if(!key) continue;
+    if(!byMission.has(key)) byMission.set(key,r);
+  }
+  const missions = [...byMission.values()];
+  const totalMissions = missions.length;
+  const totalEarned   = missions.reduce((sum,m)=>sum + (m.final_share||0),0);
+  const avgPer        = totalMissions ? totalEarned/totalMissions : 0;
+  let best = null;
+  for(const m of missions){
+    const v = m.final_share || 0;
+    if(!best || v > best.final_share) best = m;
+  }
+
+  $('#kTotalMissions').textContent = String(totalMissions);
+  $('#kTotalAuec').textContent     = fmt(Math.round(totalEarned));
+  $('#kAvgPerMission').textContent = fmt(Math.round(avgPer));
+  $('#kBestAmount').textContent    = best ? fmt(Math.round(best.final_share||0)) : '0';
+  $('#kBestTitle').textContent     = best ? (best.mission_title || '—') : '—';
+
+  // last paid mission (by start_time where share>0)
+  const paid = missions.filter(m=>m.final_share>0 && m.start_time);
+  if(paid.length){
+    paid.sort((a,b)=>new Date(b.start_time)-new Date(a.start_time));
+    const last = paid[0];
+    $('#kLastPaid').innerHTML =
+      `<span class="badge-dot"></span><span>Last paid mission: ${fmtDateTime(last.start_time)}</span>`;
+  }else{
+    $('#kLastPaid').innerHTML =
+      '<span class="badge-dot"></span><span>Last paid mission: –</span>';
+  }
+  if(best){
+    $('#kBestBadge').innerHTML =
+      `<span class="badge-dot"></span><span>Best mission earned ${fmt(Math.round(best.final_share||0))} aUEC</span>`;
+  }else{
+    $('#kBestBadge').innerHTML =
+      '<span class="badge-dot"></span><span>Best mission earned: –</span>';
+  }
+}
+
+/* ---------- Data loading ---------- */
+/*
+  We use:
+  - v_missions_payout_live: mission_id,user_id,paygrade,final_share
+  - missions: id,title,status,payout_auec,start_time
+
+  One row per (mission,user) in v_missions_payout_live.
+*/
+async function loadLedger(){
+  // 1) payouts for this user
+  const { data:payouts, error:e1 } = await sb
+    .from('v_missions_payout_live')
+    .select('mission_id,user_id,paygrade,final_share')
+    .eq('user_id', me);
+
+  if(e1){
+    console.error(e1);
+    showToast('Failed to load earnings data',true);
+    $('#tbody').innerHTML =
+      `<tr><td colspan="6" style="padding:10px;color:var(--bad)">Failed to load earnings.</td></tr>`;
+    return;
+  }
+  if(!payouts || !payouts.length){
+    ALL_ROWS = [];
+    updateOverview();
+    applyFilters();
+    return;
+  }
+
+  // 2) fetch missions meta
+  const ids = [...new Set(payouts.map(p=>p.mission_id).filter(Boolean))];
+  let missions = [];
+  if(ids.length){
+    const { data:ms, error:e2 } = await sb
+      .from('missions')
+      .select('id,title,status,payout_auec,start_time')
+      .in('id', ids);
+    if(e2){
+      console.error(e2);
+      showToast('Failed to load mission details',true);
+    }else{
+      missions = ms || [];
+    }
+  }
+  const mapM = new Map(missions.map(m=>[m.id,m]));
+
+  ALL_ROWS = payouts.map(p=>{
+    const m = mapM.get(p.mission_id) || {};
+    return {
+      mission_id: p.mission_id,
+      user_id: p.user_id,
+      paygrade: p.paygrade,
+      final_share: p.final_share || 0,
+      mission_title: m.title || '',
+      status: m.status || '',
+      payout_auec: m.payout_auec || 0,
+      start_time: m.start_time || null
+    };
+  });
+
+  updateOverview();
+  applyFilters();
 }
 
 /* ---------- Events ---------- */
@@ -482,22 +593,34 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   sb = getSupabase();
   me = session.user.id;
 
-  await loadSummary();
-  await loadMissions();
-});
+  // put handle / display name into subtitle if we can
+  try{
+    const { data: prof, error } = await sb
+      .from('v_profiles_detailed')
+      .select('handle,display_name')
+      .eq('user_id', me)
+      .maybeSingle();
+    if(!error && prof){
+      const handle = prof.handle || (prof.display_name && !prof.display_name.includes('@')
+                    ? prof.display_name
+                    : me.slice(0,8));
+      $('#overviewHandle').textContent = `Reference-only ledger for ${handle}.`;
+    }
+  }catch(e){ console.warn(e); }
 
-$('#search').addEventListener('input', applyFiltersAndRender);
-document.querySelectorAll('.filter-toggle').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.filter-toggle').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    FILTER_RANGE = btn.dataset.range || 'all';
-    applyFiltersAndRender();
+  // listeners
+  $('#search').addEventListener('input',applyFilters);
+  $('#statusFilter').addEventListener('change',applyFilters);
+  document.querySelectorAll('.filter-pill').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeRange = btn.dataset.range || 'all';
+      applyFilters();
+    });
   });
-});
-$('#statusFilter').addEventListener('change',e=>{
-  FILTER_STATUS = e.target.value || '';
-  applyFiltersAndRender();
+
+  loadLedger();
 });
 </script>
 </body>
