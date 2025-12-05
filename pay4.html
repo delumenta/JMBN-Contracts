@@ -1,901 +1,504 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JMBN – Admin Console</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JMBN – Earnings Ledger</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png">
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--sub:#0f0f0f;--row:#0a0a0a;
-  --border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#5cd47c;
-  --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.2vw,22px);
+  --bg:#000;--panel:#0b0b0b;--sub:#101010;
+  --border:#d6b44c;--row:#080808;
+  --accent:#f2d675;--accent-soft:#e0c66d;
+  --text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--good:#37d996;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
-  padding:10px 14px 16px;
+  margin:0;padding:14px;
   background:
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
   color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
-  font-size:var(--fs-base);
-  letter-spacing:.25px;
+  font-family:'Play',system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:var(--fs-base);letter-spacing:.25px;
 }
 
-/* Brand fallback (header2.html may overwrite) */
-.brand{
-  display:flex;align-items:center;gap:10px;
-  margin:0 0 8px;padding-bottom:6px;
-  border-bottom:1px solid var(--border);
-}
-.brand-logo{
-  width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
-}
-.brand h1{
-  margin:0;font-size:var(--fs-h1);font-weight:700;color:var(--accent);
-}
-
-/* Layout */
-.page{max-width:1700px;margin:0 auto}
+/* Header2 mount */
+#header2-mount{margin-bottom:6px}
 
 /* Panels */
 .panel{
   background:var(--panel);
+  border-radius:14px;
   border:1px solid var(--border);
-  border-radius:12px;
-  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.12);
+  padding:12px;
+  box-shadow:0 0 22px rgba(214,180,76,.32), inset 0 0 0 1px rgba(214,180,76,.18);
+  margin-bottom:10px;
 }
-.panel .hd{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 14px;
-  border-bottom:1px solid var(--border);
-}
-.panel .hd h2,
-.panel .hd h3{
-  margin:0;color:var(--accent);font-size:16px;font-weight:700;
-  display:flex;align-items:center;gap:10px;
-}
-.panel .body{padding:10px 14px 14px}
-.main-panel{margin-top:10px}
-
-/* Main grid inside big panel */
-.main-grid{
-  display:grid;
-  grid-template-columns:minmax(320px,0.7fr) minmax(540px,1.3fr);
-  gap:12px;
-}
-@media(max-width:1100px){
-  .main-grid{grid-template-columns:1fr}
-}
-
-/* text bits */
-.badge{
-  display:inline-block;
-  border:1px solid var(--border);
-  border-radius:999px;
-  padding:2px 7px;
-  font-size:10px;
-  color:var(--muted);
-  background:#050505;
-}
-.pill{
-  display:inline-block;
-  border-radius:999px;
-  border:1px solid var(--border);
-  padding:4px 10px;
-  font-size:12px;
-  background:#050505;
+.section-title{
+  font-size:13px;
   color:var(--accent);
-}
-.small{font-size:var(--fs-small);color:var(--muted)}
-
-/* Inputs / buttons */
-input[type="search"],select{
-  width:100%;
-  background:#0a0a0a;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:8px 10px;
-  color:var(--text);
-  font-family:'Play';
-  font-size:var(--fs-base);
-}
-button{
-  padding:8px 12px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);
-  cursor:pointer;
-  font-family:'Play';
-  font-size:12px;
-  font-weight:700;
-  transition:.18s;
-}
-button:hover{
-  background:var(--accent);
-  color:#000;
-  box-shadow:0 0 12px rgba(214,180,76,.35);
-}
-.btn-danger{border-color:var(--bad);color:var(--bad)}
-.btn-ok{border-color:var(--ok);color:var(--ok)}
-.btn-ghost{background:transparent;border-radius:999px}
-
-/* LEFT: Members list */
-.members-col{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  border-right:1px solid rgba(214,180,76,.3);
-  padding-right:10px;
-}
-@media(max-width:1100px){
-  .members-col{
-    border-right:none;
-    border-bottom:1px solid rgba(214,180,76,.3);
-    padding-right:0;
-    padding-bottom:10px;
-  }
-}
-.mlist{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  max-height:70vh;
-  overflow:auto;
-}
-.mrow{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:10px;
-  align-items:center;
-  padding:8px;
-  border-radius:10px;
-  border:1px solid transparent;
-  background:#0a0a0a;
-  cursor:pointer;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.08);
-}
-.mrow:hover{
-  background:#111;
-  border-color:rgba(214,180,76,.45);
-}
-.mrow.active{
-  background:rgba(214,180,76,.16);
-  border-color:var(--border);
-}
-
-/* Avatar – frameless */
-.mavatar{
-  width:38px;height:38px;
-  display:grid;place-items:center;
-  overflow:hidden;
-  background:transparent;
-  border:none;
-}
-.mavatar img{
-  width:100%;height:100%;object-fit:contain;
-  border:none;background:transparent;box-shadow:none;filter:none;
-}
-
-/* RIGHT: dashboard */
-.dashboard-col{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.ctrl-bar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center;
-  margin-bottom:8px;
-}
-.ctrl-bar select{max-width:150px}
-
-/* KPI cards */
-.kpis{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin:8px 0 10px;
-}
-@media(max-width:720px){.kpis{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.kpis{grid-template-columns:1fr}}
-
-.kpi{
-  background:linear-gradient(180deg,#0b0b0b,#080808);
-  border-radius:10px;
-  border:1px solid var(--border);
-  padding:8px;
-  box-shadow:0 0 14px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
-  text-align:center;
-}
-.kpi h4{
+  text-transform:uppercase;
+  letter-spacing:.16em;
   margin:0 0 4px;
+}
+.subtle{font-size:var(--fs-small);color:var(--muted)}
+
+/* Overview cards */
+.overview-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-top:6px;
+}
+@media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.overview-grid{grid-template-columns:1fr}}
+.stat{
+  background:linear-gradient(180deg,#0c0c0c,#050505);
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:8px 10px;
+  box-shadow:0 0 12px rgba(214,180,76,.25), inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.stat-label{
   font-size:11px;
   color:var(--muted);
   text-transform:uppercase;
-  letter-spacing:.08em;
+  letter-spacing:.12em;
+  margin-bottom:3px;
 }
-.kpi .val{
-  font-size:18px;
+.stat-value{
+  font-size:20px;
   font-weight:700;
   color:var(--accent);
 }
+.stat-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.mono{font-variant-numeric:tabular-nums}
 
-/* Progress bars */
-.pb{
-  display:grid;
-  grid-template-columns:120px 1fr auto;
-  gap:10px;
-  align-items:center;
-  margin:6px 0;
-}
-.pb .label{color:var(--muted);font-size:12px}
-.bar{
-  height:12px;background:#0a0a0a;
-  border-radius:999px;border:1px solid var(--border);
-  overflow:hidden;
-}
-.fill{
-  height:100%;
-  background:linear-gradient(180deg,var(--accent),#d6b44c);
-}
-.pb .val{
-  font-variant-numeric:tabular-nums;
-  color:var(--muted);
-  font-size:12px;
-}
-
-/* inner subpanels */
-.subpanel{
-  background:var(--sub);
-  border-radius:10px;
-  border:1px solid rgba(214,180,76,.55);
-  box-shadow:0 0 12px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.08);
-  margin-top:10px;
-}
-.subpanel .hd{
-  padding:8px 10px;
-  border-bottom:1px solid rgba(214,180,76,.5);
-}
-.subpanel .body{padding:8px 10px 10px}
-.subpanel .hd h3{font-size:13px}
-
-/* Cert grid – 6-up */
-.certGrid{
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
-  gap:8px;
-}
-@media(max-width:1300px){.certGrid{grid-template-columns:repeat(5,minmax(0,1fr))}}
-@media(max-width:1100px){.certGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:780px){ .certGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:520px){ .certGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-.cert{
-  background:transparent;
-  border:none;
-  padding:6px;
-  text-align:center;
-}
-.cert.dim{opacity:.5;filter:grayscale(.5)}
-.cert .thumb{
-  height:72px;
-  display:grid;place-items:center;
-  margin-bottom:4px;
-}
-.cert .thumb img{
-  max-height:60px;max-width:60px;
-  width:auto;height:auto;object-fit:contain;
-}
-.cert .abbr{
-  font-weight:700;
-  letter-spacing:.5px;
-  color:var(--accent);
-  font-size:12px;
-}
-
-/* Timeline */
-.timeline{
-  position:relative;
-  margin-top:6px;
-  padding-left:0;
-}
-.timeline::before{
-  content:"";
-  position:absolute;
-  left:0;top:0;bottom:0;
-  width:2px;
-  background:linear-gradient(var(--border),transparent);
-}
-.titem{
-  position:relative;
-  padding:8px 4px 8px 8px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:10px;
-}
-.titem.done .tlabel{color:var(--accent)}
-
-/* Missions list */
-.list{
+/* Pills for meta line */
+.pills-row{
   display:flex;
-  flex-direction:column;
-  gap:8px;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:6px;
 }
-.item{
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border-radius:999px;
   border:1px solid var(--border);
-  border-radius:8px;
-  background:#0b0b0b;
-  padding:8px 9px;
-  box-shadow:0 0 10px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.08);
+  padding:3px 9px;
+  font-size:11px;
+  background:#050505;
+  color:var(--muted);
 }
-.item h4{margin:0 0 4px;color:var(--accent);font-size:13px}
-.item .meta{font-size:12px;color:var(--muted)}
+.pill-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--accent);
+}
+
+/* Mission table */
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:6px 0 8px;
+  align-items:center;
+}
+input[type="search"]{
+  background:#050505;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:8px 12px;
+  color:var(--text);
+  font-size:var(--fs-table);
+  min-width:220px;
+}
+.filter-toggle{
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--muted);
+  font-size:11px;
+  cursor:pointer;
+}
+.filter-toggle.active{
+  color:#000;
+  background:linear-gradient(180deg,var(--accent),var(--accent-soft));
+  box-shadow:0 0 14px rgba(214,180,76,.45);
+}
+select{
+  background:#050505;
+  border-radius:999px;
+  border:1px solid var(--border);
+  padding:7px 10px;
+  color:var(--text);
+  font-size:11px;
+}
+
+/* Table */
+.tableWrap{
+  border-radius:12px;
+  border:1px solid var(--border);
+  overflow:auto;
+  max-height:62vh;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--fs-table);
+  min-width:720px;
+}
+th,td{
+  padding:8px 9px;
+  border-bottom:1px solid rgba(214,180,76,.28);
+  text-align:left;
+}
+th{
+  font-size:11px;
+  color:var(--accent);
+  background:#080808;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  position:sticky;
+  top:0;
+  z-index:1;
+}
+tbody tr:nth-child(even){background:#111}
+tbody tr:hover{background:rgba(214,180,76,.10)}
+.mission-title{
+  font-weight:700;
+}
+.mission-id{
+  font-size:11px;
+  color:var(--muted);
+}
+.badge-status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:3px 9px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:#050505;
+  font-size:11px;
+}
+.badge-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--muted);
+}
+.badge-dot.good{background:var(--good)}
+.badge-dot.bad{background:var(--bad)}
+.text-right{text-align:right}
+.text-center{text-align:center}
+
+/* Toast */
+.toast{
+  position:fixed;right:16px;bottom:16px;
+  background:#111;border:1px solid var(--border);border-radius:10px;
+  padding:8px 12px;font-size:12px;color:var(--text);
+  box-shadow:0 0 18px rgba(214,180,76,.32);
+  max-width:320px;z-index:40;
+}
+.toast.bad{border-color:var(--bad);color:#ffd0d0}
 </style>
 </head>
 <body>
 
-<!-- Shared header mount (header2.html) -->
-<div id="header2-mount">
-  <!-- Fallback if header2.html fails -->
-  <div class="brand">
-    <img class="brand-logo"
-         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-         alt="JMBN">
-    <h1>JMBN Admin Console</h1>
+<div id="header2-mount"></div>
+
+<section class="panel">
+  <div class="section-title">Personal Earnings Overview</div>
+  <div class="subtle" id="overviewUser">Reference-only ledger.</div>
+
+  <div class="overview-grid">
+    <div class="stat">
+      <div class="stat-label">Total Missions Paid</div>
+      <div class="stat-value mono" id="statMissions">–</div>
+      <div class="stat-sub">Any mission with a recorded payout row for you</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Total aUEC Earned</div>
+      <div class="stat-value mono" id="statTotal">–</div>
+      <div class="stat-sub">Sum of all final shares recorded</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Average Per Mission</div>
+      <div class="stat-value mono" id="statAvg">–</div>
+      <div class="stat-sub">Total / missions paid</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Best Mission</div>
+      <div class="stat-value mono" id="statBest">–</div>
+      <div class="stat-sub" id="statBestTitle">–</div>
+    </div>
   </div>
-</div>
 
-<div class="page">
-  <!-- Big unified panel -->
-  <section class="panel main-panel">
-    <div class="hd">
-      <h2>Member Management</h2>
-      <span class="small">View activity • Manage ranks • Grant certs</span>
+  <div class="pills-row">
+    <div class="pill">
+      <span class="pill-dot"></span>
+      <span id="pillLastPaid">Last paid mission: —</span>
     </div>
-    <div class="body">
-      <div class="main-grid">
-
-        <!-- LEFT: member list -->
-        <div class="members-col">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;">
-            <h3 style="margin:0;color:var(--accent);font-size:14px;">Members</h3>
-            <span class="small">Pick a member to inspect</span>
-          </div>
-          <input id="mSearch" type="search" placeholder="Search handle / name…">
-          <div id="mList" class="mlist" style="margin-top:8px">Loading…</div>
-        </div>
-
-        <!-- RIGHT: dashboard -->
-        <div class="dashboard-col">
-          <div class="ctrl-bar">
-            <select id="rankTrack" title="Rank Track">
-              <option value="">— Track —</option>
-              <option value="Officer">Officer</option>
-              <option value="Enlisted">Enlisted</option>
-              <option value="Warrant">Warrant</option>
-            </select>
-            <button id="btnForce" class="pill" title="Force set user's rank track">Force Track</button>
-
-            <select id="rankCode" title="Rank Code">
-              <option value="">— Select Rank —</option>
-            </select>
-            <button id="btnSetRank" class="pill" title="Force set a specific rank code">Set Rank</button>
-
-            <button id="btnPromote" class="pill" disabled>Run Promotion Check</button>
-          </div>
-
-          <div id="inspector">
-            <div class="small">Select a member on the left to open their dashboard.</div>
-          </div>
-        </div>
-
-      </div>
+    <div class="pill">
+      <span class="pill-dot"></span>
+      <span id="pillBest">Best mission earned: —</span>
     </div>
-  </section>
-</div>
+  </div>
+</section>
 
-<!-- Supabase JS (ESM) -->
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+<section class="panel">
+  <div class="section-title">Mission Earnings</div>
+  <div class="subtle">Click a row to see a detailed breakdown for that mission (in admin ledger).</div>
 
-/* ===== Supabase config (same project as mission-log / editor) ===== */
-const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search by mission title / ID">
+    <button class="filter-toggle active" data-range="all">All time</button>
+    <button class="filter-toggle" data-range="30">Last 30 days</button>
+    <button class="filter-toggle" data-range="90">Last 90 days</button>
+    <select id="statusFilter" aria-label="Status filter">
+      <option value="">All statuses</option>
+      <option value="Planned">Planned</option>
+      <option value="Success">Success</option>
+      <option value="Abort">Abort</option>
+      <option value="Fail">Fail</option>
+    </select>
+  </div>
 
-const sb  = createClient(SUPABASE_URL, SUPABASE_ANON)
+  <div class="tableWrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:15%">Date</th>
+          <th style="width:32%">Mission</th>
+          <th style="width:14%">Status</th>
+          <th style="width:10%">Role / PG</th>
+          <th style="width:14%" class="text-right">Mission Payout</th>
+          <th style="width:15%" class="text-right">Your Share</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="6" class="subtle" style="padding:10px">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-const $   = s => document.querySelector(s)
-const esc = s => { const d=document.createElement('div'); d.textContent=s ?? ''; return d.innerHTML }
-const setFill = (el,p) => {
-  if(!el) return
-  const x = Math.max(0, Math.min(1, Number(p)||0))
-  el.style.width = (x*100) + '%'
-}
+  <div class="subtle" style="margin-top:6px">
+    Note: this page is for reference only. Actual payouts are based on in-game transfers and admin records.
+  </div>
+</section>
 
-let me        = null
-let isElev    = false
-let MEMBERS   = []
-let SELECTED  = null
-let RANKS     = []
+<div id="toast" class="toast" style="display:none"></div>
 
-/* ===== Shared header mount ===== */
-async function mountHeader2(){
-  const mount = document.getElementById('header2-mount')
-  if(!mount) return
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+
+<script>
+/* ---------- Header2 mount ---------- */
+(async function mountHeader2(){
+  const mount = document.getElementById('header2-mount');
+  if(!mount) return;
   try{
-    const res = await fetch('header2.html',{cache:'no-cache'})
-    if(!res.ok) return
-    const html = await res.text()
-    mount.innerHTML = html
+    const res = await fetch('header2.html',{cache:'no-cache'});
+    if(!res.ok) return;
+    const html = await res.text();
+    mount.innerHTML = html;
 
-    const here = (location.pathname.split('/').pop() || 'index.html')
-    const active = mount.querySelector(`.nav-btn[href="${here}"]`)
-    if(active) active.classList.add('active')
-  }catch(err){
-    console.error('Failed to mount header2:', err)
-  }
-}
-
-/* ===== Boot ===== */
-document.addEventListener('DOMContentLoaded', boot)
-
-async function boot(){
-  await mountHeader2()
-
-  // Get current auth session
-  const { data: { session }, error: sErr } = await sb.auth.getSession()
-  if(sErr){
-    console.error('getSession error:', sErr.message)
-  }
-  if(!session){
-    $('#inspector').innerHTML = '<div class="small" style="color:#ff9c9c">Not signed in. Please log in via your auth flow.</div>'
-    // You can optionally still allow read-only here if desired.
-    return
-  }
-
-  me = session.user.id
-
-  try{
-    const { data, error } = await sb.rpc('is_elevated',{ u: me })
-    if(error) console.warn('is_elevated error:', error.message)
-    isElev = data === true
+    // highlight nav
+    requestAnimationFrame(()=>{
+      const here = (location.pathname.split('/').pop() || 'earnings.html').toLowerCase();
+      mount.querySelectorAll('.nav-btn').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(href === here) a.classList.add('active');
+      });
+    });
   }catch(e){
-    console.warn('is_elevated rpc failed:', e.message || e)
+    console.warn('header2 failed',e);
   }
+})();
 
-  if(!isElev){
-    $('#inspector').innerHTML = '<div class="small" style="color:#ff6b6b">Access denied — not elevated.</div>'
-    $('#mList').textContent   = 'No access.'
-    return
-  }
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
+const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
 
-  await loadMembers()
-  await loadRankOptions()
-
-  $('#mSearch').oninput        = renderMembers
-  $('#rankTrack').onchange     = e => loadRankOptions(e.target.value)
-
-  $('#btnForce').onclick = async () => {
-    if(!SELECTED) return alert('Select a member first.')
-    const track = $('#rankTrack').value
-    if(!track) return alert('Choose a track.')
-    if(!confirm(`Force set ${SELECTED.handle || SELECTED.display_name || SELECTED.user_id.slice(0,8)} to ${track}?`)) return
-    const { error } = await sb.rpc('set_rank_track',{ p_user: SELECTED.user_id, p_track: track })
-    if(error) return alert('Force set failed: ' + error.message)
-    alert('Track updated ✓')
-    await openMember(SELECTED.user_id)
-    await loadMembers()
-  }
-
-  $('#btnSetRank').onclick = async () => {
-    if(!SELECTED) return alert('Select a member first.')
-    const code = $('#rankCode').value
-    if(!code) return alert('Choose a rank.')
-    if(!confirm(`Force set ${SELECTED.handle || SELECTED.display_name || SELECTED.user_id.slice(0,8)} to ${code}?`)) return
-    const { error } = await sb.rpc('set_rank_code',{ p_user: SELECTED.user_id, p_code: code })
-    if(error) return alert('Set rank failed: ' + error.message)
-    alert('Rank updated ✓')
-    await openMember(SELECTED.user_id)
-    await loadMembers()
-  }
-
-  $('#btnPromote').onclick = async () => {
-    if(!SELECTED) return
-    const { data, error } = await sb.rpc('request_promotion',{ p_user: SELECTED.user_id })
-    if(error) return alert('Promotion failed: ' + error.message)
-    alert(data?.message || (data?.ok ? 'Promotion OK' : 'Not eligible yet'))
-    await openMember(SELECTED.user_id)
-  }
+function showToast(msg,bad=false){
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = 'toast' + (bad?' bad':'');
+  el.style.display = 'block';
+  setTimeout(()=>{ el.style.display='none'; }, 3200);
 }
 
-/* ===== Ranks dropdown ===== */
-async function loadRankOptions(track=''){
-  if(!RANKS.length){
+/* ---------- State ---------- */
+let sb, me;
+let RAW_ROWS = [];
+let FILTER_RANGE = 'all';
+let FILTER_STATUS = '';
+
+/* ---------- Summary loader ---------- */
+async function loadSummary(){
+  try{
     const { data, error } = await sb
-      .from('ranks')
-      .select('code,name,category,sort_order')
-      .order('sort_order')
+      .from('v_user_earnings_summary')
+      .select('*')
+      .eq('user_id', me)
+      .maybeSingle();
     if(error){
-      console.warn('ranks error:', error.message)
-      return
+      console.error(error);
+      showToast('Failed to load summary',true);
+      return;
     }
-    RANKS = data || []
-  }
-  const want  = (track || $('#rankTrack').value || '').toLowerCase()
-  const items = RANKS.filter(r => !want || (r.category || '').toLowerCase() === want)
-  const sel   = $('#rankCode')
-  sel.innerHTML = '<option value="">— Select Rank —</option>' +
-    items.map(r => `<option value="${r.code}">${r.code} — ${esc(r.name)}</option>`).join('')
-}
+    const s = data || {};
+    $('#overviewUser').textContent =
+      `Reference-only ledger for ${s.handle || s.display_name || me.slice(0,8)}.`;
 
-/* ===== Members list ===== */
-async function loadMembers(){
-  const list = $('#mList')
-  list.textContent = 'Loading…'
-  const { data, error } = await sb.from('v_profiles_detailed').select(`
-    user_id,handle,display_name,
-    current_rank_category,current_rank_name,current_rank_code,current_rank_image_url
-  `).order('handle')
+    $('#statMissions').textContent = s.missions_paid ? fmt(s.missions_paid) : '0';
+    $('#statTotal').textContent    = s.total_earned ? fmt(s.total_earned) : '0';
+    $('#statAvg').textContent      = s.missions_paid ? fmt(Math.round((s.total_earned||0)/(s.missions_paid||1))) : '0';
+    $('#statBest').textContent     = s.best_mission_payout ? fmt(s.best_mission_payout) : '0';
+    $('#statBestTitle').textContent= s.best_mission_title || '—';
 
-  if(error){
-    console.error('loadMembers error:', error.message)
-    list.textContent = 'Failed to load members: ' + error.message
-    return
-  }
-  MEMBERS = data || []
-  renderMembers()
-}
+    $('#pillLastPaid').textContent = s.last_paid_at
+      ? `Last paid mission: ${new Date(s.last_paid_at).toLocaleString()}`
+      : 'Last paid mission: —';
 
-function renderMembers(){
-  const q    = ($('#mSearch').value || '').toLowerCase().trim()
-  const list = $('#mList')
-  const rows = q
-    ? MEMBERS.filter(m => (`${m.handle} ${m.display_name}`).toLowerCase().includes(q))
-    : MEMBERS
-
-  if(!rows.length){
-    list.textContent = 'No matches.'
-    return
-  }
-  list.innerHTML = ''
-  rows.forEach(m => {
-    const row = document.createElement('div')
-    row.className = 'mrow'
-    row.innerHTML = `
-      <div class="mavatar">
-        ${m.current_rank_image_url
-          ? `<img src="${esc(m.current_rank_image_url)}" alt="rank">`
-          : '👤'}
-      </div>
-      <div>
-        <div><b>${esc(m.handle || '(no handle)')}</b>
-          <span class="small">• ${esc(m.display_name || '')}</span>
-        </div>
-        <div class="small">
-          ${esc(m.current_rank_category || 'Unrated')} — ${esc(m.current_rank_name || 'Unrated')}
-        </div>
-      </div>
-      <div><button class="pill" type="button">Open</button></div>`
-    row.querySelector('button').onclick = () => openMember(m.user_id, row)
-    list.appendChild(row)
-  })
-}
-
-function markActive(row){
-  document.querySelectorAll('.mrow').forEach(x => x.classList.remove('active'))
-  row && row.classList.add('active')
-}
-
-/* ===== Dashboard for a member ===== */
-async function openMember(userId, rowEl){
-  const res = MEMBERS.find(x => x.user_id === userId)
-  if(!res) return
-  SELECTED = res
-  markActive(rowEl)
-  $('#btnPromote').disabled = false
-
-  $('#rankTrack').value = res.current_rank_category || ''
-  await loadRankOptions(res.current_rank_category || '')
-  if(res.current_rank_code) $('#rankCode').value = res.current_rank_code
-
-  $('#inspector').innerHTML = `
-    <div id="summary"></div>
-
-    <div class="kpis">
-      <div class="kpi"><h4>Total Missions</h4><div class="val" id="k_mis">—</div></div>
-      <div class="kpi"><h4>Total Hours</h4><div class="val" id="k_hrs">—</div></div>
-      <div class="kpi"><h4>Owned Certs</h4><div class="val" id="k_cer">—</div></div>
-    </div>
-
-    <div class="pb">
-      <div class="label">Missions</div>
-      <div class="bar"><div id="pbMis" class="fill" style="width:0%"></div></div>
-      <div class="val" id="vMis">—</div>
-    </div>
-    <div class="pb">
-      <div class="label">Hours</div>
-      <div class="bar"><div id="pbHrs" class="fill" style="width:0%"></div></div>
-      <div class="val" id="vHrs">—</div>
-    </div>
-    <div class="pb">
-      <div class="label">Certifications</div>
-      <div class="bar"><div id="pbCer" class="fill" style="width:0%"></div></div>
-      <div class="val" id="vCer">—</div>
-    </div>
-
-    <div class="subpanel">
-      <div class="hd"><h3>Certifications</h3></div>
-      <div class="body"><div id="certGrid" class="certGrid">Loading…</div></div>
-    </div>
-
-    <div class="subpanel">
-      <div class="hd">
-        <h3>Certification Timeline</h3>
-        <div>
-          <select id="certSelect"></select>
-          <button id="btnReloadTL" class="btn-ghost" type="button">Load</button>
-        </div>
-      </div>
-      <div class="body">
-        <div id="tlHint" class="small">Pick a certification to manage completions.</div>
-        <div id="timeline" class="timeline"></div>
-      </div>
-    </div>
-
-    <div class="subpanel">
-      <div class="hd">
-        <h3>Missions <span id="misCount" class="badge">0</span></h3>
-        <div><button id="misReload" class="pill" type="button">Reload</button></div>
-      </div>
-      <div class="body"><div id="misList" class="list">Loading…</div></div>
-    </div>
-  `
-
-  await Promise.all([
-    loadProgress(userId),
-    loadCerts(userId),
-    loadMissions(userId)
-  ])
-
-  $('#misReload').onclick = () => loadMissions(userId)
-}
-
-/* ===== Progress ===== */
-async function loadProgress(uid){
-  const [{ data: prog }, { data: up }] = await Promise.all([
-    sb.from('v_user_rank_progress').select('*').eq('user_id', uid).maybeSingle(),
-    sb.from('v_user_progress').select('*').eq('user_id', uid).maybeSingle()
-  ])
-
-  const cur   = esc(prog?.current_name || '(unranked)')
-  const curPg = esc(prog?.current_paygrade || '—')
-  const nxt   = esc(prog?.next_name || '—')
-  const nxtPg = esc(prog?.next_paygrade || '—')
-
-  $('#summary').innerHTML = `
-    <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-      <div>
-        <div><b>Current:</b>
-          <span style="color:var(--accent)">${cur}</span>
-          <span class="pill">PG: ${curPg}</span>
-        </div>
-        <div class="small">
-          Next: ${nxt} <span class="pill">PG: ${nxtPg}</span>
-        </div>
-      </div>
-      <div class="small">
-        Targets • M:${prog?.missions_target ?? 0}
-        • H:${prog?.hours_target ?? 0}
-        • C:${prog?.certification_target ?? 0}
-      </div>
-    </div>`
-
-  const m  = Number(up?.missions_attended || 0)
-  const h  = Number(up?.hours_total || 0)
-  const c  = Number(up?.certifications_total || 0)
-  const mt = Number(prog?.missions_target || 0)
-  const ht = Number(prog?.hours_target || 0)
-  const ct = Number(prog?.certification_target || 0)
-
-  $('#k_mis').textContent = String(m)
-  $('#k_hrs').textContent = String(h)
-  $('#k_cer').textContent = String(c)
-
-  $('#vMis').textContent = `${m} / ${mt}`
-  $('#vHrs').textContent = `${h} / ${ht}`
-  $('#vCer').textContent = `${c} / ${ct}`
-
-  setFill($('#pbMis'), mt ? Math.min(1, m/mt) : 1)
-  setFill($('#pbHrs'), ht ? Math.min(1, h/ht) : 1)
-  setFill($('#pbCer'), ct ? Math.min(1, c/ct) : 1)
-}
-
-/* ===== Certifications ===== */
-async function loadCerts(uid){
-  const [{ data: catalog }, { data: mine }] = await Promise.all([
-    sb.from('certifications')
-      .select('certification_code,name,image_url,sort_order,is_active')
-      .order('sort_order'),
-    sb.from('user_certifications')
-      .select('certification_code')
-      .eq('user_id', uid)
-  ])
-
-  const owned  = new Set((mine || []).map(x => x.certification_code))
-  const grid   = $('#certGrid'); grid.innerHTML = ''
-  const select = $('#certSelect'); select.innerHTML = ''
-
-  ;(catalog || []).forEach(c => {
-    const div = document.createElement('div')
-    div.className = 'cert' + (owned.has(c.certification_code) ? '' : ' dim')
-    div.innerHTML = `
-      <div class="thumb">${c.image_url ? `<img src="${esc(c.image_url)}" alt="">` : '🏅'}</div>
-      <div class="abbr">${esc(c.certification_code)}</div>`
-    div.title = c.name || c.certification_code
-    div.style.cursor = 'pointer'
-    div.onclick = () => {
-      select.value = c.certification_code
-      loadTimeline(uid, c.certification_code)
-      $('#tlHint').textContent = c.name || c.certification_code
-      $('#timeline').scrollIntoView({ behavior:'smooth', block:'nearest' })
-    }
-    grid.appendChild(div)
-
-    const opt = document.createElement('option')
-    opt.value = c.certification_code
-    opt.textContent = `${c.certification_code} — ${c.name}`
-    select.appendChild(opt)
-  })
-
-  $('#btnReloadTL').onclick = () => loadTimeline(uid, select.value)
-}
-
-/* ===== Timeline ===== */
-async function loadTimeline(uid, certCode){
-  const tl = $('#timeline'); tl.innerHTML = ''
-  if(!certCode){
-    tl.innerHTML = '<div class="small">Pick a certification.</div>'
-    return
-  }
-
-  const [{ data: reqs }, { data: recs }] = await Promise.all([
-    sb.from('certification_requirements')
-      .select('event_code, sort_order, training_events(title, description)')
-      .eq('certification_code', certCode)
-      .order('sort_order'),
-    sb.from('user_training_events')
-      .select('event_code, completed_at, approved_by, approved_at')
-      .eq('user_id', uid)
-  ])
-  const done = new Map((recs || []).map(r => [r.event_code, r]))
-
-  if(!reqs?.length){
-    tl.innerHTML = '<div class="small">No requirements configured.</div>'
-    return
-  }
-
-  reqs.forEach(r => {
-    const rec = done.get(r.event_code)
-    const ok  = !!rec
-    const row = document.createElement('div')
-    row.className = 'titem' + (ok ? ' done' : '')
-    row.innerHTML = `
-      <div>
-        <div class="tlabel">${esc(r.training_events?.title || r.event_code)}</div>
-        <div class="small">${esc(r.training_events?.description || '')}</div>
-        ${ok ? `<div class="small">
-          Completed: ${new Date(rec.approved_at || rec.completed_at).toLocaleString()}
-          ${rec.approved_by ? ` • by ${esc(rec.approved_by.slice(0,8))}` : ''}
-        </div>` : ''}
-      </div>
-      <div>
-        ${ok
-          ? `<button class="btn-danger" data-remove="${r.event_code}" type="button">Remove</button>`
-          : `<button class="btn-ok" data-add="${r.event_code}" type="button">Grant</button>`}
-      </div>`
-    tl.appendChild(row)
-  })
-
-  tl.querySelectorAll('button[data-add]').forEach(b => {
-    b.onclick = async () => {
-      const { error } = await sb.from('user_training_events').insert({
-        user_id: uid,
-        event_code: b.dataset.add,
-        completed_at: new Date().toISOString()
-      })
-      if(error) return alert('Grant failed: ' + error.message)
-      await Promise.all([loadTimeline(uid, certCode), loadProgress(uid)])
-    }
-  })
-  tl.querySelectorAll('button[data-remove]').forEach(b => {
-    b.onclick = async () => {
-      const { error } = await sb.from('user_training_events')
-        .delete().eq('user_id', uid).eq('event_code', b.dataset.remove)
-      if(error) return alert('Remove failed: ' + error.message)
-      await Promise.all([loadTimeline(uid, certCode), loadProgress(uid)])
-    }
-  })
-}
-
-/* ===== Missions ===== */
-async function loadMissions(uid){
-  const box   = $('#misList')
-  const count = $('#misCount')
-  box.textContent = 'Loading…'
-
-  try{
-    let { data, error } = await sb
-      .from('v_mission_attendees_detailed')
-      .select('mission_id, attendance, missions(id,title,start_time)')
-      .eq('user_id', uid)
-      .order('missions.start_time', { ascending:false })
-      .limit(20)
-
-    // fallback if joined missions is null
-    if(error || (data && data.length && data[0].missions == null)){
-      const { data: bare, error: e2 } = await sb
-        .from('v_mission_attendees_detailed')
-        .select('mission_id, attendance')
-        .eq('user_id', uid)
-        .order('mission_id', { ascending:false })
-        .limit(50)
-      if(e2) throw e2
-
-      const ids = [...new Set((bare || []).map(r => r.mission_id))]
-      let map = {}
-      if(ids.length){
-        const { data: mrows } = await sb
-          .from('missions')
-          .select('id,title,start_time')
-          .in('id', ids)
-        map = Object.fromEntries((mrows || []).map(m => [m.id, m]))
-      }
-      data = (bare || [])
-        .map(r => ({ ...r, missions: map[r.mission_id] || null }))
-        .sort((a,b) => new Date(b.missions?.start_time || 0) - new Date(a.missions?.start_time || 0))
-        .slice(0,20)
-    }
-
-    const attended = (data || []).filter(r => r.attendance && r.attendance.toLowerCase() !== 'withdrawn')
-    count.textContent = String(attended.length)
-
-    if(!data || !data.length){
-      box.innerHTML = '<div class="small">No missions found.</div>'
-      return
-    }
-
-    box.innerHTML = data.map(r => {
-      const m    = r.missions || {}
-      const when = m.start_time ? new Date(m.start_time).toLocaleString() : ''
-      const att  = r.attendance || '—'
-      return `<div class="item">
-        <h4>${esc(m.title || 'Untitled Mission')}</h4>
-        <div class="meta">${when} • Attendance: ${esc(att)}</div>
-      </div>`
-    }).join('')
+    $('#pillBest').textContent = s.best_mission_payout
+      ? `Best mission earned ${fmt(s.best_mission_payout)} aUEC`
+      : 'Best mission earned: —';
   }catch(e){
-    box.innerHTML = `<div class="small" style="color:#ff9c9c">
-      Failed to load missions: ${esc(e.message || e)}
-    </div>`
-    count.textContent = '0'
+    console.error(e);
+    showToast('Failed to load summary',true);
   }
 }
+
+/* ---------- Missions loader ---------- */
+async function loadMissions(){
+  try{
+    const { data, error } = await sb
+      .from('v_user_earnings_missions')
+      .select('*')
+      .eq('user_id', me)
+      .order('start_time',{ascending:false});
+    if(error){
+      console.error(error);
+      showToast('Failed to load missions',true);
+      RAW_ROWS = [];
+    }else{
+      RAW_ROWS = data || [];
+    }
+    applyFiltersAndRender();
+  }catch(e){
+    console.error(e);
+    showToast('Failed to load missions',true);
+  }
+}
+
+/* ---------- Filters ---------- */
+function applyFiltersAndRender(){
+  const term = ($('#search').value || '').toLowerCase().trim();
+  const now = Date.now();
+  let rows = RAW_ROWS.slice();
+
+  // time range
+  if(FILTER_RANGE !== 'all'){
+    const days = Number(FILTER_RANGE) || 0;
+    const cutoff = now - days*24*60*60*1000;
+    rows = rows.filter(r=>{
+      const t = r.start_time ? new Date(r.start_time).getTime() : 0;
+      return t >= cutoff;
+    });
+  }
+
+  // status
+  if(FILTER_STATUS){
+    rows = rows.filter(r => (r.status || '').toLowerCase() === FILTER_STATUS.toLowerCase());
+  }
+
+  // text search
+  if(term){
+    rows = rows.filter(r=>{
+      const hay = `${r.mission_title||''} ${r.mission_id||''}`.toLowerCase();
+      return hay.includes(term);
+    });
+  }
+
+  renderTable(rows);
+}
+
+function renderTable(rows){
+  const tbody = $('#tbody');
+  if(!rows.length){
+    tbody.innerHTML = `<tr><td colspan="6" class="subtle" style="padding:10px">No missions found.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(r=>{
+    const dt = r.start_time
+      ? new Date(r.start_time).toLocaleString()
+      : '—';
+    const status = r.status || 'Unknown';
+    const statusLower = status.toLowerCase();
+    let badgeClass=''; // colour dot
+    if(statusLower === 'success') badgeClass='good';
+    else if(statusLower === 'fail' || statusLower === 'failed' || statusLower === 'abort') badgeClass='bad';
+
+    const pg = r.paygrade || r.role_code || '—';
+    const payout = r.mission_payout || 0;
+    const share  = r.user_share || r.final_share || 0;
+
+    return `
+      <tr>
+        <td>${esc(dt)}</td>
+        <td>
+          <div class="mission-title">${esc(r.mission_title || 'Untitled')}</div>
+          <div class="mission-id">ID: ${esc(r.mission_id || r.id || '')}</div>
+        </td>
+        <td>
+          <span class="badge-status">
+            <span class="badge-dot ${badgeClass}"></span>
+            <span>${esc(status)}</span>
+          </span>
+        </td>
+        <td>${esc(pg)}</td>
+        <td class="text-right mono">${payout ? fmt(payout) : '—'}</td>
+        <td class="text-right mono">${share ? fmt(share) : '—'}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
+
+  await loadSummary();
+  await loadMissions();
+});
+
+$('#search').addEventListener('input', applyFiltersAndRender);
+document.querySelectorAll('.filter-toggle').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-toggle').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    FILTER_RANGE = btn.dataset.range || 'all';
+    applyFiltersAndRender();
+  });
+});
+$('#statusFilter').addEventListener('change',e=>{
+  FILTER_STATUS = e.target.value || '';
+  applyFiltersAndRender();
+});
 </script>
 </body>
 </html>
