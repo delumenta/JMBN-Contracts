@@ -12,437 +12,611 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--border:#d6b44c;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#5cd47c;
+  --bg:#000;
+  --panel:#050506;
+  --card:#0c0c10;
+  --border:#d6b44c;
+  --accent:#f2d675;
+  --accent-soft:#c9b06a;
+  --text:#f7f1d0;
+  --muted:#c9b06a;
+  --bad:#ff6b6b;
+  --ok:#5cd47c;
   --fs:14px;
 }
+
 *{box-sizing:border-box}
+
 body{
-  margin:0;padding:14px;background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+  margin:0;
+  padding:14px;
+  background:
+    radial-gradient(circle at top,rgba(242,214,117,.10),transparent 55%),
+    radial-gradient(900px 700px at 120% 120%,rgba(214,180,76,.08),transparent 60%),
     #000;
-  color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.25px;
+  color:var(--text);
+  font-family:'Play',system-ui,sans-serif;
+  font-size:var(--fs);
+  letter-spacing:.25px;
 }
 
-/* Fallback brand (if header.html fails to load) */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.brand img.brand-logo{width:44px;height:44px;object-fit:contain;border:none;background:transparent;box-shadow:none}
-.brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
-
-/* Containers */
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  margin-top:10px;
-  box-shadow:0 0 18px rgba(214,180,76,.20);
+/* Fallback brand (if header.html fails) */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 10px;
+  padding-bottom:6px;
+  border-bottom:1px solid var(--border);
 }
-.section{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  margin-top:10px;
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
 }
-.h{margin:0 0 8px;color:var(--accent);font-size:16px}
-
-/* Rank header */
-.rankRow{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:10px;
-  align-items:center;
-}
-.rankNow{display:flex;align-items:center;gap:10px}
-.rankImg{
-  width:46px;
-  height:46px;
-  object-fit:contain;
-  border:none;
-  background:transparent;
-  box-shadow:none;
-}
-.badge{
-  border:1px solid var(--border);
-  border-radius:999px;
-  padding:4px 10px;
-  font-size:12px;
-  background:#121212;
+.brand h1{
+  margin:0;
+  font-weight:700;
+  font-size:clamp(18px,2.2vw,22px);
   color:var(--accent);
 }
 
-/* Progress bars */
+/* Shell */
+.shell{
+  max-width:980px;
+  margin:0 auto;
+}
+
+/* Cards */
+.card{
+  background:var(--card);
+  border-radius:16px;
+  border:1px solid rgba(214,180,76,.45);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.9),
+    0 18px 38px rgba(0,0,0,.95);
+  padding:14px 14px 12px;
+  margin-top:14px;
+}
+.card-header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:10px;margin-bottom:10px;
+}
+.card-title{
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.card-sub{
+  font-size:11px;
+  color:var(--muted);
+}
+
+/* Hero rank card */
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);
+  gap:12px;
+}
+@media(max-width:720px){
+  .hero{grid-template-columns:1fr}
+}
+
+.hero-left{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.rankImg{
+  width:56px;height:56px;object-fit:contain;
+  border:none;background:transparent;box-shadow:none;
+  display:none;
+}
+.hero-rank-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--accent-soft);
+}
+.hero-rank-main{
+  font-size:16px;
+}
+.hero-pg{
+  margin-top:3px;
+  font-size:11px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  padding:4px 10px;
+  font-size:11px;
+  background:rgba(5,5,5,.95);
+  color:var(--accent);
+}
+.badge strong{font-weight:700}
+
+.hero-right{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-end;
+  gap:6px;
+}
+.hero-next-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--accent-soft);
+}
+.hero-next-name{
+  font-size:14px;
+  font-weight:700;
+}
+
+/* Buttons */
+button{
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:radial-gradient(circle at top left,#151515,#050505);
+  color:var(--accent);
+  cursor:pointer;
+  font-family:'Play';
+  font-size:13px;
+}
+button:hover{background:var(--accent);color:#000}
+button[disabled]{
+  opacity:.55;
+  cursor:not-allowed;
+  background:#050505;
+}
+
+/* Requirements card */
 .pb{
   display:grid;
   grid-template-columns:120px 1fr auto;
-  gap:10px;
   align-items:center;
-  margin:8px 0;
+  gap:10px;
+  margin:6px 0;
 }
-.pb .label{color:var(--muted);font-size:12px}
+.pb-label{
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent-soft);
+}
 .bar{
   height:12px;
-  background:#0a0a0a;
-  border:1px solid var(--border);
+  background:#050505;
   border-radius:999px;
+  border:1px solid rgba(214,180,76,.55);
   overflow:hidden;
+  box-shadow:inset 0 0 10px rgba(0,0,0,.95);
 }
 .fill{
   height:100%;
-  background:linear-gradient(180deg,var(--accent),#d6b44c);
+  background:linear-gradient(90deg,var(--accent),#f7f1d0);
+  box-shadow:0 0 18px rgba(242,214,117,.9);
 }
-.pb .val{
+.pb-val{
+  font-size:11px;
   font-variant-numeric:tabular-nums;
   color:var(--muted);
-  font-size:12px;
 }
+
+.small{font-size:11px;color:var(--muted)}
 
 /* Certifications grid */
 .certGrid{
   display:grid;
-  grid-template-columns:repeat(6,1fr);
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
-  margin-top:10px;
+  margin-top:6px;
   justify-items:center;
 }
-@media(max-width:1100px){.certGrid{grid-template-columns:repeat(5,1fr)}}
-@media(max-width:900px){.certGrid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:700px){.certGrid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
-.cert{
-  background:transparent;
-  text-align:center;
-  padding:4px 2px 10px;
-  border-radius:8px;
-  transition:transform .15s ease, opacity .15s ease, filter .15s ease;
-}
-.cert:hover{transform:scale(1.05)}
-.cert.dim{opacity:.45;filter:grayscale(.6)}
-.cert .thumb{
-  width:64px;
-  height:64px;
-  display:grid;
-  place-items:center;
-  margin:0 auto 4px;
-}
-.cert .thumb img{
-  width:auto;
-  max-width:54px;
-  max-height:100%;
-  object-fit:contain;
-}
-.cert .title{font-weight:700;font-size:12px}
-.cert .code{font-size:10px;color:var(--muted);margin-top:1px}
+@media(max-width:920px){.certGrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.certGrid{grid-template-columns:repeat(2,1fr)}}
 
-/* Timeline – keep vertical line, remove dots */
+.cert{
+  text-align:center;
+  padding:6px 4px 10px;
+  border-radius:10px;
+  transition:transform .12s ease,opacity .12s ease,filter .12s ease;
+}
+.cert:hover{transform:translateY(-1px) scale(1.03)}
+.cert.dim{opacity:.4;filter:grayscale(.7)}
+.cert-thumb{
+  width:64px;height:64px;
+  margin:0 auto 4px;
+  display:grid;place-items:center;
+}
+.cert-thumb img{
+  max-width:56px;max-height:100%;object-fit:contain;
+  border:none;background:transparent;box-shadow:none;
+}
+.cert-title{font-size:12px;font-weight:700}
+.cert-code{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* Timeline */
 .timeline{
   position:relative;
-  margin-top:10px;
-  padding-left:36px;
+  padding-left:18px;
+  margin-top:6px;
 }
 .timeline::before{
   content:"";
   position:absolute;
-  left:16px; top:0; bottom:0;
+  left:4px;top:0;bottom:0;
   width:2px;
   background:linear-gradient(var(--border),transparent);
 }
 .titem{
   position:relative;
-  padding:14px 8px;
+  padding:8px 2px;
   border-bottom:1px solid rgba(255,255,255,.06);
   display:grid;
-  grid-template-columns:1fr auto;
-  gap:10px;
+  grid-template-columns:1.5fr auto;
+  gap:8px;
 }
-.tdot{display:none}
-.titem.done .tdot{display:none}
-.tlabel{font-weight:700}
-.small{font-size:12px;color:var(--muted)}
-@media(max-width:520px){
-  .timeline{padding-left:40px}
+.titem:last-child{border-bottom:none}
+.tlabel{font-size:13px;font-weight:700}
+.tdesc{font-size:11px;color:var(--muted);margin-top:2px}
+.tstatus{
+  font-size:11px;text-align:right;
+  color:var(--muted);
 }
+.tstatus.done{color:var(--ok)}
 
-/* Buttons */
-button{
-  padding:8px 12px;
-  border:1px solid var(--border);
+/* Select */
+select{
+  background:#050505;
   border-radius:10px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);
-  cursor:pointer;
+  border:1px solid rgba(214,180,76,.6);
+  padding:8px 10px;
+  color:var(--text);
   font-family:'Play';
+  font-size:12px;
 }
-button:hover{background:var(--accent);color:#000}
 </style>
 </head>
 <body>
 
-<!-- Shared header mount -->
-<div id="header">
-  <!-- Fallback brand if header.html fails -->
+<!-- Header mount (replaced by header.html if available) -->
+<div id="header-container">
   <div class="brand">
     <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
     <h1>JMBN – Progression</h1>
   </div>
 </div>
+<script>
+/* Shared header.html + active nav */
+(async () => {
+  try{
+    const r = await fetch('header.html',{cache:'no-cache'});
+    if(!r.ok) return;
+    const html = await r.text();
+    const mount = document.getElementById('header-container');
+    if(mount) mount.outerHTML = html;
+    requestAnimationFrame(()=>{
+      const here = (location.pathname.split('/').pop() || 'rank-progression.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(href===here || (here==='' && href==='index.html')){
+          a.classList.add('active');
+          a.setAttribute('aria-current','page');
+        }
+      });
+    });
+  }catch(e){console.warn('Header mount failed',e);}
+})();
+</script>
 
-<div class="panel">
-  <div class="rankRow">
-    <div class="rankNow">
-      <img id="curImg" class="rankImg" alt="Rank">
-      <div>
-        <div class="h" style="margin:0">Rank Progression</div>
-        <div style="font-size:12px;color:var(--muted)">
-          Current: <b id="curRank">—</b> <span class="badge" id="curPg">PG: —</span>
+<div class="shell">
+  <!-- HERO: Current + Next Rank -->
+  <section class="card">
+    <div class="card-header">
+      <div class="card-title">Rank Overview</div>
+    </div>
+    <div class="hero">
+      <div class="hero-left">
+        <img id="curImg" class="rankImg" alt="Current Rank">
+        <div>
+          <div class="hero-rank-label">Current Rank</div>
+          <div class="hero-rank-main" id="curRank">—</div>
+          <div class="hero-pg">
+            <span class="badge" id="curPg"><strong>PG:</strong> —</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div>
-      <button class="badge" id="btnPromote" disabled
-        style="cursor:pointer;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent)">
-        Request Promotion
-      </button>
-    </div>
-  </div>
-
-  <div class="section">
-    <h3 class="h">Next Rank</h3>
-    <div style="display:flex;align-items:center;gap:10px">
-      <img id="nextImg" class="rankImg" alt="Next">
-      <div>
-        <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
+      <div class="hero-right">
+        <div class="hero-next-label">Next Rank</div>
+        <div class="hero-next-name" id="nextName">—</div>
         <div class="badge" id="nextPg">PG: —</div>
+        <button id="btnPromote" disabled>Request Promotion</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="section">
-    <h3 class="h">Requirements</h3>
+  <!-- REQUIREMENTS -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Requirements</div>
+        <div class="card-sub">Live counters from missions, hours, and certifications.</div>
+      </div>
+    </div>
+
     <div class="pb">
-      <div class="label">Missions</div>
+      <div class="pb-label">Missions</div>
       <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valMissions">0 / 0</div>
+      <div class="pb-val" id="valMissions">0 / 0</div>
     </div>
+
     <div class="pb">
-      <div class="label">Hours</div>
+      <div class="pb-label">Hours</div>
       <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valHours">0 / 0</div>
+      <div class="pb-val" id="valHours">0 / 0</div>
     </div>
+
     <div class="pb">
-      <div class="label">Certifications</div>
+      <div class="pb-label">Certifications</div>
       <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
-      <div class="val" id="valCerts">0 / 0</div>
+      <div class="pb-val" id="valCerts">0 / 0</div>
     </div>
+
     <div id="note" class="small" style="margin-top:8px">
       Promotion is available when all targets are met.
     </div>
-  </div>
+  </section>
 
-  <div class="section">
-    <h3 class="h">Certifications</h3>
+  <!-- CERTIFICATIONS -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Certifications</div>
+        <div class="card-sub">Gold badges are owned; dimmed badges are not yet earned.</div>
+      </div>
+    </div>
     <div id="certGrid" class="certGrid">—</div>
-    <div class="small" style="margin-top:8px">Dim badges are not yet earned.</div>
-  </div>
+  </section>
 
-  <div class="section">
-    <h3 class="h">Certification Timeline</h3>
-    <div>
-      <select id="certSelect"
-        style="background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:'Play'">
+  <!-- TIMELINE -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Certification Timeline</div>
+        <div class="card-sub">Pick a certification to view its required trainings.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+      <select id="certSelect">
         <option value="">— Select a Certification —</option>
       </select>
-      <button id="btnReloadTL" style="margin-left:6px">Load</button>
+      <button id="btnReloadTL">Load</button>
     </div>
-    <div id="tlHint" class="small" style="margin-top:8px">
+
+    <div id="tlHint" class="small" style="margin-bottom:6px">
       Pick a certification to view its required trainings.
     </div>
+
     <div id="timeline" class="timeline"></div>
-  </div>
+  </section>
 </div>
 
-<!-- Supabase + auth helpers -->
+<!-- Supabase + auth -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
-
 <script>
 const $ = s => document.querySelector(s);
-let sb = null;
-let me = null;
+let sb, me;
 
+/* Clamp & set bar fill */
 function setFill(sel,pct){
-  const el = $(sel);
-  const x = Math.max(0, Math.min(1, Number(pct) || 0));
-  el.style.width = (x * 100) + '%';
+  const el=$(sel);
+  const x=Math.max(0,Math.min(1,Number(pct)||0));
+  if(el) el.style.width=(x*100)+'%';
 }
 
-async function fetchRankImage(code){
-  if(!code || !sb) return '';
-  try{
-    return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl || '';
-  }catch{
-    return '';
-  }
-}
-
-async function loadProgress(){
-  const { data: prog } = await sb
-    .from('v_user_rank_progress')
-    .select('*')
-    .eq('user_id', me)
-    .maybeSingle();
-
-  $('#curRank').textContent = prog?.current_name || '(unranked)';
-  $('#curPg').textContent   = `PG: ${prog?.current_paygrade || '—'}`;
-  $('#nextName').textContent= prog?.next_name || '—';
-  $('#nextPg').textContent  = `PG: ${prog?.next_paygrade || '—'}`;
-
-  const curImg = await fetchRankImage(prog?.current_code);
-  const nxtImg = await fetchRankImage(prog?.next_code);
-  if(curImg) $('#curImg').src = curImg;
-  if(nxtImg) $('#nextImg').src = nxtImg;
-
-  const { data: up } = await sb
-    .from('v_user_progress')
-    .select('*')
-    .eq('user_id', me)
-    .maybeSingle();
-
-  const m  = Number(up?.missions_attended   || 0);
-  const h  = Number(up?.hours_total         || 0);
-  const c  = Number(up?.certifications_total|| 0);
-  const mt = Number(prog?.missions_target        || 0);
-  const ht = Number(prog?.hours_target           || 0);
-  const ct = Number(prog?.certification_target   || 0);
-
-  $('#valMissions').textContent = `${m} / ${mt}`;
-  $('#valHours').textContent    = `${h} / ${ht}`;
-  $('#valCerts').textContent    = `${c} / ${ct}`;
-
-  setFill('#pbMissions', mt ? m/mt : 1);
-  setFill('#pbHours',    ht ? h/ht : 1);
-  setFill('#pbCerts',    ct ? c/ct : 1);
-
-  const allMet =
-    (mt ? m >= mt : true) &&
-    (ht ? h >= ht : true) &&
-    (ct ? c >= ct : true) &&
-    prog?.next_code;
-
-  $('#btnPromote').disabled = !allMet;
-  $('#note').textContent = !prog?.next_code
-    ? 'You are at the highest rank or next rank is not configured.'
-    : allMet
-      ? 'All requirements met. You can request promotion.'
-      : 'Promotion is available when all targets are met.';
-}
-
-async function loadCerts(){
-  const [{ data: cat }, { data: mine }] = await Promise.all([
-    sb.from('certifications')
-      .select('certification_code,name,image_url,sort_order')
-      .order('sort_order'),
-    sb.from('user_certifications')
-      .select('certification_code')
-      .eq('user_id', me)
-  ]);
-
-  const owned = new Set((mine || []).map(x => x.certification_code));
-
-  $('#certGrid').innerHTML = (cat || []).map(c => {
-    const dim = !owned.has(c.certification_code) ? ' dim' : '';
-    return `<div class="cert${dim}">
-      <div class="thumb">
-        ${c.image_url ? `<img src="${c.image_url}" alt="">` : '🏅'}
-      </div>
-      <div class="title">${c.name}</div>
-      <div class="code">${c.certification_code}</div>
-    </div>`;
-  }).join('');
-
-  const sel = $('#certSelect');
-  sel.innerHTML = '<option value="">— Select a Certification —</option>' +
-    (cat || []).map(c =>
-      `<option value="${c.certification_code}">${c.certification_code} — ${c.name}</option>`
-    ).join('');
-}
-
-async function loadTimeline(code){
-  const tl = $('#timeline');
-  tl.innerHTML = '';
+/* Rank image loader */
+function setRankImg(id, code){
+  const img = $('#'+id);
+  if(!img) return;
   if(!code){
-    tl.innerHTML = '<div class="small">Pick a certification.</div>';
+    img.style.display='none';
+    img.removeAttribute('src');
     return;
   }
-
-  const [{ data: reqs }, { data: done }] = await Promise.all([
-    sb.from('certification_requirements')
-      .select('event_code,sort_order,training_events(title,description)')
-      .eq('certification_code', code)
-      .order('sort_order'),
-    sb.from('user_training_events')
-      .select('event_code,completed_at,approved_by')
-      .eq('user_id', me)
-  ]);
-
-  const map = new Map((done || []).map(r => [r.event_code, r]));
-
-  tl.innerHTML = (reqs || []).map(r => {
-    const rec = map.get(r.event_code);
-    const ok  = !!rec;
-    return `<div class="titem${ok ? ' done' : ''}">
-      <div class="tlabel">
-        ${r.training_events?.title || r.event_code}
-      </div>
-      <div class="small">${ok ? 'Completed' : 'Pending'}</div>
-    </div>`;
-  }).join('');
+  try{
+    const { data } = sb.storage.from('Ranks').getPublicUrl(`${code}.png`);
+    const url = data?.publicUrl || '';
+    if(!url){
+      img.style.display='none';
+      img.removeAttribute('src');
+      return;
+    }
+    img.onload  = ()=>{ img.style.display='block'; };
+    img.onerror = ()=>{ img.style.display='none'; };
+    img.src = url;
+  }catch(e){
+    console.warn('rank img error', e);
+    img.style.display='none';
+    img.removeAttribute('src');
+  }
 }
 
-/* ---------- Init + header injection ---------- */
-document.addEventListener('DOMContentLoaded', async () => {
-  // 1) Inject shared header
-  try{
-    const host = document.getElementById('header');
-    if(host){
-      const res = await fetch('header.html', { cache:'no-cache' });
-      if(res.ok){
-        host.innerHTML = await res.text();
-
-        const here = (location.pathname.split('/').pop() || 'progression.html').toLowerCase();
-        requestAnimationFrame(() => {
-          document.querySelectorAll('.nav-btn').forEach(a => {
-            const href = (a.getAttribute('href') || '').toLowerCase();
-            if(href === here){
-              a.classList.add('active');
-              a.setAttribute('aria-current','page');
-            }
-            // Fuzzy match for any "progress"/"rank" type path
-            if(/progress/.test(here) && /progress/.test(href)){
-              a.classList.add('active');
-              a.setAttribute('aria-current','page');
-            }
-          });
-        });
-      }
-    }
-  }catch(e){
-    console.warn('Header mount failed:', e);
-  }
-
-  // 2) Auth + Supabase
+document.addEventListener('DOMContentLoaded', async ()=>{
   const session = await requireAuth();
   if(!session) return;
   sb = getSupabase();
   me = session.user.id;
 
-  // 3) Wire events
+  async function loadProgress(){
+    const { data: prog, error: progErr } = await sb
+      .from('v_user_rank_progress')
+      .select('*')
+      .eq('user_id', me)
+      .maybeSingle();
+    if(progErr) console.warn('rank progress error', progErr.message);
+
+    $('#curRank').textContent   = prog?.current_name || '(unranked)';
+    $('#curPg').textContent     = `PG: ${prog?.current_paygrade || '—'}`;
+    $('#nextName').textContent  = prog?.next_name || '—';
+    $('#nextPg').textContent    = `PG: ${prog?.next_paygrade || '—'}`;
+
+    setRankImg('curImg',  prog?.current_code || null);
+    setRankImg('nextImg', prog?.next_code    || null);
+
+    const { data: up, error: upErr } = await sb
+      .from('v_user_progress')
+      .select('missions_attended,hours_total')
+      .eq('user_id', me)
+      .maybeSingle();
+    if(upErr) console.warn('user progress error', upErr.message);
+
+    const m  = Number(up?.missions_attended || 0);
+    const h  = Number(up?.hours_total       || 0);
+
+    // count owned certifications
+    let ownedCerts = 0;
+    try{
+      const { data: certRows, error: cErr } = await sb
+        .from('v_user_certifications')
+        .select('certification_code,owned')
+        .eq('user_id', me);
+      if(cErr) console.warn('cert count error', cErr.message);
+      ownedCerts = (certRows || []).filter(c => c.owned).length;
+    }catch(e){
+      console.warn('cert count exception', e);
+    }
+
+    const mt = Number(prog?.missions_target      || 0);
+    const ht = Number(prog?.hours_target         || 0);
+    const ct = Number(prog?.certification_target || 0);
+
+    $('#valMissions').textContent = `${m} / ${mt}`;
+    $('#valHours').textContent    = `${h} / ${ht}`;
+    $('#valCerts').textContent    = `${ownedCerts} / ${ct}`;
+
+    setFill('#pbMissions', mt ? m/mt : 1);
+    setFill('#pbHours',    ht ? h/ht : 1);
+    setFill('#pbCerts',    ct ? ownedCerts/ct : 1);
+
+    const allMet =
+      (!!prog?.next_code) &&
+      (mt ? m >= mt : true) &&
+      (ht ? h >= ht : true) &&
+      (ct ? ownedCerts >= ct : true);
+
+    $('#btnPromote').disabled = !allMet;
+
+    const note = $('#note');
+    if(!prog?.next_code){
+      note.textContent = 'You are at the highest rank or the next rank is not configured.';
+    }else if(allMet){
+      note.textContent = 'All requirements met. You can request promotion.';
+    }else{
+      note.textContent = 'Promotion is available when all targets are met.';
+    }
+  }
+
+  async function loadCerts(){
+    const [{ data: cat, error: catErr }, { data: mine, error: mineErr }] =
+      await Promise.all([
+        sb.from('certifications')
+          .select('certification_code,name,image_url,sort_order')
+          .order('sort_order',{ascending:true}),
+        sb.from('v_user_certifications')
+          .select('certification_code,owned,image_url')
+          .eq('user_id', me)
+      ]);
+
+    if(catErr)  console.warn('cert catalog error', catErr.message);
+    if(mineErr) console.warn('user certs error', mineErr.message);
+
+    const ownedSet   = new Set((mine || []).filter(c=>c.owned).map(c=>c.certification_code));
+    const ownedImage = new Map((mine || []).map(c=>[c.certification_code,c.image_url]));
+
+    const grid = $('#certGrid');
+    if(!cat || !cat.length){
+      grid.innerHTML = '<div class="small">No certifications configured yet.</div>';
+    }else{
+      grid.innerHTML = cat.map(c=>{
+        const has = ownedSet.has(c.certification_code);
+        const img = ownedImage.get(c.certification_code) || c.image_url;
+        const dim = has ? '' : ' dim';
+        return `
+          <div class="cert${dim}">
+            <div class="cert-thumb">
+              ${img ? `<img src="${img}" alt="">` : '🏅'}
+            </div>
+            <div class="cert-title">${c.name}</div>
+            <div class="cert-code">${c.certification_code}</div>
+          </div>`;
+      }).join('');
+    }
+
+    const sel = $('#certSelect');
+    sel.innerHTML = '<option value="">— Select a Certification —</option>' +
+      (cat || []).map(c =>
+        `<option value="${c.certification_code}">${c.certification_code} — ${c.name}</option>`
+      ).join('');
+  }
+
+  async function loadTimeline(code){
+    const tl   = $('#timeline');
+    const hint = $('#tlHint');
+    tl.innerHTML = '';
+
+    if(!code){
+      hint.textContent = 'Pick a certification to view its required trainings.';
+      return;
+    }
+    hint.textContent = '';
+
+    const [{ data: reqs, error: reqErr }, { data: done, error: doneErr }] =
+      await Promise.all([
+        sb.from('certification_requirements')
+          .select('event_code,sort_order,training_events(title,description)')
+          .eq('certification_code', code)
+          .order('sort_order',{ascending:true}),
+        sb.from('user_training_events')
+          .select('event_code,completed_at,approved_by')
+          .eq('user_id', me)
+      ]);
+
+    if(reqErr)  console.warn('timeline req error', reqErr.message);
+    if(doneErr) console.warn('timeline done error', doneErr.message);
+
+    const map = new Map((done || []).map(r=>[r.event_code,r]));
+    if(!reqs || !reqs.length){
+      tl.innerHTML = '<div class="small">No training events configured for this certification yet.</div>';
+      return;
+    }
+
+    tl.innerHTML = reqs.map(r=>{
+      const ev  = r.training_events || {};
+      const rec = map.get(r.event_code);
+      const ok  = !!rec;
+      const status = ok
+        ? `Completed${rec.completed_at ? ' — ' + new Date(rec.completed_at).toLocaleString('en-SG') : ''}`
+        : 'Pending';
+      return `
+        <div class="titem">
+          <div>
+            <div class="tlabel">${ev.title || r.event_code}</div>
+            <div class="tdesc">${ev.description || ''}</div>
+          </div>
+          <div class="tstatus${ok?' done':''}">${status}</div>
+        </div>`;
+    }).join('');
+  }
+
   $('#btnReloadTL').onclick = () => loadTimeline($('#certSelect').value);
   $('#certSelect').onchange = () => loadTimeline($('#certSelect').value);
 
-  // 4) Initial load
   await loadProgress();
   await loadCerts();
 });
