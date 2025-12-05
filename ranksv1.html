@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Member Roster</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>JMBN – Progression</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,543 +12,396 @@
 
 <style>
 :root{
-  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
-  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
-  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
+  --bg:#000;--panel:#0b0b0b;--card:#0c0c0c;--border:#d6b44c;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--ok:#5cd47c;
+  --fs:14px;
 }
 *{box-sizing:border-box}
 body{
-  background:
+  margin:0;padding:14px;background:
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  color:var(--text); font-family:'Play',system-ui,sans-serif;
-  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
+  color:var(--text);font-family:'Play',system-ui,sans-serif;font-size:var(--fs);letter-spacing:.25px;
 }
 
-/* Shared header target */
-#header{margin-bottom:10px}
+/* Fallback brand (if header.html fails to load) */
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.brand img.brand-logo{width:44px;height:44px;object-fit:contain;border:none;background:transparent;box-shadow:none}
+.brand h1{font-weight:700;font-size:clamp(18px,2.2vw,22px);color:var(--accent);margin:0}
 
-/* Panel & table */
+/* Containers */
 .panel{
   background:var(--panel);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:12px;
   padding:12px;
-  margin-top:4px;
-  box-shadow:
-    inset 0 0 0 1px rgba(242,214,117,.18),
-    0 0 0 1px rgba(214,180,76,.35),
-    0 18px 45px rgba(0,0,0,.9);
+  margin-top:10px;
+  box-shadow:0 0 18px rgba(214,180,76,.20);
 }
-.controls{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:10px;
-  align-items:center;
-}
-input[type="search"]{
-  background:#0a0a0a;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:9px 12px;
-  color:var(--text);
-  font-size:var(--fs-table);
-  min-width:260px
-}
-.badge{
-  border:1px solid var(--border);
-  padding:6px 10px;
-  border-radius:999px;
-  color:var(--accent);
-  font-weight:700
-}
-.tableWrap{
+.section{
+  background:var(--card);
   border:1px solid var(--border);
   border-radius:12px;
-  overflow:auto;
-  max-height:70vh
+  padding:12px;
+  margin-top:10px;
 }
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:var(--fs-table)
-}
-th,td{
-  border-bottom:1px solid rgba(214,180,76,.3);
-  padding:10px;
-  text-align:left;
-  vertical-align:middle
-}
-th{
-  color:var(--accent);
-  background:#080808;
-  font-weight:600;
-  position:sticky;
-  top:0;
-  z-index:1
-}
-tr:nth-child(even){background:#111}
-tr:hover{background:rgba(214,180,76,.08)}
-.name{font-weight:700}
+.h{margin:0 0 8px;color:var(--accent);font-size:16px}
 
-/* Rank cell — image beside rank text, NO frame/background */
-.rankCell{
-  display:flex;
+/* Rank header */
+.rankRow{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
   align-items:center;
-  gap:12px
 }
-.rankCell img{
-  width:28px;
-  height:28px;
+.rankNow{display:flex;align-items:center;gap:10px}
+.rankImg{
+  width:46px;
+  height:46px;
   object-fit:contain;
-  flex:0 0 28px;
   border:none;
-  border-radius:0;
   background:transparent;
   box-shadow:none;
 }
-
-/* Role chips */
-.roles{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px
-}
-.role-chip{
+.badge{
   border:1px solid var(--border);
   border-radius:999px;
   padding:4px 10px;
   font-size:12px;
-  background:#0c0c0c;
+  background:#121212;
+  color:var(--accent);
+}
+
+/* Progress bars */
+.pb{
+  display:grid;
+  grid-template-columns:120px 1fr auto;
+  gap:10px;
+  align-items:center;
+  margin:8px 0;
+}
+.pb .label{color:var(--muted);font-size:12px}
+.bar{
+  height:12px;
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:999px;
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  background:linear-gradient(180deg,var(--accent),#d6b44c);
+}
+.pb .val{
+  font-variant-numeric:tabular-nums;
   color:var(--muted);
+  font-size:12px;
+}
+
+/* Certifications grid */
+.certGrid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:10px;
+  margin-top:10px;
+  justify-items:center;
+}
+@media(max-width:1100px){.certGrid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:900px){.certGrid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.certGrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.certGrid{grid-template-columns:repeat(2,1fr)}}
+.cert{
+  background:transparent;
+  text-align:center;
+  padding:4px 2px 10px;
+  border-radius:8px;
+  transition:transform .15s ease, opacity .15s ease, filter .15s ease;
+}
+.cert:hover{transform:scale(1.05)}
+.cert.dim{opacity:.45;filter:grayscale(.6)}
+.cert .thumb{
+  width:64px;
+  height:64px;
+  display:grid;
+  place-items:center;
+  margin:0 auto 4px;
+}
+.cert .thumb img{
+  width:auto;
+  max-width:54px;
+  max-height:100%;
+  object-fit:contain;
+}
+.cert .title{font-weight:700;font-size:12px}
+.cert .code{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* Timeline – keep vertical line, remove dots */
+.timeline{
+  position:relative;
+  margin-top:10px;
+  padding-left:36px;
+}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:16px; top:0; bottom:0;
+  width:2px;
+  background:linear-gradient(var(--border),transparent);
+}
+.titem{
+  position:relative;
+  padding:14px 8px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+}
+.tdot{display:none}
+.titem.done .tdot{display:none}
+.tlabel{font-weight:700}
+.small{font-size:12px;color:var(--muted)}
+@media(max-width:520px){
+  .timeline{padding-left:40px}
 }
 
 /* Buttons */
-.btn{
+button{
   padding:8px 12px;
+  border:1px solid var(--border);
   border-radius:10px;
   background:linear-gradient(180deg,#0c0c0c,#060606);
   color:var(--accent);
-  border:1px solid var(--border);
   cursor:pointer;
-  font-family:'Play'
+  font-family:'Play';
 }
-.btn:hover{
-  background:var(--accent);
-  color:#000
-}
-
-/* Modal */
-.modal-mask{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:50
-}
-.modal{
-  background:#0b0b0b;
-  border:1px solid var(--border);
-  border-radius:16px;
-  max-width:760px;
-  width:94vw;
-  padding:20px 18px;
-  box-shadow:0 0 28px rgba(214,180,76,.3)
-}
-.modal h3{
-  margin:0 0 14px;
-  color:var(--accent);
-  font-size:18px;
-  letter-spacing:.3px
-}
-.modal .header-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:14px
-}
-.modal .header-row .spacer{flex:1}
-
-/* Rank card in modal — NO frame/background on image */
-.rankCard{
-  display:flex;
-  gap:16px;
-  align-items:center;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  background:#0f0f0f
-}
-.rankCard img{
-  width:70px;
-  height:70px;
-  object-fit:contain;
-  border:none;
-  border-radius:0;
-  background:transparent;
-  box-shadow:none;
-}
-
-.meta{
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.55
-}
-.meta b{color:var(--accent)}
-
-.divider{
-  height:1px;
-  background:linear-gradient(90deg,rgba(214,180,76,.15),rgba(214,180,76,.4),rgba(214,180,76,.15));
-  border:none;
-  margin:16px 0
-}
-
-/* Section blocks inside modal */
-.section{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px;
-  background:#0f0f0f;
-  margin-bottom:12px
-}
-.section h4{
-  margin:0 0 10px;
-  color:var(--accent);
-  font-size:14px;
-  letter-spacing:.3px
-}
-.section .body{
-  font-size:13px;
-  color:var(--text);
-  line-height:1.6
-}
-.section .muted{color:var(--muted)}
-
-/* Certifications-only gallery in modal */
-.certThumbs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center
-}
-.certThumbs img{
-  width:56px;
-  height:56px;
-  object-fit:contain;
-  display:block;
-  border:none;
-  background:transparent;
-  box-shadow:none;
-  border-radius:0;
-}
-.subtle{font-size:11px;color:var(--muted)}
+button:hover{background:var(--accent);color:#000}
 </style>
 </head>
 <body>
 
-  <!-- Shared header mount -->
-  <div id="header"></div>
-
-  <div class="panel">
-    <div class="controls">
-      <input id="q" type="search" placeholder="Search handle, rank, or specialization…">
-      <span id="count" class="badge">0 members</span>
-    </div>
-
-    <div class="tableWrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:23%">Handle</th>
-            <th style="width:19%">Rank Category</th>
-            <th style="width:20%">Current Rank</th>
-            <th style="width:20%">Specialization</th>
-            <th style="width:13%">Certifications</th>
-            <th style="width:5%"></th>
-          </tr>
-        </thead>
-        <tbody id="tbody">
-          <tr><td colspan="6" style="padding:12px;color:var(--muted)">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="meta" style="padding-top:10px">
-      Attendance counts only missions with status <b>Success / Fail / Abort</b>.
-    </div>
+<!-- Shared header mount -->
+<div id="header">
+  <!-- Fallback brand if header.html fails -->
+  <div class="brand">
+    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
+    <h1>JMBN – Progression</h1>
   </div>
+</div>
 
-  <!-- Modal -->
-  <div id="viewMask" class="modal-mask" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="header-row">
-        <h3 id="viewTitle">Member</h3>
-        <div class="spacer"></div>
-        <button class="btn" type="button" onclick="closeView()">Close</button>
-      </div>
-
-      <div class="rankCard">
-        <img id="rankImg" alt="Rank">
-        <div class="meta">
-          <div><b>Handle:</b> <span id="vHandle"></span></div>
-          <div><b>Rank Category:</b> <span id="vRankCat"></span></div>
-          <div>
-            <b>Current Rank:</b>
-            <span id="vRankName"></span>
-            <span id="vRankCode" class="meta"></span>
-          </div>
-          <div>
-            <b>Specialization (role chips):</b>
-            <span id="vRoles"></span>
-          </div>
-          <div><b>Missions attended:</b> <span id="vAttended"></span></div>
+<div class="panel">
+  <div class="rankRow">
+    <div class="rankNow">
+      <img id="curImg" class="rankImg" alt="Rank">
+      <div>
+        <div class="h" style="margin:0">Rank Progression</div>
+        <div style="font-size:12px;color:var(--muted)">
+          Current: <b id="curRank">—</b> <span class="badge" id="curPg">PG: —</span>
         </div>
       </div>
+    </div>
+    <div>
+      <button class="badge" id="btnPromote" disabled
+        style="cursor:pointer;background:linear-gradient(180deg,#0c0c0c,#060606);color:var(--accent)">
+        Request Promotion
+      </button>
+    </div>
+  </div>
 
-      <hr class="divider">
-
-      <div class="section">
-        <h4>Certifications</h4>
-        <!-- ONLY images below, no labels/text -->
-        <div id="vCertThumbs" class="certThumbs"></div>
+  <div class="section">
+    <h3 class="h">Next Rank</h3>
+    <div style="display:flex;align-items:center;gap:10px">
+      <img id="nextImg" class="rankImg" alt="Next">
+      <div>
+        <div id="nextName" style="font-weight:700;color:var(--accent)">—</div>
+        <div class="badge" id="nextPg">PG: —</div>
       </div>
     </div>
   </div>
 
-  <!-- Supabase -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/auth.js"></script>
+  <div class="section">
+    <h3 class="h">Requirements</h3>
+    <div class="pb">
+      <div class="label">Missions</div>
+      <div class="bar"><div id="pbMissions" class="fill" style="width:0%"></div></div>
+      <div class="val" id="valMissions">0 / 0</div>
+    </div>
+    <div class="pb">
+      <div class="label">Hours</div>
+      <div class="bar"><div id="pbHours" class="fill" style="width:0%"></div></div>
+      <div class="val" id="valHours">0 / 0</div>
+    </div>
+    <div class="pb">
+      <div class="label">Certifications</div>
+      <div class="bar"><div id="pbCerts" class="fill" style="width:0%"></div></div>
+      <div class="val" id="valCerts">0 / 0</div>
+    </div>
+    <div id="note" class="small" style="margin-top:8px">
+      Promotion is available when all targets are met.
+    </div>
+  </div>
+
+  <div class="section">
+    <h3 class="h">Certifications</h3>
+    <div id="certGrid" class="certGrid">—</div>
+    <div class="small" style="margin-top:8px">Dim badges are not yet earned.</div>
+  </div>
+
+  <div class="section">
+    <h3 class="h">Certification Timeline</h3>
+    <div>
+      <select id="certSelect"
+        style="background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:'Play'">
+        <option value="">— Select a Certification —</option>
+      </select>
+      <button id="btnReloadTL" style="margin-left:6px">Load</button>
+    </div>
+    <div id="tlHint" class="small" style="margin-top:8px">
+      Pick a certification to view its required trainings.
+    </div>
+    <div id="timeline" class="timeline"></div>
+  </div>
+</div>
+
+<!-- Supabase + auth helpers -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 
 <script>
-/* ---------- Utilities ---------- */
-const $  = s => document.querySelector(s);
-const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
-const toTitleCase = s => s
-  ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())
-  : '';
-
-function normalizeRoles(r){
-  const raw = r.ingame_role ?? null;
-  if(!raw) return [];
-  if(Array.isArray(raw)) return raw.map(toTitleCase).filter(Boolean);
-  return String(raw).split(/[,;/]+/).map(s=>toTitleCase(s)).filter(Boolean);
-}
-
-/* ---------- Supabase + buckets ---------- */
+const $ = s => document.querySelector(s);
 let sb = null;
-let ROWS = [];
-const RANK_BUCKET = 'Ranks';
-const CERT_BUCKET = 'Certifications';
+let me = null;
 
-function rankPublicUrlFromCode(code){
-  if(!code) return '';
-  return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
-}
-function certPublicUrlFromCode(code){
-  if(!code) return '';
-  return sb.storage.from(CERT_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
+function setFill(sel,pct){
+  const el = $(sel);
+  const x = Math.max(0, Math.min(1, Number(pct) || 0));
+  el.style.width = (x * 100) + '%';
 }
 
-/* ---------- Rank sorting helpers (highest first) ---------- */
-function rankScore(r){
-  const code = String(r.current_rank_code || '').toUpperCase().trim();
-  // O > W > E ; higher number = higher rank
-  const m = code.match(/^([OWE])-(\d{1,2})$/);
-  if(m){
-    const tier = { O: 300, W: 200, E: 100 }[m[1]] || 0;
-    const n = Number(m[2]) || 0;
-    return tier + n; // O-10 => 310, E-1 => 101
+async function fetchRankImage(code){
+  if(!code || !sb) return '';
+  try{
+    return sb.storage.from('Ranks').getPublicUrl(`${code}.png`).data.publicUrl || '';
+  }catch{
+    return '';
   }
-
-  // Fallbacks when there's no code — use name hints
-  const name = String(r.current_rank_name || '').toLowerCase();
-  const hints = [
-    ['admiral','general','marshal','commodore','captain of fleet'],
-    ['captain','commander'],
-    ['lieutenant colonel','major','lieutenant commander'],
-    ['lieutenant','ensign'],
-    ['sergeant major','master sergeant','gunnery sergeant'],
-    ['sergeant','corporal'],
-    ['private','recruit','cadet','trainee','unrated','unranked']
-  ];
-  for(let i=0;i<hints.length;i++){
-    if(hints[i].some(k=>name.includes(k))) return 240 - i*10;
-  }
-  return 0; // unknown => bottom
 }
 
-function sortByRank(rows){
-  return (rows||[]).slice().sort((a,b)=>{
-    const diff = rankScore(b) - rankScore(a);
-    if(diff) return diff;
-    // Tie-breakers: category then handle
-    const catA = (a.current_rank_category||'').localeCompare(b.current_rank_category||'');
-    if(catA) return catA;
-    return (a.handle||'').localeCompare(b.handle||'');
-  });
+async function loadProgress(){
+  const { data: prog } = await sb
+    .from('v_user_rank_progress')
+    .select('*')
+    .eq('user_id', me)
+    .maybeSingle();
+
+  $('#curRank').textContent = prog?.current_name || '(unranked)';
+  $('#curPg').textContent   = `PG: ${prog?.current_paygrade || '—'}`;
+  $('#nextName').textContent= prog?.next_name || '—';
+  $('#nextPg').textContent  = `PG: ${prog?.next_paygrade || '—'}`;
+
+  const curImg = await fetchRankImage(prog?.current_code);
+  const nxtImg = await fetchRankImage(prog?.next_code);
+  if(curImg) $('#curImg').src = curImg;
+  if(nxtImg) $('#nextImg').src = nxtImg;
+
+  const { data: up } = await sb
+    .from('v_user_progress')
+    .select('*')
+    .eq('user_id', me)
+    .maybeSingle();
+
+  const m  = Number(up?.missions_attended   || 0);
+  const h  = Number(up?.hours_total         || 0);
+  const c  = Number(up?.certifications_total|| 0);
+  const mt = Number(prog?.missions_target        || 0);
+  const ht = Number(prog?.hours_target           || 0);
+  const ct = Number(prog?.certification_target   || 0);
+
+  $('#valMissions').textContent = `${m} / ${mt}`;
+  $('#valHours').textContent    = `${h} / ${ht}`;
+  $('#valCerts').textContent    = `${c} / ${ct}`;
+
+  setFill('#pbMissions', mt ? m/mt : 1);
+  setFill('#pbHours',    ht ? h/ht : 1);
+  setFill('#pbCerts',    ct ? c/ct : 1);
+
+  const allMet =
+    (mt ? m >= mt : true) &&
+    (ht ? h >= ht : true) &&
+    (ct ? c >= ct : true) &&
+    prog?.next_code;
+
+  $('#btnPromote').disabled = !allMet;
+  $('#note').textContent = !prog?.next_code
+    ? 'You are at the highest rank or next rank is not configured.'
+    : allMet
+      ? 'All requirements met. You can request promotion.'
+      : 'Promotion is available when all targets are met.';
 }
 
-/* ---------- DOM refs ---------- */
-const tbody  = $('#tbody');
-const countEl= $('#count');
-const q      = $('#q');
+async function loadCerts(){
+  const [{ data: cat }, { data: mine }] = await Promise.all([
+    sb.from('certifications')
+      .select('certification_code,name,image_url,sort_order')
+      .order('sort_order'),
+    sb.from('user_certifications')
+      .select('certification_code')
+      .eq('user_id', me)
+  ]);
 
-/* ---------- Render ---------- */
-function render(rows){
-  if(!rows?.length){
-    tbody.innerHTML = `<tr><td colspan="6" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
-    countEl.textContent = '0 members';
-    return;
-  }
+  const owned = new Set((mine || []).map(x => x.certification_code));
 
-  tbody.innerHTML = rows.map(r=>{
-    const handle   = toTitleCase(r.handle || r.display_name || r.user_id?.slice(0,8) || '—');
-    const rankCat  = r.current_rank_category ? toTitleCase(r.current_rank_category) : '—';
-    const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unrated';
-    const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
-    const roles    = normalizeRoles(r);
-
-    return `
-      <tr>
-        <td class="name">${esc(handle)}</td>
-        <td>${esc(rankCat)}</td>
-        <td>
-          <div class="rankCell">
-            ${imgUrl
-              ? `<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">`
-              : ''}
-            <span>${esc(rankName)}</span>
-          </div>
-        </td>
-        <td>${
-          roles.length
-            ? `<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>`
-            : `<span style="color:var(--muted)">—</span>`
-        }</td>
-        <td><span style="color:var(--muted)">—</span></td>
-        <td><button class="btn" type="button" onclick="viewMember('${r.user_id}')">View</button></td>
-      </tr>`;
+  $('#certGrid').innerHTML = (cat || []).map(c => {
+    const dim = !owned.has(c.certification_code) ? ' dim' : '';
+    return `<div class="cert${dim}">
+      <div class="thumb">
+        ${c.image_url ? `<img src="${c.image_url}" alt="">` : '🏅'}
+      </div>
+      <div class="title">${c.name}</div>
+      <div class="code">${c.certification_code}</div>
+    </div>`;
   }).join('');
 
-  countEl.textContent = `${rows.length} member${rows.length===1?'':'s'}`;
+  const sel = $('#certSelect');
+  sel.innerHTML = '<option value="">— Select a Certification —</option>' +
+    (cat || []).map(c =>
+      `<option value="${c.certification_code}">${c.certification_code} — ${c.name}</option>`
+    ).join('');
 }
 
-/* ---------- Filter ---------- */
-function filterRows(){
-  const term = (q.value || '').toLowerCase().trim();
-  if(!term) return ROWS;
-  return ROWS.filter(r=>{
-    const all = `${r.handle||''} ${r.display_name||''} ${r.current_rank_category||''} ${r.current_rank_name||''} ${r.current_rank_code||''} ${normalizeRoles(r).join(' ')}`.toLowerCase();
-    return all.includes(term);
-  });
-}
-
-function applyAndRender(){
-  const filtered = filterRows();
-  const sorted   = sortByRank(filtered);
-  render(sorted);
-}
-
-/* ---------- Modal logic ---------- */
-function closeView(){
-  $('#viewMask').style.display='none';
-}
-window.closeView = closeView;
-
-async function loadCertThumbs(userId){
-  const box = $('#vCertThumbs');
-  box.innerHTML = '';
-  try{
-    const { data, error } = await sb
-      .from('v_user_certifications')
-      .select('certification_code,image_url,owned')
-      .eq('user_id', userId);
-    if(error){
-      console.warn(error.message);
-      return;
-    }
-    const imgs = (data||[])
-      .filter(c=>c.owned)
-      .map(c => c.image_url || certPublicUrlFromCode(c.certification_code))
-      .filter(Boolean);
-
-    if(!imgs.length){
-      box.innerHTML = '';
-      return;
-    }
-    box.innerHTML = imgs
-      .map(src => `<img src="${esc(src)}" alt="" loading="lazy" onerror="this.style.display='none'">`)
-      .join('');
-  }catch(e){
-    console.warn('cert thumbs:', e.message);
-  }
-}
-
-function viewMember(userId){
-  const r = ROWS.find(x=>x.user_id===userId);
-  if(!r) return;
-
-  const handle   = toTitleCase(r.handle || r.display_name || r.user_id.slice(0,8));
-  const attended = Number(r.missions_attended)||0;
-  const rankCat  = r.current_rank_category ? toTitleCase(r.current_rank_category) : '—';
-  const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unrated';
-  const roles    = normalizeRoles(r);
-  const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
-
-  $('#viewTitle').textContent = `Member — ${handle}`;
-  $('#vHandle').textContent   = handle;
-  $('#vRankCat').textContent  = rankCat;
-  $('#vRankName').textContent = rankName;
-  $('#vRankCode').textContent = r.current_rank_code ? `(${r.current_rank_code})` : '';
-  $('#vRoles').innerHTML      = roles.length
-    ? roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' ')
-    : '—';
-  $('#vAttended').textContent = attended;
-
-  const imgEl = $('#rankImg');
-  imgEl.src   = imgUrl || '';
-  imgEl.alt   = r.current_rank_code || 'Rank';
-  imgEl.style.visibility = imgUrl ? 'visible' : 'hidden';
-  imgEl.onerror = () => { imgEl.style.visibility='hidden'; };
-
-  loadCertThumbs(userId);
-
-  $('#viewMask').style.display='flex';
-}
-window.viewMember = viewMember;
-
-/* ---------- Data load ---------- */
-async function loadRoster(){
-  const { data, error } = await sb
-    .from('v_profiles_detailed')
-    .select(`
-      user_id,
-      handle,
-      display_name,
-      current_rank_category,
-      current_rank_name,
-      current_rank_code,
-      current_rank_image_url,
-      ingame_role,
-      missions_attended
-    `)
-    .order('current_rank_category',{ascending:true})
-    .order('handle',{ascending:true});
-
-  if(error){
-    tbody.innerHTML = `<tr><td colspan="6" style="padding:12px;color:var(--bad)">Failed to load: ${esc(error.message)}</td></tr>`;
-    countEl.textContent = '0 members';
+async function loadTimeline(code){
+  const tl = $('#timeline');
+  tl.innerHTML = '';
+  if(!code){
+    tl.innerHTML = '<div class="small">Pick a certification.</div>';
     return;
   }
-  ROWS = data || [];
-  applyAndRender(); // sort highest rank first
+
+  const [{ data: reqs }, { data: done }] = await Promise.all([
+    sb.from('certification_requirements')
+      .select('event_code,sort_order,training_events(title,description)')
+      .eq('certification_code', code)
+      .order('sort_order'),
+    sb.from('user_training_events')
+      .select('event_code,completed_at,approved_by')
+      .eq('user_id', me)
+  ]);
+
+  const map = new Map((done || []).map(r => [r.event_code, r]));
+
+  tl.innerHTML = (reqs || []).map(r => {
+    const rec = map.get(r.event_code);
+    const ok  = !!rec;
+    return `<div class="titem${ok ? ' done' : ''}">
+      <div class="tlabel">
+        ${r.training_events?.title || r.event_code}
+      </div>
+      <div class="small">${ok ? 'Completed' : 'Pending'}</div>
+    </div>`;
+  }).join('');
 }
 
-/* ---------- Init ---------- */
+/* ---------- Init + header injection ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
   // 1) Inject shared header
   try{
@@ -557,15 +410,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       const res = await fetch('header.html', { cache:'no-cache' });
       if(res.ok){
         host.innerHTML = await res.text();
-        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+
+        const here = (location.pathname.split('/').pop() || 'progression.html').toLowerCase();
         requestAnimationFrame(() => {
-          document.querySelectorAll('.nav-btn').forEach(a=>{
-            const href = (a.getAttribute('href')||'').toLowerCase();
-            if(href === here) {
+          document.querySelectorAll('.nav-btn').forEach(a => {
+            const href = (a.getAttribute('href') || '').toLowerCase();
+            if(href === here){
               a.classList.add('active');
               a.setAttribute('aria-current','page');
             }
-            if(/member/.test(here) && /member/.test(href)){
+            // Fuzzy match for any "progress"/"rank" type path
+            if(/progress/.test(here) && /progress/.test(href)){
               a.classList.add('active');
               a.setAttribute('aria-current','page');
             }
@@ -574,17 +429,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   }catch(e){
-    console.warn('Header load failed:', e);
+    console.warn('Header mount failed:', e);
   }
 
   // 2) Auth + Supabase
   const session = await requireAuth();
   if(!session) return;
   sb = getSupabase();
+  me = session.user.id;
 
-  // 3) Wire events + load data
-  q.addEventListener('input', applyAndRender);
-  await loadRoster();
+  // 3) Wire events
+  $('#btnReloadTL').onclick = () => loadTimeline($('#certSelect').value);
+  $('#certSelect').onchange = () => loadTimeline($('#certSelect').value);
+
+  // 4) Initial load
+  await loadProgress();
+  await loadCerts();
 });
 </script>
 </body>
