@@ -1,383 +1,665 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>JMBN Paygrades — Holo HUD</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JMBN – My Earnings</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png"
+      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+      sizes="32x32">
 
 <style>
 :root{
-  --bg:#000; --panel:#0b0b0b; --panel2:#0a0a0a; --card:#0c0c0c;
-  --border:#d6b44c; --accent:#f2d675; --text:#f7f1d0; --muted:#c9b06a;
-  --hud:#00ffe0; --hud-dim:rgba(0,255,224,.2);
+  --bg:#000;--panel:#0b0b0b;--sub:#0f0f0f;--row:#0a0a0a;
+  --border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;--good:#37d996;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
 *{box-sizing:border-box}
-html,body{height:100%}
 body{
-  margin:0; padding:14px; color:var(--text);
+  margin:0;padding:14px;
   background:
-    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.07), transparent 60%),
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
     radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
     #000;
-  font-family:'Play',system-ui,sans-serif; letter-spacing:.25px; font-size:14px;
+  color:var(--text);
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size:var(--fs-base);letter-spacing:.25px;
 }
 
-/* ===== Brand + HUD Bar ===== */
-.brand{display:flex;align-items:center;gap:10px;margin:0 0 8px;border-bottom:1px solid var(--border);padding-bottom:6px}
-.brand-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(242,214,117,.25))}
-.brand h1{margin:0;color:var(--accent);font-size:22px}
-
-.hudbar{
-  position:relative; display:flex; align-items:center; gap:10px;
-  background:linear-gradient(180deg,#0b0b0b,#070707);
-  border:1px solid var(--border); border-radius:10px; padding:8px 10px; margin:8px 0 12px;
-  box-shadow:0 0 18px rgba(214,180,76,.14), inset 0 0 0 1px rgba(214,180,76,.10);
-  overflow:hidden;
+/* Fallback brand if header.html fails */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 8px;padding-bottom:6px;
+  border-bottom:1px solid var(--border)
 }
-.hudbar::after{
-  content:""; position:absolute; inset:0;
-  background:repeating-linear-gradient(90deg, transparent 0 24px, rgba(255,255,255,.04) 24px 25px);
-  pointer-events:none;
+.brand-logo{
+  width:44px;height:44px;object-fit:contain;
+  filter:drop-shadow(0 0 4px rgba(242,214,117,.25))
 }
-.hud-led{width:8px;height:8px;border-radius:50%; background:#45ffb7; box-shadow:0 0 10px #45ffb7}
-.hud-scroll{font-family:'Share Tech Mono',monospace; color:var(--hud); opacity:.9; white-space:nowrap; overflow:hidden}
-.hud-scroll span{display:inline-block; padding-left:100%; animation:marq 14s linear infinite}
-@keyframes marq{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
-
-/* ===== Nav ===== */
-.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px}
-.nav-btn{
-  --ring:#d6b44c;
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;border:1px solid var(--ring);border-radius:999px;
-  background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent);text-decoration:none;font-weight:700;letter-spacing:.2px;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+.brand h1{
+  font-weight:700;font-size:var(--fs-h1);color:var(--accent);margin:0
 }
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 0 12px rgba(214,180,76,.25)}
-.nav-btn.active{color:#000;background:linear-gradient(180deg,#f2d675,#e7c760);border-color:var(--ring)}
 
-/* ===== Layout ===== */
-.wrap{display:grid; grid-template-columns:1fr 360px; gap:12px}
-@media (max-width:1100px){ .wrap{ grid-template-columns:1fr } }
-.panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px; box-shadow:0 0 18px rgba(214,180,76,.14)}
-.panel h2{margin:0 0 8px; color:var(--accent); font-size:16px}
-
-/* ===== Controls ===== */
-.tools{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
-input[type="search"], input[type="number"]{
-  background:#0a0a0a; border:1px solid var(--border); border-radius:10px; padding:9px 10px; color:var(--text); min-width:220px
+/* Panels & layout */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.10);
 }
+.wrap{
+  display:grid;
+  grid-template-columns:minmax(260px,0.95fr) minmax(420px,1.4fr);
+  gap:12px;
+  margin-top:8px;
+}
+@media(max-width:960px){
+  .wrap{grid-template-columns:1fr}
+}
+
+/* Titles / text */
+.section-title{
+  font-size:13px;color:var(--accent);margin:0 0 4px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.12em;
+}
+.small{font-size:var(--fs-small);color:var(--muted)}
+.subtle{font-size:11px;color:var(--muted)}
+.mono{font-variant-numeric:tabular-nums}
+
+/* KPI cards */
+.kpis{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px;
+}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{
+  background:linear-gradient(180deg,#0b0b0b,#080808);
+  border-radius:10px;border:1px solid var(--border);
+  padding:8px;
+  box-shadow:0 0 14px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.kpi-label{
+  font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px
+}
+.kpi-value{
+  font-size:18px;font-weight:700;color:var(--accent);line-height:1.2
+}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* Tiny summary strip */
+.summary-strip{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;
+  font-size:11px;color:var(--muted);
+}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  border-radius:999px;border:1px solid var(--border);
+  padding:2px 8px;font-size:10px;color:var(--muted);background:#050505;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+
+/* Filters / controls */
+.controls{
+  display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px;
+  align-items:center;justify-content:space-between;
+}
+.controls-left{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.controls-right{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+input[type="search"],select{
+  background:#050505;border:1px solid var(--border);border-radius:8px;
+  padding:7px 9px;color:var(--text);font-family:'Play';font-size:var(--fs-table);
+}
+.filter-pill{
+  padding:5px 10px;border-radius:999px;border:1px solid var(--border);
+  background:#050505;color:var(--muted);font-size:11px;cursor:pointer;
+}
+.filter-pill.active{
+  background:var(--accent);color:#000;box-shadow:0 0 14px rgba(214,180,76,.3);
+}
+
+/* Table */
+.tableWrap{
+  margin-top:4px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  overflow:auto;
+  max-height:60vh;
+}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-table);min-width:780px;}
+th,td{padding:7px 8px;border-bottom:1px solid rgba(214,180,76,.28);text-align:left}
+th{
+  font-size:11px;color:var(--accent);background:#080808;font-weight:500;
+  text-transform:uppercase;letter-spacing:.09em;
+  position:sticky;top:0;z-index:1;
+}
+tbody tr:nth-child(even){background:#111}
+tbody tr:hover{background:rgba(214,180,76,.08);cursor:pointer}
+.text-right{text-align:right}
+.text-center{text-align:center}
+.nowrap{white-space:nowrap}
+
+/* Chips */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:2px 8px;border-radius:999px;
+  border:1px solid var(--border);background:#050505;
+  font-size:11px;color:var(--muted);
+}
+.chip .dot{width:6px;height:6px}
+.chip.success .dot{background:var(--good)}
+.chip.abort .dot{background:var(--bad)}
+.chip.planned .dot{background:var(--muted)}
+
+/* Buttons */
 button{
-  padding:8px 12px; border-radius:10px; background:linear-gradient(180deg,#0c0c0c,#060606);
-  color:var(--accent); border:1px solid var(--border); cursor:pointer; font-weight:700; transition:.2s;
-  font-family:'Play',sans-serif;
+  padding:7px 11px;border-radius:10px;border:1px solid var(--border);
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);cursor:pointer;
+  font-family:'Play';font-size:12px;font-weight:700;
+  transition:.18s;
 }
-button:hover{background:var(--accent); color:#000}
-.btn-ghost{background:transparent}
-.small{font-size:12px; color:var(--muted)}
+button:hover{
+  background:var(--accent);color:#000;
+  box-shadow:0 0 12px rgba(214,180,76,.35);
+}
+.btn-ghost{
+  background:transparent;border-radius:999px;
+}
 
-/* ===== Holo Grid ===== */
-.grid{
-  display:grid; gap:10px;
-  grid-template-columns: repeat(3, minmax(280px, 1fr));
+/* Modal */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;align-items:center;justify-content:center;
+  z-index:80;
 }
-@media (max-width:1280px){ .grid{ grid-template-columns: repeat(2, minmax(240px, 1fr)); } }
-@media (max-width:860px){ .grid{ grid-template-columns: 1fr; } }
+.modal{
+  background:#0b0b0b;
+  border:1px solid var(--border);
+  border-radius:12px;
+  max-width:720px;width:95%;
+  max-height:80vh;
+  overflow:auto;
+  box-shadow:0 0 25px rgba(214,180,76,.4);
+  padding:12px;
+}
+.modal-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:12px;margin-bottom:6px;
+}
+.modal-title{
+  font-size:14px;font-weight:700;color:var(--accent);
+}
+.modal-close{
+  border:none;background:transparent;color:var(--accent);
+  font-size:18px;line-height:1;cursor:pointer;padding:0 4px;
+}
+.modal-body{font-size:12px;}
+.modal-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;
+}
+@media(max-width:640px){.modal-grid{grid-template-columns:1fr}}
+.modal-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.modal-val{font-size:13px}
 
-.card{
-  position:relative; background:linear-gradient(180deg,#0b0b0b,#080808);
-  border:1px solid var(--border); border-radius:14px; padding:10px;
-  box-shadow:0 0 24px rgba(214,180,76,.14), inset 0 0 0 1px rgba(214,180,76,.08);
-  overflow:hidden; transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+/* Toast */
+.toast{
+  position:fixed;right:16px;bottom:16px;
+  background:#111;border:1px solid var(--border);border-radius:10px;
+  padding:8px 12px;font-size:12px;color:var(--text);
+  box-shadow:0 0 18px rgba(214,180,76,.32);
+  max-width:320px;z-index:90;
 }
-.card::before{
-  content:""; position:absolute; inset:0; border-radius:inherit;
-  background: radial-gradient(400px 200px at 110% -10%, var(--hud-dim), transparent 60%);
-  pointer-events:none;
-}
-.card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 28px rgba(0,255,224,.25), 0 0 24px rgba(214,180,76,.2);
-  border-color:#9fe8d9;
-}
-.rank-line{display:flex; align-items:center; justify-content:space-between; gap:8px}
-.rank-name{color:var(--accent); font-weight:800; font-size:16px}
-.rank-code{font-family:'Share Tech Mono',monospace; color:var(--hud)}
-.meta{display:flex; gap:6px; flex-wrap:wrap; margin-top:4px}
-.badge{border:1px solid var(--border); border-radius:999px; padding:2px 8px; font-size:11px; color:var(--muted); background:#0c0c0c}
-.values{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px}
-.v{background:var(--panel2); border:1px solid rgba(214,180,76,.3); border-radius:10px; padding:8px}
-.v label{display:block; color:#c9b06a; font-size:11px; margin-bottom:2px}
-.v strong{display:block; font-family:'Share Tech Mono',monospace; font-size:16px; color:#f7f1d0}
-.actions{display:flex; gap:6px; margin-top:8px}
-
-/* ===== Scanner (right) ===== */
-.scan{position:relative}
-.scan .hud{
-  position:absolute; inset:0; border-radius:10px; pointer-events:none;
-  background:linear-gradient(180deg, rgba(0,255,224,.06), transparent 40%); mix-blend-mode:screen;
-}
-.kpis{display:grid; grid-template-columns:repeat(2,1fr); gap:8px}
-.kpi{background:#0c0c0c; border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center}
-.kpi h3{margin:0; color:#c9b06a; font-size:11px; text-transform:uppercase}
-.kpi .val{font-weight:800; font-size:18px; color:var(--accent); margin-top:4px}
-
-.scan-block{background:#0b0b0b; border:1px solid var(--border); border-radius:12px; padding:10px; margin-top:10px}
-.scan-block h3{margin:0 0 6px; color:var(--accent); font-size:14px}
-.row{display:flex; align-items:center; gap:8px; margin-top:6px; flex-wrap:wrap}
-.readout{font-family:'Share Tech Mono',monospace; color:var(--hud)}
-.list{max-height:36vh; overflow:auto; border:1px solid rgba(214,180,76,.25); border-radius:10px; padding:8px; background:#090909}
-.list .li{display:grid; grid-template-columns:1fr auto; gap:6px; padding:6px 0; border-bottom:1px dashed rgba(214,180,76,.2)}
-.list .li:last-child{border-bottom:none}
-.mono{font-family:'Share Tech Mono',monospace}
+.toast.bad{border-color:var(--bad);color:#ffd0d0}
 </style>
 </head>
-
 <body>
+
+<!-- Header mount (header.html) -->
+<div id="header-container">
   <div class="brand">
-    <img class="brand-logo" src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" alt="JMBN">
-    <h1>JMBN Paygrades — Holo HUD</h1>
+    <img class="brand-logo"
+         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+         alt="JMBN">
+    <h1>JMBN – My Earnings</h1>
   </div>
+</div>
+<script>
+(async () => {
+  try{
+    const res = await fetch('header.html',{cache:'no-cache'});
+    if(!res.ok) return;
+    const html = await res.text();
+    const mount = document.getElementById('header-container');
+    if(mount) mount.outerHTML = html;
 
-  <div class="hudbar">
-    <div class="hud-led" title="Auth channel active"></div>
-    <div class="hud-scroll"><span>// PAYGRADE INTERFACE — FLEET NODE ONLINE — DATA LINK: V_RANK_PAY_CURRENT — STATUS: GREEN — PRESS SIMULATE TO PROJECT MISSION PAYOUTS //</span></div>
-  </div>
-
-  <nav class="nav">
-    <a class="nav-btn" href="index.html">Manifest</a>
-    <a class="nav-btn" href="hangar.html">Hangar</a>
-    <a class="nav-btn" href="components.html">Components</a>
-    <a class="nav-btn" href="contracts.html">Contracts</a>
-    <a class="nav-btn" href="mission-log.html">Mission Log</a>
-    <a class="nav-btn active" href="paygrades-holo.html">Paygrades (HUD)</a>
-  </nav>
-
-  <div class="wrap">
-    <!-- LEFT: Holo grid -->
-    <div class="panel">
-      <div class="tools">
-        <input id="q" type="search" placeholder="Search rank / code / category…">
-        <button id="export">Export JSON</button>
-        <span class="small" id="countInfo">—</span>
-      </div>
-      <div id="grid" class="grid"></div>
-    </div>
-
-    <!-- RIGHT: Scanner -->
-    <div class="panel scan">
-      <div class="hud"></div>
-      <h2>Finance Scanner</h2>
-
-      <div class="kpis">
-        <div class="kpi"><h3>Total Ranks</h3><div class="val" id="kCount">0</div></div>
-        <div class="kpi"><h3>Avg Base</h3><div class="val" id="kAvg">—</div></div>
-      </div>
-
-      <div class="scan-block">
-        <h3>Selected Rank</h3>
-        <div class="row"><span class="small">Code:</span> <span id="selCode" class="readout">—</span></div>
-        <div class="row"><span class="small">Name:</span> <span id="selName" class="readout">—</span></div>
-        <div class="row"><span class="small">Category:</span> <span id="selCat" class="readout">—</span></div>
-        <div class="row"><span class="small">Base:</span> <span id="selBase" class="readout">—</span></div>
-        <div class="row"><span class="small">Bonus:</span> <span id="selBonus" class="readout">—</span></div>
-      </div>
-
-      <div class="scan-block">
-        <h3>Mission Simulation</h3>
-        <div class="row">
-          <input id="simPayout" type="number" placeholder="Mission payout (aUEC)" />
-          <button id="runSim">Simulate</button>
-        </div>
-        <div class="row small">For each rank: <span class="mono">total = base + bonus_flat + (pct * mission / 100)</span></div>
-        <div id="simList" class="list" style="margin-top:8px"></div>
-      </div>
-    </div>
-  </div>
-
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-/* ===== Supabase config (same as your suite) ===== */
-const SUPABASE_URL  = 'https://fcegavhipeaeihxegsnw.supabase.co'
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZWdhdmhpcGVhZWloeGVnc253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxMjk3NTcsImV4cCI6MjA3NzcwNTc1N30.i-ZjOlKc89-uA7fqOIvmAMv60-C2_NmKikRI_78Jei8'
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
-
-/* ===== DOM refs ===== */
-const grid   = document.getElementById('grid')
-const q      = document.getElementById('q')
-const exportBtn = document.getElementById('export')
-const countInfo = document.getElementById('countInfo')
-
-const kCount = document.getElementById('kCount')
-const kAvg   = document.getElementById('kAvg')
-
-const selCode = document.getElementById('selCode')
-const selName = document.getElementById('selName')
-const selCat  = document.getElementById('selCat')
-const selBase = document.getElementById('selBase')
-const selBonus= document.getElementById('selBonus')
-
-const simPayout = document.getElementById('simPayout')
-const runSim    = document.getElementById('runSim')
-const simList   = document.getElementById('simList')
-
-/* ===== State ===== */
-let rows = []       // from v_rank_pay_current
-let filtered = []   // after search
-let selected = null
-
-/* ===== Helpers ===== */
-const esc = (s='') => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML }
-const fmt = (n) => (n||n===0) ? Number(n).toLocaleString() : '—'
-const bonusText = (r) => {
-  const f = r.bonus_per_mission || 0
-  const p = r.bonus_pct_of_mission_payout || 0
-  return `${fmt(f)} + ${p}%`
-}
-function setSelected(r){
-  selected = r
-  selCode.textContent  = r?.rank_code || '—'
-  selName.textContent  = r ? `${r.rank_name} (${r.paygrade||''})` : '—'
-  selCat.textContent   = r?.rank_category || '—'
-  selBase.textContent  = r ? `${fmt(r.base_monthly)} aUEC` : '—'
-  selBonus.textContent = r ? bonusText(r) : '—'
-}
-function simulate(payout){
-  const m = Number(payout||0)
-  const arr = filtered.length ? filtered : rows
-  if(!arr.length){ simList.innerHTML = '<div class="small">No ranks loaded.</div>'; return }
-  simList.innerHTML = arr.map(r=>{
-    const flat = Number(r.bonus_per_mission||0)
-    const pct  = Number(r.bonus_pct_of_mission_payout||0)
-    const add  = flat + (pct * m / 100)
-    const total= Number(r.base_monthly||0) + add
-    return `<div class="li">
-      <div>
-        <div class="small" style="color:#c9b06a">${esc(r.rank_name)} <span class="mono">[${esc(r.rank_code)}]</span></div>
-        <div class="small">Bonus: <span class="mono">${fmt(flat)} + ${pct}%</span></div>
-      </div>
-      <div class="mono">${fmt(total)}</div>
-    </div>`
-  }).join('')
-}
-
-/* ===== Render ===== */
-function card(r){
-  return `<div class="card" data-code="${esc(r.rank_code)}" role="button" title="Inspect">
-    <div class="rank-line">
-      <div class="rank-name">${esc(r.rank_name)}</div>
-      <div class="rank-code">${esc(r.rank_code||'')}</div>
-    </div>
-    <div class="meta" aria-hidden="true">
-      ${r.rank_category?`<span class="badge">${esc(r.rank_category)}</span>`:''}
-      ${r.paygrade?`<span class="badge">Paygrade: ${esc(r.paygrade)}</span>`:''}
-      ${r.active_to?`<span class="badge">Active to: ${esc(r.active_to)}</span>`:'<span class="badge">Active</span>'}
-    </div>
-    <div class="values">
-      <div class="v"><label>Base Monthly</label><strong class="mono">${fmt(r.base_monthly)}</strong></div>
-      <div class="v"><label>Bonus</label><strong class="mono">${bonusText(r)}</strong></div>
-    </div>
-    <div class="actions">
-      <button class="btn-ghost" data-act="select" data-code="${esc(r.rank_code)}">Scan</button>
-      <button class="btn-ghost" data-act="quickSim" data-bonus="${(r.bonus_per_mission||0)}" data-pct="${(r.bonus_pct_of_mission_payout||0)}">Quick Sim</button>
-    </div>
-  </div>`
-}
-
-function render(list){
-  grid.innerHTML = list.map(card).join('') || `<div class="small">No results. Adjust search.</div>`
-  countInfo.textContent = list.length ? `${list.length} ranks` : '—'
-  // bind actions
-  grid.querySelectorAll('button[data-act="select"]').forEach(b=>{
-    b.onclick = () => {
-      const code = b.dataset.code
-      const r = rows.find(x=>x.rank_code===code)
-      setSelected(r)
-    }
-  })
-  grid.querySelectorAll('button[data-act="quickSim"]').forEach(b=>{
-    b.onclick = () => {
-      const payout = Number(simPayout.value||0)
-      if(!payout){ alert('Set a mission payout first'); return }
-      simulate(payout)
-    }
-  })
-  // click card to select
-  grid.querySelectorAll('.card').forEach(c=>{
-    c.onclick = (e)=>{
-      if(e.target.closest('button')) return;
-      const code = c.dataset.code
-      const r = rows.find(x=>x.rank_code===code)
-      setSelected(r)
-    }
-  })
-}
-
-/* ===== Load from Supabase ===== */
-async function load(){
-  // Pull everything needed for UI
-  const { data, error } = await sb
-    .from('v_rank_pay_current')
-    .select('rank_code, rank_name, paygrade, rank_category, base_monthly, bonus_per_mission, bonus_pct_of_mission_payout, notes, active_from, active_to')
-    .order('rank_category',{ascending:true})
-  if(error){
-    grid.innerHTML = `<div class="small">Failed to load paygrades: ${esc(error.message)}</div>`
-    return
-  }
-  rows = data || []
-  filtered = rows.slice()
-  render(filtered)
-  // KPIs
-  kCount.textContent = String(rows.length||0)
-  const avg = rows.length ? rows.reduce((a,b)=>a+Number(b.base_monthly||0),0)/rows.length : 0
-  kAvg.textContent = avg ? Number(avg).toLocaleString() : '—'
-  // Pick first by default
-  setSelected(rows[0] || null)
-}
-
-/* ===== Search ===== */
-q.addEventListener('input', ()=>{
-  const v = (q.value || '').toLowerCase()
-  filtered = rows.filter(r =>
-    (r.rank_name||'').toLowerCase().includes(v) ||
-    (r.rank_code||'').toLowerCase().includes(v) ||
-    (r.rank_category||'').toLowerCase().includes(v) ||
-    (r.paygrade||'').toLowerCase().includes(v)
-  )
-  render(filtered)
-})
-
-/* ===== Export ===== */
-exportBtn.onclick = ()=>{
-  const blob = new Blob([JSON.stringify(rows,null,2)],{type:'application/json'})
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a'); a.href = url; a.download = 'jmbn-paygrades.json'; a.click()
-  URL.revokeObjectURL(url)
-}
-
-/* ===== Simulate ===== */
-runSim.onclick = ()=>{
-  simulate(simPayout.value)
-}
-
-/* ===== Boot ===== */
-await load()
+    // highlight current nav
+    requestAnimationFrame(() => {
+      const here = (location.pathname.split('/').pop() || 'earnings.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(href === here) { a.classList.add('active'); a.setAttribute('aria-current','page'); }
+      });
+    });
+  }catch(e){ console.warn('Header load failed',e); }
+})();
 </script>
 
-<!-- highlight current nav -->
+<div class="wrap">
+  <!-- LEFT: Summary -->
+  <section class="panel">
+    <div class="section-title">Personal Earnings Overview</div>
+    <div class="small">Reference-only ledger for <span id="userHandle">you</span>.</div>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-label">Total Missions Paid</div>
+        <div class="kpi-value mono" id="kpiMissions">–</div>
+        <div class="kpi-sub">Any mission with a recorded payout row for you</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total aUEC Earned</div>
+        <div class="kpi-value mono" id="kpiTotal">–</div>
+        <div class="kpi-sub">Sum of all final shares recorded</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Average Per Mission</div>
+        <div class="kpi-value mono" id="kpiAvg">–</div>
+        <div class="kpi-sub">Total / missions paid</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Best Mission</div>
+        <div class="kpi-value mono" id="kpiBest">–</div>
+        <div class="kpi-sub" id="kpiBestLabel">Highest single payout</div>
+      </div>
+    </div>
+
+    <div class="summary-strip" id="summaryStrip">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- RIGHT: Missions list -->
+  <section class="panel">
+    <div class="section-title">Mission Earnings</div>
+    <div class="small">Click a row to see a detailed breakdown for that mission.</div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <input id="search" type="search" placeholder="Search by mission title / ID / status…">
+      </div>
+      <div class="controls-right">
+        <button class="filter-pill active" data-range="all">All time</button>
+        <button class="filter-pill" data-range="30">Last 30 days</button>
+        <button class="filter-pill" data-range="90">Last 90 days</button>
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="success">Success</option>
+          <option value="fail">Fail</option>
+          <option value="abort">Abort</option>
+          <option value="planned">Planned</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:14%">Date</th>
+            <th style="width:28%">Mission</th>
+            <th style="width:11%">Status</th>
+            <th style="width:10%">Role / PG</th>
+            <th style="width:13%" class="text-right nowrap">Mission Payout</th>
+            <th style="width:12%" class="text-right nowrap">Your Share</th>
+            <th style="width:12%" class="text-right nowrap">Org %</th>
+          </tr>
+        </thead>
+        <tbody id="missionBody">
+          <tr><td colspan="7" class="subtle">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="small" style="margin-top:6px">
+      Note: this page is for reference only. Actual payouts are based on in-game transfers and admin records.
+    </div>
+  </section>
+</div>
+
+<!-- Modal -->
+<div id="missionModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle">Mission</div>
+        <div class="subtle" id="modalMeta"></div>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div>
+          <div class="modal-label">Your Share</div>
+          <div class="modal-val mono" id="modalYourShare">–</div>
+        </div>
+        <div>
+          <div class="modal-label">Mission Payout</div>
+          <div class="modal-val mono" id="modalMissionPayout">–</div>
+        </div>
+        <div>
+          <div class="modal-label">Org Cut % (effective)</div>
+          <div class="modal-val mono" id="modalOrgPct">–</div>
+        </div>
+        <div>
+          <div class="modal-label">Crew Pool & Your %</div>
+          <div class="modal-val mono" id="modalCrewPool">–</div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <div class="modal-label">Notes</div>
+        <div class="modal-val subtle" id="modalNotes">
+          This breakdown is calculated from the live payout view. If numbers look off,
+          check with an officer as the admin ledger may have been updated.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" style="display:none"></div>
+
+<!-- Supabase + auth -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+
 <script>
-(() => {
-  const here = location.pathname.split('/').pop() || 'paygrades-holo.html';
-  document.querySelectorAll('.nav-btn').forEach(a=>{
-    if(a.getAttribute('href')===here){a.classList.add('active')}
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const fmt = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
+
+let sb, me, rows=[], filtered=[], range='all';
+
+/* Toast */
+function showToast(msg,bad=false){
+  const el=$('#toast');
+  el.textContent=msg;
+  el.className='toast'+(bad?' bad':'');
+  el.style.display='block';
+  setTimeout(()=>{el.style.display='none';},3200);
+}
+
+/* Status chip */
+function statusChip(st){
+  const s = (st||'').toLowerCase();
+  let cls='',label;
+  if(s==='success'){cls='success';label='Success'}
+  else if(s==='abort'){cls='abort';label='Abort'}
+  else if(s==='fail' || s==='failed'){cls='abort';label='Fail'}
+  else if(s==='planned'){cls='planned';label='Planned'}
+  else {label=st||'–';}
+  return `<span class="chip ${cls}">
+    <span class="dot"></span>
+    <span>${label}</span>
+  </span>`;
+}
+
+/* Apply filters */
+function applyFilters(){
+  const term = ($('#search').value||'').toLowerCase().trim();
+  const stFilter = ($('#statusFilter').value||'').toLowerCase();
+  const now = Date.now();
+  let minTs = 0;
+  if(range==='30') minTs = now - 30*86400000;
+  if(range==='90') minTs = now - 90*86400000;
+
+  filtered = rows.filter(r=>{
+    if(minTs && r.start_ts && r.start_ts < minTs) return false;
+    if(stFilter && (r.status||'').toLowerCase()!==stFilter) return false;
+    if(!term) return true;
+    const hay = `${r.mission_id} ${r.title||''} ${r.status||''} ${r.paygrade||''}`.toLowerCase();
+    return hay.includes(term);
   });
-})();
+
+  renderTable();
+}
+
+/* Render main table */
+function renderTable(){
+  const tbody = $('#missionBody');
+  if(!filtered.length){
+    tbody.innerHTML = `<tr><td colspan="7" class="subtle">No missions found for the current filters.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(r=>{
+    const d = r.start_ts ? new Date(r.start_ts) : null;
+    const dateStr = d ? d.toLocaleDateString('en-SG',{day:'2-digit',month:'short',year:'2-digit'}) : '—';
+    const timeStr = d ? d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}) : '';
+    const title   = r.title || 'Untitled mission';
+    const pg      = r.paygrade || '—';
+    const payout  = r.mission_payout || 0;
+    const share   = r.final_share || 0;
+    const orgPct  = r.org_cut_effective!=null ? r.org_cut_effective.toFixed(1)+'%' : '—';
+
+    return `
+      <tr data-id="${r.mission_id}">
+        <td class="mono nowrap">
+          ${dateStr}<br><span class="subtle">${timeStr}</span>
+        </td>
+        <td>
+          <div style="font-weight:700;color:var(--accent)">${title}</div>
+          <div class="subtle">ID: ${r.mission_id}</div>
+        </td>
+        <td>${statusChip(r.status)}</td>
+        <td class="nowrap">${pg}</td>
+        <td class="text-right mono">${payout?fmt(payout):'–'}</td>
+        <td class="text-right mono">${share?fmt(share):'–'}</td>
+        <td class="text-right mono">${orgPct}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* Summary KPIs */
+function updateSummary(){
+  if(!rows.length){
+    $('#kpiMissions').textContent='0';
+    $('#kpiTotal').textContent='0';
+    $('#kpiAvg').textContent='0';
+    $('#kpiBest').textContent='0';
+    $('#kpiBestLabel').textContent='No missions yet';
+    $('#summaryStrip').innerHTML='';
+    return;
+  }
+  const totalMissions = rows.length;
+  const totalEarn = rows.reduce((s,r)=>s+Number(r.final_share||0),0);
+  const best = rows.reduce((b,r)=> (r.final_share||0) > (b.final_share||0) ? r : b, rows[0]);
+  const last = rows.reduce((b,r)=> (r.start_ts||0) > (b.start_ts||0) ? r : b, rows[0]);
+
+  $('#kpiMissions').textContent = totalMissions;
+  $('#kpiTotal').textContent    = fmt(totalEarn);
+  $('#kpiAvg').textContent      = totalMissions ? fmt(Math.round(totalEarn/totalMissions)) : '0';
+  $('#kpiBest').textContent     = fmt(best.final_share||0);
+  $('#kpiBestLabel').textContent = best.title ? best.title : 'Best mission';
+
+  const lastDate = last.start_ts ? new Date(last.start_ts).toLocaleString('en-SG',{
+    day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'
+  }) : '—';
+
+  $('#summaryStrip').innerHTML = `
+    <span class="badge">
+      <span class="dot"></span>
+      <span>Last paid mission: <span class="mono">${lastDate}</span></span>
+    </span>
+    <span class="badge">
+      <span class="dot"></span>
+      <span>Best mission earned <span class="mono">${fmt(best.final_share||0)} aUEC</span></span>
+    </span>
+  `;
+}
+
+/* Modal helpers */
+const modal = $('#missionModal');
+$('#modalClose').addEventListener('click',()=>{ modal.style.display='none'; });
+modal.addEventListener('click',e=>{ if(e.target===modal) modal.style.display='none'; });
+
+async function openMissionModal(missionId){
+  const r = rows.find(x=>x.mission_id===missionId);
+  if(!r) return;
+
+  const d = r.start_ts ? new Date(r.start_ts) : null;
+  const dateStr = d ? d.toLocaleString('en-SG',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+  const payout  = r.mission_payout || 0;
+  const share   = r.final_share || 0;
+  const orgPct  = r.org_cut_effective!=null ? r.org_cut_effective.toFixed(1)+'%' : '—';
+
+  $('#modalTitle').textContent = r.title || 'Mission';
+  $('#modalMeta').innerHTML = `
+    <span class="mono">ID: ${r.mission_id}</span> •
+    <span>Status: ${r.status || 'unknown'}</span> •
+    <span>Date: ${dateStr}</span>
+  `;
+  $('#modalYourShare').textContent = share ? fmt(share)+' aUEC' : '0 aUEC';
+  $('#modalMissionPayout').textContent = payout ? fmt(payout)+' aUEC' : '0 aUEC';
+  $('#modalOrgPct').textContent = orgPct;
+
+  // Fetch crew pool & your %
+  $('#modalCrewPool').textContent = 'Loading…';
+  modal.style.display = 'flex';
+
+  try{
+    const { data, error } = await sb
+      .from('v_missions_payout_live')
+      .select('mission_id,user_id,final_share')
+      .eq('mission_id', missionId);
+
+    if(error || !data){
+      console.error(error);
+      $('#modalCrewPool').textContent = 'Unavailable';
+      return;
+    }
+
+    const crewPool = data.reduce((s,p)=>s+Number(p.final_share||0),0);
+    const yourShare = share;
+    const pct = crewPool ? (yourShare/crewPool*100) : 0;
+
+    $('#modalCrewPool').textContent = crewPool
+      ? `${fmt(crewPool)} aUEC • You got ${pct.toFixed(1)}%`
+      : 'No crew payouts recorded';
+  }catch(e){
+    console.error(e);
+    $('#modalCrewPool').textContent = 'Unavailable';
+  }
+}
+
+/* Click handler for table rows */
+document.addEventListener('click',e=>{
+  const row = e.target.closest('tbody#missionBody tr[data-id]');
+  if(!row) return;
+  openMissionModal(row.dataset.id);
+});
+
+/* Data load */
+async function loadData(){
+  // 1) all payout rows for current user
+  const { data: payouts, error } = await sb
+    .from('v_missions_payout_live')
+    .select('mission_id,user_id,paygrade,weight,final_share')
+    .eq('user_id', me);
+
+  if(error){
+    console.error(error);
+    showToast('Failed to load earnings',true);
+    $('#missionBody').innerHTML = `<tr><td colspan="7" class="subtle">Failed to load earnings.</td></tr>`;
+    return;
+  }
+  if(!payouts || !payouts.length){
+    rows = [];
+    updateSummary();
+    applyFilters();
+    return;
+  }
+
+  const ids = [...new Set(payouts.map(p=>p.mission_id).filter(Boolean))];
+
+  // 2) fetch mission meta
+  let missions = [];
+  if(ids.length){
+    const { data: ms, error: e2 } = await sb
+      .from('missions')
+      .select('id,title,status,payout_auec,start_time,org_cut_percent,notes')
+      .in('id', ids);
+    if(e2){
+      console.error(e2);
+      showToast('Failed to load mission details',true);
+    }else{
+      missions = ms || [];
+    }
+  }
+  const mapM = {};
+  missions.forEach(m=>{ mapM[m.id] = m; });
+
+  rows = payouts.map(p=>{
+    const m = mapM[p.mission_id] || {};
+    const startTs = m.start_time ? Date.parse(m.start_time) : null;
+    return {
+      mission_id: p.mission_id,
+      paygrade: p.paygrade,
+      weight: p.weight,
+      final_share: Number(p.final_share||0),
+      title: m.title || null,
+      status: m.status || null,
+      mission_payout: Number(m.payout_auec||0),
+      org_cut_effective: m.org_cut_percent!=null ? Number(m.org_cut_percent) : null,
+      start_ts: startTs,
+      notes: m.notes || null
+    };
+  }).sort((a,b)=>(b.start_ts||0)-(a.start_ts||0));
+
+  updateSummary();
+  applyFilters();
+}
+
+/* Events */
+$('#search').addEventListener('input',applyFilters);
+$('#statusFilter').addEventListener('change',applyFilters);
+$$('.filter-pill').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    $$('.filter-pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    range = btn.dataset.range || 'all';
+    applyFilters();
+  });
+});
+
+/* Init */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const session = await requireAuth();
+  if(!session) return;
+  sb = getSupabase();
+  me = session.user.id;
+
+  // show handle / display name in header text if available
+  try{
+    const { data, error } = await sb
+      .from('v_profiles_detailed')
+      .select('user_id,handle,display_name')
+      .eq('user_id', me)
+      .maybeSingle();
+    if(!error && data){
+      const handle = data.handle || data.display_name || data.user_id.slice(0,8);
+      $('#userHandle').textContent = handle;
+    }
+  }catch(e){console.warn(e);}
+
+  await loadData();
+});
 </script>
 </body>
 </html>
