@@ -3,769 +3,588 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMBN Mission Editor</title>
+<title>JMBN Member Roster</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png"
-      href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-      sizes="32x32">
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png" sizes="32x32">
 
 <style>
 :root{
-  --bg:#000;
-  --panel:#0b0b0b;
-  --row:#0a0a0a;
-  --border:#d6b44c;
-  --accent:#f2d675;
-  --accent-soft:#c9b06a;
-  --text:#f7f1d0;
-  --muted:#c9b06a;
-  --bad:#ff6b6b;
-  --good:#37d996;
+  --bg:#000;--panel:#0b0b0b;--border:#d6b44c;--card:#141414;
+  --accent:#f2d675;--text:#f7f1d0;--muted:#c9b06a;--bad:#ff6b6b;
+  --fs-base:14px;--fs-small:11px;--fs-table:13px;--fs-h1:clamp(18px,2.2vw,22px);
 }
-
-/* Reset */
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box}
 body{
   background:
-    radial-gradient(circle at top,rgba(242,214,117,.08),transparent 55%),
-    radial-gradient(circle at bottom,rgba(10,10,10,1),#000);
-  color:var(--text);
-  font-family:'Play',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  margin:0;
-  padding:16px;
+    radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    #000;
+  color:var(--text); font-family:'Play',system-ui,sans-serif;
+  margin:0; padding:14px; letter-spacing:.25px; font-size:var(--fs-base);
 }
 
-/* Brand + Nav (shared header styles) */
-.brand{
-  display:flex;align-items:center;gap:10px;
-  margin:0 0 12px;
-  border-bottom:1px solid var(--border);
-  padding-bottom:8px;
-}
-.brand-logo{
-  width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
-}
-.brand h1{
-  margin:0;color:var(--accent);font-size:22px;
-}
-.brand-sub{
-  font-size:11px;color:var(--muted);margin-left:auto;text-align:right;
-}
-.nav{
-  display:flex;align-items:center;gap:8px;
-  flex-wrap:wrap;margin:8px 0 16px;
-}
-.nav-btn{
-  --ring:#d6b44c;
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 14px;
-  border:1px solid var(--ring);
-  border-radius:999px;
-  font-size:11px;
-  text-decoration:none;
-  color:var(--text);
-  background:radial-gradient(circle at top left,rgba(242,214,117,.16),rgba(0,0,0,1));
-  box-shadow:0 0 0 1px rgba(0,0,0,.7);
-  position:relative;
-  overflow:hidden;
-}
-.nav-btn::after{
-  content:"";
-  position:absolute;inset:-40%;
-  background:conic-gradient(from 0deg,rgba(242,214,117,.0),rgba(242,214,117,.7),rgba(242,214,117,.0));
-  opacity:0;transition:opacity .25s;
-}
-.nav-btn:hover::after{opacity:.35;}
-.nav-btn span{position:relative;z-index:1}
-.nav-btn.active{
-  background:radial-gradient(circle at top left,rgba(242,214,117,.75),rgba(0,0,0,1));
-  color:#000;
-}
+/* Shared header target */
+#header{margin-bottom:10px}
 
-/* Layout */
-.grid{
-  max-width:1200px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:minmax(260px,340px) minmax(0,1fr);
-  gap:18px;
-}
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr;}
-}
-
-/* Panels (Option A style) */
+/* Panel & table */
 .panel{
-  position:relative;
-  border-radius:16px;
+  background:var(--panel);
   border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+  margin-top:4px;
   box-shadow:
     inset 0 0 0 1px rgba(242,214,117,.18),
     0 0 0 1px rgba(214,180,76,.35),
     0 18px 45px rgba(0,0,0,.9);
-  background:
-    radial-gradient(circle at top left,rgba(242,214,117,.08),rgba(0,0,0,1) 55%),
-    radial-gradient(circle at bottom right,rgba(242,214,117,.05),rgba(0,0,0,1) 65%);
-  padding:16px;
-  overflow:hidden;
 }
-.panel::before{
-  content:"";
-  position:absolute;inset:-30%;
-  background:
-    radial-gradient(circle at 30% 0%,rgba(242,214,117,.09),transparent 60%);
-  opacity:.45;
-  pointer-events:none;
-}
-.panel > *{position:relative;z-index:1}
-.panel-inner{display:flex;flex-direction:column;gap:12px}
-
-/* Left: mission list */
-.console-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:6px;
-}
-.console-title{
-  font-size:13px;text-transform:uppercase;letter-spacing:.16em;
-  color:var(--accent);
-}
-.console-pill{
-  font-size:10px;color:var(--muted);
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.5);
-  padding:3px 10px;
-}
-.list-tools{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:8px;
+.controls{
+  display:flex;
+  gap:10px;
   flex-wrap:wrap;
+  margin-bottom:10px;
+  align-items:center;
 }
 input[type="search"]{
-  flex:1 1 160px;
-  border-radius:11px;
-  border:1px solid rgba(214,180,76,.35);
-  padding:7px 10px;
-  font-size:11px;
-  background:#050505;
+  background:#0a0a0a;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px 12px;
   color:var(--text);
-  outline:none;
-}
-input::placeholder{color:rgba(200,190,150,.7);font-size:10px}
-.small-btn{
-  font-size:10px;
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.6);
-  background:radial-gradient(circle at top left,rgba(242,214,117,.35),rgba(0,0,0,1));
-  color:var(--text);
-  padding:5px 9px;
-  cursor:pointer;
-}
-.small-btn:hover{
-  background:radial-gradient(circle at top left,rgba(242,214,117,.55),rgba(0,0,0,1));
-}
-.list{
-  display:flex;flex-direction:column;gap:8px;
-  max-height:68vh;
-  overflow:auto;
-  padding-right:4px;
-}
-.item{
-  border-radius:11px;
-  border:1px solid rgba(214,180,76,.45);
-  background:radial-gradient(circle at top left,rgba(242,214,117,.05),rgba(0,0,0,.98));
-  padding:8px 10px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;
-  cursor:pointer;
-  transition:transform .12s,box-shadow .12s,border-color .12s,background .12s;
-}
-.item:hover{
-  transform:translateY(-1px);
-  border-color:var(--accent);
-  box-shadow:0 0 16px rgba(242,214,117,.45);
-  background:radial-gradient(circle at top left,rgba(242,214,117,.12),rgba(0,0,0,.98));
-}
-.item-main{
-  min-width:0;
-}
-.item-title{
-  font-size:13px;font-weight:700;
-  white-space:nowrap;text-overflow:ellipsis;overflow:hidden;
-}
-.item-meta{
-  font-size:10px;color:var(--muted);
-  display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;
+  font-size:var(--fs-table);
+  min-width:260px
 }
 .badge{
+  border:1px solid var(--border);
+  padding:6px 10px;
   border-radius:999px;
-  border:1px solid rgba(214,180,76,.4);
-  padding:2px 7px;
-  font-size:10px;
-  background:rgba(0,0,0,.9);
+  color:var(--accent);
+  font-weight:700
 }
-.badge-id{
-  font-variant-numeric:tabular-nums;
+.tableWrap{
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:auto;
+  max-height:70vh
 }
-.mono{font-variant-numeric:tabular-nums}
-.subtle{font-size:10px;color:var(--muted)}
-
-/* Right: editor form */
-.main-header{
-  display:flex;align-items:center;gap:10px;justify-content:space-between;
-}
-.main-title{
-  font-size:12px;text-transform:uppercase;letter-spacing:.16em;
-  color:var(--muted);
-}
-.mode-pill{
-  font-size:10px;color:var(--accent);
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.6);
-  padding:3px 10px;
-  background:#050505;
-}
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-  margin-top:10px;
-}
-.form-grid.full{grid-template-columns:1fr;}
-@media(max-width:720px){
-  .form-grid{grid-template-columns:1fr;}
-}
-label{
-  display:block;
-  margin-bottom:3px;
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  color:var(--muted);
-}
-input[type="text"],
-input[type="number"],
-input[type="datetime-local"],
-select,
-textarea{
+table{
   width:100%;
-  border-radius:11px;
-  border:1px solid rgba(214,180,76,.35);
-  padding:8px 10px;
-  font-size:11px;
-  background:#050505;
-  color:var(--text);
-  outline:none;
+  border-collapse:collapse;
+  font-size:var(--fs-table)
 }
-textarea{
-  min-height:90px;
-  resize:vertical;
+th,td{
+  border-bottom:1px solid rgba(214,180,76,.3);
+  padding:10px;
+  text-align:left;
+  vertical-align:middle
 }
-input:focus,select:focus,textarea:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 1px rgba(242,214,117,.3);
+th{
+  color:var(--accent);
+  background:#080808;
+  font-weight:600;
+  position:sticky;
+  top:0;
+  z-index:1
+}
+tr:nth-child(even){background:#111}
+tr:hover{background:rgba(214,180,76,.08)}
+.name{font-weight:700}
+
+/* Rank cell — image beside rank text, NO frame/background */
+.rankCell{
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+.rankCell img{
+  width:28px;
+  height:28px;
+  object-fit:contain;
+  flex:0 0 28px;
+  border:none;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
 }
 
-/* Attachment rows */
-.attach-list{
-  margin-top:4px;
+/* Role chips */
+.roles{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px
 }
-.attach-item{
-  display:grid;
-  grid-template-columns:minmax(0,1.5fr) minmax(0,2fr) auto;
-  gap:6px;
-  margin-bottom:6px;
-}
-.attach-item button{
-  padding:6px 9px;
-}
-
-/* Actions */
-.actions{
-  margin-top:12px;
-  display:flex;flex-wrap:wrap;gap:8px;
-}
-.btn{
-  font-size:11px;
+.role-chip{
+  border:1px solid var(--border);
   border-radius:999px;
-  border:1px solid rgba(214,180,76,.6);
-  background:radial-gradient(circle at top left,rgba(242,214,117,.35),rgba(0,0,0,1));
-  color:var(--text);
-  padding:7px 13px;
+  padding:4px 10px;
+  font-size:12px;
+  background:#0c0c0c;
+  color:var(--muted);
+}
+
+/* Buttons */
+.btn{
+  padding:8px 12px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#0c0c0c,#060606);
+  color:var(--accent);
+  border:1px solid var(--border);
   cursor:pointer;
-}
-.btn.primary{
-  background:radial-gradient(circle at top left,rgba(242,214,117,.9),rgba(0,0,0,1));
-  color:#000;
-  box-shadow:0 0 16px rgba(242,214,117,.5);
-}
-.btn.danger{
-  border-color:var(--bad);
-  color:var(--bad);
+  font-family:'Play'
 }
 .btn:hover{
-  background:radial-gradient(circle at top left,rgba(242,214,117,.6),rgba(0,0,0,1));
-  color:#000;
-}
-.btn.danger:hover{
-  background:rgba(255,107,107,.12);
-  color:#ff6b6b;
+  background:var(--accent);
+  color:#000
 }
 
-/* Helper */
-.nowrap{white-space:nowrap}
+/* Modal */
+.modal-mask{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50
+}
+.modal{
+  background:#0b0b0b;
+  border:1px solid var(--border);
+  border-radius:16px;
+  max-width:760px;
+  width:94vw;
+  padding:20px 18px;
+  box-shadow:0 0 28px rgba(214,180,76,.3)
+}
+.modal h3{
+  margin:0 0 14px;
+  color:var(--accent);
+  font-size:18px;
+  letter-spacing:.3px
+}
+.modal .header-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px
+}
+.modal .header-row .spacer{flex:1}
+
+/* Rank card in modal — NO frame/background on image */
+.rankCard{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  background:#0f0f0f
+}
+.rankCard img{
+  width:70px;
+  height:70px;
+  object-fit:contain;
+  border:none;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+.meta{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.55
+}
+.meta b{color:var(--accent)}
+
+.divider{
+  height:1px;
+  background:linear-gradient(90deg,rgba(214,180,76,.15),rgba(214,180,76,.4),rgba(214,180,76,.15));
+  border:none;
+  margin:16px 0
+}
+
+/* Section blocks inside modal */
+.section{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  background:#0f0f0f;
+  margin-bottom:12px
+}
+.section h4{
+  margin:0 0 10px;
+  color:var(--accent);
+  font-size:14px;
+  letter-spacing:.3px
+}
+.section .body{
+  font-size:13px;
+  color:var(--text);
+  line-height:1.6
+}
+.section .muted{color:var(--muted)}
+
+/* Certifications-only gallery in modal */
+.certThumbs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center
+}
+.certThumbs img{
+  width:56px;
+  height:56px;
+  object-fit:contain;
+  display:block;
+  border:none;
+  background:transparent;
+  box-shadow:none;
+  border-radius:0;
+}
+.subtle{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
 
-<!-- Shared header -->
-<div id="header"></div>
+  <!-- Shared header mount -->
+  <div id="header"></div>
 
-<div class="grid">
-  <!-- LEFT: Mission list -->
-  <aside class="panel">
-    <div class="panel-inner">
-      <div class="console-header">
-        <div>
-          <div class="console-title">Mission Index</div>
-          <div class="subtle">Select a mission to edit · or create new</div>
-        </div>
-        <div class="console-pill" id="listCount">0 missions</div>
-      </div>
-
-      <div class="list-tools">
-        <input id="search" type="search" placeholder="Search title / tags / type / status…">
-        <button id="reloadBtn" class="small-btn" type="button">↻</button>
-        <button id="newBtn" class="small-btn" type="button">＋ New</button>
-      </div>
-
-      <div id="missionList" class="list"></div>
+  <div class="panel">
+    <div class="controls">
+      <input id="q" type="search" placeholder="Search handle, rank, or specialization…">
+      <span id="count" class="badge">0 members</span>
     </div>
-  </aside>
 
-  <!-- RIGHT: Editor -->
-  <section class="panel">
-    <div class="panel-inner">
-      <div class="main-header">
-        <div>
-          <div class="main-title">Mission Editor</div>
-          <div class="subtle">Form-up only · mission core data · attachments &amp; notes</div>
-        </div>
-        <div id="modeLabel" class="mode-pill">Create</div>
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:23%">Handle</th>
+            <th style="width:19%">Rank Category</th>
+            <th style="width:20%">Current Rank</th>
+            <th style="width:20%">Specialization</th>
+            <th style="width:13%">Certifications</th>
+            <th style="width:5%"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="6" style="padding:12px;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="meta" style="padding-top:10px">
+      Attendance counts only missions with status <b>Success / Fail / Abort</b>.
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="viewMask" class="modal-mask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="header-row">
+        <h3 id="viewTitle">Member</h3>
+        <div class="spacer"></div>
+        <button class="btn" type="button" onclick="closeView()">Close</button>
       </div>
 
-      <!-- Title -->
-      <div class="form-grid full">
-        <div>
-          <label for="title">Mission Title *</label>
-          <input id="title" type="text" placeholder="e.g., RW S2 — 24-box Haul">
-        </div>
-      </div>
-
-      <!-- Type + Status -->
-      <div class="form-grid">
-        <div>
-          <label for="type">Type</label>
-          <select id="type">
-            <option value="">(select type)</option>
-            <option value="hauling">Hauling</option>
-            <option value="cargo">Cargo</option>
-            <option value="salvage">Salvage</option>
-            <option value="mining">Mining</option>
-            <option value="delivery">Delivery</option>
-            <option value="combat">Combat</option>
-            <option value="support">Support</option>
-            <option value="training">Training</option>
-            <option value="exploration">Exploration</option>
-          </select>
-        </div>
-        <div>
-          <label for="status">Status</label>
-          <select id="status">
-            <option value="">(select status)</option>
-            <option value="planned">Planned</option>
-            <option value="active">Active</option>
-            <option value="success">Success</option>
-            <option value="fail">Fail</option>
-            <option value="abort">Abort</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Origin + Start time -->
-      <div class="form-grid">
-        <div>
-          <label for="origin">Form-up (Origin)</label>
-          <input id="origin" type="text" placeholder="e.g., Area18 · Everus Harbor pad 07">
-        </div>
-        <div>
-          <label for="startTime">Start Date / Time</label>
-          <input id="startTime" type="datetime-local">
-        </div>
-      </div>
-
-      <!-- Hours + Payout -->
-      <div class="form-grid">
-        <div>
-          <label for="hours">No. of Hours</label>
-          <input id="hours" type="number" step="0.1" min="0">
-        </div>
-        <div>
-          <label for="payout">Payout (aUEC)</label>
-          <input id="payout" type="number" step="1" min="0">
-        </div>
-      </div>
-
-      <!-- Tags + Submitted by -->
-      <div class="form-grid">
-        <div>
-          <label for="tags">Tags (comma separated)</label>
-          <input id="tags" type="text" placeholder="e.g., org, cargo, night-run">
-        </div>
-        <div>
-          <label for="submittedBy">Submitted By</label>
-          <input id="submittedBy" type="text" placeholder="e.g., Derek / handle">
-        </div>
-      </div>
-
-      <!-- Attachments -->
-      <div class="form-grid full">
-        <div>
-          <label>Attachments (optional)</label>
-          <div id="attachList" class="attach-list"></div>
-          <button id="addAttachBtn" class="small-btn" type="button" style="margin-top:4px">＋ Add Attachment</button>
-          <div class="subtle" style="margin-top:4px">
-            Each attachment = label + URL (screenshots, sheets, etc.). Saved into the mission’s <code>attachments</code> JSON.
+      <div class="rankCard">
+        <img id="rankImg" alt="Rank">
+        <div class="meta">
+          <div><b>Handle:</b> <span id="vHandle"></span></div>
+          <div><b>Rank Category:</b> <span id="vRankCat"></span></div>
+          <div>
+            <b>Current Rank:</b>
+            <span id="vRankName"></span>
+            <span id="vRankCode" class="meta"></span>
           </div>
+          <div>
+            <b>Specialization (role chips):</b>
+            <span id="vRoles"></span>
+          </div>
+          <div><b>Missions attended:</b> <span id="vAttended"></span></div>
         </div>
       </div>
 
-      <!-- Notes -->
-      <div class="form-grid full">
-        <div>
-          <label for="notes">Notes / AAR</label>
-          <textarea id="notes" placeholder="Summary, key events, lessons learned…"></textarea>
-        </div>
-      </div>
+      <hr class="divider">
 
-      <!-- Actions -->
-      <div class="actions">
-        <button id="clearBtn" class="btn" type="button">Clear Form</button>
-        <button id="saveNewBtn" class="btn primary" type="button">💾 Save as New</button>
-        <button id="updateBtn" class="btn" type="button">✎ Update Selected</button>
-        <button id="deleteBtn" class="btn danger" type="button">🗑 Delete Selected</button>
-      </div>
-
-      <div class="subtle" style="margin-top:4px">
-        Note: Attendance is managed separately via the Operations / Mission Log attendance modal.
+      <div class="section">
+        <h4>Certifications</h4>
+        <!-- ONLY images below, no labels/text -->
+        <div id="vCertThumbs" class="certThumbs"></div>
       </div>
     </div>
-  </section>
-</div>
+  </div>
 
-<!-- Supabase + auth -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
 
 <script>
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const esc = s => {
-  const d=document.createElement('div');
-  d.textContent = s ?? '';
-  return d.innerHTML;
-};
+/* ---------- Utilities ---------- */
+const $  = s => document.querySelector(s);
+const esc = s => { const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; };
+const toTitleCase = s => s
+  ? s.replace(/\s+/g,' ').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())
+  : '';
 
+function normalizeRoles(r){
+  const raw = r.ingame_role ?? null;
+  if(!raw) return [];
+  if(Array.isArray(raw)) return raw.map(toTitleCase).filter(Boolean);
+  return String(raw).split(/[,;/]+/).map(s=>toTitleCase(s)).filter(Boolean);
+}
+
+/* ---------- Supabase + buckets ---------- */
 let sb = null;
-let session = null;
-let missions = [];
-let currentId = null;
+let ROWS = [];
+const RANK_BUCKET = 'Ranks';
+const CERT_BUCKET = 'Certifications';
 
-/* Date helpers */
-function isoToLocalInput(iso){
-  if(!iso) return '';
-  const d=new Date(iso);
-  const pad=n=>String(n).padStart(2,'0');
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function rankPublicUrlFromCode(code){
+  if(!code) return '';
+  return sb.storage.from(RANK_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
-function localInputToISO(v){
-  if(!v) return null;
-  const d = new Date(v);
-  if(isNaN(d.getTime())) return null;
-  return d.toISOString();
-}
-function fmtShort(iso){
-  if(!iso) return '';
-  return new Date(iso).toLocaleString('en-SG',{
-    day:'numeric',month:'short',hour:'numeric',minute:'2-digit',hour12:true
-  }).replace(/\s?([ap])m/i,'$1m');
+function certPublicUrlFromCode(code){
+  if(!code) return '';
+  return sb.storage.from(CERT_BUCKET).getPublicUrl(`${code}.png`).data.publicUrl;
 }
 
-/* Attachments UI */
-function addAttachRow(name='', url=''){
-  const wrap = document.createElement('div');
-  wrap.className='attach-item';
-  wrap.innerHTML = `
-    <input type="text" placeholder="Label (e.g., Screenshot)" value="${esc(name)}">
-    <input type="text" placeholder="URL (https://…)" value="${esc(url)}">
-    <button type="button" class="small-btn">✕</button>
-  `;
-  const btn = wrap.querySelector('button');
-  btn.addEventListener('click',()=>wrap.remove());
-  $('#attachList').appendChild(wrap);
-}
-function collectAttachments(){
-  const out = [];
-  $$('#attachList .attach-item').forEach(row=>{
-    const [nameInput,urlInput] = row.querySelectorAll('input');
-    const label = (nameInput.value||'').trim();
-    const url   = (urlInput.value||'').trim();
-    if(!url) return;
-    try{ new URL(url); }catch{ return; }
-    out.push({ name: label || (url.split('/').pop() || 'link'), url });
-  });
-  return out;
-}
-
-/* Form helpers */
-function setModeLabel(){
-  const el = $('#modeLabel');
-  if(!el) return;
-  el.textContent = currentId
-    ? `Editing ${currentId.slice(0,8)}…`
-    : 'Create';
-}
-function clearForm(){
-  currentId = null;
-  $('#title').value = '';
-  $('#type').value = '';
-  $('#status').value = '';
-  $('#origin').value = '';
-  $('#startTime').value = '';
-  $('#hours').value = '';
-  $('#payout').value = '';
-  $('#tags').value = '';
-  $('#submittedBy').value = '';
-  $('#notes').value = '';
-  $('#attachList').innerHTML = '';
-  addAttachRow();
-  setModeLabel();
-}
-function fillForm(m){
-  currentId = m.id;
-  $('#title').value = m.title || '';
-  $('#type').value = (m.type || '').toLowerCase();
-  $('#status').value = (m.status || '').toLowerCase();
-  $('#origin').value = m.origin || '';
-  $('#startTime').value = isoToLocalInput(m.start_time);
-  $('#hours').value = m.hours ?? '';
-  $('#payout').value = m.payout_auec ?? '';
-  $('#tags').value = m.tags || '';
-  $('#submittedBy').value = m.submitted_by || '';
-  $('#notes').value = m.notes || '';
-  $('#attachList').innerHTML = '';
-  if(Array.isArray(m.attachments) && m.attachments.length){
-    m.attachments.forEach(a=>addAttachRow(a.name||'',a.url||''));
-  }else{
-    addAttachRow();
+/* ---------- Rank sorting helpers (highest first) ---------- */
+function rankScore(r){
+  const code = String(r.current_rank_code || '').toUpperCase().trim();
+  // O > W > E ; higher number = higher rank
+  const m = code.match(/^([OWE])-(\d{1,2})$/);
+  if(m){
+    const tier = { O: 300, W: 200, E: 100 }[m[1]] || 0;
+    const n = Number(m[2]) || 0;
+    return tier + n; // O-10 => 310, E-1 => 101
   }
-  setModeLabel();
-}
-function payloadFromForm(){
-  return {
-    title: ($('#title').value||'').trim(),
-    type: ($('#type').value||'').toLowerCase() || null,
-    status: ($('#status').value||'').toLowerCase() || null,
-    origin: ($('#origin').value||'').trim() || null,
-    start_time: localInputToISO($('#startTime').value),
-    hours: $('#hours').value !== '' ? Number($('#hours').value) : null,
-    payout_auec: $('#payout').value !== '' ? Number($('#payout').value) : null,
-    tags: ($('#tags').value||'').trim() || null,
-    submitted_by: ($('#submittedBy').value||'').trim() || null,
-    notes: ($('#notes').value||'').trim() || null,
-    attachments: collectAttachments()
-  };
+
+  // Fallbacks when there's no code — use name hints
+  const name = String(r.current_rank_name || '').toLowerCase();
+  const hints = [
+    ['admiral','general','marshal','commodore','captain of fleet'],
+    ['captain','commander'],
+    ['lieutenant colonel','major','lieutenant commander'],
+    ['lieutenant','ensign'],
+    ['sergeant major','master sergeant','gunnery sergeant'],
+    ['sergeant','corporal'],
+    ['private','recruit','cadet','trainee','unrated','unranked']
+  ];
+  for(let i=0;i<hints.length;i++){
+    if(hints[i].some(k=>name.includes(k))) return 240 - i*10;
+  }
+  return 0; // unknown => bottom
 }
 
-/* List rendering */
-function renderList(rows){
-  const list = $('#missionList');
-  const countEl = $('#listCount');
-  list.innerHTML = '';
-  const total = rows.length;
-  if(countEl){
-    countEl.textContent = total ? `${total} mission${total>1?'s':''}` : '0 missions';
-  }
-  if(!rows.length){
-    list.innerHTML = `<div class="item">
-      <div class="item-main">
-        <div class="item-title">No missions found</div>
-        <div class="item-meta">Adjust search or create a new mission.</div>
-      </div>
-    </div>`;
-    return;
-  }
-  rows.forEach(m=>{
-    const el = document.createElement('article');
-    el.className = 'item';
-    el.innerHTML = `
-      <div class="item-main">
-        <div class="item-title">${esc(m.title || '(untitled mission)')}</div>
-        <div class="item-meta">
-          ${m.type ? `<span class="badge">${esc(m.type)}</span>` : ''}
-          ${m.status ? `<span class="badge">${esc(m.status)}</span>` : ''}
-          <span>${fmtShort(m.start_time) || 'no start'}</span>
-          ${m.origin ? `<span>· ${esc(m.origin)}</span>` : ''}
-        </div>
-      </div>
-      <div class="nowrap">
-        <span class="badge badge-id">${esc(m.id.slice(0,8))}</span>
-      </div>
-    `;
-    el.addEventListener('click',()=>openMission(m.id));
-    list.appendChild(el);
+function sortByRank(rows){
+  return (rows||[]).slice().sort((a,b)=>{
+    const diff = rankScore(b) - rankScore(a);
+    if(diff) return diff;
+    // Tie-breakers: category then handle
+    const catA = (a.current_rank_category||'').localeCompare(b.current_rank_category||'');
+    if(catA) return catA;
+    return (a.handle||'').localeCompare(b.handle||'');
   });
 }
-function applySearch(){
-  const q = ($('#search').value||'').toLowerCase();
-  if(!q){ renderList(missions); return; }
-  const filtered = missions.filter(m=>{
-    const blob = `${m.title||''} ${m.type||''} ${m.status||''} ${m.tags||''} ${m.origin||''}`.toLowerCase();
-    return blob.includes(q);
+
+/* ---------- DOM refs ---------- */
+const tbody  = $('#tbody');
+const countEl= $('#count');
+const q      = $('#q');
+
+/* ---------- Render ---------- */
+function render(rows){
+  if(!rows?.length){
+    tbody.innerHTML = `<tr><td colspan="6" style="padding:12px;color:var(--muted)">No members found</td></tr>`;
+    countEl.textContent = '0 members';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r=>{
+    const handle   = toTitleCase(r.handle || r.display_name || r.user_id?.slice(0,8) || '—');
+    const rankCat  = r.current_rank_category ? toTitleCase(r.current_rank_category) : '—';
+    const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unrated';
+    const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+    const roles    = normalizeRoles(r);
+
+    return `
+      <tr>
+        <td class="name">${esc(handle)}</td>
+        <td>${esc(rankCat)}</td>
+        <td>
+          <div class="rankCell">
+            ${imgUrl
+              ? `<img src="${imgUrl}" alt="${esc(r.current_rank_code||'Rank')}" loading="lazy" onerror="this.style.display='none'">`
+              : ''}
+            <span>${esc(rankName)}</span>
+          </div>
+        </td>
+        <td>${
+          roles.length
+            ? `<div class="roles">${roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join('')}</div>`
+            : `<span style="color:var(--muted)">—</span>`
+        }</td>
+        <td><span style="color:var(--muted)">—</span></td>
+        <td><button class="btn" type="button" onclick="viewMember('${r.user_id}')">View</button></td>
+      </tr>`;
+  }).join('');
+
+  countEl.textContent = `${rows.length} member${rows.length===1?'':'s'}`;
+}
+
+/* ---------- Filter ---------- */
+function filterRows(){
+  const term = (q.value || '').toLowerCase().trim();
+  if(!term) return ROWS;
+  return ROWS.filter(r=>{
+    const all = `${r.handle||''} ${r.display_name||''} ${r.current_rank_category||''} ${r.current_rank_name||''} ${r.current_rank_code||''} ${normalizeRoles(r).join(' ')}`.toLowerCase();
+    return all.includes(term);
   });
-  renderList(filtered);
 }
 
-/* Supabase calls */
-async function loadMissions(){
+function applyAndRender(){
+  const filtered = filterRows();
+  const sorted   = sortByRank(filtered);
+  render(sorted);
+}
+
+/* ---------- Modal logic ---------- */
+function closeView(){
+  $('#viewMask').style.display='none';
+}
+window.closeView = closeView;
+
+async function loadCertThumbs(userId){
+  const box = $('#vCertThumbs');
+  box.innerHTML = '';
+  try{
+    const { data, error } = await sb
+      .from('v_user_certifications')
+      .select('certification_code,image_url,owned')
+      .eq('user_id', userId);
+    if(error){
+      console.warn(error.message);
+      return;
+    }
+    const imgs = (data||[])
+      .filter(c=>c.owned)
+      .map(c => c.image_url || certPublicUrlFromCode(c.certification_code))
+      .filter(Boolean);
+
+    if(!imgs.length){
+      box.innerHTML = '';
+      return;
+    }
+    box.innerHTML = imgs
+      .map(src => `<img src="${esc(src)}" alt="" loading="lazy" onerror="this.style.display='none'">`)
+      .join('');
+  }catch(e){
+    console.warn('cert thumbs:', e.message);
+  }
+}
+
+function viewMember(userId){
+  const r = ROWS.find(x=>x.user_id===userId);
+  if(!r) return;
+
+  const handle   = toTitleCase(r.handle || r.display_name || r.user_id.slice(0,8));
+  const attended = Number(r.missions_attended)||0;
+  const rankCat  = r.current_rank_category ? toTitleCase(r.current_rank_category) : '—';
+  const rankName = r.current_rank_name ? toTitleCase(r.current_rank_name) : 'Unrated';
+  const roles    = normalizeRoles(r);
+  const imgUrl   = r.current_rank_image_url || rankPublicUrlFromCode(r.current_rank_code);
+
+  $('#viewTitle').textContent = `Member — ${handle}`;
+  $('#vHandle').textContent   = handle;
+  $('#vRankCat').textContent  = rankCat;
+  $('#vRankName').textContent = rankName;
+  $('#vRankCode').textContent = r.current_rank_code ? `(${r.current_rank_code})` : '';
+  $('#vRoles').innerHTML      = roles.length
+    ? roles.map(x=>`<span class="role-chip">${esc(x)}</span>`).join(' ')
+    : '—';
+  $('#vAttended').textContent = attended;
+
+  const imgEl = $('#rankImg');
+  imgEl.src   = imgUrl || '';
+  imgEl.alt   = r.current_rank_code || 'Rank';
+  imgEl.style.visibility = imgUrl ? 'visible' : 'hidden';
+  imgEl.onerror = () => { imgEl.style.visibility='hidden'; };
+
+  loadCertThumbs(userId);
+
+  $('#viewMask').style.display='flex';
+}
+window.viewMember = viewMember;
+
+/* ---------- Data load ---------- */
+async function loadRoster(){
   const { data, error } = await sb
-    .from('missions')
-    .select('id,title,type,status,origin,start_time,hours,payout_auec,tags,attachments,notes,submitted_by,created_at')
-    .order('start_time',{ascending:false});
+    .from('v_profiles_detailed')
+    .select(`
+      user_id,
+      handle,
+      display_name,
+      current_rank_category,
+      current_rank_name,
+      current_rank_code,
+      current_rank_image_url,
+      ingame_role,
+      missions_attended
+    `)
+    .order('current_rank_category',{ascending:true})
+    .order('handle',{ascending:true});
+
   if(error){
-    alert('Failed to load missions: '+error.message);
-    missions = [];
-    renderList([]);
+    tbody.innerHTML = `<tr><td colspan="6" style="padding:12px;color:var(--bad)">Failed to load: ${esc(error.message)}</td></tr>`;
+    countEl.textContent = '0 members';
     return;
   }
-  missions = data || [];
-  renderList(missions);
+  ROWS = data || [];
+  applyAndRender(); // sort highest rank first
 }
 
-async function openMission(id){
-  const { data, error } = await sb
-    .from('missions')
-    .select('id,title,type,status,origin,start_time,hours,payout_auec,tags,attachments,notes,submitted_by,created_at')
-    .eq('id',id)
-    .single();
-  if(error){
-    alert('Failed to open mission: '+error.message);
-    return;
-  }
-  fillForm(data);
-}
-
-async function saveNew(){
-  const payload = payloadFromForm();
-  if(!payload.title){
-    alert('Mission title is required.');
-    return;
-  }
-  const { data, error } = await sb
-    .from('missions')
-    .insert(payload)
-    .select()
-    .single();
-  if(error){
-    alert('Save failed: '+error.message);
-    return;
-  }
-  await loadMissions();
-  fillForm(data);
-  alert('Mission saved.');
-}
-
-async function updateCurrent(){
-  if(!currentId){
-    alert('No mission selected. Use "Save as New" or select one from the list.');
-    return;
-  }
-  const payload = payloadFromForm();
-  const { error } = await sb
-    .from('missions')
-    .update(payload)
-    .eq('id',currentId);
-  if(error){
-    alert('Update failed: '+error.message);
-    return;
-  }
-  await loadMissions();
-  const updated = missions.find(m=>m.id===currentId);
-  if(updated) fillForm(updated);
-  alert('Mission updated.');
-}
-
-async function deleteCurrent(){
-  if(!currentId){
-    alert('No mission selected.');
-    return;
-  }
-  if(!confirm('Delete this mission? This cannot be undone.')) return;
-  const { error } = await sb
-    .from('missions')
-    .delete()
-    .eq('id',currentId);
-  if(error){
-    alert('Delete failed: '+error.message);
-    return;
-  }
-  currentId = null;
-  clearForm();
-  await loadMissions();
-  alert('Mission deleted.');
-}
-
-/* Init */
-document.addEventListener('DOMContentLoaded', async ()=>{
+/* ---------- Init ---------- */
+document.addEventListener('DOMContentLoaded', async () => {
   // 1) Inject shared header
   try{
     const host = document.getElementById('header');
     if(host){
-      const res = await fetch('header.html');
-      host.innerHTML = await res.text();
-
-      // highlight current page if it exists in nav
-      const here = location.pathname.split('/').pop() || 'mission-editor.html';
-      host.querySelectorAll('.nav-btn').forEach(a=>{
-        if(a.getAttribute('href')===here){
-          a.classList.add('active');
-        }
-      });
+      const res = await fetch('header.html', { cache:'no-cache' });
+      if(res.ok){
+        host.innerHTML = await res.text();
+        const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.nav-btn').forEach(a=>{
+            const href = (a.getAttribute('href')||'').toLowerCase();
+            if(href === here) {
+              a.classList.add('active');
+              a.setAttribute('aria-current','page');
+            }
+            if(/member/.test(here) && /member/.test(href)){
+              a.classList.add('active');
+              a.setAttribute('aria-current','page');
+            }
+          });
+        });
+      }
     }
   }catch(e){
-    console.error('Failed to load header.html', e);
+    console.warn('Header load failed:', e);
   }
 
-  // 2) Auth
-  session = await requireAuth();
+  // 2) Auth + Supabase
+  const session = await requireAuth();
   if(!session) return;
   sb = getSupabase();
 
-  // 3) Wire events
-  $('#search').addEventListener('input',applySearch);
-  $('#reloadBtn').addEventListener('click',()=>{ loadMissions(); });
-  $('#newBtn').addEventListener('click',()=>{ clearForm(); });
-  $('#clearBtn').addEventListener('click',()=>{ clearForm(); });
-  $('#addAttachBtn').addEventListener('click',()=>{ addAttachRow(); });
-  $('#saveNewBtn').addEventListener('click',saveNew);
-  $('#updateBtn').addEventListener('click',updateCurrent);
-  $('#deleteBtn').addEventListener('click',deleteCurrent);
-
-  // 4) Start with one empty attachment row + load data
-  addAttachRow();
-  setModeLabel();
-  await loadMissions();
+  // 3) Wire events + load data
+  q.addEventListener('input', applyAndRender);
+  await loadRoster();
 });
 </script>
 </body>
