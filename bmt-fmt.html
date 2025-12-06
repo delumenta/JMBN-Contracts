@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JMBN – BMT Training Manual: Fire Team Movements</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JMBN – BMT Manual: Fire Team Movements</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,1005 +14,824 @@
 
 <style>
 :root{
-  --bg:#000;
-  --panel:#070707;
-  --page:#101010;
-  --border:#d6b44c;
-  --accent:#f2d675;
-  --accent-soft:#c9b06a;
-  --text:#f7f1d0;
-  --muted:#c9b06a;
-  --danger:#ff6b6b;
-  --fs-base:14px;
-  --fs-small:11px;
+  --bg:#000;--panel:#0b0b0b;--page:#050505;
+  --border:#d6b44c;--accent:#f2d675;--accent-soft:#c9b06a;
+  --text:#f7f1d0;--muted:#c9b06a;--danger:#ff6b6b;--ok:#61d49a;
+  --fs-base:14px;--fs-small:11px;--fs-h1:clamp(18px,2.4vw,24px);
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{
-  margin:0;padding:12px;
+  margin:0;padding:14px;
   background:
     radial-gradient(1200px 900px at 15% -10%, rgba(242,214,117,.08), transparent 60%),
-    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.06), transparent 60%),
-    #000;
+    radial-gradient(900px 700px at 120% 110%, rgba(214,180,76,.05), transparent 60%),
+    var(--bg);
   color:var(--text);
-  font-family:'Play',system-ui,sans-serif;
+  font-family:'Play',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   font-size:var(--fs-base);
-  letter-spacing:.25px;
+  letter-spacing:.22px;
 }
 
-/* Fallback brand / header */
-.brand{
+/* Header mount (header.html) */
+#header-container{
+  margin-bottom:10px;
+}
+.brand-fallback{
   display:flex;align-items:center;gap:10px;
-  margin:0 0 8px;padding-bottom:6px;
   border-bottom:1px solid var(--border);
+  padding-bottom:6px;margin-bottom:4px;
 }
-.brand-logo{
+.brand-fallback img{
   width:44px;height:44px;object-fit:contain;
-  filter:drop-shadow(0 0 4px rgba(242,214,117,.25));
 }
-.brand h1{
-  margin:0;
-  font-size:clamp(18px,2.2vw,22px);
-  color:var(--accent);
+.brand-fallback h1{
+  font-size:var(--fs-h1);margin:0;color:var(--accent);font-weight:700;
 }
 
-/* Shell */
+/* Page shell */
 .manual-shell{
-  max-width:1180px;
-  margin:0 auto;
+  background:var(--panel);
+  border-radius:14px;
+  border:1px solid var(--border);
+  box-shadow:0 0 18px rgba(214,180,76,.25),inset 0 0 0 1px rgba(214,180,76,.12);
+  padding:14px;
 }
 
-/* Manual frame: like a book */
-.manual-frame{
-  display:grid;
-  grid-template-columns:220px minmax(0,1.8fr) 210px;
-  gap:10px;
-  background:var(--panel);
-  border-radius:12px;
-  border:1px solid var(--border);
-  padding:10px;
-  box-shadow:0 0 22px rgba(214,180,76,.3),inset 0 0 0 1px rgba(214,180,76,.12);
+/* Title / meta */
+.manual-header{
+  display:flex;flex-wrap:wrap;align-items:flex-start;
+  gap:10px 18px;
+  border-bottom:1px solid rgba(214,180,76,.45);
+  padding-bottom:10px;margin-bottom:10px;
 }
-@media(max-width:1024px){
-  .manual-frame{
-    grid-template-columns:190px minmax(0,1.8fr);
+.manual-title-block h2{
+  margin:0;font-size:18px;color:var(--accent);
+}
+.manual-title-block .subtitle{
+  font-size:12px;color:var(--muted);margin-top:2px;
+}
+.manual-meta{
+  margin-left:auto;font-size:11px;color:var(--muted);
+  display:flex;flex-direction:column;gap:3px;white-space:nowrap;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  padding:2px 8px;
+  font-size:10px;
+  background:#101010;
+  color:var(--accent-soft);
+}
+
+/* Layout: left index / main / margin */
+.manual-layout{
+  display:grid;
+  grid-template-columns:220px minmax(0,1.8fr) 260px;
+  gap:12px;
+  margin-top:10px;
+}
+@media(max-width:1080px){
+  .manual-layout{
+    grid-template-columns:210px minmax(0,1.8fr);
   }
   .manual-margin{display:none;}
 }
-@media(max-width:760px){
-  .manual-frame{
+@media(max-width:720px){
+  .manual-layout{
     grid-template-columns:1fr;
   }
-  .manual-nav{order:-1;display:flex;overflow-x:auto;}
-}
-
-/* Left: chapter nav */
-.manual-nav{
-  border-right:1px solid rgba(214,180,76,.35);
-  padding-right:8px;
-}
-@media(max-width:760px){
-  .manual-nav{
-    border-right:none;
-    border-bottom:1px solid rgba(214,180,76,.35);
-    padding:0 0 6px;
-  }
-}
-.nav-title{
-  font-size:12px;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:.18em;
-  margin-bottom:6px;
-}
-.nav-list{
-  list-style:none;
-  margin:0;
-  padding:0;
-}
-.nav-item{
-  margin-bottom:5px;
-}
-.nav-btn-chapter{
-  width:100%;
-  border-radius:999px;
-  border:1px solid rgba(214,180,76,.55);
-  background:#050505;
-  color:var(--muted);
-  font-size:12px;
-  padding:6px 8px;
-  text-align:left;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  cursor:pointer;
-  transition:.18s;
-}
-.nav-btn-chapter span.idx{
-  width:18px;height:18px;
-  border-radius:50%;
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;
-  color:var(--accent);
-  background:#050505;
-}
-.nav-btn-chapter span.label{
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.nav-btn-chapter.active{
-  background:linear-gradient(180deg,var(--accent),#d6b44c);
-  color:#000;
-  box-shadow:0 0 18px rgba(214,180,76,.45);
-}
-.nav-btn-chapter.active span.idx{
-  border-color:#000;
-  background:rgba(0,0,0,.1);
-  color:#000;
-}
-
-/* Center: pages */
-.manual-content{
-  background:var(--page);
-  border-radius:10px;
-  border:1px solid var(--border);
-  padding:10px 11px 11px;
-  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
-  max-height:calc(100vh - 90px);
-  overflow:auto;
-}
-@media(max-width:760px){
-  .manual-content{
+  .manual-index{
+    position:static;
     max-height:none;
   }
 }
 
-/* Page header strip */
-.page-header{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:flex-end;
-  margin-bottom:8px;
-  border-bottom:1px dashed rgba(214,180,76,.6);
-  padding-bottom:4px;
-}
-.page-title-wrap{
-  display:flex;flex-direction:column;gap:2px;
-}
-.page-eyebrow{
-  font-size:11px;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:.18em;
-}
-.page-title{
-  font-size:15px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.18em;
-}
-.page-meta{
-  font-size:11px;
-  color:var(--muted);
-  text-align:right;
-}
-.page-meta span.badge-doc{
-  display:inline-block;
-  border-radius:999px;
+/* Left index */
+.manual-index{
+  position:sticky;
+  top:14px;
+  align-self:flex-start;
+  background:#060606;
+  border-radius:10px;
   border:1px solid var(--border);
-  padding:2px 7px;
-  background:#050505;
+  padding:10px;
+  box-shadow:0 0 16px rgba(214,180,76,.25),inset 0 0 0 1px rgba(214,180,76,.12);
 }
-
-/* Chapter sections */
-.chapter{
-  padding:7px 0;
-  border-bottom:1px solid rgba(214,180,76,.25);
-}
-.chapter:last-of-type{
-  border-bottom:none;
-}
-.chapter-heading{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-bottom:4px;
-}
-.chapter-title{
-  font-size:13px;
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  color:var(--accent);
-}
-.chapter-code{
-  font-size:11px;
-  color:var(--muted);
-}
-.chapter-body{
-  font-size:13px;
-  line-height:1.6;
-}
-
-/* Boxes */
-.box{
-  margin-top:5px;
-  border-radius:8px;
-  border:1px solid var(--border);
-  padding:7px 8px;
-  background:#070707;
-}
-.box-title{
-  font-size:12px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  margin-bottom:3px;
-}
-.box-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-}
-@media(max-width:700px){
-  .box-grid{grid-template-columns:1fr;}
-}
-.small{font-size:var(--fs-small);color:var(--muted);}
-
-/* Lists */
-.ul-clean{
-  list-style:none;
-  margin:4px 0 0;
-  padding:0;
-}
-.ul-clean li{
-  margin:2px 0;
-  font-size:13px;
-}
-.bullet{color:var(--accent);margin-right:4px}
-
-/* Two-column */
-.twocol{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-}
-@media(max-width:700px){
-  .twocol{grid-template-columns:1fr;}
-}
-
-/* Formation cards */
-.formations{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:7px;
-  margin-top:4px;
-}
-@media(max-width:900px){
-  .formations{grid-template-columns:1fr;}
-}
-.form-card{
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:#050505;
-  padding:7px 8px;
-}
-.form-header{
-  display:flex;
-  justify-content:space-between;
-  gap:6px;
-  align-items:flex-start;
-}
-.form-name{
-  font-size:13px;
-  color:var(--accent);
-  font-weight:700;
-}
-.form-tag{
-  font-size:10px;
-  color:var(--muted);
-  border-radius:999px;
-  border:1px solid var(--border);
-  padding:2px 7px;
-}
-.diagram{
-  font-family:monospace;
-  font-size:11px;
-  line-height:1.5;
-  margin:4px 0;
-  padding:4px 5px;
-  border-radius:6px;
-  border:1px dashed rgba(214,180,76,.7);
-  background:#020202;
-  white-space:pre;
-}
-.chip-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:4px;
-  margin-top:3px;
-}
-.chip{
-  border-radius:999px;
-  border:1px solid var(--border);
-  padding:2px 6px;
-  font-size:10px;
-  color:var(--muted);
-}
-
-/* Callout / checklist */
-.callout{
-  margin-top:6px;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:linear-gradient(135deg,rgba(242,214,117,.10),rgba(0,0,0,.95));
-  padding:7px 8px;
-}
-.callout-title{
-  font-size:12px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  margin-bottom:3px;
-}
-.checklist{
-  list-style:none;
-  margin:0;
-  padding:0;
-  font-size:13px;
-}
-.checklist li{
-  margin:2px 0;
-}
-.check-icon{
-  color:var(--accent);
-  margin-right:4px;
-}
-
-/* Right: margin notes */
-.manual-margin{
-  border-left:1px solid rgba(214,180,76,.35);
-  padding-left:8px;
-  font-size:12px;
-}
-.margin-title{
-  font-size:11px;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  margin-bottom:4px;
-}
-.margin-card{
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:#050505;
-  padding:6px 7px;
+.index-title{
+  font-size:11px;color:var(--accent-soft);
+  text-transform:uppercase;letter-spacing:.12em;
   margin-bottom:6px;
 }
-.margin-card h3{
-  margin:0 0 3px;
-  font-size:11px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.12em;
+.index-list{
+  display:flex;flex-direction:column;gap:6px;
 }
-.margin-list{
-  list-style:none;
-  margin:0;
-  padding:0;
-}
-.margin-list li{
-  margin:2px 0;
-}
-.footer-note{
-  margin-top:6px;
-  font-size:10px;
+.idx-btn{
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#111,#050505);
   color:var(--muted);
-  text-align:right;
+  font-size:11px;
+  padding:6px 9px;
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:.16s;
+}
+.idx-btn span.num{
+  width:18px;height:18px;border-radius:999px;
+  border:1px solid var(--border);
+  display:grid;place-items:center;
+  font-size:10px;color:var(--accent-soft);
+}
+.idx-btn span.label{
+  flex:1;
+}
+.idx-btn:hover{
+  transform:translateX(2px);
+  box-shadow:0 0 10px rgba(214,180,76,.25);
+}
+.idx-btn.active{
+  background:linear-gradient(180deg,var(--accent),#e7c760);
+  color:#000;
+  box-shadow:0 0 18px rgba(214,180,76,.6);
+}
+.idx-btn.active span.num{
+  border-color:#000;background:rgba(0,0,0,.14);color:#000;
 }
 
-/* Links */
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+/* Main content */
+.manual-main{
+  background:var(--page);
+  border-radius:10px;
+  border:1px solid var(--border);
+  padding:12px;
+  box-shadow:inset 0 0 0 1px rgba(214,180,76,.12);
+}
 
-/* Smooth scroll */
-html{scroll-behavior:smooth}
+/* Chapters */
+.chapter{
+  scroll-margin-top:80px;
+  padding:10px 6px;
+  border-bottom:1px dashed rgba(214,180,76,.28);
+}
+.chapter:last-of-type{border-bottom:none}
+.chapter-header{
+  display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;
+}
+.chapter-num{
+  width:22px;height:22px;border-radius:999px;
+  border:1px solid var(--border);
+  display:grid;place-items:center;
+  font-size:11px;color:var(--accent-soft);
+  flex-shrink:0;
+}
+.chapter-title-wrap{
+  flex:1;
+}
+.chapter-title{
+  font-size:15px;font-weight:700;color:var(--accent);
+}
+.chapter-subtitle{
+  font-size:11px;color:var(--muted);
+}
+.chapter-body{
+  font-size:13px;line-height:1.6;color:var(--text);
+}
+.chapter-body p{margin:4px 0 8px}
+.chapter-body ul,
+.chapter-body ol{margin:4px 0 8px 18px;padding-left:12px}
+.chapter-body li{margin:2px 0}
+.callout{
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#111;
+  padding:7px 8px;
+  font-size:12px;
+  margin:6px 0 8px;
+}
+.callout-label{
+  font-size:11px;color:var(--accent-soft);text-transform:uppercase;letter-spacing:.12em;
+}
+.callout.danger{border-color:var(--danger);color:#ffd0d0;}
+.callout.ok{border-color:var(--ok);}
+
+/* Mini “diagram” boxes */
+.diagram{
+  border-radius:8px;
+  border:1px solid rgba(214,180,76,.55);
+  background:#050505;
+  padding:8px;
+  font-size:11px;
+  margin:6px 0 8px;
+}
+.diagram-label{
+  font-size:11px;color:var(--accent-soft);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;
+}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:4px;
+}
+.diagram-cell{
+  border-radius:6px;
+  border:1px solid rgba(214,180,76,.4);
+  padding:4px;
+  text-align:center;
+  font-size:11px;
+}
+@media(max-width:600px){
+  .diagram-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* Right margin notes */
+.manual-margin{
+  position:sticky;
+  top:14px;
+  align-self:flex-start;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.margin-card{
+  background:#060606;
+  border-radius:10px;
+  border:1px solid var(--border);
+  padding:10px;
+  box-shadow:0 0 16px rgba(214,180,76,.2),inset 0 0 0 1px rgba(214,180,76,.1);
+}
+.margin-title{
+  font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;
+  margin-bottom:4px;
+}
+.margin-body{
+  font-size:11px;color:var(--muted);line-height:1.5;
+}
+.margin-list{margin:4px 0 0 14px;padding-left:8px}
+.margin-list li{margin:2px 0}
+.badge-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:2px 7px;border-radius:999px;border:1px solid var(--border);
+  font-size:10px;background:#101010;color:var(--accent-soft);
+}
+
+/* Utility */
+.mono{font-variant-numeric:tabular-nums}
+code{
+  font-family:Menlo,Consolas,monospace;
+  font-size:11px;
+  background:#111;
+  padding:1px 4px;
+  border-radius:4px;
+  border:1px solid rgba(214,180,76,.35);
+}
 </style>
 </head>
 <body>
 
-<!-- header.html mount -->
+<!-- Shared header mount -->
 <div id="header-container">
-  <div class="brand">
-    <img class="brand-logo"
-         src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-         alt="JMBN">
-    <h1>JMBN – BMT Training Manual: Fire Team Movements</h1>
+  <!-- Fallback if header.html not found -->
+  <div class="brand-fallback">
+    <img src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
+         alt="JMBN" />
+    <h1>JMBN – BMT Training Manual</h1>
   </div>
 </div>
 
 <script>
-/* Inject shared header and highlight nav if available */
+/* Inject shared header.html and set active nav if available */
 (async () => {
   try{
-    const r = await fetch('header.html', { cache: 'no-cache' });
-    if(!r.ok) return;
-    const html = await r.text();
+    const res = await fetch('header.html',{cache:'no-cache'});
+    if(!res.ok) return;
+    const html = await res.text();
     const mount = document.getElementById('header-container');
     if(mount) mount.outerHTML = html;
 
-    requestAnimationFrame(() => {
-      const here = (location.pathname.split('/').pop() || '').toLowerCase();
-      document.querySelectorAll('.nav-btn').forEach(a => {
+    requestAnimationFrame(()=>{
+      const here = (location.pathname.split('/').pop() || 'bmt-fireteam.html').toLowerCase();
+      document.querySelectorAll('.nav-btn').forEach(a=>{
         const href = (a.getAttribute('href')||'').toLowerCase();
-        if(href === here){
-          a.classList.add('active');
-          a.setAttribute('aria-current','page');
-        }
-        if(/bmt|manual|fire\-team/.test(here) && /bmt|manual|fire\-team/.test(href)){
+        if(href === here || (here.includes('bmt') && href.includes('bmt')))
+        {
           a.classList.add('active');
           a.setAttribute('aria-current','page');
         }
       });
     });
   }catch(e){
-    console.warn('Header mount failed:', e);
+    console.warn('header load failed',e);
   }
 })();
 </script>
 
-<main class="manual-shell">
-  <section class="manual-frame">
-    <!-- LEFT: NAV -->
-    <aside class="manual-nav">
-      <div class="nav-title">Section Index</div>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <button class="nav-btn-chapter active" data-target="ch-1">
-            <span class="idx">1</span>
-            <span class="label">Aim & Structure</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-btn-chapter" data-target="ch-2">
-            <span class="idx">2</span>
-            <span class="label">Standard Formations</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-btn-chapter" data-target="ch-3">
-            <span class="idx">3</span>
-            <span class="label">Movement Techniques</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-btn-chapter" data-target="ch-4">
-            <span class="idx">4</span>
-            <span class="label">Sectors & Spacing</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-btn-chapter" data-target="ch-5">
-            <span class="idx">5</span>
-            <span class="label">Communication</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-btn-chapter" data-target="ch-6">
-            <span class="idx">6</span>
-            <span class="label">Assessment Criteria</span>
-          </button>
-        </li>
-      </ul>
+<div class="manual-shell">
+  <header class="manual-header">
+    <div class="manual-title-block">
+      <h2>BMT Manual – Fire Team Movements</h2>
+      <div class="subtitle">
+        Certification Track: <span class="badge">BMT – Basic Military Training</span>
+      </div>
+    </div>
+    <div class="manual-meta">
+      <span>Ref: <span class="mono">FTM-01</span></span>
+      <span>Version: 1.0 (Training)</span>
+      <span>Audience: Recruits / Fire Team Leaders</span>
+    </div>
+  </header>
+
+  <div class="manual-layout">
+    <!-- LEFT: SECTION INDEX -->
+    <aside class="manual-index" aria-label="Section index">
+      <div class="index-title">Sections</div>
+      <div class="index-list">
+        <button type="button" class="idx-btn active" data-target="ch1">
+          <span class="num">1</span><span class="label">Aim & Scope</span>
+        </button>
+        <button type="button" class="idx-btn" data-target="ch2">
+          <span class="num">2</span><span class="label">Fire Team Structure</span>
+        </button>
+        <button type="button" class="idx-btn" data-target="ch3">
+          <span class="num">3</span><span class="label">Standard Formations</span>
+        </button>
+        <button type="button" class="idx-btn" data-target="ch4">
+          <span class="num">4</span><span class="label">Movement Techniques</span>
+        </button>
+        <button type="button" class="idx-btn" data-target="ch5">
+          <span class="num">5</span><span class="label">Contact Drills</span>
+        </button>
+        <button type="button" class="idx-btn" data-target="ch6">
+          <span class="num">6</span><span class="label">Communication & Signals</span>
+        </button>
+        <button type="button" class="idx-btn" data-target="ch7">
+          <span class="num">7</span><span class="label">Safety & Common Errors</span>
+        </button>
+        <button type="button" class="idx-btn" data-target="ch8">
+          <span class="num">8</span><span class="label">Practical Drills & Checklist</span>
+        </button>
+      </div>
     </aside>
 
-    <!-- CENTER: PAGES -->
-    <section class="manual-content">
-      <header class="page-header">
-        <div class="page-title-wrap">
-          <div class="page-eyebrow">Basic Military Training (BMT)</div>
-          <div class="page-title">Fire Team Movements</div>
-        </div>
-        <div class="page-meta">
-          <div><span class="badge-doc">Doc Code: BMT–FTM–01</span></div>
-          <div>Version 1.0 • Training Reference Only</div>
-        </div>
-      </header>
-
-      <!-- Chapter 1 -->
-      <article id="ch-1" class="chapter">
-        <div class="chapter-heading">
-          <div class="chapter-title">1. Lesson Aim & Fire Team Structure</div>
-          <div class="chapter-code">FTM–1</div>
+    <!-- MIDDLE: MAIN MANUAL TEXT -->
+    <main class="manual-main">
+      <!-- 1. AIM & SCOPE -->
+      <article id="ch1" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">1</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Aim & Scope</div>
+            <div class="chapter-subtitle">What this lesson covers and what “good” looks like.</div>
+          </div>
         </div>
         <div class="chapter-body">
-          <div class="box">
-            <div class="box-title">Lesson Aim</div>
-            <div class="box-grid">
-              <div class="small">
-                On completion of this lesson, the recruit is expected to:
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span>State the purpose of a Fire Team.</li>
-                  <li><span class="bullet">•</span>Identify all roles in a 4-man Fire Team.</li>
-                  <li><span class="bullet">•</span>Describe who controls formation, pace, and reactions.</li>
-                </ul>
-              </div>
-              <div class="small">
-                Training context:
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span>Ship interior and bunker operations.</li>
-                  <li><span class="bullet">•</span>Surface movement from ship to objective.</li>
-                  <li><span class="bullet">•</span>Transition between open terrain and confined spaces.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="box" style="margin-top:6px">
-            <div class="box-title">Standard Fire Team Composition (4-Man)</div>
-            <div class="twocol">
-              <div>
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span><b>Team Leader (TL)</b>  
-                    – Commands formation, direction, speed, and reactions. Responsible for overall control.
-                  </li>
-                  <li><span class="bullet">•</span><b>Point / Rifleman 1 (F1)</b>  
-                    – First in contact, clears corners, leads entries under TL direction.
-                  </li>
-                  <li><span class="bullet">•</span><b>Rifleman 2 (F2)</b>  
-                    – Supports point, maintains formation integrity, assists with angles and flanks.
-                  </li>
-                  <li><span class="bullet">•</span><b>Support / AR (F3)</b>  
-                    – Provides suppression, anchors the team when static, reinforces weak sectors.
-                  </li>
-                  <li><span class="bullet">•</span><b>Rear Security (F4)</b>  
-                    – Responsible for 6 o’clock. Prevents surprise attacks from behind.
-                  </li>
-                </ul>
-              </div>
-              <div class="small">
-                Standard rule:
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span>Roles are assigned before departure or drop.</li>
-                  <li><span class="bullet">•</span>Role changes are only carried out on TL’s explicit orders.</li>
-                  <li><span class="bullet">•</span>Each member must know their role and sector before any movement begins.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Chapter 2 -->
-      <article id="ch-2" class="chapter">
-        <div class="chapter-heading">
-          <div class="chapter-title">2. Standard Fire Team Formations</div>
-          <div class="chapter-code">FTM–2</div>
-        </div>
-        <div class="chapter-body">
-          <div class="box">
-            <div class="box-title">General</div>
-            <p class="small">
-              The Fire Team adjusts its formation according to terrain and expected threat.  
-              The TL is responsible for selecting and announcing the formation prior to movement
-              and when changing formation.
-            </p>
-
-            <div class="formations">
-              <!-- Wedge -->
-              <div class="form-card">
-                <div class="form-header">
-                  <div class="form-name">Wedge Formation</div>
-                  <span class="form-tag">Standard – Open Ground</span>
-                </div>
-                <div class="diagram">
-    F1        F2
-        TL
-    F3        F4
-                </div>
-                <p class="small">
-                  Used in open terrain and on approaches where visibility is good.
-                  Provides effective 360° observation and flexible reaction left or right.
-                </p>
-                <div class="chip-row">
-                  <span class="chip">Use: Open ground</span>
-                  <span class="chip">Advancing to objective</span>
-                </div>
-              </div>
-
-              <!-- File -->
-              <div class="form-card">
-                <div class="form-header">
-                  <div class="form-name">File Formation</div>
-                  <span class="form-tag">Narrow Spaces</span>
-                </div>
-                <div class="diagram">
-F1
-TL
-F2
-F3
-F4
-                </div>
-                <p class="small">
-                  Used in corridors, ship passageways, stairwells and tight bunkers.
-                  Keeps the team compact and controlled in restricted space.
-                </p>
-                <div class="chip-row">
-                  <span class="chip">Use: Ships & corridors</span>
-                  <span class="chip">Single-door entries</span>
-                </div>
-              </div>
-
-              <!-- Staggered Column -->
-              <div class="form-card">
-                <div class="form-header">
-                  <div class="form-name">Staggered Column</div>
-                  <span class="form-tag">Roads / Paths</span>
-                </div>
-                <div class="diagram">
-    F1           F2
-        TL
-    F3           F4
-                </div>
-                <p class="small">
-                  Used when moving along roads, paths or channels where threat is expected
-                  from both flanks. Provides balanced coverage left and right.
-                </p>
-                <div class="chip-row">
-                  <span class="chip">Use: Tracks / roads</span>
-                  <span class="chip">Balanced flank cover</span>
-                </div>
-              </div>
-
-              <!-- Echelon -->
-              <div class="form-card">
-                <div class="form-header">
-                  <div class="form-name">Echelon (Left / Right)</div>
-                  <span class="form-tag">Threat One Side</span>
-                </div>
-                <div class="diagram">
-Echelon Right:
-
-F1
-   TL
-      F2
-         F3
-            F4
-                </div>
-                <p class="small">
-                  Used when the team is moving along a wall, cliff or other linear feature
-                  and threat is assessed primarily from one side.
-                </p>
-                <div class="chip-row">
-                  <span class="chip">Use: Wall / cliff</span>
-                  <span class="chip">One-sided threat</span>
-                </div>
-              </div>
-
-              <!-- Line -->
-              <div class="form-card">
-                <div class="form-header">
-                  <div class="form-name">Line Formation</div>
-                  <span class="form-tag">Assault / Breach</span>
-                </div>
-                <div class="diagram">
-F1   TL   F2   F3   F4
-                </div>
-                <p class="small">
-                  Used when maximum firepower to the front is required, such as
-                  before a breach, across open doors, or when sweeping a hangar.
-                </p>
-                <div class="chip-row">
-                  <span class="chip">Use: Breach line</span>
-                  <span class="chip">Hangar sweep</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Chapter 3 -->
-      <article id="ch-3" class="chapter">
-        <div class="chapter-heading">
-          <div class="chapter-title">3. Movement Techniques</div>
-          <div class="chapter-code">FTM–3</div>
-        </div>
-        <div class="chapter-body">
-          <div class="box">
-            <div class="box-title">Bounding Overwatch</div>
-            <p class="small">
-              Bounding overwatch is used when enemy contact is possible or likely.
-              One element moves while the other remains stationary and provides security.
-            </p>
-            <p class="small"><b>Procedure:</b></p>
-            <ul class="ul-clean">
-              <li><span class="bullet">1.</span>Element A halts and takes up firing positions.  
-                  Element A calls: <b>“A set, covering.”</b></li>
-              <li><span class="bullet">2.</span>Element B calls: <b>“B moving.”</b> and moves to the next covered position.</li>
-              <li><span class="bullet">3.</span>On arrival, Element B calls: <b>“B set.”</b></li>
-              <li><span class="bullet">4.</span>Element A then calls: <b>“A moving.”</b> and bounds past B.</li>
-              <li><span class="bullet">5.</span>Sequence repeats until the objective or safe position is reached.</li>
-            </ul>
-            <p class="small">
-              At any time, at least one element must be stationary and ready to fire.
-            </p>
-          </div>
-
-          <div class="box" style="margin-top:6px">
-            <div class="box-title">Peeling (Breaking Contact)</div>
-            <p class="small">
-              Peeling is used to disengage from contact while maintaining fire and control.
-              The team withdraws by rotating one member at a time to the rear.
-            </p>
-            <p class="small"><b>Procedure:</b></p>
-            <ul class="ul-clean">
-              <li><span class="bullet">1.</span>TL orders: <b>“Peel left!”</b> or <b>“Peel right!”</b></li>
-              <li><span class="bullet">2.</span>Front man fires short controlled bursts, then calls: <b>“Moving!”</b></li>
-              <li><span class="bullet">3.</span>Front man moves behind the last man in the team and takes up a new firing position.</li>
-              <li><span class="bullet">4.</span>The next man in line repeats the process.</li>
-              <li><span class="bullet">5.</span>Peel continues until team reaches a designated position or is directed to hold.</li>
-            </ul>
-            <p class="small">
-              Peeling must be controlled, with clear calls and no uncontrolled sprinting.
-            </p>
-          </div>
-
-          <div class="box" style="margin-top:6px">
-            <div class="box-title">Key Principle</div>
-            <p class="small">
-              <b>Movement only occurs when another member or element is prepared to cover.</b>  
-              Before leaving cover, the moving member confirms that someone is “Set” and watching the threat direction.
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <!-- Chapter 4 -->
-      <article id="ch-4" class="chapter">
-        <div class="chapter-heading">
-          <div class="chapter-title">4. Sectors & Spacing</div>
-          <div class="chapter-code">FTM–4</div>
-        </div>
-        <div class="chapter-body">
-          <div class="box">
-            <div class="box-title">Sector Responsibilities</div>
-            <div class="twocol">
-              <div>
-                <p class="small">
-                  Each member is responsible for a specific “sector” around the team.
-                  This prevents gaps in observation and reduces duplication.
-                </p>
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span><b>F1 (Point)</b>: Front-right (approx. 11–1 o’clock depending on formation).</li>
-                  <li><span class="bullet">•</span><b>TL</b>: Front and general control of angles.</li>
-                  <li><span class="bullet">•</span><b>F2</b>: Threat side (flank), checks doors and cross-lanes.</li>
-                  <li><span class="bullet">•</span><b>F3</b>: Opposite flank or rear-left, depending on formation.</li>
-                  <li><span class="bullet">•</span><b>F4</b>: Rear (6 o’clock), ensures back is protected.</li>
-                </ul>
-              </div>
-              <div class="small">
-                Example – corridor movement:
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span>Point and TL focus on the corridor ahead.</li>
-                  <li><span class="bullet">•</span>F2/F3 focus on doors and intersections.</li>
-                  <li><span class="bullet">•</span>F4 regularly checks rear and reports contacts behind.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="box" style="margin-top:6px">
-            <div class="box-title">Spacing</div>
-            <div class="twocol">
-              <div class="small">
-                <b>Open terrain:</b>
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span>Maintain approximately 3–5 meters between members.</li>
-                  <li><span class="bullet">•</span>Prevents one explosion from disabling the entire team.</li>
-                  <li><span class="bullet">•</span>Makes the team harder to detect at distance.</li>
-                </ul>
-              </div>
-              <div class="small">
-                <b>Indoors / ships:</b>
-                <ul class="ul-clean">
-                  <li><span class="bullet">•</span>Maintain approximately 1–2 meters between members.</li>
-                  <li><span class="bullet">•</span>Allows members to move, turn and fire without colliding.</li>
-                  <li><span class="bullet">•</span>Avoid blocking doorways, corners and firing lines.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Chapter 5 -->
-      <article id="ch-5" class="chapter">
-        <div class="chapter-heading">
-          <div class="chapter-title">5. Communication & Control</div>
-          <div class="chapter-code">FTM–5</div>
-        </div>
-        <div class="chapter-body">
-          <div class="box">
-            <div class="box-title">Standard Voice Procedures</div>
-            <p class="small">
-              The following standard phrases are to be used during Fire Team movement.
-              Phrases are short, clear and understood by all members.
-            </p>
-            <ul class="ul-clean">
-              <li><span class="bullet">•</span><b>“Moving”</b>  
-                – Called by a member when leaving cover to change position.</li>
-              <li><span class="bullet">•</span><b>“Set”</b>  
-                – Called by a member when they have reached position and are ready to fire.</li>
-              <li><span class="bullet">•</span><b>“Covering”</b>  
-                – Indicates that a member has eyes and weapon on a specific lane or sector.</li>
-              <li><span class="bullet">•</span><b>“On you, [name]”</b>  
-                – Indicates that a member is directly following or supporting that person.</li>
-              <li><span class="bullet">•</span><b>“Contact front/left/right/rear”</b>  
-                – Announces contact and the direction.</li>
-              <li><span class="bullet">•</span><b>“Crossing”</b>  
-                – Used before passing in front of another member’s weapon line.</li>
-            </ul>
-          </div>
-
-          <div class="box" style="margin-top:6px">
-            <div class="box-title">Discipline</div>
-            <p class="small">
-              During movement, communication must support control, not create confusion.
-            </p>
-            <ul class="ul-clean">
-              <li><span class="bullet">•</span>Only the TL gives formation and movement orders.</li>
-              <li><span class="bullet">•</span>Members report status (“Moving”, “Set”, “Covering”) when required.</li>
-              <li><span class="bullet">•</span>Non-essential chat is minimized during contact and during drills.</li>
-              <li><span class="bullet">•</span>Contradictory orders are not given. If unclear, request clarification:  
-                  <b>“Say again, last order.”</b></li>
-            </ul>
-          </div>
-
-          <div class="box" style="margin-top:6px">
-            <div class="box-title">Common Faults</div>
-            <ul class="ul-clean">
-              <li><span class="bullet">✕</span>Bunching up in doorways or at corners.</li>
-              <li><span class="bullet">✕</span>Failure to provide rear security.</li>
-              <li><span class="bullet">✕</span>Moving without confirming that someone is “Set”.</li>
-              <li><span class="bullet">✕</span>All members focusing on the same direction.</li>
-              <li><span class="bullet">✕</span>Running ahead of the TL and breaking formation.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <!-- Chapter 6 -->
-      <article id="ch-6" class="chapter">
-        <div class="chapter-heading">
-          <div class="chapter-title">6. Assessment & Pass Criteria</div>
-          <div class="chapter-code">FTM–6</div>
-        </div>
-        <div class="chapter-body">
-          <div class="callout">
-            <div class="callout-title">BMT – Fire Team Movements: Assessment Checklist</div>
-            <ul class="checklist">
-              <li><span class="check-icon">✔</span>Identifies all Fire Team roles and responsibilities correctly.</li>
-              <li><span class="check-icon">✔</span>Forms Wedge, File, Staggered Column, Echelon (L/R), and Line on TL’s command.</li>
-              <li><span class="check-icon">✔</span>Executes bounding overwatch using correct “Moving/Set” procedure.</li>
-              <li><span class="check-icon">✔</span>Executes peeling drill on command to break contact in a controlled manner.</li>
-              <li><span class="check-icon">✔</span>Maintains appropriate spacing in open ground and in confined spaces.</li>
-              <li><span class="check-icon">✔</span>Maintains assigned sectors with minimal reminders.</li>
-              <li><span class="check-icon">✔</span>Uses standard voice procedures clearly and consistently.</li>
-              <li><span class="check-icon">✔</span>Maintains formation and does not rush ahead of TL without orders.</li>
-            </ul>
-          </div>
-
-          <p class="small" style="margin-top:6px;text-align:right">
-            Successful completion of this lesson contributes towards the  
-            <b>BMT – Fire Team Movements</b> component of the BMT certification.
+          <p>
+            This section sets the intent for Fire Team Movements in JMBN’s BMT track.  
+            By the end of this module, every recruit should be able to:
           </p>
+          <ul>
+            <li>Describe the basic roles within a four-person fire team.</li>
+            <li>Select an appropriate <b>formation</b> based on terrain and threat.</li>
+            <li>Apply the three core <b>movement techniques</b> during patrol.</li>
+            <li>React correctly to <b>enemy contact</b> at team level.</li>
+          </ul>
+
+          <div class="callout ok">
+            <div class="callout-label">Training standard</div>
+            <div>
+              A recruit is considered <b>proficient</b> when they can move as part of a team
+              with correct spacing, maintain sector discipline, and respond to basic commands
+              without needing constant correction.
+            </div>
+          </div>
+
+          <p>
+            Fire Team Movements in JMBN are based on real-world doctrine, adapted for:
+          </p>
+          <ul>
+            <li>Game environments (Star Citizen FPS & VBSS style ops)</li>
+            <li>Latency and visibility limitations</li>
+            <li>Small-unit organisation inside JMBN platoons</li>
+          </ul>
         </div>
       </article>
-    </section>
 
-    <!-- RIGHT: MARGIN NOTES -->
-    <aside class="manual-margin">
-      <div class="margin-title">Instructor Notes</div>
+      <!-- 2. FIRE TEAM STRUCTURE -->
+      <article id="ch2" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">2</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Fire Team Structure & Roles</div>
+            <div class="chapter-subtitle">Who does what inside a 4-man element.</div>
+          </div>
+        </div>
+        <div class="chapter-body">
+          <p>
+            A standard JMBN fire team is <b>4 members</b>. This is the basic building block
+            for squad and platoon operations.
+          </p>
 
+          <h4>2.1 Roles</h4>
+          <ul>
+            <li><b>Team Leader (TL)</b> – overall control, decides formation, movement, and contact drills.</li>
+            <li><b>Point / Lead Rifle</b> – front security, first eyes on contact, sets pace.</li>
+            <li><b>Support / Gunner</b> – main firepower, covers key sectors during halts and contact.</li>
+            <li><b>Rear Security</b> – watches the back arc, ensures no one is left behind, manages spacing.</li>
+          </ul>
+
+          <div class="callout">
+            <div class="callout-label">Instructor note</div>
+            <div>
+              In game, call out your role at the start of the patrol:
+              <code>“Vex – Team Lead, Kara – Point, Malik – Gunner, Rasa – Rear.”</code>
+            </div>
+          </div>
+
+          <h4>2.2 Sector Responsibility</h4>
+          <ul>
+            <li><b>Point:</b> 10 to 2 o’clock.</li>
+            <li><b>TL:</b> floats, fills gaps, usually 11 to 1 o’clock.</li>
+            <li><b>Gunner:</b> flank emphasis (9 or 3 o’clock, as assigned).</li>
+            <li><b>Rear:</b> 4 to 8 o’clock, plus spacing and stragglers.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 3. STANDARD FORMATIONS -->
+      <article id="ch3" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">3</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Standard Fire Team Formations</div>
+            <div class="chapter-subtitle">Shape of the team in space.</div>
+          </div>
+        </div>
+        <div class="chapter-body">
+          <p>
+            Formations are the <b>pattern</b> your team maintains while moving.  
+            They control spacing, fields of fire, and reaction to contact.
+          </p>
+
+          <div class="diagram">
+            <div class="diagram-label">Summary – when to use what</div>
+            <div class="diagram-grid">
+              <div class="diagram-cell">
+                <b>File</b><br><span class="small">Tight terrain, corridors</span>
+              </div>
+              <div class="diagram-cell">
+                <b>Wedge</b><br><span class="small">Open ground, unknown threat</span>
+              </div>
+              <div class="diagram-cell">
+                <b>Line</b><br><span class="small">Assault to front</span>
+              </div>
+              <div class="diagram-cell">
+                <b>Stag. Column</b><br><span class="small">Road / hallway, moderate threat</span>
+              </div>
+            </div>
+          </div>
+
+          <h4>3.1 File</h4>
+          <p><b>Description:</b> All members in a single line, one behind another.</p>
+          <ul>
+            <li><b>Use when:</b> terrain is narrow (stairs, corridors, dense clutter).</li>
+            <li><b>Strengths:</b> easy control, simple sectors.</li>
+            <li><b>Weaknesses:</b> limited firepower to the front, vulnerable to flanks.</li>
+          </ul>
+
+          <h4>3.2 Wedge</h4>
+          <p><b>Description:</b> Point in front, two in the middle offset left/right, rear at the back.</p>
+          <ul>
+            <li><b>Use when:</b> moving across open terrain or large rooms.</li>
+            <li><b>Strengths:</b> good all-round security, flexible.</li>
+            <li><b>Weaknesses:</b> needs space and discipline to maintain.</li>
+          </ul>
+
+          <h4>3.3 Line</h4>
+          <p><b>Description:</b> All members in a line abreast, shoulder-to-shoulder (with spacing).</p>
+          <ul>
+            <li><b>Use when:</b> preparing to deliver maximum fire to the <b>front</b>.</li>
+            <li><b>Strengths:</b> maximum frontal firepower.</li>
+            <li><b>Weaknesses:</b> weak flanks, hard to control in tight terrain.</li>
+          </ul>
+
+          <h4>3.4 Staggered Column</h4>
+          <p><b>Description:</b> Two loose files offset left and right of a path/road/hallway.</p>
+          <ul>
+            <li><b>Use when:</b> moving along a street, corridor, or ship passageway.</li>
+            <li><b>Strengths:</b> better fields of fire, some depth.</li>
+            <li><b>Weaknesses:</b> requires coordination, can bunch under stress.</li>
+          </ul>
+
+          <div class="callout">
+            <div class="callout-label">BMT standard</div>
+            <div>
+              Recruits must be able to identify and <b>move in File and Wedge</b> on command.
+              Line and Staggered Column may be introduced during later phases.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4. MOVEMENT TECHNIQUES -->
+      <article id="ch4" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">4</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Movement Techniques</div>
+            <div class="chapter-subtitle">How aggressive or cautious the team moves.</div>
+          </div>
+        </div>
+        <div class="chapter-body">
+          <p>
+            Movement techniques describe <b>how</b> the team moves, regardless of formation:  
+            how fast, how spread, and how ready to fight.
+          </p>
+
+          <h4>4.1 Traveling</h4>
+          <ul>
+            <li><b>Threat Level:</b> low</li>
+            <li><b>Spacing:</b> slightly closer (to avoid losing visual).</li>
+            <li><b>Use when:</b> time matters more than immediate contact (safe areas).</li>
+          </ul>
+
+          <h4>4.2 Traveling Overwatch</h4>
+          <ul>
+            <li><b>Threat Level:</b> medium / unknown.</li>
+            <li><b>Formation:</b> same as normal, but slightly more spacing.</li>
+            <li><b>Behavior:</b> Point is more cautious, team pauses more often to scan.</li>
+          </ul>
+
+          <h4>4.3 Bounding Overwatch</h4>
+          <p>
+            <b>Bounding</b> means part of the team moves while the other part covers.
+          </p>
+          <ul>
+            <li><b>Threat Level:</b> high or expected contact.</li>
+            <li><b>Use when:</b> closing in on a known enemy location, crossing danger areas.</li>
+          </ul>
+
+          <p><b>Basic bounding sequence (two-element team):</b></p>
+          <ol>
+            <li>Element A covers; Element B moves forward to next position.</li>
+            <li>Element B calls “<b>Set</b>”.</li>
+            <li>Element B covers; Element A moves past B or up to new position.</li>
+            <li>Repeat until objective is reached.</li>
+          </ol>
+
+          <div class="callout">
+            <div class="callout-label">BMT drill phrase</div>
+            <div>
+              For training, use clear calls: <code>“Alpha set.”</code>, <code>“Bravo moving.”</code>  
+              Keep it short and consistent.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5. CONTACT DRILLS -->
+      <article id="ch5" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">5</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Contact Drills (Fire Team Level)</div>
+            <div class="chapter-subtitle">Immediate reactions when rounds start coming in.</div>
+          </div>
+        </div>
+        <div class="chapter-body">
+          <p>
+            Contact drills must be <b>automatic</b>. When someone calls “Contact front!”, every
+            member knows the default reaction without waiting for a long briefing.
+          </p>
+
+          <h4>5.1 Contact Front (Hasty)</h4>
+          <ol>
+            <li><b>Immediate action:</b> nearest to contact returns fire, everyone moves to cover.</li>
+            <li><b>Team Leader:</b> confirms direction, gives a simple order: “<b>Team – line, suppress front.</b>”</li>
+            <li><b>Gunner:</b> establishes main base of fire.</li>
+            <li><b>Rear:</b> checks flanks and rear, then joins main fire sector.</li>
+          </ol>
+
+          <h4>5.2 Contact Flank (Left/Right)</h4>
+          <ul>
+            <li>Nearest member to that flank calls “<b>Contact left!</b>” or “<b>Contact right!</b>”.</li>
+            <li>Team pivots formation to face the threat while seeking cover.</li>
+            <li>TL decides to either <b>fix</b> (suppress) or <b>break contact</b>.</li>
+          </ul>
+
+          <h4>5.3 Break Contact (Basic)</h4>
+          <ol>
+            <li>Team leader calls “<b>Break contact – smoke / backwards / towards X.</b>”</li>
+            <li>One element fires while the other bounds back to the next cover position.</li>
+            <li>Elements alternate movement until they reach a safer line or rally point.</li>
+          </ol>
+
+          <div class="callout danger">
+            <div class="callout-label">Critical safety</div>
+            <div>
+              Never move <b>in front</b> of a friendly who is already firing a weapon.  
+              In training, if someone crosses your muzzle, call “<b>Check fire!</b>” and reset the drill.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6. COMMUNICATION & SIGNALS -->
+      <article id="ch6" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">6</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Communication & Signals</div>
+            <div class="chapter-subtitle">Keeping a team together without cluttering comms.</div>
+          </div>
+        </div>
+        <div class="chapter-body">
+          <p>
+            Clear comms prevent confusion and team wipes. For BMT Fire Team Movements, we standardise
+            a small set of <b>voice commands</b> and <b>hand signals</b>.
+          </p>
+
+          <h4>6.1 Standard Voice Commands</h4>
+          <ul>
+            <li><b>“Set”</b> – I’m in position and ready to cover.</li>
+            <li><b>“Moving”</b> – I am leaving cover and moving now.</li>
+            <li><b>“Last man”</b> – I am the last in the team; once I pass, move or close the formation.</li>
+            <li><b>“Contact front/left/right/rear”</b> – immediate threat direction.</li>
+            <li><b>“Hold”</b> – stop where you are, stay covered.</li>
+          </ul>
+
+          <h4>6.2 Basic Hand Signals (for reference)</h4>
+          <p>In game, hand signals may be symbolic. As a training standard:</p>
+          <ul>
+            <li><b>Move out:</b> Arm extended forward, hand waving in a “come on” motion.</li>
+            <li><b>Halt:</b> Hand straight up, palm forward.</li>
+            <li><b>Enemy spotted:</b> Point weapon or finger towards contact, then show number of enemies with fingers.</li>
+          </ul>
+
+          <div class="callout">
+            <div class="callout-label">JMBN practice</div>
+            <div>
+              Use voice first (because of VOIP), but leaders are encouraged to
+              <b>gesture in game</b> to reinforce directions where possible.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 7. SAFETY & COMMON ERRORS -->
+      <article id="ch7" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">7</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Safety & Common Errors</div>
+            <div class="chapter-subtitle">Things that break teams – and how to avoid them.</div>
+          </div>
+        </div>
+        <div class="chapter-body">
+          <h4>7.1 Safety Rules (Training)</h4>
+          <ul>
+            <li>Do not fire past or through your team mates unless you have a clear line and permission.</li>
+            <li>If you’re unsure of a target, <b>ask</b> or hold fire.</li>
+            <li>Call out reloads if you are in a critical position: “<b>Gunner reloading!</b>”.</li>
+          </ul>
+
+          <h4>7.2 Common Errors</h4>
+          <ul>
+            <li><b>Bunching up:</b> standing too close, one grenade kills the team.</li>
+            <li><b>Over-extending:</b> point man runs too far ahead, breaks comms and support.</li>
+            <li><b>Silent movement:</b> nobody says “Moving / Set,” so no one knows who is covering.</li>
+            <li><b>Fighting the formation:</b> ignoring spacing or leaving assigned sector.</li>
+          </ul>
+
+          <div class="callout danger">
+            <div class="callout-label">Correction drill</div>
+            <div>
+              On repeated errors, instructors may call a “<b>freeze</b>” and reset the team
+              to the last safe position, then walk through the correction slowly.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8. PRACTICAL DRILLS & CHECKLIST -->
+      <article id="ch8" class="chapter">
+        <div class="chapter-header">
+          <div class="chapter-num">8</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">Practical Drills & Assessment Checklist</div>
+            <div class="chapter-subtitle">How this is trained and what is examined for BMT.</div>
+          </div>
+        </div>
+        <div class="chapter-body">
+          <h4>8.1 Recommended Drill Sequence</h4>
+          <ol>
+            <li><b>Dry Walk:</b> Team moves in File across a simple route, no enemies.</li>
+            <li><b>Wedge Practice:</b> Team practices wedge in open area, adjusting spacing on the move.</li>
+            <li><b>Traveling vs Traveling Overwatch:</b> Instructor calls threat changes; team adjusts tempo.</li>
+            <li><b>Bounding Pairs:</b> 2-man teams practice “Set / Moving” across a short lane.</li>
+            <li><b>Contact Front Drill:</b> Instructor triggers contact; team executes standard reaction.</li>
+          </ol>
+
+          <h4>8.2 BMT Assessment Points (Instructor Guide)</h4>
+          <ul>
+            <li>Recruit maintains <b>assigned position</b> in the formation.</li>
+            <li>Recruit keeps reasonable <b>spacing</b> and does not constantly bunch up.</li>
+            <li>Recruit reacts correctly to “<b>Halt</b>”, “<b>Move</b>”, and “<b>Contact front</b>”.</li>
+            <li>Recruit uses simple voice procedure: announces “Moving” and “Set” when bounding.</li>
+            <li>Recruit does not cross friendly muzzle lines during drills.</li>
+          </ul>
+
+          <div class="callout ok">
+            <div class="callout-label">Certification tie-in</div>
+            <div>
+              Successful completion of this module contributes to the <b>BMT certification</b>.
+              In the JMBN system, instructors record completion under the recruit’s profile once
+              they demonstrate these skills in at least one controlled exercise.
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <!-- RIGHT: MARGIN NOTES / QUICK REF -->
+    <aside class="manual-margin" aria-label="Quick reference">
       <div class="margin-card">
-        <h3>Recommended Sequence</h3>
-        <ul class="margin-list">
-          <li><span class="bullet">1.</span>Explain team roles and sectors.</li>
-          <li><span class="bullet">2.</span>Static practice of each formation.</li>
-          <li><span class="bullet">3.</span>Slow walk-through with commands.</li>
-          <li><span class="bullet">4.</span>Add bounding and peeling drills.</li>
-          <li><span class="bullet">5.</span>Run full scenario with timed evaluation.</li>
-        </ul>
+        <div class="margin-title">Lesson Overview</div>
+        <div class="margin-body">
+          <ul class="margin-list">
+            <li>Size: 4-man fire team.</li>
+            <li>Key shapes: File, Wedge, Line.</li>
+            <li>Techniques: Traveling, Overwatch, Bounding.</li>
+            <li>Core words: Moving / Set / Contact.</li>
+          </ul>
+        </div>
       </div>
 
       <div class="margin-card">
-        <h3>Formation Selection</h3>
-        <ul class="margin-list">
-          <li><span class="bullet">•</span>Open ground: Wedge.</li>
-          <li><span class="bullet">•</span>Road/path: Staggered Column.</li>
-          <li><span class="bullet">•</span>Ships/corridors: File.</li>
-          <li><span class="bullet">•</span>Wall/cliff: Echelon (towards threat).</li>
-          <li><span class="bullet">•</span>Door/hangar: Line.</li>
-        </ul>
+        <div class="margin-title">Formation Selection (Quick)</div>
+        <div class="margin-body">
+          <p><span class="badge-pill">Open Terrain → Wedge</span></p>
+          <p><span class="badge-pill">Tight / Corridor → File</span></p>
+          <p><span class="badge-pill">Assault Front → Line</span></p>
+          <p><span class="badge-pill">Road / Hallway → Stag. Column</span></p>
+        </div>
       </div>
 
       <div class="margin-card">
-        <h3>Key Emphasis</h3>
-        <ul class="margin-list">
-          <li><span class="bullet">•</span>One element covers while the other moves.</li>
-          <li><span class="bullet">•</span>Rear security is always assigned.</li>
-          <li><span class="bullet">•</span>Comms must be clear, short and relevant.</li>
-        </ul>
+        <div class="margin-title">Instructor Notes</div>
+        <div class="margin-body">
+          <ul class="margin-list">
+            <li>Start <b>slower than you think</b>; speed can be added later.</li>
+            <li>Correct spacing and sectors before adding enemy AI/players.</li>
+            <li>Use a <b>fixed script</b> for first few runs to build muscle memory.</li>
+            <li>Encourage recruits to call out mistakes on themselves.</li>
+          </ul>
+        </div>
       </div>
 
       <div class="margin-card">
-        <h3>Safety / Control</h3>
-        <ul class="margin-list">
-          <li><span class="bullet">•</span>Stop drill if formation breaks completely.</li>
-          <li><span class="bullet">•</span>Reset and repeat until actions are consistent.</li>
-        </ul>
-      </div>
-
-      <div class="footer-note">
-        This page is intended as a reference for both recruits and instructors  
-        during BMT Fire Team Movement training.
+        <div class="margin-title">Debrief Prompts</div>
+        <div class="margin-body">
+          <ul class="margin-list">
+            <li>“Where did we bunch up?”</li>
+            <li>“When did we lose eyes on each other?”</li>
+            <li>“Who felt uncovered during movement?”</li>
+            <li>“Were ‘Moving’ / ‘Set’ calls clear?”</li>
+          </ul>
+        </div>
       </div>
     </aside>
-  </section>
-</main>
+  </div>
+</div>
 
 <script>
-/* Chapter nav scroll + active state */
-document.addEventListener('DOMContentLoaded', () => {
-  const content = document.querySelector('.manual-content');
-  const buttons = document.querySelectorAll('.nav-btn-chapter');
-  const chapters = Array.from(document.querySelectorAll('.chapter'));
+/* Left index scroll + active state */
+const idxButtons = document.querySelectorAll('.idx-btn');
+const chapters   = document.querySelectorAll('.chapter');
 
-  function activate(targetId){
-    buttons.forEach(btn => {
-      const id = btn.getAttribute('data-target');
-      if(id === targetId) btn.classList.add('active');
-      else btn.classList.remove('active');
-    });
-  }
-
-  // Click -> scroll inside content panel
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetId = btn.getAttribute('data-target');
-      const sec = document.getElementById(targetId);
-      if(sec && content){
-        const top = sec.offsetTop;
-        content.scrollTo({ top: top - 4, behavior:'smooth' });
-        activate(targetId);
-      }
-    });
-  });
-
-  // Scroll -> update active nav
-  function onScroll(){
-    if(!content) return;
-    const scrollTop = content.scrollTop;
-    const offset = 40;
-    let currentId = null;
-
-    for(const ch of chapters){
-      if(ch.offsetTop - offset <= scrollTop){
-        currentId = ch.id;
-      }else{
-        break;
-      }
+idxButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const targetId = btn.dataset.target;
+    const el = document.getElementById(targetId);
+    if(el){
+      el.scrollIntoView({behavior:'smooth',block:'start'});
     }
-    if(currentId) activate(currentId);
-  }
-
-  if(content){
-    content.addEventListener('scroll', onScroll);
-  }
+  });
 });
+
+/* Highlight active section on scroll */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id = entry.target.id;
+      idxButtons.forEach(b=>{
+        b.classList.toggle('active', b.dataset.target === id);
+      });
+    }
+  });
+},{rootMargin:'-50% 0px -45% 0px',threshold:0});
+
+chapters.forEach(ch=>observer.observe(ch));
 </script>
 
 </body>
