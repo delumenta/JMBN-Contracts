@@ -451,7 +451,7 @@ html{scroll-behavior:smooth}
           a.classList.add('active');
           a.setAttribute('aria-current','page');
         }
-        if(/bmt|training|fire\-team/.test(here) && /bmt|training|fire\-team/.test(href)){
+        if(/bmt|manual|fire\-team/.test(here) && /bmt|manual|fire\-team/.test(href)){
           a.classList.add('active');
           a.setAttribute('aria-current','page');
         }
@@ -467,18 +467,18 @@ html{scroll-behavior:smooth}
   <section class="manual-frame">
     <!-- LEFT: NAV -->
     <aside class="manual-nav">
-      <div class="nav-title">BMT – Section Index</div>
+      <div class="nav-title">Section Index</div>
       <ul class="nav-list">
         <li class="nav-item">
           <button class="nav-btn-chapter active" data-target="ch-1">
             <span class="idx">1</span>
-            <span class="label">Purpose & Structure</span>
+            <span class="label">Aim & Structure</span>
           </button>
         </li>
         <li class="nav-item">
           <button class="nav-btn-chapter" data-target="ch-2">
             <span class="idx">2</span>
-            <span class="label">Core Formations</span>
+            <span class="label">Standard Formations</span>
           </button>
         </li>
         <li class="nav-item">
@@ -496,7 +496,7 @@ html{scroll-behavior:smooth}
         <li class="nav-item">
           <button class="nav-btn-chapter" data-target="ch-5">
             <span class="idx">5</span>
-            <span class="label">Comms & Discipline</span>
+            <span class="label">Communication</span>
           </button>
         </li>
         <li class="nav-item">
@@ -512,61 +512,73 @@ html{scroll-behavior:smooth}
     <section class="manual-content">
       <header class="page-header">
         <div class="page-title-wrap">
-          <div class="page-eyebrow">Basic Military Training (JMBN)</div>
+          <div class="page-eyebrow">Basic Military Training (BMT)</div>
           <div class="page-title">Fire Team Movements</div>
         </div>
         <div class="page-meta">
           <div><span class="badge-doc">Doc Code: BMT–FTM–01</span></div>
-          <div>Version 1.0 • For internal training use</div>
+          <div>Version 1.0 • Training Reference Only</div>
         </div>
       </header>
 
       <!-- Chapter 1 -->
       <article id="ch-1" class="chapter">
         <div class="chapter-heading">
-          <div class="chapter-title">1. Purpose & Fire Team Structure</div>
-          <div class="chapter-code">Ref: FTM–1</div>
+          <div class="chapter-title">1. Lesson Aim & Fire Team Structure</div>
+          <div class="chapter-code">FTM–1</div>
         </div>
         <div class="chapter-body">
           <div class="box">
-            <div class="box-title">Lesson Objective</div>
+            <div class="box-title">Lesson Aim</div>
             <div class="box-grid">
               <div class="small">
-                By the end of this lesson, a recruit should:
+                On completion of this lesson, the recruit is expected to:
                 <ul class="ul-clean">
-                  <li><span class="bullet">•</span>Understand the roles in a 4-man Fire Team.</li>
-                  <li><span class="bullet">•</span>Know who controls pace, formation, and reactions.</li>
-                  <li><span class="bullet">•</span>Know when roles may (and may not) be swapped.</li>
+                  <li><span class="bullet">•</span>State the purpose of a Fire Team.</li>
+                  <li><span class="bullet">•</span>Identify all roles in a 4-man Fire Team.</li>
+                  <li><span class="bullet">•</span>Describe who controls formation, pace, and reactions.</li>
                 </ul>
               </div>
               <div class="small">
-                Scope:
+                Training context:
                 <ul class="ul-clean">
-                  <li><span class="bullet">•</span>Bunker operations.</li>
-                  <li><span class="bullet">•</span>Ship interior clearing.</li>
-                  <li><span class="bullet">•</span>Surface approaches to targets.</li>
+                  <li><span class="bullet">•</span>Ship interior and bunker operations.</li>
+                  <li><span class="bullet">•</span>Surface movement from ship to objective.</li>
+                  <li><span class="bullet">•</span>Transition between open terrain and confined spaces.</li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div class="box" style="margin-top:6px">
-            <div class="box-title">Standard 4-Man Fire Team</div>
+            <div class="box-title">Standard Fire Team Composition (4-Man)</div>
             <div class="twocol">
               <div>
                 <ul class="ul-clean">
-                  <li><span class="bullet">•</span><b>Team Lead (TL)</b> – Commands formation, speed, and reactions.</li>
-                  <li><span class="bullet">•</span><b>Point / Rifleman 1 (F1)</b> – First contact, clears corners, leads entry.</li>
-                  <li><span class="bullet">•</span><b>Rifleman 2 (F2)</b> – Flank support, helps TL keep shape.</li>
-                  <li><span class="bullet">•</span><b>Support / AR (F3)</b> – Suppression, anchors the team.</li>
-                  <li><span class="bullet">•</span><b>Rear Security (F4)</b> – Watches 6 o’clock, prevents backstab.</li>
+                  <li><span class="bullet">•</span><b>Team Leader (TL)</b>  
+                    – Commands formation, direction, speed, and reactions. Responsible for overall control.
+                  </li>
+                  <li><span class="bullet">•</span><b>Point / Rifleman 1 (F1)</b>  
+                    – First in contact, clears corners, leads entries under TL direction.
+                  </li>
+                  <li><span class="bullet">•</span><b>Rifleman 2 (F2)</b>  
+                    – Supports point, maintains formation integrity, assists with angles and flanks.
+                  </li>
+                  <li><span class="bullet">•</span><b>Support / AR (F3)</b>  
+                    – Provides suppression, anchors the team when static, reinforces weak sectors.
+                  </li>
+                  <li><span class="bullet">•</span><b>Rear Security (F4)</b>  
+                    – Responsible for 6 o’clock. Prevents surprise attacks from behind.
+                  </li>
                 </ul>
               </div>
               <div class="small">
-                Doctrine Note:<br>
-                Roles should be confirmed <b>before</b> insertion.  
-                No mid-run role swapping unless ordered by TL.  
-                In Star Citizen, confusion kills faster than bullets.
+                Standard rule:
+                <ul class="ul-clean">
+                  <li><span class="bullet">•</span>Roles are assigned before departure or drop.</li>
+                  <li><span class="bullet">•</span>Role changes are only carried out on TL’s explicit orders.</li>
+                  <li><span class="bullet">•</span>Each member must know their role and sector before any movement begins.</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -576,15 +588,16 @@ html{scroll-behavior:smooth}
       <!-- Chapter 2 -->
       <article id="ch-2" class="chapter">
         <div class="chapter-heading">
-          <div class="chapter-title">2. Core Fire Team Formations</div>
-          <div class="chapter-code">Ref: FTM–2</div>
+          <div class="chapter-title">2. Standard Fire Team Formations</div>
+          <div class="chapter-code">FTM–2</div>
         </div>
         <div class="chapter-body">
           <div class="box">
-            <div class="box-title">Formations Overview</div>
+            <div class="box-title">General</div>
             <p class="small">
-              Fire Team formations change with terrain and threat.  
-              There is no “one formation fits all” – the TL must select the correct shape.
+              The Fire Team adjusts its formation according to terrain and expected threat.  
+              The TL is responsible for selecting and announcing the formation prior to movement
+              and when changing formation.
             </p>
 
             <div class="formations">
@@ -592,7 +605,7 @@ html{scroll-behavior:smooth}
               <div class="form-card">
                 <div class="form-header">
                   <div class="form-name">Wedge Formation</div>
-                  <span class="form-tag">Default – Open Terrain</span>
+                  <span class="form-tag">Standard – Open Ground</span>
                 </div>
                 <div class="diagram">
     F1        F2
@@ -600,13 +613,12 @@ html{scroll-behavior:smooth}
     F3        F4
                 </div>
                 <p class="small">
-                  Standard movement outside bunkers, on pads, and across open fields.
-                  Good all-round visibility and quick reaction left/right.
+                  Used in open terrain and on approaches where visibility is good.
+                  Provides effective 360° observation and flexible reaction left or right.
                 </p>
                 <div class="chip-row">
-                  <span class="chip">360° security</span>
-                  <span class="chip">Flexible</span>
-                  <span class="chip">Approach posture</span>
+                  <span class="chip">Use: Open ground</span>
+                  <span class="chip">Advancing to objective</span>
                 </div>
               </div>
 
@@ -614,7 +626,7 @@ html{scroll-behavior:smooth}
               <div class="form-card">
                 <div class="form-header">
                   <div class="form-name">File Formation</div>
-                  <span class="form-tag">Corridors / Ships</span>
+                  <span class="form-tag">Narrow Spaces</span>
                 </div>
                 <div class="diagram">
 F1
@@ -624,12 +636,12 @@ F3
 F4
                 </div>
                 <p class="small">
-                  Used in ships, stairwells, caves, and tight bunker hallways.
-                  Keeps footprint small and movement controlled.
+                  Used in corridors, ship passageways, stairwells and tight bunkers.
+                  Keeps the team compact and controlled in restricted space.
                 </p>
                 <div class="chip-row">
-                  <span class="chip">Tight spaces</span>
-                  <span class="chip">Ship clearing</span>
+                  <span class="chip">Use: Ships & corridors</span>
+                  <span class="chip">Single-door entries</span>
                 </div>
               </div>
 
@@ -637,7 +649,7 @@ F4
               <div class="form-card">
                 <div class="form-header">
                   <div class="form-name">Staggered Column</div>
-                  <span class="form-tag">Roads / Valleys</span>
+                  <span class="form-tag">Roads / Paths</span>
                 </div>
                 <div class="diagram">
     F1           F2
@@ -645,12 +657,12 @@ F4
     F3           F4
                 </div>
                 <p class="small">
-                  Used along paths, ravines, or roads on moons/planets.
-                  Balances left/right security while staying mobile.
+                  Used when moving along roads, paths or channels where threat is expected
+                  from both flanks. Provides balanced coverage left and right.
                 </p>
                 <div class="chip-row">
-                  <span class="chip">Balanced arcs</span>
-                  <span class="chip">Movement focused</span>
+                  <span class="chip">Use: Tracks / roads</span>
+                  <span class="chip">Balanced flank cover</span>
                 </div>
               </div>
 
@@ -670,11 +682,11 @@ F1
             F4
                 </div>
                 <p class="small">
-                  Used when hugging a wall or cliff and expecting contact from one side.
-                  Stack towards the threat direction.
+                  Used when the team is moving along a wall, cliff or other linear feature
+                  and threat is assessed primarily from one side.
                 </p>
                 <div class="chip-row">
-                  <span class="chip">Wall/comms tower</span>
+                  <span class="chip">Use: Wall / cliff</span>
                   <span class="chip">One-sided threat</span>
                 </div>
               </div>
@@ -689,11 +701,12 @@ F1
 F1   TL   F2   F3   F4
                 </div>
                 <p class="small">
-                  Used when preparing to breach rooms, hangars, or to deliver maximum fire to the front.
+                  Used when maximum firepower to the front is required, such as
+                  before a breach, across open doors, or when sweeping a hangar.
                 </p>
                 <div class="chip-row">
-                  <span class="chip">Max forward fire</span>
-                  <span class="chip">Door / hangar entry</span>
+                  <span class="chip">Use: Breach line</span>
+                  <span class="chip">Hangar sweep</span>
                 </div>
               </div>
             </div>
@@ -705,49 +718,53 @@ F1   TL   F2   F3   F4
       <article id="ch-3" class="chapter">
         <div class="chapter-heading">
           <div class="chapter-title">3. Movement Techniques</div>
-          <div class="chapter-code">Ref: FTM–3</div>
+          <div class="chapter-code">FTM–3</div>
         </div>
         <div class="chapter-body">
           <div class="box">
             <div class="box-title">Bounding Overwatch</div>
             <p class="small">
-              One element moves while the other covers. Use when contact is possible or likely –
-              especially across open gaps between cover.
+              Bounding overwatch is used when enemy contact is possible or likely.
+              One element moves while the other remains stationary and provides security.
             </p>
+            <p class="small"><b>Procedure:</b></p>
             <ul class="ul-clean">
-              <li><span class="bullet">1.</span>Element A: “<b>Set, covering.</b>” – guns up, scanning.</li>
-              <li><span class="bullet">2.</span>Element B: “<b>Moving.</b>” – moves to next cover.</li>
-              <li><span class="bullet">3.</span>Element B: “<b>Set.</b>” – now they cover.</li>
-              <li><span class="bullet">4.</span>Element A: “<b>Moving.</b>” – leapfrogs past B.</li>
+              <li><span class="bullet">1.</span>Element A halts and takes up firing positions.  
+                  Element A calls: <b>“A set, covering.”</b></li>
+              <li><span class="bullet">2.</span>Element B calls: <b>“B moving.”</b> and moves to the next covered position.</li>
+              <li><span class="bullet">3.</span>On arrival, Element B calls: <b>“B set.”</b></li>
+              <li><span class="bullet">4.</span>Element A then calls: <b>“A moving.”</b> and bounds past B.</li>
+              <li><span class="bullet">5.</span>Sequence repeats until the objective or safe position is reached.</li>
             </ul>
             <p class="small">
-              Example: crossing the open pad into a bunker entrance – one element <b>always</b> holds
-              guns while the other sprints.
+              At any time, at least one element must be stationary and ready to fire.
             </p>
           </div>
 
           <div class="box" style="margin-top:6px">
-            <div class="box-title">Peeling (Break Contact)</div>
+            <div class="box-title">Peeling (Breaking Contact)</div>
             <p class="small">
-              Used when falling back under fire without turning it into a panicked retreat.
-              The team rotates backwards one by one.
+              Peeling is used to disengage from contact while maintaining fire and control.
+              The team withdraws by rotating one member at a time to the rear.
             </p>
+            <p class="small"><b>Procedure:</b></p>
             <ul class="ul-clean">
-              <li><span class="bullet">•</span>TL: “<b>Peel right!</b>” or “<b>Peel left!</b>”.</li>
-              <li><span class="bullet">•</span>Front man fires 2–3 shots, calls “<b>Moving!</b>”, runs behind last man.</li>
-              <li><span class="bullet">•</span>Next man repeats until everyone has shifted back.</li>
+              <li><span class="bullet">1.</span>TL orders: <b>“Peel left!”</b> or <b>“Peel right!”</b></li>
+              <li><span class="bullet">2.</span>Front man fires short controlled bursts, then calls: <b>“Moving!”</b></li>
+              <li><span class="bullet">3.</span>Front man moves behind the last man in the team and takes up a new firing position.</li>
+              <li><span class="bullet">4.</span>The next man in line repeats the process.</li>
+              <li><span class="bullet">5.</span>Peel continues until team reaches a designated position or is directed to hold.</li>
             </ul>
             <p class="small">
-              Example: heavy push in a bunker corridor — peel back in a controlled chain to the
-              previous room or airlock.
+              Peeling must be controlled, with clear calls and no uncontrolled sprinting.
             </p>
           </div>
 
           <div class="box" style="margin-top:6px">
             <div class="box-title">Key Principle</div>
             <p class="small">
-              <b>No one moves unless someone is covering.</b>  
-              Every movement call must have a partner who is already “Set” and ready.
+              <b>Movement only occurs when another member or element is prepared to cover.</b>  
+              Before leaving cover, the moving member confirms that someone is “Set” and watching the threat direction.
             </p>
           </div>
         </div>
@@ -757,7 +774,7 @@ F1   TL   F2   F3   F4
       <article id="ch-4" class="chapter">
         <div class="chapter-heading">
           <div class="chapter-title">4. Sectors & Spacing</div>
-          <div class="chapter-code">Ref: FTM–4</div>
+          <div class="chapter-code">FTM–4</div>
         </div>
         <div class="chapter-body">
           <div class="box">
@@ -765,41 +782,45 @@ F1   TL   F2   F3   F4
             <div class="twocol">
               <div>
                 <p class="small">
-                  Every member owns a slice of the 360° circle:
+                  Each member is responsible for a specific “sector” around the team.
+                  This prevents gaps in observation and reduces duplication.
                 </p>
                 <ul class="ul-clean">
-                  <li><span class="bullet">•</span><b>F1 (Point)</b>: 12 – 2 o’clock (front-right)</li>
-                  <li><span class="bullet">•</span><b>TL</b>: 10 – 12 o’clock (front-left)</li>
-                  <li><span class="bullet">•</span><b>F2</b>: 2 – 4 o’clock (right flank)</li>
-                  <li><span class="bullet">•</span><b>F3</b>: 8 – 10 o’clock (left flank)</li>
-                  <li><span class="bullet">•</span><b>F4 (Rear)</b>: 6 o’clock (rear security)</li>
+                  <li><span class="bullet">•</span><b>F1 (Point)</b>: Front-right (approx. 11–1 o’clock depending on formation).</li>
+                  <li><span class="bullet">•</span><b>TL</b>: Front and general control of angles.</li>
+                  <li><span class="bullet">•</span><b>F2</b>: Threat side (flank), checks doors and cross-lanes.</li>
+                  <li><span class="bullet">•</span><b>F3</b>: Opposite flank or rear-left, depending on formation.</li>
+                  <li><span class="bullet">•</span><b>F4</b>: Rear (6 o’clock), ensures back is protected.</li>
                 </ul>
               </div>
               <div class="small">
-                Corridor note:<br>
-                TL and point focus forward; F2/F3 watch side rooms and cross-lanes; F4 checks rear
-                regularly. If everyone stares forward, nobody sees the flank push.
+                Example – corridor movement:
+                <ul class="ul-clean">
+                  <li><span class="bullet">•</span>Point and TL focus on the corridor ahead.</li>
+                  <li><span class="bullet">•</span>F2/F3 focus on doors and intersections.</li>
+                  <li><span class="bullet">•</span>F4 regularly checks rear and reports contacts behind.</li>
+                </ul>
               </div>
             </div>
           </div>
 
           <div class="box" style="margin-top:6px">
-            <div class="box-title">Spacing Doctrine</div>
+            <div class="box-title">Spacing</div>
             <div class="twocol">
               <div class="small">
-                <b>Outdoors:</b>
+                <b>Open terrain:</b>
                 <ul class="ul-clean">
-                  <li><span class="bullet">•</span>3–5 meters apart.</li>
-                  <li><span class="bullet">•</span>Prevents one grenade from wiping the squad.</li>
-                  <li><span class="bullet">•</span>Harder to spot at distance.</li>
+                  <li><span class="bullet">•</span>Maintain approximately 3–5 meters between members.</li>
+                  <li><span class="bullet">•</span>Prevents one explosion from disabling the entire team.</li>
+                  <li><span class="bullet">•</span>Makes the team harder to detect at distance.</li>
                 </ul>
               </div>
               <div class="small">
-                <b>Indoors / Ships:</b>
+                <b>Indoors / ships:</b>
                 <ul class="ul-clean">
-                  <li><span class="bullet">•</span>1–2 meters apart.</li>
-                  <li><span class="bullet">•</span>Enough room to turn and aim.</li>
-                  <li><span class="bullet">•</span>Do not block corners or doorways.</li>
+                  <li><span class="bullet">•</span>Maintain approximately 1–2 meters between members.</li>
+                  <li><span class="bullet">•</span>Allows members to move, turn and fire without colliding.</li>
+                  <li><span class="bullet">•</span>Avoid blocking doorways, corners and firing lines.</li>
                 </ul>
               </div>
             </div>
@@ -810,34 +831,54 @@ F1   TL   F2   F3   F4
       <!-- Chapter 5 -->
       <article id="ch-5" class="chapter">
         <div class="chapter-heading">
-          <div class="chapter-title">5. Communication & Discipline</div>
-          <div class="chapter-code">Ref: FTM–5</div>
+          <div class="chapter-title">5. Communication & Control</div>
+          <div class="chapter-code">FTM–5</div>
         </div>
         <div class="chapter-body">
           <div class="box">
-            <div class="box-title">Standard Callouts</div>
-            <ul class="ul-clean">
-              <li><span class="bullet">•</span><b>“Moving”</b> – leaving cover.</li>
-              <li><span class="bullet">•</span><b>“Set”</b> – arrived, ready to fire.</li>
-              <li><span class="bullet">•</span><b>“Covering”</b> – actively watching a lane.</li>
-              <li><span class="bullet">•</span><b>“On you [name]”</b> – following that player.</li>
-              <li><span class="bullet">•</span><b>“Contact front/left/right”</b> – enemy direction.</li>
-              <li><span class="bullet">•</span><b>“Crossing”</b> – when crossing someone’s barrel.</li>
-            </ul>
+            <div class="box-title">Standard Voice Procedures</div>
             <p class="small">
-              Short, clear phrases only. Star Citizen already has desync and chaos –
-              don’t add extra noise on comms.
+              The following standard phrases are to be used during Fire Team movement.
+              Phrases are short, clear and understood by all members.
             </p>
+            <ul class="ul-clean">
+              <li><span class="bullet">•</span><b>“Moving”</b>  
+                – Called by a member when leaving cover to change position.</li>
+              <li><span class="bullet">•</span><b>“Set”</b>  
+                – Called by a member when they have reached position and are ready to fire.</li>
+              <li><span class="bullet">•</span><b>“Covering”</b>  
+                – Indicates that a member has eyes and weapon on a specific lane or sector.</li>
+              <li><span class="bullet">•</span><b>“On you, [name]”</b>  
+                – Indicates that a member is directly following or supporting that person.</li>
+              <li><span class="bullet">•</span><b>“Contact front/left/right/rear”</b>  
+                – Announces contact and the direction.</li>
+              <li><span class="bullet">•</span><b>“Crossing”</b>  
+                – Used before passing in front of another member’s weapon line.</li>
+            </ul>
           </div>
 
           <div class="box" style="margin-top:6px">
-            <div class="box-title">Common Mistakes</div>
+            <div class="box-title">Discipline</div>
+            <p class="small">
+              During movement, communication must support control, not create confusion.
+            </p>
             <ul class="ul-clean">
-              <li><span class="bullet">✕</span><b>Bunching up</b> – one grenade or spray deletes the team.</li>
-              <li><span class="bullet">✕</span><b>No rear security</b> – free kills for anyone behind you.</li>
-              <li><span class="bullet">✕</span><b>Running indoors</b> – TL loses control; corners get rushed.</li>
-              <li><span class="bullet">✕</span><b>Over-peeking</b> – repeating the same corner until you die.</li>
-              <li><span class="bullet">✕</span><b>Everyone staring forward</b> – flanks or rear wide open.</li>
+              <li><span class="bullet">•</span>Only the TL gives formation and movement orders.</li>
+              <li><span class="bullet">•</span>Members report status (“Moving”, “Set”, “Covering”) when required.</li>
+              <li><span class="bullet">•</span>Non-essential chat is minimized during contact and during drills.</li>
+              <li><span class="bullet">•</span>Contradictory orders are not given. If unclear, request clarification:  
+                  <b>“Say again, last order.”</b></li>
+            </ul>
+          </div>
+
+          <div class="box" style="margin-top:6px">
+            <div class="box-title">Common Faults</div>
+            <ul class="ul-clean">
+              <li><span class="bullet">✕</span>Bunching up in doorways or at corners.</li>
+              <li><span class="bullet">✕</span>Failure to provide rear security.</li>
+              <li><span class="bullet">✕</span>Moving without confirming that someone is “Set”.</li>
+              <li><span class="bullet">✕</span>All members focusing on the same direction.</li>
+              <li><span class="bullet">✕</span>Running ahead of the TL and breaking formation.</li>
             </ul>
           </div>
         </div>
@@ -847,25 +888,26 @@ F1   TL   F2   F3   F4
       <article id="ch-6" class="chapter">
         <div class="chapter-heading">
           <div class="chapter-title">6. Assessment & Pass Criteria</div>
-          <div class="chapter-code">Ref: FTM–6</div>
+          <div class="chapter-code">FTM–6</div>
         </div>
         <div class="chapter-body">
           <div class="callout">
-            <div class="callout-title">BMT – Fire Team Movements: Pass Conditions</div>
+            <div class="callout-title">BMT – Fire Team Movements: Assessment Checklist</div>
             <ul class="checklist">
-              <li><span class="check-icon">✔</span>Demonstrate Wedge, File, Staggered Column, Echelon, and Line correctly.</li>
-              <li><span class="check-icon">✔</span>Execute bounding overwatch using “Moving / Set” correctly.</li>
-              <li><span class="check-icon">✔</span>Execute peeling drill under simulated fire.</li>
-              <li><span class="check-icon">✔</span>Maintain proper spacing indoors and outdoors.</li>
-              <li><span class="check-icon">✔</span>Keep assigned sectors covered with minimal reminders.</li>
-              <li><span class="check-icon">✔</span>Follow TL commands quickly and calmly.</li>
-              <li><span class="check-icon">✔</span>Maintain comms discipline (no spam in contact).</li>
+              <li><span class="check-icon">✔</span>Identifies all Fire Team roles and responsibilities correctly.</li>
+              <li><span class="check-icon">✔</span>Forms Wedge, File, Staggered Column, Echelon (L/R), and Line on TL’s command.</li>
+              <li><span class="check-icon">✔</span>Executes bounding overwatch using correct “Moving/Set” procedure.</li>
+              <li><span class="check-icon">✔</span>Executes peeling drill on command to break contact in a controlled manner.</li>
+              <li><span class="check-icon">✔</span>Maintains appropriate spacing in open ground and in confined spaces.</li>
+              <li><span class="check-icon">✔</span>Maintains assigned sectors with minimal reminders.</li>
+              <li><span class="check-icon">✔</span>Uses standard voice procedures clearly and consistently.</li>
+              <li><span class="check-icon">✔</span>Maintains formation and does not rush ahead of TL without orders.</li>
             </ul>
           </div>
 
           <p class="small" style="margin-top:6px;text-align:right">
-            On successful completion, candidate is eligible for BMT certification component:  
-            <b>BMT – Fire Team Movements</b>.
+            Successful completion of this lesson contributes towards the  
+            <b>BMT – Fire Team Movements</b> component of the BMT certification.
           </p>
         </div>
       </article>
@@ -873,50 +915,50 @@ F1   TL   F2   F3   F4
 
     <!-- RIGHT: MARGIN NOTES -->
     <aside class="manual-margin">
-      <div class="margin-title">Margin Notes</div>
+      <div class="margin-title">Instructor Notes</div>
 
       <div class="margin-card">
-        <h3>Formation Selector</h3>
+        <h3>Recommended Sequence</h3>
         <ul class="margin-list">
-          <li><span class="bullet">•</span><b>Open ground</b>: Wedge</li>
-          <li><span class="bullet">•</span><b>Road / valley</b>: Staggered Column</li>
-          <li><span class="bullet">•</span><b>Ships / corridors</b>: File</li>
-          <li><span class="bullet">•</span><b>Wall / cliff</b>: Echelon</li>
-          <li><span class="bullet">•</span><b>Door / hangar</b>: Line</li>
+          <li><span class="bullet">1.</span>Explain team roles and sectors.</li>
+          <li><span class="bullet">2.</span>Static practice of each formation.</li>
+          <li><span class="bullet">3.</span>Slow walk-through with commands.</li>
+          <li><span class="bullet">4.</span>Add bounding and peeling drills.</li>
+          <li><span class="bullet">5.</span>Run full scenario with timed evaluation.</li>
         </ul>
       </div>
 
       <div class="margin-card">
-        <h3>Bounding Script</h3>
+        <h3>Formation Selection</h3>
         <ul class="margin-list">
-          <li><span class="bullet">1.</span>“A set, covering.”</li>
-          <li><span class="bullet">2.</span>“B moving.”</li>
-          <li><span class="bullet">3.</span>“B set.”</li>
-          <li><span class="bullet">4.</span>“A moving.”</li>
+          <li><span class="bullet">•</span>Open ground: Wedge.</li>
+          <li><span class="bullet">•</span>Road/path: Staggered Column.</li>
+          <li><span class="bullet">•</span>Ships/corridors: File.</li>
+          <li><span class="bullet">•</span>Wall/cliff: Echelon (towards threat).</li>
+          <li><span class="bullet">•</span>Door/hangar: Line.</li>
         </ul>
       </div>
 
       <div class="margin-card">
-        <h3>Peel Script</h3>
+        <h3>Key Emphasis</h3>
         <ul class="margin-list">
-          <li><span class="bullet">•</span>TL: “Peel right/left!”</li>
-          <li><span class="bullet">•</span>Front: fire → “Moving!” → goes to back.</li>
-          <li><span class="bullet">•</span>Next repeats.</li>
+          <li><span class="bullet">•</span>One element covers while the other moves.</li>
+          <li><span class="bullet">•</span>Rear security is always assigned.</li>
+          <li><span class="bullet">•</span>Comms must be clear, short and relevant.</li>
         </ul>
       </div>
 
       <div class="margin-card">
-        <h3>Minimum Standard</h3>
+        <h3>Safety / Control</h3>
         <ul class="margin-list">
-          <li><span class="bullet">•</span>Never bunch up.</li>
-          <li><span class="bullet">•</span>Always have rear security.</li>
-          <li><span class="bullet">•</span>Clear, short comms.</li>
-          <li><span class="bullet">•</span>Controlled pace, not rushing.</li>
+          <li><span class="bullet">•</span>Stop drill if formation breaks completely.</li>
+          <li><span class="bullet">•</span>Reset and repeat until actions are consistent.</li>
         </ul>
       </div>
 
       <div class="footer-note">
-        Use this margin as a live cheat sheet during drills and evaluations.
+        This page is intended as a reference for both recruits and instructors  
+        during BMT Fire Team Movement training.
       </div>
     </aside>
   </section>
