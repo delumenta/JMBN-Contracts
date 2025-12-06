@@ -16,7 +16,8 @@
 :root{
   --bg:#000;
   --panel:#0b0b0b;
-  --card:#101010;
+  --panel-soft:#101010;
+  --card:#0f0f0f;
   --border:#d6b44c;
   --accent:#f2d675;
   --accent-soft:#c9b06a;
@@ -40,7 +41,7 @@ body{
   letter-spacing:.25px;
 }
 
-/* Fallback brand if header.html fails */
+/* Fallback brand */
 .brand{
   display:flex;align-items:center;gap:10px;
   margin:0 0 10px;padding-bottom:6px;
@@ -55,36 +56,50 @@ body{
   color:var(--accent);margin:0;
 }
 
-/* Page shell */
+/* Shell */
 .page{
-  max-width:1120px;
+  max-width:1180px;
   margin:0 auto;
 }
 
-/* Top header block */
+/* Hero / header band */
 .hero{
-  background:radial-gradient(circle at 0 0,rgba(242,214,117,.08),transparent 60%),
-             radial-gradient(circle at 100% 100%,rgba(214,180,76,.06),transparent 60%),
-             var(--panel);
-  border:1px solid var(--border);
   border-radius:14px;
-  padding:14px 14px 12px;
-  box-shadow:0 0 18px rgba(214,180,76,.25),inset 0 0 0 1px rgba(214,180,76,.12);
-  margin-top:8px;
+  border:1px solid var(--border);
+  padding:12px 12px 10px;
+  background:
+    radial-gradient(circle at 0 0,rgba(242,214,117,.12),transparent 65%),
+    radial-gradient(circle at 100% 100%,rgba(214,180,76,.08),transparent 60%),
+    #050505;
+  box-shadow:0 0 20px rgba(214,180,76,.35),inset 0 0 0 1px rgba(214,180,76,.12);
 }
 .hero-top{
-  display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+.hero-title-wrap{
+  display:flex;flex-direction:column;gap:2px;
+}
+.hero-eyebrow{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.18em;
 }
 .hero-title{
   font-size:16px;
   color:var(--accent);
   text-transform:uppercase;
   letter-spacing:.16em;
-  margin-bottom:2px;
 }
 .hero-sub{
   font-size:12px;
   color:var(--muted);
+}
+.hero-tags{
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;
 }
 .hero-tag{
   border-radius:999px;
@@ -97,41 +112,46 @@ body{
   letter-spacing:.12em;
 }
 .hero-grid{
-  display:grid;
-  grid-template-columns:2.2fr 1.3fr;
-  gap:10px;
   margin-top:10px;
+  display:grid;
+  grid-template-columns:minmax(0,2.1fr) minmax(0,1.4fr);
+  gap:10px;
 }
 @media(max-width:880px){
   .hero-grid{grid-template-columns:1fr}
 }
 
-/* Highlight cards */
+/* Hero cards */
 .hero-card{
-  background:rgba(0,0,0,.65);
+  background:rgba(0,0,0,.75);
   border-radius:12px;
-  border:1px solid rgba(214,180,76,.7);
+  border:1px solid var(--border);
   padding:10px;
-  box-shadow:0 0 16px rgba(214,180,76,.35);
+  box-shadow:0 0 14px rgba(214,180,76,.25),inset 0 0 0 1px rgba(214,180,76,.14);
 }
 .hero-card h3{
-  margin:0 0 6px;
+  margin:0 0 4px;
   font-size:13px;
   color:var(--accent);
   text-transform:uppercase;
   letter-spacing:.12em;
 }
+.hero-card p{
+  margin:0;
+  font-size:13px;
+  line-height:1.6;
+}
 .hero-meta{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:6px;
-  margin-top:4px;
+  gap:7px;
+  margin-top:6px;
 }
-@media(max-width:600px){
+@media(max-width:640px){
   .hero-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 .meta-item{
-  border-radius:8px;
+  border-radius:9px;
   border:1px solid var(--border);
   padding:6px 7px;
   background:#090909;
@@ -147,58 +167,121 @@ body{
   font-size:13px;
   color:var(--accent);
 }
-
-/* Layout: main content + quick ref column */
-.layout{
-  margin-top:10px;
-  display:grid;
-  grid-template-columns:minmax(0,2.2fr) minmax(0,1.2fr);
-  gap:12px;
-}
-@media(max-width:980px){
-  .layout{grid-template-columns:1fr}
-}
-
-/* Panels / sections */
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 0 18px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.12);
-}
-.section-header{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-end;
-  margin-bottom:6px;
-}
-.sec-title{
-  font-size:13px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.16em;
-}
-.sec-sub{
-  font-size:11px;
-  color:var(--muted);
-}
-.tag{
+.badge-pill{
+  display:inline-block;
   border-radius:999px;
   border:1px solid var(--border);
-  padding:2px 8px;
+  padding:2px 7px;
   font-size:10px;
   color:var(--muted);
   background:#050505;
 }
 
-/* Content blocks */
-.block{
-  background:#101010;
+/* Layout: left manual + right quick ref (sticky) */
+.layout{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:minmax(0,2.4fr) minmax(0,1.3fr);
+  gap:12px;
+}
+@media(max-width:980px){
+  .layout{grid-template-columns:1fr}
+}
+.main-panel{
+  background:var(--panel);
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:10px;
+  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.12);
+}
+.side-panel{
+  background:var(--panel-soft);
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:9px 9px 10px;
+  box-shadow:0 0 18px rgba(214,180,76,.22),inset 0 0 0 1px rgba(214,180,76,.12);
+  position:sticky;
+  top:14px;
+  height:fit-content;
+}
+
+/* Section nav strip */
+.section-nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:8px;
+}
+.sec-chip{
+  border-radius:999px;
+  border:1px solid rgba(214,180,76,.6);
+  padding:4px 9px;
+  font-size:11px;
+  color:var(--muted);
+  background:#050505;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+.sec-chip span.num{
+  width:16px;height:16px;border-radius:50%;
+  border:1px solid var(--border);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--accent);
+  background:#070707;
+}
+.sec-chip.active{
+  background:linear-gradient(180deg,var(--accent),#d6b44c);
+  color:#000;
+  box-shadow:0 0 18px rgba(214,180,76,.4);
+}
+.sec-chip.active span.num{
+  border-color:#000;
+  background:rgba(0,0,0,.2);
+  color:#000;
+}
+
+/* Section panels */
+.section-block{
+  background:#050505;
   border-radius:10px;
   border:1px solid var(--border);
-  padding:9px 10px;
+  padding:9px 10px 8px;
+  margin-bottom:8px;
+  box-shadow:0 0 12px rgba(214,180,76,.18),inset 0 0 0 1px rgba(214,180,76,.08);
+}
+.section-header-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  margin-bottom:4px;
+}
+.section-title{
+  font-size:13px;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+}
+.section-kicker{
+  font-size:11px;
+  color:var(--muted);
+}
+.sec-tag{
+  border-radius:999px;
+  border:1px solid var(--border);
+  padding:2px 8px;
+  font-size:10px;
+  color:var(--muted);
+}
+
+/* Content blocks inside sections */
+.block{
+  background:var(--card);
+  border-radius:8px;
+  border:1px solid var(--border);
+  padding:8px 9px;
   margin-top:6px;
 }
 .block h3{
@@ -210,14 +293,11 @@ body{
   margin:0 0 4px;
   font-size:13px;
   line-height:1.6;
-  color:var(--text);
 }
 .small{
   font-size:11px;
   color:var(--muted);
 }
-
-/* Two-column lists */
 .twocol{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -226,6 +306,8 @@ body{
 @media(max-width:720px){
   .twocol{grid-template-columns:1fr}
 }
+
+/* Lists */
 .ul-clean{
   list-style:none;
   margin:4px 0 0;
@@ -240,23 +322,23 @@ body{
   margin-right:4px;
 }
 
-/* Formation cards */
-.formations{
+/* Formation cards grid */
+.formations-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
+  gap:7px;
   margin-top:4px;
 }
 @media(max-width:880px){
-  .formations{grid-template-columns:1fr}
+  .formations-grid{grid-template-columns:1fr}
 }
 .formation-card{
-  background:#0c0c0c;
-  border-radius:10px;
+  background:#0a0a0a;
+  border-radius:8px;
   border:1px solid var(--border);
-  padding:8px 9px;
+  padding:7px 8px;
 }
-.formation-top{
+.formation-head{
   display:flex;
   justify-content:space-between;
   gap:6px;
@@ -270,7 +352,7 @@ body{
 .formation-tag{
   font-size:10px;
   color:var(--muted);
-  padding:2px 6px;
+  padding:2px 7px;
   border-radius:999px;
   border:1px solid var(--border);
 }
@@ -280,7 +362,7 @@ body{
   line-height:1.5;
   padding:5px 6px;
   border-radius:6px;
-  border:1px dashed rgba(214,180,76,.6);
+  border:1px dashed rgba(214,180,76,.7);
   margin:5px 0 4px;
   background:#050505;
   white-space:pre;
@@ -300,36 +382,11 @@ body{
   background:#050505;
 }
 
-/* Quick reference column */
-.qr-card{
-  background:#101010;
-  border-radius:10px;
-  border:1px solid var(--border);
-  padding:9px 10px;
-  margin-top:7px;
-}
-.qr-card h3{
-  margin:0 0 4px;
-  font-size:12px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:.12em;
-}
-.qr-list{
-  list-style:none;
-  margin:4px 0 0;
-  padding:0;
-  font-size:12px;
-}
-.qr-list li{
-  margin:3px 0;
-}
-
-/* Highlight callouts */
+/* Callout / checklist */
 .callout{
-  border-radius:10px;
+  border-radius:9px;
   border:1px solid var(--border);
-  background:linear-gradient(135deg,rgba(242,214,117,.08),rgba(0,0,0,.9));
+  background:linear-gradient(135deg,rgba(242,214,117,.10),rgba(0,0,0,.92));
   padding:8px 9px;
   margin-top:6px;
 }
@@ -340,23 +397,44 @@ body{
   letter-spacing:.12em;
   margin-bottom:3px;
 }
-
-/* Checklist */
 .checklist{
   list-style:none;
-  margin:4px 0 0;
+  margin:3px 0 0;
   padding:0;
   font-size:13px;
 }
 .checklist li{
-  margin:3px 0;
+  margin:2px 0;
 }
 .check-icon{
   color:var(--accent);
   margin-right:4px;
 }
 
-/* Footer note */
+/* Side panel cards */
+.side-card{
+  background:#050505;
+  border-radius:9px;
+  border:1px solid var(--border);
+  padding:7px 8px;
+  margin-top:6px;
+}
+.side-card h3{
+  margin:0 0 3px;
+  font-size:12px;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+.qr-list{
+  list-style:none;
+  margin:3px 0 0;
+  padding:0;
+  font-size:12px;
+}
+.qr-list li{
+  margin:2px 0;
+}
 .footer-note{
   margin-top:8px;
   font-size:11px;
@@ -367,23 +445,27 @@ body{
 /* Links */
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
+
+/* Smooth scroll */
+html{
+  scroll-behavior:smooth;
+}
 </style>
 </head>
 <body>
 
-<!-- Header mount (shared header.html) -->
+<!-- Header mount -->
 <div id="header-container">
-  <!-- Fallback header if header.html not found -->
   <div class="brand">
     <img class="brand-logo"
          src="https://static.wixstatic.com/media/08ea88_820ac3bc561d4233ad73a7af859f28bf~mv2.png"
-         alt="JMBN Logo">
+         alt="JMBN">
     <h1>JMBN – BMT Fire Team Movements</h1>
   </div>
 </div>
 
 <script>
-/* Inject shared header.html and set active nav (if nav-btn exist) */
+/* Shared header.html inject + nav highlight */
 (async () => {
   try{
     const r = await fetch('header.html', { cache: 'no-cache' });
@@ -396,7 +478,6 @@ a:hover{text-decoration:underline}
       const here = (location.pathname.split('/').pop() || '').toLowerCase();
       document.querySelectorAll('.nav-btn').forEach(a => {
         const href = (a.getAttribute('href')||'').toLowerCase();
-        // mark active if exact match or if this page looks like a training/bmt page
         if (href === here) {
           a.classList.add('active');
           a.setAttribute('aria-current','page');
@@ -414,24 +495,26 @@ a:hover{text-decoration:underline}
 </script>
 
 <main class="page">
-
-  <!-- HERO / OVERVIEW -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-top">
-      <div>
-        <div class="hero-title">Basic Military Training</div>
-        <div class="hero-sub">Module: Fire Team Movements – JMBN Standard</div>
+      <div class="hero-title-wrap">
+        <div class="hero-eyebrow">Basic Military Training</div>
+        <div class="hero-title">Fire Team Movements</div>
+        <div class="hero-sub">4-man team movement standard for JMBN bunkers, ships, and surface ops.</div>
       </div>
-      <span class="hero-tag">Certification: BMT – FT MOV</span>
+      <div class="hero-tags">
+        <span class="hero-tag">Certification: BMT – FT MOV</span>
+        <span class="hero-tag">Version 1.0</span>
+      </div>
     </div>
 
     <div class="hero-grid">
       <div class="hero-card">
         <h3>Purpose</h3>
-        <p class="small">
-          Fire Team Movements ensure that a 4-man element moves as a single organism —
-          controlling tempo, maintaining 360° security, and surviving contact in
-          bunkers, ship corridors, and open terrain.
+        <p>
+          To teach every member how to move as a 4-man Fire Team — maintaining 360° security,
+          controlling pace, and surviving contact in Star Citizen environments.
         </p>
         <div class="hero-meta">
           <div class="meta-item">
@@ -444,7 +527,9 @@ a:hover{text-decoration:underline}
           </div>
           <div class="meta-item">
             <div class="meta-label">Outcome</div>
-            <div class="meta-value">Pass BMT – Movements</div>
+            <div class="meta-value">
+              <span class="badge-pill">Pass BMT – Movements</span>
+            </div>
           </div>
         </div>
       </div>
@@ -453,10 +538,10 @@ a:hover{text-decoration:underline}
         <h3>Assessment Snapshot</h3>
         <ul class="ul-clean small">
           <li><span class="bullet">•</span>Demonstrate all core formations</li>
-          <li><span class="bullet">•</span>Execute bounding & peeling drills</li>
+          <li><span class="bullet">•</span>Execute bounding & peeling under command</li>
           <li><span class="bullet">•</span>Maintain spacing & sectors correctly</li>
-          <li><span class="bullet">•</span>Follow Team Lead commands without delay</li>
-          <li><span class="bullet">•</span>Apply in Star Citizen scenarios (UGFs, derelicts, ships)</li>
+          <li><span class="bullet">•</span>Follow Team Lead orders without hesitation</li>
+          <li><span class="bullet">•</span>Apply techniques in actual SC scenarios</li>
         </ul>
       </div>
     </div>
@@ -465,122 +550,150 @@ a:hover{text-decoration:underline}
   <!-- MAIN LAYOUT -->
   <div class="layout">
 
-    <!-- LEFT: DETAILED MANUAL -->
-    <section class="panel">
-      <!-- 1. Fire Team Composition -->
-      <div class="section-header">
-        <div>
-          <div class="sec-title">Fire Team Structure</div>
-          <div class="sec-sub">JMBN default composition for BMT and operations.</div>
-        </div>
-        <span class="tag">Section 1</span>
-      </div>
+    <!-- LEFT: FULL MANUAL -->
+    <section class="main-panel">
 
-      <div class="block">
-        <h3>Standard 4-Man Fire Team</h3>
-        <div class="twocol">
+      <!-- Section nav chips -->
+      <nav class="section-nav">
+        <button class="sec-chip active" data-target="sec-1">
+          <span class="num">1</span> Structure
+        </button>
+        <button class="sec-chip" data-target="sec-2">
+          <span class="num">2</span> Formations
+        </button>
+        <button class="sec-chip" data-target="sec-3">
+          <span class="num">3</span> Movement
+        </button>
+        <button class="sec-chip" data-target="sec-4">
+          <span class="num">4</span> Sectors
+        </button>
+        <button class="sec-chip" data-target="sec-5">
+          <span class="num">5</span> Comms
+        </button>
+        <button class="sec-chip" data-target="sec-6">
+          <span class="num">6</span> Assessment
+        </button>
+      </nav>
+
+      <!-- 1. Fire Team Structure -->
+      <article id="sec-1" class="section-block">
+        <header class="section-header-row">
           <div>
-            <ul class="ul-clean">
-              <li><span class="bullet">•</span><b>Team Lead (TL)</b> – Commands the team, decides formation, tempo, and reactions.</li>
-              <li><span class="bullet">•</span><b>Point / Rifleman 1 (F1)</b> – First in contact, scans front and immediate danger areas.</li>
-              <li><span class="bullet">•</span><b>Rifleman 2 (F2)</b> – Flank & support, helps maintain formation integrity.</li>
-              <li><span class="bullet">•</span><b>Support / AR (F3)</b> – Suppressive fire, anchors the team during contact.</li>
-              <li><span class="bullet">•</span><b>Rear Security (F4)</b> – Covers 6 o’clock, protects team from back-stab or chase.</li>
-            </ul>
+            <div class="section-title">Fire Team Structure</div>
+            <div class="section-kicker">Who does what inside a 4-man element.</div>
           </div>
-          <div>
-            <p class="small">
-              In bunkers and ships, this structure keeps 360° security even in tight spaces.
-              The roles do <b>not</b> change mid-run unless ordered by the Team Lead.
-            </p>
-          </div>
-        </div>
-      </div>
+          <span class="sec-tag">Section 1</span>
+        </header>
 
-      <!-- 2. Formations -->
-      <div class="section-header" style="margin-top:10px">
-        <div>
-          <div class="sec-title">Core Formations</div>
-          <div class="sec-sub">Default movement patterns for different environments.</div>
-        </div>
-        <span class="tag">Section 2</span>
-      </div>
-
-      <div class="block">
-        <h3>Primary Fire Team Formations</h3>
-        <div class="formations">
-
-          <!-- WEDGE -->
-          <div class="formation-card">
-            <div class="formation-top">
-              <div class="formation-name">Wedge Formation</div>
-              <span class="formation-tag">Default – Open Ground</span>
+        <div class="block">
+          <h3>Standard 4-Man Fire Team</h3>
+          <div class="twocol">
+            <div>
+              <ul class="ul-clean">
+                <li><span class="bullet">•</span><b>Team Lead (TL)</b> – Commands formation, speed, and reactions.</li>
+                <li><span class="bullet">•</span><b>Point / Rifleman 1 (F1)</b> – First contact, clears corners and leads entry.</li>
+                <li><span class="bullet">•</span><b>Rifleman 2 (F2)</b> – Flank & support; helps TL maintain formation.</li>
+                <li><span class="bullet">•</span><b>Support / AR (F3)</b> – Suppression, anchors the team in fights.</li>
+                <li><span class="bullet">•</span><b>Rear Security (F4)</b> – Watches the 6; prevents surprise from behind.</li>
+              </ul>
             </div>
-            <div class="diagram">
+            <div>
+              <p class="small">
+                In bunkers and ships, roles should be locked before insertion.  
+                No mid-run role swapping unless ordered by the TL — chaos kills more teams than enemies.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2. Core Formations -->
+      <article id="sec-2" class="section-block">
+        <header class="section-header-row">
+          <div>
+            <div class="section-title">Core Formations</div>
+            <div class="section-kicker">How the team shapes itself based on terrain.</div>
+          </div>
+          <span class="sec-tag">Section 2</span>
+        </header>
+
+        <div class="block">
+          <h3>Primary Formations</h3>
+          <div class="formations-grid">
+
+            <!-- Wedge -->
+            <div class="formation-card">
+              <div class="formation-head">
+                <div class="formation-name">Wedge Formation</div>
+                <span class="formation-tag">Default – Open Ground</span>
+              </div>
+              <div class="diagram">
       F1        F2
           TL
       F3        F4
+              </div>
+              <p class="small">
+                Standard formation outside bunkers, on pads, and across open fields.
+                Good all-round visibility and quick reaction left/right.
+              </p>
+              <div class="badge-row">
+                <span class="badge">360° security</span>
+                <span class="badge">Good flexibility</span>
+                <span class="badge">Use while approaching bunkers</span>
+              </div>
             </div>
-            <p class="small">
-              Used in open areas outside bunkers, courtyards, landing pads, and on the surface of moons.
-            </p>
-            <div class="badge-row">
-              <span class="badge">360° security</span>
-              <span class="badge">Fast reaction</span>
-              <span class="badge">Good for bunkers exterior</span>
-            </div>
-          </div>
 
-          <!-- FILE -->
-          <div class="formation-card">
-            <div class="formation-top">
-              <div class="formation-name">File Formation</div>
-              <span class="formation-tag">Corridors / Tight Spaces</span>
-            </div>
-            <div class="diagram">
+            <!-- File -->
+            <div class="formation-card">
+              <div class="formation-head">
+                <div class="formation-name">File Formation</div>
+                <span class="formation-tag">Corridors / Tight</span>
+              </div>
+              <div class="diagram">
 F1
 TL
 F2
 F3
 F4
+              </div>
+              <p class="small">
+                Used in ship corridors, stairwells, caves and tight bunker hallways.
+                Keeps footprint small and movement controlled.
+              </p>
+              <div class="badge-row">
+                <span class="badge">Ideal for ships</span>
+                <span class="badge">Max control</span>
+              </div>
             </div>
-            <p class="small">
-              Used in ship corridors, staircases, elevators, caves, and tight bunker hallways.
-            </p>
-            <div class="badge-row">
-              <span class="badge">Tight control</span>
-              <span class="badge">Good for ships</span>
-              <span class="badge">Low profile</span>
-            </div>
-          </div>
 
-          <!-- STAGGERED COLUMN -->
-          <div class="formation-card">
-            <div class="formation-top">
-              <div class="formation-name">Staggered Column</div>
-              <span class="formation-tag">Roads / Valleys</span>
-            </div>
-            <div class="diagram">
+            <!-- Staggered Column -->
+            <div class="formation-card">
+              <div class="formation-head">
+                <div class="formation-name">Staggered Column</div>
+                <span class="formation-tag">Roads / Valleys</span>
+              </div>
+              <div class="diagram">
     F1           F2
         TL
     F3           F4
+              </div>
+              <p class="small">
+                Used when moving along paths, ravines or roads on moons/planets.
+                Balances left/right security while staying mobile.
+              </p>
+              <div class="badge-row">
+                <span class="badge">Balanced arcs</span>
+                <span class="badge">Good for movement</span>
+              </div>
             </div>
-            <p class="small">
-              Used when moving along paths, canyons, or ridgelines on moons or planets.
-            </p>
-            <div class="badge-row">
-              <span class="badge">Balanced security</span>
-              <span class="badge">Good left/right arcs</span>
-            </div>
-          </div>
 
-          <!-- ECHELON -->
-          <div class="formation-card">
-            <div class="formation-top">
-              <div class="formation-name">Echelon Left / Right</div>
-              <span class="formation-tag">Threat One Side</span>
-            </div>
-            <div class="diagram">
+            <!-- Echelon -->
+            <div class="formation-card">
+              <div class="formation-head">
+                <div class="formation-name">Echelon Left / Right</div>
+                <span class="formation-tag">Threat One Side</span>
+              </div>
+              <div class="diagram">
 Echelon Right:
 
 F1
@@ -588,274 +701,318 @@ F1
       F2
          F3
             F4
+              </div>
+              <p class="small">
+                Used when hugging a wall or cliff and expecting contact from one side only.
+                Stack towards the threat direction.
+              </p>
+              <div class="badge-row">
+                <span class="badge">Focus fire one side</span>
+                <span class="badge">Wall/cliff movement</span>
+              </div>
             </div>
-            <p class="small">
-              Used when hugging a wall or cliff and expecting contact from one direction only.
-            </p>
-            <div class="badge-row">
-              <span class="badge">Focused firepower</span>
-              <span class="badge">Ideal vs. one-sided threat</span>
-            </div>
-          </div>
 
-          <!-- LINE -->
-          <div class="formation-card">
-            <div class="formation-top">
-              <div class="formation-name">Line Formation</div>
-              <span class="formation-tag">Assault Line</span>
-            </div>
-            <div class="diagram">
+            <!-- Line -->
+            <div class="formation-card">
+              <div class="formation-head">
+                <div class="formation-name">Line Formation</div>
+                <span class="formation-tag">Assault / Breach</span>
+              </div>
+              <div class="diagram">
 F1   TL   F2   F3   F4
+              </div>
+              <p class="small">
+                Used when preparing to breach rooms, hangars or to deliver max fire to the front.
+              </p>
+              <div class="badge-row">
+                <span class="badge">Max forward firepower</span>
+                <span class="badge">Door / hangar entry</span>
+              </div>
             </div>
-            <p class="small">
-              Used when preparing to breach or lay down maximum fire to the front.
-            </p>
-            <div class="badge-row">
-              <span class="badge">Max front fire</span>
-              <span class="badge">Room / hangar entry</span>
-            </div>
-          </div>
 
+          </div>
         </div>
-      </div>
+      </article>
 
       <!-- 3. Movement Techniques -->
-      <div class="section-header" style="margin-top:10px">
-        <div>
-          <div class="sec-title">Movement Techniques</div>
-          <div class="sec-sub">How the fire team moves under different threat levels.</div>
+      <article id="sec-3" class="section-block">
+        <header class="section-header-row">
+          <div>
+            <div class="section-title">Movement Techniques</div>
+            <div class="section-kicker">How the team moves under different threat levels.</div>
+          </div>
+          <span class="sec-tag">Section 3</span>
+        </header>
+
+        <div class="block">
+          <h3>Bounding Overwatch (Leapfrog)</h3>
+          <p>
+            One element moves while the other covers. Use when contact is possible or likely —
+            especially across open gaps between cover.
+          </p>
+          <ul class="ul-clean">
+            <li><span class="bullet">1.</span>Team A: “<b>Set, covering.</b>” – guns up, scanning.</li>
+            <li><span class="bullet">2.</span>Team B: “<b>Moving.</b>” – moves to next cover.</li>
+            <li><span class="bullet">3.</span>Team B: “<b>Set.</b>” – now they cover.</li>
+            <li><span class="bullet">4.</span>Team A: “<b>Moving.</b>” – leapfrogs past B.</li>
+          </ul>
+          <p class="small">
+            Example: Crossing the open pad into a bunker entrance – one element <b>always</b> holds
+            guns while the other sprints.
+          </p>
         </div>
-        <span class="tag">Section 3</span>
-      </div>
 
-      <div class="block">
-        <h3>Bounding Overwatch (Leapfrogging)</h3>
-        <p>
-          One element moves while the other covers. This is used when contact is possible or likely,
-          especially across open ground or between cover.
-        </p>
-        <ul class="ul-clean">
-          <li><span class="bullet">1.</span>Team A: “<b>Set, covering.</b>” — weapons up, scanning.</li>
-          <li><span class="bullet">2.</span>Team B: “<b>Moving.</b>” — advances to next cover.</li>
-          <li><span class="bullet">3.</span>Team B: “<b>Set.</b>” — now they cover.</li>
-          <li><span class="bullet">4.</span>Team A moves to leapfrog past B.</li>
-        </ul>
-        <p class="small">
-          Star Citizen example: Crossing the open area between rocks and bunker entrance on Daymar —
-          one element always has guns up while the other sprints.
-        </p>
-      </div>
+        <div class="block">
+          <h3>Peeling (Break Contact)</h3>
+          <p>
+            Used when you must fall back under fire without turning into a panicked retreat.
+            The team rotates backwards one by one.
+          </p>
+          <ul class="ul-clean">
+            <li><span class="bullet">•</span>TL: “<b>Peel right!</b>” or “<b>Peel left!</b>”</li>
+            <li><span class="bullet">•</span>Front man fires 2–3 shots, calls “<b>Moving!</b>”, runs behind last man.</li>
+            <li><span class="bullet">•</span>Next man repeats until everyone has shifted back.</li>
+          </ul>
+          <p class="small">
+            Example: Heavy push in a bunker corridor — peel back in a controlled chain to the
+            previous room or airlock.
+          </p>
+        </div>
 
-      <div class="block">
-        <h3>Peeling (Break Contact)</h3>
-        <p>
-          Used when you’re under fire and need to fall back without turning into a rout.
-          Each member moves back one by one while others maintain fire.
-        </p>
-        <ul class="ul-clean">
-          <li><span class="bullet">•</span>Command: “<b>Peel right!</b>” or “<b>Peel left!</b>”</li>
-          <li><span class="bullet">•</span>Front man fires, then moves behind the last man.</li>
-          <li><span class="bullet">•</span>Next man repeats in sequence.</li>
-        </ul>
-        <p class="small">
-          Example: Inside a derelict, heavy enemy push from front corridor —
-          team peels back to the airlock while maintaining fire pressure.
-        </p>
-      </div>
-
-      <div class="block">
-        <h3>Center Peel (Front Contact)</h3>
-        <p>
-          When taking direct frontal contact and needing to withdraw rapidly,
-          the center elements fall back through the sides in a controlled pattern.
-        </p>
-        <p class="small">
-          Key idea: <b>no one runs blindly.</b> Everyone knows who moves first and who covers.
-        </p>
-      </div>
+        <div class="block">
+          <h3>Center Peel (Front Contact)</h3>
+          <p>
+            When taking direct frontal contact, center elements fall back through the sides in
+            sequence while flanks maintain fire.
+          </p>
+          <p class="small">
+            Key idea: <b>no one moves without someone covering.</b> Everyone knows who moves first,
+            and where they are going.
+          </p>
+        </div>
+      </article>
 
       <!-- 4. Sectors & Spacing -->
-      <div class="section-header" style="margin-top:10px">
-        <div>
-          <div class="sec-title">Sectors & Spacing</div>
-          <div class="sec-sub">How every member protects part of the 360° bubble.</div>
-        </div>
-        <span class="tag">Section 4</span>
-      </div>
-
-      <div class="block">
-        <h3>Sector Responsibilities</h3>
-        <p class="small">
-          Every member owns a slice of the 360°. If everyone watches front, no one watches flanks.
-        </p>
-        <ul class="ul-clean">
-          <li><span class="bullet">•</span><b>F1 (Point)</b>: 12 – 2 o’clock</li>
-          <li><span class="bullet">•</span><b>TL</b>: 10 – 12 o’clock</li>
-          <li><span class="bullet">•</span><b>F2</b>: 2 – 4 o’clock</li>
-          <li><span class="bullet">•</span><b>F3</b>: 8 – 10 o’clock</li>
-          <li><span class="bullet">•</span><b>F4 (Rear)</b>: 6 o’clock</li>
-        </ul>
-        <p class="small">
-          In a bunker corridor, this means somebody <b>always</b> checks behind the team,
-          even while pushing forward.
-        </p>
-      </div>
-
-      <div class="block">
-        <h3>Spacing</h3>
-        <div class="twocol">
+      <article id="sec-4" class="section-block">
+        <header class="section-header-row">
           <div>
-            <p class="small"><b>Outdoors:</b></p>
-            <ul class="ul-clean">
-              <li><span class="bullet">•</span>3–5 meters apart</li>
-              <li><span class="bullet">•</span>Prevents 1 grenade killing entire team</li>
-              <li><span class="bullet">•</span>Harder to spot from distance</li>
-            </ul>
+            <div class="section-title">Sectors & Spacing</div>
+            <div class="section-kicker">Staying alive by owning a slice of the 360° bubble.</div>
           </div>
-          <div>
-            <p class="small"><b>Indoors / Ships:</b></p>
-            <ul class="ul-clean">
-              <li><span class="bullet">•</span>1–2 meters apart</li>
-              <li><span class="bullet">•</span>Enough space to turn & aim</li>
-              <li><span class="bullet">•</span>Don’t block corners or doorways</li>
-            </ul>
+          <span class="sec-tag">Section 4</span>
+        </header>
+
+        <div class="block">
+          <h3>Sector Responsibilities</h3>
+          <p class="small">
+            Every member owns a slice of the circle. If everyone stares forward, nobody is watching flanks.
+          </p>
+          <ul class="ul-clean">
+            <li><span class="bullet">•</span><b>F1 (Point)</b>: 12 – 2 o’clock (front-right)</li>
+            <li><span class="bullet">•</span><b>TL</b>: 10 – 12 o’clock (front-left)</li>
+            <li><span class="bullet">•</span><b>F2</b>: 2 – 4 o’clock (right flank)</li>
+            <li><span class="bullet">•</span><b>F3</b>: 8 – 10 o’clock (left flank)</li>
+            <li><span class="bullet">•</span><b>F4 (Rear)</b>: 6 o’clock (rear security)</li>
+          </ul>
+          <p class="small">
+            In corridors: TL & point focus front, F2/F3 watch side rooms and cross-lanes, F4
+            regularly checks rear.
+          </p>
+        </div>
+
+        <div class="block">
+          <h3>Spacing</h3>
+          <div class="twocol">
+            <div>
+              <p class="small"><b>Outdoors:</b></p>
+              <ul class="ul-clean">
+                <li><span class="bullet">•</span>3–5 meters apart.</li>
+                <li><span class="bullet">•</span>Prevents one grenade wiping the squad.</li>
+                <li><span class="bullet">•</span>Makes team harder to spot at distance.</li>
+              </ul>
+            </div>
+            <div>
+              <p class="small"><b>Indoors / Ships:</b></p>
+              <ul class="ul-clean">
+                <li><span class="bullet">•</span>1–2 meters apart.</li>
+                <li><span class="bullet">•</span>Enough room to turn and aim.</li>
+                <li><span class="bullet">•</span>Don’t block corners or doorways.</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      </article>
 
       <!-- 5. Communication & Mistakes -->
-      <div class="section-header" style="margin-top:10px">
-        <div>
-          <div class="sec-title">Communication & Discipline</div>
-          <div class="sec-sub">Simple, clear, no spam on comms.</div>
+      <article id="sec-5" class="section-block">
+        <header class="section-header-row">
+          <div>
+            <div class="section-title">Communication & Discipline</div>
+            <div class="section-kicker">Simple calls, clean comms, controlled tempo.</div>
+          </div>
+          <span class="sec-tag">Section 5</span>
+        </header>
+
+        <div class="block">
+          <h3>Standard Callouts</h3>
+          <ul class="ul-clean">
+            <li><span class="bullet">•</span><b>“Moving”</b> – leaving cover.</li>
+            <li><span class="bullet">•</span><b>“Set”</b> – arrived, ready to fire.</li>
+            <li><span class="bullet">•</span><b>“Covering”</b> – actively watching a lane.</li>
+            <li><span class="bullet">•</span><b>“On you”</b> – following the named player.</li>
+            <li><span class="bullet">•</span><b>“Contact front/left/right”</b> – enemy direction.</li>
+            <li><span class="bullet">•</span><b>“Crossing”</b> – when crossing someone’s barrel.</li>
+          </ul>
+          <p class="small">
+            Short, clear phrases only. Star Citizen already has desync and chaos –
+            <b>don’t add extra noise on comms.</b>
+          </p>
         </div>
-        <span class="tag">Section 5</span>
-      </div>
 
-      <div class="block">
-        <h3>Standard Callouts</h3>
-        <ul class="ul-clean">
-          <li><span class="bullet">•</span><b>“Moving”</b> – when you depart cover.</li>
-          <li><span class="bullet">•</span><b>“Set”</b> – when you’re in position and ready to fire.</li>
-          <li><span class="bullet">•</span><b>“Covering”</b> – when you’re actively watching a lane.</li>
-          <li><span class="bullet">•</span><b>“On you”</b> – when you are following that player.</li>
-          <li><span class="bullet">•</span><b>“Contact front/left/right”</b> – direction of enemy.</li>
-          <li><span class="bullet">•</span><b>“Crossing”</b> – when crossing team mate’s barrel/line.</li>
-        </ul>
-        <p class="small">
-          Keep comms clean. In Star Citizen, desync and chaos already exist – <b>don’t add noise.</b>
-        </p>
-      </div>
-
-      <div class="block">
-        <h3>Common Mistakes</h3>
-        <ul class="ul-clean">
-          <li><span class="bullet">✕</span><b>Bunching up</b> – one grenade or spray wipes the team.</li>
-          <li><span class="bullet">✕</span><b>No rear security</b> – free kill for anyone flanking.</li>
-          <li><span class="bullet">✕</span><b>Running indoors</b> – TL loses control, corners get rushed.</li>
-          <li><span class="bullet">✕</span><b>Over-peeking</b> – SC AI & players will delete you.</li>
-          <li><span class="bullet">✕</span><b>Forgetting sectors</b> – everyone stares same way, nobody checks sides.</li>
-        </ul>
-      </div>
+        <div class="block">
+          <h3>Common Mistakes</h3>
+          <ul class="ul-clean">
+            <li><span class="bullet">✕</span><b>Bunching up</b> – one grenade or spray deletes the team.</li>
+            <li><span class="bullet">✕</span><b>No rear security</b> – free kills for anyone behind you.</li>
+            <li><span class="bullet">✕</span><b>Running indoors</b> – TL loses control, corners get rushed.</li>
+            <li><span class="bullet">✕</span><b>Over-peeking</b> – repeating the same corner until you die.</li>
+            <li><span class="bullet">✕</span><b>Everyone staring forward</b> – flanks or rear wide open.</li>
+          </ul>
+        </div>
+      </article>
 
       <!-- 6. Assessment -->
-      <div class="section-header" style="margin-top:10px">
-        <div>
-          <div class="sec-title">Assessment Criteria</div>
-          <div class="sec-sub">What instructors look for during BMT check ride.</div>
+      <article id="sec-6" class="section-block">
+        <header class="section-header-row">
+          <div>
+            <div class="section-title">Assessment Criteria</div>
+            <div class="section-kicker">What instructors look for in your BMT check ride.</div>
+          </div>
+          <span class="sec-tag">Section 6</span>
+        </header>
+
+        <div class="callout">
+          <div class="callout-title">Pass Conditions – Fire Team Movements</div>
+          <ul class="checklist">
+            <li><span class="check-icon">✔</span>Demonstrate Wedge, File, Staggered Column, Echelon, and Line.</li>
+            <li><span class="check-icon">✔</span>Execute bounding overwatch using “Moving / Set” correctly.</li>
+            <li><span class="check-icon">✔</span>Execute peeling drill under simulated fire.</li>
+            <li><span class="check-icon">✔</span>Maintain proper spacing indoors and outdoors.</li>
+            <li><span class="check-icon">✔</span>Keep sectors covered with minimal reminders from TL.</li>
+            <li><span class="check-icon">✔</span>Follow Team Lead commands quickly and calmly.</li>
+            <li><span class="check-icon">✔</span>Maintain discipline on comms – no spam during movement or contact.</li>
+          </ul>
         </div>
-        <span class="tag">Section 6</span>
-      </div>
 
-      <div class="callout">
-        <div class="callout-title">To Pass Fire Team Movements (BMT)</div>
-        <ul class="checklist">
-          <li><span class="check-icon">✔</span>Demonstrate all core formations: Wedge, File, Staggered Column, Echelon, Line.</li>
-          <li><span class="check-icon">✔</span>Execute bounding overwatch with clear “Moving / Set” calls.</li>
-          <li><span class="check-icon">✔</span>Execute peeling drill under simulated fire.</li>
-          <li><span class="check-icon">✔</span>Maintain proper spacing indoors & outdoors.</li>
-          <li><span class="check-icon">✔</span>Maintain correct sectors of fire without constant reminders.</li>
-          <li><span class="check-icon">✔</span>Follow Team Lead orders quickly with minimal delay.</li>
-          <li><span class="check-icon">✔</span>Show discipline on comms – no unnecessary chatter in movement phase.</li>
-        </ul>
-      </div>
-
-      <div class="footer-note">
-        BMT – Fire Team Movements • Version 1.0 • Internal JMBN Training Document
-      </div>
+        <div class="footer-note">
+          BMT – Fire Team Movements • JMBN Internal Training • Use with BMT certification flow
+        </div>
+      </article>
     </section>
 
-    <!-- RIGHT: QUICK REFERENCE / CHEAT SHEET -->
-    <aside class="panel">
-      <div class="section-header">
+    <!-- RIGHT: QUICK REFERENCE -->
+    <aside class="side-panel">
+      <header class="section-header-row" style="margin-bottom:4px">
         <div>
-          <div class="sec-title">Quick Reference</div>
-          <div class="sec-sub">Cheat sheet for drills & live ops.</div>
+          <div class="section-title" style="font-size:12px">Quick Reference</div>
+          <div class="section-kicker">Cheat sheet for drills & live ops.</div>
         </div>
-        <span class="tag">Side Panel</span>
-      </div>
+      </header>
 
-      <div class="qr-card">
+      <div class="side-card">
         <h3>Formation by Environment</h3>
         <ul class="qr-list">
           <li><span class="bullet">•</span><b>Open terrain</b> – Wedge</li>
           <li><span class="bullet">•</span><b>Roads / valleys</b> – Staggered Column</li>
-          <li><span class="bullet">•</span><b>Ship corridors</b> – File</li>
-          <li><span class="bullet">•</span><b>Caves / tight tunnels</b> – File</li>
-          <li><span class="bullet">•</span><b>Side threat (wall/cliff)</b> – Echelon (towards open side)</li>
-          <li><span class="bullet">•</span><b>Pre-breach / assault</b> – Line</li>
+          <li><span class="bullet">•</span><b>Ships / corridors</b> – File</li>
+          <li><span class="bullet">•</span><b>Caves / tight</b> – File</li>
+          <li><span class="bullet">•</span><b>Wall / cliff side</b> – Echelon (toward open side)</li>
+          <li><span class="bullet">•</span><b>Pre-breach</b> – Line</li>
         </ul>
       </div>
 
-      <div class="qr-card">
+      <div class="side-card">
         <h3>Bounding Drill Script</h3>
         <ul class="qr-list">
           <li><span class="bullet">1.</span>“<b>A set, covering.</b>”</li>
-          <li><span class="bullet">2.</span>“<b>B moving.</b>” – B advances to next cover.</li>
+          <li><span class="bullet">2.</span>“<b>B moving.</b>” – B moves to cover.</li>
           <li><span class="bullet">3.</span>“<b>B set.</b>”</li>
-          <li><span class="bullet">4.</span>“<b>A moving.</b>” – A advances past B.</li>
+          <li><span class="bullet">4.</span>“<b>A moving.</b>” – A leapfrogs.</li>
         </ul>
-        <p class="small" style="margin-top:4px">
-          Instructors may ask you to run this repeatedly between rocks, walls, or cover in-game.
-        </p>
       </div>
 
-      <div class="qr-card">
+      <div class="side-card">
         <h3>Peel Drill Script</h3>
         <ul class="qr-list">
-          <li><span class="bullet">•</span>TL: “<b>Peel right!</b>”</li>
-          <li><span class="bullet">•</span>Front man fires 2–3 shots, shouts “<b>Moving!</b>”, moves behind last man.</li>
-          <li><span class="bullet">•</span>Next man repeats.</li>
-          <li><span class="bullet">•</span>Continue until team reaches safe position.</li>
+          <li><span class="bullet">•</span>TL: “<b>Peel right/left!</b>”</li>
+          <li><span class="bullet">•</span>Front: fire → “<b>Moving!</b>” → runs to back.</li>
+          <li><span class="bullet">•</span>Next repeats until safe.</li>
         </ul>
       </div>
 
-      <div class="qr-card">
+      <div class="side-card">
         <h3>Minimum Standard</h3>
         <ul class="qr-list">
           <li><span class="bullet">•</span>No bunching up.</li>
-          <li><span class="bullet">•</span>No dead sectors (front, flanks, rear always covered).</li>
-          <li><span class="bullet">•</span>Clear acknowledgement of commands.</li>
-          <li><span class="bullet">•</span>Calm, controlled pace — not rushing.</li>
+          <li><span class="bullet">•</span>Front, flanks, and rear covered.</li>
+          <li><span class="bullet">•</span>Clear, short comms.</li>
+          <li><span class="bullet">•</span>Controlled pace, not rushing.</li>
         </ul>
       </div>
 
-      <div class="qr-card">
+      <div class="side-card">
         <h3>Recommended Practice</h3>
         <ul class="qr-list">
-          <li><span class="bullet">•</span>Run drills in a safe moon bunker with AI only.</li>
-          <li><span class="bullet">•</span>Practice both day & night conditions.</li>
-          <li><span class="bullet">•</span>Swap roles (Point, Rear, TL) to feel each perspective.</li>
+          <li><span class="bullet">•</span>Run drills in a low-risk bunker with AI only.</li>
+          <li><span class="bullet">•</span>Practice both day and night conditions.</li>
+          <li><span class="bullet">•</span>Rotate TL / Point / Rear roles across runs.</li>
         </ul>
       </div>
 
-      <div class="small" style="margin-top:8px">
-        <b>Tip:</b> This page can be referenced during training and linked inside your BMT certification briefing.
+      <div class="footer-note" style="text-align:left;margin-top:7px">
+        Tip: Use this panel as your live “cheat sheet” while the main team listens to the instructor.
       </div>
     </aside>
 
   </div>
 </main>
+
+<script>
+/* Section chip scroll + active state */
+document.addEventListener('DOMContentLoaded', () => {
+  const chips = document.querySelectorAll('.sec-chip');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const targetId = chip.getAttribute('data-target');
+      const sec = document.getElementById(targetId);
+      if(sec){
+        sec.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+      chips.forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // Optional: highlight chip on scroll
+  const sections = Array.from(document.querySelectorAll('.section-block'));
+  const onScroll = () => {
+    let current = null;
+    const y = window.scrollY + 160; // offset for header + hero
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      const top = rect.top + window.scrollY;
+      if(top <= y) current = sec.id;
+    });
+    if(current){
+      chips.forEach(c=>{
+        const t = c.getAttribute('data-target');
+        if(t === current) c.classList.add('active'); else c.classList.remove('active');
+      });
+    }
+  };
+  window.addEventListener('scroll', onScroll);
+});
+</script>
 
 </body>
 </html>
